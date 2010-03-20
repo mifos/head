@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files class="org.mifos.xyz" name="client" resourcebundle="resource"
+		xmlns="http://www.aditi.com"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.aditi.com type.xsd ">
+		<file name="1" path="org/mifos/framework/util/resources/tabletag/CustomerClient.xml" />
+</files>

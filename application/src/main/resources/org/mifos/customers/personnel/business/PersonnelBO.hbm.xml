@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.customers.personnel.business.PersonnelBO"
+		table="PERSONNEL">
+		<id name="personnelId" column="PERSONNEL_ID" type="short"
+			access="field">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" type="integer"
+			unsaved-value="negative" />
+		<many-to-one name="level" column="LEVEL_ID"
+			class="org.mifos.customers.personnel.business.PersonnelLevelEntity"
+			unique="true" lazy="false" />
+		<many-to-one name="office" column="OFFICE_ID"
+			class="org.mifos.customers.office.business.OfficeBO" unique="true"
+			lazy="false" />
+		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
+			class="org.mifos.application.master.business.SupportedLocalesEntity"
+			insert="true" update="true" cascade="none" />
+		<one-to-one name="personnelDetails"
+			class="org.mifos.customers.personnel.business.PersonnelDetailsEntity"
+			cascade="all" lazy="false" />
+
+		<property name="globalPersonnelNum"
+			column="GLOBAL_PERSONNEL_NUM" type="string" />
+		<property name="displayName" column="DISPLAY_NAME"
+			type="string" />
+		<many-to-one name="status" column="PERSONNEL_STATUS"
+			class="org.mifos.customers.personnel.business.PersonnelStatusEntity" />
+		<property name="title" column="TITLE" type="integer" />
+		<property name="searchId" column="SEARCH_ID" type="string" />
+		<property name="maxChildCount" column="MAX_CHILD_COUNT"
+			type="integer" />
+		<property name="encryptedPassword" column="PASSWORD"
+			type="binary" access="field" />
+		<property name="userName" column="LOGIN_NAME" unique="true"
+			type="string" access="field" />
+		<property name="emailId" column="EMAIL_ID" type="string"
+			access="field" />
+		<property name="passwordChanged" column="PASSWORD_CHANGED"
+			type="short" access="field" />
+		<property name="createdBy" column="CREATED_BY" type="short" />
+		<property name="createdDate" column="CREATED_DATE" type="date"
+			access="field" />
+		<property name="updatedBy" column="UPDATED_BY" type="short" />
+		<property name="updatedDate" column="UPDATED_DATE" type="date" />
+		<property name="lastLogin" column="LAST_LOGIN" type="date"
+			access="field" />
+		<property name="locked" column="LOCKED" type="short"
+			access="field" />
+		<property name="noOfTries" column="NO_OF_TRIES" type="short"
+			access="field" />
+		<set name="personnelRoles" cascade="all,delete-orphan"
+			inverse="true" lazy="false">
+			<key column="PERSONNEL_ID" />
+			<one-to-many
+				class="org.mifos.customers.personnel.business.PersonnelRoleEntity" />
+		</set>
+		<set name="customFields" cascade="all" inverse="true"
+			table="PERSONNEL_CUSTOM_FIELD">
+			<key column="PERSONNEL_ID" />
+			<one-to-many
+				class="org.mifos.customers.personnel.business.PersonnelCustomFieldEntity" />
+		</set>
+		<set name="personnelMovements" cascade="all" lazy="false"
+			access="field">
+			<key column="PERSONNEL_ID" update="false" />
+			<one-to-many
+				class="org.mifos.customers.personnel.business.PersonnelMovementEntity" />
+		</set>
+		<set name="personnelNotes" cascade="all" inverse="true"
+			table="PERSONNEL_NOTES" lazy="true" order-by="COMMENT_ID desc"
+			access="field">
+			<key column="PERSONNEL_ID" />
+			<many-to-many
+				class="org.mifos.customers.personnel.business.PersonnelNotesEntity"
+				column="COMMENT_ID" />
+		</set>
+	</class>
+	<!-- This query obtains all the active loan officers under a particular office -->
+	<query name="masterdata.activeloanofficers">
+		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.id = :levelId)) and personnel.office.officeId =:officeId and personnel.status.id =:statusId order by personnel.displayName]]>
+	</query>
+	<query name="personnel.formedByLoanOfficers">
+		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where personnel.level.id = :levelId and personnel.office.officeId =:officeId and personnel.status.id =:statusId]]>
+	</query>
+	<query name="getCountActivePersonnel">
+		<![CDATA[select count(*)  from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.office.officeId =:OFFICE_ID and personnel.status.id =:STATUS_ID]]>
+	</query>
+	<query name="getCountByName">
+		<![CDATA[select count(*)  from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
+	</query>
+	<query name="getPersonnelByName">
+		<![CDATA[from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
+	</query>
+	<query name="getPersonnelByDisplayName">
+		<![CDATA[from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME]]>
+	</query>
+	<query name="getCountByGovernmentId">
+		<![CDATA[select count(*)  from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.personnelDetails.governmentIdNumber = :GOVT_ID]]>
+	</query>
+	<query name="getCountByDobAndDisplayName">
+		<![CDATA[select count(*)  from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME and personnel.personnelDetails.dob =:DOB]]>
+	</query>
+
+	<query name="getPersonBySystemId">
+		<![CDATA[from org.mifos.customers.personnel.business.PersonnelBO as personnel where personnel.globalPersonnelNum =:globalPersonnelNum]]>
+	</query>
+	<query name="search_Personnel">
+		<![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName 
+			from org.mifos.customers.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and personnel.office.searchId like :SEARCH_ALL
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME
+			or 
+			(personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2) )
+			 order by personnel.office.officeName, personnel.personnelDetails.name.lastName
+			 ]]>
+	</query>
+	<query name="count_search_Personnel">
+		<![CDATA[select count(*) 
+			from org.mifos.customers.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and personnel.office.searchId like :SEARCH_ALL
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME or 
+			
+			(personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2))
+	 		]]>
+	</query>
+
+	<query name="search_Personnel_first_and_last_name">
+		<![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName 
+			from org.mifos.customers.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and personnel.office.searchId like :SEARCH_ALL
+			and (personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2 )
+			 order by personnel.office.officeName, personnel.personnelDetails.name.lastName
+			 ]]>
+	</query>
+	<query name="count_search_Personnel_first_and_last_name">
+		<![CDATA[select count(*) 
+			from org.mifos.customers.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and personnel.office.searchId like :SEARCH_ALL 
+			and (personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2 )
+	 		]]>
+	</query>
+
+	<query name="get_active_loanofficers_under_office">
+		<![CDATA[from  org.mifos.customers.personnel.business.PersonnelBO personnel 
+	        	   			where personnel.level.id=:personnelLevelId and 
+	        	   			personnel.office.officeId=:officeId and personnel.status.id=:ACTIVE
+					        order by personnel.displayName]]>
+	</query>
+	<query name="personnel.getActiveBranchManagerUnderOffice">
+		<![CDATA[from org.mifos.customers.personnel.business.PersonnelBO as personnel 
+							where personnel.office.officeId =:officeId and personnel.status.id =:personnelStatusId]]>
+	</query>
+
+	<query name="personnel.getAllPersonnel">    		
+		<![CDATA[from org.mifos.customers.personnel.business.PersonnelBO personnel]]>
+	</query>
+</hibernate-mapping>

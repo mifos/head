@@ -1,0 +1,229 @@
+# extracted from Resources.properties
+#. extracted from Resources.properties
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#: Next
+msgid "Next"
+msgstr ""
+
+#: Previous
+msgid "Previous"
+msgstr ""
+
+#: Results
+msgid "Results %s1-%s2 of %s3"
+msgstr ""
+
+#: alsosee
+msgid "Also See"
+msgstr ""
+
+#: center
+msgid "Center"
+msgstr ""
+
+#: client
+msgid "Client"
+msgstr ""
+
+#: error.fwdkey
+msgid "forward key not found"
+msgstr ""
+
+#: error.noaction
+msgid "action not found"
+msgstr ""
+
+#: error.noxmlfile
+msgid "xml file not found in properties file"
+msgstr ""
+
+#: error.tablenotfound
+msgid "table not found"
+msgstr ""
+
+#: error.wrongtype
+msgid "type entered is wrong"
+msgstr ""
+
+#: errors.unexpected
+msgid ""
+"An unexpected error has occured during the operation. Please try again "
+"later."
+msgstr ""
+
+#: group
+msgid "Group"
+msgstr ""
+
+#: loan
+msgid "Loan"
+msgstr ""
+
+#: loanaccount_stateid_1
+msgctxt "loanaccount_stateid_1"
+msgid "Partial Application"
+msgstr ""
+
+#: loanaccount_stateid_10
+msgctxt "loanaccount_stateid_10"
+msgid "Cancel"
+msgstr ""
+
+#: loanaccount_stateid_2
+msgctxt "loanaccount_stateid_2"
+msgid "Pending Approval"
+msgstr ""
+
+#: loanaccount_stateid_3
+msgid "Approved"
+msgstr ""
+
+#: loanaccount_stateid_4
+msgid "Disbursed to LO"
+msgstr ""
+
+#: loanaccount_stateid_5
+msgid "Active in Good Standing"
+msgstr ""
+
+#: loanaccount_stateid_6
+msgid "Closed- Obligation met"
+msgstr ""
+
+#: loanaccount_stateid_7
+msgid "Closed- Written Off"
+msgstr ""
+
+#: loanaccount_stateid_8
+msgid "Closed- Rescheduled"
+msgstr ""
+
+#: loanaccount_stateid_9
+msgid "Active in Bad Standing"
+msgstr ""
+
+#: loanofficer
+msgid "Loan Officer"
+msgstr ""
+
+#: savings
+msgid "Savings"
+msgstr ""
+
+#: savings_stateid_13
+msgctxt "savings_stateid_13"
+msgid "Partial Application"
+msgstr ""
+
+#: savings_stateid_14
+msgctxt "savings_stateid_14"
+msgid "Pending Approval"
+msgstr ""
+
+#: savings_stateid_15
+msgctxt "savings_stateid_15"
+msgid "Cancel"
+msgstr ""
+
+#: savings_stateid_16
+msgctxt "savings_stateid_16"
+msgid "Active"
+msgstr ""
+
+#: savings_stateid_17
+msgctxt "savings_stateid_17"
+msgid "Closed"
+msgstr ""
+
+#: savings_stateid_18
+msgctxt "savings_stateid_18"
+msgid "Inactive"
+msgstr ""
+
+#: status
+msgid "Status"
+msgstr ""
+
+#: value_1
+msgctxt "value_1"
+msgid "PartialApplication"
+msgstr ""
+
+#: value_10
+msgctxt "value_10"
+msgid "Hold"
+msgstr ""
+
+#: value_11
+msgctxt "value_11"
+msgid "Cancelled"
+msgstr ""
+
+#: value_12
+msgctxt "value_12"
+msgid "Closed"
+msgstr ""
+
+#: value_13
+msgctxt "value_13"
+msgid "Active"
+msgstr ""
+
+#: value_14
+msgctxt "value_14"
+msgid "Inactive"
+msgstr ""
+
+#: value_2
+msgctxt "value_2"
+msgid "PendingApproval"
+msgstr ""
+
+#: value_3
+msgctxt "value_3"
+msgid "Active"
+msgstr ""
+
+#: value_4
+msgctxt "value_4"
+msgid "Hold"
+msgstr ""
+
+#: value_5
+msgctxt "value_5"
+msgid "Cancelled"
+msgstr ""
+
+#: value_6
+msgctxt "value_6"
+msgid "Closed"
+msgstr ""
+
+#: value_7
+msgctxt "value_7"
+msgid "PartialApplication"
+msgstr ""
+
+#: value_8
+msgctxt "value_8"
+msgid "PendingApproval"
+msgstr ""
+
+#: value_9
+msgctxt "value_9"
+msgid "Active"
+msgstr ""

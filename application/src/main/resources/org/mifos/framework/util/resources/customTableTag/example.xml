@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold" /> 
+  <row totWidth="100" bottomLineRequired="true">
+	<column label="Name" value="Name" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="30" align="right"/>
+    </column>
+	<column label="Name" value="Name" valueType="method" columnType="link">
+	     <columnDetails  rowStyle="drawtablerowbold" colWidth="40" />
+		 <linkDetails action="/xyz"> 
+			<actionParam name="add"  value="Name" valueType="method" />
+		 </linkDetails>
+    </column>
+	<column label=""    value="edit"  valueType="text"   columnType="link"> 
+	    <columnDetails   rowStyle="drawtablerow" colWidth="30" />
+        <linkDetails action="/xyz">
+	       <actionParam name="add"  value="Name" valueType="method"/>
+	    </linkDetails>
+    </column>
+  </row>
+</tableInfo>
+   
+   
+   

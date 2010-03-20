@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="org.mifos.xyz" name="center" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
+  <path key="customersearch" forwardkey="search_sucess" action="custSearchAction.do"/> 
+  <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>  
+  
+  
+  
+  <row>
+  	<column label="Savings" labeltype="key" boldlabel="true" type="link" action="savingsAction.do"  styleClass="headingblue">
+  		<displayname bold="true">
+  			<fragment-name name="Account # " type="string"/>
+  			<fragment-name name="loanGlobalAccountNumber" type="method"/>  			
+  		</displayname>
+  		<parameters>
+  			<parameter name="globalAccountNum" value="loanGlobalAccountNumber" valuetype="method"/>
+  			<parameter name="method" value="get" valuetype="string"/>
+  			<parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
+        	<parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
+  		</parameters>
+  	</column>  	
+  </row>
+  
+  <row>
+  	<column label="status" labeltype="key" boldlabel="true" type="text" image="true">
+  		<displayname>
+  			<fragment-name name="status" type="method"/>
+  		</displayname>
+  	</column>
+  	<column label="loanofficer" labeltype="key" boldlabel="true" type="text">  		
+  		<displayname>
+  			<fragment-name name="loanOfficerName" type="method"/>
+  		</displayname>
+  	</column>
+  </row>
+  
+  <row>
+    <column label="Center" labeltype="key" boldlabel="false" type="link" action="centerCustAction.do">
+      <displayname>
+       <fragment-name name="centerName" type="method"/>
+       <fragment-name name=": ID " type="string"/>
+       <fragment-name name="centerGlobalCustNum" type="method"/>
+      </displayname>
+      <parameters>
+        <parameter name="globalCustNum" value="centerGlobalCustNum" valuetype="method"/>
+        <parameter name="method" value="get" valuetype="string"/>
+        <parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
+        <parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
+      </parameters>
+    </column>
+  </row> 
+  
+  <row>
+	<column label="alsosee" labeltype="key" boldlabel="false" type="link" action="custSearchAction.do">
+		<displayname>
+			<fragment-name name="branchName" type="method"/>
+		</displayname>
+		<parameters>
+			<parameter name="method" value="loadMainSearch" valuetype="string"/>
+		</parameters>
+	</column>
+	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">
+		<displayname>
+			<fragment-name name="clientName" type="method"/>
+		</displayname>
+		<parameters>
+			<parameter name="globalCustNum" value="clientGlobalCustNum" valuetype="method"/>
+			<parameter name="method" value="get" valuetype="string"/>
+			<parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
+        	<parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
+		</parameters>
+	</column>
+	
+	<column label="/" labeltype="string" boldlabel="false" type="link" action="groupCustAction.do">
+		<displayname>
+			<fragment-name name="groupName" type="method" />
+		</displayname>
+		<parameters>
+			<parameter name="globalCustNum" value="groupGlobalCustNum" valuetype="method"/>
+			<parameter name="method" value="get" valuetype="string"/>
+			<parameter name="recordOfficeId" value="branchGlobalNum" valuetype="method"/>
+       		<parameter name="recordLoanOfficerId" value="loanOffcerGlobalNum" valuetype="method"/>
+		</parameters>
+	</column>
+	
+	</row>
+  	
+  	
+</table>

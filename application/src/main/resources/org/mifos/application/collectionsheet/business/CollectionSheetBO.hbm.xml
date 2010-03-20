@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.collectionsheet.business.CollectionSheetBO" table="COLL_SHEET">
+		<id name="collSheetID" column="COLL_SHEET_ID" type="integer">
+			<generator class="native"/>
+		</id>
+		
+		<property name="collSheetDate" column="COLL_SHEET_DATE" type="date"/>
+		<property name="statusFlag" column="STATUS_FLAG" type="short"/>
+		<property name="runDate" column="RUN_DATE" type="date"/>
+		
+		<set name="collectionSheetCustomers" cascade="all"  table="COLL_SHEET_CUSTOMER" inverse="true">
+			<key column="COLL_SHEET_ID"/>
+			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetCustBO" />
+		</set>
+	</class>
+
+    <query name="collectionSheet.getCollectionSheetForMeetingDate">
+            <![CDATA[from org.mifos.application.collectionsheet.business.CollectionSheetBO 
+            collectionSheet where collectionSheet.collSheetDate = date(:MEETING_DATE)]]>
+    </query>	   
+
+	<!-- Query to retrieve meeting date for specified center -->
+	<sql-query name="collectionSheet.getCollectionSheetForCenterWithSpecifiedMeetingDate">
+		<return alias="collectionSheet" class="org.mifos.application.collectionsheet.business.CollectionSheetBO"/>
+		<![CDATA[
+			SELECT {collectionSheet.*} from coll_sheet collectionSheet, coll_sheet_customer 
+				where coll_sheet_customer.cust_id=:CUSTOMER_ID 
+				and coll_sheet_customer.cust_level=:CUSTOMER_LEVEL 
+				and coll_sheet_customer.cust_office_id=:OFFICE_ID
+				and coll_sheet_customer.loan_officer_id=:LOAN_OFFICER_ID 
+				and collectionSheet.coll_sheet_date > date(:FROM_DATE)
+				and collectionSheet.coll_sheet_id=coll_sheet_customer.coll_sheet_id
+				order by collectionSheet.coll_sheet_date desc
+		]]>
+	</sql-query>	
+	
+	<sql-query name="collectionSheet.extractCollectionSheetReportData">
+	    <return-scalar column="colldate" type="string"/>
+	    <return-scalar column="offid" type="integer"/>
+	    <return-scalar column="offname" type="string"/>
+	    <return-scalar column="staffid" type="integer"/>
+	    <return-scalar column="staffname" type="string"/>
+	    <return-scalar column="kendraid" type="integer"/>
+	    <return-scalar column="kendraname" type="string"/>
+	    <return-scalar column="groupid" type="integer"/>
+	    <return-scalar column="groupname" type="string"/>
+	    <return-scalar column="Memid" type="integer"/>
+	    <return-scalar column="Memname" type="string"/>
+	    
+	    <return-scalar column="loanbal" type="string"/>
+	    <return-scalar column="tloanbal" type="big_decimal"/>
+	    <return-scalar column="loandue" type="string"/>
+	    <return-scalar column="tloandue" type="big_decimal"/>
+	    
+	    <return-scalar column="loandis" type="string"/>
+	    <return-scalar column="tloandis" type="big_decimal"/>
+	    <return-scalar column="loanfees" type="string"/>
+	    <return-scalar column="tloanfees" type="big_decimal"/>	    
+	    
+	    <![CDATA[
+	    select coll.*, 
+       ifnull(loan.loanbal,0) as loanbal, 
+       round(ifnull(loan.tloanbal,0),0) as tloanbal, 
+       
+       ifnull(loanduesch.loandue,0) as loandue ,
+       round(ifnull(loanduesch.tloandue,0),0) as tloandue ,
+       
+       ifnull(ld.loandis,0) as loandis,
+       round(ifnull(ld.tloandis,0),0) as tloandis, 
+       
+       ifnull(ld.loanfees,0) as loanfees, 
+       round(ifnull(ld.tloanfees,0),0) as tloanfees from
+       
+       (SELECT concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
+        left(date(:MEETING_DATE),4)) as colldate ,        
+        o.office_id as offid, 
+        o.DISPLAY_NAME as offname, 
+        p.personnel_id as staffid, 
+        p.display_name as staffname, 
+        k.customer_id as kendraid, 
+        k.display_name as kendraname, 
+        g.customer_id as groupid,
+        g.display_name as groupname,
+        M.customer_id as Memid, 
+        M.display_name as Memname
+        
+	FROM customer K
+	 left join personnel p on K.loan_officer_id = P.personnel_id
+	 left join office o on P.office_id = o.office_id
+	 left join customer G on G.parent_customer_id = K.customer_id
+	 left join customer M on M.parent_customer_id = G.customer_id
+	 left join customer_meeting cm on cm.CUSTOMER_ID=K.CUSTOMER_ID
+	 left join recurrence_detail rd on rd.meeting_id = cm.meeting_id
+	 left join recur_on_day r on r.details_id = rd.details_id	
+
+	Where 
+	   o.office_id = :BRANCH_ID 
+	   and P.personnel_status = 1
+	   and P.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then P.personnel_id else (:PERSONNEL_ID) end)
+	   and K.customer_id = (case (:CENTER_ID)  when 'ALL' then K.customer_id else (:CENTER_ID) end)
+	   and K.status_id = 13 
+	   and G.status_id = 9 
+	   and M.status_id = 3 
+	   and r.days = dayofweek(:MEETING_DATE)
+	   
+           order by K.customer_id, G.customer_id, M.customer_id
+        ) coll
+
+	left join
+	
+	(SELECT a.customer_id as customer_id, 
+	 	group_concat(
+	 	  concat_ws(':',p.prd_offering_short_name, 
+	 	    round(ls.orig_principal + ls.orig_interest + ls.orig_fees + 
+	 	      ls.orig_penalty - ls.principal_paid - round(ls.interest_paid,2)- 
+	 	      round(ls.fees_paid,2) - ls.penalty_paid, 0
+	 	    )
+	 	  ) separator '||'
+	 	) as loanbal, 
+	 	sum(ls.orig_principal+ls.orig_interest+ls.orig_fees+ls.orig_penalty
+	 	  -ls.principal_paid-round(ls.interest_paid,2)-round(ls.fees_paid,2)-
+	 	  ls.penalty_paid) as tloanbal 
+	 	
+	 	FROM loan_account l
+		left join account a on l.account_id = a.account_id
+		left join loan_summary ls on l.account_id = ls.account_id
+		left join prd_offering p on l.PRD_OFFERING_ID=p.PRD_OFFERING_ID
+		Where (
+		   a.account_state_id = 5 or a.account_state_id = 9
+		   ) and a.office_id = :BRANCH_ID and a.account_type_id = 1
+		group by a.customer_id
+	 ) loan on coll.memid = loan.customer_id
+
+	 left join
+	 
+	 (select c.customer_id as customer_id, 
+	         group_concat(ifnull(loansch.loandue,0) separator '||') as loandue , 
+	         ifnull(sum(loansch.tloandue),0) as tloandue 
+	         from customer c
+		 left join
+
+                 (SELECT a.customer_id as customer_id, 
+                         concat_ws(':',p.prd_offering_short_name, ifnull(round(
+                            sum(l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)),2),0)
+                         ) as loandue, 
+                         ifnull(sum(l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)),0)
+                          as tloandue
+			 
+			 FROM loan_schedule l, account a, loan_account la, prd_offering p
+			 WHERE l.ACCOUNT_ID=a.ACCOUNT_ID 
+			 AND la.ACCOUNT_ID=a.ACCOUNT_ID 
+			 AND la.PRD_OFFERING_ID=p.PRD_OFFERING_ID
+                         and a.office_id = :BRANCH_ID
+                         and l.action_date <= date(:MEETING_DATE) 
+                         and l.payment_status = 0 
+                         and (a.account_state_id = 5 or a.account_state_id = 9) 
+                         and a.account_type_id = 1                         
+                         group by l.account_id
+                  ) loansch on loansch.customer_id = c.customer_id 
+                    where c.branch_id = :BRANCH_ID 
+                    and c.customer_level_id = 1
+                    group by c.customer_id 
+           ) loanduesch on coll.memid = loanduesch.customer_id
+
+	   left join
+
+           (select c.customer_id as customer_id, 
+            	    group_concat(ifnull(loandisb.loandis,0) separator '||') as loandis,
+            	    sum(loandisb.tloandis) as tloandis, 
+            	    group_concat(ifnull(loandisb.loanfees,0) separator '||') as loanfees, 
+            	    sum(loandisb.tloanfees) as tloanfees 
+            	    from customer c
+		    left join
+		    
+		    (SELECT a.customer_id as customer_id, 
+		            concat_ws(':',p.prd_offering_short_name, round(l.loan_amount,0)) as loandis,
+		            l.loan_amount as tloandis,
+			    concat_ws(':',p.prd_offering_short_name,round(ls.orig_fees,0)) as loanfees, 
+			    ls.orig_fees as tloanfees
+			    FROM loan_account l, loan_summary ls, account a, prd_offering p
+			    
+			    WHERE ls.ACCOUNT_ID=l.ACCOUNT_ID 
+			    AND l.ACCOUNT_ID=a.ACCOUNT_ID 
+			    and l.disbursement_date = date(:MEETING_DATE)
+			    and a.account_state_id = 3 
+			    and a.office_id = :BRANCH_ID 
+			    and a.account_type_id = 1 
+			    AND l.PRD_OFFERING_ID=p.PRD_OFFERING_ID
+		     ) loandisb on loandisb.customer_id = c.customer_id 
+		       where c.branch_id = :BRANCH_ID 
+		       and c.customer_level_id = 1
+                       group by c.customer_id 
+             ) ld on coll.memid = ld.customer_id
+          ]]>   
+	</sql-query>
+	
+</hibernate-mapping>

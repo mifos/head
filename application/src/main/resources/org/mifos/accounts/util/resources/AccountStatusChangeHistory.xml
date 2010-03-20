@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails headerStyle="fontnormalbold" /> 
+  <row totWidth="100" bottomLineRequired="true">
+	<column label="Date" value="UserPrefferedDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="15" />
+    </column>
+    <column label="OldStatus" value="oldStatusName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="20"/>
+    </column>
+    
+    <column label="NewStatus" value="newStatusName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="19"/>
+    </column>
+
+    <column label="User" value="personnelName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="19"/>
+    </column>
+  </row>
+</tableInfo>
+   
+   
+   

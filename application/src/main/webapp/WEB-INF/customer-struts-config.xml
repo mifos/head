@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+        "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+    <form-beans>
+        <!-- Edit Client Transfer Action form -->
+        <form-bean name="clientTransferActionForm"
+                   type="org.mifos.customers.client.struts.actionforms.ClientTransferActionForm"/>
+        <!-- Group Transfer Action form -->
+        <form-bean name="groupTransferActionForm"
+                   type="org.mifos.customers.group.struts.actionforms.GroupTransferActionForm"/>
+        <!-- Customer Historical Data Action Form -->
+        <form-bean name="custHistoricalDataActionForm"
+                   type="org.mifos.customers.struts.actionforms.CustHistoricalDataActionForm"/>
+        <!-- Apply Adjustment action form for customer -->
+        <form-bean name="custApplyAdjustmentActionForm"
+                   type="org.mifos.customers.struts.actionforms.CustomerApplyAdjustmentActionForm"/>
+        <!-- Edit status for customers-->
+        <form-bean name="editCustomerStatusActionForm"
+                   type="org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm"/>
+        <!-- add notesform  for customer-->
+        <form-bean name="customerNotesActionForm"
+                   type="org.mifos.customers.struts.actionforms.CustomerNotesActionForm"/>
+        <!-- Customer Action form -->
+        <form-bean name="custActionForm" type="org.mifos.customers.struts.actionforms.CustActionForm"/>
+        <!-- Customer Account Action form -->
+        <form-bean name="customerAccountActionForm"
+                   type="org.mifos.customers.struts.actionforms.CustomerAccountActionForm"/>
+
+        <form-bean name="custSearchActionForm"
+                   type="org.mifos.customers.struts.actionforms.CustSearchActionForm"/>
+        <!-- Add group Membership Form -->
+        <form-bean name="addGroupMembershipForm"
+                   type="org.mifos.customers.group.struts.actionforms.AddGroupMembershipForm"/>
+    </form-beans>
+
+    <action-mappings>
+        <action path="/custSearchAction" type="org.mifos.customers.struts.action.CustSearchAction"
+                name="custSearchActionForm"
+                parameter="method"
+                scope="session">
+            <forward name="loadSearch_success" path="/pages/application/customer/jsp/cust_search_account.jsp"/>
+            <forward name="search_success" path="/pages/application/customer/jsp/cust_search_account_results.jsp"/>
+            <forward name="search_failure" path="/pages/application/customer/jsp/cust_search_account.jsp"/>
+            <forward name="load_success" path="/pages/application/customer/jsp/clients_accounts.jsp"/>
+            <forward name="load_branch" path="/pages/application/customer/jsp/branch_search_loanofficer.jsp"/>
+            <forward name="load_loanofficer" path="/pages/application/customer/jsp/branch_search.jsp"/>
+            <forward name="mainSearch_success" path="/pages/application/customer/jsp/search_result.jsp"/>
+            <forward name="mainSearch_failure" path="/pages/application/customer/jsp/search_result.jsp"/>
+            <forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp"/>
+            <forward name="loadallbranches_success" path="/custSearchAction.do?method=mainSearch"/>
+            <forward name="moratorium_search_success"
+                     path="/pages/application/moratorium/jsp/moratoriumSearchResults.jsp"/>
+        </action>
+        <action path="/customerAccountAction"
+                type="org.mifos.customers.struts.action.CustomerAccountAction"
+                name="customerAccountActionForm"
+                parameter="method"
+                scope="session">
+            <forward name="client_detail_page" path="/pages/application/client/jsp/view_clientchargesdetail.jsp"/>
+            <forward name="group_detail_page" path="/pages/application/group/jsp/view_groupchargesdetail.jsp"/>
+            <forward name="center_detail_page" path="/pages/application/center/jsp/view_centerchargesdetail.jsp"/>
+        </action>
+        <!-- Edit Client Transfer Action -->
+        <action path="/clientTransferAction"
+                type="org.mifos.customers.client.struts.action.ClientTransferAction"
+                name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate"
+                validate="false"
+                scope="session">
+            <!--  Load forwards -->
+            <forward name="loadParents_success"
+                     path="/groupCustAction.do?method=loadSearch&amp;input=GroupSearch_ClientTransfer"/>
+            <forward name="loadBranches_success" path="/pages/application/client/jsp/choosebranch.jsp"/>
+            <!-- Preview Page Forwards -->
+            <forward name="previewParentTransfer_success"
+                     path="/pages/application/client/jsp/confirmParentTransfer.jsp"/>
+            <forward name="previewBranchTransfer_success"
+                     path="/pages/application/client/jsp/confirmbranchtransfer.jsp"/>
+            <forward name="update_success" path="/clientCustAction.do?method=get"/>
+            <!-- Failure Forwards -->
+            <forward name="transferToBranch_failure" path="/pages/application/client/jsp/confirmbranchtransfer.jsp"/>
+            <forward name="updateParent_failure" path="/pages/application/client/jsp/confirmParentTransfer.jsp"/>
+            <!-- Cancel Page Forwards -->
+            <forward name="cancel_success" path="/clientCustAction.do?method=get"/>
+        </action>
+        <!-- Edit Group Transfer Action -->
+        <action path="/groupTransferAction"
+                type="org.mifos.customers.group.struts.action.GroupTransferAction"
+                name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate"
+                validate="true"
+                scope="session">
+            <!--  Load forwards -->
+            <forward name="loadParents_success"
+                     path="/centerCustAction.do?method=loadTransferSearch&amp;input=CenterSearch_TransferGroup"/>
+            <forward name="loadBranches_success" path="/pages/application/group/jsp/choosebranch.jsp"/>
+            <!-- Preview Page Forwards -->
+            <forward name="previewParentTransfer_success"
+                     path="/pages/application/group/jsp/confirmcentermembership.jsp"/>
+            <forward name="previewBranchTransfer_success"
+                     path="/pages/application/group/jsp/confirmbranchtransfer.jsp"/>
+            <forward name="update_success" path="/groupCustAction.do?method=get"/>
+            <!-- Failure Forwards -->
+            <forward name="transferToBranch_failure" path="/pages/application/group/jsp/confirmbranchtransfer.jsp"/>
+            <forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp"/>
+            <!-- Cancel Page Forwards -->
+            <forward name="cancel_success" path="/groupCustAction.do?method=get"/>
+            <!-- Remove group membership Page Forwards -->
+            <forward name="loadGrpMemberShip_success" path="/pages/application/group/jsp/deletegroupmembership.jsp"/>
+            <forward name="view_client_details_page" path="/clientCustAction.do?method=get"/>
+
+        </action>
+        <action path="/custHistoricalDataAction"
+                type="org.mifos.customers.struts.action.CustHistoricalDataAction"
+                name="custHistoricalDataActionForm" parameter="method" validate="true"
+                input="/custHistoricalDataAction.do?method=validate" scope="session">
+            <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
+            <forward name="client_detail_page" path="/clientCustAction.do?method=get"/>
+            <forward name="getHistoricalData_success" path="/pages/application/customer/jsp/cust_historicaldata.jsp"/>
+            <forward name="loadHistoricalData_success"
+                     path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp"/>
+            <forward name="previewHistoricalData_success"
+                     path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp"/>
+            <forward name="previewHistoricalData_failure"
+                     path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp"/>
+            <forward name="previousHistoricalData_success"
+                     path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp"/>
+            <forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData"/>
+            <forward name="updateHistoricalData_failure"
+                     path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp"/>
+        </action>
+        <!-- Apply Adjustment action for customer-->
+        <action path="/custApplyAdjustment"
+                type="org.mifos.customers.struts.action.CustomerApplyAdjustmentAction"
+                name="custApplyAdjustmentActionForm" parameter="method" validate="true"
+                input="/pages/application/customer/jsp/applyadjustment.jsp" scope="session">
+            <forward name="loadAdjustment_success" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="loadAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="previewAdjustment_success" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="previewAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="cancelAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="applyAdjustment_failure" path="/pages/application/customer/jsp/applyadjustment.jsp"/>
+            <forward name="applyAdjustment_client_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="applyAdjustment_group_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="applyAdjustment_center_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="canceladj_group_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="canceladj_center_success" path="/customerAccountAction.do?method=load"/>
+            <forward name="canceladj_client_success" path="/customerAccountAction.do?method=load"/>
+        </action>
+        <action path="/customerAction" type="org.mifos.customers.struts.action.CustomerAction"
+                parameter="method" scope="session">
+            <forward name="waiveChargesDue_Success" path="/customerAction.do?method=forwardWaiveChargeDue"/>
+            <forward name="waiveChargesOverDue_Success" path="/customerAction.do?method=forwardWaiveChargeOverDue"/>
+            <forward name="waiveChargeDue_Client_failure"
+                     path="/pages/application/client/jsp/view_clientchargesdetail.jsp"/>
+            <forward name="waiveChargeOverDue_Client_failure"
+                     path="/pages/application/client/jsp/view_clientchargesdetail.jsp"/>
+            <forward name="waiveChargeDue_Group_failure"
+                     path="/pages/application/group/jsp/view_groupchargesdetail.jsp"/>
+            <forward name="waiveChargeOverDue_Group_failure"
+                     path="/pages/application/group/jsp/view_groupchargesdetail.jsp"/>
+            <forward name="waiveChargeDue_Center_failure"
+                     path="/pages/application/center/jsp/view_centerchargesdetail.jsp"/>
+            <forward name="waiveChargeOverDue_Center_failure"
+                     path="/pages/application/center/jsp/view_centerchargesdetail.jsp"/>
+            <forward name="waiveClientCharges_Success" path="/customerAccountAction.do?method=load"/>
+            <forward name="waiveGroupCharges_Success" path="/customerAccountAction.do?method=load"/>
+            <forward name="waiveCenterCharges_Success" path="/customerAccountAction.do?method=load"/>
+            <forward name="viewClientActivity" path="/pages/application/client/jsp/viewClientActivity.jsp"/>
+            <forward name="viewGroupActivity" path="/pages/application/group/jsp/viewGroupActivity.jsp"/>
+            <forward name="viewCenterActivity" path="/pages/application/center/jsp/viewCenterActivity.jsp"/>
+        </action>
+        <!-- Edit Customer Status Action -->
+        <action path="/editCustomerStatusAction"
+                type="org.mifos.customers.struts.action.EditCustomerStatusAction"
+                name="editCustomerStatusActionForm"
+                parameter="method"
+                input="/editCustomerStatusAction.do?method=validate"
+                validate="true"
+                scope="session">
+            <forward name="center_detail_page" path="/centerCustAction.do?method=get"/>
+            <forward name="client_detail_page" path="/clientCustAction.do?method=get"/>
+            <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
+            <forward name="loadStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp"/>
+            <forward name="previewStatus_success"
+                     path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp"/>
+            <forward name="previousStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp"/>
+            <forward name="updateStatus_failure"
+                     path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp"/>
+            <forward name="previewStatus_failure" path="/pages/application/customer/jsp/customerchangeStatus.jsp"/>
+        </action>
+
+        <!-- CustomerNotes action -->
+        <action path="/customerNotesAction" type="org.mifos.customers.struts.action.CustomerNotesAction"
+                name="customerNotesActionForm"
+                parameter="method"
+                validate="true"
+                input="/customerNotesAction.do?method=validate" scope="session">
+            <forward name="load_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp"/>
+            <forward name="get_success" path="/customerNotesAction.do?method=search"/>
+            <forward name="search_success" path="/pages/application/customer/jsp/viewCustomerNotes.jsp"/>
+            <forward name="preview_success" path="/pages/application/customer/jsp/previewCustomerNotes.jsp"/>
+            <forward name="preview_failure" path="/pages/application/customer/jsp/addCustomerNotes.jsp"/>
+            <forward name="create_failure" path="/pages/application/customer/jsp/previewCustomerNotes.jsp"/>
+            <forward name="previous_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp"/>
+            <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
+            <forward name="center_detail_page" path="/centerCustAction.do?method=get"/>
+            <forward name="client_detail_page" path="/clientCustAction.do?method=get"/>
+        </action>
+
+        <!-- Customer action M2 style-->
+        <action path="/custAction"
+                type="org.mifos.customers.struts.action.CustAction"
+                name="custActionForm" parameter="method" validate="true"
+                input="/custAction.do?method=validate" scope="session">
+
+            <forward name="getAllClosedAccounts" path="/pages/application/customer/jsp/getallclosedaccounts.jsp"/>
+            <forward name="client_detail_page" path="/clientCustAction.do?method=get"/>
+            <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
+            <forward name="center_detail_page" path="/centerCustAction.do?method=get"/>
+        </action>
+        <!-- Add group membership action -->
+        <action path="/addGroupMembershipAction"
+                type="org.mifos.customers.group.struts.action.AddGroupMembershipAction"
+                name="addGroupMembershipForm"
+                parameter="method"
+                scope="session"
+                input="/addGroupMembershipAction.do?method=validate"
+                validate="true">
+            <forward name="loadSearch_success" path="/pages/application/group/jsp/group_search_addMember.jsp"/>
+            <forward name="confirmAddClientToGroup_success"
+                     path="/pages/application/group/jsp/confirmAddClientToGroup.jsp"/>
+            <forward name="view_client_details_page" path="/clientCustAction.do?method=get"/>
+            <forward name="cancel_success" path="/clientCustAction.do?method=get"/>
+            <!-- forward name="loadSearch_failure" path="/meetingAction.do?method=edit&amp;input=ClientDetails" /-->
+
+
+        </action>
+    </action-mappings>
+
+    <message-resources key="GroupUIResources"
+                       parameter="org.mifos.config.localizedResources.GroupUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="CustomerUIResources"
+                       parameter="org.mifos.config.localizedResources.CustomerUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="CenterUIResources"
+                       parameter="org.mifos.config.localizedResources.CenterUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="ClientUIResources"
+                       parameter="org.mifos.config.localizedResources.ClientUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- Personnel resources -->
+    <message-resources key="CustomerSearchUIResources"
+                       parameter="org.mifos.config.localizedResources.CustomerSearchUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+</struts-config>

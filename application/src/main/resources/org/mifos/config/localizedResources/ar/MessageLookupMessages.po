@@ -1,0 +1,455 @@
+# extracted from MessageLookupMessages.properties
+#. extracted from MessageLookupMessages.properties
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:22-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_ENTRY entries
+#. # defined in latest-data.sql and for enumerated type
+#. # strings.
+#. # New key value pairs (not defined in latest-data.sql or
+#. # enumerated type name lookup) should not be added to this file.
+#: AccountAction.Label
+msgid "Account Action"
+msgstr ""
+
+#: AccountActionTypes.DEPOSIT
+msgid "Deposit"
+msgstr ""
+
+#: AccountActionTypes.DISBURSAL
+msgid "Disbursal"
+msgstr ""
+
+#: AccountActionTypes.FEE_REPAYMENT
+msgid "Fee"
+msgstr ""
+
+#: AccountActionTypes.LOAN_REPAYMENT
+msgid "Loan Repayment"
+msgstr ""
+
+#: AccountActionTypes.WITHDRAWAL
+msgid "Withdrawal"
+msgstr ""
+
+#: AccountFlags.Label
+msgid "AccountFlags"
+msgstr ""
+
+#: AccountState.Label
+msgid "Loan Status"
+msgstr ""
+
+#: AccountType.Label
+msgid "Account Type"
+msgstr ""
+
+#: Address1.Label
+msgid "Address1"
+msgstr ""
+
+#: Address2.Label
+msgid "Address2"
+msgstr ""
+
+#: Address3.Label
+msgid "Address 3"
+msgstr ""
+
+#: Amount.Label
+msgid "Amount"
+msgstr ""
+
+#: BulkEntry.Label
+msgid "Bulk entry"
+msgstr ""
+
+#: BusinessActivities.Label
+msgid "Occupation"
+msgstr ""
+
+#: CategoryType.Label
+msgid "CategoryTypes"
+msgstr ""
+
+#: Center.Label
+msgid "Center"
+msgstr ""
+
+#: CenterStatus.Label
+msgid "Center Status"
+msgstr ""
+
+#: Citizenship.Label
+msgid "Citizenship"
+msgstr ""
+
+#: City.Label
+msgid "City/District"
+msgstr ""
+
+#: Client.Label
+msgid "Client"
+msgstr ""
+
+#: ClientStatus.Label
+msgid "Client Status"
+msgstr ""
+
+#: CollateralTypes.Label
+msgid "CollateralTypes"
+msgstr ""
+
+#: CustomFieldType.ALPHA_NUMERIC
+msgid "Alpha Numeric"
+msgstr ""
+
+#: CustomFieldType.DATE
+msgctxt "CustomFieldType.DATE"
+msgid "Date"
+msgstr ""
+
+#: CustomFieldType.NUMERIC
+msgid "Numeric"
+msgstr ""
+
+#: CustomerAttendance.Label
+msgid "CustomerAttendance"
+msgstr ""
+
+#: CustomerStatus.Label
+msgid "Customer Status"
+msgstr ""
+
+#: Date.Label
+msgctxt "Date.Label"
+msgid "Date"
+msgstr ""
+
+#: DayRank.Label
+msgid "Days Rank"
+msgstr ""
+
+#: Description.Label
+msgid "Description"
+msgstr ""
+
+#: DistanceFromBoToCenter.Label
+msgid "Distance from BO to Center"
+msgstr ""
+
+#: DistanceFromHoToBO.Label
+msgid "Distance from HO to BO for office"
+msgstr ""
+
+#: EducationLevel.Label
+msgid "EducationLevel"
+msgstr ""
+
+#: Ethinicity.Label
+msgid "Ethnicity"
+msgstr ""
+
+#: ExternalId.Label
+msgid "External Id"
+msgstr ""
+
+#: ExternalLoanId.Label
+msgid "External Loan Id"
+msgstr ""
+
+#: ExternalSavingsId
+msgctxt "ExternalSavingsId"
+msgid "External Savings Id"
+msgstr ""
+
+#: ExternalSavingsId.Label
+msgctxt "ExternalSavingsId.Label"
+msgid "External Savings Id"
+msgstr ""
+
+#: FeeFormulaMaster.Label
+msgid "Fee Formula Master"
+msgstr ""
+
+#: FeePayment.Label
+msgid "Fee Payment"
+msgstr ""
+
+#: FeeStatus.Label
+msgid "Fee Status"
+msgstr ""
+
+#: FeeType.Label
+msgid "Fee Type"
+msgstr ""
+
+#: Field.Label
+msgid "Field"
+msgstr ""
+
+#: FinancialAction.Label
+msgid "Financial Action"
+msgstr ""
+
+#: GRTStaffId.Label
+msgid "GRT Staff Id"
+msgstr ""
+
+#: Gender.Label
+msgid "Gender"
+msgstr ""
+
+#: GovernmentId.Label
+msgid "Government ID"
+msgstr ""
+
+#: GracePeriodTypes.Label
+msgid "GracePeriodTypes"
+msgstr ""
+
+#: Group.Label
+msgid "Group"
+msgstr ""
+
+#: GroupFlag.Label
+msgid "Group Flag"
+msgstr ""
+
+#: GroupStatus.Label
+msgid "Group Status"
+msgstr ""
+
+#: Handicapped.Label
+msgid "Handicapped"
+msgstr ""
+
+#: IntCalTypes.Label
+msgid "INT CALC TYPES"
+msgstr ""
+
+#: Interest.Label
+msgctxt "Interest.Label"
+msgid "Interest"
+msgstr ""
+
+#: InterestCalcRule.Label
+msgid "InterestCalcRule"
+msgstr ""
+
+#: InterestTypes.Label
+msgid "InterestTypes"
+msgstr ""
+
+#: Language.Label
+msgid "Language"
+msgstr ""
+
+#: Loan.Label
+msgid "Loan"
+msgstr ""
+
+#: LoanPurposes.Label
+msgid "Loan Purposes"
+msgstr ""
+
+#: MaritalStatus.Label
+msgid "MartialStatus"
+msgstr ""
+
+#: MeetingTime.Label
+msgid "Meeting Time"
+msgstr ""
+
+#: NewValue.Label
+msgid "New Value"
+msgstr ""
+
+#: NoOfClientsPerCenter.Label
+msgid "Number of Clients per Center"
+msgstr ""
+
+#: NoOfClientsPerGroup.Label
+msgid "Number of Clients per Group"
+msgstr ""
+
+#: Office.Label
+msgid "Office"
+msgstr ""
+
+#: OfficeCode.Label
+msgid "Office Code"
+msgstr ""
+
+#: OfficeLevels.Label
+msgid "OfficeLevel"
+msgstr ""
+
+#: OfficeStatus.Label
+msgid "Office Status"
+msgstr ""
+
+#: OldValue.Label
+msgid "Old Value"
+msgstr ""
+
+#: PaymentType.Label
+msgid "PaymentType"
+msgstr ""
+
+#: PaymentTypes.CASH
+msgid "Cash"
+msgstr ""
+
+#: PaymentTypes.CHEQUE
+msgid "Check"
+msgstr ""
+
+#: PaymentTypes.VOUCHER
+msgid "Voucher"
+msgstr ""
+
+#: Permissions.Label
+msgid "Permissions"
+msgstr ""
+
+#: Personnel.Label
+msgid "Personnel"
+msgstr ""
+
+#: PersonnelLevels.Label
+msgid "User Hierarchy"
+msgstr ""
+
+#: PersonnelStatus.Label
+msgid "Personnel Status"
+msgstr ""
+
+#: PersonnelTitles.Label
+msgid "User Title"
+msgstr ""
+
+#: PostalCode.Label
+msgid "Postal Code"
+msgstr ""
+
+#: PovertyStatus.Label
+msgid "Poverty Status"
+msgstr ""
+
+#: PrdApplicableMaster.Label
+msgid "PrdApplicableMaster"
+msgstr ""
+
+#: ProductCategoryStatus.Label
+msgid "Product Category Status"
+msgstr ""
+
+#: ProductState.Label
+msgid "Product State"
+msgstr ""
+
+#: ProductStatus.Label
+msgid "Product Status"
+msgstr ""
+
+#: RecommendedAmtUnit.Label
+msgid "REC AMNT UNIT"
+msgstr ""
+
+#: ReplacementStatus.Label
+msgid "Replacement Status"
+msgstr ""
+
+#: Salutation.Label
+msgid "Salutation"
+msgstr ""
+
+#: Savings.Label
+msgid "Savings"
+msgstr ""
+
+#: SavingsStatus.Label
+msgid "Savings Status"
+msgstr ""
+
+#: SavingsType.Label
+msgid "SAVINGS TYPE"
+msgstr ""
+
+#: ServiceCharge.Label
+msgctxt "ServiceCharge.Label"
+msgid "Interest"
+msgstr ""
+
+#: SpouseFather.Label
+msgid "Spouse/Father"
+msgstr ""
+
+#: State.Label
+msgid "State"
+msgstr ""
+
+#: Titles.Label
+msgid "Titles"
+msgstr ""
+
+#: User.Label
+msgid "User"
+msgstr ""
+
+#: WeekDay.FRIDAY
+msgid "Friday"
+msgstr ""
+
+#: WeekDay.MONDAY
+msgid "Monday"
+msgstr ""
+
+#: WeekDay.SATURDAY
+msgid "Saturday"
+msgstr ""
+
+#: WeekDay.SUNDAY
+msgid "Sunday"
+msgstr ""
+
+#: WeekDay.THURSDAY
+msgid "Thursday"
+msgstr ""
+
+#: WeekDay.TUESDAY
+msgid "Tuesday"
+msgstr ""
+
+#: WeekDay.WEDNESDAY
+msgid "Wednesday"
+msgstr ""
+
+#: WeekDays.Label
+msgid "Week Days"
+msgstr ""
+
+#: YESNO.Label
+msgid "YES/NO"
+msgstr ""
+
+#: YesNoFlag.NO
+msgid "No"
+msgstr ""
+
+#: YesNoFlag.YES
+msgid "Yes"
+msgstr ""

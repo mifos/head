@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+    
+  <description>JSTL 1.1 functions library</description>
+  <display-name>JSTL functions</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>personnelfn</short-name>
+  <uri>/personnel/personnelfunctions</uri>
+  
+   <function>
+    <description>
+     This takes a collection of Roles and returns the , separated role names as a String
+    </description>
+    <name>getRoleNamesFromSet</name>
+    <function-class>org.mifos.customers.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
+    <function-signature>java.lang.String getRoleNamesFromSet(java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getCommaSeparatedRoles(object)}">
+    </example>
+  </function>
+  
+   <function>
+    <description>
+     This takes a collection of Roles and returns the , separated role names as a String
+    </description>
+    <name>getRoleNamesFromList</name>
+    <function-class>org.mifos.customers.personnel.struts.uihelpers.PersonnelUIHelperFn</function-class>
+    <function-signature>java.lang.String getRoleNamesFromList(java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getRoleNamesFromList(object)}">
+    </example>
+  </function>
+  
+  </taglib>

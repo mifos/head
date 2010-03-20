@@ -1,0 +1,4 @@
+The directory BirtWebViewer-X_Y_Z contains the part of BIRT that runs within
+Mifos. This directory should always reflect the version of BIRT that is
+currently installed. For instance, if Mifos uses BIRT 2.5.0, the directory
+must be called BirtWebViewer-2_5_0.

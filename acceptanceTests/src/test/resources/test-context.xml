@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    classpath:xsd/spring-beans-3.0.xsd"> 
+
+    <import resource="acceptancePropertyConfigurer.xml"/>
+
+    <bean id="dataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${acceptance.database.driver}" />
+        <property name="url" value="jdbc:mysql://${acceptance.database.host}:${acceptance.database.port}/${acceptance.database}?${acceptance.database.params}" />
+        <property name="username" value="${acceptance.database.user}" />
+        <property name="password" value="${acceptance.database.password}" />
+    </bean>
+
+    <bean id="transactionManager" 
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+</beans>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statemaps xmlns="http://www.aditi.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.aditi.com StateMachine.xsd ">
+	<stateConfiguration configurationName="configuration 1">
+		<state>
+			<statename>PartialApplication</statename>
+			<stateid>13</stateid>
+			<possiblestates>
+			<possiblestate>
+					<statename>PendingApproval</statename>
+					<stateid>14</stateid>
+			</possiblestate>
+			<possiblestate>
+				<statename>Cancel</statename>
+				<stateid>15</stateid>
+			</possiblestate>
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Cancel</statename>
+			<stateid>15</stateid>
+		</state>		
+		<state>
+			<statename>PendingApproval</statename>
+			<stateid>14</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>PartialApplication</statename>
+					<stateid>13</stateid>
+				</possiblestate>
+				<possiblestate>
+					<statename>Apporved</statename>
+					<stateid>16</stateid>
+				</possiblestate>
+				<possiblestate>
+					<statename>Cancel</statename>
+					<stateid>15</stateid>
+				</possiblestate>
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Apporved</statename>
+			<stateid>16</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Inactive</statename>
+					<stateid>18</stateid>
+				</possiblestate>
+
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Inactive</statename>
+			<stateid>18</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Apporved</statename>
+					<stateid>16</stateid>
+				</possiblestate>
+
+			</possiblestates>
+		</state>
+	</stateConfiguration>
+	
+		<stateConfiguration configurationName="configuration 2">
+		<state>
+			<statename>PartialApplication</statename>
+			<stateid>13</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Apporved</statename>
+					<stateid>16</stateid>
+				</possiblestate>
+				<possiblestate>
+					<statename>Cancel</statename>
+					<stateid>15</stateid>
+				</possiblestate>
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Cancel</statename>
+			<stateid>15</stateid>
+		</state>
+		<state>
+			<statename>Apporved</statename>
+			<stateid>16</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Inactive</statename>
+					<stateid>18</stateid>
+				</possiblestate>
+
+			</possiblestates>
+		</state>
+		<state>
+			<statename>Inactive</statename>
+			<stateid>18</stateid>
+			<possiblestates>
+				<possiblestate>
+					<statename>Apporved</statename>
+					<stateid>16</stateid>
+				</possiblestate>
+
+			</possiblestates>
+		</state>
+	</stateConfiguration>
+</statemaps>

@@ -1,0 +1,1367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
+    <property name="units">in</property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <parameters>
+        <scalar-parameter name="mifosHiddenParam" id="1626">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="isRequired">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="userId" id="29">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <cascading-parameter-group name="branch_loanOfficer" id="38">
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="branchId" id="39">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Branch Office</text-property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">Branches</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">false</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+                <scalar-parameter name="loanOfficerId" id="40">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Loan Officer</text-property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">LoanOfficers</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">false</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+                <scalar-parameter name="loanProductId" id="1341">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Loan Product</text-property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">LoanProducts</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">false</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
+    </parameters>
+    <data-sources>
+        <script-data-source name="Scripted Data Source" id="4">
+            <method name="open"><![CDATA[var logger = Packages.java.util.logging.Logger.getLogger("");
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
+var userId = reportContext.getParameterValue("userId");
+reportsDataService = new Packages.org.mifos.reports.business.service.ReportsDataService();
+reportsDataService.initialize(userId);]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;
+Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
+        </script-data-source>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="LoanProducts" id="5">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("LP");
+
+var request = reportContext.getHttpServletRequest();
+Packages.java.util.logging.Logger.getLogger("").info("request:" + request );
+
+loanProducts = reportsDataService.getAllLoanProducts();
+if (loanProducts.size()>1) {
+	reportContext.setParameterValue("loanProductId", loanProducts.get(1).getPrdOfferingId());
+	reportContext.setPersistentGlobalVariable("defaultLoanProductId", loanProducts.get(1).getPrdOfferingId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanProduct as default:" + reportContext.getParameterValue("loanProductId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
+}
+
+iterator = loanProducts.iterator();
+
+flag = 0;
+branchId = reportContext.getParameterValue("branchId");]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	if(branchId == null || branchId == -2){
+	    row["ID"] = -2;
+	    row["Name"] = "---Select---";	    
+	}else if(loanProducts.size() == 1) {
+        row["ID"] = -2;
+   	    row["Name"] = "-Not Applicable-";
+    }
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
+	return false;
+}
+
+if (loanProducts.size()>1) {
+    var loanProduct = iterator.next( );
+
+    row["ID"] = loanProduct.getPrdOfferingId();
+    row["Name"] = loanProduct.getPrdOfferingName();
+    if(row["ID"] == null)
+       row["ID"] = -1;
+
+    return true;
+}]]></method>
+            <method name="close"><![CDATA[loanProducts = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Branches" id="34">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("BR");
+branches = reportsDataService.getActiveBranchesUnderUser();
+
+if (branches.size()>1) {
+	reportContext.setParameterValue("branchId", branches.get(1).getOfficeId());
+	reportContext.setPersistentGlobalVariable("defaultBranchId", branches.get(1).getOfficeId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd branch as default:" + reportContext.getParameterValue("branchId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
+}
+
+iterator = branches.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
+	return false;
+}
+
+var branch = iterator.next();
+
+row["ID"] = branch.getOfficeId();
+row["Name"] = branch.getOfficeName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[branches = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="LoanOfficers" id="35">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("LO");
+branchId = reportContext.getParameterValue("branchId");
+Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId:" + branchId);
+Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
+
+loanOfficers = reportsDataService.getActiveLoanOfficers(branchId);
+
+if (loanOfficers.size()>1) {
+	reportContext.setParameterValue("loanOfficerId", loanOfficers.get(1).getPersonnelId());
+	reportContext.setPersistentGlobalVariable("defaultLoanOfficerId", loanOfficers.get(1).getPersonnelId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanOfficer as default:" + reportContext.getParameterValue("loanOfficerId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
+}
+
+
+iterator = loanOfficers.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	if(branchId == null || branchId == -2){
+	    row["ID"] = -2;
+	    row["Name"] = "---Select---";
+	    
+	}else if(loanOfficers.size() == 1) {
+        row["ID"] = -2;
+	    row["Name"] = "-Not Applicable-";
+    }
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
+	return false;
+}
+
+if (loanOfficers.size()>1) {
+    var loanOfficer = iterator.next( );
+
+    row["ID"] = loanOfficer.getPersonnelId();
+    row["Name"] = loanOfficer.getDisplayName();
+
+    if(row["ID"] == null)
+       row["ID"] = -1;
+   
+    return true;
+}]]></method>
+            <method name="close"><![CDATA[loanOfficers = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="DataForLoanAccountInActiveBad" id="849">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">LoanNumber</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Client</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">LoanAmount</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">Balance</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">Principal</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">Interest</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">DaysInArrears</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">Current</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">1-30</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">31-60</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">61-90</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">91-180</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">>180</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">LoanNumber</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Client</property>
+                </structure>
+                <structure>
+                    <property name="columnName">LoanAmount</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Balance</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Principal</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Interest</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DaysInArrears</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Current</property>
+                </structure>
+                <structure>
+                    <property name="columnName">1-30</property>
+                </structure>
+                <structure>
+                    <property name="columnName">31-60</property>
+                </structure>
+                <structure>
+                    <property name="columnName">61-90</property>
+                </structure>
+                <structure>
+                    <property name="columnName">91-180</property>
+                </structure>
+                <structure>
+                    <property name="columnName">>180</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">LoanNumber</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Client</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">LoanAmount</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">Balance</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">Principal</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">Interest</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">DaysInArrears</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">Current</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">1-30</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">31-60</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">61-90</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">91-180</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">>180</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB");
+
+var branchId = reportContext.getParameterValue("branchId");
+
+var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
+
+var loanProductId = reportContext.getParameterValue("loanProductId");
+
+current = reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
+loans = reportsDataService.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
+iterator = loans.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(current == null)
+{
+    row["Current"] = 0;
+}else{
+    row["Current"] = current;
+}
+
+if(iterator.hasNext() == false ){
+	return false;
+}
+Packages.java.util.logging.Logger.getLogger("").info("FETCH");
+var loan = iterator.next( );
+row["LoanNumber"]= loan.getGlobalAccountNum();
+row["Client"] = loan.getCustomer().getDisplayName();
+row["LoanAmount"] = loan.getLoanAmount().getAmount();
+row["Balance"] = loan.getRemainingPrincipalAmount().getAmount();
+row["Principal"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount();
+row["Interest"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
+row["DaysInArrears"] = loan.getDaysInArrears();
+
+if (loan.getDaysInArrears()>=1 &amp;&amp; loan.getDaysInArrears() <=30)
+row["1-30"] = row["Balance"];
+
+if (loan.getDaysInArrears()>=31 &amp;&amp; loan.getDaysInArrears() <=60)
+row["31-60"] = row["Balance"];
+
+if (loan.getDaysInArrears()>=61 &amp;&amp; loan.getDaysInArrears() <=90)
+row["61-90"] = row["Balance"];
+
+if (loan.getDaysInArrears()>=91 &amp;&amp; loan.getDaysInArrears()<=180)
+row["91-180"] =row["Balance"];
+
+if (loan.getDaysInArrears()>=181)
+row[">180"] =row["Balance"];
+
+
+return true;]]></method>
+            <method name="close"><![CDATA[loans = null;
+iterator = null;
+current = null;
+Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></method>
+        </script-data-set>
+    </data-sets>
+    <styles>
+        <style name="CurrencyStyle" id="1081">
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0</property>
+            </structure>
+        </style>
+        <style name="NewStyle" id="1158"/>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Report1 MasterPage" id="2">
+            <property name="orientation">auto</property>
+            <property name="leftMargin">0.5in</property>
+            <property name="bottomMargin">1in</property>
+            <property name="rightMargin">0.5in</property>
+            <page-header>
+                <grid id="835">
+                    <property name="height">2in</property>
+                    <property name="width">100%</property>
+                    <column id="836">
+                        <property name="width">7.375in</property>
+                    </column>
+                    <row id="837">
+                        <property name="height">100%</property>
+                        <cell id="838">
+                            <grid id="105">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">medium</property>
+                                <property name="height">1.6145833333in</property>
+                                <property name="width">7.4895833333in</property>
+                                <column id="106">
+                                    <property name="width">4.0625in</property>
+                                </column>
+                                <column id="107">
+                                    <property name="width">3.4270833333in</property>
+                                </column>
+                                <row id="108">
+                                    <cell id="109">
+                                        <property name="colSpan">2</property>
+                                        <property name="rowSpan">1</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">medium</property>
+                                        <grid id="615">
+                                            <property name="height">0.5625in</property>
+                                            <property name="width">7.2916666667in</property>
+                                            <column id="616">
+                                                <property name="width">6.3958333333in</property>
+                                            </column>
+                                            <column id="617">
+                                                <property name="width">0.4895833333in</property>
+                                            </column>
+                                            <column id="618">
+                                                <property name="width">0.40625in</property>
+                                            </column>
+                                            <row id="619">
+                                                <property name="height">0.2in</property>
+                                                <cell id="620"/>
+                                                <cell id="621">
+                                                    <property name="textAlign">right</property>
+                                                    <label id="579">
+                                                        <property name="marginLeft">10pt</property>
+                                                        <property name="textAlign">right</property>
+                                                        <text-property name="text">Page</text-property>
+                                                    </label>
+                                                </cell>
+                                                <cell id="622">
+                                                    <property name="textAlign">right</property>
+                                                    <auto-text id="138">
+                                                        <property name="textAlign">right</property>
+                                                        <property name="type">page-number</property>
+                                                    </auto-text>
+                                                </cell>
+                                            </row>
+                                        </grid>
+                                    </cell>
+                                </row>
+                                <row id="111">
+                                    <cell id="112">
+                                        <data id="1627">
+                                            <list-property name="boundDataColumns">
+                                                <structure>
+                                                    <property name="name">data item</property>
+                                                    <expression name="expression">params["reportName"]</expression>
+                                                    <property name="dataType">any</property>
+                                                </structure>
+                                            </list-property>
+                                            <property name="resultSetColumn">data item</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="113">
+                                        <text id="841">
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[Report date: <value-of>new Date()</value-of>]]></text-property>
+                                        </text>
+                                    </cell>
+                                </row>
+                                <row id="114">
+                                    <cell id="115">
+                                        <text id="842">
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[Branch office: <value-of>params["branchId"].displayText</value-of>]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="116">
+                                        <text id="844">
+                                            <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
+                                            <property name="contentType">auto</property>
+                                            <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
+                                        </text>
+                                    </cell>
+                                </row>
+                                <row id="845">
+                                    <cell id="846">
+                                        <text id="848">
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="847"/>
+                                </row>
+                                <row id="117">
+                                    <property name="height">0.25in</property>
+                                    <cell id="118">
+                                        <text id="843">
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[Product: <value-of>params["loanProductId"].displayText</value-of>]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="119"/>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </grid>
+            </page-header>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="1354">
+            <property name="height">4.59375in</property>
+            <property name="width">7.5104166667in</property>
+            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">LoanNumber</property>
+                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Client</property>
+                    <expression name="expression">dataSetRow["Client"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">LoanAmount</property>
+                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Balance</property>
+                    <expression name="expression">dataSetRow["Balance"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Principal</property>
+                    <expression name="expression">dataSetRow["Principal"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Interest</property>
+                    <expression name="expression">dataSetRow["Interest"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">DaysInArrears</property>
+                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Current</property>
+                    <expression name="expression">dataSetRow["Current"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">1-30</property>
+                    <expression name="expression">dataSetRow["1-30"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">31-60</property>
+                    <expression name="expression">dataSetRow["31-60"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">61-90</property>
+                    <expression name="expression">dataSetRow["61-90"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">91-180</property>
+                    <expression name="expression">dataSetRow["91-180"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">>180</property>
+                    <expression name="expression">dataSetRow[">180"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Percent</property>
+                    <expression name="expression">dataSetRow["Principal"]/dataSetRow["Balance"]*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">PrincipalSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["Principal"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">BalanceSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["Balance"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">InterestSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["Interest"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Total</property>
+                    <expression name="expression">dataSetRow["Current"]+Total.sum(dataSetRow["Balance"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">PercentageAtRisk</property>
+                    <expression name="expression">Total.sum(dataSetRow["Balance"])/(dataSetRow["Current"]+Total.sum(dataSetRow["Balance"]))*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Sum31-60</property>
+                    <expression name="expression">Total.sum(dataSetRow["31-60"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Sum1-30</property>
+                    <expression name="expression">Total.sum(dataSetRow["1-30"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Sum61-90</property>
+                    <expression name="expression">Total.sum(dataSetRow["61-90"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Sum91-180</property>
+                    <expression name="expression">Total.sum(dataSetRow["91-180"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Sum>180</property>
+                    <expression name="expression">Total.sum(dataSetRow[">180"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">1-30Percentage</property>
+                    <expression name="expression">Total.sum(dataSetRow["1-30"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">31-60Percentage</property>
+                    <expression name="expression">Total.sum(dataSetRow["31-60"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">61-90Percentage</property>
+                    <expression name="expression">Total.sum(dataSetRow["61-90"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">91-180Percentage</property>
+                    <expression name="expression">Total.sum(dataSetRow["91-180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">>180Percentage</property>
+                    <expression name="expression">Total.sum(dataSetRow[">180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">MoreThan30</property>
+                    <expression name="expression">(Total.sum(dataSetRow["31-60"])+Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">MoreThan60</property>
+                    <expression name="expression">(Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">MoreThan90</property>
+                    <expression name="expression">(Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">ReportName</property>
+                    <expression name="expression">dataSetRow["ReportName"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <property name="pageBreakInterval">50</property>
+            <column id="1391">
+                <property name="width">1.0833333333in</property>
+            </column>
+            <column id="1392">
+                <property name="width">0.9375in</property>
+            </column>
+            <column id="1393">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="1394">
+                <property name="width">0.6in</property>
+            </column>
+            <column id="1395">
+                <property name="width">0.6041666667in</property>
+            </column>
+            <column id="1396">
+                <property name="width">0.46875in</property>
+            </column>
+            <column id="1397">
+                <property name="width">0.6354166667in</property>
+            </column>
+            <column id="1398">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="1399">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="1400">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="1401">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="1451">
+                <property name="width">0.5in</property>
+            </column>
+            <header>
+                <row id="1355">
+                    <cell id="1356">
+                        <label id="1402">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Loan</text-property>
+                        </label>
+                        <label id="1403">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Number</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1357">
+                        <label id="1411"/>
+                        <label id="1412">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Client</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1358">
+                        <label id="1413">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Loan</text-property>
+                        </label>
+                        <label id="1414">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Amount</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1359">
+                        <label id="1415"/>
+                        <label id="1416">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Balance</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1360">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="1417">
+                            <property name="width">100%</property>
+                            <column id="1418">
+                                <property name="width">0.46875in</property>
+                            </column>
+                            <column id="1419">
+                                <property name="width">0.5104166667in</property>
+                            </column>
+                            <row id="1420">
+                                <cell id="1421">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="1422">
+                                        <property name="fontSize">medium</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Past due</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1423">
+                                <cell id="1424">
+                                    <label id="1425">
+                                        <property name="fontSize">small</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Principal</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1426">
+                                    <label id="1427">
+                                        <property name="fontSize">small</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Interest</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="1362">
+                        <label id="976">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">Arrears</text-property>
+                        </label>
+                        <label id="977">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">(percent)</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1363">
+                        <label id="1428">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">1-30</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1364">
+                        <label id="1429">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">31-60</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1365">
+                        <label id="1430">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">61-90</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1366">
+                        <label id="1431">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">91-180</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1440">
+                        <label id="1441">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">>180</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="1367">
+                    <cell id="1368">
+                        <data id="1597">
+                            <property name="resultSetColumn">LoanNumber</property>
+                        </data>
+                    </cell>
+                    <cell id="1369">
+                        <data id="1598">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Client</property>
+                        </data>
+                    </cell>
+                    <cell id="1370">
+                        <data id="1408">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">LoanAmount</property>
+                        </data>
+                    </cell>
+                    <cell id="1371">
+                        <data id="1410">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Balance</property>
+                        </data>
+                    </cell>
+                    <cell id="1372">
+                        <data id="1442">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Principal</property>
+                        </data>
+                    </cell>
+                    <cell id="1373">
+                        <data id="1443">
+                            <structure name="numberFormat">
+                                <property name="category">General Number</property>
+                                <property name="pattern">General Number</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Interest</property>
+                        </data>
+                    </cell>
+                    <cell id="1374">
+                        <data id="1599">
+                            <structure name="numberFormat">
+                                <property name="category">Fixed</property>
+                                <property name="pattern">###0</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Percent</property>
+                        </data>
+                    </cell>
+                    <cell id="1375">
+                        <data id="1444">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">1-30</property>
+                        </data>
+                    </cell>
+                    <cell id="1376">
+                        <data id="1445">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">31-60</property>
+                        </data>
+                    </cell>
+                    <cell id="1377">
+                        <data id="1446">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">61-90</property>
+                        </data>
+                    </cell>
+                    <cell id="1378">
+                        <data id="1447">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">91-180</property>
+                        </data>
+                    </cell>
+                    <cell id="1448">
+                        <data id="1449">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">>180</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="1379">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1380"/>
+                    <cell id="1381">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="456">
+                            <text-property name="text">Overdue</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1383">
+                        <data id="1604">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">BalanceSum</property>
+                        </data>
+                    </cell>
+                    <cell id="1384">
+                        <data id="1605">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PrincipalSum</property>
+                        </data>
+                    </cell>
+                    <cell id="1385">
+                        <data id="1606">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">InterestSum</property>
+                        </data>
+                    </cell>
+                    <cell id="1386"/>
+                    <cell id="1387"/>
+                    <cell id="1388"/>
+                    <cell id="1389"/>
+                    <cell id="1390"/>
+                    <cell id="1450"/>
+                </row>
+                <row id="1452">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1453"/>
+                    <cell id="1454">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="568">
+                            <text-property name="text">Current</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1456">
+                        <data id="1600">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Current</property>
+                        </data>
+                    </cell>
+                    <cell id="1457"/>
+                    <cell id="1458"/>
+                    <cell id="1459"/>
+                    <cell id="1460"/>
+                    <cell id="1461"/>
+                    <cell id="1462"/>
+                    <cell id="1463"/>
+                    <cell id="1464"/>
+                </row>
+                <row id="1492">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1493">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="555">
+                            <text-property name="text">Total portfolio</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1495"/>
+                    <cell id="1496">
+                        <data id="1607">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Total</property>
+                        </data>
+                    </cell>
+                    <cell id="1497"/>
+                    <cell id="1498"/>
+                    <cell id="1499"/>
+                    <cell id="1500">
+                        <data id="1611">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Sum1-30</property>
+                        </data>
+                    </cell>
+                    <cell id="1501">
+                        <data id="1612">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Sum31-60</property>
+                        </data>
+                    </cell>
+                    <cell id="1502">
+                        <data id="1613">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Sum61-90</property>
+                        </data>
+                    </cell>
+                    <cell id="1503">
+                        <data id="1614">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Sum91-180</property>
+                        </data>
+                    </cell>
+                    <cell id="1504">
+                        <data id="1615">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Sum>180</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="1532">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1533">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="570">
+                            <text-property name="text">Percentage at risk</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1535"/>
+                    <cell id="1536">
+                        <data id="1608">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PercentageAtRisk</property>
+                        </data>
+                    </cell>
+                    <cell id="1537"/>
+                    <cell id="1538"/>
+                    <cell id="1539"/>
+                    <cell id="1540">
+                        <data id="1616">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">1-30Percentage</property>
+                        </data>
+                    </cell>
+                    <cell id="1541">
+                        <data id="1617">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">31-60Percentage</property>
+                        </data>
+                    </cell>
+                    <cell id="1542">
+                        <data id="1618">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">61-90Percentage</property>
+                        </data>
+                    </cell>
+                    <cell id="1543">
+                        <data id="1619">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">91-180Percentage</property>
+                        </data>
+                    </cell>
+                    <cell id="1544">
+                        <data id="1620">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">>180Percentage</property>
+                        </data>
+                    </cell>
+                </row>
+                <row id="1519">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1520">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1586">
+                            <text-property name="text">More than 30 days</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1522"/>
+                    <cell id="1523"/>
+                    <cell id="1524"/>
+                    <cell id="1525"/>
+                    <cell id="1526"/>
+                    <cell id="1527"/>
+                    <cell id="1528">
+                        <data id="1621">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">MoreThan30</property>
+                        </data>
+                    </cell>
+                    <cell id="1529"/>
+                    <cell id="1530"/>
+                    <cell id="1531"/>
+                </row>
+                <row id="1573">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1574">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1587">
+                            <text-property name="text">More than 60 days</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1576"/>
+                    <cell id="1577"/>
+                    <cell id="1578"/>
+                    <cell id="1579"/>
+                    <cell id="1580"/>
+                    <cell id="1581"/>
+                    <cell id="1582"/>
+                    <cell id="1583">
+                        <data id="1623">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">MoreThan60</property>
+                        </data>
+                    </cell>
+                    <cell id="1584"/>
+                    <cell id="1585"/>
+                </row>
+                <row id="1560">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="1561">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1588">
+                            <text-property name="text">More than 90 days</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1563"/>
+                    <cell id="1564"/>
+                    <cell id="1565"/>
+                    <cell id="1566"/>
+                    <cell id="1567"/>
+                    <cell id="1568"/>
+                    <cell id="1569"/>
+                    <cell id="1570"/>
+                    <cell id="1571">
+                        <data id="1624">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">MoreThan90</property>
+                        </data>
+                    </cell>
+                    <cell id="1572"/>
+                </row>
+                <row id="1506">
+                    <property name="height">0.3958333333in</property>
+                    <cell id="1507">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1589">
+                            <text-property name="text">More than 180 days</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1509"/>
+                    <cell id="1510"/>
+                    <cell id="1511"/>
+                    <cell id="1512"/>
+                    <cell id="1513"/>
+                    <cell id="1514"/>
+                    <cell id="1515"/>
+                    <cell id="1516"/>
+                    <cell id="1517"/>
+                    <cell id="1518">
+                        <data id="1625">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">>180Percentage</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

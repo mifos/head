@@ -1,0 +1,1905 @@
+#. extracted from LookupValueMessages.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"PO-Revision-Date: 2009-11-10 01:46+0100\n"
+"Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_VALUE entries
+#. # defined in latest-data.sql.
+#. # New key value pairs (not defined in latest-data.sql)
+#. # should not be added to this file.
+#: AccountAction-Adjustment
+msgid "Adjustment"
+msgstr "Korrekció"
+
+#: AccountAction-CustomerAccountRepayment
+msgid "Customer Account Repayment"
+msgstr "Ügyfélszámla törlesztés"
+
+#: AccountAction-CustomerAdjustment
+msgctxt "AccountAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "Ügyfél korrekció"
+
+#: AccountAction-Deposit
+msgid "Deposit"
+msgstr "Befizetés"
+
+#: AccountAction-Disbursal
+msgid "Disbursal"
+msgstr "Folyósítás"
+
+#: AccountAction-DisrbursalAmountReversal
+msgid "Disrbursal amount Reversal"
+msgstr "Folyósított összeg visszaállítása"
+
+#: AccountAction-Fee
+msgid "Fee"
+msgstr "Díj"
+
+#: AccountAction-Interest_posting
+msgctxt "AccountAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "Kamat feladás"
+
+#: AccountAction-LoanRepayment
+msgid "Loan Repayment"
+msgstr "Hitel törlesztés"
+
+#: AccountAction-LoanRescheduled
+msgctxt "AccountAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "Hitel átütemezve"
+
+#: AccountAction-LoanReversal
+msgid "Loan Reversal"
+msgstr "Hitel visszaállítása"
+
+#: AccountAction-LoanWrittenOff
+msgctxt "AccountAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "Hitel leírva"
+
+#: AccountAction-MiscellenousFee
+msgid "Miscellenous Fee"
+msgstr "Egyéb díj"
+
+#: AccountAction-MiscellenousPenalty
+msgid "Miscellenous Penalty"
+msgstr "Egyéb késedelmi kamat"
+
+#: AccountAction-Payment
+msgid "Payment"
+msgstr "Fizetési tranzakció"
+
+#: AccountAction-Penalty
+msgctxt "AccountAction-Penalty"
+msgid "Penalty"
+msgstr "Késedelmi kamat"
+
+#: AccountAction-SavingsAdjustment
+msgid "Savings Adjustment"
+msgstr "Megtakarítás korrekciója"
+
+#: AccountAction-WaiveOffDue
+msgid "Waive Off Due"
+msgstr "Eltekintés esedékes összegtől"
+
+#: AccountAction-WaiveOffOverDue
+msgid "Waive Off Over Due"
+msgstr "Eltekintés lejárt összegtől"
+
+#: AccountAction-Withdrawal
+msgid "Withdrawal"
+msgstr "Készpénzfelvétel"
+
+#: AccountFlags-LoanReversal
+msgid "Loan reversal"
+msgstr "Hitel visszaállítása"
+
+#: AccountFlags-Other
+msgctxt "AccountFlags-Other"
+msgid "Other"
+msgstr "Egyéb"
+
+#: AccountFlags-Rejected
+msgctxt "AccountFlags-Rejected"
+msgid "Rejected"
+msgstr "Elutasítva"
+
+#: AccountFlags-Withdraw
+msgctxt "AccountFlags-Withdraw"
+msgid "Withdraw"
+msgstr "Visszavonás"
+
+#: AccountState-ActiveInBadStanding
+msgid "Active in Bad Standing"
+msgstr "Rossz állapotú aktív"
+
+#: AccountState-ActiveInGoodStanding
+msgid "Active in Good Standing"
+msgstr "Jó állapotú aktív"
+
+#: AccountState-ApplicationApproved
+msgid "Application Approved"
+msgstr "Igénylés elfogadva"
+
+#: AccountState-ApplicationPendingApproval
+msgctxt "AccountState-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Elfogadásra váró igénylés"
+
+#: AccountState-Cancel
+msgid "Cancel"
+msgstr "Törlés"
+
+#: AccountState-ClosedObligationMet
+msgid "Closed- Obligation met"
+msgstr "Lezárt - kötelezettségek teljesítve"
+
+#: AccountState-ClosedRescheduled
+msgid "Closed- Rescheduled"
+msgstr "Lezárt - átütemezve"
+
+#: AccountState-ClosedWrittenOff
+msgid "Closed- Written Off"
+msgstr "Lezárt - leírva"
+
+#: AccountState-DisbursedToLo
+msgid "Disbursed to LO"
+msgstr "Reménygazdának folyósítva"
+
+#: AccountState-PartialApplication
+msgctxt "AccountState-PartialApplication"
+msgid "Partial Application"
+msgstr "Kiegészítésre váró igénylés"
+
+#: AccountType-Customer
+msgid "Customer"
+msgstr "Ügyfél"
+
+#: AccountType-Loan
+msgctxt "AccountType-Loan"
+msgid "Loan"
+msgstr "Hitel"
+
+#: AccountType-Saving
+msgid "Saving"
+msgstr "Megtakarítás"
+
+#: BusinessActivities-Agriculture
+msgid "Agriculture"
+msgstr "Mezőgazdaság"
+
+#: BusinessActivities-AnimalHusbandry
+msgid "Animal Husbandry"
+msgstr "Állattartás"
+
+#: BusinessActivities-DailyLabour
+msgid "Daily Labour"
+msgstr "Alkalmi munkás"
+
+#: BusinessActivities-MicroEnterprise
+msgid "Micro Enterprise"
+msgstr "Mikrovállalkozás"
+
+#: BusinessActivities-Production
+msgid "Production"
+msgstr "Gyártás"
+
+#: BusinessActivities-Trading
+msgid "Trading"
+msgstr "Kereskedelem"
+
+#: CategoryType-AllCustomers
+msgid "All Customers"
+msgstr "Összes ügyfél"
+
+#: CategoryType-AllProductTypes
+msgid "All Product Types"
+msgstr "Összes terméktípus"
+
+#: CategoryType-Center
+msgctxt "CategoryType-Center"
+msgid "Center"
+msgstr "Központ"
+
+#: CategoryType-Client
+msgid "Client"
+msgstr "Ügyfél"
+
+#: CategoryType-Group
+msgid "Group"
+msgstr "Csoport"
+
+#: CategoryType-Loans
+msgid "Loans"
+msgstr "Hitelek"
+
+#: CategoryType-Savings
+msgctxt "CategoryType-Savings"
+msgid "Savings"
+msgstr "Megtakarítások"
+
+#: CenterStatus-Active
+msgctxt "CenterStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: CenterStatus-Inactive
+msgctxt "CenterStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: ClientFlag-Blacklisted
+msgctxt "ClientFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "Feketelistás"
+
+#: ClientFlag-Duplicate
+msgctxt "ClientFlag-Duplicate"
+msgid "Duplicate"
+msgstr "Duplikált"
+
+#: ClientFlag-Other
+msgctxt "ClientFlag-Other"
+msgid "Other"
+msgstr "Egyéb"
+
+#: ClientFlag-Rejected
+msgctxt "ClientFlag-Rejected"
+msgid "Rejected"
+msgstr "Elutasítva"
+
+#: ClientFlag-Withdraw
+msgctxt "ClientFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Visszavonás"
+
+#: ClientStatus-Active
+msgctxt "ClientStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: ClientStatus-ApplicationPendingApproval
+msgctxt "ClientStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Elfogadásra váró igénylés"
+
+#: ClientStatus-Cancelled
+msgctxt "ClientStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Törölt"
+
+#: ClientStatus-Closed
+msgctxt "ClientStatus-Closed"
+msgid "Closed"
+msgstr "Lezárt"
+
+#: ClientStatus-OnHold
+msgctxt "ClientStatus-OnHold"
+msgid "On Hold"
+msgstr "Felfüggesztett"
+
+#: ClientStatus-PartialApplication
+msgctxt "ClientStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Kiegészítésre váró igénylés"
+
+#: CollateralTypes-Type1
+msgid "Type 1"
+msgstr "1. típus"
+
+#: CollateralTypes-Type2
+msgid "Type 2"
+msgstr "2. típus"
+
+#: CustomerAttendance-Ab
+msgid "A"
+msgstr "A"
+
+#: CustomerAttendance-Al
+msgid "AA"
+msgstr "AA"
+
+#: CustomerAttendance-L
+msgid "L"
+msgstr "L"
+
+#: CustomerAttendance-P
+msgid "P"
+msgstr "P"
+
+#: CustomerStatus-CustomerAccountActive
+msgid "Customer Account Active"
+msgstr "Aktív ügyfélszámla"
+
+#: CustomerStatus-CustomerAccountInactive
+msgid "Customer Account InActive"
+msgstr "Inaktív ügyfélszámla"
+
+#: DayRank-First
+msgid "First"
+msgstr "Első"
+
+#: DayRank-Fourth
+msgid "Fourth"
+msgstr "Negyedik"
+
+#: DayRank-Last
+msgid "Last"
+msgstr "Utolsó"
+
+#: DayRank-Second
+msgid "Second"
+msgstr "Második"
+
+#: DayRank-Third
+msgid "Third"
+msgstr "Harmadik"
+
+#: Mother
+msgid "Mother"
+msgstr ""
+
+#: Child
+msgid "Child"
+msgstr ""
+
+#: FeeFormulaMaster-Interest
+msgctxt "FeeFormulaMaster-Interest"
+msgid "Interest"
+msgstr "Kamat"
+
+#: FeeFormulaMaster-LoanAmount
+msgid "Loan Amount"
+msgstr "Hitel összege"
+
+#: FeeFormulaMaster-LoanAmountInterest
+msgid "Loan Amount+Interest"
+msgstr "Hitelösszeg+kamat"
+
+#: FeeFrequency-OneTime
+msgid "One Time"
+msgstr "Egyszeri"
+
+#: FeeFrequency-Periodic
+msgid "Periodic"
+msgstr "Rendszeres"
+
+#: FeePayment-TimeOfDisburstment
+msgid "Time Of Disburstment"
+msgstr "Folyósítás ideje"
+
+#: FeePayment-TimeOfFirstLoanRepayment
+#, fuzzy
+msgid "Time of First Loan Repayment "
+msgstr "Első törlesztés ideje"
+
+#: FeePayment-Upfront
+msgid "Upfront"
+msgstr "Előre fizetendő"
+
+#: FeeStatus-Active
+msgctxt "FeeStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: FeeStatus-Inactive
+msgid "InActive"
+msgstr "Inaktív"
+
+#: FeeType-ConsultancyFee
+msgid "Consultancy Fee"
+msgstr "Tanácsadási díj"
+
+#: FeeType-MaintenanceFee
+msgid "Maintenance Fee"
+msgstr "Fenntartási díj"
+
+#: FeeType-MeetingCharges
+msgid "Meeting Charges"
+msgstr "Találkozó költségek"
+
+#: FeeType-TrainingFee
+msgid "Training Fee"
+msgstr "Képzési díj"
+
+#: FinancialAction-CustomerAccountFeesPosting
+msgid "Customer Account Fees Posting"
+msgstr "Ügyfélszámla díjak feladása"
+
+#: FinancialAction-CustomerAdjustment
+msgctxt "FinancialAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "Ügyfél korrekciója"
+
+#: FinancialAction-Fees
+msgctxt "FinancialAction-Fees"
+msgid "Fees"
+msgstr "Díjak"
+
+#: FinancialAction-Interest
+msgctxt "FinancialAction-Interest"
+msgid "Interest"
+msgstr "Kamat"
+
+#: FinancialAction-Interest_posting
+msgctxt "FinancialAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "Kamat feladása"
+
+#: FinancialAction-LoanDisbursement
+msgid "Loan Disbursement"
+msgstr "Hitel folyósítása"
+
+#: FinancialAction-LoanRescheduled
+msgctxt "FinancialAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "Hitel átütemezve"
+
+#: FinancialAction-LoanWrittenOff
+msgctxt "FinancialAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "Hitel leírva"
+
+#: FinancialAction-MandatoryDeposit
+msgid "Mandatory Deposit"
+msgstr "Kötelező befizetés"
+
+#: FinancialAction-MandatoryDepositAdjustment
+msgid "Mandatory Deposit Adjustment"
+msgstr "Kötelező befizetés korrekciója"
+
+#: FinancialAction-MandatoryWithdrawal
+msgid "Mandatory Withdrawal"
+msgstr "Kötelező készpénzfelvétel"
+
+#: FinancialAction-MandatoryWithdrawalAdjustment
+msgid "Mandatory Withdrawal Adjustment"
+msgstr "Kötelező készpénzfelvétel korrekciója"
+
+#: FinancialAction-MiscFee
+msgid "Misc Fee"
+msgstr "Egyéb díj"
+
+#: FinancialAction-MiscPenalty
+msgid "Misc Penalty"
+msgstr "Egyéb késedelmi kamat"
+
+#: FinancialAction-Penalty
+msgctxt "FinancialAction-Penalty"
+msgid "Penalty"
+msgstr "Késedelmi kamat"
+
+#: FinancialAction-Principal
+msgid "Principal"
+msgstr "Tőke"
+
+#: FinancialAction-ReversalAdjustment
+msgid "Reversal Adjustment"
+msgstr "Korrekció - visszaállítás"
+
+#: FinancialAction-RoundingAdjustments
+msgid "Rounding Adjustments"
+msgstr "Korrekció - kerekítés"
+
+#: FinancialAction-SavingsInterestPosting
+msgid "Savings Interest Posting"
+msgstr "Betéti kamat feladása"
+
+#: FinancialAction-VoluntoryDeposit
+msgid "Voluntory Deposit"
+msgstr "Önkéntes befizetés"
+
+#: FinancialAction-VoluntoryDepositAdjustment
+msgid "Voluntory Deposit Adjustment"
+msgstr "Önkéntes befizetés korrekciója"
+
+#: FinancialAction-VoluntoryWithdrawal
+msgid "Voluntory Withdrawal"
+msgstr "Önkéntes készpénzfelvétel"
+
+#: FinancialAction-VoluntoryWithdrawalAdjustment
+msgid "Voluntory Withdrawal Adjustment"
+msgstr "Önkéntes készpénzfelvétel korrekciója"
+
+#: Gender-Female
+msgid "Female"
+msgstr "Nő"
+
+#: Gender-Male
+msgid "Male"
+msgstr "Férfi"
+
+#: GracePeriodTypes-GraceOnAllRepayments
+msgid "Grace on all repayments"
+msgstr "Tőketörlesztés és kamatfizetés türelmi időszak"
+
+#: GracePeriodTypes-None
+msgid "None"
+msgstr "Nincsen"
+
+#: GracePeriodTypes-PrincipalOnlyGrace
+msgid "Principal only grace"
+msgstr "Csak tőketörlesztés türelmi időszak"
+
+#: GroupFlag-Blacklisted
+msgctxt "GroupFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "Feketelistás"
+
+#: GroupFlag-Duplicate
+msgctxt "GroupFlag-Duplicate"
+msgid "Duplicate"
+msgstr "Duplikált"
+
+#: GroupFlag-LeftProgram
+msgid "Left Program"
+msgstr "Kilépett a programból"
+
+#: GroupFlag-Other
+msgctxt "GroupFlag-Other"
+msgid "Other"
+msgstr "Egyéb"
+
+#: GroupFlag-Rejected
+msgctxt "GroupFlag-Rejected"
+msgid "Rejected"
+msgstr "Elutasítva"
+
+#: GroupFlag-Transferred
+msgid "Transferred"
+msgstr "Áthelyezve"
+
+#: GroupFlag-Withdraw
+msgctxt "GroupFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Visszavonás"
+
+#: GroupStatus-Active
+msgctxt "GroupStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: GroupStatus-ApplicationPendingApproval
+msgctxt "GroupStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Elfogadásra váró igénylés"
+
+#: GroupStatus-Cancelled
+msgctxt "GroupStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Törölve"
+
+#: GroupStatus-Closed
+msgctxt "GroupStatus-Closed"
+msgid "Closed"
+msgstr "Lezárva"
+
+#: GroupStatus-OnHold
+msgctxt "GroupStatus-OnHold"
+msgid "On Hold"
+msgstr "Felfüggesztve"
+
+#: GroupStatus-PartialApplication
+msgctxt "GroupStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Kiegészítésre váró igénylés"
+
+#: IntCalTypes-AverageBalance
+msgid "Average Balance"
+msgstr "Átlag egyenleg"
+
+#: IntCalTypes-MinimumBalance
+msgid "Minimum Balance"
+msgstr "Minimum egyenleg"
+
+#: InterestCalcRule-AlwaysRecalculate
+msgid "Always Recalculate"
+msgstr "Mindig számolja újra"
+
+#: InterestCalcRule-NeverRecalculate
+msgid "Never Recalculate"
+msgstr "Soha ne számolja újra"
+
+#: InterestTypes-DecliningBalance
+msgid "Declining Balance"
+msgstr "Csökkenő egyenleg"
+
+#: InterestTypes-DecliningBalance-EqualPrincipalInstallment
+msgid "Declining Balance-Equal Principal Installment"
+msgstr "Csökkenő egyenleg - egyenlő tőke törlesztőrészletek"
+
+#: InterestTypes-Flat
+msgid "Flat"
+msgstr "Átalány"
+
+#: Language-English
+msgid "English"
+msgstr "Angol"
+
+#: Language-French
+msgid "French"
+msgstr "Francia"
+
+#: Language-Icelandic
+msgid "Icelandic"
+msgstr "Izlandi"
+
+#: Language-Spanish
+msgid "Spanish"
+msgstr "Spanyol"
+
+#: Language-Arabic
+msgid "Arabic"
+msgstr "Arab"
+
+#: Language-Chinese
+msgid "Chinese"
+msgstr "Kínai"
+
+#: Language-Swahili
+msgid "Swahili"
+msgstr "Szuahéli"
+
+#: Language-Portuguese
+msgid "Portuguese"
+msgstr "Portugál"
+
+#: Language-Khmer
+msgid "Khmer"
+msgstr "Khmer"
+
+#: Language-Lao
+msgid "Lao"
+msgstr "Lao"
+
+#: Language-Hungarian
+msgid "Hungarian"
+msgstr "Magyar"
+
+#: Together
+msgid "Together"
+msgstr ""
+
+#: NotTogether
+msgid "Not Together"
+msgstr ""
+
+#: Loan-Loan
+msgctxt "Loan-Loan"
+msgid "Loan"
+msgstr "Hitel"
+
+#: MaritalStatus-Married
+msgid "Married"
+msgstr "Férjezett/nős"
+
+#: MaritalStatus-Unmarried
+msgid "Unmarried"
+msgstr "Hajadon/nőtlen"
+
+#: MaritalStatus-Widowed
+msgid "Widowed"
+msgstr "Özvegy"
+
+#: OfficeCode-Code1
+msgid "Code 1"
+msgstr "Kód 1"
+
+#: OfficeCode-Code2
+msgid "Code 2"
+msgstr "Kód 2"
+
+#: OfficeLevels-AreaOffice
+msgid "Area Office"
+msgstr "Területi iroda"
+
+#: OfficeLevels-BranchOffice
+msgid "Branch Office"
+msgstr "Fiók iroda"
+
+#: OfficeLevels-DivisionalOffice
+msgid "Divisional Office"
+msgstr "Divízió iroda"
+
+#: OfficeLevels-HeadOffice
+msgid "Head Office"
+msgstr "Központi iroda"
+
+#: OfficeLevels-RegionalOffice
+msgid "Regional Office"
+msgstr "Regionális iroda"
+
+#: OfficeStatus-Active
+msgctxt "OfficeStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: OfficeStatus-Inactive
+msgctxt "OfficeStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: PaymentType-Cash
+msgid "Cash"
+msgstr "Készpénz"
+
+#: PaymentType-Cheque
+msgid "Cheque"
+msgstr "Csekk"
+
+#: PaymentType-Voucher
+msgid "Voucher"
+msgstr "Utalvány"
+
+#: Permissions-Analysis
+msgid "Analysis"
+msgstr "Elemzés"
+
+#: Permissions-Bulk
+msgid "Bulk"
+msgstr "Tömeges"
+
+#: Permissions-CanAddNotesToLoanAccount
+msgid "Can add notes to loan account"
+msgstr "Hitelszámlához megjegyzés hozzáadására jogosult"
+
+#: Permissions-CanAddNotesToPersonnel
+msgid "Can Add Notes to Personnel"
+msgstr "Munkatársakhoz megjegyzés hozzáadására jogosult"
+
+#: Permissions-CanAddNotesToSavingsAccount
+msgid "Can add notes to Savings account"
+msgstr "Takarékszámlához megjegyzés hozzáadására jogosult"
+
+#: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
+msgid "Can adjust payment when account status is \"closed-obligation met\""
+msgstr ""
+"Fizetési tranzakció korrekciójára jogosult \"Lezárt - kötelezettségek "
+"teljesítve\" státuszú számla esetén"
+
+#: Permissions-CanAdministerReports
+msgid "Can Administer Reports"
+msgstr "Jelentések kezelésére jogosult"
+
+#: Permissions-CanApplyChargesToLoans
+#, fuzzy
+msgid "Can apply charges to loans "
+msgstr "Hitel esetén költségek alkalmazására jogosult"
+
+#: Permissions-CanApproveLoansInBulk
+#, fuzzy
+msgid "Can approve loans in bulk "
+msgstr "Hitelek tömeges jóváhagyására jogosult"
+
+#: Permissions-CanBlacklistSavingsAccount
+msgid "Can blacklist Savings account"
+msgstr "Takarékszámla feketelistára helyezésére jogosult"
+
+#: Permissions-CanChangeStateToPartialApplication
+msgctxt "Permissions-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Státusz Kiegészítésre váró igénylésre módosítására jogosult"
+
+#: Permissions-CanCloseSavingsAccount
+msgid "Can close Savings account"
+msgstr "Takarékszámla lezárására jogosult"
+
+#: Permissions-CanCreateFunds
+msgid "Can create funds"
+msgstr "Pénzalap létrehozására jogosult"
+
+#: Permissions-CanCreateMultipleLoanAccounts
+msgid "Can create multiple Loan accounts"
+msgstr "Több hitelszámla létrehozására jogosult"
+
+#: Permissions-CanCreateNewLoanAccountInSaveForLaterState
+msgid "Can create new loan account in Save for later state"
+msgstr "Mentés későbbi időpontra státuszú új hitelszámla létrehozására jogosult"
+
+#: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
+msgid "Can create new loan account in Submit for approval state"
+msgstr "Elküldés jóváhagyásra státuszú új hitelszámla létrehozására jogosult"
+
+#: Permissions-CanCreateNewOffice
+msgid "Can create new office"
+msgstr "Új iroda létrehozására jogosult"
+
+#: Permissions-CanCreateNewRole
+msgid "Can create new role"
+msgstr "Új szerep létrehozására jogosult"
+
+#: Permissions-CanCreateNewSavingsAccountInSaveForLaterState
+msgid "Can create new Savings account in Save for later state"
+msgstr ""
+"Mentés későbbi időpontra státuszú új takarékszámla létrehozására jogosult"
+
+#: Permissions-CanCreateNewSavingsAccountInSubmitForApprovalState
+msgid "Can create new Savings account in submit for approval state"
+msgstr "Elküldés jóváhagyásra státuszú új takarékszámla létrehozására jogosult"
+
+#: Permissions-CanCreateNewSystemUsers
+msgid "Can create new system users"
+msgstr "Új rendszerfelhasználók létrehozására jogosult"
+
+#: Permissions-CanDefineAcceptedPaymentType
+msgid "Can define Accepted Payment Type"
+msgstr "Elfogadott fizetési mód definiálására jogosult"
+
+#: Permissions-CanDefineCustomFields
+msgid "Can define custom fields"
+msgstr "Egyedi mezők definiálására jogosult"
+
+#: Permissions-CanDefineHiddenMandatoryFields
+msgid "Can define hidden/mandatory fields"
+msgstr "Rejtett/kötelező mezők definiálására jogosult"
+
+#: Permissions-CanDefineLabels
+msgid "Can define labels"
+msgstr "Címkék definiálására jogosult"
+
+#: Permissions-CanDefineLookupValues
+msgid "Can Define Lookup Values"
+msgstr "Keresési értékek definiálására jogosult"
+
+#: Permissions-CanDefineNewChecklistType
+msgid "Can define new checklist type"
+msgstr "Új ellenőrző lista típus definiálására jogosult"
+
+#: Permissions-CanDefineNewFeeType
+msgid "Can define new fee type"
+msgstr "Új díjtípus definiálására jogosult"
+
+#: Permissions-CanDefineNewLoanProductInstance
+msgid "Can define new loan product instance"
+msgstr "Új hiteltermék definiálására jogosult"
+
+#: Permissions-CanDefineNewProductCategories
+msgid "Can define new product categories"
+msgstr "Új termékkategóriák definiálására jogosult"
+
+#: Permissions-CanDefineNewReportCategory
+msgid "Can define new report category"
+msgstr "Új jelentéskategória definiálására jogosult"
+
+#: Permissions-CanDefineNewSavingsProductInstance
+msgid "Can define new Savings product instance"
+msgstr "Új megtakarítási termék definiálására jogosult"
+
+#: Permissions-CanDefineProductMix
+msgid "Can define product mix"
+msgstr "Termékkombináció definiálására jogosult"
+
+#: Permissions-CanDeleteARole
+msgid "Can delete a role"
+msgstr "Szerep törlésére jogosult"
+
+#: Permissions-CanDeleteReportCategory
+msgid "Can delete report category"
+msgstr "Jelentéskategória törlésére jogosult"
+
+#: Permissions-CanDisburseLoan
+msgid "Can disburse loan"
+msgstr "Hitel folyósítására jogosult"
+
+#: Permissions-CanDoAdjustmentsForSavingsAccount
+msgid "Can do adjustments for savings account"
+msgstr "Takarékszámla korrekciójára jogosult"
+
+#: Permissions-CanDownloadReportTemplate
+msgid "Can download report template"
+msgstr "Jelentéssablon letöltésére jogosult"
+
+#: Permissions-CanEditLoanAccountInformation
+msgid "Can edit Loan account information"
+msgstr "Hitelszámlainformációk szerkesztésére jogosult"
+
+#: Permissions-CanEditLoanProductInstances
+msgid "Can edit loan product instances"
+msgstr "Hiteltermék szerkesztésére jogosult"
+
+#: Permissions-CanEditProductCategoryInformation
+msgid "Can edit product category information"
+msgstr "Termékkategória információk szerkesztésére jogosult"
+
+#: Permissions-CanEditProductMix
+msgid "Can edit product mix"
+msgstr "Termékkombináció szerkesztésére jogosult"
+
+#: Permissions-CanEditReportInformation
+msgid "Can edit report information"
+msgstr "Jelentés információk szerkesztésére jogosult"
+
+#: Permissions-CanEditSavingsProductInstances
+msgid "Can edit Savings product instances"
+msgstr "Megtakarítási termék szerkesztésére jogosult"
+
+#: Permissions-CanEditSelfInformation
+msgid "Can edit self information"
+msgstr "Saját információk szerkesztésére jogosult"
+
+#: Permissions-CanEnterCollectionSheetData
+msgid "Can Enter Collection Sheet Data"
+msgstr "Beszedési lap adatok rögzítésére jogosult"
+
+#: Permissions-CanImportTransactions
+msgid "Can import transactions"
+msgstr ""
+
+#: Permissions-CanMakeAdjustmentEntryToTheAccount
+msgid "Can make adjustment entry to the account"
+msgstr "Számlák korrekciójára jogosult"
+
+#: Permissions-CanMakeDepositWithdrawalToSavingsAccount
+msgid "Can make deposit/withdrawal to savings account"
+msgstr "A takarékszámlán befizetés/készpénzfelvétel rögzítésére jogosult"
+
+#: Permissions-CanMakePaymentToTheAccount
+msgid "Can make payment to the account"
+msgstr "A számlán fizetési tranzakció rögzítésére jogosult"
+
+#: Permissions-CanModifyARole
+msgid "Can modify a role"
+msgstr "Szerep módosítására jogosult"
+
+#: Permissions-CanModifyChecklistInformation
+msgid "Can modify checklist information"
+msgstr "Ellenőrző lista információk módosítására jogosult"
+
+#: Permissions-CanModifyFeeInformation
+msgid "Can modify fee information"
+msgstr "Díj információk módosítására jogosult"
+
+#: Permissions-CanModifyFunds
+msgid "Can modify funds"
+msgstr "Pénzalapok módosítására jogosult"
+
+#: Permissions-CanModifyLatenessDormancyDefinition
+msgid "Can modify lateness/dormancy definition"
+msgstr "A késedelem/alvó állapot definíció módosítására jogosult"
+
+#: Permissions-CanModifyOfficeHierarchy
+msgid "Can modify office hierarchy"
+msgstr "Iroda hierarchia módosítására jogosult"
+
+#: Permissions-CanModifyOfficeInformation
+msgid "Can modify office information"
+msgstr "Iroda információk módosítására jogosult"
+
+#: Permissions-CanModifyUserInformation
+msgid "Can modify user information"
+msgstr "Felhasználói információk módosítására jogosult"
+
+#: Permissions-CanPreviewReports
+msgid "Can Preview Reports"
+msgstr "Jelentések előnézetére jogosult"
+
+#: Permissions-CanRedoLoanDisbursals
+msgid "Can redo Loan disbursals"
+msgstr "Hitel folyósítások visszaállítására jogosult"
+
+#: Permissions-CanRemoveFeeTypesAttachedToTheAccount
+msgid "Can remove fee types attached to the account"
+msgstr "A számlához tartozó díjtípusok törlésére jogosult"
+
+#: Permissions-CanRepayLoan
+msgid "Can repay loan"
+msgstr "Hitel törlesztésére jogosult"
+
+#: Permissions-CanReverseLoanDisbursals
+msgid "Can reverse Loan disbursals"
+msgstr "Hitel folyósítások visszaállítására jogosult"
+
+#: Permissions-CanShutdownMifos
+msgid "Can shut down Mifos"
+msgstr ""
+
+#: Permissions-CanUnlockAUser
+msgid "Can unlock a user"
+msgstr "Felhasználó zárolásának a feloldására jogosult"
+
+#: Permissions-CanUpdateSavingsAccount
+msgid "Can update Savings account"
+msgstr "Takarékszámla frissítésére jogosult"
+
+#: Permissions-CanUploadAdminDocuments
+msgid "Can upload admin documents"
+msgstr "Adminisztratív dokumentumok feltöltésére jogosult"
+
+#: Permissions-CanUploadNewReports
+msgid "Can upload new reports"
+msgstr "Új jelentések feltöltésére jogosult"
+
+#: Permissions-CanUploadReportTemplate
+msgid "Can upload report template"
+msgstr "Jelentés sablon feltöltésére jogosult"
+
+#: Permissions-CanViewActiveLoansByLoanOfficer
+msgid "Can view Active Loans By Loan Officer"
+msgstr "Aktív hitelek reménygazdák szerinti megtekintésére jogosult"
+
+#: Permissions-CanViewAdminDocuments
+msgid "Can view admin documents"
+msgstr "Adminisztratív dokumentumok megtekintésére jogosult"
+
+#: Permissions-CanViewAreaPerformanceStatusReport
+msgid "Can view Area Performance Status Report"
+msgstr "Területi teljesítmény státuszjelentés megtekintésére jogosult"
+
+#: Permissions-CanViewBranchDueDisbursementReport
+msgid "Can view Branch Due disbursement Report"
+msgstr "Fiók esedékes folyósítások jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewBranchPerformanceStatusReport
+msgid "Can view Branch Performance Status Report"
+msgstr "Fiók teljesítmény státuszjelentés megtekintésére jogosult"
+
+#: Permissions-CanViewCenterMeetingSchedule
+msgid "Can view Center Meeting Schedule"
+msgstr "Központ találkozó ütemterv megtekintésére jogosult"
+
+#: Permissions-CanViewCenterSummaryReport
+msgid "Can view Center Summary Report"
+msgstr "Központ összefoglaló jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewClientFeesChargesAndPenaltiesReport
+msgid "Can view Client Fees, Charges and Penalties report"
+msgstr ""
+"Ügyfél díjak, költségek és késedelmi kamatok jelentés megtekintésére "
+"jogosult"
+
+#: Permissions-CanViewClientLoanRepaymentSchedule
+msgid "Can view Client Loan repayment schedule"
+msgstr "Ügyfél hitel törlesztési ütemterv megtekintésére jogosult"
+
+#: Permissions-CanViewClientPendingApprovalReport
+msgid "Can view Client pending approval report"
+msgstr "Jóváhagyásra váró ügyfelek jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewClientProductWiseHistoryReport
+msgid "Can view Client Product Wise History Report"
+msgstr "Ügyfél terméktörténet jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewClientSettlementInfoReport
+msgid "Can view Client Settlement info Report"
+msgstr "Ügyfél elszámolási információk jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewClientSummaryHistoryReport
+msgid "Can view Client Summary-& History Report"
+msgstr "Ügyfél összefoglaló és -történet jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewClientsWithoutSavingsAccount
+msgid "Can view Clients without Savings Account"
+msgstr "Takarékszámlával nem rendelkező ügyfelek megtekintésére jogosult"
+
+#: Permissions-CanViewCollectionSheet
+msgid "Can view Collection sheet"
+msgstr "Beszedési lap megtekintésére jogosult"
+
+#: Permissions-CanViewCollectionSheetReport
+msgid "Can view Collection Sheet Report"
+msgstr "Beszedési lap jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewDailyCashConfirmationReportStaffWise
+msgid "Can view Daily Cash Confirmation Report - Staff Wise"
+msgstr ""
+"Napi készpénz megerősítés munkatársak szerint jelentés megtekintésére "
+"jogosult"
+
+#: Permissions-CanViewDailyCashFlowReportBranch
+msgid "Can view Daily Cash Flow Report - Branch"
+msgstr "Napi cash flow jelentés - fiók megtekintésére jogosult"
+
+#: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
+msgid "Can view Daily Portfolio quality data report - Aging analysis"
+msgstr ""
+"Napi portfolió minőség adatok jelentés - lejárat szerinti elemzés "
+"megtekintésére jogosult"
+
+#: Permissions-CanViewDailyTransactionSummaryReport
+msgid "Can view Daily Transaction Summary report"
+msgstr "Napi tranzakciós összesítő jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
+msgid "Can view Detailed Aging of Portfolio at Risk"
+msgstr ""
+"Kockáztatott portfolió - részletes lejárat szerinti elemzés megtekintésére "
+"jogosult"
+
+#: Permissions-CanViewDivisionPerformanceStatusReport
+msgid "Can view Division Performance Status Report"
+msgstr "Divízió teljesítmény státuszjelentés megtekintésére jogosult"
+
+#: Permissions-CanViewFundRequirementReport
+msgid "Can view Fund Requirement Report"
+msgstr "Finanszírozási igény jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewGrameenKootaPerformanceStatusReport
+msgid "Can view Grameen Koota Performance Status Report"
+msgstr "Grameen Koota teljesítmény státuszjelentés megtekintésére jogosult"
+
+#: Permissions-CanViewLoanAccountsReports
+msgid "Can view Loan Accounts reports"
+msgstr "Hitelszámla jelentések megtekintésére jogosult"
+
+#: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
+msgid ""
+"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
+"Sequency Wise"
+msgstr ""
+"Hiteltermék eloszlás megtekintésére jogosult tevékenység, méret, termék, "
+"szekvencia szerint"
+
+#: Permissions-CanViewLoansPendingApprovalReport
+msgid "Can view Loans pending approval report"
+msgstr "Jóváhagyásra váró hitelek jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewOrganizationSettings
+msgid "Can view organization settings"
+msgstr "Szervezeti beállítások megtekintésére jogosult"
+
+#: Permissions-CanViewOutreachReport
+msgid "Can view Outreach Report"
+msgstr "Túllépés jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewRegionPerformanceStatusReport
+msgid "Can view Region Performance Status Report"
+msgstr "Régió teljesítmény státuszjelentés megtekintésére jogosult"
+
+#: Permissions-CanViewReportCategory
+msgid "Can view report category"
+msgstr "Jelentéskategória megtekintésére jogosult"
+
+#: Permissions-CanViewReports
+msgid "Can view reports"
+msgstr "Jelentések megtekintésére jogosult"
+
+#: Permissions-CanViewStaffPerformanceReport
+msgid "Can view Staff Performance Report"
+msgstr "Dolgozói teljesítmény jelentés megtekintésére jogosult"
+
+#: Permissions-CanViewSystemInformation
+msgid "Can view system information"
+msgstr "Rendszerinformációk megtekintésére jogosult"
+
+#: Permissions-CanWaiveAFeeInstallment
+msgid "Can waive a fee installment"
+msgstr "Díjfizetéstől eltekintésre jogosult"
+
+#: Permissions-CanWaiveDueDepositsForSavingsAccount
+msgid "Can waive due deposits for Savings account"
+msgstr "Takarékszámlára esedékes befizetéstől eltekintésre jogosult"
+
+#: Permissions-CanWaiveOverDueDepositsForSavingsAccount
+msgid "Can waive over due deposits for Savings account"
+msgstr "Takarékszámlára esedékes késedelmes befizetéstől eltekintésre jogosult"
+
+#: Permissions-CanWaivePenalty
+msgid "Can waive penalty"
+msgstr "Késedelmi kamattól való eltekintésre jogosult"
+
+#: Permissions-Center
+msgctxt "Permissions-Center"
+msgid "Center"
+msgstr "Központ"
+
+#: Permissions-Centers
+msgctxt "Permissions-Centers"
+msgid "Centers"
+msgstr "Központok"
+
+#: Permissions-Centers-CanAddNotesToCenterRecords
+msgid "Can add notes to Center records"
+msgstr "A Központ nyilvántartásaihoz megjegyzés hozzáadására jogosult"
+
+#: Permissions-Centers-CanApplyChargesToCenterAccounts
+msgid "Can apply charges to Center accounts"
+msgstr "Központi számlákra költségek alkalmazására jogosult"
+
+#: Permissions-Centers-CanCreateNewCenter
+#, fuzzy
+msgid "Can create new Center "
+msgstr "Új Központ létrehozására jogosult"
+
+#: Permissions-Centers-CanEditCenterStatus
+msgid "Can edit Center status"
+msgstr "Központ státuszának a szerkesztésére jogosult"
+
+#: Permissions-Centers-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "A számlához tartozó díjösszeg szerkesztésére jogosult"
+
+#: Permissions-Centers-CanEditMeetingSchedule
+#, fuzzy
+msgid "Can edit meeting schedule "
+msgstr "Találkozó ütemterv szerkesztésére jogosult"
+
+#: Permissions-Centers-CanMakeAdjustmentEntriesToCenterAccount
+msgid "Can make adjustment entries to Center account"
+msgstr "Központ számlára korrekciók rögzítésére jogosult"
+
+#: Permissions-Centers-CanMakePaymentsToCenterAccounts
+msgid "Can make payments to Center accounts"
+msgstr "Központ számlákra fizetési tranzakció rögzítésére jogosult"
+
+#: Permissions-Centers-CanModifyCenterInformation
+#, fuzzy
+msgid "Can modify Center information "
+msgstr "Központ információk módosítására jogosult"
+
+#: Permissions-Centers-CanRemoveFeeTypesFromCenterAccount
+msgid "Can remove fee types from Center account"
+msgstr "Központ számláról díjtípusok törlésére jogosult"
+
+#: Permissions-Centers-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Centers-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Találkozó ütemterv meghatározására jogosult"
+
+#: Permissions-Centers-CanWaiveADueAmount
+msgctxt "Permissions-Centers-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Esedékes összegtől eltekintésre jogosult"
+
+#: Permissions-Checklists
+msgid "Checklists"
+msgstr "Ellenőrző listák"
+
+#: Permissions-ClientDetail
+msgid "Client Detail"
+msgstr "Ügyfél adatok"
+
+#: Permissions-ClientManagement
+msgid "Client management"
+msgstr "Ügyfélkezelés"
+
+#: Permissions-Clients
+msgctxt "Permissions-Clients"
+msgid "Clients"
+msgstr "Ügyfelek"
+
+#: Permissions-Clients-CanAddAnExistingClientToAGroup
+msgid "Can add an existing client to a group"
+msgstr "Meglévő ügyfél csoporthoz hozzáadására jogosult"
+
+#: Permissions-Clients-CanAddEditHistoricalData
+msgctxt "Permissions-Clients-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "Múltbéli adatok hozzáadására/szerkesztésére jogosult"
+
+#: Permissions-Clients-CanAddNotesToClient
+msgid "Can add notes to Client"
+msgstr "Ügyfélhez megjegyzés hozzáadására jogosult"
+
+#: Permissions-Clients-CanApplyChargesToClientAccounts
+msgid "Can apply charges to Client accounts"
+msgstr "Ügyfélszámlákra költségek alkalmazására jogosult"
+
+#: Permissions-Clients-CanBlacklistAClient
+msgid "Can Blacklist a Client"
+msgstr "Ügyfél feketelistára helyezésére jogosult"
+
+#: Permissions-Clients-CanChangeStateToActive
+msgctxt "Permissions-Clients-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Státusz aktívra módosítására jogosult"
+
+#: Permissions-Clients-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Clients-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "Státusz jóváhagyásra váró igénylés státuszra módosítására jogosult"
+
+#: Permissions-Clients-CanChangeStateToCancelled
+msgctxt "Permissions-Clients-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Státusz Töröltre módosítására jogosult"
+
+#: Permissions-Clients-CanChangeStateToClosed
+msgctxt "Permissions-Clients-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "Státusz Lezártra módosítására jogosult"
+
+#: Permissions-Clients-CanChangeStateToOnHold
+msgctxt "Permissions-Clients-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "Státusz Felfüggesztettre módosítására jogosult"
+
+#: Permissions-Clients-CanChangeStateToPartialApplication
+msgctxt "Permissions-Clients-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Státusz kiegészítésre váró igénylésre módosítására jogosult"
+
+#: Permissions-Clients-CanCreateNewClientInSaveForLaterState
+msgid "Can create new Client in save for later state"
+msgstr "Mentés későbbi időpontra státuszú új Ügyfél létrehozására jogosult"
+
+#: Permissions-Clients-CanCreateNewClientInSubmitForApprovalState
+msgid "Can create new Client in submit for approval state"
+msgstr "Elküldés jóváhagyásra státuszú új Ügyfél létrehozására jogosult"
+
+#: Permissions-Clients-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Clients-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "Számlához tartozó díjösszeg szerkesztésére jogosult"
+
+#: Permissions-Clients-CanEditGroupMembership
+msgid "Can edit group membership"
+msgstr "Csoport tagság szerkesztésére jogosult"
+
+#: Permissions-Clients-CanEditMeetingSchedule
+msgctxt "Permissions-Clients-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "Találkozó ütemterv szerkesztésére jogosult"
+
+#: Permissions-Clients-CanEditMfiInformation
+msgid "Can edit MFI information"
+msgstr "MFI információk szerkesztésére jogosult"
+
+#: Permissions-Clients-CanEditOfficeMembership
+msgctxt "Permissions-Clients-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "Iroda tagság szerkesztésére jogosult"
+
+#: Permissions-Clients-CanEditPersonalInformation
+msgid "Can edit personal information"
+msgstr "Személyes információk szerkesztésére jogosult"
+
+#: Permissions-Clients-CanMakeAdjustmentEntriesToClientAccount
+msgid "Can make adjustment entries to Client account"
+msgstr "Ügyfélszámlán korrekciók végzésére jogosult"
+
+#: Permissions-Clients-CanMakePaymentsToClientAccounts
+msgid "Can make payments to Client accounts"
+msgstr "Ügyfélszámlákra fizetési tranzakció rögzítésére jogosult"
+
+#: Permissions-Clients-CanRemoveClientsFromGroups
+msgid "Can remove clients from groups"
+msgstr "Ügyfelek csoportból való eltávolítására jogosult"
+
+#: Permissions-Clients-CanRemoveFeeTypesFromClientAccount
+msgid "Can remove fee types from Client account"
+msgstr "Ügyfélszámláról díjtípusok törlésére jogosult"
+
+#: Permissions-Clients-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Clients-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Találkozó ütemterv meghatározására jogosult"
+
+#: Permissions-Clients-CanWaiveADueAmount
+msgctxt "Permissions-Clients-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Esedékes összegtől eltekintésre jogosult"
+
+#: Permissions-ConfigurationManagement
+msgid "Configuration Management"
+msgstr "Konfigurációkezelés"
+
+#: Permissions-Fees
+msgctxt "Permissions-Fees"
+msgid "Fees"
+msgstr "Díjak"
+
+#: Permissions-Funds
+msgid "Funds"
+msgstr "Pénzalapok"
+
+#: Permissions-Groups
+msgctxt "Permissions-Groups"
+msgid "Groups"
+msgstr "Csoportok"
+
+#: Permissions-Groups-CanAddEditHistoricalData
+msgctxt "Permissions-Groups-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "Múltbéli adatok hozzáadására/szerkesztésére jogosult"
+
+#: Permissions-Groups-CanAddNotesToGroup
+msgid "Can add notes to group"
+msgstr "Csoporthoz megjegyzés hozzáadására jogosult"
+
+#: Permissions-Groups-CanApplyChargesToGroupAccounts
+msgid "Can apply charges to group accounts"
+msgstr "Csoport számlákra költségek alkalmazására jogosult"
+
+#: Permissions-Groups-CanBlacklistAGroup
+msgid "Can Blacklist a group"
+msgstr "Csoport feketelistára helyezésére jogosult"
+
+#: Permissions-Groups-CanChangeStateToActive
+msgctxt "Permissions-Groups-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Státusz aktívra módosítására jogosult"
+
+#: Permissions-Groups-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Groups-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "Státusz jóváhagyásra váró igénylés státuszra módosítására jogosult"
+
+#: Permissions-Groups-CanChangeStateToCancelled
+msgctxt "Permissions-Groups-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Státusz Töröltre módosítására jogosult"
+
+#: Permissions-Groups-CanChangeStateToClosed
+msgctxt "Permissions-Groups-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "Státusz Lezártra módosítására jogosult"
+
+#: Permissions-Groups-CanChangeStateToOnHold
+msgctxt "Permissions-Groups-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "Státusz Felfüggesztettre módosítására jogosult"
+
+#: Permissions-Groups-CanChangeStateToPartialApplication
+msgctxt "Permissions-Groups-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Státusz kiegészítésre váró igénylésre módosítására jogosult"
+
+#: Permissions-Groups-CanCreateNewGroupInSaveForLaterState
+msgid "Can create new group in save for later state"
+msgstr "Mentés későbbi időpontra státuszú új csoport létrehozására jogosult"
+
+#: Permissions-Groups-CanCreateNewGroupInSubmitForApprovalState
+msgid "Can create new group in submit for approval state"
+msgstr "Elküldés jóváhagyásra státuszú új csoport létrehozására jogosult"
+
+#: Permissions-Groups-CanEditCenterClientship
+msgid "Can edit Center Clientship"
+msgstr "Központ tagság szerkesztésére jogosult"
+
+#: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "Számlához tartozó díjösszeg szerkesztésére jogosult"
+
+#: Permissions-Groups-CanEditGroupInformation
+msgid "Can edit Group information"
+msgstr "Csoport információk szerkesztésére jogosult"
+
+#: Permissions-Groups-CanEditMeetingSchedule
+msgctxt "Permissions-Groups-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "Találkozó ütemterv szerkesztésére jogosult"
+
+#: Permissions-Groups-CanEditOfficeMembership
+msgctxt "Permissions-Groups-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "Iroda tagság szerkesztésére jogosult"
+
+#: Permissions-Groups-CanMakeAdjustmentEntriesToGroupAccount
+msgid "Can make adjustment entries to group account"
+msgstr "Csoport számlán korrekció végzésére jogosult"
+
+#: Permissions-Groups-CanMakePaymentsToGroupAccounts
+msgid "Can make payments to group accounts"
+msgstr "Csoport számlákra fizetési tranzakció rögzítésére jogosult"
+
+#: Permissions-Groups-CanRemoveFeeTypesFromGroupAccount
+msgid "Can remove fee types from group account"
+msgstr "Csoport számláról díjtípusok törlésére jogosult"
+
+#: Permissions-Groups-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Groups-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Találkozó ütemterv meghatározására jogosult"
+
+#: Permissions-Groups-CanWaiveADueAmount
+msgctxt "Permissions-Groups-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Esedékes összegtől eltekintésre jogosult"
+
+#: Permissions-LoanManagement
+msgid "Loan management"
+msgstr "Hitelek kezelése"
+
+#: Permissions-LoanProcessing
+msgid "Loan Processing"
+msgstr "Hitelek feldolgozása"
+
+#: Permissions-LoanProcessing-CanChangeStateToApproved
+msgid "Can change state to Approved"
+msgstr "Státusz Jóváhagyottra módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToCancelled
+msgctxt "Permissions-LoanProcessing-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Státusz Töröltre módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedRescheduled
+msgid "Can change state to Closed-rescheduled"
+msgstr "Státusz Lezárt - átütemezettre módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedWrittenOff
+msgid "Can change state to Closed- Written off"
+msgstr "Státusz Lezárt - leírtra módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToDisbursedToLo
+msgid "Can change state to Disbursed to LO"
+msgstr "Státusz Reménygazdának folyósítva státuszra módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToPartialApplication
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Státusz kiegészítésre váró igénylésre módosítására jogosult"
+
+#: Permissions-LoanProcessing-CanChangeStateToPendingApproval
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "Státusz jóváhagyásra várva státuszra módosítására jogosult"
+
+#: Permissions-LoanProductDetail
+msgid "Loan Product Detail"
+msgstr "Hiteltermék adatai"
+
+#: Permissions-LoanProducts
+msgid "Loan Products"
+msgstr "Hiteltermékek"
+
+#: Permissions-LoanTransactions
+msgid "Loan Transactions"
+msgstr "Hiteltranzakciók"
+
+#: Permissions-Miscellaneous
+msgid "Miscellaneous"
+msgstr "Egyéb"
+
+#: Permissions-NotImplemented
+msgid "Not implemented"
+msgstr "Nem valósult meg"
+
+#: Permissions-OfficeManagement
+msgid "Office management"
+msgstr "Irodák kezelése"
+
+#: Permissions-Offices
+msgid "Offices"
+msgstr "Irodák"
+
+#: Permissions-OrganizationManagement
+msgid "Organization Management"
+msgstr "Szervezet kezelése"
+
+#: Permissions-Performance
+msgid "Performance"
+msgstr "Teljesítmény"
+
+#: Permissions-Personnel
+msgctxt "Permissions-Personnel"
+msgid "Personnel"
+msgstr "Munkatársak"
+
+#: Permissions-ProductCategories
+msgid "Product Categories"
+msgstr "Termékkategóriák"
+
+#: Permissions-ProductDefinition
+msgid "Product definition"
+msgstr "Termék meghatározás"
+
+#: Permissions-ProductMix
+msgid "Product Mix"
+msgstr "Termékkombináció"
+
+#: Permissions-ReportsManagement
+msgid "Reports Management"
+msgstr "Jelentések kezelése"
+
+#: Permissions-Roles
+msgid "Roles"
+msgstr "Szerepek"
+
+#: Permissions-SavingsManagement
+msgid "Savings Management"
+msgstr "Megtakarítások kezelése"
+
+#: Permissions-SavingsManagement-CanChangeStateToActive
+msgctxt "Permissions-SavingsManagement-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Státusz aktívra módosítására jogosult"
+
+#: Permissions-SavingsManagement-CanChangeStateToCancel
+msgid "Can change state to cancel"
+msgstr "Státusz töröltre módosítására jogosult"
+
+#: Permissions-SavingsManagement-CanChangeStateToInactive
+msgid "Can change state to inactive"
+msgstr "Státusz inaktívra módosítására jogosult"
+
+#: Permissions-SavingsManagement-CanChangeStateToPartialApplication
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Státusz kiegészítésre váró igénylésre módosítására jogosult"
+
+#: Permissions-SavingsManagement-CanChangeStateToPendingApproval
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "Státusz jóváhagyásra várva státuszra módosítására jogosult"
+
+#: Permissions-SavingsProducts
+msgid "Savings Products"
+msgstr "Megtakarítási termékek"
+
+#: Permissions-Status
+msgid "Status"
+msgstr "Státusz"
+
+#: Permissions-SystemInformation
+msgid "System information"
+msgstr "Rendszerinformációk"
+
+#: Permissions-UserManagement
+msgid "User management"
+msgstr "Felhasználók kezelése"
+
+#: Personnel-Personnel
+msgctxt "Personnel-Personnel"
+msgid "Personnel"
+msgstr "Munkatársak"
+
+#: PersonnelLevels-LoanOfficer
+msgid "Loan Officer"
+msgstr "Reménygazda"
+
+#: PersonnelLevels-NonLoanOfficer
+msgid "Non Loan Officer"
+msgstr "Nem reménygazda munkatárs"
+
+#: PersonnelStatus-Active
+msgctxt "PersonnelStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: PersonnelStatus-Inactive
+msgctxt "PersonnelStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: PersonnelStatusUnused-Active
+msgctxt "PersonnelStatusUnused-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: PersonnelStatusUnused-Inactive
+msgctxt "PersonnelStatusUnused-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: Position-CenterLeader
+msgid "Center Leader"
+msgstr "Központ vezető"
+
+#: Position-CenterSecretary
+msgid "Center Secretary"
+msgstr "Központ titkár"
+
+#: Position-GroupLeader
+msgid "Group Leader"
+msgstr "Csoport vezető"
+
+#: Position-GroupSecretary
+msgid "Group Secretary"
+msgstr "Csoport titkár"
+
+#: PovertyStatus-NonPoor
+msgid "Non-poor"
+msgstr "Nem szegény"
+
+#: PovertyStatus-Poor
+msgid "Poor"
+msgstr "Szegény"
+
+#: PovertyStatus-VeryPoor
+msgid "Very poor"
+msgstr "Nagyon szegény"
+
+#: PrdApplicableMaster-Centers
+msgctxt "PrdApplicableMaster-Centers"
+msgid "Centers"
+msgstr "Központok"
+
+#: PrdApplicableMaster-Clients
+msgctxt "PrdApplicableMaster-Clients"
+msgid "Clients"
+msgstr "Ügyfelek"
+
+#: PrdApplicableMaster-Groups
+msgctxt "PrdApplicableMaster-Groups"
+msgid "Groups"
+msgstr "Csoportok"
+
+#: ProductCategoryStatus-Active
+msgctxt "ProductCategoryStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: ProductCategoryStatus-Inactive
+msgctxt "ProductCategoryStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: ProductState-Active
+msgctxt "ProductState-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: ProductState-Close
+msgid "Close"
+msgstr "Lezárás"
+
+#: ProductState-Inactive
+msgctxt "ProductState-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: ProductStatus-Active
+msgctxt "ProductStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: ProductStatus-Closed
+msgctxt "ProductStatus-Closed"
+msgid "Closed"
+msgstr "Lezárt"
+
+#: ProductStatus-Inactive
+msgctxt "ProductStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: RecommendedAmtUnit-CompleteGroup
+msgid "Complete Group"
+msgstr "Egész csoport"
+
+#: RecommendedAmtUnit-PerIndividual
+msgid "Per Individual"
+msgstr "Egyénenként"
+
+#: RepaymentRule-NextMeetingRepayment
+msgid "Next Meeting/Repayment"
+msgstr "Következő találkozó/törlesztés"
+
+#: RepaymentRule-NextWorkingDay
+msgid "Next Working Day"
+msgstr "Következő munkanap"
+
+#: RepaymentRule-RepaymentMoratorium
+msgid "Moratorium"
+msgstr ""
+
+#: RepaymentRule-SameDay
+msgid "Same Day"
+msgstr "Tárgynap"
+
+#: Salutation-Mr
+msgid "Mr"
+msgstr "Mr"
+
+#: Salutation-Mrs
+msgid "Mrs"
+msgstr "Mrs"
+
+#: Salutation-Ms
+msgid "Ms"
+msgstr "Ms"
+
+#: Savings-Savings
+msgctxt "Savings-Savings"
+msgid "Savings"
+msgstr "Megtakarítás"
+
+#: SavingsAccountFlag-Blacklisted
+msgctxt "SavingsAccountFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "Feketelistás"
+
+#: SavingsAccountFlag-Rejected
+msgctxt "SavingsAccountFlag-Rejected"
+msgid "Rejected"
+msgstr "Elutasítva"
+
+#: SavingsAccountFlag-Withdraw
+msgctxt "SavingsAccountFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Visszavonás"
+
+#: SavingsStatus-Active
+msgctxt "SavingsStatus-Active"
+msgid "Active"
+msgstr "Aktív"
+
+#: SavingsStatus-ApplicationPendingApproval
+msgctxt "SavingsStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Jóváhagyásra váró igénylés"
+
+#: SavingsStatus-Cancelled
+msgctxt "SavingsStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Törölt"
+
+#: SavingsStatus-Closed
+msgctxt "SavingsStatus-Closed"
+msgid "Closed"
+msgstr "Lezárt"
+
+#: SavingsStatus-Inactive
+msgctxt "SavingsStatus-Inactive"
+msgid "Inactive"
+msgstr "Inaktív"
+
+#: SavingsStatus-PartialApplication
+msgctxt "SavingsStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Kiegészítésre váró igénylés"
+
+#: SavingsType-Mandatory
+msgid "Mandatory"
+msgstr "Kötelező"
+
+#: SavingsType-Voluntary
+msgid "Voluntary"
+msgstr "Önkéntes"
+
+#: SpouseFather-Father
+msgid "Father"
+msgstr "Apa"
+
+#: SpouseFather-Spouse
+msgid "Spouse"
+msgstr "Házastárs"
+
+#: WeekDays-Friday
+msgid "Friday"
+msgstr "Péntek"
+
+#: WeekDays-Monday
+msgid "Monday"
+msgstr "Hétfő"
+
+#: WeekDays-Saturday
+msgid "Saturday"
+msgstr "Szombat"
+
+#: WeekDays-Sunday
+msgid "Sunday"
+msgstr "Vasárnap"
+
+#: WeekDays-Thursday
+msgid "Thursday"
+msgstr "Csütörtök"
+
+#: WeekDays-Tuesday
+msgid "Tuesday"
+msgstr "Kedd"
+
+#: WeekDays-Wednesday
+msgid "Wednesday"
+msgstr "Szerda"
+
+#: YESNO-No
+msgid "No"
+msgstr "Nem"
+
+#: YESNO-Yes
+msgid "Yes"
+msgstr "Igen"
+
+#: feeUpdationType-AppliesToExistingFutureAccounts
+msgid "Applies to existing & future accounts"
+msgstr "Meglévő és később megnyitandó számlákra érvényes"
+
+#: feeUpdationType-AppliesToFutureAccounts
+msgid "Applies to future accounts"
+msgstr "Később megnyitandó számlákra érvényes"

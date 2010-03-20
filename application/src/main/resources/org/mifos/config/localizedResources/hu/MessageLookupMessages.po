@@ -1,0 +1,453 @@
+#. extracted from MessageLookupMessages.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"PO-Revision-Date: 2009-11-12 15:55+0100\n"
+"Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_ENTRY entries
+#. # defined in latest-data.sql and for enumerated type
+#. # strings.
+#. # New key value pairs (not defined in latest-data.sql or
+#. # enumerated type name lookup) should not be added to this file.
+#: AccountAction.Label
+msgid "Account Action"
+msgstr "Számlaművelet"
+
+#: AccountActionTypes.DEPOSIT
+msgid "Deposit"
+msgstr "Befizetés"
+
+#: AccountActionTypes.DISBURSAL
+msgid "Disbursal"
+msgstr "Folyósítás"
+
+#: AccountActionTypes.FEE_REPAYMENT
+msgid "Fee"
+msgstr "Díj"
+
+#: AccountActionTypes.LOAN_REPAYMENT
+msgid "Loan Repayment"
+msgstr "Hitel törlesztés"
+
+#: AccountActionTypes.WITHDRAWAL
+msgid "Withdrawal"
+msgstr "Pénzfelvétel"
+
+#: AccountFlags.Label
+msgid "AccountFlags"
+msgstr "Számla flagek"
+
+#: AccountState.Label
+msgid "Loan Status"
+msgstr "Hitel státusza"
+
+#: AccountType.Label
+msgid "Account Type"
+msgstr "Számla típusa"
+
+#: Address1.Label
+msgid "Address1"
+msgstr "Cím 1"
+
+#: Address2.Label
+msgid "Address2"
+msgstr "Cím 2"
+
+#: Address3.Label
+msgid "Address 3"
+msgstr "Cím 3"
+
+#: Amount.Label
+msgid "Amount"
+msgstr "Összeg"
+
+#: BulkEntry.Label
+msgid "Bulk entry"
+msgstr "Tömeges rögzítés"
+
+#: BusinessActivities.Label
+msgid "Occupation"
+msgstr "Tevékenység"
+
+#: CategoryType.Label
+msgid "CategoryTypes"
+msgstr "Kategória típusok"
+
+#: Center.Label
+msgid "Center"
+msgstr "Központ"
+
+#: CenterStatus.Label
+msgid "Center Status"
+msgstr "Központ státusza"
+
+#: Citizenship.Label
+msgid "Citizenship"
+msgstr "Állampolgárság"
+
+#: City.Label
+msgid "City/District"
+msgstr "Város/kerület"
+
+#: Client.Label
+msgid "Client"
+msgstr "Ügyfél"
+
+#: ClientStatus.Label
+msgid "Client Status"
+msgstr "Ügyfél státusz"
+
+#: CollateralTypes.Label
+msgid "CollateralTypes"
+msgstr "Biztosíték típusok"
+
+#: CustomFieldType.ALPHA_NUMERIC
+msgid "Alpha Numeric"
+msgstr "Alfanumerikus"
+
+#: CustomFieldType.DATE
+msgctxt "CustomFieldType.DATE"
+msgid "Date"
+msgstr "Dátum"
+
+#: CustomFieldType.NUMERIC
+msgid "Numeric"
+msgstr "Numerikus"
+
+#: CustomerAttendance.Label
+msgid "CustomerAttendance"
+msgstr "Ügyfél jelenlét"
+
+#: CustomerStatus.Label
+msgid "Customer Status"
+msgstr "Ügyfél státusz"
+
+#: Date.Label
+msgctxt "Date.Label"
+msgid "Date"
+msgstr "Dátum"
+
+#: DayRank.Label
+msgid "Days Rank"
+msgstr "Napok rangsora"
+
+#: Description.Label
+msgid "Description"
+msgstr "Leírás"
+
+#: DistanceFromBoToCenter.Label
+msgid "Distance from BO to Center"
+msgstr "Fiók és Központ távolsága"
+
+#: DistanceFromHoToBO.Label
+msgid "Distance from HO to BO for office"
+msgstr "Fő iroda és fiók távolsága az adott iroda számára"
+
+#: EducationLevel.Label
+msgid "EducationLevel"
+msgstr "Végzettség"
+
+#: Ethinicity.Label
+msgid "Ethnicity"
+msgstr "Etnikum"
+
+#: ExternalId.Label
+msgid "External Id"
+msgstr "Külső azonosító"
+
+#: ExternalLoanId.Label
+msgid "External Loan Id"
+msgstr "Külső hitel azonosító"
+
+#: ExternalSavingsId
+msgctxt "ExternalSavingsId"
+msgid "External Savings Id"
+msgstr "Külső megtakarítás azonosító"
+
+#: ExternalSavingsId.Label
+msgctxt "ExternalSavingsId.Label"
+msgid "External Savings Id"
+msgstr "Külső megtakarítás azonosító"
+
+#: FeeFormulaMaster.Label
+msgid "Fee Formula Master"
+msgstr "Mester díjképlet"
+
+#: FeePayment.Label
+msgid "Fee Payment"
+msgstr "Díjfizetés"
+
+#: FeeStatus.Label
+msgid "Fee Status"
+msgstr "Díj státusz"
+
+#: FeeType.Label
+msgid "Fee Type"
+msgstr "Díjtípus"
+
+#: Field.Label
+msgid "Field"
+msgstr "Mező"
+
+#: FinancialAction.Label
+msgid "Financial Action"
+msgstr "Pénzügyi művelet"
+
+#: GRTStaffId.Label
+msgid "GRT Staff Id"
+msgstr "GRT dolgozói azonosító"
+
+#: Gender.Label
+msgid "Gender"
+msgstr "Neme"
+
+#: GovernmentId.Label
+msgid "Government ID"
+msgstr "Azonosító okmány száma"
+
+#: GracePeriodTypes.Label
+msgid "GracePeriodTypes"
+msgstr "Türelmi időszak típus"
+
+#: Group.Label
+msgid "Group"
+msgstr "Csoport"
+
+#: GroupFlag.Label
+msgid "Group Flag"
+msgstr "Csoport flag"
+
+#: GroupStatus.Label
+msgid "Group Status"
+msgstr "Csoport státusz"
+
+#: Handicapped.Label
+msgid "Handicapped"
+msgstr "Mozgáskorlátozott"
+
+#: IntCalTypes.Label
+msgid "INT CALC TYPES"
+msgstr "KAMAT SZÁM. TÍPUSOK"
+
+#: Interest.Label
+msgctxt "Interest.Label"
+msgid "Interest"
+msgstr "Kamat"
+
+#: InterestCalcRule.Label
+msgid "InterestCalcRule"
+msgstr "Kamatszámítási szabály"
+
+#: InterestTypes.Label
+msgid "InterestTypes"
+msgstr "Kamattípusok"
+
+#: Language.Label
+msgid "Language"
+msgstr "Nyelv"
+
+#: Loan.Label
+msgid "Loan"
+msgstr "Hitel"
+
+#: LoanPurposes.Label
+msgid "Loan Purposes"
+msgstr "Hitel célja"
+
+#: MaritalStatus.Label
+msgid "MartialStatus"
+msgstr "Családi állapot"
+
+#: MeetingTime.Label
+msgid "Meeting Time"
+msgstr "Találkozó ideje"
+
+#: NewValue.Label
+msgid "New Value"
+msgstr "Új érték"
+
+#: NoOfClientsPerCenter.Label
+msgid "Number of Clients per Center"
+msgstr "Ügyfelek száma Központonként"
+
+#: NoOfClientsPerGroup.Label
+msgid "Number of Clients per Group"
+msgstr "Ügyfelek száma Csoportonként"
+
+#: Office.Label
+msgid "Office"
+msgstr "Iroda"
+
+#: OfficeCode.Label
+msgid "Office Code"
+msgstr "Iroda kód"
+
+#: OfficeLevels.Label
+msgid "OfficeLevel"
+msgstr "Iroda szint"
+
+#: OfficeStatus.Label
+msgid "Office Status"
+msgstr "Iroda státusz"
+
+#: OldValue.Label
+msgid "Old Value"
+msgstr "Korábbi érték"
+
+#: PaymentType.Label
+msgid "PaymentType"
+msgstr "Fizetési tranzakció típusa"
+
+#: PaymentTypes.CASH
+msgid "Cash"
+msgstr "Készpénz"
+
+#: PaymentTypes.CHEQUE
+msgid "Check"
+msgstr "Csekk"
+
+#: PaymentTypes.VOUCHER
+msgid "Voucher"
+msgstr "Utalvány"
+
+#: Permissions.Label
+msgid "Permissions"
+msgstr "Jogosultságok"
+
+#: Personnel.Label
+msgid "Personnel"
+msgstr "Munkatárs"
+
+#: PersonnelLevels.Label
+msgid "User Hierarchy"
+msgstr "Felhasználói hierarchia"
+
+#: PersonnelStatus.Label
+msgid "Personnel Status"
+msgstr "Dolgozói státusz"
+
+#: PersonnelTitles.Label
+msgid "User Title"
+msgstr "Felhasználó címe"
+
+#: PostalCode.Label
+msgid "Postal Code"
+msgstr "Irányítószám"
+
+#: PovertyStatus.Label
+msgid "Poverty Status"
+msgstr "Szegénységi státusz"
+
+#: PrdApplicableMaster.Label
+msgid "PrdApplicableMaster"
+msgstr "Alkalmazandó termék mester"
+
+#: ProductCategoryStatus.Label
+msgid "Product Category Status"
+msgstr "Termék kategória státusz"
+
+#: ProductState.Label
+msgid "Product State"
+msgstr "Termék státusz"
+
+#: ProductStatus.Label
+msgid "Product Status"
+msgstr "Termék státusz"
+
+#: RecommendedAmtUnit.Label
+msgid "REC AMNT UNIT"
+msgstr "REC AMNT UNIT"
+
+#: ReplacementStatus.Label
+msgid "Replacement Status"
+msgstr "Státusz csere"
+
+#: Salutation.Label
+msgid "Salutation"
+msgstr "Megszólítás"
+
+#: Savings.Label
+msgid "Savings"
+msgstr "Megtakarítások"
+
+#: SavingsStatus.Label
+msgid "Savings Status"
+msgstr "Megtakarítás státusza"
+
+#: SavingsType.Label
+msgid "SAVINGS TYPE"
+msgstr "MEGTAKARÍTÁS TÍPUS"
+
+#: ServiceCharge.Label
+msgctxt "ServiceCharge.Label"
+msgid "Interest"
+msgstr "Kamat"
+
+#: SpouseFather.Label
+msgid "Spouse/Father"
+msgstr "Házastárs/apa"
+
+#: State.Label
+msgid "State"
+msgstr "Státusz"
+
+#: Titles.Label
+msgid "Titles"
+msgstr "Címek"
+
+#: User.Label
+msgid "User"
+msgstr "Felhasználó"
+
+#: WeekDay.FRIDAY
+msgid "Friday"
+msgstr "Péntek"
+
+#: WeekDay.MONDAY
+msgid "Monday"
+msgstr "Hétfő"
+
+#: WeekDay.SATURDAY
+msgid "Saturday"
+msgstr "Szombat"
+
+#: WeekDay.SUNDAY
+msgid "Sunday"
+msgstr "Vasárnap"
+
+#: WeekDay.THURSDAY
+msgid "Thursday"
+msgstr "Csütörtök"
+
+#: WeekDay.TUESDAY
+msgid "Tuesday"
+msgstr "Kedd"
+
+#: WeekDay.WEDNESDAY
+msgid "Wednesday"
+msgstr "Szerda"
+
+#: WeekDays.Label
+msgid "Week Days"
+msgstr "Hétköznap"
+
+#: YESNO.Label
+msgid "YES/NO"
+msgstr "IGEN/NEM"
+
+#: YesNoFlag.NO
+msgid "No"
+msgstr "Nem"
+
+#: YesNoFlag.YES
+msgid "Yes"
+msgstr "Igen"

@@ -1,0 +1,454 @@
+# extracted from MessageLookupMessages.properties
+#. extracted from MessageLookupMessages.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"PO-Revision-Date: 2009-08-21 01:57-0700\n"
+"Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_ENTRY entries
+#. # defined in latest-data.sql and for enumerated type
+#. # strings.
+#. # New key value pairs (not defined in latest-data.sql or
+#. # enumerated type name lookup) should not be added to this file.
+#: AccountAction.Label
+msgid "Account Action"
+msgstr "ចលនានៃគណនី"
+
+#: AccountActionTypes.DEPOSIT
+msgid "Deposit"
+msgstr "ដាក់ចូល"
+
+#: AccountActionTypes.DISBURSAL
+msgid "Disbursal"
+msgstr "ប្រាក់ចំនាយ"
+
+#: AccountActionTypes.FEE_REPAYMENT
+msgid "Fee"
+msgstr "ថ្លៃសេវា"
+
+#: AccountActionTypes.LOAN_REPAYMENT
+msgid "Loan Repayment"
+msgstr "សងរំលោះសំរាប់កម្ចីម្តងទៀត"
+
+#: AccountActionTypes.WITHDRAWAL
+msgid "Withdrawal"
+msgstr "ដកចេញ"
+
+#: AccountFlags.Label
+msgid "AccountFlags"
+msgstr "សញ្ញាផ្កាយសំរាប់ចំនាំនៃគណនី"
+
+#: AccountState.Label
+msgid "Loan Status"
+msgstr "លក្ខ័ណនៃកម្ចី"
+
+#: AccountType.Label
+msgid "Account Type"
+msgstr "ប្រភេទនៃគណនី"
+
+#: Address1.Label
+msgid "Address1"
+msgstr "អស័យដ្ដាន១"
+
+#: Address2.Label
+msgid "Address2"
+msgstr "អស័យដ្ដាន២"
+
+#: Address3.Label
+msgid "Address 3"
+msgstr "អស័យដ្ដាន៣"
+
+#: Amount.Label
+msgid "Amount"
+msgstr "ចំនួន"
+
+#: BulkEntry.Label
+msgid "Bulk entry"
+msgstr ""
+
+#: BusinessActivities.Label
+msgid "Occupation"
+msgstr "មុខរបរ"
+
+#: CategoryType.Label
+msgid "CategoryTypes"
+msgstr "ប្រភេទនៃផ្នែក"
+
+#: Center.Label
+msgid "Center"
+msgstr "មជ្ឈមណ្ឌល"
+
+#: CenterStatus.Label
+msgid "Center Status"
+msgstr "លក្ខ័ណនៃមជ្ឈមណ្ឌល"
+
+#: Citizenship.Label
+msgid "Citizenship"
+msgstr "សញ្ជាត្តិ"
+
+#: City.Label
+msgid "City/District"
+msgstr "ទីក្រុង/សង្កាត់"
+
+#: Client.Label
+msgid "Client"
+msgstr "អតិថិជន"
+
+#: ClientStatus.Label
+msgid "Client Status"
+msgstr "លក្ខ័ណអតិថិជន"
+
+#: CollateralTypes.Label
+msgid "CollateralTypes"
+msgstr "ប្រភេទនៃវត្ថុបញ្ចាំ"
+
+#: CustomFieldType.ALPHA_NUMERIC
+msgid "Alpha Numeric"
+msgstr "អក្សរក្រមលេខ"
+
+#: CustomFieldType.DATE
+msgctxt "CustomFieldType.DATE"
+msgid "Date"
+msgstr "ថ្ងៃ"
+
+#: CustomFieldType.NUMERIC
+msgid "Numeric"
+msgstr "ជាលេខ"
+
+#: CustomerAttendance.Label
+msgid "CustomerAttendance"
+msgstr "វត្តិមាននៃអតិថិជន"
+
+#: CustomerStatus.Label
+msgid "Customer Status"
+msgstr "លក្ខ័ណនៃអតិថិជន"
+
+#: Date.Label
+msgctxt "Date.Label"
+msgid "Date"
+msgstr "ថ្ងៃ"
+
+#: DayRank.Label
+msgid "Days Rank"
+msgstr "ថ្ងៃបន្តបន្ទាប់"
+
+#: Description.Label
+msgid "Description"
+msgstr "ការពិពណ៍នា"
+
+#: DistanceFromBoToCenter.Label
+msgid "Distance from BO to Center"
+msgstr "ចំងាយពីសាខាទៅមជ្ឈមណ្ឌល"
+
+#: DistanceFromHoToBO.Label
+msgid "Distance from HO to BO for office"
+msgstr "ចំងាយពីទីស្នាក់ការធំទៅការិយាល័យ"
+
+#: EducationLevel.Label
+msgid "EducationLevel"
+msgstr "កំរិតនៃចំនេះដឺង"
+
+#: Ethinicity.Label
+msgid "Ethnicity"
+msgstr "ជាតិពិន្ធុ"
+
+#: ExternalId.Label
+msgid "External Id"
+msgstr "លេខកូដខាងក្រៅ"
+
+#: ExternalLoanId.Label
+msgid "External Loan Id"
+msgstr "លេខកូដកម្ចីខាងក្រៅ"
+
+#: ExternalSavingsId
+msgctxt "ExternalSavingsId"
+msgid "External Savings Id"
+msgstr "លេខកូដសន្សំខាងក្រៅ"
+
+#: ExternalSavingsId.Label
+msgctxt "ExternalSavingsId.Label"
+msgid "External Savings Id"
+msgstr "លេខកូដសន្សំខាងក្រៅ"
+
+#: FeeFormulaMaster.Label
+msgid "Fee Formula Master"
+msgstr "រូបមន្តធំនៃកំរៃសេវា"
+
+#: FeePayment.Label
+msgid "Fee Payment"
+msgstr "ការចំានាយថ្លៃសេវា"
+
+#: FeeStatus.Label
+msgid "Fee Status"
+msgstr "លក្ខ័ននៃសេវារ"
+
+#: FeeType.Label
+msgid "Fee Type"
+msgstr "ប្រភេទនៃសេវារ"
+
+#: Field.Label
+msgid "Field"
+msgstr "ប្រឡោះ"
+
+#: FinancialAction.Label
+msgid "Financial Action"
+msgstr "សកម្មភាពហរិញ្ញេវត្ថុ"
+
+#: GRTStaffId.Label
+msgid "GRT Staff Id"
+msgstr "លេខកូដបុគ្គលិកGRT"
+
+#: Gender.Label
+msgid "Gender"
+msgstr "ភេទ"
+
+#: GovernmentId.Label
+msgid "Government ID"
+msgstr "អត្តសញ្ញាណប័ណមន្ត្រីរាជការ"
+
+#: GracePeriodTypes.Label
+msgid "GracePeriodTypes"
+msgstr "ប្រភេទនៃដំនាក់ការលើកលែង"
+
+#: Group.Label
+msgid "Group"
+msgstr "ក្រុម"
+
+#: GroupFlag.Label
+msgid "Group Flag"
+msgstr " ក្រុមនៃសញ្ញាផ្កាយ"
+
+#: GroupStatus.Label
+msgid "Group Status"
+msgstr "ក្រុមនៃលក្ខណ័"
+
+#: Handicapped.Label
+msgid "Handicapped"
+msgstr "ពិការភាព"
+
+#: IntCalTypes.Label
+msgid "INT CALC TYPES"
+msgstr "ប្រភេទនៃការគណនាការប្រាក់"
+
+#: Interest.Label
+msgctxt "Interest.Label"
+msgid "Interest"
+msgstr "ការប្រាក់"
+
+#: InterestCalcRule.Label
+msgid "InterestCalcRule"
+msgstr "និតិវិធីនៃការគណនាការប្រាក់"
+
+#: InterestTypes.Label
+msgid "InterestTypes"
+msgstr "ប្រភេទនៃការប្រាក់"
+
+#: Language.Label
+msgid "Language"
+msgstr "ភាសារ"
+
+#: Loan.Label
+msgid "Loan"
+msgstr "កំចីយ"
+
+#: LoanPurposes.Label
+msgid "Loan Purposes"
+msgstr "គោលបំណងនៃកំចីយ"
+
+#: MaritalStatus.Label
+msgid "MartialStatus"
+msgstr "ស្ថានភាពគ្រសារ"
+
+#: MeetingTime.Label
+msgid "Meeting Time"
+msgstr "ពេលវេលាប្រជុំ"
+
+#: NewValue.Label
+msgid "New Value"
+msgstr "តំលៃថ្មី"
+
+#: NoOfClientsPerCenter.Label
+msgid "Number of Clients per Center"
+msgstr "ចំនូននៃអតិថិជនក្នុងសាខានីមួយៗ"
+
+#: NoOfClientsPerGroup.Label
+msgid "Number of Clients per Group"
+msgstr "ចំនូននៃអតិថិជនក្នុងក្រមនីមួយៗ"
+
+#: Office.Label
+msgid "Office"
+msgstr "ការិយាល័យ"
+
+#: OfficeCode.Label
+msgid "Office Code"
+msgstr "លេខកូដរបស់ការិយាល័យ"
+
+#: OfficeLevels.Label
+msgid "OfficeLevel"
+msgstr "លំដាប់នៃការិយាល័យ"
+
+#: OfficeStatus.Label
+msgid "Office Status"
+msgstr "លក្ខ័នការិយាល័យ"
+
+#: OldValue.Label
+msgid "Old Value"
+msgstr "តំលៃចាស់"
+
+#: PaymentType.Label
+msgid "PaymentType"
+msgstr "ប្រភេទនៃការបង់"
+
+#: PaymentTypes.CASH
+msgid "Cash"
+msgstr "សាច់ប្រាក់សុទ្ធ"
+
+#: PaymentTypes.CHEQUE
+msgid "Check"
+msgstr "ពិនិត្យ"
+
+#: PaymentTypes.VOUCHER
+msgid "Voucher"
+msgstr "ប័ណ្ណ"
+
+#: Permissions.Label
+msgid "Permissions"
+msgstr "ការអនុញ្ញាត្តិ"
+
+#: Personnel.Label
+msgid "Personnel"
+msgstr "បុគ្កលិក"
+
+#: PersonnelLevels.Label
+msgid "User Hierarchy"
+msgstr "ឋានានុក្រមនៃអ្នកប្រើប្រាស់"
+
+#: PersonnelStatus.Label
+msgid "Personnel Status"
+msgstr "លក័្ខណរបស់បុគ្កលិក"
+
+#: PersonnelTitles.Label
+msgid "User Title"
+msgstr "តូនាទីរបស់បុគ្កលិក"
+
+#: PostalCode.Label
+msgid "Postal Code"
+msgstr "លេខកូដរបស់ប្រអប់ប្រៃសណីយ"
+
+#: PovertyStatus.Label
+msgid "Poverty Status"
+msgstr "ស្ថានភាពក្រីក្រ"
+
+#: PrdApplicableMaster.Label
+msgid "PrdApplicableMaster"
+msgstr ""
+
+#: ProductCategoryStatus.Label
+msgid "Product Category Status"
+msgstr "លក្ខ័ណនៃប្រភេទផលិតផល"
+
+#: ProductState.Label
+msgid "Product State"
+msgstr "ស្ថានភាពនៃផលិតផល"
+
+#: ProductStatus.Label
+msgid "Product Status"
+msgstr "លក័្ខណនៃផលិតផល"
+
+#: RecommendedAmtUnit.Label
+msgid "REC AMNT UNIT"
+msgstr ""
+
+#: ReplacementStatus.Label
+msgid "Replacement Status"
+msgstr "លក្ខ័ននៃការសងជំនួស"
+
+#: Salutation.Label
+msgid "Salutation"
+msgstr "បដិសណ្ឋារកិច្ច"
+
+#: Savings.Label
+msgid "Savings"
+msgstr "ការសន្សំ"
+
+#: SavingsStatus.Label
+msgid "Savings Status"
+msgstr "លក្ខ័ននៃការសន្សំ"
+
+#: SavingsType.Label
+msgid "SAVINGS TYPE"
+msgstr "ប្រភេទនៃការសន្សំ"
+
+#: ServiceCharge.Label
+msgctxt "ServiceCharge.Label"
+msgid "Interest"
+msgstr "ការប្រាក់"
+
+#: SpouseFather.Label
+msgid "Spouse/Father"
+msgstr "ប្តីប្រពន្ធ/ឪពុក"
+
+#: State.Label
+msgid "State"
+msgstr "រដ្ឋ"
+
+#: Titles.Label
+msgid "Titles"
+msgstr "តួនាទី"
+
+#: User.Label
+msgid "User"
+msgstr "អ្នកប្រើប្រាស់"
+
+#: WeekDay.FRIDAY
+msgid "Friday"
+msgstr "ថ្ងៃសុក្រ"
+
+#: WeekDay.MONDAY
+msgid "Monday"
+msgstr "ថ្ងៃច័ន្ទ"
+
+#: WeekDay.SATURDAY
+msgid "Saturday"
+msgstr "ថ្ងៃសៅរ"
+
+#: WeekDay.SUNDAY
+msgid "Sunday"
+msgstr "ថ្ងៃអាទិត្យ"
+
+#: WeekDay.THURSDAY
+msgid "Thursday"
+msgstr "ថ្ងៃព្រហស្បត្តិ័"
+
+#: WeekDay.TUESDAY
+msgid "Tuesday"
+msgstr "ថ្ងៃអង្គារ"
+
+#: WeekDay.WEDNESDAY
+msgid "Wednesday"
+msgstr "ថ្ងៃពុធ"
+
+#: WeekDays.Label
+msgid "Week Days"
+msgstr "ថ្ងៃធ្វើការ"
+
+#: YESNO.Label
+msgid "YES/NO"
+msgstr "យល់ព្រម/ទេ"
+
+#: YesNoFlag.NO
+msgid "No"
+msgstr "ទេ"
+
+#: YesNoFlag.YES
+msgid "Yes"
+msgstr "បាទ​​ឬចាស"

@@ -1,0 +1,290 @@
+# extracted from Meeting.properties
+#. extracted from Meeting.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:22-0700\n"
+"PO-Revision-Date: 2009-06-19 10:54-0700\n"
+"Last-Translator: Aida Ocana <aocana@att.net>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#: error.activity.not.allowed
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
+msgstr ""
+"Usted no tiene permiso para efectuar esta actividad. Contacte a su "
+"administrador de sistemas para que le conceda los permisos necesarios y "
+"vuelva a intentarlo."
+
+#: errors.Meeting.invalidDayNumber
+msgid "Please specify the valid day number in the range of 1 to 31."
+msgstr "Por favor, específique un día válido en el rango del 1 al 31."
+
+#: errors.Meeting.invalidMeetingPlace
+msgid "Please specify a Meeting location."
+msgstr "Por favor, específique el lugar de la reunión."
+
+#: errors.Meeting.invalidRecurAfter
+msgid "Please Specify the valid recurrence pattern."
+msgstr "Por favor, específique el patrón válido de recurrencia."
+
+#: errors.Meeting.invalidRecurrenceType
+msgid "Please specify the value for Meeting frequency."
+msgstr "Por favor, específique el valor de la frecuencia de las reuniones."
+
+#: errors.Meeting.specifyDayNumAndRecurAfter
+msgid "Please ensure that both day and month are specified."
+msgstr "Por favor, asegúrese que tanto el día como el mes sean específicados."
+
+#: errors.Meeting.specifyMonthlyMeetingOnWeekDay
+msgid ""
+"Please ensure that all the recurrence details of the month are specified."
+msgstr ""
+"Por favor, asegúrese que todos los detalles de las recurrencias del  mes "
+"sean específicadas."
+
+#: errors.Meeting.specifyWeekDayAndRecurAfter
+msgid ""
+"Please ensure that the recurrence pattern has both week and day specified."
+msgstr ""
+"Por favor, asegúrese que los patrones de recurrencia tengan tanto la semana "
+"como el día específicado."
+
+#: errors.prefix
+msgid "<li>"
+msgstr "<li>"
+
+#: errors.suffix
+msgid "</li>"
+msgstr "</li>"
+
+#: meeting.labelFrequencyOfMeeting
+msgid "Frequency of Meetings:"
+msgstr "Frecuencia de las reuniones:"
+
+#: meeting.button.create
+msgid "Create"
+msgstr "Crear"
+
+#: meeting.button.save
+msgid "Save"
+msgstr "Guardar"
+
+#: meeting.daySchedule
+msgid "Recur on day {0} of every {1} month(s)"
+msgstr "Ocurre el día {0} de cada {1} mes."
+
+#: meeting.daySchedule.change
+msgid ""
+"(Meetings will be changed to recur on day {0} of every {1} month(s) after "
+"the batch jobs run)"
+msgstr ""
+"(Las reuniones serán cambiadas para que ocurran los {0} días de cada {1} mes "
+"después que los lotes hayan sido procesados) "
+
+#: meeting.error.creationFailed
+msgid ""
+"An unexpected exception occurred while creating the meeting. Please try "
+"again later or contact the system administrator."
+msgstr ""
+"Se encontró un error mientras se creaba la reunión. Por favor, vuelva a "
+"intentarlo luego o contacte a su administrador de sistemas."
+
+#: meeting.error.invalidMomthDay
+msgid "Please specify a value between 1 and 31 for Day of Month."
+msgstr "Por favor, específique un valor entre 1 y 31 para el Día del Mes."
+
+#: meeting.error.invalidRecurAfter
+msgid "Please specify a valid value for recurrence pattern."
+msgstr "Por favor, específique un valor válido para el patrón de recurrencia."
+
+#: meeting.error.loadFailed
+msgid ""
+"The application could not load the meeting details. Please try again later "
+"or contact the system administrator."
+msgstr ""
+"La aplicación no pudo cargar los detalles de la reunión. Por favor, vuelva a "
+"intentarlo luego o contacte a su administrador de sistemas."
+
+#: meeting.error.updateFailed
+msgid ""
+"An unexpected exception occurred while updating the meeting. Please try "
+"again later or contact the system administrator."
+msgstr ""
+"Se encontró un error mientras se cargaba la reunión. Por favor, vuelva a "
+"intentarlo luego o contacte a su administrador de sistemas."
+
+#: meeting.labelCreateInstruction
+msgid "Fields marked with an asterisk are required."
+msgstr "Los campos marcados con un asterisco son requeridos."
+
+#: meeting.labelDay
+msgid "Day"
+msgstr "Día"
+
+#: meeting.labelDays
+msgid "day(s)"
+msgstr "día(s)"
+
+#: meeting.labelMeetingSchedule
+msgid "Meeting schedule"
+msgstr "Horario de reuniones"
+
+#: meeting.labelMeetingScheduleFor
+msgid "Meeting schedule for"
+msgstr "Horario de reuniones para"
+
+#: meeting.labelMonths
+msgid "month(s)"
+msgstr "mes(es)"
+
+#: meeting.labelOfEvery
+msgid "of every"
+msgstr "de cada"
+
+#: meeting.labelPlaceOfMeeting
+#, fuzzy
+msgid "Location of meeting:"
+msgstr "Lugar de la reunión\\:"
+
+#: meeting.labelRecurDays
+#, fuzzy
+msgid "If days, specify the recurrence:"
+msgstr "Si son días, específique la recurrencia\\:"
+
+#: meeting.labelRecurEvery
+msgid "Recur every"
+msgstr "Ocurre cada"
+
+#: meeting.labelRecurMonths
+#, fuzzy
+msgid "If months, select between the following:"
+msgstr "si son meses, seleccione entre lo siguiente\\:"
+
+#: meeting.labelRecurWeeks
+#, fuzzy
+msgid "If weeks, specify the following:"
+msgstr "Si son semanas, específique lo siguiente\\:"
+
+#: meeting.labelRepaymentDay
+#, fuzzy
+msgid "Repayment day:"
+msgstr "Día de pago\\:"
+
+# it could be: el, la, los or las
+#: meeting.labelThe
+#, fuzzy
+msgid "The"
+msgstr "El"
+
+#: meeting.labelWeeks
+msgid "week(s) on"
+msgstr "semana(s) en "
+
+#: meeting.labelmeetingschedule&groupMembership
+#, fuzzy
+msgid "Meeting schedule & Group Membership:"
+msgstr "Horario de reuniones y membresía de grupo\\:"
+
+#: meeting.monthDay.number
+msgid "Please specify a number for Month {0}."
+msgstr "Por favor, específique el número de meses {0}."
+
+#: meeting.monthDay.range
+msgid "Please specify a number in the range {1} to {2} for month {0}."
+msgstr ""
+"Por favor, específique un número en el rango de {1} y {2} para el mes {0}."
+
+#: meeting.monthFrequency
+msgid "{0} month(s)"
+msgstr "{0} mes(es)"
+
+#: meeting.monthMonth.number
+msgid "Please specify a number for the Month."
+msgstr "Por favor, específique un número para el Mes."
+
+#: meeting.monthMonth.required
+msgid "Please specify a value for Month."
+msgstr "Por favor, específique un valor para el Mes."
+
+#: meeting.monthMonthRank.requiredmsg
+msgid ""
+"Please specify the recurrence pattern of the month if the month option is "
+"selected."
+msgstr ""
+"Por favor, específique el patrón de recurrencia del mes, si la opción mes es "
+"seleccionada."
+
+#: meeting.monthSchedule
+msgid "Recur on {0} {1} of every {2} month(s)"
+msgstr "Ocurre en {0} {1} de cada {2} mes(es)"
+
+#: meeting.monthSchedule.change
+msgid ""
+"(Meetings will be changed to recur on {0} {1} of every {2} month(s) after "
+"the batch jobs run)"
+msgstr ""
+"(Las reuniones serán cambiadas para que ocurran el {0} de cada {2} mes(es) "
+"después que se procesen los lotes)"
+
+#: meeting.monthScheduleShort
+msgid "Recur every {0} month(s)"
+msgstr "Ocurre cada {0} mes(es)"
+
+#: meeting.monthType.requiredmsgPlease
+msgid "ensure that the recurrence pattern has both day and month specified."
+msgstr ""
+"asegure que los patrones de recurrencia tengan el día y el mes específicado. "
+""
+
+#: meeting.monthWeek.requiredmsg
+msgid ""
+"Please specify the recurrence details of the week if the week option is "
+"selected."
+msgstr ""
+"Por favor, específique los detalles de recurrencia de la semana si la opción "
+"semana es seleccionada."
+
+#: meeting.msgUpdateMeeting
+msgid ""
+"If meeting is edited, changes do not show up immediately. The change to "
+"meeting schedule will not be reflected until after the batch jobs run."
+msgstr ""
+"Si la reunión es editada, los cambios no se veran inmediatamente. Los "
+"cambios a los horarios de las reuniones no se reflejaran hasta que los lotes "
+"sean procesados."
+
+#: meeting.reurweek.number
+msgid "Please specify a Weekly recurrence pattern value."
+msgstr "Por favor, específique un valor al patrón de recurrencia semanal."
+
+#: meeting.weekDay.requiredmsg
+msgid "Please select the Weekday if week is selected."
+msgstr "Por favor, seleccione el día de la semana, si semana es seleccionada."
+
+#: meeting.weekFrequency
+msgid "{0} week(s)"
+msgstr "{0} semana(s)"
+
+#: meeting.weekSchedule
+msgid "Recur every {0} Week(s) on {1}"
+msgstr "Ocurre cada {0} semana(s) en {1}"
+
+#: meeting.weekSchedule.change
+msgid ""
+"(Meetings will be changed to recur every {0} Week(s) on {1} after the batch "
+"jobs run)"
+msgstr ""
+"(Las reuniones serán cambiadas para que ocurran cada {0} semana(s) en {1} "
+"después que el procesamiento por lotes haya terminado."
+
+#: meeting.weekScheduleShort
+msgid "Recur every {0} week(s)"
+msgstr "Ocurre cada {0} semana(s)"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
+	<classpathentry kind="src" output="api/target/test-classes" path="api/src/test/java"/>
+	<classpathentry kind="src" path="spi/src/main/java"/>
+	<classpathentry kind="src" path="api/src/main/java"/>
+	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF/freemarker" path="userInterface/src/main/resources/org/mifos/ui/freemarker/core"/>
+	<classpathentry excluding="java/|resources/|webapp/pages/" including="sql/*" kind="src" path="application/src/main"/>
+	<classpathentry kind="src" path="application/src/main/java"/>
+	<classpathentry kind="src" path="application/src/main/resources"/>
+	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="application/src/main/webapp/pages"/>
+	<classpathentry kind="src" output="application/target/test-classes" path="application/src/test/java"/>
+	<classpathentry kind="src" path="application/src/test/resources"/>
+	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
+	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
+	<classpathentry excluding="org/mifos/ui/freemarker/core/" kind="src" path="userInterface/src/main/resources"/>
+	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
+	<classpathentry kind="src" path="userInterface/src/main/java"/>
+	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>
+	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
+	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/java"/>
+	<classpathentry kind="src" path="serviceInterfaces/src/main/java"/>
+	<classpathentry kind="src" path="common/src/main/java"/>
+	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="var" path="M2_REPO"/>
+	<classpathentry kind="output" path="application/target/mifos-webapp/WEB-INF/classes"/>
+</classpath>

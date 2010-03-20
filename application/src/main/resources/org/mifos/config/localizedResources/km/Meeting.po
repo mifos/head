@@ -1,0 +1,274 @@
+# extracted from Meeting.properties
+#. extracted from Meeting.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"PO-Revision-Date: 2009-12-07 20:41-0800\n"
+"Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#: error.activity.not.allowed
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
+msgstr ""
+"អ្នកពុំមានសិទ្ធិគ្រប់គ្រាន់ក្នុងការអនុវត្តិសកម្មភាពនេះទេ "
+"សូមទាក់ទងទៅអ្នកគ្រប់គ្រងប្រពន្ធ័ដើម្បីផ្តល់សិទ្ធិដែលចាំបាច់ "
+"និងសាកល្បងម្តងទៀត"
+
+#: errors.Meeting.invalidDayNumber
+msgid "Please specify the valid day number in the range of 1 to 31."
+msgstr "សូមបញ្ជាក់នូវចំនួនថ្ងៃដែលមានសុពលភាពក្នុងជួនៃ ១ដល់៣០"
+
+#: errors.Meeting.invalidMeetingPlace
+msgid "Please specify a Meeting location."
+msgstr "សូមបញ្ជាក់អំពីទីតាំងនៃអង្គប្រជុំ"
+
+#: errors.Meeting.invalidRecurAfter
+msgid "Please Specify the valid recurrence pattern."
+msgstr ""
+
+#: errors.Meeting.invalidRecurrenceType
+msgid "Please specify the value for Meeting frequency."
+msgstr "សូមបញ្ជាក់ពីចំនួននៃភាពញឹកញាប់របស់អង្គប្រជុំ"
+
+#: errors.Meeting.specifyDayNumAndRecurAfter
+msgid "Please ensure that both day and month are specified."
+msgstr "សូមធានាអះអាងទាំងថ្ងៃនិងខែដែលបានបញ្ជាក់"
+
+#: errors.Meeting.specifyMonthlyMeetingOnWeekDay
+msgid ""
+"Please ensure that all the recurrence details of the month are specified."
+msgstr "សូមធានាអះអាងថារាល់ពត៌មានលំអិតដែលកើតឡើងជារឿយៗនៃខែគឺបានបញ្ជាក់"
+
+#: errors.Meeting.specifyWeekDayAndRecurAfter
+#, fuzzy
+msgid ""
+"Please ensure that the recurrence pattern has both week and day specified."
+msgstr "សូមអះអាងថាជារឿយៗនៃគំរូដែលមានថ្ងៃនិងខែ គឺត្រូវបានបញ្ជាក់"
+
+#: errors.prefix
+msgid "<li>"
+msgstr "<li>"
+
+#: errors.suffix
+msgid "</li>"
+msgstr "</li>"
+
+#: meeting.labelFrequencyOfMeeting
+msgid "Frequency of Meetings:"
+msgstr "ភាពញឺកញាប់នៃអង្គប្រជុំ"
+
+#: meeting.button.create
+msgid "Create"
+msgstr "បង្កើត"
+
+#: meeting.button.save
+msgid "Save"
+msgstr "រក្សាទុក"
+
+#: meeting.daySchedule
+msgid "Recur on day {0} of every {1} month(s)"
+msgstr "ភាពផ្ទួនៗនៅលើថ្ងៃ{0}នៃរៀងរាល់{១}ខែ"
+
+#: meeting.daySchedule.change
+msgid ""
+"(Meetings will be changed to recur on day {0} of every {1} month(s) after "
+"the batch jobs run)"
+msgstr ""
+"(អង្គប្រជុំត្រូវបានផ្លាស់ប្តូអោយមានជារឿយៗនៅថ្ងៃ{0}នៃរៀងរាល់ថ្តៃ{១}ខៃបន្ទាប់ព"
+"ីបន្តុំនៃការងារបានដំនើរការ"
+
+#: meeting.error.creationFailed
+msgid ""
+"An unexpected exception occurred while creating the meeting. Please try "
+"again later or contact the system administrator."
+msgstr ""
+"ភាពលើកលែងដោយមិនបានគ្រោងទុកបានកើតឡើងនាពេលដែលបង្កើតអង្គប្រជុំ។ "
+"សូមព្យាយាមម្តងទៀតនាពេលក្រោយ ឬទាក់ទងទៅអ្នកគ្រប់គ្រងប្រពន្ធ័"
+
+#: meeting.error.invalidMomthDay
+msgid "Please specify a value between 1 and 31 for Day of Month."
+msgstr "សូមបញ្ញាក់ចំនួនរវាង ១ដល់៣០នៃថ្ងៃរបស់ខែ"
+
+#: meeting.error.invalidRecurAfter
+msgid "Please specify a valid value for recurrence pattern."
+msgstr "សូមបញ្ជាក់តំលៃសុពលភាពសំរាប់ភាពជារឿយៗនៃគំរូ"
+
+#: meeting.error.loadFailed
+msgid ""
+"The application could not load the meeting details. Please try again later "
+"or contact the system administrator."
+msgstr ""
+"ប្រពន្ធ័មិនអាចដាក់បញ្ជូលពត៍មានលំអិតនៃអង្គប្រជុំទេ សូមសាកល្បងនាពេលក្រោយ "
+"ឬទាក់ទងទៅអ្នកគ្រប់គ្រងប្រពន្ធ័"
+
+#: meeting.error.updateFailed
+msgid ""
+"An unexpected exception occurred while updating the meeting. Please try "
+"again later or contact the system administrator."
+msgstr ""
+"ករុណីយលើកលែងដោយមិនបានគ្រោងទុកបានកើតឡើងនាពេលដែលកែតំរូវអង្គប្រជុំ "
+"សូមសាកល្បងម្តងទៀតនាពេលក្រោយ ឬទាក់ទងទៅអ្នកគ្រប់គ្រងប្រពន្ធ័"
+
+#: meeting.labelCreateInstruction
+msgid "Fields marked with an asterisk are required."
+msgstr "ប្រឡោះដែលមានសញ្ញាផ្កាយគឺតំរូវអោយបំពេញពត៌មាន"
+
+#: meeting.labelDay
+msgid "Day"
+msgstr "ថ្ងៃ"
+
+#: meeting.labelDays
+msgid "day(s)"
+msgstr "ថ្ងៃ"
+
+#: meeting.labelMeetingSchedule
+msgid "Meeting schedule"
+msgstr "កាលវីភាគនៃអង្គប្រជុំ"
+
+#: meeting.labelMeetingScheduleFor
+msgid "Meeting schedule for"
+msgstr "កាលវីភាគនៃអង្គប្រជុំសំរាប"
+
+#: meeting.labelMonths
+msgid "month(s)"
+msgstr "ខែ"
+
+#: meeting.labelOfEvery
+msgid "of every"
+msgstr "នៃរៀងរាល់"
+
+#: meeting.labelPlaceOfMeeting
+msgid "Location of meeting:"
+msgstr "ទីតាំងនៃអង្គប្រជុំ"
+
+#: meeting.labelRecurDays
+msgid "If days, specify the recurrence:"
+msgstr "ប្រសិនបើថ្ងៃ ដែលបានបញ្ជាក់គឺកើតឡើងជារឿយៗ"
+
+#: meeting.labelRecurEvery
+msgid "Recur every"
+msgstr "ជារឿយរៀងរាល់"
+
+#: meeting.labelRecurMonths
+msgid "If months, select between the following:"
+msgstr "ប្រសិនបើខែ ជ្រើសរើសរវាងទូទៅដូចខាងក្រោម"
+
+#: meeting.labelRecurWeeks
+msgid "If weeks, specify the following:"
+msgstr "ប្រសិនបើអាទិត្យ បញ្ជាក់ដូចតទៅនេះ"
+
+#: meeting.labelRepaymentDay
+msgid "Repayment day:"
+msgstr "ថ្ងសងត្រលប់"
+
+#: meeting.labelThe
+msgid "The"
+msgstr "មួយនេះ"
+
+#: meeting.labelWeeks
+msgid "week(s) on"
+msgstr "អាទិត្យ"
+
+#: meeting.labelmeetingschedule&groupMembership
+msgid "Meeting schedule & Group Membership:"
+msgstr "កាលវីភាគប្រជុំ និងក្រុមសមាជិកភាព"
+
+#: meeting.monthDay.number
+msgid "Please specify a number for Month {0}."
+msgstr "សូមបញ្ជាក់តំលៃលេខសំរាប់ខែ {0}"
+
+#: meeting.monthDay.range
+msgid "Please specify a number in the range {1} to {2} for month {0}."
+msgstr "សូមបញ្ជាក់តំលៃលេខនៅក្នុងរៀងនៃ {១} ទៅ​​{២}សំរាប់ខែ {0}"
+
+#: meeting.monthFrequency
+msgid "{0} month(s)"
+msgstr "{0}ខែ"
+
+#: meeting.monthMonth.number
+msgid "Please specify a number for the Month."
+msgstr "សូមបញ្ជាក់តំលៃលេខសំរាប់ខែ"
+
+#: meeting.monthMonth.required
+msgid "Please specify a value for Month."
+msgstr "សូមបញ្ជាក់តំលៃសំរាប់ខែ"
+
+#: meeting.monthMonthRank.requiredmsg
+msgid ""
+"Please specify the recurrence pattern of the month if the month option is "
+"selected."
+msgstr "សូមបញ្ជាក់គំរូនៃភាពញឹកញាប់នៃខែ ប្រសិនបើជំរើសនៃខែត្រូវបានជ្រើសរើស"
+
+#: meeting.monthSchedule
+msgid "Recur on {0} {1} of every {2} month(s)"
+msgstr "ជារឿយៗ {0} {១}នៃរវាង {២}​ខែ"
+
+#: meeting.monthSchedule.change
+msgid ""
+"(Meetings will be changed to recur on {0} {1} of every {2} month(s) after "
+"the batch jobs run)"
+msgstr ""
+"អង្គប្រជុំត្រូវបានប្តូជារឿយៗនៅ {0} {១}នៃរៀងរាល់ {២}ខែ "
+"បន្ទាប់ពីបាច់នៃការងារត្រូវបានចាប់ដំនើរការ"
+
+#: meeting.monthScheduleShort
+msgid "Recur every {0} month(s)"
+msgstr "ជារឿយៗរៀងរាល់ {0}ខែ"
+
+#: meeting.monthType.requiredmsgPlease
+msgid "ensure that the recurrence pattern has both day and month specified."
+msgstr "សូមអះអាងថាជារឿយៗនៃគំរូដែលមានថ្ងៃនិងខែ គឺត្រូវបានបញ្ជាក់"
+
+#: meeting.monthWeek.requiredmsg
+msgid ""
+"Please specify the recurrence details of the week if the week option is "
+"selected."
+msgstr ""
+"សូមបញ្ជាក់លំអិតនៃភាពរឿយៗនៃសប្តាហ៍ ប្រសិនបើជំរើសនៃសប្តាហ៍ត្រូវបានជ្រើសរើស"
+
+#: meeting.msgUpdateMeeting
+msgid ""
+"If meeting is edited, changes do not show up immediately. The change to "
+"meeting schedule will not be reflected until after the batch jobs run."
+msgstr ""
+"ប្រសិនបើអង្គប្រជុំត្រូវបានកែតំរូវ កាផ្លាស់ប្តូមិនបង្ហាញភ្លាមៗទេ។​ "
+"ការផ្លាស់ប្តូកាលវីភាគនៃអង្គប្រជុំមិនអាចប៉ពាល "
+"រហូតដល់បន្ទាប់ពីបាច់នៃការងារត្រូវបានដំណើរការ"
+
+#: meeting.reurweek.number
+msgid "Please specify a Weekly recurrence pattern value."
+msgstr "សូមបញ្ជាក់ពីភាពរឿយៗនៃតំលៃគំរូសប្តាហ៍"
+
+#: meeting.weekDay.requiredmsg
+msgid "Please select the Weekday if week is selected."
+msgstr "សូមជ្រើសរើសជាថ្អដែលធ្វើការ ប្រសិនបើត្រូវបានជ្រើសរើស"
+
+#: meeting.weekFrequency
+msgid "{0} week(s)"
+msgstr "{0} អាទិត្យ"
+
+#: meeting.weekSchedule
+msgid "Recur every {0} Week(s) on {1}"
+msgstr "ជារឿយៗរៀងរាល់ {0}អាទិត្យ ក្នុង {១}"
+
+#: meeting.weekSchedule.change
+msgid ""
+"(Meetings will be changed to recur every {0} Week(s) on {1} after the batch "
+"jobs run)"
+msgstr ""
+"អង្គប្រជុំត្រូវផ្លាស់ប្តូទៅជារឿយៗរវាង {0}សប្តាហ៍ក្នង "
+"{១}បន្ទាប់ពីបាច់នៃការងារត្រូវបានដំណើរការ"
+
+#: meeting.weekScheduleShort
+#, fuzzy
+msgid "Recur every {0} week(s)"
+msgstr "ជារឿយៗរៀងរាល់ {0}ខែ"

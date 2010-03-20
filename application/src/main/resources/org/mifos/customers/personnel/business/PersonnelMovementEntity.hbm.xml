@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.customers.personnel.business.PersonnelMovementEntity" table="PERSONNEL_MOVEMENT">
+        <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short" access="field">
+            <generator class="native"/>
+        </id>
+		 <property name="status" column="STATUS" type="short" access="field"/>
+		<property name="startDate" column="START_DATE" type="date" access="field"/>                                        
+        <property name="endDate" column="END_DATE" type="date" />                                        
+        <property name="updatedBy" column="UPDATED_BY" type="short" access="field"/>                                     
+        <property name="updatedDate" column="UPDATED_DATE" type="date" access="field"/>      
+        <many-to-one name="personnel"  column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" access="field"/>
+        <many-to-one name="office"  column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field"/>
+    </class>
+</hibernate-mapping>

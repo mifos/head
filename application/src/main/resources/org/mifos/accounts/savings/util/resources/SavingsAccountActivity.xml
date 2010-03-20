@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <row totWidth="70" bottomLineRequired="false">
+	<column label="Date" value="userPrefferedDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+	<column label="Activity" value="activity" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+    <column label="Amount" value="amount" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17" align="right"/>
+    </column>
+    <column label="RunningBalance" value="runningBalance" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="19" align="right"/>
+    </column>
+  </row>
+</tableInfo>

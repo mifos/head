@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+
+	<class name="org.mifos.accounts.loan.business.LoanFeeScheduleEntity" table="LOAN_FEE_SCHEDULE">
+		<id name="accountFeesActionDetailId" column="ACCOUNT_FEES_DETAIL_ID" type="integer" unsaved-value="null" access="field">
+			<generator class="native" />
+		</id>
+
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+
+		<property name="installmentId" column="INSTALLMENT_ID" access="field"/>
+		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="AMOUNT_CURRENCY_ID" />
+			<column name="AMOUNT" />
+		</property>
+		<property name="feeAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="AMOUNT_PAID_CURRENCY_ID" />
+			<column name="AMOUNT_PAID" />
+		</property>
+
+		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.accounts.business.AccountFeesEntity" access="field"/>
+		<many-to-one name="accountActionDate" column="ID" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.accounts.fees.business.FeeBO" access="field"/>
+
+	</class>
+</hibernate-mapping>

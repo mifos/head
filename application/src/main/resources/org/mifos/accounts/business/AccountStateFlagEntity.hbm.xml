@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.accounts.business.AccountStateFlagEntity" 
+    	table="ACCOUNT_STATE_FLAG">
+        <id name="id" column="FLAG_ID"  unsaved-value="-1">
+            <generator class="native"/>
+        </id>
+  	<many-to-one name="lookUpValue" column="LOOKUP_ID" 
+  		class="org.mifos.application.master.business.LookUpValueEntity" 
+    	cascade="none" update="false" unique="true"/>
+  	<property name="statusId" column="STATUS_ID" type="short" />
+  	<property name="flagDescription" column="FLAG_DESCRIPTION"  type="string"/>
+  	<property name="retained" column="RETAIN_FLAG" type="short"/>
+    </class>
+</hibernate-mapping>

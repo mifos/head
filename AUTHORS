@@ -1,0 +1,80 @@
+This is a list of names of everyone who has contributed code to Mifos. The
+purpose of this list is to encourage participation in Mifos. "Code" can mean
+Java source, XML, configuration for .properties files, documentation; anything
+committed to the same version control system in which this file lives.
+
+The list is sorted alphabetically in dictionary order using 'sort -d'. One
+human per line. If you are a committer, feel free to add your name to the list.
+If you are a contributor and would like to be added to the list, please contact
+a committer. Provide reference to a contribution you have made. There is no
+minimal contribution size.
+
+This file is UTF-8 Unicode English text.
+
+* fields are separated by a colon
+* field 1: comma-separated list of usernames used for commits. May be null.
+* field 2: given name(s) and surname. May be null.
+* long lines below should never be wrapped
+
+aalevy,amit:Amit Levy
+adamfeuer:Adam Feuer
+aditi_imtiyazmb:
+aditi_jalajs:
+aditi_krishankg:
+aditi_maneshg:
+aditi_mohammedn:
+aditi_navitas:
+aditi_rajenders:rajendersaini
+aditi_rohitr:
+aditi_sandeep:
+aditi_sreedhark:
+aditi_sreedharkr:
+aditi_sumeethaec:
+aditi_vasuv:
+aditi_yashol,yashol:
+:Aditya Shah
+aliyaw:Aliya Walji
+:Alv Gullbrand Lia
+:Anshal
+arunkanabar:
+ashish:
+:Biren Patnaik
+:Ellen Nadelhoffer
+Emily,emilytucker:Emily Tucker
+ericberman:
+erid_du:
+:Gordon Irlam
+:Graeme Ruthven
+gsteff:
+imtiyaz:
+jdailey:James Dailey
+jkingdon:Jim Kingdon
+johanhil:Johan Hilding
+johnwoodlock:John Woodlock
+jslawins:Jakub Sławiński
+:Kay Chau
+keithpierce:Keith Pierce
+randall77:Keith Randall
+keithwoodlock:Keith Woodlock
+kimloanho:Kimloan Ho
+kratib:
+:Malini Krupa
+meonkeys:Adam Monsen
+nazirlajdel:Nazir Lajdel
+:Ofer Matan
+:Pramod Biligiri
+:Ravi Kutaphale
+:Renaud Richardet
+:Saurabh Kumar
+:Selim Lachiheb
+sonyabarry:
+:Stephen Horgan
+tbostelmann:Tom Bostelmann
+:Theodor Kurz
+twong:Terry Wong
+ugupta:Udai Gupta
+vanmh:Van Mittal-Henkle
+vasu:
+:Viswanath Durbha
+williampietri,wpietri:William Pietri
+youssefassad:Youssef Assad

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.framework.components.audit.business.AuditLog" table="CHANGE_LOG">
+        <id name="id" column="CHANGE_LOG_ID" type="integer" unsaved-value="null" access="field">
+            <generator class="native"/>
+        </id>
+        <property name="entityId" column="ENTITY_ID" access="field"/>
+        <property name="entityType" column="ENTITY_TYPE" access="field"/>
+        <property name="modifierName" column="MODIFIER_NAME" access="field"/>
+	    <property name="updatedBy" column="CHANGED_BY" type="short" access="field"/>
+        <property name="updatedDate" column="CHANGED_DATE" access="field"/>
+        
+        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="CHANGE_LOG_DETAIL" access="field" order-by="SEQUENCE_NUM">
+            <key column="CHANGE_LOG_ID"  />
+            <one-to-many   class="org.mifos.framework.components.audit.business.AuditLogRecord"   />
+    	</set>	
+       
+       
+    </class>
+   <query name="retrieveAuditLogRecords">
+            <![CDATA[from org.mifos.framework.components.audit.business.AuditLog al where 
+           			 	al.entityType=:entityType and al.entityId=:entityId order by al.id desc]]>
+    </query>
+   
+</hibernate-mapping>

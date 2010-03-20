@@ -1,0 +1,43 @@
+#!/bin/bash
+# Hudson Tomcat control script
+#
+# description: Provides easy control of Hudson's tomcat service
+
+# Set Tomcat environment.
+HUDSON_USER=hudson
+export HOME=/home/$HUDSON_USER
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HUDSON_BASEDIR=$HOME
+export TOMCAT_HOME=$HUDSON_BASEDIR/apache-tomcat-6.0.18
+export CATALINA_PID=$HUDSON_BASEDIR/hudson-tomcat.pid
+export CATALINA_OPTS="-DHUDSON_HOME=$HUDSON_BASEDIR/hudson-home -Xmx512m -Djava.awt.headless=true"
+
+[ -f $TOMCAT_HOME/bin/catalina.sh ] || exit 0
+
+case $1 in
+start)
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/startup.sh"
+        ;;
+stop)  
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/shutdown.sh -force"
+        rm -f $CATALINA_PID
+        ;;
+status)  
+        if [ -e $CATALINA_PID ]
+        then
+            echo "Hudson appears to be running as process id `cat $CATALINA_PID`"
+        else
+            echo "$CATALINA_PID does not exist, Hudson probably is not running."
+        fi
+        ;;
+restart)
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/shutdown.sh"
+        sleep 1
+        su -p -s /bin/sh $HUDSON_USER -c "$TOMCAT_HOME/bin/startup.sh"
+        ;;
+*)
+        echo "Usage: $0 {start|stop|status}"
+        exit 1
+        ;;
+esac   
+exit 0

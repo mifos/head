@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    classpath:xsd/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop
+    classpath:xsd/spring-aop-3.0.xsd">
+
+    <aop:aspectj-autoproxy />
+
+    <import resource="acceptancePropertyConfigurer.xml"/>
+
+    <bean id="seleniumSpeedControl" class="org.mifos.test.acceptance.framework.util.SeleniumSpeedControl" />
+
+    <bean id="selenium" class="com.thoughtworks.selenium.DefaultSelenium" >
+        <constructor-arg type="java.lang.String" value="localhost" />
+        <constructor-arg type="int" value="${selenium.port}" />
+        <constructor-arg type="java.lang.String" value="${selenium.browser.start.command}" />
+        <constructor-arg type="java.lang.String" value="http://localhost:${servlet.port}/mifos/" />
+    </bean>
+
+    <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
+    <bean id="dbUnitUtilities" class="org.mifos.framework.util.DbUnitUtilities" />
+    <bean id="initRemote" class="org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService" />
+
+</beans>

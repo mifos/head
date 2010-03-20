@@ -1,0 +1,1902 @@
+# extracted from LookupValueMessages.properties
+#. extracted from LookupValueMessages.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"PO-Revision-Date: 2009-09-15 20:48-0700\n"
+"Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_VALUE entries
+#. # defined in latest-data.sql.
+#. # New key value pairs (not defined in latest-data.sql)
+#. # should not be added to this file.
+#: AccountAction-Adjustment
+msgid "Adjustment"
+msgstr "កាកែតំរូវ"
+
+#: AccountAction-CustomerAccountRepayment
+msgid "Customer Account Repayment"
+msgstr "គណនីសងរំលោះរបស់អតិថិជន"
+
+#: AccountAction-CustomerAdjustment
+msgctxt "AccountAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "កាកែតំរូវរបស់អតិថិជន"
+
+#: AccountAction-Deposit
+msgid "Deposit"
+msgstr "ដាក់ប្រាក់"
+
+#: AccountAction-Disbursal
+msgid "Disbursal"
+msgstr "ប្រាក់ចំនាយ"
+
+#: AccountAction-DisrbursalAmountReversal
+msgid "Disrbursal amount Reversal"
+msgstr "ចំនួនប្រាក់ចំនាយត្រូវបានសងត្រលប់វិញ"
+
+#: AccountAction-Fee
+msgid "Fee"
+msgstr "ថ្លៃសេវា"
+
+#: AccountAction-Interest_posting
+msgctxt "AccountAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "កាប្រាក់ដែលបានបង់"
+
+#: AccountAction-LoanRepayment
+msgid "Loan Repayment"
+msgstr "សងរំលោះកំចី"
+
+#: AccountAction-LoanRescheduled
+msgctxt "AccountAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "កំនត់កាលវិភាគកំចីសាជាថ្មី"
+
+#: AccountAction-LoanReversal
+msgid "Loan Reversal"
+msgstr "កប្រែត្រឡប់នៃកំចី"
+
+#: AccountAction-LoanWrittenOff
+msgctxt "AccountAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "ការលប់ចោលនៃកំចី"
+
+#: AccountAction-MiscellenousFee
+msgid "Miscellenous Fee"
+msgstr "ថ្លៃសេវាផ្សេងៗ"
+
+#: AccountAction-MiscellenousPenalty
+msgid "Miscellenous Penalty"
+msgstr "ការពិន័យ្យផ្សេងៗ"
+
+#: AccountAction-Payment
+msgid "Payment"
+msgstr "ការចំនាយ"
+
+#: AccountAction-Penalty
+msgctxt "AccountAction-Penalty"
+msgid "Penalty"
+msgstr "ការពិន័យ្យ"
+
+#: AccountAction-SavingsAdjustment
+msgid "Savings Adjustment"
+msgstr "រក្សាទុកការកែតំរូវ"
+
+#: AccountAction-WaiveOffDue
+msgid "Waive Off Due"
+msgstr "លើកលែងចំនួនដែលជំពាក់"
+
+#: AccountAction-WaiveOffOverDue
+msgid "Waive Off Over Due"
+msgstr "លើកលែងរាល់ចំនួនដែលជំពាក់ហូស"
+
+#: AccountAction-Withdrawal
+msgid "Withdrawal"
+msgstr "ដកប្រាក់"
+
+#: AccountFlags-LoanReversal
+msgid "Loan reversal"
+msgstr "បកត្រលប់នៃកំចី"
+
+#: AccountFlags-Other
+msgctxt "AccountFlags-Other"
+msgid "Other"
+msgstr "ផ្សេងទៀត"
+
+#: AccountFlags-Rejected
+msgctxt "AccountFlags-Rejected"
+msgid "Rejected"
+msgstr "បដិសេធ"
+
+#: AccountFlags-Withdraw
+msgctxt "AccountFlags-Withdraw"
+msgid "Withdraw"
+msgstr "ដកប្រាក់"
+
+#: AccountState-ActiveInBadStanding
+msgid "Active in Bad Standing"
+msgstr ""
+
+#: AccountState-ActiveInGoodStanding
+msgid "Active in Good Standing"
+msgstr ""
+
+#: AccountState-ApplicationApproved
+msgid "Application Approved"
+msgstr "ពាក្យស្នើសុំត្រូវបានសំរេច"
+
+#: AccountState-ApplicationPendingApproval
+msgctxt "AccountState-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "ពាក្យស្នើសុំត្រូវបានអាក់ខានក្នុងការសំរេច"
+
+#: AccountState-Cancel
+msgid "Cancel"
+msgstr "បោះបង់"
+
+#: AccountState-ClosedObligationMet
+msgid "Closed- Obligation met"
+msgstr "បិទ ករុណីយកិច្ចបានសំរេចដូចបំនង"
+
+#: AccountState-ClosedRescheduled
+msgid "Closed- Rescheduled"
+msgstr "បិទ រៀបចំកាលវិភាគជាថ្មី"
+
+#: AccountState-ClosedWrittenOff
+msgid "Closed- Written Off"
+msgstr "បិទ លប់ចោល"
+
+#: AccountState-DisbursedToLo
+msgid "Disbursed to LO"
+msgstr ""
+
+#: AccountState-PartialApplication
+msgctxt "AccountState-PartialApplication"
+msgid "Partial Application"
+msgstr "ផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: AccountType-Customer
+msgid "Customer"
+msgstr "អតិថិជន"
+
+#: AccountType-Loan
+msgctxt "AccountType-Loan"
+msgid "Loan"
+msgstr "កំចី"
+
+#: AccountType-Saving
+msgid "Saving"
+msgstr "សន្សំ"
+
+#: BusinessActivities-Agriculture
+msgid "Agriculture"
+msgstr "កសិកម្ម"
+
+#: BusinessActivities-AnimalHusbandry
+msgid "Animal Husbandry"
+msgstr "ការចិញ្ចឺមសត្វ"
+
+#: BusinessActivities-DailyLabour
+msgid "Daily Labour"
+msgstr "កំលាំងពលកម្មប្រចាំថ្ងៃ"
+
+#: BusinessActivities-MicroEnterprise
+msgid "Micro Enterprise"
+msgstr ""
+
+#: BusinessActivities-Production
+msgid "Production"
+msgstr "ផលិតកម្ម"
+
+#: BusinessActivities-Trading
+msgid "Trading"
+msgstr "ពាណិជ្ជកម្ម"
+
+#: CategoryType-AllCustomers
+msgid "All Customers"
+msgstr "រាល់អតិថិជនទាំងអស់"
+
+#: CategoryType-AllProductTypes
+msgid "All Product Types"
+msgstr "រាល់ប្រភេទផលិតកម្មទាំងអស់"
+
+#: CategoryType-Center
+msgctxt "CategoryType-Center"
+msgid "Center"
+msgstr "មជ្ឈមណ្ឌល"
+
+#: CategoryType-Client
+msgid "Client"
+msgstr "អតិថិជន"
+
+#: CategoryType-Group
+msgid "Group"
+msgstr "ក្រុម"
+
+#: CategoryType-Loans
+msgid "Loans"
+msgstr "កំចីយ"
+
+#: CategoryType-Savings
+msgctxt "CategoryType-Savings"
+msgid "Savings"
+msgstr "សន្សំ"
+
+#: CenterStatus-Active
+msgctxt "CenterStatus-Active"
+msgid "Active"
+msgstr "នៅមានសកម្មភាព"
+
+#: CenterStatus-Inactive
+msgctxt "CenterStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្មភាព"
+
+#: ClientFlag-Blacklisted
+msgctxt "ClientFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "បញ្ជីខ្មៅ"
+
+#: ClientFlag-Duplicate
+msgctxt "ClientFlag-Duplicate"
+msgid "Duplicate"
+msgstr "ផ្ទួនដង"
+
+#: ClientFlag-Other
+msgctxt "ClientFlag-Other"
+msgid "Other"
+msgstr "ផ្សេងទៀត"
+
+#: ClientFlag-Rejected
+msgctxt "ClientFlag-Rejected"
+msgid "Rejected"
+msgstr "បដិសេធ"
+
+#: ClientFlag-Withdraw
+msgctxt "ClientFlag-Withdraw"
+msgid "Withdraw"
+msgstr "ដកប្រាក់"
+
+#: ClientStatus-Active
+msgctxt "ClientStatus-Active"
+msgid "Active"
+msgstr "នៅមានសកម្មភាព"
+
+#: ClientStatus-ApplicationPendingApproval
+msgctxt "ClientStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "ពាក្យស្នើសុំគឺនៅអាក់ខានក្នុងការសំរេច"
+
+#: ClientStatus-Cancelled
+msgctxt "ClientStatus-Cancelled"
+msgid "Cancelled"
+msgstr "បោះបង់"
+
+#: ClientStatus-Closed
+msgctxt "ClientStatus-Closed"
+msgid "Closed"
+msgstr "បិទ"
+
+#: ClientStatus-OnHold
+msgctxt "ClientStatus-OnHold"
+msgid "On Hold"
+msgstr "រងចាំ"
+
+#: ClientStatus-PartialApplication
+msgctxt "ClientStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "ដោយផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: CollateralTypes-Type1
+msgid "Type 1"
+msgstr "ប្រភេទ១"
+
+#: CollateralTypes-Type2
+msgid "Type 2"
+msgstr "ប្រភេទ២"
+
+#: CustomerAttendance-Ab
+msgid "A"
+msgstr "A"
+
+#: CustomerAttendance-Al
+msgid "AA"
+msgstr "AA"
+
+#: CustomerAttendance-L
+msgid "L"
+msgstr "L"
+
+#: CustomerAttendance-P
+msgid "P"
+msgstr "P"
+
+#: CustomerStatus-CustomerAccountActive
+msgid "Customer Account Active"
+msgstr "គណនីរបស់អតិថិជននៅមានសកម្មភាពនៅឡើយ"
+
+#: CustomerStatus-CustomerAccountInactive
+msgid "Customer Account InActive"
+msgstr "គណនីរបស់អតិថិជនគឺអសកម្ម"
+
+#: DayRank-First
+msgid "First"
+msgstr "ទីមួយ"
+
+#: DayRank-Fourth
+msgid "Fourth"
+msgstr "ទីបួន"
+
+#: DayRank-Last
+msgid "Last"
+msgstr "ចុងក្រោយ"
+
+#: DayRank-Second
+msgid "Second"
+msgstr "ទីពីរ"
+
+#: DayRank-Third
+msgid "Third"
+msgstr "ទីបី"
+
+#: Mother
+msgid "Mother"
+msgstr ""
+
+#: Child
+msgid "Child"
+msgstr ""
+
+#: FeeFormulaMaster-Interest
+msgctxt "FeeFormulaMaster-Interest"
+msgid "Interest"
+msgstr "ការប្រាក់"
+
+#: FeeFormulaMaster-LoanAmount
+msgid "Loan Amount"
+msgstr "ចំនួនកំចីយ"
+
+#: FeeFormulaMaster-LoanAmountInterest
+msgid "Loan Amount+Interest"
+msgstr "ចំនួនជំពាក់​បូកនិងការប្រាក់"
+
+#: FeeFrequency-OneTime
+msgid "One Time"
+msgstr "ម្តង"
+
+#: FeeFrequency-Periodic
+msgid "Periodic"
+msgstr "ដំនាក់កាល"
+
+#: FeePayment-TimeOfDisburstment
+msgid "Time Of Disburstment"
+msgstr "ពេលវេលាសងត្រឡប់"
+
+#: FeePayment-TimeOfFirstLoanRepayment
+#, fuzzy
+msgid "Time of First Loan Repayment "
+msgstr "ពេលវេលាសងរំលោះនៃកំចីយដំបូង"
+
+#: FeePayment-Upfront
+msgid "Upfront"
+msgstr "ចំពោះមុខ"
+
+#: FeeStatus-Active
+msgctxt "FeeStatus-Active"
+msgid "Active"
+msgstr "នៅមានសកម្មភាព"
+
+#: FeeStatus-Inactive
+msgid "InActive"
+msgstr "អសកម្មភាព"
+
+#: FeeType-ConsultancyFee
+msgid "Consultancy Fee"
+msgstr "សេវាពិគ្រោះយោបល់"
+
+#: FeeType-MaintenanceFee
+msgid "Maintenance Fee"
+msgstr "ថ្លៃសេវាជួសជុល"
+
+#: FeeType-MeetingCharges
+msgid "Meeting Charges"
+msgstr "ការយកសេវានៃអង្គប្រជុំ"
+
+#: FeeType-TrainingFee
+msgid "Training Fee"
+msgstr "ថ្លៃសេវានៃកាហ្វឺកហាត់"
+
+#: FinancialAction-CustomerAccountFeesPosting
+msgid "Customer Account Fees Posting"
+msgstr "សេវាលើគណនីអតិថិជនដែលបានប្រតិបត្តិ"
+
+#: FinancialAction-CustomerAdjustment
+msgctxt "FinancialAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "ការកែតំរូវអតិថិជន"
+
+#: FinancialAction-Fees
+msgctxt "FinancialAction-Fees"
+msgid "Fees"
+msgstr "ថ្លៃសេវា"
+
+#: FinancialAction-Interest
+msgctxt "FinancialAction-Interest"
+msgid "Interest"
+msgstr "កាប្រាក់"
+
+#: FinancialAction-Interest_posting
+msgctxt "FinancialAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "ការប្រាក់ដែលបានប្រតិបត្តិ"
+
+#: FinancialAction-LoanDisbursement
+msgid "Loan Disbursement"
+msgstr "ការសងកំចី"
+
+#: FinancialAction-LoanRescheduled
+msgctxt "FinancialAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "កំនត់កាលវិភាគឡើងវិញនៃកំចីយ"
+
+#: FinancialAction-LoanWrittenOff
+msgctxt "FinancialAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "លប់ចោលនូវកំចីយ"
+
+#: FinancialAction-MandatoryDeposit
+msgid "Mandatory Deposit"
+msgstr "កាដាក់ប្រាក់ដែលចាំបាច់"
+
+#: FinancialAction-MandatoryDepositAdjustment
+msgid "Mandatory Deposit Adjustment"
+msgstr "កាដាក់ប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
+
+#: FinancialAction-MandatoryWithdrawal
+msgid "Mandatory Withdrawal"
+msgstr "កាដកប្រាក់ដែលចាំបាច់"
+
+#: FinancialAction-MandatoryWithdrawalAdjustment
+msgid "Mandatory Withdrawal Adjustment"
+msgstr "កាដកប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
+
+#: FinancialAction-MiscFee
+msgid "Misc Fee"
+msgstr "ថ្លៃសេវាផ្សេងៗ"
+
+#: FinancialAction-MiscPenalty
+msgid "Misc Penalty"
+msgstr "ការពិនយ្យផ្សេងៗ"
+
+#: FinancialAction-Penalty
+msgctxt "FinancialAction-Penalty"
+msgid "Penalty"
+msgstr "ពិន័យ្យ"
+
+#: FinancialAction-Principal
+msgid "Principal"
+msgstr "ប្រាក់ដើម"
+
+#: FinancialAction-ReversalAdjustment
+msgid "Reversal Adjustment"
+msgstr ""
+
+#: FinancialAction-RoundingAdjustments
+msgid "Rounding Adjustments"
+msgstr ""
+
+#: FinancialAction-SavingsInterestPosting
+msgid "Savings Interest Posting"
+msgstr "ការប្រាក់នៃគណនីសន្សំត្រូវបានដាក់ចូល"
+
+#: FinancialAction-VoluntoryDeposit
+msgid "Voluntory Deposit"
+msgstr ""
+
+#: FinancialAction-VoluntoryDepositAdjustment
+#, fuzzy
+msgid "Voluntory Deposit Adjustment"
+msgstr "កាដាក់ប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
+
+#: FinancialAction-VoluntoryWithdrawal
+#, fuzzy
+msgid "Voluntory Withdrawal"
+msgstr "កាដកប្រាក់ដែលចាំបាច់"
+
+#: FinancialAction-VoluntoryWithdrawalAdjustment
+#, fuzzy
+msgid "Voluntory Withdrawal Adjustment"
+msgstr "កាដកប្រាក់ដែលចាំបាច់ត្រូវបានធ្វើការកែតំរូវ"
+
+#: Gender-Female
+msgid "Female"
+msgstr "ស្ត្រី"
+
+#: Gender-Male
+msgid "Male"
+msgstr "បុរស"
+
+#: GracePeriodTypes-GraceOnAllRepayments
+msgid "Grace on all repayments"
+msgstr ""
+
+#: GracePeriodTypes-None
+msgid "None"
+msgstr "គ្មាន"
+
+#: GracePeriodTypes-PrincipalOnlyGrace
+msgid "Principal only grace"
+msgstr ""
+
+#: GroupFlag-Blacklisted
+msgctxt "GroupFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "បញ្ជីខ្មៅ"
+
+#: GroupFlag-Duplicate
+msgctxt "GroupFlag-Duplicate"
+msgid "Duplicate"
+msgstr "ផ្ទួន"
+
+#: GroupFlag-LeftProgram
+msgid "Left Program"
+msgstr "ចាកចេញពីកម្មវិធី"
+
+#: GroupFlag-Other
+msgctxt "GroupFlag-Other"
+msgid "Other"
+msgstr "ផ្សេងៗ"
+
+#: GroupFlag-Rejected
+msgctxt "GroupFlag-Rejected"
+msgid "Rejected"
+msgstr "បដិសេធ"
+
+#: GroupFlag-Transferred
+msgid "Transferred"
+msgstr "បញ្ជូន"
+
+#: GroupFlag-Withdraw
+msgctxt "GroupFlag-Withdraw"
+msgid "Withdraw"
+msgstr "ដកប្រាក់"
+
+#: GroupStatus-Active
+msgctxt "GroupStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: GroupStatus-ApplicationPendingApproval
+msgctxt "GroupStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "ពាក្យស្នើសមូត្រូវបានអាក់ខានក្នុងការសំរេច"
+
+#: GroupStatus-Cancelled
+msgctxt "GroupStatus-Cancelled"
+msgid "Cancelled"
+msgstr "បោះបង់"
+
+#: GroupStatus-Closed
+msgctxt "GroupStatus-Closed"
+msgid "Closed"
+msgstr "បិទ"
+
+#: GroupStatus-OnHold
+msgctxt "GroupStatus-OnHold"
+msgid "On Hold"
+msgstr "រងចាំ"
+
+#: GroupStatus-PartialApplication
+msgctxt "GroupStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "ដោយផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: IntCalTypes-AverageBalance
+msgid "Average Balance"
+msgstr "សមតុល្យជាមធ្យម"
+
+#: IntCalTypes-MinimumBalance
+msgid "Minimum Balance"
+msgstr "សមតុល្យអប្បបរិមា"
+
+#: InterestCalcRule-AlwaysRecalculate
+msgid "Always Recalculate"
+msgstr "ជានិច្ចជាកាលតែងតែប្តូកាលវិភាគ"
+
+#: InterestCalcRule-NeverRecalculate
+msgid "Never Recalculate"
+msgstr "មិនដែលប្តូកាលវិភាគ"
+
+#: InterestTypes-DecliningBalance
+msgid "Declining Balance"
+msgstr "កាថយចុះនៃសមតុល្យ"
+
+#: InterestTypes-DecliningBalance-EqualPrincipalInstallment
+msgid "Declining Balance-Equal Principal Installment"
+msgstr "កាថយចុះនៃសមតុល្យ -​ស្មើនិងការសងរំលោះប្រាក់ដើម"
+
+#: InterestTypes-Flat
+msgid "Flat"
+msgstr "រាប"
+
+#: Language-English
+msgid "English"
+msgstr "ភាសាអង់គ្លេស"
+
+#: Language-French
+msgid "French"
+msgstr "ភាសាបារាំង"
+
+#: Language-Icelandic
+msgid "Icelandic"
+msgstr ""
+
+#: Language-Spanish
+msgid "Spanish"
+msgstr "ភាសាអេស្ប៉ាញ"
+
+#: Language-Arabic
+msgid "Arabic"
+msgstr "ភាសាអារ៉ាប់"
+
+#: Language-Chinese
+msgid "Chinese"
+msgstr "ភាសាចិន"
+
+#: Language-Swahili
+msgid "Swahili"
+msgstr ""
+
+#: Language-Portuguese
+msgid "Portuguese"
+msgstr "ភាសាប៉ទុយហ្គ័ល"
+
+#: Language-Khmer
+msgid "Khmer"
+msgstr "ភាសាខ្មែរ"
+
+#: Language-Lao
+msgid "Lao"
+msgstr "ភាសាឡាវ"
+
+#: Language-Hungarian
+msgid "Hungarian"
+msgstr ""
+
+#: Together
+msgid "Together"
+msgstr ""
+
+#: NotTogether
+msgid "Not Together"
+msgstr ""
+
+#: Loan-Loan
+msgctxt "Loan-Loan"
+msgid "Loan"
+msgstr "កំចីយ"
+
+#: MaritalStatus-Married
+msgid "Married"
+msgstr "អ្នករៀបការ"
+
+#: MaritalStatus-Unmarried
+msgid "Unmarried"
+msgstr "មិនទាន់រៀបការ"
+
+#: MaritalStatus-Widowed
+msgid "Widowed"
+msgstr "ម៉េមាយ ឬ​ ពោះម៉ាយ"
+
+#: OfficeCode-Code1
+msgid "Code 1"
+msgstr "កូដ​ ១"
+
+#: OfficeCode-Code2
+msgid "Code 2"
+msgstr "កូដ ២"
+
+#: OfficeLevels-AreaOffice
+msgid "Area Office"
+msgstr "តំបន់ទីស្នាក់ការ"
+
+#: OfficeLevels-BranchOffice
+msgid "Branch Office"
+msgstr "ទីស្នាក់ការង"
+
+#: OfficeLevels-DivisionalOffice
+msgid "Divisional Office"
+msgstr "ទីស្នាក់កានៃផ្នែក"
+
+#: OfficeLevels-HeadOffice
+msgid "Head Office"
+msgstr "ទីស្នាក់កាធំ"
+
+#: OfficeLevels-RegionalOffice
+msgid "Regional Office"
+msgstr "ទីស្នាក់កានៃតំបន់"
+
+#: OfficeStatus-Active
+msgctxt "OfficeStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: OfficeStatus-Inactive
+msgctxt "OfficeStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: PaymentType-Cash
+msgid "Cash"
+msgstr "សាច់ប្រាក់សុទ្ធ"
+
+#: PaymentType-Cheque
+msgid "Cheque"
+msgstr "មូលប្បទានប័ត្រ"
+
+#: PaymentType-Voucher
+msgid "Voucher"
+msgstr ""
+
+#: Permissions-Analysis
+msgid "Analysis"
+msgstr "វិភាគ"
+
+#: Permissions-Bulk
+msgid "Bulk"
+msgstr ""
+
+#: Permissions-CanAddNotesToLoanAccount
+msgid "Can add notes to loan account"
+msgstr "អាចបន្ថែមកំនត់ចំនាំទៅគណនីកំចី"
+
+#: Permissions-CanAddNotesToPersonnel
+msgid "Can Add Notes to Personnel"
+msgstr "អាចបន្ថែមកំនត់ចំនាំទៅលើពត៍មានបុគ្គលនីមួយៗ"
+
+#: Permissions-CanAddNotesToSavingsAccount
+msgid "Can add notes to Savings account"
+msgstr "អាចបន្ថែមកំនត់ចំនាំទៅគណនីសន្សំ"
+
+#: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
+msgid "Can adjust payment when account status is \"closed-obligation met\""
+msgstr "អាចកែតំរូវប្រាក់ដែលបានបង់នៅពេលដែលលក្ខ័ណ​"
+
+#: Permissions-CanAdministerReports
+msgid "Can Administer Reports"
+msgstr "អាចរៀបចំរបាយការណ៍"
+
+#: Permissions-CanApplyChargesToLoans
+#, fuzzy
+msgid "Can apply charges to loans "
+msgstr "អាចអនុវត្តិការយកសេវាទៅលើកំចី"
+
+#: Permissions-CanApproveLoansInBulk
+#, fuzzy
+msgid "Can approve loans in bulk "
+msgstr "អាចសំរេចកំចីនៅក្នុងលក្ខណះរួម"
+
+#: Permissions-CanBlacklistSavingsAccount
+msgid "Can blacklist Savings account"
+msgstr "អាចដាក់បញ្ជីខ្មៅទៅក្នុងគណនីសន្សំ"
+
+#: Permissions-CanChangeStateToPartialApplication
+msgctxt "Permissions-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "អាចប្តូលក្ខ័ណទៅលើផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: Permissions-CanCloseSavingsAccount
+msgid "Can close Savings account"
+msgstr "អាចបិទគណនីសន្សំ"
+
+#: Permissions-CanCreateFunds
+msgid "Can create funds"
+msgstr "អាចបង្កើតមូលនិធិ"
+
+#: Permissions-CanCreateMultipleLoanAccounts
+msgid "Can create multiple Loan accounts"
+msgstr "អាចបង្កើតពហុគណនីកំចីបាន"
+
+#: Permissions-CanCreateNewLoanAccountInSaveForLaterState
+msgid "Can create new loan account in Save for later state"
+msgstr "អាចបង្កើតគណនីកំចីទុកជាមុនសំរាបលក្ខ័នបន្ទាប់"
+
+#: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
+msgid "Can create new loan account in Submit for approval state"
+msgstr "អាចបង្កើតគណនីកំចីបានកហើយដាក់បញ្ជូនសំរាប់ពេលសុំកាអនុញ្ញាតិ"
+
+#: Permissions-CanCreateNewOffice
+msgid "Can create new office"
+msgstr "អាចបង្កើតទីស្នាក់ការថ្មី"
+
+#: Permissions-CanCreateNewRole
+msgid "Can create new role"
+msgstr "អាចបង្កតតួនាទីថ្មី"
+
+#: Permissions-CanCreateNewSavingsAccountInSaveForLaterState
+msgid "Can create new Savings account in Save for later state"
+msgstr "អាចបង្កើតគណនីសន្សំថ្មីទុកសំរាប់ពេលបន្ទាប់"
+
+#: Permissions-CanCreateNewSavingsAccountInSubmitForApprovalState
+msgid "Can create new Savings account in submit for approval state"
+msgstr "អាចបង្កើតគណនីសន្សំថ្មីទុកសំរាប់ពេលសុំក្តីសំរេច"
+
+#: Permissions-CanCreateNewSystemUsers
+msgid "Can create new system users"
+msgstr "អាចបង្កើតប្រពន្ធសំរាប់ប្រើប្រាស់ថ្មី"
+
+#: Permissions-CanDefineAcceptedPaymentType
+msgid "Can define Accepted Payment Type"
+msgstr "អាចកំនត់ប្រភេទនៃការចំនាយដែលបានយល់ព្រម"
+
+#: Permissions-CanDefineCustomFields
+msgid "Can define custom fields"
+msgstr ""
+
+#: Permissions-CanDefineHiddenMandatoryFields
+msgid "Can define hidden/mandatory fields"
+msgstr "អាចកំនត់ប្រឡោះដែលបានលាក់ទុក​​ ឬដែលមានបញ្ញត្តិ"
+
+#: Permissions-CanDefineLabels
+msgid "Can define labels"
+msgstr "អាចកំនត់ស្លាកសញ្ញា"
+
+#: Permissions-CanDefineLookupValues
+msgid "Can Define Lookup Values"
+msgstr "អាចកំនត់តំលៃដែលស្វែងរក"
+
+#: Permissions-CanDefineNewChecklistType
+msgid "Can define new checklist type"
+msgstr "អាចកំនត់ប្រភេទនៃតារាងត្រួតពិនិត្យថ្មី"
+
+#: Permissions-CanDefineNewFeeType
+msgid "Can define new fee type"
+msgstr "អាចកំនត់ប្រភេទនៃសេវាថ្មី"
+
+#: Permissions-CanDefineNewLoanProductInstance
+msgid "Can define new loan product instance"
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
+
+#: Permissions-CanDefineNewProductCategories
+msgid "Can define new product categories"
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលថ្មី"
+
+#: Permissions-CanDefineNewReportCategory
+msgid "Can define new report category"
+msgstr "អាចកំនត់ប្រភេទនៃរបាយការណ៍ថ្មី"
+
+#: Permissions-CanDefineNewSavingsProductInstance
+#, fuzzy
+msgid "Can define new Savings product instance"
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
+
+#: Permissions-CanDefineProductMix
+msgid "Can define product mix"
+msgstr "អាចកំនត់ផលិតផលចំរុះ"
+
+#: Permissions-CanDeleteARole
+msgid "Can delete a role"
+msgstr "តួនាទីអាចលប់ចោល"
+
+#: Permissions-CanDeleteReportCategory
+msgid "Can delete report category"
+msgstr "អាចលប់ចោលប្រភេទនៃរបាយការណ៍"
+
+#: Permissions-CanDisburseLoan
+msgid "Can disburse loan"
+msgstr "អាចសងកំចីបាន"
+
+#: Permissions-CanDoAdjustmentsForSavingsAccount
+msgid "Can do adjustments for savings account"
+msgstr "អាចធ្វើកាកែតំរូវបានសំរាប់គណនីសន្សំ"
+
+#: Permissions-CanDownloadReportTemplate
+msgid "Can download report template"
+msgstr "អាចចំលងទំរង់នៃរបាយការណ៍ពីក្នុងប្រពន្ធ័"
+
+#: Permissions-CanEditLoanAccountInformation
+msgid "Can edit Loan account information"
+msgstr "អាចកែពត៍មានគណនីកំចី"
+
+#: Permissions-CanEditLoanProductInstances
+#, fuzzy
+msgid "Can edit loan product instances"
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
+
+#: Permissions-CanEditProductCategoryInformation
+msgid "Can edit product category information"
+msgstr "អាចកែពត៍មាននៃប្រភេទផលិតផល"
+
+#: Permissions-CanEditProductMix
+msgid "Can edit product mix"
+msgstr "អាចកែផលិតផលចំរុះ"
+
+#: Permissions-CanEditReportInformation
+msgid "Can edit report information"
+msgstr "អាចកែពត៍មាននៃរបាយការណ៍"
+
+#: Permissions-CanEditSavingsProductInstances
+#, fuzzy
+msgid "Can edit Savings product instances"
+msgstr "អាចកំនត់ប្រភេទនៃផលិតផលកំចីរយះពេលខ្លីថ្មី"
+
+#: Permissions-CanEditSelfInformation
+msgid "Can edit self information"
+msgstr "អាចកែពត៍មានផ្ទាល់ខ្លួន"
+
+#: Permissions-CanEnterCollectionSheetData
+msgid "Can Enter Collection Sheet Data"
+msgstr "អាចដាក់ចូលរាល់ទំពរ័នៃទិន្ន័យដែលបានប្រមូល"
+
+#: Permissions-CanImportTransactions
+msgid "Can import transactions"
+msgstr ""
+
+#: Permissions-CanMakeAdjustmentEntryToTheAccount
+msgid "Can make adjustment entry to the account"
+msgstr "អាចធ្វើការកែតំរូវចូលទៅក្នុងគណនី"
+
+#: Permissions-CanMakeDepositWithdrawalToSavingsAccount
+msgid "Can make deposit/withdrawal to savings account"
+msgstr "អាចដាក់ប្រាក់ចូល/​ដកចេញទៅក្នុងគណនីសន្សំ"
+
+#: Permissions-CanMakePaymentToTheAccount
+msgid "Can make payment to the account"
+msgstr "អាចបង់លុយចូលទៅក្នុងគណនី"
+
+#: Permissions-CanModifyARole
+msgid "Can modify a role"
+msgstr "អាចកែឡើងវិញនូវតួនាទី"
+
+#: Permissions-CanModifyChecklistInformation
+msgid "Can modify checklist information"
+msgstr "អាចកែពត៍មានតារាងត្រួតពិនិត្យ"
+
+#: Permissions-CanModifyFeeInformation
+msgid "Can modify fee information"
+msgstr "អាចប្តូពត៍មាននៃថ្លៃសេវា"
+
+#: Permissions-CanModifyFunds
+msgid "Can modify funds"
+msgstr "អាចប្តូមូលនិធិ"
+
+#: Permissions-CanModifyLatenessDormancyDefinition
+msgid "Can modify lateness/dormancy definition"
+msgstr "អាចកែនិយមន័យនៃភាពយឺតយាវ​ ឬដែលគ្មានសកម្មភាពយូ"
+
+#: Permissions-CanModifyOfficeHierarchy
+msgid "Can modify office hierarchy"
+msgstr "អាចកែឋានានុក្រម្យនៃទីស្នាក់ការ"
+
+#: Permissions-CanModifyOfficeInformation
+msgid "Can modify office information"
+msgstr "អាចកែពត៍មាននៃទីស្នាក់ការ"
+
+#: Permissions-CanModifyUserInformation
+msgid "Can modify user information"
+msgstr "អាចកែពត៍មានអ្នកប្រើប្រាស់"
+
+#: Permissions-CanPreviewReports
+msgid "Can Preview Reports"
+msgstr "អាចបើកមើលរបាយការណ៍"
+
+#: Permissions-CanRedoLoanDisbursals
+msgid "Can redo Loan disbursals"
+msgstr "អាចធ្វើឡើងវិញនូវការសងរំលោះប្រាក់ដែលបានខ្ចី"
+
+#: Permissions-CanRemoveFeeTypesAttachedToTheAccount
+msgid "Can remove fee types attached to the account"
+msgstr "អាចដកប្រភេទនៃថ្លៃសេវាដែលបានដាក់ភ្ជាប់ទៅនិងប្រភេទគណនី"
+
+#: Permissions-CanRepayLoan
+msgid "Can repay loan"
+msgstr "អាចសងរំលោះកំចី"
+
+#: Permissions-CanReverseLoanDisbursals
+msgid "Can reverse Loan disbursals"
+msgstr "អាចសងត្រលប់ប្រាក់ដែលបានបង់រំលោះលើកំចី"
+
+#: Permissions-CanShutdownMifos
+msgid "Can shut down Mifos"
+msgstr ""
+
+#: Permissions-CanUnlockAUser
+msgid "Can unlock a user"
+msgstr "អាចឈប់បិទអ្នកប្រើប្រាស់"
+
+#: Permissions-CanUpdateSavingsAccount
+msgid "Can update Savings account"
+msgstr "អាចកែប្រែពត៍មានរបស់គណនីសន្សំទៅតាមជាក់សែ្តង"
+
+#: Permissions-CanUploadAdminDocuments
+msgid "Can upload admin documents"
+msgstr "អាចដាក់បញ្ជូលឯកសារដ្ឋបាលទៅក្នុង​ប្រព័ន្ធ"
+
+#: Permissions-CanUploadNewReports
+msgid "Can upload new reports"
+msgstr "អាចដាក់បញ្ចូលរបាយការណ៍ថ្មីទៅក្នុងប្រព័ន្ធ"
+
+#: Permissions-CanUploadReportTemplate
+msgid "Can upload report template"
+msgstr "អាចដាក់បញ្ចូលទំរង់របាយការណ៍ទៅក្នុងប្រព័ន្ធ"
+
+#: Permissions-CanViewActiveLoansByLoanOfficer
+msgid "Can view Active Loans By Loan Officer"
+msgstr "អាចបើកមើលកំចីដែលនៅសកម្មដោយមន្ត្រីផ្មែកឥណទាន"
+
+#: Permissions-CanViewAdminDocuments
+msgid "Can view admin documents"
+msgstr "អាចបើកមើលឯកសារដ្ឋបាល"
+
+#: Permissions-CanViewAreaPerformanceStatusReport
+#, fuzzy
+msgid "Can view Area Performance Status Report"
+msgstr "អាចបើកមើលរបាយការណ៍ស្ថានភាពស្នាដៃរបស់សាខា"
+
+#: Permissions-CanViewBranchDueDisbursementReport
+msgid "Can view Branch Due disbursement Report"
+msgstr "អាចបើកមើលសាខាតាមរយះរបាយការណ៍នៃការសងរំលោះ"
+
+#: Permissions-CanViewBranchPerformanceStatusReport
+msgid "Can view Branch Performance Status Report"
+msgstr "អាចបើកមើលរបាយការណ៍ស្ថានភាពស្នាដៃរបស់សាខា"
+
+#: Permissions-CanViewCenterMeetingSchedule
+msgid "Can view Center Meeting Schedule"
+msgstr "អាចបើកមើលកាលវីភាគនៃអង្គប្រជុំរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-CanViewCenterSummaryReport
+msgid "Can view Center Summary Report"
+msgstr "អាចបើកមើលរបាយការណ៍សង្ខេបរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-CanViewClientFeesChargesAndPenaltiesReport
+msgid "Can view Client Fees, Charges and Penalties report"
+msgstr ""
+"អាចបើកមើលប្រភេទសេវារបស់អតិថិជន​ សេវាដែលបានបង់ និងរបាយការណ៍នៃកាពិន័យ្យផ្សេងៗ"
+
+#: Permissions-CanViewClientLoanRepaymentSchedule
+msgid "Can view Client Loan repayment schedule"
+msgstr "អាចបើកមើលកាលវិភាគសងរំលោះនៃកំចីរបស់អតិថិជន"
+
+#: Permissions-CanViewClientPendingApprovalReport
+msgid "Can view Client pending approval report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃអតិថិជនដែលនៅអាក់ខានមិនទាន់ទទួលបាននូវកាសំរេច"
+
+#: Permissions-CanViewClientProductWiseHistoryReport
+msgid "Can view Client Product Wise History Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃប្រវត្តិផលិតផលដែលអតិថិជនជ្រើសរើស"
+
+#: Permissions-CanViewClientSettlementInfoReport
+msgid "Can view Client Settlement info Report"
+msgstr "អាចបើកមើលរបាយការណ៍ពត៍មានការសងប្រាក់របស់អតិថិជន"
+
+#: Permissions-CanViewClientSummaryHistoryReport
+msgid "Can view Client Summary-& History Report"
+msgstr "អាចបើកមើលរបាយការណ៍សង្ខេបនិង ប្រវត្តិរបស់អតិថិជន"
+
+#: Permissions-CanViewClientsWithoutSavingsAccount
+msgid "Can view Clients without Savings Account"
+msgstr "អាចបើកមើលគណនីអតិថិជនដោយពុំចាំបាច់រក្សាទុកនូវសកម្មភាពទាំងនេះ"
+
+#: Permissions-CanViewCollectionSheet
+msgid "Can view Collection sheet"
+msgstr "អាចបើកមើលសន្លឺកដែលប្រមូលទុក"
+
+#: Permissions-CanViewCollectionSheetReport
+msgid "Can view Collection Sheet Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃសន្លឺកដែលប្រមូលទុក"
+
+#: Permissions-CanViewDailyCashConfirmationReportStaffWise
+msgid "Can view Daily Cash Confirmation Report - Staff Wise"
+msgstr "អាចបើកមើលរាបាយការណ៍បញ្ជាក់នៃចំនួនប្រាក់សុទ្ធ នៃបុគ្គលិកម្នាក់ៗ"
+
+#: Permissions-CanViewDailyCashFlowReportBranch
+msgid "Can view Daily Cash Flow Report - Branch"
+msgstr "អាចបើកមើលរបាយការណ៍ចលនាសាច់ប្រាក់ប្រចាំថ្ងៃរបស់សាខា"
+
+#: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
+msgid "Can view Daily Portfolio quality data report - Aging analysis"
+msgstr ""
+
+#: Permissions-CanViewDailyTransactionSummaryReport
+msgid "Can view Daily Transaction Summary report"
+msgstr "អាចបើកមើលរបាយការណ៍សង្ខេបនៃប្រតិបត្តិការប្រចាំថ្ងៃ"
+
+#: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
+msgid "Can view Detailed Aging of Portfolio at Risk"
+msgstr ""
+
+#: Permissions-CanViewDivisionPerformanceStatusReport
+msgid "Can view Division Performance Status Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃស្ថានភាពស្នាដៃរបស់ផ្នែកនិមួយៗ"
+
+#: Permissions-CanViewFundRequirementReport
+msgid "Can view Fund Requirement Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃថវិការដែលត្រូវការ"
+
+#: Permissions-CanViewGrameenKootaPerformanceStatusReport
+#, fuzzy
+msgid "Can view Grameen Koota Performance Status Report"
+msgstr "អាចបើកមើលរបាយការណ៍ស្ថានភាពស្នាដៃរបស់សាខា"
+
+#: Permissions-CanViewLoanAccountsReports
+msgid "Can view Loan Accounts reports"
+msgstr "អាចបើកមើលរបាយការណ៍នៃគណនីកំចី"
+
+#: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
+msgid ""
+"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
+"Sequency Wise"
+msgstr ""
+
+#: Permissions-CanViewLoansPendingApprovalReport
+msgid "Can view Loans pending approval report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃកំចីដែលអាក់ខានក្មុងកាសំរេចក្តីអនុញ្ញាត្តិ"
+
+#: Permissions-CanViewOrganizationSettings
+msgid "Can view organization settings"
+msgstr "អាចបើកមើលការរៀបចំអង្គភាព"
+
+#: Permissions-CanViewOutreachReport
+msgid "Can view Outreach Report"
+msgstr ""
+
+#: Permissions-CanViewRegionPerformanceStatusReport
+msgid "Can view Region Performance Status Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃស្ថានភាពស្នាដៃនៃតំបន់និមួយៗ"
+
+#: Permissions-CanViewReportCategory
+msgid "Can view report category"
+msgstr "អាចបើកមើលប្រភេទនៃរបាយការណ៍"
+
+#: Permissions-CanViewReports
+msgid "Can view reports"
+msgstr "អាចបើកមើលរបាយការណ៍"
+
+#: Permissions-CanViewStaffPerformanceReport
+msgid "Can view Staff Performance Report"
+msgstr "អាចបើកមើលរបាយការណ៍នៃស្នាដៃរបស់បុគ្គលិក"
+
+#: Permissions-CanViewSystemInformation
+msgid "Can view system information"
+msgstr "អាចបើកមើលពត៍មានរបស់ប្រព័ន្ធ"
+
+#: Permissions-CanWaiveAFeeInstallment
+msgid "Can waive a fee installment"
+msgstr "អាចមានការលើកលែងថ្លៃសេវានៃការសងរំលោះ"
+
+#: Permissions-CanWaiveDueDepositsForSavingsAccount
+msgid "Can waive due deposits for Savings account"
+msgstr "អាចលើកលែងកាដាក់ប្រាក់ដែលដល់ពេលត្រូវបង់សំរាប់គណនីសន្សំ"
+
+#: Permissions-CanWaiveOverDueDepositsForSavingsAccount
+msgid "Can waive over due deposits for Savings account"
+msgstr "អាចលើកលែងកាដាក់ប្រាក់ដែលហួសពេលពេលត្រូវបង់សំរាប់គណនីសន្សំ"
+
+#: Permissions-CanWaivePenalty
+msgid "Can waive penalty"
+msgstr "អាចលើកលែងការពិន័យ្យ"
+
+#: Permissions-Center
+msgctxt "Permissions-Center"
+msgid "Center"
+msgstr "មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers
+msgctxt "Permissions-Centers"
+msgid "Centers"
+msgstr "មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanAddNotesToCenterRecords
+msgid "Can add notes to Center records"
+msgstr "អាចបន្ថែមកំនត់ចំណាំទៅលើការកត់ត្រារបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanApplyChargesToCenterAccounts
+msgid "Can apply charges to Center accounts"
+msgstr "អាចអនុវត្តិការយកសេវាទៅលើគណនីរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanCreateNewCenter
+#, fuzzy
+msgid "Can create new Center "
+msgstr "អាចបង្កើតមជ្ឈមណ្ឌលថ្មី"
+
+#: Permissions-Centers-CanEditCenterStatus
+msgid "Can edit Center status"
+msgstr "អាចកែលក្ខ័ណរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "អាចកែចំនួនថ្លៃសេវាដែលភ្ជាប់ទៅនឹងគណនី"
+
+#: Permissions-Centers-CanEditMeetingSchedule
+#, fuzzy
+msgid "Can edit meeting schedule "
+msgstr "អាចកែតំរូវកាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Centers-CanMakeAdjustmentEntriesToCenterAccount
+msgid "Can make adjustment entries to Center account"
+msgstr "អាចធ្វើការកែតំរូវរាលប្រតិបត្តិការណ៍ក្នុងគណនីរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanMakePaymentsToCenterAccounts
+msgid "Can make payments to Center accounts"
+msgstr "អាចធ្វើការសងទៅក្នុងគណនីរបស់ំជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanModifyCenterInformation
+#, fuzzy
+msgid "Can modify Center information "
+msgstr "អាចកែតំរូវពត៍មានរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanRemoveFeeTypesFromCenterAccount
+msgid "Can remove fee types from Center account"
+msgstr "អាចដកប្រភេទនៃសេវាពីក្នុងគណនីរបស់មជ្ឈមណ្ឌល"
+
+#: Permissions-Centers-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Centers-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "អាចបញ្ជាក់កាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Centers-CanWaiveADueAmount
+msgctxt "Permissions-Centers-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "អាចលើកលែងនូវចំនួនដែលជំពាក់"
+
+#: Permissions-Checklists
+msgid "Checklists"
+msgstr "តារាងត្រួតពិនិត្យ"
+
+#: Permissions-ClientDetail
+msgid "Client Detail"
+msgstr "លំអិតពីអតិថិជន"
+
+#: Permissions-ClientManagement
+msgid "Client management"
+msgstr "ការគ្រប់គ្រងអតិថិជន"
+
+#: Permissions-Clients
+msgctxt "Permissions-Clients"
+msgid "Clients"
+msgstr "អតិថិជន"
+
+#: Permissions-Clients-CanAddAnExistingClientToAGroup
+msgid "Can add an existing client to a group"
+msgstr "អាចបន្ងែមអតិថិជនដែលមានស្រេចទៅក្នុងក្រុម"
+
+#: Permissions-Clients-CanAddEditHistoricalData
+msgctxt "Permissions-Clients-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "អាចដាក់ថែម ឬ កែទិន្ន័យពីមុន"
+
+#: Permissions-Clients-CanAddNotesToClient
+msgid "Can add notes to Client"
+msgstr "អាចបន្ថែមកំនត់ចំនាំទៅក្នុងអតិថិជន"
+
+#: Permissions-Clients-CanApplyChargesToClientAccounts
+msgid "Can apply charges to Client accounts"
+msgstr "អាចអនុវត្តិការយកថ្លៃសេវាពីគណនីរបស់អតិថិជន"
+
+#: Permissions-Clients-CanBlacklistAClient
+msgid "Can Blacklist a Client"
+msgstr "អាចចាត់អតិថិជនទៅក្នុងបញ្ជីខ្មៅ"
+
+#: Permissions-Clients-CanChangeStateToActive
+msgctxt "Permissions-Clients-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "អាចប្តូលក្ខ័ណទៅជាសកម្ម"
+
+#: Permissions-Clients-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Clients-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "អាចប្តូលក្ខ័ណទៅពាក្យស្នើសុំដែលនៅអាក់ខានមិនទាន់មានការសំរេច"
+
+#: Permissions-Clients-CanChangeStateToCancelled
+msgctxt "Permissions-Clients-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបោះបង់"
+
+#: Permissions-Clients-CanChangeStateToClosed
+msgctxt "Permissions-Clients-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបិទ"
+
+#: Permissions-Clients-CanChangeStateToOnHold
+msgctxt "Permissions-Clients-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "អាចប្តូលក្ខ័ណទៅជារង់ចាំ"
+
+#: Permissions-Clients-CanChangeStateToPartialApplication
+msgctxt "Permissions-Clients-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "អាចប្តូលក្ឋ័ណទៅផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: Permissions-Clients-CanCreateNewClientInSaveForLaterState
+msgid "Can create new Client in save for later state"
+msgstr "អាចបង្កើតអតិថិជនថ្មីទុកជាមុនសំរាប់លក្ខ័ណក្រោយ"
+
+#: Permissions-Clients-CanCreateNewClientInSubmitForApprovalState
+msgid "Can create new Client in submit for approval state"
+msgstr "អាចបង្កើតអតិថិជនថ្មីនៅក្នុងពេលដាក់បញ្ជូនសុំការសំរេច"
+
+#: Permissions-Clients-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Clients-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "អាចកែចំនួនថ្លៃសេវាដែលជាប់គណនី"
+
+#: Permissions-Clients-CanEditGroupMembership
+msgid "Can edit group membership"
+msgstr "អាចកែសមាជិកភាពនៃក្រុម"
+
+#: Permissions-Clients-CanEditMeetingSchedule
+msgctxt "Permissions-Clients-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "អាចកែកាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Clients-CanEditMfiInformation
+msgid "Can edit MFI information"
+msgstr "អាចកែពត៍មានMFI"
+
+#: Permissions-Clients-CanEditOfficeMembership
+msgctxt "Permissions-Clients-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "អាចកែសមាជិកភាពនៃទីស្នាក់ការ"
+
+#: Permissions-Clients-CanEditPersonalInformation
+msgid "Can edit personal information"
+msgstr "អាចកែពត៍មានផ្ទាល់ខ្លួន"
+
+#: Permissions-Clients-CanMakeAdjustmentEntriesToClientAccount
+msgid "Can make adjustment entries to Client account"
+msgstr "អាចធ្វើការកែតំរូវរាល់ប្រតិបត្តិការណ៍ដែលបានធ្វើនៅក្នុងគណនីអតិថិជន"
+
+#: Permissions-Clients-CanMakePaymentsToClientAccounts
+msgid "Can make payments to Client accounts"
+msgstr "អាចធ្វើការបង់ទៅក្នុងគណនីរបស់អតិថិជន"
+
+#: Permissions-Clients-CanRemoveClientsFromGroups
+msgid "Can remove clients from groups"
+msgstr "អាចដកអតិថិជនពីក្នុងក្រុម"
+
+#: Permissions-Clients-CanRemoveFeeTypesFromClientAccount
+msgid "Can remove fee types from Client account"
+msgstr "អាចដកប្រភេទថ្លៃសេវាពីក្នុងគណនីរបស់អតិថិជន"
+
+#: Permissions-Clients-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Clients-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "អាចបញ្ជាក់កាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Clients-CanWaiveADueAmount
+msgctxt "Permissions-Clients-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "អាចលើ់កលែងចំនួនដែលជំពាក់"
+
+#: Permissions-ConfigurationManagement
+msgid "Configuration Management"
+msgstr ""
+
+#: Permissions-Fees
+msgctxt "Permissions-Fees"
+msgid "Fees"
+msgstr "ថ្លៃសេវា"
+
+#: Permissions-Funds
+msgid "Funds"
+msgstr "ថវិការ"
+
+#: Permissions-Groups
+msgctxt "Permissions-Groups"
+msgid "Groups"
+msgstr "ក្រុម"
+
+#: Permissions-Groups-CanAddEditHistoricalData
+msgctxt "Permissions-Groups-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "អាចបន្ថែម /កែប្រែប្រវត្តិនៃទិន្ន័យ"
+
+#: Permissions-Groups-CanAddNotesToGroup
+msgid "Can add notes to group"
+msgstr "អាចបន្ថែមកំនត់ចំនាំទៅក្នុងក្រុម"
+
+#: Permissions-Groups-CanApplyChargesToGroupAccounts
+msgid "Can apply charges to group accounts"
+msgstr "អាចអនុវត្តិកាយកសេវាទៅគណនីរបស់ក្រុម"
+
+#: Permissions-Groups-CanBlacklistAGroup
+msgid "Can Blacklist a group"
+msgstr "អាចចាត់ក្រុមទៅក្នុងបញ្ជីខ្មៅ"
+
+#: Permissions-Groups-CanChangeStateToActive
+msgctxt "Permissions-Groups-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "អាចប្តូលក្ខ័ណទៅជានៅសកម្ម"
+
+#: Permissions-Groups-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Groups-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "អាចប្តូលក្ខ័ណទៅជាពាក្យស្នើសុំគឺនៅអាក់ខានមិនទាន់ការសំរេច"
+
+#: Permissions-Groups-CanChangeStateToCancelled
+msgctxt "Permissions-Groups-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបោះបង់"
+
+#: Permissions-Groups-CanChangeStateToClosed
+msgctxt "Permissions-Groups-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបិទ"
+
+#: Permissions-Groups-CanChangeStateToOnHold
+msgctxt "Permissions-Groups-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "អាចប្តូលក្ខ័ណទៅជារង់ចាំ"
+
+#: Permissions-Groups-CanChangeStateToPartialApplication
+msgctxt "Permissions-Groups-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "អាចប្តូលក្ខ័ណទៅលើផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: Permissions-Groups-CanCreateNewGroupInSaveForLaterState
+msgid "Can create new group in save for later state"
+msgstr "អាចបង្កើតក្រុមថ្មីនៅក្នុងការរក្សាទុកសំរាប់លក្ខ័ណពេលក្រោយ"
+
+#: Permissions-Groups-CanCreateNewGroupInSubmitForApprovalState
+msgid "Can create new group in submit for approval state"
+msgstr "អាចបង្កើតក្រុមថ្មីនៅក្នុងពេលដាក់បញ្ជូនសំរាប់វគ្គសុំការសំរេច"
+
+#: Permissions-Groups-CanEditCenterClientship
+msgid "Can edit Center Clientship"
+msgstr ""
+
+#: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "អាចកែចំនួនថ្លៃសេវាដែលបានភ្ជាប់ទៅនឺងគណនី"
+
+#: Permissions-Groups-CanEditGroupInformation
+msgid "Can edit Group information"
+msgstr "អាចកែក្រុមពត៍មាន"
+
+#: Permissions-Groups-CanEditMeetingSchedule
+msgctxt "Permissions-Groups-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "អាចកែកាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Groups-CanEditOfficeMembership
+msgctxt "Permissions-Groups-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "អាចកែសមាជិកភាពនៃទីស្នាក់ការ"
+
+#: Permissions-Groups-CanMakeAdjustmentEntriesToGroupAccount
+msgid "Can make adjustment entries to group account"
+msgstr "អាចធ្វើការកែតំរូវនូវប្រតិបត្តិការណ៍ដែលបានដាក់ទៅក្នុងគណនីក្រុម"
+
+#: Permissions-Groups-CanMakePaymentsToGroupAccounts
+msgid "Can make payments to group accounts"
+msgstr "អាចធ្វើការចំនាយទៅលើគណនីនៃក្រុម"
+
+#: Permissions-Groups-CanRemoveFeeTypesFromGroupAccount
+msgid "Can remove fee types from group account"
+msgstr "អាចដកចេញប្រភេទនៃថ្លៃសេវាកម្មពីក្នុងគណនីក្រុម"
+
+#: Permissions-Groups-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Groups-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "អាចបញ្ជាក់ពីកាលវិភាគនៃអង្គប្រជុំ"
+
+#: Permissions-Groups-CanWaiveADueAmount
+msgctxt "Permissions-Groups-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "អាចលើកលែងចំនួនដែលជំពាក់"
+
+#: Permissions-LoanManagement
+msgid "Loan management"
+msgstr "ការគ្រុប់គ្រងកំចី"
+
+#: Permissions-LoanProcessing
+msgid "Loan Processing"
+msgstr "ការរៀបចំប្រតិបត្តិការណ៍កំចី"
+
+#: Permissions-LoanProcessing-CanChangeStateToApproved
+msgid "Can change state to Approved"
+msgstr "អាចប្តូលក្ខណ៍ទៅជាសំរេច"
+
+#: Permissions-LoanProcessing-CanChangeStateToCancelled
+msgctxt "Permissions-LoanProcessing-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបោះបង់"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedRescheduled
+msgid "Can change state to Closed-rescheduled"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបិតការអនុញ្ញាត្តិក្នុងការកំនត់កាលវិភាគឡើងវិញ"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedWrittenOff
+msgid "Can change state to Closed- Written off"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបិតលែងអោយមានការលប់ចោល"
+
+#: Permissions-LoanProcessing-CanChangeStateToDisbursedToLo
+msgid "Can change state to Disbursed to LO"
+msgstr ""
+
+#: Permissions-LoanProcessing-CanChangeStateToPartialApplication
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "អាចប្តូលក្ខ័ណទៅជាផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: Permissions-LoanProcessing-CanChangeStateToPendingApproval
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "អាចប្តូលក្ខ័ណទៅជាអាក់ខានក្នុងការបានក្តីសំរេច"
+
+#: Permissions-LoanProductDetail
+msgid "Loan Product Detail"
+msgstr "លំអិតនៃផលិតផលកំចី"
+
+#: Permissions-LoanProducts
+msgid "Loan Products"
+msgstr "ផលិតផលកំចី"
+
+#: Permissions-LoanTransactions
+msgid "Loan Transactions"
+msgstr "ប្រតិបត្តិការនៃកំចី"
+
+#: Permissions-Miscellaneous
+msgid "Miscellaneous"
+msgstr "ផ្សេងៗ"
+
+#: Permissions-NotImplemented
+msgid "Not implemented"
+msgstr "មិនទាន់បានចាប់ផ្តើមបង្កើត"
+
+#: Permissions-OfficeManagement
+msgid "Office management"
+msgstr "ការគ្រប់គ្រងការិយាល័យ"
+
+#: Permissions-Offices
+msgid "Offices"
+msgstr "ទីស្នាក់ការ"
+
+#: Permissions-OrganizationManagement
+msgid "Organization Management"
+msgstr "ការគ្រប់គ្រងអង្គភាព"
+
+#: Permissions-Performance
+msgid "Performance"
+msgstr "ប្រវត្តិការងារ"
+
+#: Permissions-Personnel
+msgctxt "Permissions-Personnel"
+msgid "Personnel"
+msgstr "បុគ្គល"
+
+#: Permissions-ProductCategories
+msgid "Product Categories"
+msgstr "ប្រភេទនៃផលិតផល"
+
+#: Permissions-ProductDefinition
+msgid "Product definition"
+msgstr "និយមន័យនៃផលិតផល"
+
+#: Permissions-ProductMix
+msgid "Product Mix"
+msgstr "ចំរុះនៃផលិតផល"
+
+#: Permissions-ReportsManagement
+msgid "Reports Management"
+msgstr "កាគ្រប់គ្រងរបាយការណ៍"
+
+#: Permissions-Roles
+msgid "Roles"
+msgstr "តួនាទី"
+
+#: Permissions-SavingsManagement
+msgid "Savings Management"
+msgstr "កាគ្រប់គ្រងគណនីសន្សំ"
+
+#: Permissions-SavingsManagement-CanChangeStateToActive
+msgctxt "Permissions-SavingsManagement-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "អាចប្តូលក្ខ័ណទៅជាមានសកម្មភាព"
+
+#: Permissions-SavingsManagement-CanChangeStateToCancel
+msgid "Can change state to cancel"
+msgstr "អាចប្តូលក្ខ័ណទៅជាបោះបង់"
+
+#: Permissions-SavingsManagement-CanChangeStateToInactive
+msgid "Can change state to inactive"
+msgstr "អាចប្តូលក្ខ័ណទៅជាអសកម្ម"
+
+#: Permissions-SavingsManagement-CanChangeStateToPartialApplication
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "អាចប្តូលក្ខ័ណទៅជាផ្នែកៗនៃពាក្យស្នើសុំ"
+
+#: Permissions-SavingsManagement-CanChangeStateToPendingApproval
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "អាចប្តូលក្ខ័ណទៅជាអាក់ខានក្នុងកាទទួលបានការសំរេច"
+
+#: Permissions-SavingsProducts
+msgid "Savings Products"
+msgstr "ផលិតផលសន្សំ"
+
+#: Permissions-Status
+msgid "Status"
+msgstr "លក្ខ័ណ"
+
+#: Permissions-SystemInformation
+msgid "System information"
+msgstr "ពត៍មានប្រព័ន្ធ"
+
+#: Permissions-UserManagement
+msgid "User management"
+msgstr "កាគ្រប់គ្រងអ្នកប្រើប្រាស់"
+
+#: Personnel-Personnel
+msgctxt "Personnel-Personnel"
+msgid "Personnel"
+msgstr "បុគ្គល"
+
+#: PersonnelLevels-LoanOfficer
+msgid "Loan Officer"
+msgstr "មន្ត្រីផ្នែកឥណទាន"
+
+#: PersonnelLevels-NonLoanOfficer
+msgid "Non Loan Officer"
+msgstr "គ្មានមន្ត្រីផ្នែកឥណទាន"
+
+#: PersonnelStatus-Active
+msgctxt "PersonnelStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: PersonnelStatus-Inactive
+msgctxt "PersonnelStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: PersonnelStatusUnused-Active
+msgctxt "PersonnelStatusUnused-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: PersonnelStatusUnused-Inactive
+msgctxt "PersonnelStatusUnused-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: Position-CenterLeader
+msgid "Center Leader"
+msgstr "ប្រធានក្រុមណ្ឌល"
+
+#: Position-CenterSecretary
+msgid "Center Secretary"
+msgstr "លេខាធិការមណ្ឌល"
+
+#: Position-GroupLeader
+msgid "Group Leader"
+msgstr "ក្រុមប្រធានក្រុម"
+
+#: Position-GroupSecretary
+msgid "Group Secretary"
+msgstr "ក្រុមលេខាធិការ"
+
+#: PovertyStatus-NonPoor
+msgid "Non-poor"
+msgstr "គ្នានភាពក្រីក្ររ"
+
+#: PovertyStatus-Poor
+msgid "Poor"
+msgstr "ក្រីក្រ"
+
+#: PovertyStatus-VeryPoor
+msgid "Very poor"
+msgstr "ក្រីក្រជាខ្លាំង"
+
+#: PrdApplicableMaster-Centers
+msgctxt "PrdApplicableMaster-Centers"
+msgid "Centers"
+msgstr "មណ្ឌល"
+
+#: PrdApplicableMaster-Clients
+msgctxt "PrdApplicableMaster-Clients"
+msgid "Clients"
+msgstr "អតិថិជន"
+
+#: PrdApplicableMaster-Groups
+msgctxt "PrdApplicableMaster-Groups"
+msgid "Groups"
+msgstr "ក្រុម"
+
+#: ProductCategoryStatus-Active
+msgctxt "ProductCategoryStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: ProductCategoryStatus-Inactive
+msgctxt "ProductCategoryStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: ProductState-Active
+msgctxt "ProductState-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: ProductState-Close
+msgid "Close"
+msgstr "បិទ"
+
+#: ProductState-Inactive
+msgctxt "ProductState-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: ProductStatus-Active
+msgctxt "ProductStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: ProductStatus-Closed
+msgctxt "ProductStatus-Closed"
+msgid "Closed"
+msgstr "បិទ"
+
+#: ProductStatus-Inactive
+msgctxt "ProductStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: RecommendedAmtUnit-CompleteGroup
+msgid "Complete Group"
+msgstr "បំពេញក្រុម"
+
+#: RecommendedAmtUnit-PerIndividual
+msgid "Per Individual"
+msgstr "សំរាប់បុគ្គលម្នាក់ៗ"
+
+#: RepaymentRule-NextMeetingRepayment
+msgid "Next Meeting/Repayment"
+msgstr "អង្គប្រជុំបន្ទាប់/សងរំលោះ"
+
+#: RepaymentRule-NextWorkingDay
+msgid "Next Working Day"
+msgstr "ថ្ងៃធ្វើការបន្ទាប់"
+
+#: RepaymentRule-RepaymentMoratorium
+msgid "Moratorium"
+msgstr ""
+
+#: RepaymentRule-SameDay
+msgid "Same Day"
+msgstr "ថ្ងៃដដែល"
+
+#: Salutation-Mr
+msgid "Mr"
+msgstr "លោក"
+
+#: Salutation-Mrs
+msgid "Mrs"
+msgstr "លោកស្រី"
+
+#: Salutation-Ms
+msgid "Ms"
+msgstr "កញ្ញា"
+
+#: Savings-Savings
+msgctxt "Savings-Savings"
+msgid "Savings"
+msgstr "សន្សំ"
+
+#: SavingsAccountFlag-Blacklisted
+msgctxt "SavingsAccountFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "បញ្ជីខ្មៅ"
+
+#: SavingsAccountFlag-Rejected
+msgctxt "SavingsAccountFlag-Rejected"
+msgid "Rejected"
+msgstr "បដិសេដ"
+
+#: SavingsAccountFlag-Withdraw
+msgctxt "SavingsAccountFlag-Withdraw"
+msgid "Withdraw"
+msgstr "ដកប្រាក់"
+
+#: SavingsStatus-Active
+msgctxt "SavingsStatus-Active"
+msgid "Active"
+msgstr "សកម្ម"
+
+#: SavingsStatus-ApplicationPendingApproval
+msgctxt "SavingsStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "ពាក្យស្នើសុំបានអាក់ខានក្នុងការសំរេច"
+
+#: SavingsStatus-Cancelled
+msgctxt "SavingsStatus-Cancelled"
+msgid "Cancelled"
+msgstr "បោះបង់"
+
+#: SavingsStatus-Closed
+msgctxt "SavingsStatus-Closed"
+msgid "Closed"
+msgstr "បិទ"
+
+#: SavingsStatus-Inactive
+msgctxt "SavingsStatus-Inactive"
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#: SavingsStatus-PartialApplication
+msgctxt "SavingsStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "ផ្នែកៗនៃពាក្យស្នើ់សុំ"
+
+#: SavingsType-Mandatory
+msgid "Mandatory"
+msgstr "បញ្ញត្តិ"
+
+#: SavingsType-Voluntary
+msgid "Voluntary"
+msgstr "ដោយស្មគ្ឬ្រ័ចិត្ត"
+
+#: SpouseFather-Father
+msgid "Father"
+msgstr "ឪពុក"
+
+#: SpouseFather-Spouse
+msgid "Spouse"
+msgstr "ដៃគូ"
+
+#: WeekDays-Friday
+msgid "Friday"
+msgstr "ថ្ងៃសុក្រ"
+
+#: WeekDays-Monday
+msgid "Monday"
+msgstr "ថ្ងៃចន័្ទ"
+
+#: WeekDays-Saturday
+msgid "Saturday"
+msgstr "ថ្ងៃសៅរ៍"
+
+#: WeekDays-Sunday
+msgid "Sunday"
+msgstr "ថ្ងៃអាទិត្យ"
+
+#: WeekDays-Thursday
+msgid "Thursday"
+msgstr "ថ្ងៃព្រហស្បតិ៍"
+
+#: WeekDays-Tuesday
+msgid "Tuesday"
+msgstr "ថ្ងៃអង្គារ"
+
+#: WeekDays-Wednesday
+msgid "Wednesday"
+msgstr "ថ្ងៃពុធ"
+
+#: YESNO-No
+msgid "No"
+msgstr "ទេ"
+
+#: YESNO-Yes
+msgid "Yes"
+msgstr "ចាស"
+
+#: feeUpdationType-AppliesToExistingFutureAccounts
+msgid "Applies to existing & future accounts"
+msgstr "អនុវត្តិទៅលើគណនីដែលមានរួច ឬនាពេលអនាគត"
+
+#: feeUpdationType-AppliesToFutureAccounts
+msgid "Applies to future accounts"
+msgstr "អនុវត្តិទៅលើគណនីនាពេលអនាគត"

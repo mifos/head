@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.customers.surveys.business.Question" table="QUESTIONS">
+		<id name="questionId" column="QUESTION_ID" type="integer" unsaved-value="0" access="field">
+			<generator class="native"/>
+		</id>
+		<property name="shortName" column="SHORT_NAME"/>
+		<property name="questionText" column="QUESTION_TEXT"/>
+		<property name="answerType" column="ANSWER_TYPE" />
+		<property name="questionState" column="QUESTION_STATE"/>
+		<property name="numericMin" column="NUMERIC_MIN"/>
+		<property name="numericMax" column="NUMERIC_MAX"/>
+		<list name="choices" cascade="all" lazy="false">
+			<key column="QUESTION_ID" not-null="true"/>
+			<index column="CHOICE_ORDER"/>
+			<one-to-many class="org.mifos.customers.surveys.business.QuestionChoice"/>
+		</list>
+	</class>
+	<query name="questions.getNum">
+       <![CDATA[select count(*) from Question as question]]>
+    </query>
+	<query name="questions.retrieveAll">
+       <![CDATA[from Question as question order by question.shortName]]>
+    </query>
+ 	<query name="questions.retrieveByState">
+       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
+    </query>
+    <query name="questions.retrieveByName">
+       <![CDATA[from Question as question where question.shortName=:SHORT_NAME]]>
+    </query>    
+     <query name="questions.retrieveByAnswerType">
+       <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
+    </query>  
+      
+</hibernate-mapping>

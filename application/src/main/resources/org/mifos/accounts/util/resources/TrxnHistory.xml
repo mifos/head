@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <row totWidth="100" bottomLineRequired="false">
+	<column label="Date" value="userPrefferedTransactionDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+	<column label="PaymentID" value="paymentId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+    <column label="TransactionID" value="accountTrxnId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+    <column label="Type" value="type" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+    <column label="GLCode" value="glcode" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="5" align="right"/>
+    </column>
+    <column label="Debit" value="debit" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8" align="right"/>
+    </column>
+    <column label="Credit" value="credit" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8" align="right"/>
+    </column>
+    <!-- <column label="Balance" value="balance" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8" align="right"/>
+    </column>-->
+    <column label="Clientname" value="clientName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
+    </column>
+    <column label="DatePosted" value="userPrefferedPostedDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+    <column label="PostedBy" value="postedBy" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="8"/>
+    </column>
+    <column label="AdjustmentNotes" value="notes" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="12"/>
+    </column>
+  </row>
+</tableInfo>

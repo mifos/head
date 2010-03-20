@@ -1,0 +1,25 @@
+# extracted from SharedMessages.properties
+#. extracted from SharedMessages.properties
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # This file contains shared messages that can be accessed from Java code
+#. # using the MessageLookup class since this is loaded by the 
+#. # Spring injected MessageSource member of MessageLookup.
+#. # Any messages that do not belong in LookupValueMessages.properties
+#. # or MessageLookupMessages.properties can be defined here.
+#: errors.multipleCurrencies
+msgid "<Multiple Currencies>"
+msgstr ""

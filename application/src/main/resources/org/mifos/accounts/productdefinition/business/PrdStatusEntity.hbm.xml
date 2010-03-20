@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.accounts.productdefinition.business.PrdStatusEntity" table="PRD_STATUS">
+		<id name="offeringStatusId" column="OFFERING_STATUS_ID" access="field">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<property name="status" column="CURRENTLY_IN_USE" type="short" not-null="true" />
+		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" not-null="true" access="field" />
+		<many-to-one name="prdState" column="PRD_STATE_ID" class="org.mifos.accounts.productdefinition.business.PrdStateEntity" not-null="true" access="field" />
+	</class>
+	<query name="product.status">
+		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdStatusEntity prStatus
+		where prStatus.prdType.productTypeID=:productTypeID]]>
+	</query>
+	<query name="product.getAllPrdStates">
+		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdStatusEntity]]>
+	</query>
+</hibernate-mapping>

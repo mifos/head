@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<class
+		name="org.mifos.security.rolesandpermission.business.ActivityEntity"
+		table="ACTIVITY">
+		<id name="id" type="short" column="ACTIVITY_ID" access="field">
+		</id>
+		<set name="roles" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="ACTIVITY_ID" />
+			<one-to-many
+				class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
+		</set>
+		<many-to-one name="parent" column="PARENT_ID"
+			class="org.mifos.security.rolesandpermission.business.ActivityEntity"
+			cascade="none" update="true" insert="true" access="field" />
+		<many-to-one name="activityNameLookupValues"
+			column="ACTIVITY_NAME_LOOKUP_ID"
+			class="org.mifos.application.master.business.LookUpValueEntity"
+			cascade="none" update="true" insert="true" access="field" />
+		<many-to-one name="descriptionLookupValues"
+			column="DESCRIPTION_LOOKUP_ID"
+			class="org.mifos.application.master.business.LookUpValueEntity"
+			cascade="none" update="true" insert="true" access="field" />
+	</class>
+	
+	<query name="getAllActivities">
+            <![CDATA[ from ActivityEntity ae order by ae.id]]>
+    </query>
+	<query name="activityEntity.getActivityEntityByLookUpValueEntity">
+            <![CDATA[ from ActivityEntity ae where ae.activityNameLookupValues=:aLookUpValueEntity]]>
+    </query>
+</hibernate-mapping>
+

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<!-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+-->                            
+<hibernate-mapping>
+	<class
+		name="org.mifos.reports.branchreport.BranchReportLoanDetailsBO"
+		table="BATCH_LOAN_DETAILS">
+		<id name="loanDetailsId" column="LOAN_DETAILS_ID" type="integer"
+			access="field">
+			<generator class="native" />
+		</id>
+		<property name="productName" column="PRODUCT_NAME" type="string"
+			access="field" />
+		<property name="numberOfLoansIssued"
+			column="NUMBER_OF_LOANS_ISSUED" type="integer" access="field" />
+		<property name="loanAmountIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_AMOUNT_ISSUED_CURRENCY_ID"/>
+			<column name="LOAN_AMOUNT_ISSUED"/>
+		</property>
+		<property name="loanInterestIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_INTEREST_ISSUED_CURRENCY_ID"/>
+			<column name="LOAN_INTEREST_ISSUED"/>
+		</property>
+		<property name="numberOfLoansOutstanding"
+			column="NUMBER_OF_LOANS_OUTSTANDING" type="integer" access="field" />
+		<property name="loanAmountOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_OUTSTANDING_AMOUNT_CURRENCY_ID"/>
+			<column name="LOAN_OUTSTANDING_AMOUNT"/>
+		</property>
+		<property name="loanInterestOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_OUTSTANDING_INTEREST_CURRENCY_ID"/>
+			<column name="LOAN_OUTSTANDING_INTEREST"/>
+		</property>
+
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID"
+			access="field"
+			class="org.mifos.reports.branchreport.BranchReportBO">
+		</many-to-one>
+	</class>
+
+	<sql-query
+		name="branchReport.getBranchReportLoanDetailsForDateAndBranch">
+		<load-collection alias="loanDetails"
+			role="org.mifos.reports.branchreport.BranchReportBO.loanDetails" />
+		<![CDATA[SELECT {loanDetails.*} FROM BATCH_LOAN_DETAILS as loanDetails, BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=loanDetails.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+
+	<sql-query name="branchReport.extractLoanDetailsForBranch">
+		<return-scalar column="productName" type="string" />
+		<return-scalar column="numberOfLoansIssued" type="integer" />
+		<return-scalar column="loanAmountIssued" type="big_decimal" />
+		<return-scalar column="loanInterestIssued" type="big_decimal" />
+		<return-scalar column="numberOfLoansOutstanding" type="integer" />
+		<return-scalar column="loanAmountOutstanding"
+			type="big_decimal" />
+		<return-scalar column="loanInterestOutstanding"
+			type="big_decimal" />
+		<![CDATA[
+			SELECT 
+			        po.prd_offering_name as productName, 
+			        ifnull(account_disbursed.numberOfLoansIssued,0) as numberOfLoansIssued,
+			        ifnull(account_disbursed.loanAmountIssued,0) as loanAmountIssued,
+			        ifnull(account_disbursed.loanInterestIssued,0) as loanInterestIssued,
+			        ifnull(account_open.numberOfLoansOutstanding,0) as numberOfLoansOutstanding,
+			        ifnull(account_open.loanAmountOutstanding,0) as loanAmountOutstanding,
+			        ifnull(account_open.loanInterestOutstanding,0) as loanInterestOutstanding
+			   from
+			        loan_account la
+			   left join 
+			        account acc on acc.account_id=la.account_id
+			   left join 
+			        prd_offering po on po.prd_offering_id=la.prd_offering_id
+			   left join
+			        (
+			            select 
+			                        po.prd_offering_id as prd_offering_id,
+			                        count(ls.account_id) as numberOfLoansIssued,
+			                        round(sum(COALESCE(ls.orig_principal,0)),3) as loanAmountIssued,
+			                        round(sum(COALESCE(ls.orig_interest ,0)),3) as loanInterestIssued
+			                   from 
+			                        loan_account la
+			                   left join 
+			                        account acc on acc.account_id=la.account_id
+			                   left join
+			                        customer cust on acc.customer_id=cust.customer_id
+                               left join
+                                    customer_state cs on cs.status_id=cust.status_id
+			                   left join 
+			                        prd_offering po on po.prd_offering_id=la.prd_offering_id
+			                   left join
+			                        loan_summary ls on acc.account_id=ls.account_id
+			                   where 
+			                        acc.office_id=:officeId
+			                   and
+			                       cust.customer_level_id=:customerLevelId
+			                   and			                   
+			                        acc.account_state_id > 4 and acc.account_state_id < 10 
+			                   group by
+			                        po.prd_offering_id
+			        ) account_disbursed on account_disbursed.prd_offering_id=po.prd_offering_id
+			   left join
+			        (
+			            select 
+			                        po.prd_offering_id as prd_offering_id,
+			                        sum(if((ls.orig_principal-ls.principal_paid=0),0,1)) as numberOfLoansOutstanding,
+			                        round(sum(COALESCE(ls.orig_principal,0)-COALESCE(ls.principal_paid,0)),3) as loanAmountOutstanding,
+			                        round(sum(COALESCE(ls.orig_interest,0) -COALESCE(ls.interest_paid, 0)),3) as loanInterestOutstanding
+			                   from 
+			                        loan_account la
+			                   left join 
+			                        account acc on acc.account_id=la.account_id
+			                   left join
+			                        customer cust on acc.customer_id=cust.customer_id
+                               left join
+                                    customer_state cs on cs.status_id=cust.status_id
+			                   left join 
+			                        prd_offering po on po.prd_offering_id=la.prd_offering_id
+			                   left join
+			                        loan_summary ls on acc.account_id=ls.account_id
+			                   where 
+			                        acc.office_id=:officeId
+			                   and
+			                        cust.customer_level_id=:customerLevelId
+			                   and			                   
+			                        acc.account_state_id in (5,9)
+			                   group by
+			                        po.prd_offering_id
+			        ) account_open on account_open.prd_offering_id=po.prd_offering_id
+			   group by
+			        po.prd_offering_id
+		]]>
+	</sql-query>
+	<!-- 
+			select po.prd_offering_name as productName, 
+				count(ls.account_id) as numberOfLoansIssued,
+				round(sum(COALESCE(ls.orig_principal,0)),3) as loanAmountIssued,
+				round(sum(COALESCE(ls.orig_interest ,0)),3) as loanInterestIssued,
+				sum(if((ls.orig_principal-ls.principal_paid=0),0,1)) as numberOfLoansOutstanding,
+				round(sum(COALESCE(ls.orig_principal,0)-COALESCE(ls.principal_paid,0)),3) as loanAmountOutstanding,
+				round(sum(COALESCE(ls.orig_interest,0) -COALESCE(ls.interest_paid, 0)),3) as loanInterestOutstanding
+				from loan_account lacc, customer cust, prd_offering po, account acc
+	                        left outer join (
+	                           select * from loan_summary ls1 where ls1.orig_principal_currency_id=:currencyId
+	                                    and ls1.orig_interest_currency_id=:currencyId
+	                        )  ls on acc.account_id=ls.account_id 
+				where acc.account_state_id > 4 and acc.account_state_id < 10 
+				and lacc.prd_offering_id=po.prd_offering_id 
+				and cust.customer_id = acc.customer_id
+				and acc.account_id=lacc.account_id 
+				and cust.branch_id=:officeId
+	            group by lacc.prd_offering_id
+	-->
+</hibernate-mapping>

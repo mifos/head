@@ -1,0 +1,33 @@
+                     Welcome to the fight against poverty!
+
+                 Mifos: Changing the World... One Line at a Time
+
+                                ~ ~ ~ ~ ~ ~ ~ ~
+
+Overview
+========
+Mifos is a primarily Web-focused application for microfinance portfolio
+management. Mifos tracks offices, customers, and associated savings, loan, and
+other accounts. Mifos includes a comprehensive reporting suite, and can be
+customized to meet the needs of any microfinance institution.
+
+
+Quick start
+========
+Licensing:
+    See LICENSE.
+
+Installation, Configuration, Running:
+    See INSTALL.
+
+Contributors:
+    See AUTHORS.
+
+
+Developers
+========
+Start here:
+    http://mifos.org/developers
+
+Frequently Asked Questions:
+    http://mifos.org/developers/wiki/FAQ

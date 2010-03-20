@@ -1,0 +1,13 @@
+<FindBugsFilter>
+<!-- 
+This first match element specifies findbugs bug codes to ignore across the whole code base.
+Justifications for ignoring each code included in this list are given below:
+
+SnVI: 	Since Serialization is only intented to be used for httpsessions, there should be no
+		long lived serialized object files so using serialVersionUID is unnecessary.
+--> 
+	<Match>
+		<Bug code="SnVI"/>
+	</Match>
+
+</FindBugsFilter>

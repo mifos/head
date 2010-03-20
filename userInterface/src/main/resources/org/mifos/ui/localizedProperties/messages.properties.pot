@@ -1,0 +1,91 @@
+#. extracted from messages.properties
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-18 16:47-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.1.1\n"
+"X-Accelerator-Marker: &\n"
+
+#: title
+msgid "Mifos"
+msgstr ""
+
+#: heading
+msgid "Hello :: Mifos"
+msgstr ""
+
+#: greeting
+msgid "Greetings, it is now"
+msgstr ""
+
+#: priceincrease.heading
+msgid "Price Increase :: Mifos"
+msgstr ""
+
+#: error.not-specified
+msgid "Percentage not specified!"
+msgstr ""
+
+#: error.too-low
+msgid "You have to specify a percentage higher than {0}!"
+msgstr ""
+
+#: error.too-high
+msgid "Don''t be greedy - you can''t raise prices by more than {0}%!"
+msgstr ""
+
+#: required
+msgid "Entry required."
+msgstr ""
+
+#: typeMismatch
+msgid "Invalid data."
+msgstr ""
+
+#: typeMismatch.percentage
+msgid "That is not a number!"
+msgstr ""
+
+#: ID
+msgid "ID"
+msgstr ""
+
+#: Description
+msgid "Description"
+msgstr ""
+
+#: Price
+msgid "Price"
+msgstr ""
+
+#: UserName
+msgid "UserName"
+msgstr ""
+
+#: Products
+msgid "Products"
+msgstr ""
+
+#: chineseText
+msgid "chineseTextGoesHere"
+msgstr ""
+
+#: arabicText
+msgid "arabicTextGoesHere"
+msgstr ""
+
+#: hindiText
+msgid "hindiTextGoesHere"
+msgstr ""
+
+#: frenchText
+msgid "frenchTextGoesHere"
+msgstr ""

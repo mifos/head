@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.17" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.3.2.r232_v20090521 Build &lt;2.3.2.v20090601-0700></property>
+    <property name="units">in</property>
+    <simple-property-list name="includeResource">
+        <value>BirtReportResource/CollectionSheetReportResources</value>
+    </simple-property-list>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <property name="theme">defaultTheme</property>
+    <parameters>
+        <cascading-parameter-group name="branch_loanofficer_center" id="25">
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="branchId" id="26">
+                    <property name="hidden">false</property>
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText" key="collection.sheet.report.parameter.branch"></text-property>
+                    <property name="concealValue">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="alignment">auto</property>
+                    <property name="dataSetName">BranchOffices</property>
+                    <expression name="valueExpr">row["ds_branchId"]</expression>
+                    <expression name="labelExpr">row["ds_branchName"]</expression>
+                    <property name="fixedOrder">true</property>
+                    <property name="defaultValue">-2</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                    <list-property name="boundDataColumns">
+                        <structure>
+                            <property name="name">ds_branchId</property>
+                            <expression name="expression">dataSetRow["ds_branchId"]</expression>
+                        </structure>
+                        <structure>
+                            <property name="name">ds_branchName</property>
+                            <expression name="expression">dataSetRow["ds_branchName"]</expression>
+                        </structure>
+                    </list-property>
+                </scalar-parameter>
+                <scalar-parameter name="loanOfficerId" id="27">
+                    <property name="hidden">false</property>
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText" key="collection.sheet.report.parameter.loanofficer"></text-property>
+                    <property name="concealValue">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="alignment">auto</property>
+                    <property name="dataSetName">LoanOfficers</property>
+                    <expression name="valueExpr">row["ds_loanOfficerId"]</expression>
+                    <expression name="labelExpr">row["ds_loanOfficerName"]</expression>
+                    <property name="fixedOrder">true</property>
+                    <property name="defaultValue">-2</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                    <list-property name="boundDataColumns">
+                        <structure>
+                            <property name="name">ds_loanOfficerId</property>
+                            <expression name="expression">dataSetRow["ds_loanOfficerId"]</expression>
+                        </structure>
+                        <structure>
+                            <property name="name">ds_loanOfficerName</property>
+                            <expression name="expression">dataSetRow["ds_loanOfficerName"]</expression>
+                        </structure>
+                    </list-property>
+                </scalar-parameter>
+                <scalar-parameter name="centerId" id="28">
+                    <property name="hidden">false</property>
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText" key="collection.sheet.report.parameter.center"></text-property>
+                    <property name="concealValue">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="alignment">auto</property>
+                    <property name="dataSetName">Centers</property>
+                    <expression name="valueExpr">row["ds_centerId"]</expression>
+                    <expression name="labelExpr">row["ds_centerName"]</expression>
+                    <property name="fixedOrder">true</property>
+                    <property name="defaultValue">-2</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                    <list-property name="boundDataColumns">
+                        <structure>
+                            <property name="name">ds_centerId</property>
+                            <expression name="expression">dataSetRow["ds_centerId"]</expression>
+                        </structure>
+                        <structure>
+                            <property name="name">ds_centerName</property>
+                            <expression name="expression">dataSetRow["ds_centerName"]</expression>
+                        </structure>
+                    </list-property>
+                </scalar-parameter>
+                <scalar-parameter name="meetingDate" id="29">
+                    <property name="hidden">false</property>
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">dateTime</property>
+                    <text-property name="promptText" key="collection.sheet.report.parameter.meetingdate"></text-property>
+                    <property name="concealValue">false</property>
+                    <property name="isRequired">true</property>
+                    <property name="controlType">list-box</property>
+                    <property name="alignment">auto</property>
+                    <property name="dataSetName">MeetingDates</property>
+                    <expression name="valueExpr">row["ds_meetingDate"]</expression>
+                    <expression name="labelExpr">row["ds_meetingDisplayDate"]</expression>
+                    <property name="fixedOrder">true</property>
+                    <property name="defaultValue">01/01/1970</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                    <list-property name="boundDataColumns">
+                        <structure>
+                            <property name="name">ds_meetingDate</property>
+                            <expression name="expression">dataSetRow["ds_meetingDate"]</expression>
+                        </structure>
+                        <structure>
+                            <property name="name">ds_meetingDisplayDate</property>
+                            <expression name="expression">dataSetRow["ds_meetingDisplayDate"]</expression>
+                        </structure>
+                    </list-property>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
+        <scalar-parameter name="userId" id="30">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="isRequired">true</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <script-data-source name="ReportParameterDataSource" id="32">
+            <method name="open"><![CDATA[logger = Packages.java.util.logging.Logger.getLogger("");
+
+ALL_ID = new Packages.java.lang.Integer(-1);
+SELECT_ID = new Packages.java.lang.Integer(-2);
+NA_ID = new Packages.java.lang.Integer(-3);
+userId = params["userId"];
+try {
+	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
+    reportParameterService = Packages.org.mifos.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
+} catch (e) {
+	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
+}]]></method>
+        </script-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="MifosJDBCDataSource" id="39">
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://localhost:3306/mifos?useUnicode=true&amp;characterEncoding=UTF-8</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">bXlzcWw=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="BranchOffices" id="34">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_branchId</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">ds_branchName</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_branchId</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_branchName</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_branchId</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_branchName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">ReportParameterDataSource</property>
+            <method name="open"><![CDATA[try {
+	branchOfficeIterator = reportParameterService.getBranchOffices(userId).iterator();
+} catch(e) {
+	logger.info("MCSReport: BranchOffices: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[if (!branchOfficeIterator.hasNext()) return false;
+
+var branchOffice = branchOfficeIterator.next();
+row["ds_branchId"] = branchOffice.getId();
+row["ds_branchName"] = branchOffice.getDisplayName();
+return true;]]></method>
+        </script-data-set>
+        <script-data-set name="LoanOfficers" id="35">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ds_loanOfficerId</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_loanOfficerName</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_loanOfficerId</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_loanOfficerName</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_loanOfficerId</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_loanOfficerName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">ReportParameterDataSource</property>
+            <method name="open"><![CDATA[try {
+	var branchId = params["branchId"];
+	loanOfficerIterator = reportParameterService.getActiveLoanOfficers(userId, branchId).iterator();
+} catch(e) {
+	logger.info("MCSReport: LoanOfficers: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[if(!loanOfficerIterator.hasNext()) return false;
+
+var loanOfficer = loanOfficerIterator.next();
+row["ds_loanOfficerId"] = loanOfficer.getId();
+row["ds_loanOfficerName"] = loanOfficer.getDisplayName();
+return true;]]></method>
+            <method name="close"><![CDATA[loanOfficerIterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Centers" id="36">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ds_centerId</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_centerName</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_centerId</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_centerName</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_centerId</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_centerName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">ReportParameterDataSource</property>
+            <method name="open"><![CDATA[try {
+	var branch = params["branchId"];
+	var officer = params["loanOfficerId"];
+	
+	if(!(officer instanceof Packages.java.lang.Integer)) {
+		var pbs = new Packages.org.mifos.customers.personnel.business.service.PersonnelBusinessService();
+		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? SELECT_ID : ALL_ID;
+	}  
+    centerIterator = reportParameterService.getActiveCentersForLoanOfficer(officer, branch).iterator();
+} catch(e) {
+	logger.info("MCSReport: CenterOffices: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[if(!centerIterator.hasNext()) return false;
+	
+var center = centerIterator.next();
+row["ds_centerId"] = center.getId();
+row["ds_centerName"] = center.getDisplayName();
+return true;]]></method>
+            <method name="close"><![CDATA[centerIterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="MeetingDates" id="37">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_meetingDate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">ds_meetingDisplayDate</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_meetingDate</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_meetingDisplayDate</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_meetingDate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_meetingDisplayDate</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">ReportParameterDataSource</property>
+            <method name="open"><![CDATA[try {
+	var branchId = params["branchId"];
+	var loanOfficerId = params["loanOfficerId"];
+	if(loanOfficerId instanceof Packages.java.lang.Integer &amp;&amp; NA_ID.equals(loanOfficerId) &amp;&amp; !NA_ID.equals(branchId)) {
+		loanOfficerId = ALL_ID;
+	}  
+	if(!(loanOfficerId instanceof Packages.java.lang.Integer)) {
+		loanOfficerId = SELECT_ID.equals(branchId) ? SELECT_ID : ALL_ID;
+	}  
+	var centerId = params["centerId"];
+	if(!(centerId instanceof Packages.java.lang.Integer)) {
+		centerId = SELECT_ID.equals(loanOfficerId)? SELECT_ID : ALL_ID;		
+	}
+	
+    meetingDateIterator = reportParameterService.getMeetingDatesForCenter(
+		    branchId, loanOfficerId, centerId).iterator();	
+} catch(e) {
+	logger.info("MCSReport: MeetingDates: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[if(!meetingDateIterator.hasNext()) return false;
+var meetingDate = meetingDateIterator.next();
+row["ds_meetingDate"] = meetingDate.getDate();
+row["ds_meetingDisplayDate"] = meetingDate.getDisplayDate();
+return true;]]></method>
+            <method name="close"><![CDATA[meetingDateIterator = null;]]></method>
+        </script-data-set>
+    </data-sets>
+    <themes>
+        <theme name="defaultTheme" id="2">
+            <styles>
+                <style name="pageNumber" id="3">
+                    <property name="textAlign">center</property>
+                    <property name="verticalAlign">top</property>
+                </style>
+                <style name="pageHeaderLeft" id="4">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">18pt</property>
+                </style>
+                <style name="pageHeaderRight" id="5">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">25pt</property>
+                    <property name="color">#C0C0C0</property>
+                    <property name="textAlign">right</property>
+                    <property name="verticalAlign">top</property>
+                </style>
+                <style name="pageHeader" id="6">
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">2pt</property>
+                </style>
+                <style name="tableHeader" id="7">
+                    <property name="backgroundColor">#C0C0C0</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="textAlign">center</property>
+                </style>
+                <style name="tableSubheader" id="8">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">9pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="textAlign">center</property>
+                </style>
+                <style name="tableMainSubheader" id="9">
+                    <property name="backgroundColor">#C0C0C0</property>
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">10pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="textAlign">center</property>
+                    <property name="verticalAlign">top</property>
+                </style>
+                <style name="pageSubheaderRight" id="10">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">10pt</property>
+                    <property name="textAlign">right</property>
+                </style>
+                <style name="pageSubheaderLeft" id="11">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">10pt</property>
+                </style>
+                <style name="pageSubheader" id="12">
+                    <property name="marginBottom">10pt</property>
+                </style>
+                <style name="groupFooter" id="13">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">8pt</property>
+                    <property name="borderBottomStyle">double</property>
+                    <property name="borderBottomWidth">2pt</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">1pt</property>
+                    <property name="paddingRight">5px</property>
+                    <property name="textAlign">right</property>
+                </style>
+                <style name="rightColumnBorder" id="14">
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1pt</property>
+                </style>
+                <style name="rightBorder" id="15">
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">1pt</property>
+                </style>
+                <style name="aggregateHeader" id="16">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">12pt</property>
+                    <property name="fontWeight">bold</property>
+                </style>
+                <style name="groupRowHeader" id="17">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">8pt</property>
+                    <property name="fontWeight">bold</property>
+                </style>
+                <style name="reportSummaryHeader" id="18">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">11pt</property>
+                    <property name="fontWeight">bold</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="verticalAlign">bottom</property>
+                </style>
+                <style name="summaryText" id="19">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">12pt</property>
+                </style>
+                <style name="idText" id="20">
+                    <property name="textAlign">center</property>
+                </style>
+                <style name="numberFormat" id="21">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="paddingRight">5px</property>
+                    <property name="textAlign">right</property>
+                </style>
+                <style name="signatureLine" id="22">
+                    <property name="borderBottomStyle">dotted</property>
+                    <property name="borderBottomWidth">1pt</property>
+                </style>
+                <style name="rowText" id="23">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">8pt</property>
+                </style>
+                <style name="centerFooter" id="24">
+                    <property name="fontFamily">"Arial"</property>
+                    <property name="fontSize">8pt</property>
+                    <property name="borderBottomColor">#808080</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#808080</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#808080</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderRightWidth">thin</property>
+                </style>
+            </styles>
+        </theme>
+    </themes>
+    <page-setup>
+        <simple-master-page name="NewSimpleMasterPage" id="38"/>
+    </page-setup>
+</library>

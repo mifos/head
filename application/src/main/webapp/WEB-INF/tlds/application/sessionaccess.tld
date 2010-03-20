@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>JSTL 1.1 functions library</description>
+	<display-name>JSTL functions</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>loanfn</short-name>
+	<uri>/sessionaccess</uri>
+
+	<function>
+		<description>This takes a FlowManager,String key of Flow, String key of the Attribute in Session and returns the Value with key of the Attribute</description>
+		<name>getFromSession</name>
+		<function-class>org.mifos.framework.util.helpers.FlowManagerHelper</function-class>
+		<function-signature>java.lang.Object getFromSession(org.mifos.framework.util.helpers.FlowManager,java.lang.String,java.lang.String)</function-signature>
+		<example>&lt;c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'glCodeList')}"/&gt;</example>
+	</function>
+
+	<function>
+		<description>This takes a FlowManager,String key of Flow and returns the Flow with key</description>
+		<name>getFlow</name>
+		<function-class>org.mifos.framework.util.helpers.FlowManagerHelper</function-class>
+		<function-signature>java.lang.Object getFlow(org.mifos.framework.util.helpers.FlowManager, java.lang.String)</function-signature>
+	</function>
+
+</taglib>

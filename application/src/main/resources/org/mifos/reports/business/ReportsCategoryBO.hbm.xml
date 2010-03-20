@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  
+<hibernate-mapping > 
+  <class name="org.mifos.reports.business.ReportsCategoryBO" table="REPORT_CATEGORY" >
+     <id name="reportCategoryId" column="report_category_id" type="short">
+         <generator class="native" />
+     </id>
+    <property name="reportCategoryName" column="report_category_value" type="string" />
+    <set name="reportsSet" table="REPORT" cascade="all" order-by="report_id asc" inverse="true">
+            <key column="report_category_id"/>
+            <one-to-many class="org.mifos.reports.business.ReportsBO"/>
+    </set>   
+    
+    <property name="activityId" column="activity_Id" type="short" />
+    		
+   </class> 
+     
+</hibernate-mapping> 

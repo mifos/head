@@ -1,0 +1,3 @@
+Description:
+The expected data set for test newLoanToPartialApplicationToPendingApprovalToApproved 
+in ClientLoanStatusHistoryTest.

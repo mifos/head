@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+
+ <form-beans>
+
+    <form-bean name="importTransactionsForm" type="org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm"/>
+
+</form-beans>
+
+  <action-mappings>
+
+    <action path="/manageImportAction" 
+            name="importTransactionsForm" 
+            type="org.mifos.application.importexport.struts.action.ImportTransactionsAction" 
+            scope="session" 
+            validate="true" 
+            parameter="method"
+            input="/manageImportAction.do?method=load" >
+
+      <forward name="import_load" path="/pages/application/importexport/jsp/import_transactions.jsp"/>
+      <forward name="import_results" path="/pages/application/importexport/jsp/import_transactions_results.jsp"/>
+      <forward name="import_confirm" path="/pages/application/importexport/jsp/import_transactions_confirmation.jsp"/>
+    </action>
+
+  </action-mappings>
+
+  <message-resources parameter="org.mifos.config.localizedResources.adminUIResources"/>
+</struts-config>

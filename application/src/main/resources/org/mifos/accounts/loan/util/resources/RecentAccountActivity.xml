@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <row totWidth="100" bottomLineRequired="true">
+	<column label="Date" value="userPrefferedDate" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="25"/>
+    </column>
+	<column label="Description" value="activity" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="50"/>
+    </column>
+    <column label="Amount" value="total" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="25"/>
+    </column>
+  </row>
+</tableInfo>

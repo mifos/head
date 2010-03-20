@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<tableInfo>
+  <headerDetails  headerStyle="drawtablerowbold"/> 
+  <row totWidth="100">
+	<column label="Client ID" value="clientId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="10"/>
+    </column>
+	<column label="Client Name" value="clientName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="22"/>
+    </column>
+    <column label="Goverment ID" value="govermentId" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+    <column label="Loan amount" value="loanAmount" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>    
+    <column label="Loan purpose" value="businessActivityName" valueType="method" columnType="text">
+         <columnDetails  rowStyle="drawtablerow" colWidth="17"/>
+    </column>
+  </row>
+  
+</tableInfo>

@@ -1,0 +1,5 @@
+Principal	Loan Type	Annual Interest	Number of Payments	Payment Frequency	Days in Year	InitialRoundOffMultiple	FinalRoundOffMultiple	Digits After Decimal	InitialRoundingMode 	FinalRoundingMode	CurrencyRounding	GracePeriodType	GracePeriod	FeeFrequency	FeeType	FeeValue	FeePercentage
+10	Declining	5%	20	Weekly	365	1	0.001	3	CEILING	CEILING	CEILING	None	3	None	Value	0	10%
+							0.01		FLOOR	FLOOR	FLOOR	All		Periodic	Principal	1	
+							0.1		HALF_UP	HALF_UP	HALF_UP	Principal			Interest		
+							0.5								Principal+Interest		

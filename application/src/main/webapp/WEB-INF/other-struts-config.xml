@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+        "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+    <form-beans>
+        <!-- Login Form -->
+        <form-bean name="loginActionForm" type="org.mifos.security.login.struts.actionforms.LoginActionForm"/>
+        <form-bean name="personnelNoteActionForm"
+                   type="org.mifos.customers.personnel.struts.actionforms.PersonnelNoteActionForm"/>
+        <!-- Person Action Form -->
+        <form-bean name="personActionForm" type="org.mifos.customers.personnel.struts.actionforms.PersonActionForm"/>
+        <!-- roles and permission -->
+        <form-bean name="rolesandPermissionActionForm"
+                   type="org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionActionForm"/>
+        <!-- roles and permission -->
+        <form-bean name="rolesPermissionsActionForm"
+                   type="org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm"/>
+        <!-- office form beans -->
+        <form-bean name="offActionForm" type="org.mifos.customers.office.struts.actionforms.OffActionForm"/>
+        <!-- meeting form -->
+        <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
+        <!-- admin action form -->
+        <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
+        <form-bean name="systemInfoActionForm" type="org.mifos.application.admin.struts.actionforms.SystemInfoActionForm"/>
+        <form-bean name="shutdownActionForm" type="org.mifos.application.admin.struts.actionforms.ShutdownActionForm"/>
+        <!-- Notes form bean -->
+        <form-bean name="feeactionform" type="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
+        <!-- ChkListActionForm Action Form  -->
+        <form-bean name="ChkListActionForm"
+                   type="org.mifos.customers.checklist.struts.actionforms.ChkListActionForm"/>
+        <!--  end -->
+        <!-- FundsActionForm Action Form  -->
+        <form-bean name="fundActionForm" type="org.mifos.accounts.fund.struts.actionforms.FundActionForm"/>
+        <!--  end -->
+
+        <!-- Bulk Entry form -->
+        <form-bean name="collectionsheetactionform"
+                   type="org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm"/>
+        <!-- Office Hierarchy Action form -->
+        <form-bean name="offhierarchyactionform"
+                   type="org.mifos.customers.office.struts.actionforms.OffHierarchyActionForm"/>
+        <!-- Your Settings Action form -->
+        <form-bean name="personnelSettingsActionForm"
+                   type="org.mifos.customers.personnel.struts.actionforms.PersonnelSettingsActionForm"/>
+        <form-bean name="labelconfigurationactionform"
+                   type="org.mifos.config.struts.actionform.LabelConfigurationActionForm"/>
+        <form-bean name="hiddenmandatoryconfigurationactionform"
+                   type="org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm"/>
+        <form-bean name="lookupoptionsactionform"
+                   type="org.mifos.config.struts.actionform.LookupOptionsActionForm"/>
+        <form-bean name="customfieldsactionform"
+                   type="org.mifos.config.struts.actionform.CustomFieldsActionForm"/>
+
+        <form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm"/>
+
+        <form-bean name="genericActionForm" type="org.mifos.framework.struts.actionforms.GenericActionForm"/>
+
+        <!-- Products mix -->
+        <form-bean name="productMixActionForm"
+                   type="org.mifos.accounts.productsmix.struts.actionforms.ProductMixActionForm"/>
+        <!-- End Products mix -->
+        <!--  Accepted Payment Type Form -->
+        <form-bean name="acceptedpaymenttypeactionform"
+                   type="org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"/>
+
+        <!-- Moratorium module -->
+        <form-bean name="moratoriumActionForm"
+                   type="org.mifos.application.moratorium.struts.actionforms.MoratoriumActionForm"/>
+
+    </form-beans>
+
+    <action-mappings>
+        <!-- Products mix -->
+        <action path="/productMixAction"
+                type="org.mifos.accounts.productsmix.struts.action.ProductMixAction"
+                name="productMixActionForm"
+                parameter="method"
+                scope="session"
+                input="/productMixAction.do?method=validate"
+                validate="true"
+                >
+            <forward name="load_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
+            <forward name="loadParents_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
+            <forward name="preview_success" path="/pages/application/productsmix/jsp/previewProductsMix.jsp"/>
+            <forward name="previous_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
+            <forward name="previous_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
+            <forward name="preview_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"/>
+            <forward name="create_success" path="/pages/application/productsmix/jsp/createProductsMixConfirmation.jsp"/>
+            <forward name="get_success" path="/pages/application/productsmix/jsp/viewProductsMixDetails.jsp"/>
+            <forward name="update_success" path="/productMixAction.do?method=get"/>
+            <forward name="viewAllProductMix_success" path="/pages/application/productsmix/jsp/viewProductsMix.jsp"/>
+            <forward name="manage_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"/>
+            <forward name="editpreview_success" path="/pages/application/productsmix/jsp/editPreviewProductsMix.jsp"/>
+            <forward name="edit_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"/>
+
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+            <forward name="cancel_success" path="/productMixAction.do?method=get"/>
+            <forward name="viewProductMixChangeLog" path="/pages/application/productsmix/jsp/viewChangeLog.jsp"/>
+            <forward name="cancelProductMixChangeLog" path="/productMixAction.do?method=get"/>
+
+            <!-- adding forward for log-->
+
+
+        </action>
+        <!-- End Products mix -->
+        <action path="/yourSettings" type="org.mifos.customers.personnel.struts.action.PersonnelSettingsAction"
+                name="personnelSettingsActionForm" parameter="method" validate="true"
+                input="/yourSettings.do?method=validate" scope="session">
+            <forward name="editPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+            <forward name="get_success" path="/pages/application/personnel/jsp/yoursettings.jsp"/>
+            <forward name="manage_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+            <forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"/>
+            <forward name="preview_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp"/>
+            <forward name="previous_success" path="/pages/application/personnel/jsp/edityoursettings.jsp"/>
+            <forward name="updateSettings_success" path="/yourSettings.do?method=get"/>
+        </action>
+        <action path="/home" type="org.apache.struts.actions.ForwardAction" parameter="/login.jsp"/>
+        <action path="/PersonAction" type="org.mifos.customers.personnel.struts.action.PersonAction"
+                name="personActionForm" parameter="method" validate="true" input="/PersonAction.do?method=validate"
+                scope="session">
+            <forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp"/>
+            <forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp"/>
+            <forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp"/>
+            <forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp"/>
+            <forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp"/>
+            <forward name="create_success" path="/pages/application/personnel/jsp/createuser_confirmation.jsp"/>
+            <forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp"/>
+            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
+            <forward name="manage_success" path="/pages/application/personnel/jsp/edit_user.jsp"/>
+            <forward name="previewManage_success" path="/pages/application/personnel/jsp/preview_EditUser.jsp"/>
+            <forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp"/>
+            <forward name="previousManage_success" path="/pages/application/personnel/jsp/edit_user.jsp"/>
+            <forward name="update_success" path="/PersonAction.do?method=get"/>
+            <forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp"/>
+            <forward name="cancelEdit_success" path="/PersonAction.do?method=get"/>
+            <forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp"/>
+            <forward name="unLockUserAccount_success" path="/PersonAction.do?method=get"/>
+            <forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp"/>
+            <forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp"/>
+            <forward name="search_failure" path="/pages/application/personnel/jsp/viewusers.jsp"/>
+            <forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp"/>
+            <forward name="viewPersonnelChangeLog" path="/pages/application/personnel/jsp/viewchangelog.jsp"/>
+            <forward name="cancelPersonnelChangeLog" path="/PersonAction.do?method=get"/>
+        </action>
+
+        <!-- M2 Personnel Note action -->
+        <action path="/personnelNoteAction" type="org.mifos.customers.personnel.struts.action.PersonnelNoteAction"
+                name="personnelNoteActionForm" parameter="method" validate="true"
+                input="/personnelNoteAction.do?method=validate" scope="session">
+            <forward name="load_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp"/>
+            <forward name="get_success" path="/personnelNoteAction.do?method=search"/>
+            <forward name="search_success" path="/pages/application/personnel/jsp/viewpersonnelnotes.jsp"/>
+            <forward name="preview_success" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp"/>
+            <forward name="preview_failure" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp"/>
+            <forward name="previous_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp"/>
+            <forward name="create_success" path="/PersonAction.do?method=get"/>
+            <forward name="cancel_success" path="/PersonAction.do?method=get"/>
+            <forward name="create_failure" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp"/>
+        </action>
+        <!--M2 Login Action -->
+        <action path="/loginAction" name="loginActionForm" type="org.mifos.security.login.struts.action.LoginAction"
+                input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
+            <forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"/>
+            <forward name="login_success" path="/custSearchAction.do?method=getHomePage" redirect="true"/>
+            <forward name="login_failure" path="/pages/application/login/jsp/login.jsp"/>
+            <forward name="load_success" path="/pages/application/login/jsp/login.jsp"/>
+            <forward name="logout_success" path="/loginAction.do?method=load"/>
+            <forward name="cancel_success" path="/loginAction.do?method=logout"/>
+            <forward name="updatePassword_success" path="/custSearchAction.do?method=getHomePage" redirect="true"/>
+            <forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"/>
+            <forward name="updateSettings_success" path="/yourSettings.do?method=get"/>
+        </action>
+        <!-- Product Category -->
+        <!-- meeting action -->
+        <action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction"
+                name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
+            <forward name="load_success" path="/pages/application/meeting/jsp/createmeeting.jsp"/>
+            <forward name="createMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp"/>
+            <forward name="createMeeting_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp"/>
+            <forward name="loadCreateCenter" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting"/>
+            <forward name="loadCreateGroup" path="/groupCustAction.do?method=previous&amp;input=CreateMeeting"/>
+            <forward name="loadCreateClient" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting"/>
+            <forward name="create_failure" path="/pages/application/meeting/jsp/createmeeting.jsp"/>
+            <forward name="center_detail_page" path="/centerCustAction.do?method=get"/>
+            <forward name="group_detail_page" path="/groupCustAction.do?method=get"/>
+            <forward name="client_detail_page" path="/clientCustAction.do?method=get"/>
+            <forward name="edit_success" path="/pages/application/meeting/jsp/updatemeeting.jsp"/>
+            <forward name="update_success" path="/pages/application/meeting/jsp/updatemeeting.jsp"/>
+            <forward name="update_failure" path="/pages/application/meeting/jsp/updatemeeting.jsp"/>
+        </action>
+        <!-- admin action -->
+        <action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm"
+                parameter="method" input="/AdminAction.do?method=validate" validate="false">
+            <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
+        </action>
+        <action path="/systemInfoAction" type="org.mifos.application.admin.struts.action.SystemInfoAction" name="systemInfoActionForm"
+                parameter="method" input="/SystemInfoAction.do?method=validate" validate="false">
+            <forward name="load_success" path="/pages/application/admin/jsp/sysinfo.jsp" />
+        </action>
+        <action path="/shutdownAction" type="org.mifos.application.admin.struts.action.ShutdownAction" name="shutdownActionForm"
+                parameter="method" input="/ShutdownAction.do?method=validate" validate="false">
+            <forward name="load_success" path="/pages/application/admin/jsp/shutdown.jsp" />
+        </action>
+        <!-- Fee Action -->
+        <action path="/feeaction" type="org.mifos.accounts.fees.struts.action.FeeAction" parameter="method"
+                input="/feeaction.do?method=validate" name="feeactionform">
+            <forward name="load_success" path="/pages/application/fees/jsp/feescreate.jsp"/>
+            <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
+            <forward name="preview_failure" path="/pages/application/fees/jsp/feescreate.jsp"/>
+            <forward name="preview_success" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
+            <forward name="previous_success" path="/pages/application/fees/jsp/feescreate.jsp"/>
+            <forward name="previous_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
+            <forward name="create_success" path="/pages/application/fees/jsp/CreateFeesConfirmation.jsp"/>
+            <forward name="create_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
+            <forward name="admin" path="/AdminAction.do?method=load"/>
+            <forward name="manage_success" path="/pages/application/fees/jsp/feesedit.jsp"/>
+            <forward name="editPreview_success" path="/pages/application/fees/jsp/previewfeesedit.jsp"/>
+            <forward name="editPreview_failure" path="/pages/application/fees/jsp/feesedit.jsp"/>
+            <forward name="editprevious_success" path="/pages/application/fees/jsp/feesedit.jsp"/>
+            <forward name="editprevious_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp"/>
+            <forward name="update_success" path="/feeaction.do?method=get"/>
+            <forward name="update_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp"/>
+            <forward name="get_success" path="/pages/application/fees/jsp/FeeDetails.jsp"/>
+            <forward name="viewAll_success" path="/pages/application/fees/jsp/ViewEditFees.jsp"/>
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+            <forward name="cancelCreate_failure" path="/pages/application/fees/jsp/previewfeescreate.jsp"/>
+            <forward name="cancelEdit_success" path="/feeaction.do?method=get"/>
+            <forward name="cancelEdit_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp"/>
+        </action>
+        <!-- CheckList Action M2-->
+        <action path="/chkListAction"
+                type="org.mifos.customers.checklist.struts.action.ChkListAction"
+                parameter="method"
+                scope="session"
+                name="ChkListActionForm"
+                validate="true"
+                input="/chkListAction.do?method=validate">
+
+            <forward name="load_success" path="/pages/application/checklist/jsp/create_checkList.jsp"/>
+            <forward name="preview_success" path="/pages/application/checklist/jsp/preview_checkList.jsp"/>
+            <forward name="preview_failure" path="/pages/application/checklist/jsp/create_checkList.jsp"/>
+            <forward name="previous_success" path="/pages/application/checklist/jsp/create_checkList.jsp"/>
+            <forward name="create_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+
+            <forward name="manage_success" path="/pages/application/checklist/jsp/manage_checkList.jsp"/>
+            <forward name="managepreview_success" path="/pages/application/checklist/jsp/editPreview_checkList.jsp"/>
+            <forward name="managePreview_failure" path="/pages/application/checklist/jsp/manage_checkList.jsp"/>
+            <forward name="manageprevious_success" path="/pages/application/checklist/jsp/manage_checkList.jsp"/>
+            <forward name="update_success" path="/chkListAction.do?method=get"/>
+            <forward name="cancelEdit_success" path="/chkListAction.do?method=get"/>
+            <forward name="get_success" path="/pages/application/checklist/jsp/checklistDetails.jsp"/>
+            <forward name="get_failure" path="/pages/application/checklist/jsp/view_checkList.jsp"/>
+            <forward name="loadAllChecklist_success" path="/pages/application/checklist/jsp/view_checkList.jsp"/>
+            <forward name="loadAllChecklist_failure" path="/AdminAction.do?method=load"/>
+        </action>
+        <!-- Ends-->
+
+        <!-- Ends-->
+
+        <!-- Funds Action -->
+        <action path="/fundAction" type="org.mifos.accounts.fund.struts.action.FundAction" parameter="method"
+                scope="session" name="fundActionForm" validate="true" input="/fundAction.do?method=validate">
+            <forward name="load_success" path="/pages/application/fund/jsp/createfund.jsp"/>
+            <forward name="load_failure" path="/pages/application/fund/jsp/createfund.jsp"/>
+            <forward name="preview_success" path="/pages/application/fund/jsp/createfundpreview.jsp"/>
+            <forward name="preview_failure" path="/pages/application/fund/jsp/createfund.jsp"/>
+            <forward name="previous_success" path="/pages/application/fund/jsp/createfund.jsp"/>
+            <forward name="previous_failure" path="/pages/application/fund/jsp/createfundpreview.jsp"/>
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+            <forward name="create_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="create_failure" path="/pages/application/fund/jsp/createfundpreview.jsp"/>
+
+            <forward name="manage_success" path="/pages/application/fund/jsp/editfund.jsp"/>
+            <forward name="manage_failure" path="/pages/application/fund/jsp/viewallfund.jsp"/>
+            <forward name="previewManage_success" path="/pages/application/fund/jsp/editfundpreview.jsp"/>
+            <forward name="previewManage_failure" path="/pages/application/fund/jsp/editfund.jsp"/>
+            <forward name="previousManage_success" path="/pages/application/fund/jsp/editfund.jsp"/>
+            <forward name="previousManage_failure" path="/pages/application/fund/jsp/editfundpreview.jsp"/>
+            <forward name="update_success" path="/fundAction.do?method=viewAllFunds"/>
+            <forward name="cancelManage_success" path="/fundAction.do?method=viewAllFunds"/>
+            <forward name="update_failure" path="/pages/application/fund/jsp/editfundpreview.jsp"/>
+            <forward name="viewAllFunds_success" path="/pages/application/fund/jsp/viewallfund.jsp"/>
+        </action>
+        <!-- Ends-->
+        <!-- Bulk Entry Action -->
+        <action path="/collectionsheetaction" type="org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction"
+                parameter="method" scope="session" name="collectionsheetactionform" validate="true"
+                input="/collectionsheetaction.do?method=validate">
+            <forward name="load_success" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
+            <forward name="get_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
+            <forward name="preview_success" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
+            <forward name="preview_failure" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp?method=previous"/>
+            <forward name="create_success" path="/pages/application/collectionsheet/jsp/bulkentryconfirmation.jsp"/>
+            <forward name="create_failure" path="/pages/application/collectionsheet/jsp/bulkentry_preview.jsp"/>
+            <forward name="previous_success" path="/pages/application/collectionsheet/jsp/bulkentry_data.jsp"/>
+            <forward name="get_failure" path="/pages/application/collectionsheet/jsp/bulkentry.jsp"/>
+            <forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage"/>
+        </action>
+        <!-- Ends-->
+
+        <!-- offAction start-->
+        <action path="/offAction" type="org.mifos.customers.office.struts.action.OffAction"
+                name="offActionForm" parameter="method"
+                input="/offAction.do?method=validate" validate="true">
+            <forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp"/>
+            <forward name="preview_success" path="/pages/application/office/jsp/preview_new_office.jsp"/>
+            <forward name="preview_failure" path="/pages/application/office/jsp/CreateNewOffice.jsp"/>
+            <forward name="previous_success" path="/pages/application/office/jsp/CreateNewOffice.jsp"/>
+            <forward name="create_success" path="/pages/application/office/jsp/createNewOfficeSuccessful.jsp"/>
+            <forward name="create_failure" path="/pages/application/office/jsp/preview_new_office.jsp"/>
+            <forward name="get_success" path="/pages/application/office/jsp/viewOfficeDetails.jsp"/>
+            <forward name="edit_success" path="/pages/application/office/jsp/editoffice.jsp"/>
+            <forward name="editpreview_success" path="/pages/application/office/jsp/edit_preview_office.jsp"/>
+            <forward name="editpreview_failure" path="/pages/application/office/jsp/editoffice.jsp"/>
+            <forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp"/>
+            <forward name="update_success" path="/offAction.do?method=get"/>
+            <forward name="update_cache_success" path="/offAction.do?method=updateCache"/>
+            <forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp"/>
+            <forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp"/>
+        </action>
+        <!-- offAction End-->
+        <!-- off hierarchy Action start-->
+        <action path="/offhierarchyaction" type="org.mifos.customers.office.struts.action.OffHierarchyAction"
+                name="offhierarchyactionform" parameter="method" scope="session"
+                input="/offhierarchyaction.do?method=validate" validate="true">
+            <forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp"/>
+            <forward name="update_success" path="/AdminAction.do?method=load"/>
+            <forward name="update_failure" path="/pages/application/office/jsp/offhierarchy.jsp"/>
+            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
+        </action>
+        <!-- off hierarchy Action End-->
+
+        <!-- role action -->
+        <action path="/rolesPermission"
+                type="org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction"
+                name="rolesPermissionsActionForm" parameter="method"
+                input="/rolesPermission.do?method=validate"
+                validate="true" scope="session">
+            <forward name="viewRoles_success" path="/pages/application/rolesandpermission/jsp/viewroles.jsp"/>
+            <forward name="load_success" path="/pages/application/rolesandpermission/jsp/addrole.jsp"/>
+            <forward name="create_failure" path="/pages/application/rolesandpermission/jsp/addrole.jsp"/>
+            <forward name="create_success" path="/rolesPermission.do?method=viewRoles"/>
+            <forward name="manage_success" path="/pages/application/rolesandpermission/jsp/managerole.jsp"/>
+            <forward name="update_success" path="/rolesPermission.do?method=viewRoles"/>
+            <forward name="update_failure" path="/pages/application/rolesandpermission/jsp/managerole.jsp"/>
+            <forward name="preview_success" path="/pages/application/rolesandpermission/jsp/confirmdeleterole.jsp"/>
+            <forward name="delete_failure" path="/pages/application/rolesandpermission/jsp/confirmdeleterole.jsp"/>
+            <forward name="delete_success" path="/rolesPermission.do?method=viewRoles"/>
+            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
+        </action>
+
+        <action path="/labelconfigurationaction"
+                type="org.mifos.config.struts.action.LabelConfigurationAction"
+                name="labelconfigurationactionform" parameter="method"
+                input="/labelconfigurationaction.do?method=validate"
+                validate="true" scope="session">
+            <forward name="load_success" path="/pages/application/configuration/jsp/definelabels.jsp"/>
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp"/>
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+        </action>
+        <action path="/hiddenmandatoryconfigurationaction"
+                type="org.mifos.config.struts.action.HiddenMandatoryConfigurationAction"
+                name="hiddenmandatoryconfigurationactionform" parameter="method"
+                input="/hiddenmandatoryconfigurationaction.do?method=validate"
+                validate="true" scope="session">
+            <forward name="load_success" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp"/>
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_failure" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp"/>
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+        </action>
+        <action path="/lookupOptionsAction"
+                type="org.mifos.config.struts.action.LookupOptionsAction"
+                name="lookupoptionsactionform" parameter="method" input="/lookupOptionsAction.do?method=validate"
+                validate="true" scope="session">
+            <forward name="load_success" path="/pages/application/configuration/jsp/definelookupoptions.jsp"/>
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="addEditLookupOption_success"
+                     path="/pages/application/configuration/jsp/defineonelookupoption.jsp"/>
+            <forward name="addEditLookupOption_failure"
+                     path="/pages/application/configuration/jsp/definelookupoptions.jsp"/>
+            <forward name="addEditLookupOption_cancel_success" path="/lookupOptionsAction.do?method=load"/>
+            <forward name="addEditLookupOption_cancel_failure"
+                     path="/pages/application/configuration/jsp/defineonelookupoption.jsp"/>
+            <forward name="update_success" path="/lookupOptionsAction.do?method=load"/>
+            <forward name="update_failure" path="/pages/application/configuration/jsp/defineonelookupoption.jsp"/>
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+        </action>
+        <action path="/customFieldsAction"
+                type="org.mifos.config.struts.action.CustomFieldsAction"
+                name="customfieldsactionform" parameter="method" input="/customFieldsAction.do?method=validate"
+                validate="true" scope="session">
+            <forward name="load_success"
+                     path="/pages/application/configuration/jsp/view_additional_field_categories.jsp"/>
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="viewCategory_success"
+                     path="/pages/application/configuration/jsp/view_additional_fields.jsp"/>
+            <forward name="viewCategory_failure"
+                     path="/pages/application/configuration/jsp/view_additional_field_categories.jsp"/>
+            <forward name="create_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="create_failure" path="/pages/application/configuration/jsp/preview_additional_fields.jsp"/>
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="loadDefineCustomFields_success"
+                     path="/pages/application/configuration/jsp/define_additional_fields.jsp"/>
+            <forward name="loadDefineCustomFields_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="preview_success" path="/pages/application/configuration/jsp/preview_additional_fields.jsp"/>
+            <forward name="preview_failure" path="/pages/application/configuration/jsp/define_additional_fields.jsp"/>
+            <forward name="previous_success" path="/pages/application/configuration/jsp/define_additional_fields.jsp"/>
+            <forward name="previous_failure" path="/pages/application/configuration/jsp/preview_additional_fields.jsp"/>
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+            <forward name="edit_failure" path="/pages/application/configuration/jsp/view_additional_fields.jsp"/>
+            <forward name="edit_success" path="/pages/application/configuration/jsp/edit_additional_fields.jsp"/>
+            <forward name="update_success" path="/customFieldsAction.do?method=viewCategory"/>
+            <forward name="update_failure"
+                     path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp"/>
+            <forward name="cancelUpdate_success" path="/AdminAction.do?method=load"/>
+            <forward name="editprevious_success"
+                     path="/pages/application/configuration/jsp/edit_additional_fields.jsp"/>
+            <forward name="editprevious_failure"
+                     path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp"/>
+            <forward name="editPreview_success"
+                     path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp"/>
+            <forward name="editPreview_failure" path="/pages/application/configuration/jsp/edit_additional_fields.jsp"/>
+            <forward name="cancelEdit_success" path="/customFieldsAction.do?method=viewCategory"/>
+
+        </action>
+        <action path="/acceptedPaymentTypeAction"
+                type="org.mifos.accounts.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction"
+                name="acceptedpaymenttypeactionform" parameter="method"
+                input="/acceptedPaymentTypeAction.do?method=validate"
+                validate="false" scope="session">
+            <forward name="load_success" path="/pages/application/acceptedpaymenttype/jsp/acceptedpaymenttype.jsp"/>
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="update_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp"/>
+        </action>
+        <action path="/holidayAction"
+                type="org.mifos.application.holiday.struts.action.HolidayAction"
+                parameter="method"
+                scope="session"
+                name="holidayActionForm"
+                validate="true"
+                input="/holidayAction.do?method=validate">
+            <forward name="create_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
+            <forward name="manage_success" path="/pages/application/holiday/jsp/manage_holiday.jsp"/>
+            <forward name="managepreview_success" path="/pages/application/holiday/jsp/editPreview_holiday.jsp"/>
+            <forward name="managePreview_failure" path="/pages/application/holiday/jsp/manage_holiday.jsp"/>
+            <forward name="manageprevious_success" path="/pages/application/holiday/jsp/manage_holiday.jsp"/>
+            <forward name="cancelEdit_success" path="/holidayAction.do?method=get"/>
+            <forward name="get_failure" path="/pages/application/holiday/jsp/view_holiday.jsp"/>
+            <forward name="loadAllHoliday_success" path="/pages/application/holiday/jsp/viewOfficesHolidays.jsp"/>
+            <forward name="loadAllHoliday_failure" path="/AdminAction.do?method=load"/>
+            <forward name="view_organizational_holidays"
+                     path="/pages/application/holiday/jsp/view_organizational_holidays.jsp"/>
+            <forward name="create_office_holiday" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>
+            <forward name="previous_success" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>
+            <forward name="preview_success" path="/pages/application/holiday/jsp/Review_holidayCreation.jsp"/>
+            <forward name="preview_failure" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>
+            <forward name="update_success" path="/holidayAction.do?method=get"/>
+            <forward name="get_success" path="/pages/application/holiday/jsp/view_organizational_holidays.jsp"/>
+            <forward name="load_success" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>
+        </action>
+
+        <action path="/surveysAction"
+                type="org.mifos.customers.surveys.struts.action.SurveysAction"
+                parameter="method"
+                scope="session"
+                validate="false"
+                name="genericActionForm">
+            <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
+            <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
+            <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_survey.jsp"/>
+            <forward name="edit_success" path="/pages/application/surveys/jsp/edit_survey.jsp"/>
+            <forward name="editpreview_success" path="/pages/application/surveys/jsp/survey_edit_preview.jsp"/>
+            <forward name="preview_success" path="/pages/application/surveys/jsp/survey_preview.jsp"/>
+            <forward name="create_success" path="/pages/application/surveys/jsp/create_survey_success.jsp"/>
+            <forward name="print_success" path="/pages/application/surveys/jsp/printer_version.jsp"/>
+        </action>
+
+
+        <action path="/questionsAction"
+                type="org.mifos.customers.surveys.struts.action.QuestionsAction"
+                parameter="method"
+                scope="session"
+                validate="false"
+                name="genericActionForm"
+                input="/questionsAction.do?method=validate">
+            <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
+            <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+            <forward name="get_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
+            <forward name="edit_success" path="/pages/application/surveys/jsp/edit_question.jsp"/>
+            <forward name="update_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
+            <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
+        </action>
+
+        <action path="/surveyInstanceAction"
+                type="org.mifos.customers.surveys.struts.action.SurveyInstanceAction"
+                parameter="method"
+                scope="session"
+                validate="false"
+                name="genericActionForm">
+            <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+            <forward name="create_entry_success_ppi" path="/pages/application/surveys/jsp/create_ppi_instance.jsp"/>
+            <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+            <forward name="preview_failure" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+            <forward name="preview_success_ppi" path="/pages/application/surveys/jsp/preview_ppi_instance.jsp"/>
+            <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
+            <forward name="get_success" path="/pages/application/surveys/jsp/viewInstanceDetails.jsp"/>
+            <forward name="get_success_ppi" path="/pages/application/surveys/jsp/viewPPIInstanceDetails.jsp"/>
+            <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>
+        </action>
+
+ 		<action path="/viewOrganizationSettingsAction"
+                 type="org.mifos.application.admin.struts.action.ViewOrganizationSettingsAction"
+                 parameter="method"
+                 scope="session"
+                 validate="false"
+                 name="genericActionForm">
+             <forward name="load_success" path="/pages/application/admin/jsp/vieworganizationsettings.jsp"/>            
+         </action>
+
+        <action path="/ppiAction"
+                type="org.mifos.customers.ppi.struts.action.PPIAction"
+                parameter="method"
+                scope="session"
+                validate="false"
+                name="genericActionForm">
+            <forward name="configure" path="/pages/application/ppi/jsp/configure.jsp"/>
+            <forward name="preview_success" path="/pages/application/ppi/jsp/preview.jsp"/>
+            <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
+            <forward name="get_success" path="/pages/application/ppi/jsp/get.jsp"/>
+        </action>
+
+        <action path="/moratoriumAction"
+                type="org.mifos.application.moratorium.struts.action.MoratoriumAction"
+                parameter="method"
+                scope="session"
+                validate="true"
+                input="/moratoriumAction.do?method=validate"
+                name="moratoriumActionForm">
+            <forward name="configure" path="/pages/application/moratorium/jsp/configureMoratorium.jsp"/>
+            <forward name="loadSearch" path="/pages/application/moratorium/jsp/configureClientMoratorium.jsp"/>
+            <forward name="loadSearchForBranch" path="/pages/application/moratorium/jsp/configureBranchMoratorium.jsp"/>
+            <forward name="load" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+            <forward name="loadForBranch" path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+            <forward name="create" path="/pages/application/moratorium/jsp/applyMoratoriumConfirm.jsp"/>
+            <forward name="createForBranch" path="/pages/application/moratorium/jsp/applyBranchMoratoriumConfirm.jsp"/>
+            <forward name="previewCreateMoratorium_failure"
+                     path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+            <forward name="previewCreateBranchMoratorium_failure"
+                     path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+            <forward name="get_success" path="/pages/application/moratorium/jsp/viewMoratoriums.jsp"/>
+            <forward name="edit_success" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+            <forward name="editpreview_success" path="/pages/application/moratorium/jsp/editMoratoriumsPreview.jsp"/>
+            <forward name="update_success" path="/moratoriumAction.do?method=get"/>
+            <forward name="editPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+            <forward name="liftPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"/>
+            <forward name="create_success" path="/AdminAction.do?method=load"></forward>
+            <forward name="previous_success" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"></forward>
+            <forward name="previous_success_for_branch"
+                     path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"></forward>
+            <forward name="edit_previous_success"
+                     path="/pages/application/moratorium/jsp/editMoratoriums.jsp"></forward>
+            <forward name="lift_previous_success"
+                     path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"></forward>
+        </action>
+
+    </action-mappings>
+	<message-resources key="FrameworkUIResources" parameter="org.mifos.config.localizedResources.FrameworkUIResources"  />
+    <message-resources key="UIResources" parameter="org.mifos.config.localizedResources.UIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="LoggerResources"
+                       parameter="org.mifos.config.localizedResources.LoggerStatements"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- ImageResources-->
+    <message-resources key="ImageResources" parameter="org.mifos.framework.util.resources.ImageResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="Resources" parameter="org.mifos.config.localizedResources.Resources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="ExceptionResources" parameter="org.mifos.config.localizedResources.ExceptionResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="LoginUIResources" parameter="org.mifos.config.localizedResources.LoginUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- Personnel resources -->
+    <message-resources key="PersonnelUIResources"
+                       parameter="org.mifos.config.localizedResources.PersonnelUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- office resources -->
+    <message-resources key="OfficeResources" parameter="org.mifos.config.localizedResources.Office"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="OfficeUIResources" parameter="org.mifos.config.localizedResources.OfficeUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+
+    <!-- meeting resources -->
+    <message-resources key="MeetingResources" parameter="org.mifos.config.localizedResources.Meeting"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- Roles and permission resources -->
+    <message-resources key="RolesAndPermissionResources"
+                       parameter="org.mifos.config.localizedResources.RolesAndPermission"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="MenuResources" parameter="org.mifos.config.localizedResources.MenuResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="adminUIResources" parameter="org.mifos.config.localizedResources.adminUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!-- fees resources -->
+    <message-resources key="FeesUIResources" parameter="org.mifos.config.localizedResources.FeesUIResources"/>
+    <!-- CheckList resources -->
+    <message-resources key="checklistUIResources"
+                       parameter="org.mifos.config.localizedResources.CheckListUIResources"/>
+    <!-- Fund resources -->
+    <message-resources key="fundUIResources" parameter="org.mifos.config.localizedResources.FundUIResources"/>
+    <!-- Bulk Entry resources -->
+    <message-resources key="bulkEntryUIResources"
+                       parameter="org.mifos.config.localizedResources.BulkEntryUIResources"/>
+    <!-- Configuration -->
+    <message-resources key="configurationUIResources"
+                       parameter="org.mifos.config.localizedResources.ConfigurationUIResources"/>
+    <!--  Holidays resources -->
+    <message-resources key="HolidayUIResources"
+                       parameter="org.mifos.config.localizedResources.HolidayUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+
+    <!-- Moratorium resources -->
+    <message-resources key="moratoriumUIResources"
+                       parameter="org.mifos.application.moratorium.util.resources.MoratoriumUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+
+    <message-resources key="SurveysUIResources"
+                       parameter="org.mifos.config.localizedResources.SurveysUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="PPIUIResources" parameter="org.mifos.config.localizedResources.PPIUIResources"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!--  Accepted Payment Type resources -->
+    <message-resources key="acceptedPaymentTypeUIResources"
+                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
+ 	 <!-- View Organization Settings Resources -->
+	 <message-resources key="viewOrganizationSettingsUIResources"
+		parameter="org.mifos.config.localizedResources.ViewOrganizationSettingsUIResources"
+		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/> 
+		<!-- View Configuration Settings Resources -->
+	 <message-resources key="viewConfigurationSettingsUIResources"
+		parameter="org.mifos.config.localizedResources.ViewConfigurationSettingsUIResources"
+		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>                       
+</struts-config>

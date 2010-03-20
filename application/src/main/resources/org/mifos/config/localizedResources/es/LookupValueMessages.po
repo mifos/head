@@ -1,0 +1,1919 @@
+# extracted from LookupValueMessages.properties
+#. extracted from LookupValueMessages.properties
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-04 17:22-0700\n"
+"PO-Revision-Date: 2009-08-07 19:55-0700\n"
+"Last-Translator: Aida Ocana <aocana@att.net>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Accelerator-Marker: &\n"
+
+#. # Key value pairs in this file are for LOOKUP_VALUE entries
+#. # defined in latest-data.sql.
+#. # New key value pairs (not defined in latest-data.sql)
+#. # should not be added to this file.
+#: AccountAction-Adjustment
+msgid "Adjustment"
+msgstr "Ajuste"
+
+#: AccountAction-CustomerAccountRepayment
+msgid "Customer Account Repayment"
+msgstr "Pago de la cuenta del cliente"
+
+#: AccountAction-CustomerAdjustment
+msgctxt "AccountAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "Ajuste al cliente"
+
+#: AccountAction-Deposit
+msgid "Deposit"
+msgstr "Depósito"
+
+#: AccountAction-Disbursal
+msgid "Disbursal"
+msgstr "Desembolso"
+
+#: AccountAction-DisrbursalAmountReversal
+msgid "Disrbursal amount Reversal"
+msgstr "Cantidad de desembolso reversible"
+
+#: AccountAction-Fee
+msgid "Fee"
+msgstr "Cuota"
+
+#: AccountAction-Interest_posting
+msgctxt "AccountAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "Aplicación_interés"
+
+#: AccountAction-LoanRepayment
+msgid "Loan Repayment"
+msgstr "Pago del préstamo"
+
+#: AccountAction-LoanRescheduled
+msgctxt "AccountAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "Préstamo reprogramado"
+
+#: AccountAction-LoanReversal
+msgid "Loan Reversal"
+msgstr "Préstamo revertido"
+
+# Due to none payment or delinquency
+#: AccountAction-LoanWrittenOff
+msgctxt "AccountAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "Préstamo cancelado "
+
+#: AccountAction-MiscellenousFee
+msgid "Miscellenous Fee"
+msgstr "Cuotas misceláneas"
+
+#: AccountAction-MiscellenousPenalty
+msgid "Miscellenous Penalty"
+msgstr "Multas misceláneas"
+
+#: AccountAction-Payment
+msgid "Payment"
+msgstr "Pago"
+
+#: AccountAction-Penalty
+msgctxt "AccountAction-Penalty"
+msgid "Penalty"
+msgstr "Multa"
+
+#: AccountAction-SavingsAdjustment
+msgid "Savings Adjustment"
+msgstr "Ajuste de ahorros"
+
+#: AccountAction-WaiveOffDue
+#, fuzzy
+msgid "Waive Off Due"
+msgstr "Prescindir lo que se debe"
+
+#: AccountAction-WaiveOffOverDue
+msgid "Waive Off Over Due"
+msgstr "Prescindir lo que está vencido"
+
+#: AccountAction-Withdrawal
+msgid "Withdrawal"
+msgstr "Retirar"
+
+#: AccountFlags-LoanReversal
+msgid "Loan reversal"
+msgstr "Préstamo revertido"
+
+#: AccountFlags-Other
+msgctxt "AccountFlags-Other"
+msgid "Other"
+msgstr "Otro"
+
+#: AccountFlags-Rejected
+msgctxt "AccountFlags-Rejected"
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: AccountFlags-Withdraw
+msgctxt "AccountFlags-Withdraw"
+msgid "Withdraw"
+msgstr "Retirar"
+
+#: AccountState-ActiveInBadStanding
+msgid "Active in Bad Standing"
+msgstr "Activo en mal estado"
+
+#: AccountState-ActiveInGoodStanding
+msgid "Active in Good Standing"
+msgstr "Activo en buen estado"
+
+#: AccountState-ApplicationApproved
+msgid "Application Approved"
+msgstr "Aplicación aprobada"
+
+#: AccountState-ApplicationPendingApproval
+msgctxt "AccountState-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Aplicación con la aprobación pendiente"
+
+#: AccountState-Cancel
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: AccountState-ClosedObligationMet
+msgid "Closed- Obligation met"
+msgstr "Cerrado - La obligación a sido cumplida"
+
+#: AccountState-ClosedRescheduled
+msgid "Closed- Rescheduled"
+msgstr "Cerrado - Reprogramado"
+
+#: AccountState-ClosedWrittenOff
+msgid "Closed- Written Off"
+msgstr "Cerrado - Pérdida"
+
+#: AccountState-DisbursedToLo
+msgid "Disbursed to LO"
+msgstr "Desembolsado a LO"
+
+#: AccountState-PartialApplication
+msgctxt "AccountState-PartialApplication"
+msgid "Partial Application"
+msgstr "Aplicación parcial"
+
+#: AccountType-Customer
+msgid "Customer"
+msgstr "Cliente"
+
+#: AccountType-Loan
+msgctxt "AccountType-Loan"
+msgid "Loan"
+msgstr "Préstamo"
+
+#: AccountType-Saving
+msgid "Saving"
+msgstr "Ahorro"
+
+#: BusinessActivities-Agriculture
+msgid "Agriculture"
+msgstr "Agricultura"
+
+#: BusinessActivities-AnimalHusbandry
+msgid "Animal Husbandry"
+msgstr "Cría de animales de granja"
+
+#: BusinessActivities-DailyLabour
+msgid "Daily Labour"
+msgstr "Mano de obra diaria"
+
+#: BusinessActivities-MicroEnterprise
+msgid "Micro Enterprise"
+msgstr "Pequeña Empresa"
+
+#: BusinessActivities-Production
+msgid "Production"
+msgstr "Producción"
+
+#: BusinessActivities-Trading
+msgid "Trading"
+msgstr "Comercio"
+
+#: CategoryType-AllCustomers
+msgid "All Customers"
+msgstr "Todos los clientes"
+
+#: CategoryType-AllProductTypes
+msgid "All Product Types"
+msgstr "Todos los tipos de productos"
+
+#: CategoryType-Center
+msgctxt "CategoryType-Center"
+msgid "Center"
+msgstr "Centro"
+
+#: CategoryType-Client
+msgid "Client"
+msgstr "Cliente"
+
+#: CategoryType-Group
+msgid "Group"
+msgstr "Grupo"
+
+#: CategoryType-Loans
+msgid "Loans"
+msgstr "Préstamos"
+
+#: CategoryType-Savings
+msgctxt "CategoryType-Savings"
+msgid "Savings"
+msgstr "Ahorros"
+
+#: CenterStatus-Active
+msgctxt "CenterStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: CenterStatus-Inactive
+msgctxt "CenterStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: ClientFlag-Blacklisted
+msgctxt "ClientFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "Lista negra"
+
+#: ClientFlag-Duplicate
+msgctxt "ClientFlag-Duplicate"
+msgid "Duplicate"
+msgstr "Duplicado"
+
+#: ClientFlag-Other
+msgctxt "ClientFlag-Other"
+msgid "Other"
+msgstr "Otro"
+
+#: ClientFlag-Rejected
+msgctxt "ClientFlag-Rejected"
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: ClientFlag-Withdraw
+msgctxt "ClientFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Retiro"
+
+#: ClientStatus-Active
+msgctxt "ClientStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: ClientStatus-ApplicationPendingApproval
+msgctxt "ClientStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "La aplicación tiene la aprobación pendiente."
+
+#: ClientStatus-Cancelled
+msgctxt "ClientStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#: ClientStatus-Closed
+msgctxt "ClientStatus-Closed"
+msgid "Closed"
+msgstr "Cerrado"
+
+#: ClientStatus-OnHold
+msgctxt "ClientStatus-OnHold"
+msgid "On Hold"
+msgstr "En espera"
+
+#: ClientStatus-PartialApplication
+msgctxt "ClientStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Aplicación parcial"
+
+#: CollateralTypes-Type1
+msgid "Type 1"
+msgstr "Tipo 1"
+
+#: CollateralTypes-Type2
+msgid "Type 2"
+msgstr "Tipo 2"
+
+# it could also be: Una
+#: CustomerAttendance-Ab
+msgid "A"
+msgstr "Un "
+
+#: CustomerAttendance-Al
+#, fuzzy
+msgid "AA"
+msgstr "AA"
+
+#: CustomerAttendance-L
+#, fuzzy
+msgid "L"
+msgstr "L"
+
+#: CustomerAttendance-P
+msgid "P"
+msgstr "P"
+
+#: CustomerStatus-CustomerAccountActive
+msgid "Customer Account Active"
+msgstr "La cuenta del cliente está activa"
+
+#: CustomerStatus-CustomerAccountInactive
+msgid "Customer Account InActive"
+msgstr "La cuenta del cliente está inactiva"
+
+#: DayRank-First
+msgid "First"
+msgstr "Primero"
+
+#: DayRank-Fourth
+msgid "Fourth"
+msgstr "Cuarto"
+
+#: DayRank-Last
+msgid "Last"
+msgstr "Último"
+
+#: DayRank-Second
+msgid "Second"
+msgstr "Segundo"
+
+#: DayRank-Third
+msgid "Third"
+msgstr "Tercero"
+
+#: Mother
+msgid "Mother"
+msgstr ""
+
+#: Child
+msgid "Child"
+msgstr ""
+
+#: FeeFormulaMaster-Interest
+msgctxt "FeeFormulaMaster-Interest"
+msgid "Interest"
+msgstr "Interés"
+
+#: FeeFormulaMaster-LoanAmount
+msgid "Loan Amount"
+msgstr "Cantidad del préstamo"
+
+#: FeeFormulaMaster-LoanAmountInterest
+msgid "Loan Amount+Interest"
+msgstr "Cantidad del préstamo+interés"
+
+#: FeeFrequency-OneTime
+msgid "One Time"
+msgstr "Una vez"
+
+#: FeeFrequency-Periodic
+msgid "Periodic"
+msgstr "Periódico"
+
+#: FeePayment-TimeOfDisburstment
+msgid "Time Of Disburstment"
+msgstr "Tiempo de desembolso"
+
+#: FeePayment-TimeOfFirstLoanRepayment
+#, fuzzy
+msgid "Time of First Loan Repayment "
+msgstr "Tiempo del primer pago del préstamo"
+
+#: FeePayment-Upfront
+msgid "Upfront"
+msgstr "Por adelantado"
+
+#: FeeStatus-Active
+msgctxt "FeeStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: FeeStatus-Inactive
+msgid "InActive"
+msgstr "Inactivo"
+
+#: FeeType-ConsultancyFee
+msgid "Consultancy Fee"
+msgstr "Cuota de consultoría"
+
+#: FeeType-MaintenanceFee
+msgid "Maintenance Fee"
+msgstr "Cuota de mantenimiento"
+
+#: FeeType-MeetingCharges
+msgid "Meeting Charges"
+msgstr "Cargos de las reuniones"
+
+#: FeeType-TrainingFee
+msgid "Training Fee"
+msgstr "Cuota de entrenamiento"
+
+#: FinancialAction-CustomerAccountFeesPosting
+msgid "Customer Account Fees Posting"
+msgstr "Aplicación de las cuotas para la cuenta del cliente"
+
+#: FinancialAction-CustomerAdjustment
+msgctxt "FinancialAction-CustomerAdjustment"
+msgid "Customer Adjustment"
+msgstr "Ajuste al cliente"
+
+#: FinancialAction-Fees
+msgctxt "FinancialAction-Fees"
+msgid "Fees"
+msgstr "Cuotas"
+
+#: FinancialAction-Interest
+msgctxt "FinancialAction-Interest"
+msgid "Interest"
+msgstr "Interés"
+
+#: FinancialAction-Interest_posting
+msgctxt "FinancialAction-Interest_posting"
+msgid "Interest_Posting"
+msgstr "Aplicación_interés"
+
+#: FinancialAction-LoanDisbursement
+msgid "Loan Disbursement"
+msgstr "Desembolso del préstamo"
+
+#: FinancialAction-LoanRescheduled
+msgctxt "FinancialAction-LoanRescheduled"
+msgid "Loan Rescheduled"
+msgstr "Préstamo reprogramado"
+
+#: FinancialAction-LoanWrittenOff
+msgctxt "FinancialAction-LoanWrittenOff"
+msgid "Loan Written Off"
+msgstr "Préstamo cancelado"
+
+#: FinancialAction-MandatoryDeposit
+msgid "Mandatory Deposit"
+msgstr "Depósito mandatorio"
+
+#: FinancialAction-MandatoryDepositAdjustment
+msgid "Mandatory Deposit Adjustment"
+msgstr "Ajuste al depósito mandatorio"
+
+#: FinancialAction-MandatoryWithdrawal
+msgid "Mandatory Withdrawal"
+msgstr "Retiro mandatorio"
+
+#: FinancialAction-MandatoryWithdrawalAdjustment
+msgid "Mandatory Withdrawal Adjustment"
+msgstr "Ajuste al retiro mandatorio"
+
+#: FinancialAction-MiscFee
+msgid "Misc Fee"
+msgstr "Cuotas misceláneas"
+
+#: FinancialAction-MiscPenalty
+msgid "Misc Penalty"
+msgstr "Multas misceláneas"
+
+#: FinancialAction-Penalty
+msgctxt "FinancialAction-Penalty"
+msgid "Penalty"
+msgstr "Multas"
+
+#: FinancialAction-Principal
+msgid "Principal"
+msgstr "Principal"
+
+#: FinancialAction-ReversalAdjustment
+msgid "Reversal Adjustment"
+msgstr "Ajuste revertido"
+
+#: FinancialAction-RoundingAdjustments
+msgid "Rounding Adjustments"
+msgstr "Ajustes redondeados"
+
+#: FinancialAction-SavingsInterestPosting
+msgid "Savings Interest Posting"
+msgstr "Aplicación de los intereses de ahorros"
+
+#: FinancialAction-VoluntoryDeposit
+msgid "Voluntory Deposit"
+msgstr "Depósito voluntario"
+
+#: FinancialAction-VoluntoryDepositAdjustment
+msgid "Voluntory Deposit Adjustment"
+msgstr "Ajuste al depósito voluntario"
+
+#: FinancialAction-VoluntoryWithdrawal
+msgid "Voluntory Withdrawal"
+msgstr "Retiro voluntario"
+
+#: FinancialAction-VoluntoryWithdrawalAdjustment
+msgid "Voluntory Withdrawal Adjustment"
+msgstr "Ajuste al retiro voluntario"
+
+#: Gender-Female
+msgid "Female"
+msgstr "Femenino"
+
+#: Gender-Male
+msgid "Male"
+msgstr "Masculino"
+
+#: GracePeriodTypes-GraceOnAllRepayments
+msgid "Grace on all repayments"
+msgstr "Período de gracia en todos los pagos"
+
+#: GracePeriodTypes-None
+msgid "None"
+msgstr "Ninguno"
+
+#: GracePeriodTypes-PrincipalOnlyGrace
+msgid "Principal only grace"
+msgstr "Período de gracia sólo para el principal"
+
+#: GroupFlag-Blacklisted
+msgctxt "GroupFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "En la lista negra"
+
+#: GroupFlag-Duplicate
+msgctxt "GroupFlag-Duplicate"
+msgid "Duplicate"
+msgstr "Duplicado"
+
+#: GroupFlag-LeftProgram
+msgid "Left Program"
+msgstr "Dejó el programa"
+
+#: GroupFlag-Other
+msgctxt "GroupFlag-Other"
+msgid "Other"
+msgstr "Otro"
+
+#: GroupFlag-Rejected
+msgctxt "GroupFlag-Rejected"
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: GroupFlag-Transferred
+msgid "Transferred"
+msgstr "Transferido"
+
+#: GroupFlag-Withdraw
+msgctxt "GroupFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Retirar"
+
+#: GroupStatus-Active
+msgctxt "GroupStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: GroupStatus-ApplicationPendingApproval
+msgctxt "GroupStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "La aplicación tiene la aprobación pendiente."
+
+#: GroupStatus-Cancelled
+msgctxt "GroupStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#: GroupStatus-Closed
+msgctxt "GroupStatus-Closed"
+msgid "Closed"
+msgstr "Cerrado"
+
+#: GroupStatus-OnHold
+msgctxt "GroupStatus-OnHold"
+msgid "On Hold"
+msgstr "En espera"
+
+#: GroupStatus-PartialApplication
+msgctxt "GroupStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Aplicación parcial"
+
+#: IntCalTypes-AverageBalance
+msgid "Average Balance"
+msgstr "Balance promedio"
+
+#: IntCalTypes-MinimumBalance
+msgid "Minimum Balance"
+msgstr "Balance mínimo"
+
+#: InterestCalcRule-AlwaysRecalculate
+msgid "Always Recalculate"
+msgstr "Siempre recalcule"
+
+#: InterestCalcRule-NeverRecalculate
+msgid "Never Recalculate"
+msgstr "Nunca recalcule"
+
+#: InterestTypes-DecliningBalance
+msgid "Declining Balance"
+msgstr "Disminución de saldo"
+
+#: InterestTypes-DecliningBalance-EqualPrincipalInstallment
+msgid "Declining Balance-Equal Principal Installment"
+msgstr "Disminución de saldo-Plazos iguales para el principal"
+
+#: InterestTypes-Flat
+msgid "Flat"
+msgstr "Fija"
+
+#: Language-English
+msgid "English"
+msgstr "Inglés"
+
+#: Language-French
+msgid "French"
+msgstr "Francés"
+
+#: Language-Icelandic
+msgid "Icelandic"
+msgstr "Islandés"
+
+#: Language-Spanish
+msgid "Spanish"
+msgstr "Español"
+
+#: Language-Arabic
+msgid "Arabic"
+msgstr "Arábigo"
+
+#: Language-Chinese
+msgid "Chinese"
+msgstr "Chino"
+
+#: Language-Swahili
+msgid "Swahili"
+msgstr "Suajili"
+
+#: Language-Portuguese
+msgid "Portuguese"
+msgstr "Portugués"
+
+# It can also be Camboyano
+#: Language-Khmer
+msgid "Khmer"
+msgstr "Jemer"
+
+#: Language-Lao
+msgid "Lao"
+msgstr "Laosiano"
+
+#: Language-Hungarian
+msgid "Hungarian"
+msgstr ""
+
+#: Together
+msgid "Together"
+msgstr ""
+
+#: NotTogether
+msgid "Not Together"
+msgstr ""
+
+#: Loan-Loan
+msgctxt "Loan-Loan"
+msgid "Loan"
+msgstr "Préstamo"
+
+#: MaritalStatus-Married
+msgid "Married"
+msgstr "Casado"
+
+#: MaritalStatus-Unmarried
+msgid "Unmarried"
+msgstr "Soltero"
+
+#: MaritalStatus-Widowed
+msgid "Widowed"
+msgstr "Viudo"
+
+#: OfficeCode-Code1
+msgid "Code 1"
+msgstr "Código 1"
+
+#: OfficeCode-Code2
+msgid "Code 2"
+msgstr "Código 2"
+
+#: OfficeLevels-AreaOffice
+msgid "Area Office"
+msgstr "Oficina del área"
+
+#: OfficeLevels-BranchOffice
+msgid "Branch Office"
+msgstr "Sucursal"
+
+#: OfficeLevels-DivisionalOffice
+msgid "Divisional Office"
+msgstr "Oficina de División"
+
+#: OfficeLevels-HeadOffice
+msgid "Head Office"
+msgstr "Oficina Central"
+
+#: OfficeLevels-RegionalOffice
+msgid "Regional Office"
+msgstr "Oficina Regional"
+
+#: OfficeStatus-Active
+msgctxt "OfficeStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: OfficeStatus-Inactive
+msgctxt "OfficeStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: PaymentType-Cash
+msgid "Cash"
+msgstr "Efectivo"
+
+#: PaymentType-Cheque
+msgid "Cheque"
+msgstr "Cheque"
+
+# it can also be cupón
+#: PaymentType-Voucher
+msgid "Voucher"
+msgstr "Vale"
+
+#: Permissions-Analysis
+msgid "Analysis"
+msgstr "Análisis"
+
+#: Permissions-Bulk
+msgid "Bulk"
+msgstr "Multiple"
+
+#: Permissions-CanAddNotesToLoanAccount
+msgid "Can add notes to loan account"
+msgstr "Puede agregar notas a la cuenta del préstamo"
+
+#: Permissions-CanAddNotesToPersonnel
+msgid "Can Add Notes to Personnel"
+msgstr "Puede agregar notas a Personal"
+
+#: Permissions-CanAddNotesToSavingsAccount
+msgid "Can add notes to Savings account"
+msgstr "Puede agregar notas a la cuenta de Ahorros"
+
+#: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
+msgid "Can adjust payment when account status is \"closed-obligation met\""
+msgstr ""
+"Puede ajustar el pago cuando el estado de la cuenta este en \"cerrado-"
+"obligación cumplida\""
+
+#: Permissions-CanAdministerReports
+msgid "Can Administer Reports"
+msgstr "Puede administrar los reportes"
+
+#: Permissions-CanApplyChargesToLoans
+#, fuzzy
+msgid "Can apply charges to loans "
+msgstr "Puede aplicar cargos a los préstamos"
+
+#: Permissions-CanApproveLoansInBulk
+#, fuzzy
+msgid "Can approve loans in bulk "
+msgstr "Puede aprobar multiple préstamos "
+
+#: Permissions-CanBlacklistSavingsAccount
+#, fuzzy
+msgid "Can blacklist Savings account"
+msgstr "Puede blacklist la cuenta de ahorros"
+
+#: Permissions-CanChangeStateToPartialApplication
+msgctxt "Permissions-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Puede cambiar el estado a aplicación parcial"
+
+#: Permissions-CanCloseSavingsAccount
+msgid "Can close Savings account"
+msgstr "Puede cerrar cuenta de Ahorros"
+
+#: Permissions-CanCreateFunds
+msgid "Can create funds"
+msgstr "Puede crear fondos"
+
+#: Permissions-CanCreateMultipleLoanAccounts
+msgid "Can create multiple Loan accounts"
+msgstr "Puede crear multiple cuentas de préstamos"
+
+#: Permissions-CanCreateNewLoanAccountInSaveForLaterState
+msgid "Can create new loan account in Save for later state"
+msgstr ""
+"Puede crear un nuevo préstamo en el estado de Guardar para más adelante "
+
+#: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
+msgid "Can create new loan account in Submit for approval state"
+msgstr ""
+"Puede crear una nueva cuenta de préstamo en el estado de Enviar para ser "
+"aprobado"
+
+#: Permissions-CanCreateNewOffice
+msgid "Can create new office"
+msgstr "Puede crear una nueva oficina"
+
+#: Permissions-CanCreateNewRole
+msgid "Can create new role"
+msgstr "Puede crear un nuevo papel"
+
+#: Permissions-CanCreateNewSavingsAccountInSaveForLaterState
+msgid "Can create new Savings account in Save for later state"
+msgstr ""
+"Puede crear una nueva cuenta de Ahorros en el estado de Guardar para más "
+"adelante"
+
+#: Permissions-CanCreateNewSavingsAccountInSubmitForApprovalState
+msgid "Can create new Savings account in submit for approval state"
+msgstr ""
+"Puede crear una cuenta de Ahorro en el estado de Enviar para ser aprobada"
+
+#: Permissions-CanCreateNewSystemUsers
+msgid "Can create new system users"
+msgstr "Puede crear nuevos usuarios del sistema"
+
+#: Permissions-CanDefineAcceptedPaymentType
+msgid "Can define Accepted Payment Type"
+msgstr "Puede definir Tipo de Pago Aceptado"
+
+#: Permissions-CanDefineCustomFields
+msgid "Can define custom fields"
+msgstr "Puede definir el campo diseñado a la medida"
+
+#: Permissions-CanDefineHiddenMandatoryFields
+msgid "Can define hidden/mandatory fields"
+msgstr "Puede definir campos ocultos/mandatorios"
+
+#: Permissions-CanDefineLabels
+msgid "Can define labels"
+msgstr "Puede definir etiquetas"
+
+#: Permissions-CanDefineLookupValues
+msgid "Can Define Lookup Values"
+msgstr "Puede definir Valores de Búsqueda"
+
+#: Permissions-CanDefineNewChecklistType
+msgid "Can define new checklist type"
+msgstr "Puede definir nuevos tipos de listas de control"
+
+#: Permissions-CanDefineNewFeeType
+msgid "Can define new fee type"
+msgstr "Puede definir nuevos tipos de cuotas"
+
+#: Permissions-CanDefineNewLoanProductInstance
+msgid "Can define new loan product instance"
+msgstr "Puede definir una nueva instancia del producto de préstamo"
+
+#: Permissions-CanDefineNewProductCategories
+msgid "Can define new product categories"
+msgstr "Puede definir nuevas categorías de producto"
+
+#: Permissions-CanDefineNewReportCategory
+msgid "Can define new report category"
+msgstr "Puede definir una nueva categoría de reportes"
+
+#: Permissions-CanDefineNewSavingsProductInstance
+msgid "Can define new Savings product instance"
+msgstr "Puede definir una nueva instancia de productos de Ahorro"
+
+#: Permissions-CanDefineProductMix
+msgid "Can define product mix"
+msgstr "Puede definir una combinación de productos"
+
+#: Permissions-CanDeleteARole
+msgid "Can delete a role"
+msgstr "Puede borrar una función"
+
+#: Permissions-CanDeleteReportCategory
+msgid "Can delete report category"
+msgstr "Puede borrar una categoría de reportes"
+
+#: Permissions-CanDisburseLoan
+msgid "Can disburse loan"
+msgstr "Puede desembolsar el préstamo"
+
+#: Permissions-CanDoAdjustmentsForSavingsAccount
+msgid "Can do adjustments for savings account"
+msgstr "Puede hacer ajustes para la cuenta de ahorro"
+
+#: Permissions-CanDownloadReportTemplate
+msgid "Can download report template"
+msgstr "Puede descargar la plantilla del reporte"
+
+#: Permissions-CanEditLoanAccountInformation
+msgid "Can edit Loan account information"
+msgstr "Puede editar la información de la cuenta del préstamo"
+
+#: Permissions-CanEditLoanProductInstances
+msgid "Can edit loan product instances"
+msgstr "Puede editar las instancias del producto de préstamo"
+
+#: Permissions-CanEditProductCategoryInformation
+msgid "Can edit product category information"
+msgstr "Puede editar la información de la categoría del producto"
+
+#: Permissions-CanEditProductMix
+msgid "Can edit product mix"
+msgstr "Puede editar la combinación del producto"
+
+#: Permissions-CanEditReportInformation
+msgid "Can edit report information"
+msgstr "Puede editar la información del reporte"
+
+#: Permissions-CanEditSavingsProductInstances
+msgid "Can edit Savings product instances"
+msgstr "Puede editar las instancias del producto de Ahorro"
+
+#: Permissions-CanEditSelfInformation
+msgid "Can edit self information"
+msgstr "Puede editar su propia información "
+
+#: Permissions-CanEnterCollectionSheetData
+msgid "Can Enter Collection Sheet Data"
+msgstr "Puede introducir la Información de la Hoja de Colección"
+
+#: Permissions-CanImportTransactions
+msgid "Can import transactions"
+msgstr ""
+
+#: Permissions-CanMakeAdjustmentEntryToTheAccount
+msgid "Can make adjustment entry to the account"
+msgstr "Puede hacer el ajuste de entrada a la cuenta"
+
+#: Permissions-CanMakeDepositWithdrawalToSavingsAccount
+msgid "Can make deposit/withdrawal to savings account"
+msgstr "Puede hacer depósitos/retiros de la cuenta de ahorros"
+
+#: Permissions-CanMakePaymentToTheAccount
+msgid "Can make payment to the account"
+msgstr "Puede hacer pagos a la cuenta"
+
+#: Permissions-CanModifyARole
+msgid "Can modify a role"
+msgstr "Puede modificar una función"
+
+#: Permissions-CanModifyChecklistInformation
+msgid "Can modify checklist information"
+msgstr "Puede modificar la lista de información"
+
+#: Permissions-CanModifyFeeInformation
+msgid "Can modify fee information"
+msgstr "Puede modificar la información de cuotas"
+
+#: Permissions-CanModifyFunds
+msgid "Can modify funds"
+msgstr "Puede modificar los fondos"
+
+#: Permissions-CanModifyLatenessDormancyDefinition
+msgid "Can modify lateness/dormancy definition"
+msgstr "Puede modificar la definición de la tardanza/inactividad "
+
+#: Permissions-CanModifyOfficeHierarchy
+msgid "Can modify office hierarchy"
+msgstr "Puede modificar la jerarquía de oficina"
+
+#: Permissions-CanModifyOfficeInformation
+msgid "Can modify office information"
+msgstr "Puede modificar la información de las oficinas "
+
+#: Permissions-CanModifyUserInformation
+msgid "Can modify user information"
+msgstr "Puede modificar la información del usario"
+
+#: Permissions-CanPreviewReports
+msgid "Can Preview Reports"
+msgstr "Puede ver anticipadamente los reportes"
+
+#: Permissions-CanRedoLoanDisbursals
+msgid "Can redo Loan disbursals"
+msgstr "Puede rehacer el desembolso del préstamo"
+
+#: Permissions-CanRemoveFeeTypesAttachedToTheAccount
+msgid "Can remove fee types attached to the account"
+msgstr "Puede eliminar los tipos de cuota adjunta a la cuenta"
+
+#: Permissions-CanRepayLoan
+msgid "Can repay loan"
+msgstr "Puede pagar préstamo"
+
+#: Permissions-CanReverseLoanDisbursals
+msgid "Can reverse Loan disbursals"
+msgstr "Puede revocar el desembolso del préstamo"
+
+#: Permissions-CanShutdownMifos
+msgid "Can shut down Mifos"
+msgstr ""
+
+#: Permissions-CanUnlockAUser
+msgid "Can unlock a user"
+msgstr "Puede desbloquear un usuario"
+
+#: Permissions-CanUpdateSavingsAccount
+msgid "Can update Savings account"
+msgstr "Puede actualizar la cuenta de Ahorro"
+
+#: Permissions-CanUploadAdminDocuments
+msgid "Can upload admin documents"
+msgstr "Puede cargar los documentos del administrador"
+
+#: Permissions-CanUploadNewReports
+msgid "Can upload new reports"
+msgstr "Pueden cargar nuevos informes"
+
+#: Permissions-CanUploadReportTemplate
+msgid "Can upload report template"
+msgstr "Puede cargar la plantilla del informe"
+
+#: Permissions-CanViewActiveLoansByLoanOfficer
+msgid "Can view Active Loans By Loan Officer"
+msgstr "Puede ver los Préstamos Activos por Oficial de Crédito"
+
+#: Permissions-CanViewAdminDocuments
+msgid "Can view admin documents"
+msgstr "Puede ver los documentos del administrador"
+
+#: Permissions-CanViewAreaPerformanceStatusReport
+msgid "Can view Area Performance Status Report"
+msgstr "Puede ver el Informe del estado del Área de Rendimiento "
+
+#: Permissions-CanViewBranchDueDisbursementReport
+msgid "Can view Branch Due disbursement Report"
+msgstr "Puede ver el informe por Sucursal de Desembolso"
+
+#: Permissions-CanViewBranchPerformanceStatusReport
+msgid "Can view Branch Performance Status Report"
+msgstr "Puede ver el informe del Rendimiento por Sucursal"
+
+#: Permissions-CanViewCenterMeetingSchedule
+msgid "Can view Center Meeting Schedule"
+msgstr "Puede ver el Calendario de Reuniones del Centro"
+
+#: Permissions-CanViewCenterSummaryReport
+msgid "Can view Center Summary Report"
+msgstr "Puede ver el Informe Resumido del Centro"
+
+#: Permissions-CanViewClientFeesChargesAndPenaltiesReport
+msgid "Can view Client Fees, Charges and Penalties report"
+msgstr ""
+"Puede ver el informe de las cuotas de los clientes, los cargos y las multas"
+
+#: Permissions-CanViewClientLoanRepaymentSchedule
+msgid "Can view Client Loan repayment schedule"
+msgstr "Puede ver el calendario de pago del préstamo del cliente"
+
+#: Permissions-CanViewClientPendingApprovalReport
+msgid "Can view Client pending approval report"
+msgstr "Puede ver el informe de la aprobación pendiente del cliente"
+
+#: Permissions-CanViewClientProductWiseHistoryReport
+msgid "Can view Client Product Wise History Report"
+msgstr "Puede ver el informe histórico de los Productos del cliente"
+
+#: Permissions-CanViewClientSettlementInfoReport
+msgid "Can view Client Settlement info Report"
+msgstr "Puede ver el informe con la información del Acuerdo del Cliente"
+
+#: Permissions-CanViewClientSummaryHistoryReport
+msgid "Can view Client Summary-& History Report"
+msgstr "Puede ver el informe con el Sumario y la Historia del Cliente"
+
+#: Permissions-CanViewClientsWithoutSavingsAccount
+msgid "Can view Clients without Savings Account"
+msgstr "Puede ver clientes que no tienen Cuentas de Ahorros"
+
+#: Permissions-CanViewCollectionSheet
+msgid "Can view Collection sheet"
+msgstr "Puede ver la Hoja de Recaudación"
+
+#: Permissions-CanViewCollectionSheetReport
+msgid "Can view Collection Sheet Report"
+msgstr "Puede ver el informe de la Hoja de Recaudación"
+
+#: Permissions-CanViewDailyCashConfirmationReportStaffWise
+msgid "Can view Daily Cash Confirmation Report - Staff Wise"
+msgstr ""
+"Puede ver el Informe de Confirmación Diario de Caja por parte del Personal "
+
+#: Permissions-CanViewDailyCashFlowReportBranch
+msgid "Can view Daily Cash Flow Report - Branch"
+msgstr "Puede ver el Informe de Flujo de Caja Diario - Sucursal "
+
+#: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
+#, fuzzy
+msgid "Can view Daily Portfolio quality data report - Aging analysis"
+msgstr ""
+"Puede ver el informe Diario de Datos de Calidad de la Cartera - Análisis de "
+"Madurez"
+
+#: Permissions-CanViewDailyTransactionSummaryReport
+msgid "Can view Daily Transaction Summary report"
+msgstr "Puede ver el informe del Resumen diario de transacciones"
+
+#: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
+#, fuzzy
+msgid "Can view Detailed Aging of Portfolio at Risk"
+msgstr "Puede ver el detalle de la Cartera de Madurez en riesgo"
+
+#: Permissions-CanViewDivisionPerformanceStatusReport
+msgid "Can view Division Performance Status Report"
+msgstr "Puede ver el informe del Rendimiento de la División"
+
+#: Permissions-CanViewFundRequirementReport
+msgid "Can view Fund Requirement Report"
+msgstr "Puede ver el informe de los Fondos Requeridos"
+
+#: Permissions-CanViewGrameenKootaPerformanceStatusReport
+msgid "Can view Grameen Koota Performance Status Report"
+msgstr "Puede ver el informe de Rendimiento de Grameen Koota "
+
+#: Permissions-CanViewLoanAccountsReports
+msgid "Can view Loan Accounts reports"
+msgstr "Puede ver los informes de las Cuentas de Préstamos"
+
+#: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
+msgid ""
+"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
+"Sequency Wise"
+msgstr ""
+"Puede ver la Distribución de Productos de Préstamo - con relación a su "
+"actividad, su tamaño, el producto, la secuencia "
+
+#: Permissions-CanViewLoansPendingApprovalReport
+msgid "Can view Loans pending approval report"
+msgstr "Puede ver el informe de los Préstamos pendientes de aprobación"
+
+#: Permissions-CanViewOrganizationSettings
+msgid "Can view organization settings"
+msgstr "Puede ver la estructura de la organización"
+
+#: Permissions-CanViewOutreachReport
+msgid "Can view Outreach Report"
+msgstr "Puede ver el informe de Difusión"
+
+#: Permissions-CanViewRegionPerformanceStatusReport
+msgid "Can view Region Performance Status Report"
+msgstr "Puede ver el informe de Rendimiento de la Región"
+
+#: Permissions-CanViewReportCategory
+msgid "Can view report category"
+msgstr "Puede ver el informe de categorías"
+
+#: Permissions-CanViewReports
+msgid "Can view reports"
+msgstr "Puede ver los informes"
+
+#: Permissions-CanViewStaffPerformanceReport
+msgid "Can view Staff Performance Report"
+msgstr "Puede ver el Informe de Rendimiento del Personal"
+
+#: Permissions-CanViewSystemInformation
+msgid "Can view system information"
+msgstr "Puede ver la información del sistema"
+
+#: Permissions-CanWaiveAFeeInstallment
+msgid "Can waive a fee installment"
+msgstr "Puede eliminar una cuota de pago"
+
+#: Permissions-CanWaiveDueDepositsForSavingsAccount
+msgid "Can waive due deposits for Savings account"
+msgstr "Puede eliminar el depósito para cuentas de Ahorro"
+
+#: Permissions-CanWaiveOverDueDepositsForSavingsAccount
+msgid "Can waive over due deposits for Savings account"
+msgstr "Puede eliminar el depósito atrasado para cuentas de Ahorro"
+
+#: Permissions-CanWaivePenalty
+msgid "Can waive penalty"
+msgstr "Puede eliminar la multa"
+
+#: Permissions-Center
+msgctxt "Permissions-Center"
+msgid "Center"
+msgstr "Centro"
+
+#: Permissions-Centers
+msgctxt "Permissions-Centers"
+msgid "Centers"
+msgstr "Centros"
+
+#: Permissions-Centers-CanAddNotesToCenterRecords
+msgid "Can add notes to Center records"
+msgstr "Pueden añadir notas a los registros del Centro"
+
+#: Permissions-Centers-CanApplyChargesToCenterAccounts
+msgid "Can apply charges to Center accounts"
+msgstr "Pueden aplicar cargos a las cuentas del Centro "
+
+#: Permissions-Centers-CanCreateNewCenter
+#, fuzzy
+msgid "Can create new Center "
+msgstr "Puede crear un nuevo Centro"
+
+#: Permissions-Centers-CanEditCenterStatus
+msgid "Can edit Center status"
+msgstr "Puede editar el estado del Centro"
+
+#: Permissions-Centers-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "Puede editar la cuota adjunta a la cuenta"
+
+#: Permissions-Centers-CanEditMeetingSchedule
+#, fuzzy
+msgid "Can edit meeting schedule "
+msgstr "Puede editar el horario de reuniones"
+
+#: Permissions-Centers-CanMakeAdjustmentEntriesToCenterAccount
+msgid "Can make adjustment entries to Center account"
+msgstr "Puede hacer ajustes a las entradas de la cuenta del Centro "
+
+#: Permissions-Centers-CanMakePaymentsToCenterAccounts
+msgid "Can make payments to Center accounts"
+msgstr "Puede hacer pagos a las cuentas del Centro"
+
+#: Permissions-Centers-CanModifyCenterInformation
+#, fuzzy
+msgid "Can modify Center information "
+msgstr "Puede modificar la información del Centro"
+
+#: Permissions-Centers-CanRemoveFeeTypesFromCenterAccount
+msgid "Can remove fee types from Center account"
+msgstr "Puede eliminar cuotas de la cuenta del Centro "
+
+#: Permissions-Centers-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Centers-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Puede especificar el horario de reuniones"
+
+#: Permissions-Centers-CanWaiveADueAmount
+msgctxt "Permissions-Centers-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Puede eliminar una cantidad adeudada"
+
+#: Permissions-Checklists
+msgid "Checklists"
+msgstr "Listas"
+
+#: Permissions-ClientDetail
+msgid "Client Detail"
+msgstr "Detalle del cliente"
+
+#: Permissions-ClientManagement
+msgid "Client management"
+msgstr "Gestión de clientes"
+
+#: Permissions-Clients
+msgctxt "Permissions-Clients"
+msgid "Clients"
+msgstr "Clientes"
+
+#: Permissions-Clients-CanAddAnExistingClientToAGroup
+msgid "Can add an existing client to a group"
+msgstr "Puede agregar un cliente a un grupo"
+
+#: Permissions-Clients-CanAddEditHistoricalData
+msgctxt "Permissions-Clients-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "Puede añadir/editar los datos históricos"
+
+#: Permissions-Clients-CanAddNotesToClient
+msgid "Can add notes to Client"
+msgstr "Puede añadir notas al Cliente"
+
+#: Permissions-Clients-CanApplyChargesToClientAccounts
+msgid "Can apply charges to Client accounts"
+msgstr "Puede aplicar cargos a las cuentas del Cliente"
+
+#: Permissions-Clients-CanBlacklistAClient
+msgid "Can Blacklist a Client"
+msgstr "Puede agregar el cliente a la lista negra "
+
+#: Permissions-Clients-CanChangeStateToActive
+msgctxt "Permissions-Clients-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Puede cambiar el estado a activo"
+
+#: Permissions-Clients-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Clients-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "Puede cambiar el estado a la aplicación en espera de ser aprobada"
+
+#: Permissions-Clients-CanChangeStateToCancelled
+msgctxt "Permissions-Clients-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Puede cambiar el estado a Cancelado"
+
+#: Permissions-Clients-CanChangeStateToClosed
+msgctxt "Permissions-Clients-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "Puede cambiar el estado a Cerrado"
+
+#: Permissions-Clients-CanChangeStateToOnHold
+msgctxt "Permissions-Clients-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "Puede cambiar el estado a En Espera"
+
+#: Permissions-Clients-CanChangeStateToPartialApplication
+msgctxt "Permissions-Clients-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Puede cambiar el estado a  aplicación parcial"
+
+#: Permissions-Clients-CanCreateNewClientInSaveForLaterState
+msgid "Can create new Client in save for later state"
+msgstr "Puede crear un nuevo Cliente en el estado de Guardar para más Adelante "
+
+#: Permissions-Clients-CanCreateNewClientInSubmitForApprovalState
+msgid "Can create new Client in submit for approval state"
+msgstr "Puede crear un nuevo Cliente en el estado de Enviar para Aprobación "
+
+#: Permissions-Clients-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Clients-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "Puede editar la cuota adjunta  a la cuenta"
+
+#: Permissions-Clients-CanEditGroupMembership
+msgid "Can edit group membership"
+msgstr "Puede editar la membresía del grupo"
+
+#: Permissions-Clients-CanEditMeetingSchedule
+msgctxt "Permissions-Clients-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "Puede editar el horario de las reuniones "
+
+#: Permissions-Clients-CanEditMfiInformation
+msgid "Can edit MFI information"
+msgstr "Puede editar la información MFI"
+
+#: Permissions-Clients-CanEditOfficeMembership
+msgctxt "Permissions-Clients-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "Puede editar la membresía de la oficina"
+
+#: Permissions-Clients-CanEditPersonalInformation
+msgid "Can edit personal information"
+msgstr "Puede editar la información personal"
+
+#: Permissions-Clients-CanMakeAdjustmentEntriesToClientAccount
+msgid "Can make adjustment entries to Client account"
+msgstr "Puede hacer ajuste a las entradas de la cuenta del Cliente"
+
+#: Permissions-Clients-CanMakePaymentsToClientAccounts
+msgid "Can make payments to Client accounts"
+msgstr "Puede hacer los pagos a las cuentas del Cliente"
+
+#: Permissions-Clients-CanRemoveClientsFromGroups
+msgid "Can remove clients from groups"
+msgstr "Puede eliminar clientes de los grupos"
+
+#: Permissions-Clients-CanRemoveFeeTypesFromClientAccount
+msgid "Can remove fee types from Client account"
+msgstr "Puede remover cuotas de la cuenta del Cliente"
+
+#: Permissions-Clients-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Clients-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Puede especificar el horario de las reuniones"
+
+#: Permissions-Clients-CanWaiveADueAmount
+msgctxt "Permissions-Clients-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Puede eliminar una cantidad aduedada"
+
+#: Permissions-ConfigurationManagement
+msgid "Configuration Management"
+msgstr "Gestión de configuración"
+
+#: Permissions-Fees
+msgctxt "Permissions-Fees"
+msgid "Fees"
+msgstr "Cuotas"
+
+#: Permissions-Funds
+msgid "Funds"
+msgstr "Fondos"
+
+#: Permissions-Groups
+msgctxt "Permissions-Groups"
+msgid "Groups"
+msgstr "Grupos"
+
+#: Permissions-Groups-CanAddEditHistoricalData
+msgctxt "Permissions-Groups-CanAddEditHistoricalData"
+msgid "Can add/edit historical data"
+msgstr "Puede añadir/editar los datos históricos"
+
+#: Permissions-Groups-CanAddNotesToGroup
+msgid "Can add notes to group"
+msgstr "Puede agregar notas al grupo"
+
+#: Permissions-Groups-CanApplyChargesToGroupAccounts
+msgid "Can apply charges to group accounts"
+msgstr "Puede aplicar cargos a las cuentas de grupo"
+
+#: Permissions-Groups-CanBlacklistAGroup
+msgid "Can Blacklist a group"
+msgstr "Puede poner en la lista negra a un grupo"
+
+#: Permissions-Groups-CanChangeStateToActive
+msgctxt "Permissions-Groups-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Puede cambiar el estado a activo"
+
+#: Permissions-Groups-CanChangeStateToApplicationPendingApproval
+msgctxt "Permissions-Groups-CanChangeStateToApplicationPendingApproval"
+msgid "Can change state to application pending approval"
+msgstr "Puede cambiar el estado a aplicación en espera de ser aprobada"
+
+#: Permissions-Groups-CanChangeStateToCancelled
+msgctxt "Permissions-Groups-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Puede cambiar el estado a Cancelado"
+
+#: Permissions-Groups-CanChangeStateToClosed
+msgctxt "Permissions-Groups-CanChangeStateToClosed"
+msgid "Can change state to Closed"
+msgstr "Puede cambiar el estado a Cerrado"
+
+#: Permissions-Groups-CanChangeStateToOnHold
+msgctxt "Permissions-Groups-CanChangeStateToOnHold"
+msgid "Can change state to On Hold"
+msgstr "Puede cambiar el estado a En Espera"
+
+#: Permissions-Groups-CanChangeStateToPartialApplication
+msgctxt "Permissions-Groups-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Puede cambiar el estado a solicitud parcial"
+
+#: Permissions-Groups-CanCreateNewGroupInSaveForLaterState
+msgid "Can create new group in save for later state"
+msgstr "Puede crear un nuevo grupo en el estado de Guardar para más adelante"
+
+#: Permissions-Groups-CanCreateNewGroupInSubmitForApprovalState
+msgid "Can create new group in submit for approval state"
+msgstr "Puede crear nuevo grupo en el estado de Enviar para aprobación"
+
+#: Permissions-Groups-CanEditCenterClientship
+msgid "Can edit Center Clientship"
+msgstr "Puede editar la clientela del Centro "
+
+#: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
+msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"
+msgid "Can edit fee amount attached to the account"
+msgstr "Puede editar la cuota adjunta de la cuenta"
+
+#: Permissions-Groups-CanEditGroupInformation
+msgid "Can edit Group information"
+msgstr "Puede editar la información del Grupo"
+
+#: Permissions-Groups-CanEditMeetingSchedule
+msgctxt "Permissions-Groups-CanEditMeetingSchedule"
+msgid "Can edit meeting schedule"
+msgstr "Puede editar el horario de reuniones"
+
+#: Permissions-Groups-CanEditOfficeMembership
+msgctxt "Permissions-Groups-CanEditOfficeMembership"
+msgid "Can edit office membership"
+msgstr "Puede editar la membresía de la Oficina"
+
+#: Permissions-Groups-CanMakeAdjustmentEntriesToGroupAccount
+msgid "Can make adjustment entries to group account"
+msgstr "Puede hacer ajustes a las entradas de la cuenta de grupo"
+
+#: Permissions-Groups-CanMakePaymentsToGroupAccounts
+msgid "Can make payments to group accounts"
+msgstr "Puede hacer pagos a las cuentas de grupo"
+
+#: Permissions-Groups-CanRemoveFeeTypesFromGroupAccount
+msgid "Can remove fee types from group account"
+msgstr "Puede remover cuotas de las cuentas de grupo"
+
+#: Permissions-Groups-CanSpecifyMeetingSchedule
+msgctxt "Permissions-Groups-CanSpecifyMeetingSchedule"
+msgid "Can specify meeting schedule"
+msgstr "Puede especificar el horario de reuniones"
+
+#: Permissions-Groups-CanWaiveADueAmount
+msgctxt "Permissions-Groups-CanWaiveADueAmount"
+msgid "Can waive a due amount"
+msgstr "Puede eliminar una cantidad adeudada"
+
+#: Permissions-LoanManagement
+msgid "Loan management"
+msgstr "Gestión de préstamo"
+
+#: Permissions-LoanProcessing
+msgid "Loan Processing"
+msgstr "Procesamiento de préstamos"
+
+#: Permissions-LoanProcessing-CanChangeStateToApproved
+msgid "Can change state to Approved"
+msgstr "Puede cambiar el estado a Aprobado"
+
+#: Permissions-LoanProcessing-CanChangeStateToCancelled
+msgctxt "Permissions-LoanProcessing-CanChangeStateToCancelled"
+msgid "Can change state to Cancelled"
+msgstr "Puede cambiar el estado a Cancelado"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedRescheduled
+msgid "Can change state to Closed-rescheduled"
+msgstr "Puede cambiar el estado a Cerrado - reprogramado"
+
+#: Permissions-LoanProcessing-CanChangeStateToClosedWrittenOff
+msgid "Can change state to Closed- Written off"
+msgstr "Puede cambiar a estado Cerrado -  Pérdidas "
+
+# LO=Loan Officer??
+#: Permissions-LoanProcessing-CanChangeStateToDisbursedToLo
+#, fuzzy
+msgid "Can change state to Disbursed to LO"
+msgstr "Puede cambiar el estado a  Desembolsado al Oficial de Crédito"
+
+#: Permissions-LoanProcessing-CanChangeStateToPartialApplication
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Puede cambiar el estado a solicitud parcial"
+
+#: Permissions-LoanProcessing-CanChangeStateToPendingApproval
+msgctxt "Permissions-LoanProcessing-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "Puede cambiar de estado a en espera de aprobación"
+
+#: Permissions-LoanProductDetail
+msgid "Loan Product Detail"
+msgstr "Detalle de Productos de Préstamo"
+
+#: Permissions-LoanProducts
+msgid "Loan Products"
+msgstr "Productos de Préstamo"
+
+#: Permissions-LoanTransactions
+msgid "Loan Transactions"
+msgstr "Transacciones de Préstamo"
+
+#: Permissions-Miscellaneous
+msgid "Miscellaneous"
+msgstr "Varios"
+
+#: Permissions-NotImplemented
+msgid "Not implemented"
+msgstr "No implementado"
+
+#: Permissions-OfficeManagement
+msgid "Office management"
+msgstr "Gestión de Oficina"
+
+#: Permissions-Offices
+msgid "Offices"
+msgstr "Oficinas"
+
+#: Permissions-OrganizationManagement
+msgid "Organization Management"
+msgstr "Gestión de Organización  "
+
+#: Permissions-Performance
+msgid "Performance"
+msgstr "Rendimiento"
+
+#: Permissions-Personnel
+msgctxt "Permissions-Personnel"
+msgid "Personnel"
+msgstr "Personal"
+
+#: Permissions-ProductCategories
+msgid "Product Categories"
+msgstr "Categorías de Productos"
+
+#: Permissions-ProductDefinition
+msgid "Product definition"
+msgstr "Definición de Productos"
+
+#: Permissions-ProductMix
+msgid "Product Mix"
+msgstr "Combinación de productos"
+
+#: Permissions-ReportsManagement
+msgid "Reports Management"
+msgstr "Administración de Informes"
+
+#: Permissions-Roles
+msgid "Roles"
+msgstr "Funciones"
+
+#: Permissions-SavingsManagement
+msgid "Savings Management"
+msgstr "Gestión de Ahorros"
+
+#: Permissions-SavingsManagement-CanChangeStateToActive
+msgctxt "Permissions-SavingsManagement-CanChangeStateToActive"
+msgid "Can change state to active"
+msgstr "Puede cambiar el estado a activo"
+
+#: Permissions-SavingsManagement-CanChangeStateToCancel
+msgid "Can change state to cancel"
+msgstr "Puede cambiar el estado a Cancelar"
+
+#: Permissions-SavingsManagement-CanChangeStateToInactive
+msgid "Can change state to inactive"
+msgstr "Puede cambiar el estado a inactivo"
+
+#: Permissions-SavingsManagement-CanChangeStateToPartialApplication
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPartialApplication"
+msgid "Can change state to partial application"
+msgstr "Puede cambiar el estado a solicitud parcial"
+
+#: Permissions-SavingsManagement-CanChangeStateToPendingApproval
+msgctxt "Permissions-SavingsManagement-CanChangeStateToPendingApproval"
+msgid "Can change state to pending approval"
+msgstr "Puede cambiar el estado a aprobación pendiente"
+
+#: Permissions-SavingsProducts
+msgid "Savings Products"
+msgstr "Productos de Ahorro"
+
+#: Permissions-Status
+msgid "Status"
+msgstr "Estado"
+
+#: Permissions-SystemInformation
+msgid "System information"
+msgstr "Sistema de información"
+
+#: Permissions-UserManagement
+msgid "User management"
+msgstr "Gestión de usuarios"
+
+#: Personnel-Personnel
+msgctxt "Personnel-Personnel"
+msgid "Personnel"
+msgstr "Personal"
+
+#: PersonnelLevels-LoanOfficer
+msgid "Loan Officer"
+msgstr "Oficial de Préstamo"
+
+#: PersonnelLevels-NonLoanOfficer
+msgid "Non Loan Officer"
+msgstr "No Oficial de Crédito"
+
+#: PersonnelStatus-Active
+msgctxt "PersonnelStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: PersonnelStatus-Inactive
+msgctxt "PersonnelStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: PersonnelStatusUnused-Active
+msgctxt "PersonnelStatusUnused-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: PersonnelStatusUnused-Inactive
+msgctxt "PersonnelStatusUnused-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: Position-CenterLeader
+msgid "Center Leader"
+msgstr "Líder del Centro "
+
+#: Position-CenterSecretary
+msgid "Center Secretary"
+msgstr "Secretaria del Centro"
+
+#: Position-GroupLeader
+msgid "Group Leader"
+msgstr "Líder del Grupo"
+
+#: Position-GroupSecretary
+msgid "Group Secretary"
+msgstr "Secretaria del Grupo"
+
+#: PovertyStatus-NonPoor
+msgid "Non-poor"
+msgstr "No pobres"
+
+#: PovertyStatus-Poor
+msgid "Poor"
+msgstr "Pobres"
+
+#: PovertyStatus-VeryPoor
+msgid "Very poor"
+msgstr "Muy pobres"
+
+#: PrdApplicableMaster-Centers
+msgctxt "PrdApplicableMaster-Centers"
+msgid "Centers"
+msgstr "Centros"
+
+#: PrdApplicableMaster-Clients
+msgctxt "PrdApplicableMaster-Clients"
+msgid "Clients"
+msgstr "Clientes"
+
+#: PrdApplicableMaster-Groups
+msgctxt "PrdApplicableMaster-Groups"
+msgid "Groups"
+msgstr "Grupos"
+
+#: ProductCategoryStatus-Active
+msgctxt "ProductCategoryStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: ProductCategoryStatus-Inactive
+msgctxt "ProductCategoryStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: ProductState-Active
+msgctxt "ProductState-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: ProductState-Close
+msgid "Close"
+msgstr "Cerrar"
+
+#: ProductState-Inactive
+msgctxt "ProductState-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: ProductStatus-Active
+msgctxt "ProductStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: ProductStatus-Closed
+msgctxt "ProductStatus-Closed"
+msgid "Closed"
+msgstr "Cerrado"
+
+#: ProductStatus-Inactive
+msgctxt "ProductStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: RecommendedAmtUnit-CompleteGroup
+msgid "Complete Group"
+msgstr "Grupo completo"
+
+#: RecommendedAmtUnit-PerIndividual
+msgid "Per Individual"
+msgstr "Por individuo"
+
+#: RepaymentRule-NextMeetingRepayment
+msgid "Next Meeting/Repayment"
+msgstr "Próxima reunión/pago"
+
+#: RepaymentRule-NextWorkingDay
+msgid "Next Working Day"
+msgstr "Siguiente día laborable"
+
+#: RepaymentRule-RepaymentMoratorium
+msgid "Moratorium"
+msgstr ""
+
+#: RepaymentRule-SameDay
+msgid "Same Day"
+msgstr "Mismo día"
+
+#: Salutation-Mr
+msgid "Mr"
+msgstr "Sr"
+
+#: Salutation-Mrs
+msgid "Mrs"
+msgstr "Sra"
+
+#: Salutation-Ms
+msgid "Ms"
+msgstr "Sra"
+
+#: Savings-Savings
+msgctxt "Savings-Savings"
+msgid "Savings"
+msgstr "Ahorros"
+
+#: SavingsAccountFlag-Blacklisted
+msgctxt "SavingsAccountFlag-Blacklisted"
+msgid "Blacklisted"
+msgstr "Lista Negra"
+
+#: SavingsAccountFlag-Rejected
+msgctxt "SavingsAccountFlag-Rejected"
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: SavingsAccountFlag-Withdraw
+msgctxt "SavingsAccountFlag-Withdraw"
+msgid "Withdraw"
+msgstr "Retirar"
+
+#: SavingsStatus-Active
+msgctxt "SavingsStatus-Active"
+msgid "Active"
+msgstr "Activo"
+
+#: SavingsStatus-ApplicationPendingApproval
+msgctxt "SavingsStatus-ApplicationPendingApproval"
+msgid "Application Pending Approval"
+msgstr "Solicitud pendiente de aprobación"
+
+#: SavingsStatus-Cancelled
+msgctxt "SavingsStatus-Cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#: SavingsStatus-Closed
+msgctxt "SavingsStatus-Closed"
+msgid "Closed"
+msgstr "Cerrado"
+
+#: SavingsStatus-Inactive
+msgctxt "SavingsStatus-Inactive"
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: SavingsStatus-PartialApplication
+msgctxt "SavingsStatus-PartialApplication"
+msgid "Partial Application"
+msgstr "Solicitud parcial"
+
+#: SavingsType-Mandatory
+msgid "Mandatory"
+msgstr "Mandatorio"
+
+#: SavingsType-Voluntary
+msgid "Voluntary"
+msgstr "Voluntario"
+
+#: SpouseFather-Father
+msgid "Father"
+msgstr "Padre"
+
+#: SpouseFather-Spouse
+msgid "Spouse"
+msgstr "Cónyuge"
+
+#: WeekDays-Friday
+msgid "Friday"
+msgstr "Viernes"
+
+#: WeekDays-Monday
+msgid "Monday"
+msgstr "Lunes"
+
+#: WeekDays-Saturday
+msgid "Saturday"
+msgstr "Sábado"
+
+#: WeekDays-Sunday
+msgid "Sunday"
+msgstr "Domingo"
+
+#: WeekDays-Thursday
+msgid "Thursday"
+msgstr "Jueves"
+
+#: WeekDays-Tuesday
+msgid "Tuesday"
+msgstr "Martes"
+
+#: WeekDays-Wednesday
+msgid "Wednesday"
+msgstr "Miércoles"
+
+#: YESNO-No
+msgid "No"
+msgstr "No"
+
+#: YESNO-Yes
+msgid "Yes"
+msgstr "Sí"
+
+#: feeUpdationType-AppliesToExistingFutureAccounts
+msgid "Applies to existing & future accounts"
+msgstr "Aplica a las cuentas existentes y futuras"
+
+#: feeUpdationType-AppliesToFutureAccounts
+msgid "Applies to future accounts"
+msgstr "Aplica a las cuentas futuras"

@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS mis_bank;
+DROP TABLE IF EXISTS mis_bankbranch;
+DROP TABLE IF EXISTS mis_geographicalarea;
+DROP TABLE IF EXISTS mis_geographicalareatype;
+DROP TABLE IF EXISTS mis_shgmemberprofile;
+DROP TABLE IF EXISTS mis_shgprofile;
+
+UPDATE DATABASE_VERSION SET DATABASE_VERSION = 214 WHERE DATABASE_VERSION = 213;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.aditi.com" xmlns="http://www.aditi.com"
+	elementFormDefault="qualified">
+	<xs:element name="statemaps">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="stateConfiguration" maxOccurs="unbounded" minOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="stateConfiguration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="state" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="configurationName" type="xs:string" use="required" />
+			
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="state">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="statename" type="xs:string" />
+				<xs:element name="stateid" type="xs:string" />
+				<xs:element ref="possiblestates" maxOccurs="unbounded" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+
+	</xs:element>
+	<xs:element name="possiblestates">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="possiblestate" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="possiblestate">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="statename" type="xs:string" />
+				<xs:element name="stateid" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

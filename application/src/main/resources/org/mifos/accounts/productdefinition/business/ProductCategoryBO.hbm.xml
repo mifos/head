@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.accounts.productdefinition.business.ProductCategoryBO" table="PRD_CATEGORY">
+		<id name="productCategoryID" column="PRD_CATEGORY_ID" type="short" access="field">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<property name="productCategoryName" column="PRD_CATEGORY_NAME" type="string" />
+		<property name="globalPrdCategoryNum" column="GLOBAL_PRD_OFFERING_NUM" type="string" not-null="true" access="field" />
+		<property name="createdDate" column="CREATED_DATE" type="date" update="false" />
+		<property name="createdBy" column="CREATED_BY" type="short" update="false" />
+		<property name="updatedBy" column="UPDATED_BY" type="short" />
+		<property name="updatedDate" column="UDPATED_DATE" type="date" />
+		<property name="productCategoryDesc" column="DESCRIPTION" type="string" />
+		<many-to-one name="productType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" not-null="true" access="field" />
+		<many-to-one name="prdCategoryStatus" column="STATE" class="org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity" cascade="none" not-null="true" />
+		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" access="field" />
+	</class>
+
+	<query name="product.searchcategories">
+		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+		order by pc.productType.productTypeID,pc.productCategoryName]]>
+	</query>
+	<query name="product.updateduplcount">
+		<![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+		where pc.productCategoryName=:productCategoryName and pc.productCategoryID != (:productCategoryID)]]>
+	</query>
+	<query name="product.maxprdcatid">
+		<![CDATA[select max(pc.productCategoryID) 
+		from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc]]>
+	</query>
+	<query name="product.createduplcount">
+		<![CDATA[select count(*) from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+		where pc.productCategoryName=:productCategoryName]]>
+	</query>
+	<query name="productdefenition.getProductCategory">
+		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+		where pc.globalPrdCategoryNum=:globalNum]]>
+	</query>
+	<query name="product.createapplicableproductcat">
+		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductCategoryBO pc 
+		where pc.productType.productTypeID=:productTypeID and pc.prdCategoryStatus.id=:prdCategoryStatusId 
+		order by pc.productCategoryName]]>
+	</query>
+</hibernate-mapping>
