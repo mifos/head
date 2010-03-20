@@ -218,8 +218,7 @@ public class GroupCustAction extends CustAction {
         // on UserContext info
         GroupInformationDto groupInformationDto = groupDetailsServiceFacade.getGroupInformationDto(
                 ((GroupCustActionForm) form).getGlobalCustNum(), getUserContext(request));
-        SessionUtils.removeAttribute("groupInformationDto", request);
-        SessionUtils.setAttribute("groupInformationDto", groupInformationDto, request);
+        SessionUtils.removeThenSetAttribute("groupInformationDto", groupInformationDto, request);
 
         // John W - - not sure whether to leave these rules as is or do something else like bake the logic into the main
         // dto and out of the jsp

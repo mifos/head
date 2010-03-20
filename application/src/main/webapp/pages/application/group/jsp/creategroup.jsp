@@ -458,7 +458,7 @@ explanation of the license and how it is applied.
 											</bean:define>
 											<tr class="fontnormal">
 												<td width="21%" align="right">
-													<span id="creategroup.label.customField"><mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" isColonRequired="yes" bundle="GroupUIResources"/></span>
+													<span id="creategroup.label.customField"><mifos:mifoslabel name="${cf.lookUpEntityType}" mandatory="${cf.mandatoryString}" isColonRequired="yes" bundle="GroupUIResources"/></span>
 												</td>
 												<td width="79%">
 													<c:if test="${cf.fieldType == CustomFieldType.NUMERIC.value}">

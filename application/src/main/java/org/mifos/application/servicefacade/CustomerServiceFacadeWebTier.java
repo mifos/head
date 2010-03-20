@@ -157,15 +157,22 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.empty();
         List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
 
+        CenterCreation centerCreation;
+
         boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
         if (isCenterHierarchyExists) {
             parentCustomer = this.customerDao.findCenterBySystemId(groupCreation.getParentSystemId());
+
+            Short parentOfficeId = parentCustomer.getOffice().getOfficeId();
+
+            centerCreation = new CenterCreation(parentOfficeId, groupCreation.getUserId(),
+                    groupCreation.getUserLevelId(), groupCreation.getPreferredLocale());
 
             MeetingBO customerMeeting = parentCustomer.getCustomerMeetingValue();
             List<FeeBO> fees = customerDao.retrieveFeesApplicableToGroupsRefinedBy(customerMeeting);
             applicableFees = CustomerApplicableFeesDto.toDto(fees, groupCreation.getUserContext());
         } else {
-            CenterCreation centerCreation = new CenterCreation(groupCreation.getOfficeId(), groupCreation.getUserId(),
+            centerCreation = new CenterCreation(groupCreation.getOfficeId(), groupCreation.getUserId(),
                     groupCreation.getUserLevelId(), groupCreation.getPreferredLocale());
             personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
@@ -177,7 +184,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
                 groupCreation.getPreferredLocale());
         List<PersonnelView> formedByPersonnel = customerDao
-                .findLoanOfficerThatFormedOffice(groupCreation.getOfficeId());
+                .findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
         return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, customFieldViews, personnelList,
                 formedByPersonnel, applicableFees);
