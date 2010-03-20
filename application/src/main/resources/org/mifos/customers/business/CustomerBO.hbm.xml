@@ -284,8 +284,6 @@
 		<return-scalar column="povertyStatusName" type="string" />		
 		<return-scalar column="numChildren" type="short" />		
 		<return-scalar column="pictureId" type="integer" />
-		<return-scalar column="spouseFatherValueLookUp" type="string" />	
-		<return-scalar column="spouseFatherName" type="string" />	
 		<![CDATA[select c.customer_id as customerId,
 				c.global_cust_num as globalCustNum,
 				c.display_name as displayName,
@@ -312,9 +310,7 @@
 				lv_educationLevel.lookup_name as educationLevelName,
 				lv_povertyStatus.lookup_name as povertyStatusName,
 				cd.num_children as numChildren,
-				cp.picture_id as pictureId,
-				lv_spouseFather.lookup_name as spouseFatherValueLookUp,
-				cnd.display_name as spouseFatherName
+				cp.picture_id as pictureId
 				from customer c
 				left join customer parent on parent.customer_id = c.parent_customer_id
 				join customer_detail cd on cd.customer_id = c.customer_id
@@ -331,11 +327,17 @@
         		left join lookup_value lv_ethnicity on lv_ethnicity.lookup_id = cd.ethinicity
         		left join lookup_value lv_educationLevel on lv_educationLevel.lookup_id = cd.education_level
         		left join lookup_value lv_povertyStatus on lv_povertyStatus.lookup_id = cd.poverty_status
-        		
-				left join customer_name_detail cnd on cnd.customer_id = c.customer_id and cnd.name_type !=3
+				where c.customer_id = :CLIENT_ID]]>
+	</sql-query>
+	<sql-query name="getClientNameDetailDto">
+		<return-scalar column="spouseFatherValueLookUp" type="string" />
+		<return-scalar column="spouseFatherName" type="string" />
+		<![CDATA[select lv_spouseFather.lookup_name as spouseFatherValueLookUp,
+				cnd.display_name as spouseFatherName
+				from customer_name_detail cnd
 				left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
         		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
-				where c.customer_id = :CLIENT_ID]]>
+				where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
 	</sql-query>
 	<sql-query name="getClientFamilyDetailDto">
 		<return-scalar column="relationshipLookup" type="string" />

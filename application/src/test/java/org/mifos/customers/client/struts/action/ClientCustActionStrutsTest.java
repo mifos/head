@@ -1030,17 +1030,13 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.get_success.toString());
-//        List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
-//                ClientConstants.POVERTY_STATUS, request);
-//        Assert.assertNotNull(povertyStatusList);
 
         ClientInformationDto clientInformationDto = (ClientInformationDto) SessionUtils.getAttribute(
                 "clientInformationDto", request);
         Assert.assertEquals("Age of customer should be 50 years", 50, (int) clientInformationDto.getClientDisplay()
                 .getAge());
 
-        // Assert.assertEquals("No of active loan accounts should be
-        // 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
+        Assert.assertEquals("No of active loan accounts should be 1",1, clientInformationDto.getLoanAccountsInUse().size());
         StaticHibernateUtil.closeSession();
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());

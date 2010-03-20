@@ -1332,8 +1332,6 @@ public class CustomerPersistence extends Persistence {
         final String povertyStatusName = (String) queryResult.get(0)[24];
         final Short numChildren = (Short) queryResult.get(0)[25];
         final Integer pictureId = (Integer) queryResult.get(0)[26];
-        final String spouseFatherValueLookUp = (String) queryResult.get(0)[27];
-        String spouseFatherName = (String) queryResult.get(0)[28];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
@@ -1353,32 +1351,36 @@ public class CustomerPersistence extends Persistence {
         final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
 
         String spouseFatherValue = null;
-        Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+        String spouseFatherName = null;
         List<ClientFamilyDetailDto> familyDetails = null;
+        Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
 
         if (areFamilyDetailsRequired) {
-            System.out.println("in areFamilyDetailsRequired");
-            spouseFatherName = null;
             familyDetails = new ArrayList<ClientFamilyDetailDto>();
 
             List<Object[]> familyDetailsQueryResult = executeNamedQuery("getClientFamilyDetailDto", queryParameters);
 
-            final String relationshipLookup = (String) familyDetailsQueryResult.get(0)[0];
-            final String familyDisplayName = (String) familyDetailsQueryResult.get(0)[1];
-            final Date familyDateOfBirth = (Date) familyDetailsQueryResult.get(0)[2];
-            final String genderLookup = (String) familyDetailsQueryResult.get(0)[3];
-            final String livingStatusLookup = (String) familyDetailsQueryResult.get(0)[4];
+            for (Object[] familyDetail : familyDetailsQueryResult) {
+                final String relationshipLookup = (String) familyDetail[0];
+                final String familyDisplayName = (String) familyDetail[1];
+                final Date familyDateOfBirth = (Date) familyDetail[2];
+                final String genderLookup = (String) familyDetail[3];
+                final String livingStatusLookup = (String) familyDetail[4];
 
-            final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
-            final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
-            final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
+                final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
+                final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
+                final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
 
-            familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
-                    livingStatus));
-        } else {
-            if (spouseFatherValueLookUp != null) {
-                spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+                familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
+                        livingStatus));
             }
+        } else {
+
+            List<Object[]> clientNameDetailsQueryResult = executeNamedQuery("getClientNameDetailDto", queryParameters);
+
+            final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
+            spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
+            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
         }
 
         return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
