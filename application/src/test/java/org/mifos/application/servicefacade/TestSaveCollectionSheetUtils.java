@@ -53,11 +53,8 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -94,7 +91,6 @@ public class TestSaveCollectionSheetUtils {
     private Short loanInvalidCurrency = null;
     private Boolean loanAccountIdInvalid = false;
     private Boolean loanAccountUnderFirstGroupWithFirstClientLoanId = false;
-    private Boolean firstClientClosed = false;
     private Boolean loanAccountCancelled = false;
     private Boolean customerAccountIdtoLoanAccountIdForFirstClient = false;
     private Boolean loanAccountIdtoCustomerAccountIdForFirstClient = false;
@@ -133,7 +129,7 @@ public class TestSaveCollectionSheetUtils {
      *
      * Finally, change client and loan status if configured to do so.
      */
-    public SaveCollectionSheetDto createSampleSaveCollectionSheet() throws AccountException, CustomerException {
+    public SaveCollectionSheetDto createSampleSaveCollectionSheet() throws Exception {
 
         LocalDate transactionDate = new LocalDate();
         try {
@@ -142,16 +138,6 @@ public class TestSaveCollectionSheetUtils {
             throw new MifosRuntimeException(e);
         }
         SaveCollectionSheetDto saveCollectionSheet = assembleSaveCollectionSheetFromCreatedCenterHierarchy(transactionDate);
-
-        if (firstClientClosed) {
-            // Set Client status to closed - unfortunately have to set
-            // userContext to add customer note
-            client.setUserContext(userContext);
-            client.changeStatus(CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_BLACKLISTED,
-                    "Close Client");
-            client.update();
-            StaticHibernateUtil.commitTransaction();
-        }
 
         if (loanAccountCancelled) {
             loan.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_OTHER.getValue(), "Loan Cancelled");
@@ -619,13 +605,6 @@ public class TestSaveCollectionSheetUtils {
      */
     public void setFirstGroupAttendanceType(short attendanceType) {
         this.firstGroupAttendanceType = attendanceType;
-    }
-
-    /**
-     * The first client in this sample collection sheet hierarchy will have its status set to closed
-     */
-    public void setFirstClientClosed() {
-        this.firstClientClosed = true;
     }
 
     /**

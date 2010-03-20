@@ -618,7 +618,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
                     if (client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())) {
                         client.setUserContext(userContext);
-                        client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, notes);
+                     // FIXME - ensure clients statuses are changed as well.
+//                        client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, notes);
                     }
                 }
             }

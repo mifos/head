@@ -65,7 +65,6 @@ import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -692,59 +691,6 @@ public abstract class CustomerBO extends BusinessObject {
             }
         }
         return amount;
-    }
-
-    public void changeStatus(final CustomerStatus newStatus, final CustomerStatusFlag flag, final String comment)
-            throws CustomerException {
-        changeStatus(newStatus.getValue(), flag == null ? null : flag.getValue(), comment);
-    }
-
-    /**
-     * Most callers will want to call the enumified version
-     * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)} instead.
-     */
-    public void changeStatus(final Short newStatusId, final Short flagId, final String comment)
-            throws CustomerException {
-//        Short oldStatusId = getCustomerStatus().getId();
-//        validateStatusChange(newStatusId);
-//        if (getPersonnel() != null) {
-//            validateLoanOfficerAssigned();
-//        }
-//        if (checkStatusChangeCancelToPartial(CustomerStatus.fromInt(oldStatusId), CustomerStatus.fromInt(newStatusId))) {
-//            if (!isBlackListed()) {
-//                getCustomerFlags().clear();
-//            }
-//        }
-//        CustomerStatusEntity customerStatus;
-//        try {
-//            customerStatus = (CustomerStatusEntity) getMasterPersistence().getPersistentObject(
-//                    CustomerStatusEntity.class, newStatusId);
-//        } catch (PersistenceException e) {
-//            throw new CustomerException(e);
-//        }
-//        customerStatus.setLocaleId(this.getUserContext().getLocaleId());
-//        CustomerStatusFlagEntity customerStatusFlagEntity = null;
-//        if (flagId != null) {
-//            try {
-//                customerStatusFlagEntity = (CustomerStatusFlagEntity) getMasterPersistence().getPersistentObject(
-//                        CustomerStatusFlagEntity.class, flagId);
-//            } catch (PersistenceException e) {
-//                throw new CustomerException(e);
-//            }
-//        }
-//        CustomerNoteEntity customerNote = createCustomerNotes(comment);
-//        this.setCustomerStatus(customerStatus);
-//        this.addCustomerNotes(customerNote);
-//        if (customerStatusFlagEntity != null) {
-//            customerStatusFlagEntity.setLocaleId(this.getUserContext().getLocaleId());
-//            this.addCustomerFlag(customerStatusFlagEntity);
-//            if (customerStatusFlagEntity.isBlackListed()) {
-//                blackListed = YesNoFlag.YES.getValue();
-//            }
-//        }
-//
-//        handleActiveForFirstTime(oldStatusId, newStatusId);
-//        update();
     }
 
     public abstract void updateMeeting(MeetingBO meeting) throws CustomerException;
