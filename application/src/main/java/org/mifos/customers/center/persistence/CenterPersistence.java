@@ -25,14 +25,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.CenterTemplate;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -45,6 +50,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.security.util.UserContext;
 
@@ -85,16 +91,16 @@ public class CenterPersistence extends Persistence {
     public QueryResult search(String searchString, Short userId) throws PersistenceException {
         String[] namedQuery = new String[2];
         List<Param> paramList = new ArrayList<Param>();
-        
+
         QueryInputs queryInputs = new QueryInputs();
         QueryResult queryResult = QueryFactory.getQueryResult(PersonnelConstants.USER_LIST);
-        
+
         PersonnelBO user = new PersonnelPersistence().getPersonnel(userId);
         String officeSearchId = user.getOffice().getSearchId();
-        
+
         namedQuery[0] = NamedQueryConstants.CENTER_SEARCH_COUNT;
         namedQuery[1] = NamedQueryConstants.CENTER_SEARCH;
-        
+
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
         paramList.add(typeNameValue("String", "CENTER_NAME", searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.CENTER.getValue()));
@@ -102,9 +108,9 @@ public class CenterPersistence extends Persistence {
         paramList.add(typeNameValue("Short", "USER_ID", userId));
         paramList.add(typeNameValue("Short", "USER_LEVEL_ID", user.getLevelEnum().getValue()));
         paramList.add(typeNameValue("Short", "LO_LEVEL_ID", PersonnelConstants.LOAN_OFFICER));
-        
+
         String[] aliasNames = { "parentOfficeId", "parentOfficeName", "centerSystemId", "centerName" };
-        
+
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResults");
         queryInputs.setAliasNames(aliasNames);
@@ -118,16 +124,41 @@ public class CenterPersistence extends Persistence {
     }
 
     /**
-     * @deprecated use {@link CustomerDao#save(org.mifos.customers.business.CustomerBO)} with {@link CustomerBO} static factory methods.
+     * @deprecated use {@link CustomerDao#save(org.mifos.customers.business.CustomerBO)} with {@link CustomerBO} static
+     *             factory methods.
      */
     @Deprecated
-    public CenterBO createCenter(UserContext userContext, CenterTemplate template) throws CustomerException,
-    PersistenceException {
-        CenterBO center = new CenterBO(userContext, template.getDisplayName(), template.getAddress(), template
-                .getCustomFieldViews(), template.getFees(), template.getExternalId(), template.getMfiJoiningDate(),
-                officePersistence.getOffice(template.getOfficeId()), template.getMeeting(), personnelPersistence
-                .getPersonnel(template.getLoanOfficerId()), new CustomerPersistence());
-        saveCenter(center);
+    public CenterBO createCenter(UserContext userContext, CenterTemplate template) throws Exception {
+
+        OfficeBO centerOffice = officePersistence.getOffice(template.getOfficeId());
+        PersonnelBO loanOfficer = personnelPersistence.getPersonnel(template.getLoanOfficerId());
+        int numberOfCustomersInOfficeAlready = 1;
+        MeetingBO meeting = template.getMeeting();
+
+        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        if (template.getCustomFieldViews() != null) {
+            customFieldView = template.getCustomFieldViews();
+        }
+
+        List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldView, null);
+
+        CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
+                centerOffice, numberOfCustomersInOfficeAlready, customFields, template.getAddress(), template.getExternalId());
+
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+
+        try {
+        StaticHibernateUtil.startTransaction();
+        customerDao.save(center);
+        center.generateGlobalCustomerNumber();
+        customerDao.save(center);
+        StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
         return center;
     }
 

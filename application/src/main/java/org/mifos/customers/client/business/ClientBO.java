@@ -1010,4 +1010,13 @@ public class ClientBO extends CustomerBO {
     public void setClientPersistence(final ClientPersistence clientPersistence) {
         this.clientPersistence = clientPersistence;
     }
+
+    public boolean isClosedOrCancelled() {
+        return getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
+                || getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CANCELLED.getValue());
+    }
+
+    public boolean isPending() {
+        return this.getStatus().isClientPending();
+    }
 }

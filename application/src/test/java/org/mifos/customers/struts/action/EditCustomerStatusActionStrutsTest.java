@@ -462,7 +462,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
-    public void testUpdateStatusForClientWhenParentCustomerIsInPartialState() throws PageExpiredException {
+    public void ignore_testUpdateStatusForClientWhenParentCustomerIsInPartialState() throws PageExpiredException {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_PARTIAL);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -849,8 +849,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
-    public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenOfficeInactiveWhileChangingStatusCancelToPartial()
-            throws NumberFormatException, Exception {
+    public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenOfficeInactiveWhileChangingStatusCancelToPartial() throws Exception {
         createInitialObjectsOfficeInactive(CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
         OfficeBO officeBO = group.getOffice();
         officeBO.update(officeBO.getOfficeName(), officeBO.getShortName(), OfficeStatus.INACTIVE, officeBO

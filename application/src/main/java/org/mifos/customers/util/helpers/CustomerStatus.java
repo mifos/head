@@ -51,4 +51,31 @@ public enum CustomerStatus {
         throw new RuntimeException("no customer status " + value);
     }
 
+    public boolean isGroupPartialOrGroupPending() {
+        return isGroupPartial() || isGroupPending();
+    }
+
+    public boolean isGroupActive() {
+        return CustomerStatus.GROUP_ACTIVE.getValue().equals(this.value);
+    }
+
+    public boolean isGroupClosed() {
+        return CustomerStatus.GROUP_CLOSED.getValue().equals(this.value);
+    }
+
+    public boolean isGroupPartial() {
+        return CustomerStatus.GROUP_PARTIAL.getValue().equals(this.value);
+    }
+
+    public boolean isGroupCancelled() {
+        return CustomerStatus.GROUP_CANCELLED.getValue().equals(this.value);
+    }
+
+    public boolean isGroupPending() {
+        return CustomerStatus.GROUP_PENDING.getValue().equals(this.value);
+    }
+
+    public boolean isClientPending() {
+        return CustomerStatus.CLIENT_PENDING.getValue().equals(this.value);
+    }
 }

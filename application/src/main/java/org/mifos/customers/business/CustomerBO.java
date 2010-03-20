@@ -52,6 +52,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
@@ -445,6 +446,9 @@ public abstract class CustomerBO extends BusinessObject {
         CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(this, customerStatusFlagEntity, this
                 .getUserContext().getId(), new DateTimeService().getCurrentJavaDateTime());
         this.customerFlags.add(customerFlag);
+        if (customerStatusFlagEntity.isBlackListed()) {
+            this.blacklist();
+        }
     }
 
     public boolean isTrained() {
@@ -1333,5 +1337,40 @@ public abstract class CustomerBO extends BusinessObject {
 
     public void setMasterPersistence(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
+    }
+
+    public void validateLoanOfficerIsActive() throws CustomerException {
+        PersonnelBO loanOfficer = this.personnel;
+        if (loanOfficer != null) {
+            if (!loanOfficer.isActive()
+                    || !(loanOfficer.getOffice().getOfficeId().equals(this.office.getOfficeId()) || !loanOfficer
+                            .isLoanOfficer())) {
+                throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+            }
+        }
+    }
+
+    public void validateChangeToActive() throws CustomerException {
+        if (this.personnel == null || this.personnel.getPersonnelId() == null) {
+            throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
+        }
+    }
+
+    public void validateNoActiveAccountExist() throws CustomerException {
+        if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen()) {
+            throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+        }
+    }
+
+    public void clearCustomerFlagsIfApplicable(CustomerStatus oldStatus, CustomerStatus newStatus) {
+        if (checkStatusChangeCancelToPartial(oldStatus, newStatus)) {
+            if (!isBlackListed()) {
+                this.customerFlags.clear();
+            }
+        }
+    }
+
+    public void blacklist() {
+        this.blackListed = YesNoFlag.YES.getValue();
     }
 }

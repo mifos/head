@@ -56,7 +56,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 
 /**
  * I contain static factory methods for locating/creating application services.
- * 
+ *
  * NOTE: Use of DI frameworks method would make this redundant. e.g.
  * spring/juice
  */
@@ -73,7 +73,7 @@ public class DependencyInjectedServiceLocator {
     // services
     private static CollectionSheetService collectionSheetService;
     private static CustomerService customerService;
-    
+
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
     private static MasterPersistence masterPersistence = new MasterPersistence();
@@ -83,7 +83,7 @@ public class DependencyInjectedServiceLocator {
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
-    
+
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
     private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
@@ -92,7 +92,7 @@ public class DependencyInjectedServiceLocator {
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
-    
+
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
@@ -105,11 +105,11 @@ public class DependencyInjectedServiceLocator {
         }
         return collectionSheetService;
     }
-    
+
     public static CustomerService locateCustomerService() {
 
         if (customerService == null) {
-            customerService = new CustomerServiceImpl(customerDao, personnelDao);
+            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao);
         }
         return customerService;
     }
@@ -127,14 +127,14 @@ public class DependencyInjectedServiceLocator {
 
     public static CustomerServiceFacade locateCustomerServiceFacade() {
         if (customerServiceFacade == null) {
-            
+
             customerService = DependencyInjectedServiceLocator.locateCustomerService();
-            
+
             customerServiceFacade = new CustomerServiceFacadeWebTier(customerService, officeDao, personnelDao, customerDao);
         }
         return customerServiceFacade;
     }
-    
+
 
     public static ClientDetailsServiceFacade locateClientDetailsServiceFacade() {
         if (clientDetailsServiceFacade == null) {
@@ -143,7 +143,7 @@ public class DependencyInjectedServiceLocator {
         }
         return clientDetailsServiceFacade;
     }
-    
+
 
     public static GroupDetailsServiceFacade locateGroupDetailsServiceFacade() {
         if (groupDetailsServiceFacade == null) {
@@ -152,7 +152,7 @@ public class DependencyInjectedServiceLocator {
         }
         return groupDetailsServiceFacade;
     }
-    
+
     public static CenterDetailsServiceFacade locateCenterDetailsServiceFacade() {
         if (centerDetailsServiceFacade == null) {
             centerDetailsServiceFacade = new WebTierCenterDetailsServiceFacade(customerDao);

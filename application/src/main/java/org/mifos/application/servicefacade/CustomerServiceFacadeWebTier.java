@@ -22,12 +22,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -38,7 +36,6 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -49,7 +46,6 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -595,6 +591,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         customerBO.setUserContext(userContext);
+
         Short flagId = null;
         Short newStatusId = null;
         if (StringUtils.isNotBlank(flagIdAsString)) {
@@ -605,252 +602,16 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
         checkPermission(customerBO, userContext, newStatusId, flagId);
 
-        // pull out all commom stuff here...
-        if (customerBO.isGroup()) {
+        Short oldStatusId = customerBO.getCustomerStatus().getId();
 
-            GroupBO group = (GroupBO) customerBO;
+        // FIXME - keithw - this validation was failing an integration test.. check with business expert on all states for customer status update.
+//        customerBO.validateLoanOfficerIsActive();
 
-            Short oldStatusId = group.getCustomerStatus().getId();
-            changeStatus(group, newStatusId, flagId, notes, userContext);
+        CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
+        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
 
-            Set<CustomerBO> groupChildren = group.getChildren();
+        customerBO.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
 
-            // if group transitions from GROUP_PENDING to GROUP_CANCELLED then downgrade status of all children/clients
-            if (oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue())
-                    && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && groupChildren != null) {
-
-                for (CustomerBO child : groupChildren) {
-
-                    ClientBO client = (ClientBO) child;
-
-                    if (client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())) {
-                        client.setUserContext(userContext);
-                     // FIXME - ensure clients statuses are changed as well.
-//                        client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, notes);
-                    }
-                }
-            }
-
-        } else if (customerBO.isClient()) {
-
-            ClientBO client = (ClientBO) customerBO;
-
-            changeStatus(client, newStatusId, flagId, notes, userContext);
-
-            if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())
-                    || newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue())) {
-
-                if (client.isClientUnderGroup()) {
-
-                    CustomerBO parentCustomer = client.getParentCustomer();
-
-                    client.resetPositions(parentCustomer);
-                    parentCustomer.setUserContext(userContext);
-                    // parentCustomer.update();
-                    CustomerBO center = parentCustomer.getParentCustomer();
-                    if (center != null) {
-                        parentCustomer.resetPositions(center);
-                        center.setUserContext(userContext);
-                        // center.update();
-                        // center = null;
-                    }
-                }
-                // close customer account - #MIFOS-1504
-                for (AccountBO account : client.getAccounts()) {
-                    if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT) && account.isOpen()) {
-                        try {
-                            account.setUserContext(userContext);
-
-                            // FIXME - figure out taking this out of domain model to remove persistence
-                            account.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, flagId, notes);
-                            // account.update();
-                        } catch (AccountException e) {
-                            throw new CustomerException(e);
-                        }
-                    }
-                }
-            }
-
-        } else {
-            // center?
-            changeStatus(customerBO, newStatusId, flagId, notes, userContext);
-        }
-
-        this.customerDao.save(customerBO);
-    }
-
-    private void changeStatus(CustomerBO customer, Short newStatusId, Short flagId, String notes,
-            UserContext userContext) throws CustomerException {
-        Short oldStatusId = customer.getCustomerStatus().getId();
-
-        if (customer.isGroup()) {
-
-            GroupBO group = (GroupBO) customer;
-
-            if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue())) {
-                // checkIfGroupCanBeClosed
-                if (group.isAnyLoanAccountOpen() || group.isAnySavingsAccountOpen()) {
-                    throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-                }
-
-                List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao.findClientsThatAreNotCancelledOrClosed(group.getSearchId(), group.getOffice().getOfficeId());
-
-                if (clientsThatAreNotClosedOrCanceled.size() > 0) {
-                    throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION, new Object[] { MessageLookup
-                            .getInstance().lookupLabel(ConfigurationConstants.CLIENT, group.getUserContext()) });
-                }
-            }
-
-            if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue())) {
-                // checkIfGroupCanBeActive
-                if (group.getParentCustomer() == null || group.getParentCustomer().getCustomerId() == null) {
-                    if (group.getPersonnel() == null || group.getPersonnel().getPersonnelId() == null) {
-                        throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
-                    }
-                    if (group.getCustomerMeeting() == null || group.getCustomerMeeting().getMeeting() == null) {
-                        throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-                    }
-                }
-            }
-
-            if (group.getCustomerStatus().getId().equals(CustomerStatus.GROUP_CANCELLED.getValue())
-                    && newStatusId.equals(CustomerStatus.GROUP_PARTIAL.getValue())) {
-                // handleValidationsForCancelToPartial
-                if (group.getParentCustomer() != null && group.getParentCustomer().getCustomerId() != null) {
-                    // checkGroupCanBeChangedFromCancelToPartialIfCenterIsActive
-                    if (!group.getParentCustomer().isActive()) {
-                        throw new CustomerException(GroupConstants.CENTER_INACTIVE, new Object[] { MessageLookup.getInstance()
-                                .lookupLabel(ConfigurationConstants.CENTER, group.getUserContext()) });
-                    }
-                } else {
-                    // checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive
-                    try {
-                        if (new OfficePersistence().isBranchInactive(group.getOffice().getOfficeId())) {
-                            throw new CustomerException(GroupConstants.BRANCH_INACTIVE, new Object[] { MessageLookup.getInstance()
-                                    .lookupLabel(ConfigurationConstants.GROUP, group.getUserContext()) });
-                        }
-                    } catch (PersistenceException e) {
-                        throw new CustomerException(e);
-                    }
-                    if (group.getPersonnel() != null && group.getPersonnel().getPersonnelId() != null) {
-                        // checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive
-                        try {
-                            if (new OfficePersistence().hasActivePeronnel(group.getOffice().getOfficeId())) {
-                                throw new CustomerException(GroupConstants.LOANOFFICER_INACTIVE, new Object[] { MessageLookup
-                                        .getInstance().lookup(ConfigurationConstants.BRANCHOFFICE, group.getUserContext()) });
-                            }
-                        } catch (PersistenceException e) {
-                            throw new CustomerException(e);
-                        }
-                    }
-                }
-            }
-
-        } else if (customer.isClient()) {
-
-            ClientBO client = (ClientBO) customer;
-
-            if (client.getParentCustomer() != null) {
-                Short groupStatus = client.getParentCustomer().getCustomerStatus().getId();
-                if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
-                        .equals(CustomerStatus.CLIENT_PENDING.getValue()))
-                        && client.isClientUnderGroup()) {
-                    if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
-                        throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
-                                new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                        client.getUserContext()) });
-                    }
-
-                    if (client.isGroupStatusLower(newStatusId, groupStatus)) {
-
-                        throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
-                                MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                        client.getUserContext()),
-                                MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
-                                        client.getUserContext()) });
-                    }
-                }
-            }
-
-            if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
-                if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
-                    throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-                }
-            }
-
-            if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-                boolean loanOfficerActive = false;
-                boolean branchInactive = false;
-                short officeId = client.getOffice().getOfficeId();
-                if (client.getPersonnel() == null || client.getPersonnel().getPersonnelId() == null) {
-                    throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
-                }
-                if (client.getCustomerMeeting() == null || client.getCustomerMeeting().getMeeting() == null) {
-                    throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-                }
-                if (client.getPersonnel() != null) {
-                    try {
-                        loanOfficerActive = new OfficePersistence().hasActivePeronnel(officeId);
-                    } catch (PersistenceException e) {
-                        throw new CustomerException(e);
-                    }
-                }
-
-                try {
-                    branchInactive = new OfficePersistence().isBranchInactive(officeId);
-                } catch (PersistenceException e) {
-                    throw new CustomerException(e);
-                }
-                if (loanOfficerActive == false) {
-                    throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-                            new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                                    client.getUserContext()) });
-                }
-                if (branchInactive == true) {
-                    throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-                            new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                                    client.getUserContext()) });
-                }
-            }
-        } else {
-            if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
-
-                if (customer.isAnySavingsAccountOpen()) {
-                    throw new CustomerException(CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
-                }
-
-                List<CustomerView> groupsThatAreNotClosedOrCanceled = this.customerDao
-                        .findClientsThatAreNotCancelledOrClosed(customer.getSearchId(), customer.getOffice()
-                                .getOfficeId());
-
-                if (groupsThatAreNotClosedOrCanceled.size() > 0) {
-                    throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-                            new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                    userContext) });
-                }
-
-            } else if (newStatusId.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
-
-                if (customer.getPersonnel() == null || customer.getPersonnel().getPersonnelId() == null) {
-                    throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
-                }
-            }
-        }
-
-        PersonnelBO loanOfficer = customer.getPersonnel();
-        if (loanOfficer != null) {
-            if (!loanOfficer.isActive()
-                    || !(loanOfficer.getOffice().getOfficeId().equals(customer.getOffice().getOfficeId()) || !loanOfficer
-                            .isLoanOfficer())) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
-            }
-        }
-        if (customer.checkStatusChangeCancelToPartial(CustomerStatus.fromInt(oldStatusId), CustomerStatus
-                .fromInt(newStatusId))) {
-            if (!customer.isBlackListed()) {
-                customer.getCustomerFlags().clear();
-            }
-        }
         CustomerStatusEntity customerStatus;
         try {
             customerStatus = (CustomerStatusEntity) new MasterPersistence().getPersistentObject(
@@ -859,9 +620,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             throw new CustomerException(e);
         }
 
-        Short localeId = userContext.getLocaleId();
-
-        customerStatus.setLocaleId(localeId);
         CustomerStatusFlagEntity customerStatusFlagEntity = null;
         if (flagId != null) {
             try {
@@ -872,30 +630,50 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             }
         }
 
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
         CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(),
-                this.personnelDao.findPersonnelById(userContext.getId()), customer);
+                loggedInUser, customerBO);
 
-        customer.setCustomerStatus(customerStatus);
-        customer.addCustomerNotes(customerNote);
+        customerBO.setCustomerStatus(customerStatus);
+        customerBO.addCustomerNotes(customerNote);
+
         if (customerStatusFlagEntity != null) {
-            customerStatusFlagEntity.setLocaleId(localeId);
-            customer.addCustomerFlag(customerStatusFlagEntity);
-            if (customerStatusFlagEntity.isBlackListed()) {
-                customer.blackListed = YesNoFlag.YES.getValue();
-            }
+            customerBO.addCustomerFlag(customerStatusFlagEntity);
         }
 
-        if (customer.isGroup()) {
-            handleActiveForFirstTime(customer, oldStatusId, newStatusId);
+        // pull out all commom stuff here...
+        if (customerBO.isGroup()) {
 
-            if (customer.isActiveForFirstTime(oldStatusId, newStatusId)) {
-                customer.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
-            }
-        } else if (customer.isClient()) {
+            GroupBO group = (GroupBO) customerBO;
+            this.customerService.updateGroupStatus(group, oldStatus, newStatus);
+        } else if (customerBO.isClient()) {
+
+            ClientBO client = (ClientBO) customerBO;
+
+            handeClientChangeOfStatus(newStatusId, client);
+            changeStatus(client, newStatusId, userContext);
+            this.customerService.updateClientStatus(client, userContext);
+
+        } else {
+            CenterBO center = (CenterBO) customerBO;
+            this.customerService.updateCenterStatus(center, newStatus);
+        }
+    }
+
+    private void changeStatus(CustomerBO customer, Short newStatusId, UserContext userContext) throws CustomerException {
+        Short oldStatusId = customer.getCustomerStatus().getId();
+
+        if (customer.isClient()) {
 
             ClientBO client = (ClientBO) customer;
 
-            handleActiveForFirstTime(client, oldStatusId, newStatusId);
+            if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
+                try {
+                    client.getCustomerAccount().generateCustomerFeeSchedule();
+                } catch (AccountException ae1) {
+                    throw new CustomerException(ae1);
+                }
+            }
             if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
@@ -965,20 +743,70 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     throw new CustomerException(ae);
                 }
             }
-        } else {
-            // center
-            handleActiveForFirstTime(customer, oldStatusId, newStatusId);
         }
     }
 
-    private void handleActiveForFirstTime(CustomerBO customer, final Short oldStatusId, final Short newStatusId)
-            throws CustomerException {
+    private void handeClientChangeOfStatus(Short newStatusId, ClientBO client) throws CustomerException {
+        if (client.getParentCustomer() != null) {
+            Short groupStatus = client.getParentCustomer().getCustomerStatus().getId();
+            if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
+                    .equals(CustomerStatus.CLIENT_PENDING.getValue()))
+                    && client.isClientUnderGroup()) {
+                if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
+                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
+                            new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
+                                    client.getUserContext()) });
+                }
 
-        if (customer.isActiveForFirstTime(oldStatusId, newStatusId)) {
+                if (client.isGroupStatusLower(newStatusId, groupStatus)) {
+
+                    throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
+                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
+                                    client.getUserContext()),
+                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
+                                    client.getUserContext()) });
+                }
+            }
+        }
+
+        if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
+            if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
+                throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+            }
+        }
+
+        if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
+            boolean loanOfficerActive = false;
+            boolean branchInactive = false;
+            short officeId = client.getOffice().getOfficeId();
+            if (client.getPersonnel() == null || client.getPersonnel().getPersonnelId() == null) {
+                throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
+            }
+            if (client.getCustomerMeeting() == null || client.getCustomerMeeting().getMeeting() == null) {
+                throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
+            }
+            if (client.getPersonnel() != null) {
+                try {
+                    loanOfficerActive = new OfficePersistence().hasActivePeronnel(officeId);
+                } catch (PersistenceException e) {
+                    throw new CustomerException(e);
+                }
+            }
+
             try {
-                customer.getCustomerAccount().generateCustomerFeeSchedule();
-            } catch (AccountException ae) {
-                throw new CustomerException(ae);
+                branchInactive = new OfficePersistence().isBranchInactive(officeId);
+            } catch (PersistenceException e) {
+                throw new CustomerException(e);
+            }
+            if (loanOfficerActive == false) {
+                throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
+                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
+                                client.getUserContext()) });
+            }
+            if (branchInactive == true) {
+                throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
+                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
+                                client.getUserContext()) });
             }
         }
     }

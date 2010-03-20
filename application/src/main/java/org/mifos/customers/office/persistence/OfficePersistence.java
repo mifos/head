@@ -31,6 +31,7 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -164,6 +165,10 @@ public class OfficePersistence extends Persistence {
         return false;
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao}
+     */
+    @Deprecated
     public boolean hasActivePeronnel(Short officeId) throws PersistenceException {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();

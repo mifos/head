@@ -27,12 +27,14 @@ import org.mifos.framework.business.PersistentObject;
 
 public class CustomerNoteEntity extends PersistentObject {
 
+    @SuppressWarnings("unused")
     private final Integer commentId;
 
     private final Date commentDate;
 
     private final String comment;
 
+    @SuppressWarnings("unused")
     private final CustomerBO customer;
 
     private final PersonnelBO personnel;

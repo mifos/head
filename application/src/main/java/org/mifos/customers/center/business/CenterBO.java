@@ -32,9 +32,6 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistory;
-import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.service.CustomerService;
-import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -113,7 +110,6 @@ public class CenterBO extends CustomerBO {
             final PersonnelBO loanOfficer, final CustomerPersistence customerPersistence) throws CustomerException {
         super(userContext, displayName, CustomerLevel.CENTER, CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,
                 address, customFields, fees, null, office, null, meeting, loanOfficer);
-        validateFields(displayName, meeting, loanOfficer, office);
         int count;
         try {
             count = customerPersistence.getCustomerCountForOffice(CustomerLevel.CENTER, office.getOfficeId());
@@ -147,6 +143,9 @@ public class CenterBO extends CustomerBO {
         return getStatus() == CustomerStatus.CENTER_ACTIVE;
     }
 
+    /**
+     * @deprecated - pull out of domain model up towards service level.
+     */
     @Override
     public void updateMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CenterBO::updateMeeting(), customerId: " + getCustomerId());
@@ -154,41 +153,8 @@ public class CenterBO extends CustomerBO {
         this.update();
     }
 
-    private void validateFields(final String displayName, final MeetingBO meeting, final PersonnelBO personnel, final OfficeBO office)
-            throws CustomerException {
-        try {
-            if (getCenterPersistence().isCenterExists(displayName)) {
-                throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, new Object[] { displayName });
-            }
-        } catch (PersistenceException e) {
-            throw new CustomerException(e);
-        }
-        validateMeeting(meeting);
-        validateLO(personnel);
-        validateOffice(office);
-    }
-
-    /**
-     * @deprecated - delete - use {@link CustomerService#updateCenter(UserContext, org.mifos.application.servicefacade.CenterUpdate, CenterBO)}.
-     */
-    @Deprecated
-    public void update(final UserContext userContext, final Short loanOfficerId, final String externalId, final Date mfiJoiningDate,
-            final Address address, final List<CustomFieldView> customFields, final List<CustomerPositionView> customerPositions)
-            throws Exception {
-        validateFieldsForUpdate(loanOfficerId);
-        setMfiJoiningDate(mfiJoiningDate);
-        updateLoanOfficer(loanOfficerId);
-        super.update(userContext, externalId, address, customFields, customerPositions);
-    }
-
-    private void validateFieldsForUpdate(final Short loanOfficerId) throws CustomerException {
-        if (isActive()) {
-            validateLO(loanOfficerId);
-        }
-    }
-
     @Override
-    public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
+    public boolean isActiveForFirstTime(@SuppressWarnings("unused") final Short oldStatus, @SuppressWarnings("unused") final Short newStatusId) {
         return false;
     }
 
@@ -204,17 +170,10 @@ public class CenterBO extends CustomerBO {
         deleteMeeting(newMeeting);
     }
 
-    // FIXME - keithw - remove persistence/dao from domain model.
-    private CenterPersistence centerPersistence = null;
+    public void validateChangeToInActive() throws CustomerException {
 
-    public CenterPersistence getCenterPersistence() {
-        if (null == centerPersistence) {
-            centerPersistence = new CenterPersistence();
+        if (this.isAnySavingsAccountOpen()) {
+            throw new CustomerException(CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
         }
-        return centerPersistence;
-    }
-
-    public void setCenterPersistence(final CenterPersistence centerPersistence) {
-        this.centerPersistence = centerPersistence;
     }
 }

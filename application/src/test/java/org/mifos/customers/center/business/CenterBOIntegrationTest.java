@@ -23,7 +23,6 @@ package org.mifos.customers.center.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -40,7 +39,6 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.center.util.helpers.CenterSearchResults;
 import org.mifos.customers.client.business.ClientBO;
@@ -56,9 +54,6 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.audit.business.AuditLog;
-import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -100,56 +95,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testSuccessfulUpdateForLogging() throws Exception {
-        createCustomers();
-        Date mfiJoiningDate = getDate("11/12/2005");
-        String externalId = "1234";
-        Address address = new Address();
-        address.setCity("Bangalore");
-        address.setLine1("Aditi");
-
-        center.setUserContext(TestUtils.makeUserWithLocales());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
-        center.update(TestUtils.makeUser(), personnelId, externalId, mfiJoiningDate, address, null, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, center.getCustomerId());
-       Assert.assertEquals(1, auditLogList.size());
-        AuditLog auditLog = auditLogList.get(0);
-
-       Assert.assertEquals(EntityType.CENTER.getValue(), auditLog.getEntityType());
-        Set<AuditLogRecord> records = auditLog.getAuditLogRecords();
-       Assert.assertEquals(5, records.size());
-        for (AuditLogRecord auditLogRecord : records) {
-            String fieldName = auditLogRecord.getFieldName();
-            if (fieldName.equalsIgnoreCase("Address1")) {
-               Assert.assertEquals("-", auditLogRecord.getOldValue());
-               Assert.assertEquals("Aditi", auditLogRecord.getNewValue());
-            } else if (fieldName.equalsIgnoreCase("City/District")) {
-               Assert.assertEquals("-", auditLogRecord.getOldValue());
-               Assert.assertEquals("Bangalore", auditLogRecord.getNewValue());
-            } else if (fieldName.equalsIgnoreCase("Loan Officer Assigned")) {
-               Assert.assertEquals("mifos", auditLogRecord.getOldValue());
-               Assert.assertEquals("loan officer", auditLogRecord.getNewValue());
-            } else if (fieldName.equalsIgnoreCase("MFI Joining Date")) {
-               Assert.assertEquals("-", auditLogRecord.getOldValue());
-               Assert.assertEquals("11/12/2005", auditLogRecord.getNewValue());
-            } else if (fieldName.equalsIgnoreCase("External Id")) {
-               Assert.assertEquals("-", auditLogRecord.getOldValue());
-               Assert.assertEquals("1234", auditLogRecord.getNewValue());
-            } else {
-                Assert.fail("unrecognized field name " + fieldName);
-            }
-        }
-
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        TestObjectFactory.cleanUpChangeLog();
-    }
-
     public void testCreateWithoutName() throws Exception {
         try {
             meeting = getMeeting();
@@ -159,43 +104,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         } catch (CustomerException ce) {
             Assert.assertNull(center);
            Assert.assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
-        }
-        TestObjectFactory.removeObject(meeting);
-    }
-
-    public void testCreateWithoutLO() throws Exception {
-        try {
-            meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
-                    officeBo, meeting, null, new CustomerPersistence());
-            Assert.fail();
-        } catch (CustomerException ce) {
-            Assert.assertNull(center);
-           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
-        }
-        TestObjectFactory.removeObject(meeting);
-    }
-
-    public void testCreateWithoutMeeting() throws Exception {
-        try {
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
-                    officeBo, meeting, personnelBo, new CustomerPersistence());
-            Assert.fail();
-        } catch (CustomerException ce) {
-            Assert.assertNull(center);
-           Assert.assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
-        }
-    }
-
-    public void testCreateWithoutOffice() throws Exception {
-        try {
-            meeting = getMeeting();
-            center = new CenterBO(TestUtils.makeUser(), "Center", null, null, null, null, null,
-                    null, meeting, personnelBo, new CustomerPersistence());
-            Assert.fail();
-        } catch (CustomerException ce) {
-            Assert.assertNull(center);
-           Assert.assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
         }
         TestObjectFactory.removeObject(meeting);
     }
@@ -225,25 +133,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(name, center.getDisplayName());
        Assert.assertEquals(officeId, center.getOffice().getOfficeId());
        Assert.assertEquals(2, center.getCustomFields().size());
-    }
-
-    public void testFailureCreate_DuplicateName() throws Exception {
-        String name = "Center";
-        center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
-        StaticHibernateUtil.closeSession();
-
-        String externalId = "12345";
-        Date mfiJoiningDate = getDate("11/12/2005");
-        meeting = getMeeting();
-        List<FeeView> fees = getFees();
-        try {
-            center = new CenterBO(TestUtils.makeUser(), name, null, null, fees, externalId, mfiJoiningDate, officeBo,
-                    meeting, personnelBo, new CustomerPersistence());
-            Assert.fail();
-        } catch (CustomerException e) {
-           Assert.assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
-        }
-        removeFees(fees);
     }
 
     public void testFailureDuplicateName() throws Exception {
@@ -293,39 +182,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateFailure() throws Exception {
-        createCustomers();
-        try {
-            center.update(TestUtils.makeUser(), null, "1234", null, null, null, null);
-            Assert.fail();
-        } catch (CustomerException ce) {
-           Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
-        }
-    }
-
-    public void testSuccessfulUpdate() throws Exception {
-        createCustomers();
-        Date mfiJoiningDate = getDate("11/12/2005");
-        String city = "Bangalore";
-        String addressLine1 = "Aditi";
-        String externalId = "1234";
-        Address address = new Address();
-        address.setCity(city);
-        address.setLine1(addressLine1);
-
-        center.update(TestUtils.makeUser(), personnelId, externalId, mfiJoiningDate, address, null, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-       Assert.assertEquals(city, center.getCustomerAddressDetail().getAddress().getCity());
-       Assert.assertEquals(addressLine1, center.getCustomerAddressDetail().getAddress().getLine1());
-       Assert.assertEquals(externalId, center.getExternalId());
-       Assert.assertEquals(mfiJoiningDate, DateUtils.getDateWithoutTimeStamp(center.getMfiJoiningDate().getTime()));
-       Assert.assertEquals(personnelId, center.getPersonnel().getPersonnelId());
-    }
-
     public void ignore_testSuccessfulUpdateWithoutLO_in_InActiveState() throws Exception {
         createCustomers();
 
@@ -369,25 +225,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(center.getPersonnel());
         Assert.assertNull(group.getPersonnel());
         Assert.assertNull(client.getPersonnel());
-    }
-
-    public void testUpdateLOsForAllChildren() throws Exception {
-        createCustomers();
-       Assert.assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
-       Assert.assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
-        PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
-        StaticHibernateUtil.closeSession();
-        StaticHibernateUtil.startTransaction();
-        center.update(TestUtils.makeUser(), newLO.getPersonnelId(), center.getExternalId(), center.getMfiJoiningDate(),
-                center.getAddress(), null, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-       Assert.assertEquals(newLO.getPersonnelId(), center.getPersonnel().getPersonnelId());
-       Assert.assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
-       Assert.assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
     }
 
     public void testUpdateMeeting_SaveToUpdateLater() throws Exception {

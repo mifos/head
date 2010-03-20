@@ -34,6 +34,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -127,6 +128,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerAccountBOIntegrationTest;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
@@ -266,11 +268,13 @@ public class TestObjectFactory {
         return createCenter(customerName, meeting, getFees());
     }
 
-    public static CenterBO createWeeklyFeeCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting) {
+    public static CenterBO createWeeklyFeeCenterForTestGetLoanAccounts(final String customerName,
+            final MeetingBO meeting) {
         return createCenterForTestGetLoanAccounts(customerName, meeting, getFees());
     }
 
-    public static CenterBO createWeeklyFeeCenter(final String customerName, final MeetingBO meeting, final Short officeId, final Short personnelId) {
+    public static CenterBO createWeeklyFeeCenter(final String customerName, final MeetingBO meeting,
+            final Short officeId, final Short personnelId) {
         return createCenter(customerName, meeting, officeId, personnelId, getFees());
     }
 
@@ -349,8 +353,8 @@ public class TestObjectFactory {
         return address;
     }
 
-    public static GroupBO createWeeklyFeeGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
-            final CustomerBO parentCustomer) {
+    public static GroupBO createWeeklyFeeGroupUnderCenter(final String customerName,
+            final CustomerStatus customerStatus, final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.SYSTEM_USER;
         return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),
                 getFees(), formedBy, parentCustomer);
@@ -359,13 +363,12 @@ public class TestObjectFactory {
     public static GroupBO createNoFeeGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
             final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.SYSTEM_USER;
-        return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),
-                null, formedBy, parentCustomer);
+        return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(), null,
+                formedBy, parentCustomer);
     }
 
-
-    public static GroupBO createWeeklyFeeGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(final String customerName,
-            final CustomerStatus customerStatus, final CustomerBO parentCustomer) {
+    public static GroupBO createWeeklyFeeGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(
+            final String customerName, final CustomerStatus customerStatus, final CustomerBO parentCustomer) {
         Short formedBy = PersonnelConstants.TEST_USER;
         return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(),
                 getFees(), formedBy, parentCustomer);
@@ -435,9 +438,9 @@ public class TestObjectFactory {
             final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        //john w - changed maybe_client to client... as with new spouse_father functionality... maybe_client is father!
+        // john w - changed maybe_client to client... as with new spouse_father functionality... maybe_client is father!
 
-        //ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
+        // ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
         ClientNameDetailView clientNameDetailView = clientNameView(NameType.CLIENT, customerName);
         ClientNameDetailView spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
         ClientBO client;
@@ -475,8 +478,9 @@ public class TestObjectFactory {
                     .valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(), status, null,
                     null, null, null, getFees(), null, systemUser, new OfficePersistence()
-                            .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService().getCurrentJavaDateTime(), null, null, null,
-                    YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                            .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
+                            .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
+                    spouseNameDetailView, clientDetailView, null);
             new ClientPersistence().saveClient(client);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -627,9 +631,9 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes,TestUtils.createMoney(defLnAmnt),
-                    TestUtils.createMoney(defLnAmnt),  TestUtils.createMoney(defLnAmnt),
-                    defIntRate, defIntRate, defIntRate, defInstallments, defInstallments, defInstallments, true,
+                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, TestUtils.createMoney(defLnAmnt),
+                    TestUtils.createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt), defIntRate, defIntRate,
+                    defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
                     new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest);
         } catch (ProductDefinitionException e) {
@@ -948,8 +952,8 @@ public class TestObjectFactory {
     /**
      * createPeriodicAmountFee.
      *
-     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
-     * in {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
+     * {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
      */
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter) {
@@ -980,7 +984,8 @@ public class TestObjectFactory {
             final UserContext userContext) {
         try {
             GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
-            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
+            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService()
+                    .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
                     false, meeting);
@@ -998,7 +1003,8 @@ public class TestObjectFactory {
             final Short recurAfter) {
 
         try {
-            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
+            MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService()
+                    .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             return createPeriodicRateFee(feeName, feeCategory, rate, feeFormula, meetingFrequency, recurAfter,
                     TestUtils.makeUserWithLocales(), meeting);
         } catch (Exception e) {
@@ -1011,7 +1017,8 @@ public class TestObjectFactory {
             final Short recurAfter, final UserContext userContext, final MeetingBO meeting) {
 
         try {
-            MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService().getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
+            MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService()
+                    .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             // GLCodeEntity glCode =
             // ChartOfAccountsCache.get("31301").getAssociatedGlcode();
             GLCodeEntity glCode = new GLCodeEntity((short) 1, "31301");
@@ -1039,8 +1046,8 @@ public class TestObjectFactory {
     /**
      * createOneTimeAmountFee.
      *
-     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
-     * in {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
+     * {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
     public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final FeePayment feePayment) {
@@ -1070,8 +1077,8 @@ public class TestObjectFactory {
     /**
      * createOneTimeRateFee.
      *
-     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure
-     * in {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
+     * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
+     * {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
      */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
             final FeeFormula feeFormula, final FeePayment feePayment) {
@@ -1250,8 +1257,7 @@ public class TestObjectFactory {
                 }
             }
             // TODO: this will never be true. Do we want to fix it or nuke it?
-            if (accountType.getValue()
-                    .equals(org.mifos.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
+            if (accountType.getValue().equals(org.mifos.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
                 CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
                 for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity.getAccountFeesActionDetails()) {
                     session.delete(actionFees);
@@ -2144,8 +2150,8 @@ public class TestObjectFactory {
     }
 
     public static SavingsOfferingBO createSavingsProduct(final String productName, final String shortName,
-            final Date currentDate, final RecommendedAmountUnit recommendedAmountUnit,
-            final MeetingBO meetingIntCalc, final MeetingBO meetingIntPost) {
+            final Date currentDate, final RecommendedAmountUnit recommendedAmountUnit, final MeetingBO meetingIntCalc,
+            final MeetingBO meetingIntPost) {
         return createSavingsProduct(productName, shortName, ApplicableTo.GROUPS, currentDate, PrdStatus.SAVINGS_ACTIVE,
                 300.0, recommendedAmountUnit, 1.2, 200.0, 200.0, SavingsType.VOLUNTARY,
                 InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
@@ -2211,12 +2217,24 @@ public class TestObjectFactory {
     public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
 
     public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template,
-            final CenterBO center, final Date customerActivationDate) throws CustomerException, PersistenceException {
+            final CenterBO center, final Date customerActivationDate) {
 
-        GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
-                .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
-                .getCustomFieldViews(), template.getFees(), new PersonnelPersistence().getPersonnel(template
-                .getLoanOfficerId()), center);
+        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        if (template.getCustomFieldViews() != null) {
+            customFields = template.getCustomFieldViews();
+        }
+
+        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
+
+        PersonnelBO formedBy = null;
+        GroupBO group = GroupBO.createGroupWithCenterAsParent(userContext, template.getDisplayName(), formedBy, center,
+                customerCustomFields, template.getAddress(), template.getExternalId(), template.isTrained(),
+                new DateTime(template.getTrainedDate()), template.getCustomerStatus());
+
+        // GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
+        // .getExternalId(), template.isTrained(), template.getTrainedDate(), template.getAddress(), template
+        // .getCustomFieldViews(), template.getFees(), new PersonnelPersistence().getPersonnel(template
+        // .getLoanOfficerId()), center);
         group.setCustomerActivationDate(customerActivationDate);
         return group;
     }

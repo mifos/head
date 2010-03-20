@@ -25,31 +25,38 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -65,10 +72,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
+    private final OfficeDao officeDao;
 
-    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao) {
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
+        this.officeDao = officeDao;
     }
 
     @Override
@@ -224,7 +233,8 @@ public class CustomerServiceImpl implements CustomerService {
         group.validate();
 
         if (!group.getDisplayName().equals(groupUpdate.getDisplayName())) {
-//            customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
+            // customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(),
+            // group.getOffice().getOfficeId());
         }
 
         Short loanOfficerId = groupUpdate.getLoanOfficerId();
@@ -253,8 +263,8 @@ public class CustomerServiceImpl implements CustomerService {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
                 // accounts.
-                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, group.getSearchId(), group
-                        .getOffice().getOfficeId());
+                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, group.getSearchId(), group.getOffice()
+                        .getOfficeId());
 
                 new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, group.getSearchId(), group
                         .getOffice().getOfficeId());
@@ -330,12 +340,12 @@ public class CustomerServiceImpl implements CustomerService {
                 group.setCustomerMeeting(customerMeeting);
             }
         } else if (groupMeeting != null) {
-//            try {
-//                new CustomerPersistence().deleteCustomerMeeting(group);
-                group.setCustomerMeeting(null);
-//            } catch (PersistenceException e) {
-//                throw new MifosRuntimeException(e);
-//            }
+            // try {
+            // new CustomerPersistence().deleteCustomerMeeting(group);
+            group.setCustomerMeeting(null);
+            // } catch (PersistenceException e) {
+            // throw new MifosRuntimeException(e);
+            // }
         }
 
         if (oldParent != null) {
@@ -348,16 +358,16 @@ public class CustomerServiceImpl implements CustomerService {
 
         transferToCenter.setUserContext(group.getUserContext());
 
-//        CustomerHierarchyEntity currentHierarchy1 = getActiveCustomerHierarchy();
-//        currentHierarchy1.makeInactive(userContext.getId());
-//        this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-//
-//        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
+        // CustomerHierarchyEntity currentHierarchy1 = getActiveCustomerHierarchy();
+        // currentHierarchy1.makeInactive(userContext.getId());
+        // this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
+        //
+        // addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
 
         try {
             StaticHibernateUtil.startTransaction();
 
-//            group.transferToCenter(transferToCenter);
+            // group.transferToCenter(transferToCenter);
             group.setUpdateDetails();
 
             if (oldParent != null) {
@@ -409,7 +419,8 @@ public class CustomerServiceImpl implements CustomerService {
             searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
         } else {
             try {
-                int customerCount = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP, group.getOffice().getOfficeId());
+                int customerCount = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP, group
+                        .getOffice().getOfficeId());
                 searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(customerCount + 1);
             } catch (PersistenceException pe) {
                 throw new CustomerException(pe);
@@ -441,6 +452,164 @@ public class CustomerServiceImpl implements CustomerService {
             StaticHibernateUtil.commitTransaction();
 
             return group;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus) throws CustomerException {
+
+        if (newStatus.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
+
+            center.validateChangeToInActive();
+
+            List<CustomerView> groupsThatAreNotClosedOrCanceled = this.customerDao
+                    .findClientsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
+
+            if (groupsThatAreNotClosedOrCanceled.size() > 0) {
+                throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+                        new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
+                                center.getUserContext()) });
+            }
+
+        } else if (newStatus.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
+            center.validateChangeToActive();
+        }
+
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            customerDao.save(center);
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus)
+            throws CustomerException {
+
+        validateChangeOfStatusForGroup(group, oldStatus, newStatus);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
+                group.setCustomerActivationDate(new DateTime().toDate());
+
+                group.getCustomerAccount().generateCustomerFeeSchedule();
+            }
+
+            Set<CustomerBO> groupChildren = group.getChildren();
+
+            if (oldStatus.isGroupPending() && newStatus.isGroupCancelled() && groupChildren != null) {
+
+                for (CustomerBO child : groupChildren) {
+
+                    ClientBO client = (ClientBO) child;
+
+                    if (client.isPending()) {
+                        client.setUserContext(group.getUserContext());
+                        changeClientStatus(client, CustomerStatus.CLIENT_PARTIAL);
+                    }
+                }
+            }
+
+            customerDao.save(group);
+            StaticHibernateUtil.commitTransaction();
+
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    private void changeClientStatus(ClientBO client, CustomerStatus clientPartial) {
+        // FIXME - ensure clients statuses are changed as well.
+    }
+
+    private void validateChangeOfStatusForGroup(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus) throws CustomerException {
+
+        if (newStatus.isGroupClosed()) {
+            group.validateNoActiveAccountExist();
+
+            List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
+                    .findClientsThatAreNotCancelledOrClosed(group.getSearchId(), group.getOffice().getOfficeId());
+
+            if (clientsThatAreNotClosedOrCanceled.size() > 0) {
+                throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+                        new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
+                                group.getUserContext()) });
+            }
+        }
+
+        if (newStatus.isGroupActive()) {
+            group.validateGroupCanBeActive();
+        }
+
+        if (oldStatus.isGroupCancelled() && newStatus.isGroupPartial()) {
+
+            // handleValidationsForCancelToPartial
+            if (group.getParentCustomer() != null && group.getParentCustomer().getCustomerId() != null) {
+                group.validateTransitionFromCancelledToPartialIsAllowedBasedOnCenter();
+            } else {
+                this.officeDao.validateBranchIsActiveWithNoActivePersonnel(group.getOffice().getOfficeId(), group
+                        .getUserContext());
+            }
+        }
+    }
+
+    @Override
+    public void updateClientStatus(ClientBO client, UserContext userContext) {
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            if (client.isClosedOrCancelled()) {
+
+                if (client.isClientUnderGroup()) {
+
+                    CustomerBO parentCustomer = client.getParentCustomer();
+
+                    client.resetPositions(parentCustomer);
+                    parentCustomer.setUserContext(userContext);
+                    CustomerBO center = parentCustomer.getParentCustomer();
+                    if (center != null) {
+                        parentCustomer.resetPositions(center);
+                        center.setUserContext(userContext);
+                    }
+                }
+
+                // close customer account - #MIFOS-1504
+                for (AccountBO account : client.getAccounts()) {
+                    if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT) && account.isOpen()) {
+                        // try {
+                        account.setUserContext(userContext);
+
+                        // FIXME - figure out taking this out of domain model to remove persistence
+                        // FIXME - put back in commented out code
+                        // account.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, flagId, notes);
+                        // account.update();
+                        // } catch (AccountException e) {
+                        // throw new CustomerException(e);
+                        // }
+                    }
+                }
+            }
+
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

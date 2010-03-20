@@ -28,9 +28,11 @@ import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.security.util.UserContext;
 
 public interface CustomerService {
@@ -47,4 +49,9 @@ public interface CustomerService {
 
     GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException;
 
+    void updateCenterStatus(CenterBO center, CustomerStatus newStatus) throws CustomerException;
+
+    void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus) throws CustomerException;
+
+    void updateClientStatus(ClientBO client, UserContext userContext);
 }

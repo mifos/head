@@ -155,4 +155,9 @@ public class MeetingBuilder {
         recurAfter = meeting.getRecurAfter();
         return this;
     }
+
+    public MeetingBuilder startingFrom(Date withStartDate) {
+        this.startDate = withStartDate;
+        return this;
+    }
 }

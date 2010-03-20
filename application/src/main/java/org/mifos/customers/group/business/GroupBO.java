@@ -28,8 +28,10 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -339,10 +341,12 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
-        return (oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
-                .equals(CustomerStatus.GROUP_PENDING.getValue()))
-                && newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue());
+    public boolean isActiveForFirstTime(final Short oldStatusId, final Short newStatusId) {
+
+        CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
+        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
+
+        return oldStatus.isGroupPartialOrGroupPending() && newStatus.isGroupActive();
     }
 
     protected void validateFieldsForUpdate(final String displayName, final Short loanOfficerId)
@@ -556,5 +560,29 @@ public class GroupBO extends CustomerBO {
             throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
         }
 //        throw new UnsupportedOperationException("update for group has removed - use DAO");
+    }
+
+    public void validateGroupCanBeActive() throws CustomerException {
+
+        if (this.getParentCustomer() == null || this.getParentCustomer().getCustomerId() == null) {
+            if (this.getPersonnel() == null || this.getPersonnel().getPersonnelId() == null) {
+                throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
+            }
+            if (this.getCustomerMeeting() == null || this.getCustomerMeeting().getMeeting() == null) {
+                throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
+            }
+        }
+    }
+
+    public boolean isCancelled() {
+        return getStatus().isGroupCancelled();
+    }
+
+    public void validateTransitionFromCancelledToPartialIsAllowedBasedOnCenter() throws CustomerException {
+
+        if (!this.getParentCustomer().isActive()) {
+            throw new CustomerException(GroupConstants.CENTER_INACTIVE, new Object[] { MessageLookup
+                    .getInstance().lookupLabel(ConfigurationConstants.CENTER, this.getUserContext()) });
+        }
     }
 }
