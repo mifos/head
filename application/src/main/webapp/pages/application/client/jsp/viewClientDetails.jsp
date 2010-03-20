@@ -663,14 +663,10 @@ explanation of the license and how it is applied.
 								</span>
 								</td>
 						</tr>	
-							<c:forEach var="familyDetails" items="${sessionScope.clientCustActionForm.familyDetails}"> 
+							<c:forEach var="familyDetails" items="${clientInformationDto.clientDisplay.familyDetails}"> 
 									<tr class="fontnormal">
 										<td>
-											<c:forEach var="familyEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}">
-												<c:if test = "${familyEntity.id == familyDetails.relationship}">
-													<c:out value="${familyEntity.name}"/>
-												</c:if>
-											</c:forEach>
+											<c:out value="${familyDetails.relationship}"/>
 										</td>
 										<td class="paddingL10"> 
 											<div id="displayName"> 
@@ -681,18 +677,10 @@ explanation of the license and how it is applied.
 											<c:out value="${familyDetails.dateOfBirthForBrowser}"/>
 										</td>
 										<td class="paddingL10">
-											<c:forEach var="genderEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderEntity')}">
-											<c:if test = "${genderEntity.id == familyDetails.gender}">
-												<c:out value="${genderEntity.name}"/>
-											</c:if>
-											</c:forEach>
+												<c:out value="${familyDetails.gender}"/>
 										</td>
 										<td class="paddingL10">
-											<c:forEach var="livingStatusEntity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'livingStatusEntity')}">
-													<c:if test = "${livingStatusEntity.id ==familyDetails.livingStatus}">
-														<c:out value="${livingStatusEntity.name}"/>
-													</c:if>
-											</c:forEach>
+														<c:out value="${familyDetails.livingStatus}"/>
 										</td>
 									</tr>
 								</c:forEach>

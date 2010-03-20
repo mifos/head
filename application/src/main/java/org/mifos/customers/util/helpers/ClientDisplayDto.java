@@ -20,6 +20,7 @@
 package org.mifos.customers.util.helpers;
 
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -58,8 +59,13 @@ public class ClientDisplayDto implements DataTransferObject {
     private final Short numChildren;
     private final Boolean isCustomerPicture;
     private final Boolean areFamilyDetailsRequired;
+
+    // if areFamilyDetailsRequired = false
     private final String spouseFatherValue;
     private final String spouseFatherName;
+
+    // if areFamilyDetailsRequired = true
+    private final List<ClientFamilyDetailDto> familyDetails;
 
     public ClientDisplayDto(final Integer customerId, final String globalCustNum, final String displayName,
             final String parentCustomerDisplayName, final String branchName, final String externalId,
@@ -70,7 +76,8 @@ public class ClientDisplayDto implements DataTransferObject {
             final String businessActivities, final String handicapped, final String maritalStatus,
             final String citizenship, final String ethnicity, final String educationLevel, final String povertyStatus,
             final Short numChildren, final Boolean isCustomerPicture, final Boolean areFamilyDetailsRequired,
-            final String spouseFatherValue, final String spouseFatherName) {
+            final String spouseFatherValue, final String spouseFatherName,
+            final List<ClientFamilyDetailDto> familyDetails) {
 
         this.customerId = customerId;
         this.globalCustNum = globalCustNum;
@@ -105,8 +112,11 @@ public class ClientDisplayDto implements DataTransferObject {
         this.numChildren = numChildren;
         this.isCustomerPicture = isCustomerPicture;
         this.areFamilyDetailsRequired = areFamilyDetailsRequired;
+
         this.spouseFatherValue = spouseFatherValue;
         this.spouseFatherName = spouseFatherName;
+
+        this.familyDetails = familyDetails;
     }
 
     public Integer getCustomerId() {
@@ -231,6 +241,10 @@ public class ClientDisplayDto implements DataTransferObject {
 
     public String getSpouseFatherName() {
         return this.spouseFatherName;
+    }
+
+    public List<ClientFamilyDetailDto> getFamilyDetails() {
+        return this.familyDetails;
     }
 
 }

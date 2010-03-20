@@ -709,20 +709,10 @@ public class ClientCustAction extends CustAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         long startTime = System.currentTimeMillis();
-        ClientCustActionForm actionForm = (ClientCustActionForm) form;
-
-        // john w - can't find any reference to LOAN_INDIVIDUAL_MONITORING_IS_ENABLED. will delete after testing.
-        // ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        // Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
-        // "loanIndividualMonitoringIsEnabled").getValue();
-        // if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
-        // SessionUtils.removeThenSetAttribute(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-        // loanIndividualMonitoringIsEnabled.intValue(), request);
-        // }
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
-        ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(actionForm
+        ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(((ClientCustActionForm) form)
                 .getGlobalCustNum(), getUserContext(request));
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
@@ -730,20 +720,6 @@ public class ClientCustAction extends CustAction {
         ClientBO clientBO = (ClientBO) getCustomerBusinessService().getCustomer(
                 clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
-
-        // john w - will look at if the following 'if' can be removed soon
-        if (ClientRules.isFamilyDetailsRequired()) {
-            setValuesForFamilyEditInActionForm(actionForm, request);
-            actionForm.setFamilyDateOfBirth();
-            actionForm.constructFamilyDetails();
-            SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, getCustomerBusinessService()
-                    .retrieveMasterEntities(MasterConstants.LIVING_STATUS, getUserContext(request).getLocaleId()),
-                    request);
-            SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, getCustomerBusinessService()
-                    .retrieveMasterEntities(MasterConstants.GENDER, getUserContext(request).getLocaleId()), request);
-            SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, getMasterEntities(
-                    SpouseFatherLookupEntity.class, getUserContext(request).getLocaleId()), request);
-        }
 
         System.out.println("get Client Transaction Took: " + (System.currentTimeMillis() - startTime));
         return mapping.findForward(ActionForwards.get_success.toString());

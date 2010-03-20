@@ -78,6 +78,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
+import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -1332,7 +1333,7 @@ public class CustomerPersistence extends Persistence {
         final Short numChildren = (Short) queryResult.get(0)[25];
         final Integer pictureId = (Integer) queryResult.get(0)[26];
         final String spouseFatherValueLookUp = (String) queryResult.get(0)[27];
-        final String spouseFatherName = (String) queryResult.get(0)[28];
+        String spouseFatherName = (String) queryResult.get(0)[28];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
@@ -1350,17 +1351,42 @@ public class CustomerPersistence extends Persistence {
         final String ethnicity = MessageLookup.getInstance().lookup(ethnicityName, userContext);
         final String educationLevel = MessageLookup.getInstance().lookup(educationLevelName, userContext);
         final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
+
         String spouseFatherValue = null;
-        if (spouseFatherValueLookUp != null) {
-            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+        Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+        List<ClientFamilyDetailDto> familyDetails = null;
+
+        if (areFamilyDetailsRequired) {
+            System.out.println("in areFamilyDetailsRequired");
+            spouseFatherName = null;
+            familyDetails = new ArrayList<ClientFamilyDetailDto>();
+
+            List<Object[]> familyDetailsQueryResult = executeNamedQuery("getClientFamilyDetailDto", queryParameters);
+
+            final String relationshipLookup = (String) familyDetailsQueryResult.get(0)[0];
+            final String familyDisplayName = (String) familyDetailsQueryResult.get(0)[1];
+            final Date familyDateOfBirth = (Date) familyDetailsQueryResult.get(0)[2];
+            final String genderLookup = (String) familyDetailsQueryResult.get(0)[3];
+            final String livingStatusLookup = (String) familyDetailsQueryResult.get(0)[4];
+
+            final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
+            final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
+            final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
+
+            familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
+                    livingStatus));
+        } else {
+            if (spouseFatherValueLookUp != null) {
+                spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+            }
         }
 
         return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
                 customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
                 loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
-                educationLevel, povertyStatus, numChildren, isCustomerPicture, ClientRules.isFamilyDetailsRequired(),
-                spouseFatherValue, spouseFatherName);
+                educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
+                spouseFatherValue, spouseFatherName, familyDetails);
     }
 
     @SuppressWarnings("unchecked")

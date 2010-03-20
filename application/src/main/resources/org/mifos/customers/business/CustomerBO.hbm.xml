@@ -337,6 +337,27 @@
         		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
 				where c.customer_id = :CLIENT_ID]]>
 	</sql-query>
+	<sql-query name="getClientFamilyDetailDto">
+		<return-scalar column="relationshipLookup" type="string" />
+		<return-scalar column="displayName" type="string" />
+		<return-scalar column="dateOfBirth" type="date" />
+		<return-scalar column="genderLookup" type="string" />
+		<return-scalar column="livingStatusLookup" type="string" />
+		<![CDATA[select lv_spouseFather.lookup_name as relationshipLookup,
+				cnd.display_name as displayName,
+				cfd.date_of_birth as dateOfBirth,
+				lv_gender.lookup_name as genderLookup,
+				lv_livingStatus.lookup_name as livingStatusLookup
+				from customer_name_detail cnd
+				left join customer_family_detail cfd on cfd.customer_name_id = cnd.customer_name_id
+
+				left join spouse_father_lookup sfl on sfl.spouse_father_id = cnd.name_type
+        		left join lookup_value lv_spouseFather on lv_spouseFather.lookup_id = sfl.lookup_id
+
+        		left join lookup_value lv_gender on lv_gender.lookup_id = cfd.gender
+        		left join lookup_value lv_livingStatus on lv_livingStatus.lookup_id = cfd.living_status
+				where cnd.customer_id = :CLIENT_ID and cnd.name_type !=3]]>
+	</sql-query>
 	<sql-query name="getGroupDisplayDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="globalCustNum" type="string" />
