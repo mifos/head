@@ -689,8 +689,8 @@ explanation of the license and how it is applied.
 									</bean:define>
 									<tr class="fontnormal">
 										<td width="17%" align="right"><span id="create_ClientPersonalInfo.label.customField"><mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}"
-											mandatory="${cf.mandatoryStringValue}"
+											name="${cf.lookUpEntityType}"
+											mandatory="${cf.mandatoryString}"
 											bundle="ClientUIResources"></mifos:mifoslabel></span>:</td>
 										<td width="83%">
 										<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>

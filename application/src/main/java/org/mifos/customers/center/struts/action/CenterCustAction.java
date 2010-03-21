@@ -51,7 +51,6 @@ import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.Address;
@@ -291,7 +290,7 @@ public class CenterCustAction extends CustAction {
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
         CenterInformationDto centerInformationDto = this.centerDetailsServiceFacade.getCenterInformationDto(
-                ((CenterCustActionForm) form).getGlobalCustNum(), CustomerLevel.CENTER.getValue(), getUserContext(request));
+                ((CenterCustActionForm) form).getGlobalCustNum(), getUserContext(request));
         SessionUtils.removeAttribute("centerInformationDto", request);
         SessionUtils.setAttribute("centerInformationDto", centerInformationDto, request);
 
@@ -373,7 +372,7 @@ public class CenterCustAction extends CustAction {
         actionForm.setExternalId(null);
         actionForm.setLoanOfficerId(null);
     }
-    
+
     private class DummyBusinessService implements BusinessService {
 
         @Override

@@ -27,7 +27,7 @@ import org.mifos.security.util.UserContext;
  *
  */
 public interface CenterDetailsServiceFacade {
-    CenterInformationDto getCenterInformationDto(String globalCustNum, Short levelId, UserContext userContext)
+    CenterInformationDto getCenterInformationDto(String globalCustNum, UserContext userContext)
             throws ServiceException;
 
 }
