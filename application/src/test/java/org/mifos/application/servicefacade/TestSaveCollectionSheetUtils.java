@@ -69,12 +69,6 @@ import org.mifos.security.util.UserContext;
  */
 public class TestSaveCollectionSheetUtils {
 
-    public TestSaveCollectionSheetUtils() {
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
-        currency = Money.getDefaultCurrency();
-        userContext = TestUtils.makeUser();
-    }
-
     /*
      * Below are variables that can be configured to create invalid entries for testing. They are injected during the
      * assembling of the dto's. This is a very ugly way to inject invalid values. Set methods would be far tidier and
@@ -105,9 +99,6 @@ public class TestSaveCollectionSheetUtils {
     private Boolean invalidTransactionDate = false;
     private Boolean normalLoanRepayment = false;
 
-    /*
-     *
-     */
     private CenterBO center;
     private GroupBO group;
     private ClientBO client;
@@ -119,6 +110,12 @@ public class TestSaveCollectionSheetUtils {
     private CollectionSheetService collectionSheetService;
     private UserContext userContext;
     private MifosCurrency currency;
+
+    public TestSaveCollectionSheetUtils() {
+        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        currency = Money.getDefaultCurrency();
+        userContext = TestUtils.makeUser();
+    }
 
     /**
      * Write a sample center hierarchy, retrieve the collection sheet information and put it into a
@@ -166,28 +163,28 @@ public class TestSaveCollectionSheetUtils {
     public void createSampleCenterHierarchy(Date date) throws Exception {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withSearchId("10.4").withMeeting(weeklyMeeting).withName("Center").withOffice(
+        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Center").withOffice(
                 sampleBranchOffice()).withLoanOfficer(testUser()).build();
-        IntegrationTestObjectMother.saveCustomer(center);
+        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(center).build();
-        IntegrationTestObjectMother.saveCustomer(group);
+        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
 
         AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0")
                 .withName("First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(
                         sampleBranchOffice()).build();
-        weeklyPeriodicFeeForFirstClients.save();
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForFirstClients);
 
         client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName(
                 "Client 1").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group)
                 .buildForIntegrationTests();
-        IntegrationTestObjectMother.saveCustomer(client);
+        IntegrationTestObjectMother.saveClient(client);
 
         client.setClientPerformanceHistory(new ClientPerformanceHistoryEntity(client));
-        client.update();
-        StaticHibernateUtil.commitTransaction();
+        IntegrationTestObjectMother.saveClient(client);
 
         MeetingBO loanMeeting = TestObjectFactory.createLoanMeeting(client.getCustomerMeeting().getMeeting());
 

@@ -20,12 +20,19 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
@@ -37,8 +44,10 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.security.util.UserContext;
 
 /**
  *
@@ -61,6 +70,8 @@ public class IntegrationTestObjectMother {
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
     private static final GroupPersistence groupPersistence = new GroupPersistence();
     private static final ClientPersistence clientPersistence = new ClientPersistence();
+
+    private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
 
     public static OfficeBO sampleBranchOffice() {
         if (sampleBranchOffice == null) {
@@ -86,7 +97,7 @@ public class IntegrationTestObjectMother {
 
         return testUser;
     }
-    
+
     public static void saveMeeting(final MeetingBO meeting) {
         try {
             StaticHibernateUtil.startTransaction();
@@ -151,7 +162,7 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
     }
-    
+
     public static void cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(final ClientBO activeClient,
             final ClientBO inActiveClient, final GroupBO group, final CustomerBO center, final MeetingBO weeklyMeeting) {
         try {
@@ -237,6 +248,78 @@ public class IntegrationTestObjectMother {
             }
             StaticHibernateUtil.commitTransaction();
         } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createCenter(CenterBO center, MeetingBO meeting) {
+        UserContext userContext = TestUtils.makeUser();
+        center.setUserContext(userContext);
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+
+        customerService.create(center, meeting, accountFees);
+    }
+
+    public static void createCenter(CenterBO center, MeetingBO meeting,
+            AmountFeeBO fee) {
+
+        UserContext userContext = TestUtils.makeUser();
+        center.setUserContext(userContext);
+
+        AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue());
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        accountFees.add(accountFee);
+
+        customerService.create(center, meeting, accountFees);
+    }
+
+    public static void createGroup(GroupBO group, MeetingBO meeting) throws CustomerException {
+
+        UserContext userContext = TestUtils.makeUser();
+        group.setUserContext(userContext);
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+
+        customerService.createGroup(group, meeting, accountFees);
+    }
+
+    public static void createGroup(GroupBO group, MeetingBO meeting, AmountFeeBO fee) throws CustomerException {
+
+        UserContext userContext = TestUtils.makeUser();
+        group.setUserContext(userContext);
+
+        AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue());
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        accountFees.add(accountFee);
+
+        customerService.createGroup(group, meeting, accountFees);
+    }
+
+    public static void saveFee(AmountFeeBO fee) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(fee);
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveClient(ClientBO client) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            clientPersistence.saveClient(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (CustomerException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {

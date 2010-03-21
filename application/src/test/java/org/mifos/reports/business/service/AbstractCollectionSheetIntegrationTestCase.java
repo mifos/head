@@ -30,11 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
-import org.mifos.customers.personnel.business.CustomerFixture;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -136,12 +136,22 @@ public class AbstractCollectionSheetIntegrationTestCase extends MifosIntegration
             loanOfficers.add(loanOfficer);
             loanOfficersSelectionItems.add(new SelectionItem(convertShortToInteger(loanOfficer.getPersonnelId()),
                     loanOfficer.getDisplayName()));
-            CenterBO centerBO = CustomerFixture.createCenterBO(Integer.valueOf(i), LOAN_OFFICER);
+
+            Integer customerId = Integer.valueOf(i);
+
+            CenterBO centerBO = new CenterBuilder().withName(customerId.toString()).withLoanOfficer(loanOfficer).build();
+
+//            CenterBO centerBO = CenterBO.createInstanceForTest(customerId, new CustomerLevelEntity(CustomerLevel.CENTER),
+//                    null, loanOfficer, customerId.toString());
+
             centers.add(centerBO);
             centerSelectionItems.add(new SelectionItem(centerBO.getCustomerId(), centerBO.getDisplayName()));
         }
         anyPersonnel = PersonnelFixture.createPersonnel(ANY_SHORT_ID);
         anyOffice = OfficecFixture.createOffice(ANY_SHORT_ID);
-        center = CustomerFixture.createCenterBO(CENTER_ID, LOAN_OFFICER);
+
+        center = new CenterBuilder().withName(CENTER_ID.toString()).withLoanOfficer(LOAN_OFFICER).build();
+//        center = CenterBO.createInstanceForTest(CENTER_ID, new CustomerLevelEntity(CustomerLevel.CENTER),
+//                null, LOAN_OFFICER, CENTER_ID.toString());
     }
 }

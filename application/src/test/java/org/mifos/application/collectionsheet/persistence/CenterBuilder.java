@@ -19,41 +19,41 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.business.util.Address;
+import org.mifos.security.util.UserContext;
 
 /**
  *
  */
 public class CenterBuilder {
-    
+
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private String searchId = "1.1";
-    private final Short updatedFlag = Constants.NO;
-    private final CustomerStatus customerStatus = CustomerStatus.CENTER_ACTIVE;
-    
+    private UserContext userContext = new UserContext();
+    private DateTime mfiJoiningDate = new DateTime();
+    private int numberOfCustomersInOfficeAlready = 0;
+    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
+    private Address address;
+    private String externalId;
+
     public CenterBO build() {
 
-        final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        center = new CenterBO(CustomerLevel.CENTER, customerStatus, name, office, loanOfficer, customerMeeting,
-                searchId);
-
-        // add relationship between customer account and customer.
-        CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(center).withOffice(office).withLoanOfficer(loanOfficer).buildForIntegrationTests();
-        center.setCustomerAccount(customerAccount);
+        center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
+                numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId);
         return center;
     }
 
@@ -82,8 +82,8 @@ public class CenterBuilder {
         return this;
     }
 
-    public CenterBuilder withSearchId(final String withSearchId) {
-        this.searchId = withSearchId;
+    public CenterBuilder withNumberOfExistingCustomersInOffice(final int withNumberOfExistingCustomersInOffice) {
+        this.numberOfCustomersInOfficeAlready = withNumberOfExistingCustomersInOffice;
         return this;
     }
 }

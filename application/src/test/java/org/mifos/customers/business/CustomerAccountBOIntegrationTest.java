@@ -67,6 +67,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -1055,7 +1056,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).build();
-        IntegrationTestObjectMother.saveCustomer(center);
+        IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
         CustomerAccountBO customerAccount = center.getCustomerAccount();
 
@@ -1212,9 +1213,18 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void createInitialObjects() {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
+
+        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Center_Active_test").withOffice(
+                sampleBranchOffice()).withLoanOfficer(testUser()).build();
+        IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
+//
+//        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
+//                CUSTOMER_MEETING));
+//        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
+
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
     }
 

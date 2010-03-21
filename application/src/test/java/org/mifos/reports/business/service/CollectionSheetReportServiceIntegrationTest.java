@@ -46,10 +46,11 @@ import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEnt
 import org.mifos.application.collectionsheet.business.CollectionSheetCustomerBOFixture;
 import org.mifos.application.collectionsheet.business.CollectionSheetLoanDetailsEntityFixture;
 import org.mifos.application.collectionsheet.business.CollectionSheetSavingDetailsEntityFixture;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.personnel.business.CustomerFixture;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -108,7 +109,7 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
     public void testGetCollectionSheetForGivenBranchLoanOfficerCenterAndMeetingDate() throws Exception {
         expect(customerBusinessServiceMock.getCustomer(CENTER_ID)).andReturn(center);
         expect(
-                collectionSheetServiceMock.getCollectionSheetForCustomerOnMeetingDate(sqlMeetingDate, CENTER_ID,
+                collectionSheetServiceMock.getCollectionSheetForCustomerOnMeetingDate(sqlMeetingDate, null,
                         LOAN_OFFICER_SHORT_ID, CustomerLevel.CENTER)).andReturn(centerCollectionSheets);
         expect(
                 collectionSheetServiceMock.getCollectionSheetForGroups(sqlMeetingDate, centerCollectionSheets.get(0),
@@ -161,57 +162,22 @@ public class CollectionSheetReportServiceIntegrationTest extends AbstractCollect
                 LoanOfferingBO.createInstanceForTest(loanProductOffering2));
     }
 
-    public void testGetCollectionSheetForAllCenterOffices() throws Exception {
-        expect(personnelBusinessServiceMock.getPersonnel(LOAN_OFFICER_SHORT_ID)).andReturn(LOAN_OFFICER);
-        expect(customerBusinessServiceMock.getActiveCentersUnderUser(LOAN_OFFICER)).andReturn(centers);
-        expect(officeBusinessServiceMock.getOffice(BRANCH_SHORT_ID)).andReturn(OFFICE);
-
-        for (CustomerBO center : centers) {
-            expect(
-                    collectionSheetServiceMock.getCollectionSheetForCustomerOnMeetingDate(sqlMeetingDate, center
-                            .getCustomerId(), center.getPersonnel().getPersonnelId(), CustomerLevel.CENTER)).andReturn(
-                    centerCollectionSheets);
-            expect(
-                    collectionSheetServiceMock.getCollectionSheetForGroups(sqlMeetingDate, centerCollectionSheets
-                            .get(0), LOAN_OFFICER_SHORT_ID)).andReturn(groupsCollectionSheets);
-
-            expect(
-                    collectionSheetServiceMock.getCollectionSheetForCustomers(sqlMeetingDate, groupCollectionSheet,
-                            LOAN_OFFICER_SHORT_ID)).andReturn(anyCollectionSheetCustomer);
-            setProductOfferingExpectation();
-        }
-
-        replay(customerBusinessServiceMock);
-        replay(personnelBusinessServiceMock);
-        replay(collectionSheetServiceMock);
-        replay(officeBusinessServiceMock);
-        replay(loanProductBusinessServiceMock);
-        replay(savingsProductBusinessServiceMock);
-        replay(reportProductOfferingServiceMock);
-        List<CollectionSheetReportDTO> collectionSheets = collectionSheetReportService.getCollectionSheets(BRANCH_ID,
-                LOAN_OFFICER_ID, ALL_CENTER_ID, meetingDate);
-        verify(customerBusinessServiceMock);
-        verify(personnelBusinessServiceMock);
-        verify(collectionSheetServiceMock);
-        verify(officeBusinessServiceMock);
-        verify(loanProductBusinessServiceMock);
-        verify(savingsProductBusinessServiceMock);
-        verify(reportProductOfferingServiceMock);
-       Assert.assertEquals(MAX_COUNT, collectionSheets.size());
-    }
-
     public void testCollectionSheetForAllLoanOfficerAllCenterOffices() throws Exception {
         expect(personnelBusinessServiceMock.getActiveLoanOfficersUnderOffice(convertIntegerToShort(BRANCH_ID)))
                 .andReturn(loanOfficers);
         int centerId = 100;
         for (PersonnelBO loanOfficer : loanOfficers) {
             centerId++;
-            ArrayList<CustomerBO> center = new ArrayList<CustomerBO>();
-            center.add(CustomerFixture.createCenterBO(Integer.valueOf(centerId), loanOfficer));
-            expect(customerBusinessServiceMock.getActiveCentersUnderUser(loanOfficer)).andReturn(center);
+            List<CustomerBO> centerList = new ArrayList<CustomerBO>();
+
+            Integer customerId = Integer.valueOf(centerId);
+            CenterBO centerBO = new CenterBuilder().withName(customerId.toString()).withLoanOfficer(loanOfficer).build();
+
+            centerList.add(centerBO);
+
+            expect(customerBusinessServiceMock.getActiveCentersUnderUser(loanOfficer)).andReturn(centerList);
             expect(
-                    collectionSheetServiceMock.getCollectionSheetForCustomerOnMeetingDate(sqlMeetingDate, Integer
-                            .valueOf(centerId), loanOfficer.getPersonnelId(), CustomerLevel.CENTER)).andReturn(
+                    collectionSheetServiceMock.getCollectionSheetForCustomerOnMeetingDate(sqlMeetingDate, null, loanOfficer.getPersonnelId(), CustomerLevel.CENTER)).andReturn(
                     centerCollectionSheets);
             expect(
                     collectionSheetServiceMock.getCollectionSheetForGroups(sqlMeetingDate, centerCollectionSheet,

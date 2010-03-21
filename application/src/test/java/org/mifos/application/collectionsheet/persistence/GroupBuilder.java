@@ -19,17 +19,19 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
+import java.util.ArrayList;
+
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.security.util.UserContext;
 
 /**
  *
@@ -38,7 +40,6 @@ public class GroupBuilder {
 
     private GroupBO group;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
-    private final CustomerLevel customerLevel = CustomerLevel.GROUP;
     private String name = "Test Group";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
@@ -50,20 +51,10 @@ public class GroupBuilder {
 
     public GroupBO build() {
 
-        final CustomerMeetingEntity customerMeeting = new CustomerMeetingEntity(meeting, updatedFlag);
-        if (searchId == null) {
-            setSearchId();
-        }
+        UserContext userContext = TestUtils.makeUser();
+        group = GroupBO.createGroupWithCenterAsParent(userContext, name, loanOfficer, parentCustomer, new ArrayList<CustomerCustomFieldEntity>(),
+                null, "", false, null, customerStatus);
 
-        group = new GroupBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, searchId,
-                parentCustomer);
-
-        // add relationship between customer account and group.
-        CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(group).withOffice(office).withLoanOfficer(loanOfficer)
-                .buildForIntegrationTests();
-
-        group.setCustomerAccount(customerAccount);
-        
         return group;
     }
 
@@ -100,15 +91,5 @@ public class GroupBuilder {
     public GroupBuilder withSearchId(String withSearchId) {
         this.searchId = withSearchId;
         return this;
-    }
-
-    private void setSearchId() {
-
-        Integer childCount = 1;
-        if (parentCustomer.getChildren() != null) {
-            childCount = parentCustomer.getChildren().size() + 1;
-        }
-
-        this.searchId = parentCustomer.getSearchId() + "." + childCount;
     }
 }

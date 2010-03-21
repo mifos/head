@@ -29,8 +29,6 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistory;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
@@ -90,18 +88,6 @@ public class CenterBO extends CustomerBO {
     }
 
     /**
-     * @deprecated - use static factory methods to create
-     */
-    @Deprecated
-    public CenterBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
-            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final String searchId) {
-        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, null);
-        this.setSearchId(searchId);
-        this.setCustomerActivationDate(this.getCreatedDate());
-    }
-
-    /**
      * @deprecated - use static factory {@link CenterBO#createNew(UserContext, String, DateTime, MeetingBO, PersonnelBO, OfficeBO, int, List, Address, String)}.
      */
     @Deprecated
@@ -118,24 +104,6 @@ public class CenterBO extends CustomerBO {
         }
         this.setSearchId("1." + ++count);
         this.setCustomerActivationDate(this.getCreatedDate());
-    }
-
-    /**
-     * @deprecated - use builder pattern for tests.
-     */
-    @Deprecated
-    public static CenterBO createInstanceForTest(final Integer customerId, final CustomerLevelEntity customerLevel,
-            final PersonnelBO formedByPersonnel, final PersonnelBO personnel, final String displayName) {
-        return new CenterBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
-    }
-
-    /**
-     * @deprecated - use builder pattern for tests.
-     */
-    @Deprecated
-    private CenterBO(final Integer customerId, final CustomerLevelEntity customerLevel, final PersonnelBO formedByPersonnel,
-            final PersonnelBO personnel, final String displayName) {
-        super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
     }
 
     @Override

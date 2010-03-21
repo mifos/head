@@ -34,7 +34,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -75,13 +74,16 @@ public class GroupBO extends CustomerBO {
                 mfiJoiningDate);
 
         group.childAddedForParent(parentCustomer);
+        group.setParentCustomer(parentCustomer);
         String searchId = parentCustomer.getSearchId() + "." + parentCustomer.getMaxChildCount();
 
         group.setSearchId(searchId);
         group.setExternalId(externalId);
         group.updateAddress(address);
         group.setTrained(trained);
-        group.setTrainedDate(trainedOn.toDate());
+        if (trained) {
+            group.setTrainedDate(trainedOn.toDate());
+        }
 
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
                 .fromCustomerCustomFieldEntity(customerCustomFields, group);
@@ -133,17 +135,6 @@ public class GroupBO extends CustomerBO {
         if (getStatus().equals(CustomerStatus.GROUP_ACTIVE)) {
             this.setCustomerActivationDate(this.getCreatedDate());
         }
-    }
-
-    /**
-     * @deprecated - use legal constructor used from static factory methods.
-     */
-    @Deprecated
-    public GroupBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
-            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final String searchId, final CustomerBO parentCustomer) {
-        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, parentCustomer);
-        this.setSearchId(searchId);
     }
 
     /**
