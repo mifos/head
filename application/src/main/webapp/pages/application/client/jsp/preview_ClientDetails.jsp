@@ -374,7 +374,7 @@ explanation of the license and how it is applied.
 										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
 												<c:if test="${cf.fieldId==customField.fieldId}">
-													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
+													<mifos:mifoslabel name="${cf.lookUpEntityType}" bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 										         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
 												</c:if>
 											</c:forEach>
