@@ -95,7 +95,6 @@
             <artifactId>findbugs-maven-plugin</artifactId>
             <version>2.3</version>
             <configuration>
-               <debug>true</debug>
                <failOnError>true</failOnError>
                <effort>Max</effort>
                <threshold>Low</threshold>
