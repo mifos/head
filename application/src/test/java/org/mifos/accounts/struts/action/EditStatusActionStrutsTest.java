@@ -140,8 +140,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
 
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
         StaticHibernateUtil.closeSession();
     }
 
@@ -158,8 +158,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("load_success");
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -173,7 +173,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-       Assert.assertEquals("Closed- Rescheduled", (String) SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME,
+        Assert.assertEquals("Closed- Rescheduled", (String) SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME,
                 request));
         Assert.assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
@@ -193,8 +193,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("load_success");
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "preview");
@@ -204,7 +204,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("flagId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-       Assert.assertEquals(1, getErrorSize());
+        Assert.assertEquals(1, getErrorSize());
         verifyActionErrors(new String[] { LoanConstants.MANDATORY_TEXTBOX });
     }
 
@@ -249,8 +249,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("load_success");
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "preview");
@@ -278,16 +278,16 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
-       Assert.assertEquals(1, auditLogList.size());
-       Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
-       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+        Assert.assertEquals(1, auditLogList.size());
+        Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
+        Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")) {
-               Assert.assertEquals("-", auditLogRecord.getOldValue());
-               Assert.assertEquals("Withdraw", auditLogRecord.getNewValue());
+                Assert.assertEquals("-", auditLogRecord.getOldValue());
+                Assert.assertEquals("Withdraw", auditLogRecord.getNewValue());
             } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
-               Assert.assertEquals("Active in Good Standing", auditLogRecord.getOldValue());
-               Assert.assertEquals("Closed- Rescheduled", auditLogRecord.getNewValue());
+                Assert.assertEquals("Active in Good Standing", auditLogRecord.getOldValue());
+                Assert.assertEquals("Closed- Rescheduled", auditLogRecord.getNewValue());
             }
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -327,8 +327,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("load_success");
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
-       Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils.getAttribute(
-                SavingsConstants.STATUS_LIST, request)).size());
+        Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
+                .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
 
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "preview");
@@ -415,7 +415,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     private SavingsOfferingBO createSavingsOffering() {
         Date currentDate = new Date(System.currentTimeMillis());
-        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
+        return TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate,
+                RecommendedAmountUnit.COMPLETE_GROUP);
     }
 
     private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering,

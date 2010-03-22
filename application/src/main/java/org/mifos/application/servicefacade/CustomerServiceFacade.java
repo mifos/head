@@ -24,6 +24,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.security.util.UserContext;
 
@@ -59,4 +60,8 @@ public interface CustomerServiceFacade {
 
     void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId,
             String notes, UserContext userContext) throws CustomerException;
+
+    boolean isGroupHierarchyRequired();
+
+    GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);
 }

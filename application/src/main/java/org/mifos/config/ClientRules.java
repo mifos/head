@@ -149,7 +149,7 @@ public class ClientRules {
         return groupCanApplyLoans;
     }
 
-    public static Boolean getClientCanExistOutsideGroup() throws ConfigurationException {
+    public static boolean getClientCanExistOutsideGroup() throws ConfigurationException {
         if (clientCanExistOutsideGroup == null) {
             clientCanExistOutsideGroup = getClientCanExistOutsideGroupFromConfig();
         }

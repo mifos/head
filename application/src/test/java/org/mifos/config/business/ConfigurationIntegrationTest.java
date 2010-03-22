@@ -84,7 +84,7 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
 
     public void testClientRules() throws Exception {
        Assert.assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
-       Assert.assertEquals(true, ClientRules.getClientCanExistOutsideGroup().booleanValue());
+       Assert.assertEquals(true, ClientRules.getClientCanExistOutsideGroup());
        Assert.assertEquals(true, ClientRules.getGroupCanApplyLoans().booleanValue());
     }
 

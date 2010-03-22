@@ -38,6 +38,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
+import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -57,6 +58,8 @@ import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.business.service.GroupBusinessService;
+import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.CenterSearchInput;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -651,6 +654,32 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 new CustomerBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
                         customerBO.getOffice().getOfficeId(), userContext.getId());
             }
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean isGroupHierarchyRequired() {
+        try {
+            return ClientRules.getClientCanExistOutsideGroup();
+        } catch (ConfigurationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId) {
+
+        try {
+            // FIXME - #000001 - keithw - move search logic off group business service over to customerDAO
+            QueryResult searchResults = new GroupBusinessService().search(normalizedSearchString, loggedInUserId);
+            QueryResult searchForAddingClientToGroupResults = null;
+            if (searchForAddingClientsToGroup) {
+                searchForAddingClientToGroupResults = new GroupBusinessService().searchForAddingClientToGroup(normalizedSearchString, loggedInUserId);
+            }
+
+            return new GroupSearchResultsDto(searchResults, searchForAddingClientToGroupResults);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }

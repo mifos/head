@@ -43,15 +43,14 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupInformationDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -71,7 +70,6 @@ public class GroupCustAction extends CustAction {
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
     private final GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     @Override
     protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
@@ -80,7 +78,7 @@ public class GroupCustAction extends CustAction {
 
     @Override
     protected BusinessService getService() {
-        return getGroupBusinessService();
+        return new DummyBusinessService();
     }
 
     public static ActionSecurity getSecurity() {
@@ -338,7 +336,11 @@ public class GroupCustAction extends CustAction {
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         actionForm.setSearchString(null);
         cleanUpSearch(request);
-        if (ClientRules.getClientCanExistOutsideGroup()) {
+
+
+        boolean groupHierarchyRequired = this.customerServiceFacade.isGroupHierarchyRequired();
+
+        if (groupHierarchyRequired) {
             SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED, CustomerConstants.NO, request);
         } else {
             SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED, CustomerConstants.YES, request);
@@ -367,10 +369,12 @@ public class GroupCustAction extends CustAction {
             }
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         }
+
         addSeachValues(searchString, userContext.getBranchId().toString(), new OfficeBusinessService().getOffice(
                 userContext.getBranchId()).getOfficeName(), request);
-        searchString = SearchUtils.normalizeSearchString(searchString);
-        if (searchString.equals("")) {
+
+        final String normalizedSearchString = SearchUtils.normalizeSearchString(searchString);
+        if (normalizedSearchString.equals("")) {
             if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
                 request.setAttribute(Constants.INPUT, CenterConstants.INPUT_SEARCH_TRANSFERGROUP);
             } else {
@@ -379,23 +383,20 @@ public class GroupCustAction extends CustAction {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
         }
 
-        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new GroupBusinessService().search(searchString,
-                userContext.getId()), request);
+        boolean searchForAddingClientsToGroup = (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS));
+
+        GroupSearchResultsDto searchResult = this.customerServiceFacade.searchGroups(searchForAddingClientsToGroup, normalizedSearchString, userContext.getId());
+
+        SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, searchResult.getSearchResults(), request);
 
         if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
             return mapping.findForward(ActionForwards.transferSearch_success.toString());
-        } else if (actionForm.getInput() != null
-                && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS)) {
-            SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, new GroupBusinessService()
-                    .searchForAddingClientToGroup(searchString, userContext.getId()), request);
+        } else if (searchForAddingClientsToGroup) {
+            SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, searchResult.getSearchForAddingClientToGroupResults(), request);
             return mapping.findForward(ActionForwards.addGroupSearch_success.toString());
         } else {
             return actionForward;
         }
-    }
-
-    private GroupBusinessService getGroupBusinessService() {
-        return new GroupBusinessService();
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -404,6 +405,15 @@ public class GroupCustAction extends CustAction {
         String method = (String) request.getAttribute("methodCalled");
 
         return mapping.findForward(method + "_failure");
+
+    }
+
+    private class DummyBusinessService implements BusinessService {
+
+        @Override
+        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+            return null;
+        }
 
     }
 }
