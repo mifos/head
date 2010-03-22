@@ -639,6 +639,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                 <cell id="621">
                                                     <property name="textAlign">right</property>
                                                     <label id="579">
+                                                        <property name="fontWeight">bold</property>
                                                         <property name="marginLeft">10pt</property>
                                                         <property name="textAlign">right</property>
                                                         <text-property name="text">Page</text-property>
@@ -647,6 +648,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                 <cell id="622">
                                                     <property name="textAlign">right</property>
                                                     <auto-text id="138">
+                                                        <property name="fontWeight">bold</property>
                                                         <property name="textAlign">right</property>
                                                         <property name="type">page-number</property>
                                                     </auto-text>
@@ -658,6 +660,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 <row id="111">
                                     <cell id="112">
                                         <data id="1627">
+                                            <property name="fontWeight">bold</property>
                                             <list-property name="boundDataColumns">
                                                 <structure>
                                                     <property name="name">data item</property>
@@ -670,6 +673,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     </cell>
                                     <cell id="113">
                                         <text id="841">
+                                            <property name="fontWeight">bold</property>
                                             <property name="contentType">html</property>
                                             <text-property name="content"><![CDATA[Report date: <value-of>new Date()</value-of>]]></text-property>
                                         </text>
@@ -678,12 +682,14 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 <row id="114">
                                     <cell id="115">
                                         <text id="842">
+                                            <property name="fontWeight">bold</property>
                                             <property name="contentType">html</property>
                                             <text-property name="content"><![CDATA[Branch office: <value-of>params["branchId"].displayText</value-of>]]></text-property>
                                         </text>
                                     </cell>
                                     <cell id="116">
                                         <text id="844">
+                                            <property name="fontWeight">bold</property>
                                             <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
                                             <property name="contentType">auto</property>
                                             <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
@@ -693,6 +699,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 <row id="845">
                                     <cell id="846">
                                         <text id="848">
+                                            <property name="fontWeight">bold</property>
                                             <property name="contentType">html</property>
                                             <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
                                         </text>
@@ -703,6 +710,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <property name="height">0.25in</property>
                                     <cell id="118">
                                         <text id="843">
+                                            <property name="fontWeight">bold</property>
                                             <property name="contentType">html</property>
                                             <text-property name="content"><![CDATA[Product: <value-of>params["loanProductId"].displayText</value-of>]]></text-property>
                                         </text>
@@ -814,12 +822,12 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 </structure>
                 <structure>
                     <property name="name">Total</property>
-                    <expression name="expression">dataSetRow["Current"]+Total.sum(dataSetRow["Balance"])</expression>
+                    <expression name="expression" type="javascript">BirtMath.add(dataSetRow["Current"],Total.sum(dataSetRow["Balance"]))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">PercentageAtRisk</property>
-                    <expression name="expression">Total.sum(dataSetRow["Balance"])/(dataSetRow["Current"]+Total.sum(dataSetRow["Balance"]))*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow["Balance"]),BirtMath.add(dataSetRow["Current"],Total.sum(dataSetRow["Balance"]))))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -849,42 +857,66 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 </structure>
                 <structure>
                     <property name="name">1-30Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["1-30"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow["1-30"]), BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">31-60Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["31-60"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow["31-60"]), BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">61-90Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["61-90"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow["61-90"]), BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">91-180Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["91-180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow["91-180"]), BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">>180Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow[">180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(100,BirtMath.divide(Total.sum(dataSetRow[">180"]), BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])))</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan30</property>
-                    <expression name="expression">(Total.sum(dataSetRow["31-60"])+Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(&#13;
+                        100,&#13;
+                        BirtMath.divide(&#13;
+                                              BirtMath.add(&#13;
+                                                                 BirtMath.add(Total.sum(dataSetRow["31-60"]), Total.sum(dataSetRow["61-90"])),&#13;
+                                                                 BirtMath.add(Total.sum(dataSetRow["91-180"]),Total.sum(dataSetRow[">180"]))&#13;
+                                                                )&#13;
+                                           , BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])&#13;
+                                           )&#13;
+                       )</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan60</property>
-                    <expression name="expression">(Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(&#13;
+                        100,&#13;
+                        BirtMath.divide(&#13;
+                                              BirtMath.add(&#13;
+                                                                 Total.sum(dataSetRow["61-90"]),&#13;
+                                                                 BirtMath.add(Total.sum(dataSetRow["91-180"]),Total.sum(dataSetRow[">180"]))&#13;
+                                                                )&#13;
+                                           , BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])&#13;
+                                           )&#13;
+                       )</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan90</property>
-                    <expression name="expression">(Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
+                    <expression name="expression" type="javascript">BirtMath.multiply(&#13;
+                        100,&#13;
+                        BirtMath.divide(&#13;
+                                              BirtMath.add(Total.sum(dataSetRow["91-180"]), Total.sum(dataSetRow[">180"]))&#13;
+                                           ,  BirtMath.add(Total.sum(dataSetRow["Balance"]),dataSetRow["Current"])&#13;
+                                           )&#13;
+                       )</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -934,10 +966,12 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 <row id="1355">
                     <cell id="1356">
                         <label id="1402">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Loan</text-property>
                         </label>
                         <label id="1403">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Number</text-property>
                         </label>
@@ -945,16 +979,19 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                     <cell id="1357">
                         <label id="1411"/>
                         <label id="1412">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Client</text-property>
                         </label>
                     </cell>
                     <cell id="1358">
                         <label id="1413">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Loan</text-property>
                         </label>
                         <label id="1414">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Amount</text-property>
                         </label>
@@ -962,6 +999,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                     <cell id="1359">
                         <label id="1415"/>
                         <label id="1416">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Balance</text-property>
                         </label>
@@ -983,6 +1021,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <property name="rowSpan">1</property>
                                     <label id="1422">
                                         <property name="fontSize">medium</property>
+                                        <property name="fontWeight">bold</property>
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -995,6 +1034,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 <cell id="1424">
                                     <label id="1425">
                                         <property name="fontSize">small</property>
+                                        <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
                                         <text-property name="text">Principal</text-property>
                                     </label>
@@ -1002,6 +1042,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 <cell id="1426">
                                     <label id="1427">
                                         <property name="fontSize">small</property>
+                                        <property name="fontWeight">bold</property>
                                         <property name="textAlign">center</property>
                                         <text-property name="text">Interest</text-property>
                                     </label>
@@ -1011,40 +1052,47 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                     </cell>
                     <cell id="1362">
                         <label id="976">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">Arrears</text-property>
                         </label>
                         <label id="977">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">(percent)</text-property>
                         </label>
                     </cell>
                     <cell id="1363">
                         <label id="1428">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">1-30</text-property>
                         </label>
                     </cell>
                     <cell id="1364">
                         <label id="1429">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">31-60</text-property>
                         </label>
                     </cell>
                     <cell id="1365">
                         <label id="1430">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">61-90</text-property>
                         </label>
                     </cell>
                     <cell id="1366">
                         <label id="1431">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">91-180</text-property>
                         </label>
                     </cell>
                     <cell id="1440">
                         <label id="1441">
+                            <property name="fontWeight">bold</property>
                             <property name="textAlign">center</property>
                             <text-property name="text">>180</text-property>
                         </label>
@@ -1142,6 +1190,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="456">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Overdue</text-property>
                         </label>
                     </cell>
@@ -1177,6 +1226,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="568">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Current</text-property>
                         </label>
                     </cell>
@@ -1201,12 +1251,14 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="555">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Total portfolio</text-property>
                         </label>
                     </cell>
                     <cell id="1495"/>
                     <cell id="1496">
                         <data id="1607">
+                            <property name="fontSize">medium</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Total</property>
                         </data>
@@ -1251,6 +1303,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="570">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">Percentage at risk</text-property>
                         </label>
                     </cell>
@@ -1301,6 +1354,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="1586">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">More than 30 days</text-property>
                         </label>
                     </cell>
@@ -1326,6 +1380,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="1587">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">More than 60 days</text-property>
                         </label>
                     </cell>
@@ -1351,6 +1406,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="1588">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">More than 90 days</text-property>
                         </label>
                     </cell>
@@ -1376,6 +1432,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                         <property name="colSpan">2</property>
                         <property name="rowSpan">1</property>
                         <label id="1589">
+                            <property name="fontWeight">bold</property>
                             <text-property name="text">More than 180 days</text-property>
                         </label>
                     </cell>
