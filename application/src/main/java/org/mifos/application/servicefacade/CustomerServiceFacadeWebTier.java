@@ -25,19 +25,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -45,11 +36,8 @@ import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
-import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -67,8 +55,6 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
@@ -78,13 +64,11 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDto;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
@@ -641,7 +625,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             customerBO.addCustomerFlag(customerStatusFlagEntity);
         }
 
-        // pull out all commom stuff here...
         if (customerBO.isGroup()) {
 
             GroupBO group = (GroupBO) customerBO;
@@ -650,164 +633,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             ClientBO client = (ClientBO) customerBO;
 
-            handeClientChangeOfStatus(newStatusId, client);
-            changeStatus(client, newStatusId, userContext);
-            this.customerService.updateClientStatus(client, userContext);
+            this.customerService.updateClientStatus(client, oldStatus, newStatus, userContext, flagId, notes);
 
         } else {
             CenterBO center = (CenterBO) customerBO;
             this.customerService.updateCenterStatus(center, newStatus);
-        }
-    }
-
-    private void changeStatus(CustomerBO customer, Short newStatusId, UserContext userContext) throws CustomerException {
-        Short oldStatusId = customer.getCustomerStatus().getId();
-
-        if (customer.isClient()) {
-
-            ClientBO client = (ClientBO) customer;
-
-            if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
-                try {
-                    client.getCustomerAccount().generateCustomerFeeSchedule();
-                } catch (AccountException ae1) {
-                    throw new CustomerException(ae1);
-                }
-            }
-            if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
-                client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
-
-                if (client.getOfferingsAssociatedInCreate() != null) {
-                    for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
-                        try {
-                            SavingsOfferingBO savingsOffering = client.getSavingsPrdPersistence().getSavingsProduct(
-                                    clientOffering.getSavingsOffering().getPrdOfferingId());
-
-                            if (savingsOffering.isActive()) {
-
-                                List<CustomFieldDefinitionEntity> customFieldDefs = client.getSavingsPersistence()
-                                        .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-
-                                List<CustomFieldView> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
-                                        customFieldDefs, userContext.getPreferredLocale());
-
-                                client.addAccount(new SavingsBO(client.getUserContext(), savingsOffering, client,
-                                        AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
-                                        customerFieldsForSavings));
-                            }
-                        } catch (PersistenceException pe) {
-                            throw new CustomerException(pe);
-                        } catch (AccountException pe) {
-                            throw new CustomerException(pe);
-                        }
-                    }
-                }
-
-                new SavingsPersistence().persistSavingAccounts(client);
-
-                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao()
-                        .findAllHolidaysThisYearAndNext();
-
-                // createDepositSchedule
-                try {
-                    if (client.getParentCustomer() != null) {
-                        List<SavingsBO> savingsList = new CustomerPersistence()
-                                .retrieveSavingsAccountForCustomer(client.getParentCustomer().getCustomerId());
-
-                        if (client.getParentCustomer().getParentCustomer() != null) {
-                            savingsList.addAll(new CustomerPersistence().retrieveSavingsAccountForCustomer(client
-                                    .getParentCustomer().getParentCustomer().getCustomerId()));
-                        }
-                        for (SavingsBO savings : savingsList) {
-                            savings.setUserContext(client.getUserContext());
-
-                            // generateAndUpdateDepositActionsForClient
-                            if (client.getCustomerMeeting().getMeeting() != null) {
-                                if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
-                                        .getRecommendedAmntUnit().getId().equals(
-                                                RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-
-                                    savings.generateDepositAccountActions(client, client.getCustomerMeeting()
-                                            .getMeeting(), workingDays, holidays);
-
-                                    savings.update();
-                                }
-                            }
-                        }
-                    }
-
-                } catch (PersistenceException pe) {
-                    throw new CustomerException(pe);
-                } catch (AccountException ae) {
-                    throw new CustomerException(ae);
-                }
-            }
-        }
-    }
-
-    private void handeClientChangeOfStatus(Short newStatusId, ClientBO client) throws CustomerException {
-        if (client.getParentCustomer() != null) {
-            Short groupStatus = client.getParentCustomer().getCustomerStatus().getId();
-            if ((newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || newStatusId
-                    .equals(CustomerStatus.CLIENT_PENDING.getValue()))
-                    && client.isClientUnderGroup()) {
-                if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
-                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
-                            new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                    client.getUserContext()) });
-                }
-
-                if (client.isGroupStatusLower(newStatusId, groupStatus)) {
-
-                    throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
-                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                    client.getUserContext()),
-                            MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
-                                    client.getUserContext()) });
-                }
-            }
-        }
-
-        if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
-            if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-            }
-        }
-
-        if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-            boolean loanOfficerActive = false;
-            boolean branchInactive = false;
-            short officeId = client.getOffice().getOfficeId();
-            if (client.getPersonnel() == null || client.getPersonnel().getPersonnelId() == null) {
-                throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
-            }
-            if (client.getCustomerMeeting() == null || client.getCustomerMeeting().getMeeting() == null) {
-                throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-            }
-            if (client.getPersonnel() != null) {
-                try {
-                    loanOfficerActive = new OfficePersistence().hasActivePeronnel(officeId);
-                } catch (PersistenceException e) {
-                    throw new CustomerException(e);
-                }
-            }
-
-            try {
-                branchInactive = new OfficePersistence().isBranchInactive(officeId);
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-            if (loanOfficerActive == false) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                                client.getUserContext()) });
-            }
-            if (branchInactive == true) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-                                client.getUserContext()) });
-            }
         }
     }
 

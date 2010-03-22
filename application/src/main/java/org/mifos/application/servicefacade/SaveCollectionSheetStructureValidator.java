@@ -50,8 +50,8 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SaveCollectionSheetStructureValidator {
 
-    private final CustomerPersistence customerPersistence;
-    private final AccountPersistence accountPersistence;
+    private CustomerPersistence customerPersistence;
+    private AccountPersistence accountPersistence;
     private final Short mifosCurrencyId;
 
     private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
@@ -467,5 +467,13 @@ public class SaveCollectionSheetStructureValidator {
             String extendedMessage) {
         validationErrors.add(invalidSaveCollectionSheetReason);
         validationErrorsExtended.add(invalidSaveCollectionSheetReason.toString() + ": " + extendedMessage);
+    }
+
+    public void setCustomerPersistence(CustomerPersistence customerPersistence) {
+        this.customerPersistence = customerPersistence;
+    }
+
+    public void setAccountPersistence(AccountPersistence accountPersistence) {
+        this.accountPersistence = accountPersistence;
     }
 }

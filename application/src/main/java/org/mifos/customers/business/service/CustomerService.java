@@ -53,5 +53,5 @@ public interface CustomerService {
 
     void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus) throws CustomerException;
 
-    void updateClientStatus(ClientBO client, UserContext userContext);
+    void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, UserContext userContext, Short flagId, String notes) throws CustomerException;
 }

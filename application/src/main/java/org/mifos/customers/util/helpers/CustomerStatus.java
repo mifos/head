@@ -51,6 +51,14 @@ public enum CustomerStatus {
         throw new RuntimeException("no customer status " + value);
     }
 
+    public boolean isCenterInActive() {
+        return CustomerStatus.CENTER_INACTIVE.getValue().equals(this.value);
+    }
+
+    public boolean isCenterActive() {
+        return CustomerStatus.CENTER_ACTIVE.getValue().equals(this.value);
+    }
+
     public boolean isGroupPartialOrGroupPending() {
         return isGroupPartial() || isGroupPending();
     }
@@ -77,5 +85,13 @@ public enum CustomerStatus {
 
     public boolean isClientPending() {
         return CustomerStatus.CLIENT_PENDING.getValue().equals(this.value);
+    }
+
+    public boolean isClientActive() {
+        return CustomerStatus.CLIENT_ACTIVE.getValue().equals(this.value);
+    }
+
+    public boolean isClientClosed() {
+        return CustomerStatus.CLIENT_CLOSED.getValue().equals(this.value);
     }
 }
