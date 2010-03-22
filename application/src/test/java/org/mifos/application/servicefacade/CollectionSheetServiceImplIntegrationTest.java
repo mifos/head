@@ -126,7 +126,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         // over-repay loan
         Date repaymentDate = incrementCurrentDate(14);
-        DateTime dateTime = initializeToFixedDateTime(repaymentDate);
+        initializeToFixedDateTime(repaymentDate);
 
         saveCollectionSheetUtils.setOverpayLoan();
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
@@ -241,7 +241,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         // make a small repayment on loan without it being disbursed
         Date repaymentDate = incrementCurrentDate(14);
-        DateTime dateTime = initializeToFixedDateTime(repaymentDate);
+        initializeToFixedDateTime(repaymentDate);
 
         saveCollectionSheetUtils.setNormalLoanRepayment();
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils

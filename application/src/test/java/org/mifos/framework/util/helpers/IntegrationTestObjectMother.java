@@ -30,6 +30,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
@@ -40,6 +41,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -72,6 +74,7 @@ public class IntegrationTestObjectMother {
     private static final ClientPersistence clientPersistence = new ClientPersistence();
 
     private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+    private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static OfficeBO sampleBranchOffice() {
         if (sampleBranchOffice == null) {
@@ -104,7 +107,7 @@ public class IntegrationTestObjectMother {
             customerPersistence.createOrUpdate(meeting);
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.flushAndClearSession();
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -118,7 +121,7 @@ public class IntegrationTestObjectMother {
             customerPersistence.saveCustomer(center);
             StaticHibernateUtil.commitTransaction();
             StaticHibernateUtil.flushAndClearSession();
-        } catch (CustomerException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -143,10 +146,7 @@ public class IntegrationTestObjectMother {
             clientPersistence.saveClient(client);
             clientPersistence.saveClient(client2);
             StaticHibernateUtil.commitTransaction();
-        } catch (CustomerException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -189,10 +189,7 @@ public class IntegrationTestObjectMother {
             groupPersistence.saveGroup(group);
             clientPersistence.saveClient(client);
             StaticHibernateUtil.commitTransaction();
-        } catch (CustomerException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -221,7 +218,7 @@ public class IntegrationTestObjectMother {
                 customerPersistence.createOrUpdate(savingAccount);
             }
             StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -247,7 +244,7 @@ public class IntegrationTestObjectMother {
                 customerPersistence.createOrUpdate(loanProduct);
             }
             StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -306,7 +303,7 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(fee);
             StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {
@@ -319,7 +316,25 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.startTransaction();
             clientPersistence.saveClient(client);
             StaticHibernateUtil.commitTransaction();
-        } catch (CustomerException e) {
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveCustomerAccount(CustomerAccountBO customerAccount) {
+
+        customerAccount.setUserContext(TestUtils.makeUser());
+        customerAccount.setCreateDetails();
+        customerAccount.setUpdateDetails();
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerDao.save(customerAccount);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {

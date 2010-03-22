@@ -56,10 +56,6 @@ public class ClientBuilder {
 
         final ClientBO client = new ClientBO(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting,
                 searchId, parentCustomer);
-//        CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer)
-//                .buildForIntegrationTests();
-//
-//        client.setCustomerAccount(customerAccount);
 
         return client;
     }
