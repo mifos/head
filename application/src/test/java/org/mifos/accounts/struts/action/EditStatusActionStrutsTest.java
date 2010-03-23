@@ -280,7 +280,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
        Assert.assertEquals(1, auditLogList.size());
        Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
-       Assert.assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")) {
                Assert.assertEquals("-", auditLogRecord.getOldValue());
