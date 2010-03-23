@@ -30,6 +30,7 @@ This file describes how to install Mifos for use in a production environment.
 
          max_connections=300
          innodb_buffer_pool_size=1024M
+         innodb_file_per_table
          log-error=mysql_error.log
          log-slow-queries=mysql_slow_query.log
          long_query_time=1
