@@ -28,7 +28,25 @@
         <filter-name>DatabaseVersionFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
+    <filter>
+        <display-name>MifosResponseHeaderFilter</display-name>
+        <filter-name>MifosResponseHeaderFilter</filter-name>
+        <filter-class>org.mifos.servlet.filters.MifosResponseHeaderFilter</filter-class>
+        <init-param>
+            <param-name>Cache-Control</param-name>
+            <param-value>max-age=172800</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>MifosResponseHeaderFilter</filter-name>
+        <url-pattern>*.jpg</url-pattern>
+        <url-pattern>*.gif</url-pattern>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+
 	<filter-mapping>
 		<filter-name>loginfilter</filter-name>
 		<url-pattern>/developer/*</url-pattern>
