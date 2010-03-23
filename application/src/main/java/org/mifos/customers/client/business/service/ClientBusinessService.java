@@ -22,7 +22,6 @@ package org.mifos.customers.client.business.service;
 
 import java.util.List;
 
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
@@ -36,16 +35,8 @@ import org.mifos.security.util.UserContext;
 public class ClientBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(final UserContext userContext) {
+    public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
         return null;
-    }
-
-    public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient() throws ServiceException {
-        try {
-            return new ClientPersistence().retrieveOfferingsApplicableToClient();
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
     }
 
     public ClientBO getClient(final Integer customerId) throws ServiceException {

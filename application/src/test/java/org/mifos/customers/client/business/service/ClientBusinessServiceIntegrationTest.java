@@ -20,24 +20,19 @@
 
 package org.mifos.customers.client.business.service;
 
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -61,7 +56,7 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        service = (ClientBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Client);
+        service = new ClientBusinessService();
     }
 
     @Override
@@ -93,43 +88,6 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
            Assert.assertTrue(false);
         } catch (ServiceException e) {
            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-    }
-
-    public void testFailureRetrieveOfferings() throws Exception {
-        savingsOffering1 = TestObjectFactory.createSavingsProduct(this.getClass().getSimpleName() + " Offering1", "s1", SavingsType.MANDATORY,
-                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.retrieveOfferingsApplicableToClient();
-           Assert.assertTrue(false);
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-    }
-
-    public void testRetrieveOfferingsApplicableToClient() throws Exception {
-        savingsOffering1 = TestObjectFactory.createSavingsProduct(this.getClass().getSimpleName() + " Offering1", "s1", SavingsType.MANDATORY,
-                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        savingsOffering2 = TestObjectFactory.createSavingsProduct(this.getClass().getSimpleName() + " Offering2", "s2", SavingsType.VOLUNTARY,
-                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        savingsOffering3 = TestObjectFactory.createSavingsProduct(this.getClass().getSimpleName() + " Offering3", "s3", SavingsType.MANDATORY,
-                ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
-        savingsOffering4 = TestObjectFactory.createSavingsProduct(this.getClass().getSimpleName() + " Offering4", "s4", SavingsType.VOLUNTARY,
-                ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
-        StaticHibernateUtil.closeSession();
-        List<SavingsOfferingBO> offerings = service.retrieveOfferingsApplicableToClient();
-       Assert.assertEquals(2, offerings.size());
-        for (SavingsOfferingBO offering : offerings) {
-            if (offering.getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId())) {
-                Assert.assertTrue(true);
-            }
-            if (offering.getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId())) {
-                Assert.assertTrue(true);
-            }
         }
         StaticHibernateUtil.closeSession();
     }

@@ -30,6 +30,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.business.BusinessObject;
@@ -59,6 +60,10 @@ public class PersonnelBusinessService implements BusinessService {
         return null;
     }
 
+    /**
+     * @deprecated - use {@link PersonnelDao#findActiveLoanOfficersForOffice(org.mifos.application.servicefacade.CenterCreation)}
+     */
+    @Deprecated
     public List<PersonnelView> getActiveLoanOfficersInBranch(Short officeId, Short loggedInUserId,
             Short loggedInUserLevelId) throws ServiceException {
         try {

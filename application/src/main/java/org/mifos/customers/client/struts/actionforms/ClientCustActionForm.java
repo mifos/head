@@ -42,6 +42,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
@@ -1018,6 +1019,11 @@ public class ClientCustActionForm extends CustomerActionForm {
         for(int forMember=0;forMember<familyDateOfBirthDD.size();forMember++) {
             this.familyDateOfBirth.add(getDateOfBirth(getFamilyDateOfBirthDD(forMember), getFamilyDateOfBirthMM(forMember),  getFamilyDateOfBirthYY(forMember)));
         }
+    }
+
+
+    public boolean isGroupFlagSet() {
+        return YesNoFlag.NO.getValue().equals(this.getGroupFlagValue());
     }
 
 }

@@ -36,7 +36,7 @@ public interface CustomerServiceFacade {
 
     GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext);
+    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, boolean isGroupFlatSet, String parentGroupId);
 
     CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
 

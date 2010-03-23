@@ -30,8 +30,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.business.CustomerBO;
@@ -151,12 +149,6 @@ public class ClientPersistence extends Persistence {
         } catch (IOException ioe) {
             throw new PersistenceException(ioe);
         }
-    }
-
-    public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient() throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("prdApplicableTo", ApplicableTo.CLIENTS.getValue());
-        return executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
     }
 
     public List<ClientBO> getActiveClientsUnderParent(final String searchId, final Short officeId) throws PersistenceException {

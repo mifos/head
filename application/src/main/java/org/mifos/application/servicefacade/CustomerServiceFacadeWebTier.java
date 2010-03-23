@@ -74,6 +74,7 @@ import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -174,7 +175,40 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext) {
+    public ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, boolean groupFlagIsSet, String parentGroupId) {
+
+        Short formedByPersonnelId = null;
+        Short officeId = null;
+        CustomerApplicableFeesDto applicableFees = null;
+        List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
+
+        Integer parentCustomerId = Integer.valueOf(parentGroupId);
+        CustomerBO parentCustomer = this.customerDao.findCustomerById(parentCustomerId);
+        // FIXME - #000002 - keithw - ensure personnel, office, and meeting are eagerly fectched finding customer by id
+
+        if (groupFlagIsSet) {
+            officeId = parentCustomer.getOffice().getOfficeId();
+
+            if (parentCustomer.getPersonnel() != null) {
+                formedByPersonnelId = parentCustomer.getPersonnel().getPersonnelId();
+            }
+
+            CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
+            personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+
+            List<FeeBO> fees = customerDao.retrieveFeesApplicableToClients();
+            applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
+        } else {
+
+            if (parentCustomer.getCustomerMeetingValue() != null) {
+                List<FeeBO> fees = customerDao.retrieveFeesApplicableToClientsRefinedBy(parentCustomer.getCustomerMeetingValue());
+                applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
+
+            } else {
+                List<FeeBO> fees = customerDao.retrieveFeesApplicableToClients();
+                applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
+            }
+        }
 
         List<ValueListElement> salutations = this.customerDao.retrieveSalutations();
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
@@ -190,12 +224,22 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
                 .getPreferredLocale());
 
+        List<PersonnelView> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
+        List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
+
         try {
+
+            boolean centerHierarchyExists = ClientRules.getCenterHierarchyExists();
+            int maxNumberOfFamilyMembers = ClientRules.getMaximumNumberOfFamilyMembers();
+            boolean familyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+
+            ClientRulesDto clientRules = new ClientRulesDto(centerHierarchyExists, maxNumberOfFamilyMembers, familyDetailsRequired);
+
             List<MasterDataEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
                     SpouseFatherLookupEntity.class, userContext.getLocaleId());
 
             return new ClientFormCreationDto(salutations, genders, maritalStatuses, citizenship, ethinicity,
-                    educationLevels, businessActivity, poverty, handicapped, spouseFather, customFieldViews);
+                    educationLevels, businessActivity, poverty, handicapped, spouseFather, customFieldViews, clientRules, officeId, formedByPersonnelId, personnelList, applicableFees, formedByPersonnel, savingsOfferings);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

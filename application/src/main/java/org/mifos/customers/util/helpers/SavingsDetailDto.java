@@ -61,4 +61,8 @@ public class SavingsDetailDto implements DataTransferObject {
         return this.savingsBalance;
     }
 
+    public static SavingsDetailDto create(String withPrdOfferingName) {
+        return new SavingsDetailDto("", withPrdOfferingName, null, "", null);
+    }
+
 }

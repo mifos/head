@@ -30,6 +30,8 @@ import java.util.Map;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
@@ -115,18 +117,6 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public GroupBO findGroupBySystemId(String globalCustNum) {
-
-//        Criteria criteria = StaticHibernateUtil.getSessionTL().createCriteria(GroupBO.class);
-//        criteria.add(Restrictions.like("globalCustNum", globalCustNum));
-//        criteria.setFetchMode("parentCustomer", FetchMode.JOIN);
-//        List results = criteria.list();
-
-//        GroupBO group = null;
-//        if (!results.isEmpty()) {
-//            group = (GroupBO) results.get(0);
-//        }
-//
-//        return group;
 
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
@@ -220,8 +210,21 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public List<FeeBO> retrieveFeesApplicableToClients() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
+        queryParameters.put("CUSTOMER_CATEGAORY", FeeCategory.CLIENT.getValue());
+        return retrieveFeesApplicableTo(queryParameters);
+    }
+
+    @Override
     public List<FeeBO> retrieveFeesApplicableToGroupsRefinedBy(MeetingBO meeting) {
         return refineFeesBy(retrieveFeesApplicableToGroups(), meeting);
+    }
+
+    @Override
+    public List<FeeBO> retrieveFeesApplicableToClientsRefinedBy(MeetingBO meeting) {
+        return refineFeesBy(retrieveFeesApplicableToClients(), meeting);
     }
 
     @SuppressWarnings("unchecked")
@@ -255,7 +258,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         this.genericDao.createOrUpdate(customerAccount);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -266,7 +268,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         return findCustomersThatAreNotClosedOrCanceled(queryParameters);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<CustomerView> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -277,10 +278,10 @@ public class CustomerDaoHibernate implements CustomerDao {
         return findCustomersThatAreNotClosedOrCanceled(queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     private List<CustomerView> findCustomersThatAreNotClosedOrCanceled(Map<String, Object> queryParameters) {
         // FIXME - performance - keithw - use hibernate dto approach rather than getting back and converting
-        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(
-                NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
+        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
 
         List<CustomerView> customerViews = new ArrayList<CustomerView>();
         for (CustomerBO customerBO : queryResult) {
@@ -775,6 +776,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return retrieveTotalForQuery(NamedQueryConstants.RETRIEVE_TOTAL_SAVINGS_FOR_CUSTOMER, searchId, officeId);
     }
 
+    @SuppressWarnings("unchecked")
     private Money retrieveTotalForQuery(String query, final String searchId, final Short officeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING1", searchId);
@@ -813,6 +815,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return queryResult;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException {
 
@@ -825,5 +828,24 @@ public class CustomerDaoHibernate implements CustomerDao {
         if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
             throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient() {
+
+        List<SavingsDetailDto> savingDetails = new ArrayList<SavingsDetailDto>();
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("prdApplicableTo", ApplicableTo.CLIENTS.getValue());
+
+        List<SavingsOfferingBO> savingOfferings = (List<SavingsOfferingBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
+        for (SavingsOfferingBO savingsOffering : savingOfferings) {
+
+            SavingsDetailDto savingsDetailsWithOnlyPrdOfferingName = SavingsDetailDto.create(savingsOffering.getPrdOfferingName());
+            savingDetails.add(savingsDetailsWithOnlyPrdOfferingName);
+        }
+
+        return savingDetails;
     }
 }

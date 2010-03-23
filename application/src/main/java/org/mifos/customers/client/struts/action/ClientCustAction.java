@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Hibernate;
 import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
@@ -75,7 +74,6 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
@@ -183,48 +181,30 @@ public class ClientCustAction extends CustAction {
         clearActionForm(actionForm);
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-            CustomerBO customer = getCustomerBusinessService().getCustomer(
-                    Integer.valueOf(actionForm.getParentGroupId()));
-            // make sure that lazily loaded child objects get read in
-            // so that they are there to be used when the object is detached
-            // from the Hibernate session
-            Hibernate.initialize(customer.getPersonnel());
-            Hibernate.initialize(customer.getOffice());
-            actionForm.setParentGroup(customer);
-
-            if (actionForm.getParentGroup().getCustomerMeeting() != null) {
-                actionForm.getParentGroup().getCustomerMeeting().getMeeting().isMonthly();
-                actionForm.getParentGroup().getCustomerMeeting().getMeeting().isWeekly();
-            }
-            actionForm.setOfficeId(actionForm.getParentGroup().getOffice().getOfficeId().toString());
-            if (actionForm.getParentGroup().getPersonnel() != null) {
-                actionForm.setFormedByPersonnel(actionForm.getParentGroup().getPersonnel().getPersonnelId().toString());
-            }
-        }
-
         Short officeId = null;
         UserContext userContext = getUserContext(request);
-        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade
-                .retrieveClientFormCreationData(userContext);
 
+        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(
+                userContext, actionForm.isGroupFlagSet(), actionForm.getParentGroupId());
+
+        officeId = clientFormCreationDto.getOfficeId();
+        actionForm.setOfficeId(officeId.toString());
+        actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
         actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
 
-        if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-            loadLoanOfficers(actionForm.getOfficeIdValue(), request);
-            officeId = actionForm.getOfficeIdValue();
-            loadFees(actionForm, request, FeeCategory.CLIENT, null);
-        } else {
-            officeId = actionForm.getParentGroup().getOffice().getOfficeId();
-            if (actionForm.getParentGroup().getCustomerMeeting() != null) {
-                loadFees(actionForm, request, FeeCategory.CLIENT, actionForm.getParentGroup().getCustomerMeeting()
-                        .getMeeting());
-            } else {
-                loadFees(actionForm, request, FeeCategory.CLIENT, null);
-            }
-        }
+        if (actionForm.isGroupFlagSet()) {
 
-        List<PersonnelView> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
+            actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
+            SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto
+                    .getApplicableFees().getAdditionalFees(), request);
+            SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto
+                    .getPersonnelList(), request);
+
+        } else {
+            actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
+            SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto
+                    .getApplicableFees().getAdditionalFees(), request);
+        }
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getSalutations(),
                 request);
@@ -245,19 +225,14 @@ public class ClientCustAction extends CustAction {
                 request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto
                 .getSpouseFather(), request);
-
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto
                 .getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, formedByPersonnel, request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, getClientBusinessService()
-                .retrieveOfferingsApplicableToClient(), request);
-        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(),
-                request);
-        SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules
-                .getMaximumNumberOfFamilyMembers(), request);
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),
-                request);
+        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, clientFormCreationDto.getClientRules().isCenterHierarchyExists(), request);
+        SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, clientFormCreationDto.getClientRules().getMaxNumberOfFamilyMembers(), request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, clientFormCreationDto.getClientRules().isFamilyDetailsRequired(), request);
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -712,8 +687,8 @@ public class ClientCustAction extends CustAction {
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
-        ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(((ClientCustActionForm) form)
-                .getGlobalCustNum(), getUserContext(request));
+        ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(
+                ((ClientCustActionForm) form).getGlobalCustNum(), getUserContext(request));
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)

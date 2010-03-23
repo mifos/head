@@ -55,6 +55,10 @@ import org.mifos.security.util.UserContext;
  */
 public interface CustomerDao {
 
+    void save(CustomerBO customer);
+
+    void save(CustomerAccountBO customerAccount);
+
     CustomerBO findCustomerById(Integer customerId);
 
     ClientBO findClientBySystemId(String globalCustNum);
@@ -77,17 +81,17 @@ public interface CustomerDao {
 
     List<FeeBO> retrieveFeesApplicableToGroups();
 
+    List<FeeBO> retrieveFeesApplicableToClients();
+
     List<FeeBO> retrieveFeesApplicableToGroupsRefinedBy(MeetingBO customerMeeting);
 
-    void save(CustomerBO customer);
+    List<FeeBO> retrieveFeesApplicableToClientsRefinedBy(MeetingBO customerMeetingValue);
 
     List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
 
     List<CustomerView> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
 
     QueryResult search(String normalisedSearchString, PersonnelBO user);
-
-    void save(CustomerAccountBO customerAccount);
 
     List<ValueListElement> retrieveSalutations();
 
@@ -119,8 +123,6 @@ public interface CustomerDao {
 
     List<CustomerPositionDto> getCustomerPositionDto(Integer centerId, UserContext userContext);
 
-    List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);
-
     CustomerMeetingDto getCustomerMeetingDto(CustomerMeetingEntity customerMeeting, UserContext userContext);
 
     List<CustomerSurveyDto> getCustomerSurveyDto(Integer centerId);
@@ -129,7 +131,13 @@ public interface CustomerDao {
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
+    // FIXME - #000003 - keithw - below are non customer related methods to be moved out
+    void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
+
+    List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);
+
+    List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
+
     List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
 
-    void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 }
