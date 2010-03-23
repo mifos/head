@@ -286,21 +286,16 @@ public class CenterCustAction extends CustAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        long startTime = System.currentTimeMillis();
-        // John W - UserContext object passed because some status' need to be looked up for internationalisation based
-        // on UserContext info
+        // John W - UserContext passed because some status' need to be looked up for internationalisation
         CenterInformationDto centerInformationDto = this.centerDetailsServiceFacade.getCenterInformationDto(
                 ((CenterCustActionForm) form).getGlobalCustNum(), getUserContext(request));
-        SessionUtils.removeAttribute("centerInformationDto", request);
-        SessionUtils.setAttribute("centerInformationDto", centerInformationDto, request);
+        SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
-        // John W - 'BusinessKey' attribute linked to CenterBo is still used by other actions (e.g. meeting related)
-        // further on and also breadcrumb.
+        // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp
         CenterBO center = (CenterBO) new CustomerBusinessService().getCustomer(centerInformationDto.getCenterDisplay()
                 .getCustomerId());
-        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
-        System.out.println("get Center Transaction Took: " + (System.currentTimeMillis() - startTime));
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, center, request);
+
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 

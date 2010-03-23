@@ -41,7 +41,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -51,7 +50,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  *
  */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger("org.mifos.application.servicefacade.CollectionSheetServiceImpl");
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
@@ -606,7 +605,6 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     private void doLog(String str) {
-        //System.out.println(str);
-        logger.error(str);
+        logger.info(str);
     }
 }
