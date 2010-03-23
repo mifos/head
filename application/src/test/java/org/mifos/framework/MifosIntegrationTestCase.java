@@ -27,7 +27,7 @@ import java.util.Date;
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
-import org.hibernate.jmx.StatisticsService;
+import org.hibernate.stat.Statistics;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -59,7 +59,7 @@ public class MifosIntegrationTestCase extends TestCase {
         new TestCaseInitializer().initialize();
     }
 
-    private StatisticsService statisticsService;
+    private Statistics statisticsService;
 
     protected void assertEquals(String s, Money one, Money two) {
         if (one.equals(two)) {
@@ -73,17 +73,16 @@ public class MifosIntegrationTestCase extends TestCase {
         return format.parse(date);
     }
 
-    protected StatisticsService getStatisticsService() {
+    protected Statistics getStatisticsService() {
         return this.statisticsService;
     }
 
-    protected void setStatisticsService(StatisticsService service) {
+    protected void setStatisticsService(Statistics service) {
         this.statisticsService = service;
     }
 
     protected void initializeStatisticsService() {
-        statisticsService = new StatisticsService();
-        statisticsService.setSessionFactory(StaticHibernateUtil.getSessionFactory());
+        statisticsService = StaticHibernateUtil.getSessionFactory().getStatistics();
         statisticsService.setStatisticsEnabled(true);
     }
 
