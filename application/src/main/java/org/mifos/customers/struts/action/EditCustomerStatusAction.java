@@ -128,12 +128,15 @@ public class EditCustomerStatusAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         logger.debug("In EditCustomerStatusAction:update()");
+        long startTime = System.currentTimeMillis();
+
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         UserContext userContext = getUserContext(request);
 
         this.customerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(), editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(), editStatusActionForm.getNotes(), userContext);
 
+        System.out.println("EditCustomerStatusAction:update Transaction Took: " + (System.currentTimeMillis() - startTime));
         return mapping.findForward(getDetailAccountPage(form));
     }
 

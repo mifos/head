@@ -211,7 +211,7 @@ public class GroupCustAction extends CustAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In GroupCustAction get method ");
-        long startTime = System.currentTimeMillis();
+
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
         GroupInformationDto groupInformationDto = groupDetailsServiceFacade.getGroupInformationDto(
@@ -230,7 +230,6 @@ public class GroupCustAction extends CustAction {
                 groupInformationDto.getGroupDisplay().getCustomerId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 
-        System.out.println("get Group Transaction Took: " + (System.currentTimeMillis() - startTime));
         logger.debug("Exiting GroupCustAction get method ");
         return mapping.findForward(ActionForwards.get_success.toString());
     }

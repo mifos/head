@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -72,6 +73,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
@@ -613,6 +615,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
             String newStatusIdAsString, String notes, UserContext userContext) throws CustomerException {
 
+        runningTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
+        markposition("Very Start of updateCustomerStatus");
+
         CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
 
         try {
@@ -631,7 +637,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         if (StringUtils.isNotBlank(newStatusIdAsString)) {
             newStatusId = Short.valueOf(newStatusIdAsString);
         }
+
+        markposition("before checkPermission");
         checkPermission(customerBO, userContext, newStatusId, flagId);
+        markposition("after checkPermission");
 
         Short oldStatusId = customerBO.getCustomerStatus().getId();
 
@@ -642,6 +651,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
 
         customerBO.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
+        markposition("after clearCustomerFlagsIfApplicable");
 
         CustomerStatusEntity customerStatus;
         try {
@@ -650,6 +660,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (PersistenceException e) {
             throw new CustomerException(e);
         }
+        markposition("after customerStatus");
 
         CustomerStatusFlagEntity customerStatusFlagEntity = null;
         if (flagId != null) {
@@ -660,32 +671,59 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 throw new CustomerException(e);
             }
         }
+        markposition("after customerStatusFlagEntity");
 
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        markposition("after loggedInUser");
         CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(),
                 loggedInUser, customerBO);
+        markposition("after customerNote new");
 
         customerBO.setCustomerStatus(customerStatus);
+        markposition("after setCustomerStatus");
+
         customerBO.addCustomerNotes(customerNote);
 
         if (customerStatusFlagEntity != null) {
             customerBO.addCustomerFlag(customerStatusFlagEntity);
         }
 
+        markposition("after notes and addcustomerflag");
+
         if (customerBO.isGroup()) {
 
             GroupBO group = (GroupBO) customerBO;
             this.customerService.updateGroupStatus(group, oldStatus, newStatus);
+            markposition("after updateGroupStatus");
         } else if (customerBO.isClient()) {
 
             ClientBO client = (ClientBO) customerBO;
 
             this.customerService.updateClientStatus(client, oldStatus, newStatus, userContext, flagId, notes);
+            markposition("after updateClientStatus");
 
         } else {
             CenterBO center = (CenterBO) customerBO;
             this.customerService.updateCenterStatus(center, newStatus);
+            markposition("after updateCenterStatus");
         }
+
+        markposition("FINISHED the service update");
+    }
+
+    Long runningTime = null;
+    Long startTime = null;
+
+    private void markposition(String string) {
+
+        Session session = new SurveysPersistence().getSession();
+        Long timeTaken = (System.currentTimeMillis() - runningTime);
+        session.createSQLQuery("select 'A' from customer where 1=0 and display_name = 'Finished: " + string + "'")
+                .list();
+
+        System.out.println(string + ": " + timeTaken);
+        runningTime = System.currentTimeMillis();
     }
 
     private void checkPermission(CustomerBO customerBO, UserContext userContext, Short newStatusId, Short flagId) {

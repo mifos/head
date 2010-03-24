@@ -683,7 +683,6 @@ public class ClientCustAction extends CustAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        long startTime = System.currentTimeMillis();
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
@@ -696,7 +695,6 @@ public class ClientCustAction extends CustAction {
                 clientInformationDto.getClientDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
-        System.out.println("get Client Transaction Took: " + (System.currentTimeMillis() - startTime));
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
