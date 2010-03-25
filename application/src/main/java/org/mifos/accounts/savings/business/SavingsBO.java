@@ -466,7 +466,7 @@ public class SavingsBO extends AccountBO {
             if (this.recommendedAmount != null && recommendedAmount != null
                     && !this.recommendedAmount.equals(recommendedAmount)) {
                 for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
-                    if (accountDate.getActionDate().compareTo(helper.getCurrentDate()) >= 0) {
+                    if (accountDate.getActionDate().compareTo(new DateTimeService().getCurrentDateMidnight().toDate()) >= 0) {
                         ((SavingsScheduleEntity) accountDate).setDeposit(recommendedAmount);
                     }
                 }
@@ -632,8 +632,7 @@ public class SavingsBO extends AccountBO {
             }
             // Do not Calculate interest if principal amount is less than the
             // minimum amount needed for interest calculation
-            if (getMinAmntForInt() != null
-                    && principal != null
+            if (getMinAmntForInt() != null && principal != null
                     && (getMinAmntForInt().isZero() || principal.isGreaterThanOrEqual(getMinAmntForInt()))) {
                 interestAmount = calculateInterestForDays(principal, interestRate, fromDate, toDate);
             }
@@ -663,14 +662,14 @@ public class SavingsBO extends AccountBO {
                 makeEntriesForInterestPosting(getInterestToBePosted(), payment.getPaymentType(), customer, payment
                         .getPaymentDate(), loggedInUser);
             }
-
+            Date transactionDate = new DateTimeService().getCurrentDateMidnight().toDate();
             if (payment.getAmount().isGreaterThanZero()) {
 
                 payment.addAccountTrxn(helper.createAccountPaymentTrxn(payment, new Money(getCurrency()),
-                        AccountActionTypes.SAVINGS_WITHDRAWAL, customer, loggedInUser, getSavingsPersistence(), helper
-                                .getCurrentDate()));
+                        AccountActionTypes.SAVINGS_WITHDRAWAL, customer, loggedInUser, getSavingsPersistence(),
+                        transactionDate));
 
-                payment.setCreatedDate(helper.getCurrentDate());
+                payment.setCreatedDate(transactionDate);
                 this.addAccountPayment(payment);
                 addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(), new Money(getCurrency()),
                         AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), payment.getPaymentDate(), loggedInUser));
@@ -679,8 +678,8 @@ public class SavingsBO extends AccountBO {
                 buildFinancialEntries(payment.getAccountTrxns());
             }
             this.addAccountNotes(notes);
-            this.setLastIntCalcDate(helper.getCurrentDate());
-            this.setLastIntPostDate(helper.getCurrentDate());
+            this.setLastIntCalcDate(transactionDate);
+            this.setLastIntPostDate(transactionDate);
             this.setInterIntCalcDate(null);
             this.setSavingsBalance(new Money(getCurrency()));
             this.setInterestToBePosted(new Money(getCurrency()));
@@ -697,8 +696,8 @@ public class SavingsBO extends AccountBO {
 
     private void makeEntriesForInterestPosting(final Money interestAmt, final PaymentTypeEntity paymentType,
             final CustomerBO customer, final Date postingDate, final PersonnelBO loggedInUser) throws AccountException {
-        AccountPaymentEntity interestPayment = helper
-                .createAccountPayment(this, interestAmt, paymentType, loggedInUser);
+        AccountPaymentEntity interestPayment = helper.createAccountPayment(this, interestAmt, paymentType,
+                loggedInUser, postingDate);
 
         interestPayment.addAccountTrxn(helper.createAccountPaymentTrxn(interestPayment, getSavingsBalance(),
                 AccountActionTypes.SAVINGS_INTEREST_POSTING, customer, loggedInUser, getSavingsPersistence(),
@@ -910,7 +909,8 @@ public class SavingsBO extends AccountBO {
     }
 
     @Deprecated
-    public void generateAndUpdateDepositActionsForClient(final ClientBO client, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    public void generateAndUpdateDepositActionsForClient(final ClientBO client, final List<Days> workingDays,
+            final List<Holiday> holidays) throws AccountException {
 
         if (client.getCustomerMeeting().getMeeting() != null) {
             if (!(getCustomer().getLevel() == CustomerLevel.GROUP && getRecommendedAmntUnit().getId().equals(
@@ -921,7 +921,8 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    private void generateDepositAccountActions(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    private void generateDepositAccountActions(final List<Days> workingDays, final List<Holiday> holidays)
+            throws AccountException {
         logger.debug("In SavingsBO::generateDepositAccountActions()");
         // deposit happens on each meeting date of the customer. If for
         // center/group with individual deposits, insert row for every client
@@ -947,13 +948,13 @@ public class SavingsBO extends AccountBO {
     }
 
     @Deprecated
-    public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting, final List<Days> workingDays, final List<Holiday> holidays) {
+    public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
+            final List<Days> workingDays, final List<Holiday> holidays) {
 
         DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
-                holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
 
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
 
@@ -974,12 +975,13 @@ public class SavingsBO extends AccountBO {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10,
+                startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
 
         short installmentNumber = lastInstallment.getInstallmentId();
         for (DateTime depositDate : depositDates) {
-            AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, ++installmentNumber, depositDate.toDate(),
-                    (short) 1, getRecommendedAmount());
+            AccountActionDateEntity actionDate = helper.createActionDateObject(this, customer, ++installmentNumber,
+                    depositDate.toDate(), (short) 1, getRecommendedAmount());
 
             addAccountActionDate(actionDate);
             logger.debug("In SavingsBO::generateDepositAccountActions(), Successfully added account action on date: "
@@ -988,9 +990,7 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * @deprecated for deposits use
-     *             {@link SavingsBO#deposit(AccountPaymentEntity, Integer)} and
-     *             withdrawals use
+     * @deprecated for deposits use {@link SavingsBO#deposit(AccountPaymentEntity, Integer)} and withdrawals use
      *             {@link SavingsBO#withdraw(AccountPaymentEntity)}
      */
     @Deprecated
@@ -1003,8 +1003,7 @@ public class SavingsBO extends AccountBO {
 
         CustomerBO customer = paymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
-                paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()),
-                new DateTimeService().getCurrentJavaDateTime());
+                paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()), transactionDate);
         if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
             try {
                 this
@@ -1155,8 +1154,8 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * @deprecated use {@link SavingsBO#withdraw(AccountPaymentEntity, CustomerBO)} instead and use save
-     *             from DAO/Persistence for {@link SavingsBO}.
+     * @deprecated use {@link SavingsBO#withdraw(AccountPaymentEntity, CustomerBO)} instead and use save from
+     *             DAO/Persistence for {@link SavingsBO}.
      */
     @Deprecated
     public void withdraw(final PaymentData accountPaymentData, final boolean persist) throws AccountException {
@@ -1165,8 +1164,7 @@ public class SavingsBO extends AccountBO {
             throw new AccountException("errors.insufficentbalance", new String[] { getGlobalAccountNum() });
         }
         Money maxWithdrawAmount = getSavingsOffering().getMaxAmntWithdrawl();
-        if (maxWithdrawAmount != null && maxWithdrawAmount.isNonZero()
-                && totalAmount.isGreaterThan(maxWithdrawAmount)) {
+        if (maxWithdrawAmount != null && maxWithdrawAmount.isNonZero() && totalAmount.isGreaterThan(maxWithdrawAmount)) {
             throw new AccountException("errors.exceedmaxwithdrawal", new String[] { getGlobalAccountNum() });
         }
         savingsBalance = savingsBalance.subtract(totalAmount);
@@ -1174,7 +1172,7 @@ public class SavingsBO extends AccountBO {
         CustomerBO customer = accountPaymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, accountPaymentData
                 .getReceiptNum(), accountPaymentData.getReceiptDate(), getPaymentTypeEntity(accountPaymentData
-                .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
+                .getPaymentTypeId()), accountPaymentData.getTransactionDate());
 
         SavingsTrxnDetailEntity accountTrxnBO;
 
@@ -1207,9 +1205,10 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays)
+            throws AccountException {
         this.setActivationDate(new DateTimeService().getCurrentJavaDateTime());
-        this.generateDepositAccountActions(workingDays, holidays );
+        this.generateDepositAccountActions(workingDays, holidays);
         try {
             Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());
             this.setNextIntCalcDate(intCalcDate);
@@ -1295,8 +1294,7 @@ public class SavingsBO extends AccountBO {
             SavingsTrxnDetailEntity lastTrxn = null;
             for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
                 SavingsTrxnDetailEntity accountTrxn = (SavingsTrxnDetailEntity) trxn;
-                if (lastTrxn == null
-                        || accountTrxn.getBalance().isGreaterThan(lastTrxn.getBalance())) {
+                if (lastTrxn == null || accountTrxn.getBalance().isGreaterThan(lastTrxn.getBalance())) {
                     lastTrxn = accountTrxn;
                 }
             }
@@ -1407,9 +1405,10 @@ public class SavingsBO extends AccountBO {
             AccountPaymentEntity lastPayment = getLastPmnt();
             AccountPaymentEntity newAccountPayment = null;
             PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
+            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             if (amountAdjustedTo.isGreaterThanZero()) {
                 newAccountPayment = helper.createAccountPayment(this, amountAdjustedTo, lastPayment.getPaymentType(),
-                        getPersonnelPersistence().getPersonnel(userContext.getId()));
+                        getPersonnelPersistence().getPersonnel(userContext.getId()), transactionDate);
             }
             if (newAccountPayment != null) {
                 newAccountPayment.setAmount(amountAdjustedTo);
@@ -1796,23 +1795,18 @@ public class SavingsBO extends AccountBO {
     }
 
     /*
-     * private Money getTotalAmountDueForInstallment(Short installmentId) {
-     * Money totalAmount = new Money(getCurrency()); if (null != getAccountActionDates() &&
-     * getAccountActionDates().size() > 0) { for (AccountActionDateEntity
-     * accntActionDate : getAccountActionDates()) { if
-     * (accntActionDate.getInstallmentId().equals(installmentId) &&
-     * accntActionDate.getPaymentStatus().equals(
-     * PaymentStatus.UNPAID.getValue())) { totalAmount = totalAmount
-     * .add(((SavingsScheduleEntity) accntActionDate) .getTotalDepositDue()); }
-     * } }
+     * private Money getTotalAmountDueForInstallment(Short installmentId) { Money totalAmount = new
+     * Money(getCurrency()); if (null != getAccountActionDates() && getAccountActionDates().size() > 0) { for
+     * (AccountActionDateEntity accntActionDate : getAccountActionDates()) { if
+     * (accntActionDate.getInstallmentId().equals(installmentId) && accntActionDate.getPaymentStatus().equals(
+     * PaymentStatus.UNPAID.getValue())) { totalAmount = totalAmount .add(((SavingsScheduleEntity) accntActionDate)
+     * .getTotalDepositDue()); } } }
      *
      * return totalAmount; }
      *
-     * public Money getTotalAmountDueForNextInstallment() {
-     * AccountActionDateEntity nextAccountAction =
+     * public Money getTotalAmountDueForNextInstallment() { AccountActionDateEntity nextAccountAction =
      * getDetailsOfNextInstallment(); if (nextAccountAction != null) return
-     * getTotalAmountDueForInstallment(nextAccountAction .getInstallmentId());
-     * return new Money(getCurrency()); }
+     * getTotalAmountDueForInstallment(nextAccountAction .getInstallmentId()); return new Money(getCurrency()); }
      */
 
     private List<AccountActionDateEntity> getNextInstallment() {
@@ -1878,12 +1872,13 @@ public class SavingsBO extends AccountBO {
     }
 
     @Override
-    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
+            final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
         if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
                 && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
 
-            MeetingBO customerMeeting  = getCustomer().getCustomerMeetingValue();
+            MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
             DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
@@ -1998,7 +1993,8 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    public void generateNextSetOfMeetingDates(final List<Days> workingDays, final List<Holiday> holidays)
+            throws AccountException {
         CustomerBO customerBO = getCustomer();
         if (customerBO.getCustomerMeeting() != null && customerBO.getCustomerMeeting().getMeeting() != null) {
 
@@ -2084,13 +2080,12 @@ public class SavingsBO extends AccountBO {
     }
 
     /*
-     * In order to do audit logging, we need to get the name of the PaymentTypeEntity.
-     * A new instance constructed with the paymentTypeId is not good enough for this,
-     * we need to get the lookup value loaded so that we can resolve the name of the
-     * PaymentTypeEntity.
+     * In order to do audit logging, we need to get the name of the PaymentTypeEntity. A new instance constructed with
+     * the paymentTypeId is not good enough for this, we need to get the lookup value loaded so that we can resolve the
+     * name of the PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return (PaymentTypeEntity)getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return (PaymentTypeEntity) getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     @Override

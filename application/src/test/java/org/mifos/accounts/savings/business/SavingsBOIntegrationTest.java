@@ -100,6 +100,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
@@ -3904,7 +3905,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
-        Money interestAtClosure = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
+        Money interestAtClosure = savings.calculateInterestForClosure(new DateTimeService().getCurrentDateMidnight().toDate());
         AccountPaymentEntity payment = new AccountPaymentEntity(savings, balanceAmount.add(interestAtClosure), null,
                 null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),
