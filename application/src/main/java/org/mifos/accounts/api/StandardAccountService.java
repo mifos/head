@@ -122,6 +122,15 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
+    public AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws PersistenceException {
+        LoanBO loan = getLoanPersistence().getAccount(id);
+        if (null == loan) {
+            throw new PersistenceException("loan not found for id " + id);
+        }
+        return new AccountReferenceDto(loan.getAccountId());
+    }
+
+    @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
         LoanBO loan = getLoanPersistence().findByExternalId(externalId);
         if (null == loan) {

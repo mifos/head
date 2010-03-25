@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * The Interface AccountService provides methods to make and support making
- * loan payments.  This interface is intended to be used by implementers of
+ * loan payments. This interface is intended to be used by implementers of
  * the <b>org.mifos.spi.TransactionImport</b> Interface.
  */
 public interface AccountService {
@@ -33,8 +33,6 @@ public interface AccountService {
      * Make a payment on a loan account within a single transaction.
      *
      * @param accountPaymentParametersDto the parameters to make a loan payment
-     *
-     * @throws Exception
      */
     void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws Exception;
 
@@ -42,32 +40,40 @@ public interface AccountService {
      * Make multiple loan account payments within a single transaction.
      *
      * @param accountPaymentParametersDtoList a list of loan payment parameters
-     *
-     * @throws Exception
      */
     void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
 
     /**
-     * Lookup a loan account reference for a loan with a matching external id.  If no loan is found
-     * with a matching external id, then an exception is thrown.
+     * Lookup a loan account reference for a loan with a matching primary key.
      *
+     * @param id primary key of loan account
+     *
+     * @return a reference to the account found
+     *
+     * @throws Exception if no loan is found with a matching id
+     */
+    AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws Exception;
+
+    /**
+     * Lookup a loan account reference for a loan with a matching external id. External id is a field on a
+     * loan account created specifically for external lookups.
+     * 
      * @param externalId the external id to find.
      *
      * @return a reference to the account found
      *
-     * @throws Exception
+     * @throws Exception if no loan is found with a matching external id
      */
     AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws Exception;
 
     /**
-     * Lookup a loan account reference for a loan with a matching global account number.  If no loan is found
-     * with a matching global account number, then an exception is thrown.
+     * Lookup a loan account reference for a loan with a matching global account number.
      *
      * @param globalAccountNumber the the global account number to find.
      *
      * @return a reference to the account found
      *
-     * @throws Exception
+     * @throws Exception If no loan is found with a matching global account numbe
      */
     AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber) throws Exception;
 
@@ -78,8 +84,6 @@ public interface AccountService {
      * @param payment the payment parameters to validate
      *
      * @return a list of invalid payment reasons
-     *
-     * @throws Exception
      */
     List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws Exception;
 
@@ -87,8 +91,6 @@ public interface AccountService {
      * Gets the payment types that are valid for loans.
      *
      * @return a list of payment types
-     *
-     * @throws Exception
      */
     List<PaymentTypeDto> getLoanPaymentTypes() throws Exception;
 
@@ -96,8 +98,6 @@ public interface AccountService {
      * Gets the payment types that are valid for fee payments.
      *
      * @return a list of payment types
-     *
-     * @throws Exception
      */
     List<PaymentTypeDto> getFeePaymentTypes() throws Exception;
 
