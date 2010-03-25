@@ -43,7 +43,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
@@ -70,86 +69,53 @@ import org.mifos.security.util.UserContext;
 public class ClientCustActionForm extends CustomerActionForm {
 
     private MeetingBO parentCustomerMeeting;
-    private CustomerBO parentGroup;
 
     private String groupFlag;
-
-    private List<FamilyDetailDTO> familyDetailBean=new ArrayList<FamilyDetailDTO>();
-
-    public List<FamilyDetailDTO> getFamilyDetailBean() {
-        return this.familyDetailBean;
-    }
-
-
-    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {
-        this.familyDetailBean = familyDetailBean;
-    }
-
+    private List<FamilyDetailDTO> familyDetailBean = new ArrayList<FamilyDetailDTO>();
     private ClientDetailView clientDetailView;
-
     private ClientNameDetailView clientName;
-
     private ClientNameDetailView spouseName;
 
     private String parentGroupId;
-
     private String governmentId;
-
     private String dateOfBirthDD;
-
     private String dateOfBirthMM;
-
     private String dateOfBirthYY;
-
     private String nextOrPreview;
-
     private String editFamily;
-
     private String gotErrorInPage;
-
     private String deleteThisRow;
-
-    public String getDeleteThisRow() {
-        return this.deleteThisRow;
-    }
-
-
-    public void setDeleteThisRow(String deleteThisRow) {
-        this.deleteThisRow = deleteThisRow;
-    }
-
-
-    public String getGotErrorInPage() {
-        return this.gotErrorInPage;
-    }
-
-
-    public void setGotErrorInPage(String gotErrorInPage) {
-        this.gotErrorInPage = gotErrorInPage;
-    }
-
-
-    public String getEditFamily() {
-        return this.editFamily;
-    }
-
-
-    public void setEditFamily(String editFamily) {
-        this.editFamily = editFamily;
-    }
-
     private FormFile picture;
-
     private InputStream customerPicture;
-
     private int age;
-
     private final List<Short> selectedOfferings;
-
     private List<ClientNameDetailView> familyNames;
-
     private List<ClientFamilyDetailView> familyDetails;
+    private int[] relativePrimaryKey=new int[ClientRules.getMaximumNumberOfFamilyMembers()];
 
+    // family details
+    private List<Short> familyRelationship;
+    private List<String> familyFirstName;
+    private List<String> familyMiddleName;
+    private List<String> familyLastName;
+    private List<String> familyDateOfBirthDD;
+    private List<String> familyDateOfBirthMM;
+    private List<String> familyDateOfBirthYY;
+    private List<Short> familyGender;
+    private List<Short> familyLivingStatus;
+    private List<Integer> familyPrimaryKey;
+    private List<String> familyDateOfBirth;
+
+    public ClientCustActionForm() {
+        super();
+        selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
+        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++) {
+            selectedOfferings.add(null);
+        }
+
+        initializeFamilyMember();
+        addFamilyMember();
+    }
 
     public List<ClientFamilyDetailView> getFamilyDetails() {
         return this.familyDetails;
@@ -163,24 +129,51 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.familyNames = familyNames;
     }
 
-    private int[] relativePrimaryKey=new int[ClientRules.getMaximumNumberOfFamilyMembers()];
-
     public int[] getRelativePrimaryKey() {
         return this.relativePrimaryKey;
     }
-
 
     public void setRelativePrimaryKey(int[] relativePrimaryKey) {
         this.relativePrimaryKey = relativePrimaryKey;
     }
 
+    public String getDeleteThisRow() {
+        return this.deleteThisRow;
+    }
+
+    public void setDeleteThisRow(String deleteThisRow) {
+        this.deleteThisRow = deleteThisRow;
+    }
+
+    public String getGotErrorInPage() {
+        return this.gotErrorInPage;
+    }
+
+    public void setGotErrorInPage(String gotErrorInPage) {
+        this.gotErrorInPage = gotErrorInPage;
+    }
+
+    public String getEditFamily() {
+        return this.editFamily;
+    }
+
+    public void setEditFamily(String editFamily) {
+        this.editFamily = editFamily;
+    }
+
+    public List<FamilyDetailDTO> getFamilyDetailBean() {
+        return this.familyDetailBean;
+    }
+
+    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {
+        this.familyDetailBean = familyDetailBean;
+    }
 
     /*
      *  This is used to construct Name detail view and family detail view for each family member,
      *  Please note i have added display name into family detail view so that i can iterate over only one collection
      *  when i do preview of this page.
      */
-
     public void constructFamilyDetails() {
         this.familyDetails=new ArrayList<ClientFamilyDetailView>();
         this.familyNames=new ArrayList<ClientNameDetailView>();
@@ -221,21 +214,8 @@ public class ClientCustActionForm extends CustomerActionForm {
         return t;
       }
 
-
     public List<ClientNameDetailView> getFamilyNames() {
         return this.familyNames;
-    }
-
-
-    public ClientCustActionForm() {
-        super();
-        selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
-        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++) {
-            selectedOfferings.add(null);
-        }
-
-        initializeFamilyMember();
-        addFamilyMember();
     }
 
     public String getGroupFlag() {
@@ -248,15 +228,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public void setGroupFlag(String groupFlag) {
         this.groupFlag = groupFlag;
-    }
-
-    @Deprecated
-    public CustomerBO getParentGroup() {
-        return parentGroup;
-    }
-    @Deprecated
-    public void setParentGroup(CustomerBO parentGroup) {
-        this.parentGroup = parentGroup;
     }
 
     public ClientDetailView getClientDetailView() {
@@ -282,7 +253,6 @@ public class ClientCustActionForm extends CustomerActionForm {
     public void setSpouseName(ClientNameDetailView spouseName) {
         this.spouseName = spouseName;
     }
-
 
     public String getParentGroupId() {
         return parentGroupId;
@@ -348,7 +318,6 @@ public class ClientCustActionForm extends CustomerActionForm {
             selectedOfferings.set(i, value);
         }
     }
-
 
     @Override
     protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException {
@@ -585,6 +554,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                     1,ClientRules.getMaximumNumberOfFamilyMembers()));
         }
     }
+
     public void validateFamilyNames(ActionErrors errors) {
 
         for(int row=0;row<familyFirstName.size();row++){
@@ -598,6 +568,7 @@ public class ClientCustActionForm extends CustomerActionForm {
            }
        }
     }
+
     public void validateFamilyDateOfBirths(ActionErrors errors) {
        //Setting date of births for family members before validating it.
        setFamilyDateOfBirth();
@@ -753,17 +724,6 @@ public class ClientCustActionForm extends CustomerActionForm {
             return false;
         }
     }
-
-    private List<Short> familyRelationship;
-    private List<String> familyFirstName;
-    private List<String> familyMiddleName;
-    private List<String> familyLastName;
-    private List<String> familyDateOfBirthDD;
-    private List<String> familyDateOfBirthMM;
-    private List<String> familyDateOfBirthYY;
-    private List<Short> familyGender;
-    private List<Short> familyLivingStatus;
-    private List<Integer> familyPrimaryKey;
 
     //FirstName
     public List<String> getFamilyFirstName() {
@@ -1002,8 +962,6 @@ public class ClientCustActionForm extends CustomerActionForm {
         return familyFirstName.size()-1;
     }
 
-    List<String> familyDateOfBirth;
-
     public List<String> getFamilyDateOfBirth() {
         return this.familyDateOfBirth;
     }
@@ -1011,6 +969,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     public String getFamilyDateOfBirth(int forMember) {
         return this.familyDateOfBirth.get(forMember);
     }
+
     /*
      * I set date of Birth so that it can be used by the construct family details function
      */
@@ -1021,14 +980,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
-
     public boolean isGroupFlagSet() {
         return YesNoFlag.NO.getValue().equals(this.getGroupFlagValue());
     }
-
-    @Deprecated
-    public void setParentCustomerMeeting(MeetingBO parentCustomerMeeting) {
-        this.parentCustomerMeeting = parentCustomerMeeting;
-    }
-
 }

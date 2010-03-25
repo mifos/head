@@ -108,9 +108,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    // FIXME - keithw - IGNORING AFTER REMOVAL OF CENTER PERSISTENCE
-    public void ignore_testCreateClient() throws Exception {
-        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+    public void testCreateClient() throws Exception {
         try {
             UserContext userContext = TestUtils.makeUser();
 
@@ -134,7 +132,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             StaticHibernateUtil.rollbackTransaction();
         }
-       Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
     public void testCreateClientInvalidParentCustomer() throws PersistenceException, CustomerException {
@@ -167,7 +164,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + "_Client Two", CustomerStatus.CLIENT_ACTIVE, group);
     }
 
-    // FIXME - #00009 - keithw - put back in after refactoring client creation.
+    // FIXME - #00009 - keithw - put back validation on client creation
     public void ignore_testShouldThrowExceptionWhenTryingToCreateACustomerWithSameGovtId() throws Exception {
         setUpClients();
         localTestClient = createActiveClientWithGovtId();
@@ -205,7 +202,7 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    // FIXME - #00009 - keithw - put back in after refactoring client creation.
+    // FIXME - #00009 - keithw - put back validation on client creation
     public void ignore_testShouldThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAnActiveClient() throws Exception {
         setUpClients();
         localTestClient = createActiveClientWithGovtId();
