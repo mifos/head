@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -768,27 +767,29 @@ public class ClientBO extends CustomerBO {
 
     private void checkForDuplicates(final String name, final Date dob, final String governmentId, final Integer customerId)
             throws CustomerException {
-        if (StringUtils.isNotBlank(governmentId)) {
-            try {
-                if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-                    String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
-                            userContext);
-                    throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] {
-                            governmentId, label });
-                }
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        } else {
-            try {
-                if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-                    throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
-                            new Object[] { name });
-                }
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        }
+
+        // FIXME - #000004 - keithw - put back in governmentId validation for clients
+//        if (StringUtils.isNotBlank(governmentId)) {
+//            try {
+//                if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
+//                    String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
+//                            userContext);
+//                    throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] {
+//                            governmentId, label });
+//                }
+//            } catch (PersistenceException e) {
+//                throw new CustomerException(e);
+//            }
+//        } else {
+//            try {
+//                if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
+//                    throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
+//                            new Object[] { name });
+//                }
+//            } catch (PersistenceException e) {
+//                throw new CustomerException(e);
+//            }
+//        }
 
     }
 

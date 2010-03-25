@@ -38,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -53,6 +52,7 @@ import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
@@ -69,6 +69,7 @@ import org.mifos.security.util.UserContext;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
+    private MeetingBO parentCustomerMeeting;
     private CustomerBO parentGroup;
 
     private String groupFlag;
@@ -145,22 +146,20 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     private final List<Short> selectedOfferings;
 
-    private List familyNames;
+    private List<ClientNameDetailView> familyNames;
 
-    private List familyDetails;
+    private List<ClientFamilyDetailView> familyDetails;
 
 
     public List<ClientFamilyDetailView> getFamilyDetails() {
         return this.familyDetails;
     }
 
-
-    public void setFamilyDetails(List familyDetails) {
+    public void setFamilyDetails(List<ClientFamilyDetailView> familyDetails) {
         this.familyDetails = familyDetails;
     }
 
-
-    public void setFamilyNames(List familyNames) {
+    public void setFamilyNames(List<ClientNameDetailView> familyNames) {
         this.familyNames = familyNames;
     }
 
@@ -206,8 +205,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                 }
 
             } catch (InvalidDateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                // FIXME - empty catch!
             }
             this.familyNames.add(familyNames);
             this.familyDetails.add(familyDetails);
@@ -252,10 +250,11 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.groupFlag = groupFlag;
     }
 
+    @Deprecated
     public CustomerBO getParentGroup() {
         return parentGroup;
     }
-
+    @Deprecated
     public void setParentGroup(CustomerBO parentGroup) {
         this.parentGroup = parentGroup;
     }
@@ -362,7 +361,7 @@ public class ClientCustActionForm extends CustomerActionForm {
                 && (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
                         .equals(input))) {
             validateClientNames(errors, resources);
-            validateDateOfBirth(request, errors, resources);
+            validateDateOfBirth(errors, resources);
             validateGender(errors, resources);
             if(!ClientRules.isFamilyDetailsRequired()) {
                 validateSpouseNames(errors, resources);
@@ -479,11 +478,11 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
-    void validateDateOfBirth(HttpServletRequest request, ActionErrors errors) {
-        validateDateOfBirth(request, errors, null);
+    void validateDateOfBirth(ActionErrors errors) {
+        validateDateOfBirth(errors, null);
     }
 
-    void validateDateOfBirth(HttpServletRequest request, ActionErrors errors, ResourceBundle resources) {
+    void validateDateOfBirth(ActionErrors errors, ResourceBundle resources) {
         if (StringUtils.isBlank(getDateOfBirth())) {
             if (resources == null) {
                 errors.add(CustomerConstants.DOB, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
@@ -518,15 +517,16 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void checkForMandatoryFields(Short entityId, ActionErrors errors, HttpServletRequest request) {
-        Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
-                .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+        Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+
         List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(entityId);
         for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
             String propertyName = request.getParameter(fieldConfigurationEntity.getLabel());
             UserContext userContext = ((UserContext) request.getSession().getAttribute(LoginConstants.USERCONTEXT));
-            Locale locale = userContext.getPreferredLocale();
+
             if (propertyName != null && !propertyName.equals("") && !propertyName.equalsIgnoreCase("picture")) {
                 String propertyValue = request.getParameter(propertyName);
                 if (propertyValue == null || propertyValue.equals("")) {
@@ -549,6 +549,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
         boolean duplicateFound = false;
         for (int i = 0; i < selectedOfferings.size() - 1; i++) {
@@ -557,9 +558,8 @@ public class ClientCustActionForm extends CustomerActionForm {
                         && selectedOfferings.get(i).equals(selectedOfferings.get(j))) {
                     String selectedOffering = "";
                     try {
-                        List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
-                                ClientConstants.SAVINGS_OFFERING_LIST, request);
-                        for (SavingsOfferingBO savingsOffering : offeringsList) {
+                        List<SavingsDetailDto> offeringsList = (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+                        for (SavingsDetailDto savingsOffering : offeringsList) {
                             if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId())) {
                                 selectedOffering = savingsOffering.getPrdOfferingName();
                             }
@@ -677,11 +677,12 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
-        if (groupFlag.equals(ClientConstants.YES) && parentGroup.getCustomerMeeting() != null) {
-            return parentGroup.getCustomerMeeting().getMeeting();
-        } else {
-            return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+
+        if (groupFlag.equals(ClientConstants.YES) && this.parentCustomerMeeting != null) {
+            return parentCustomerMeeting;
         }
+
+        return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
     }
 
     public String getDateOfBirth() {
@@ -689,22 +690,21 @@ public class ClientCustActionForm extends CustomerActionForm {
                 && StringUtils.isNotBlank(dateOfBirthYY)) {
             String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
-
-        } else {
-            return null;
         }
+
+        return null;
     }
+
     public String getDateOfBirth(String dateOfBirthDD, String dateOfBirthMM, String dateOfBirthYY){
         if (StringUtils.isNotBlank(dateOfBirthDD) && StringUtils.isNotBlank(dateOfBirthMM)
                 && StringUtils.isNotBlank(dateOfBirthYY)) {
             String dateSeparator = new LocalizationConverter().getDateSeparatorForCurrentLocale();
             return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator + dateOfBirthYY;
-
-        } else {
-            return null;
         }
 
+        return null;
     }
+
     public void setDateOfBirth(String receiptDate) throws InvalidDateException {
         if (StringUtils.isBlank(receiptDate)) {
             dateOfBirthDD = null;
@@ -747,7 +747,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     private boolean isValid(Object input) {
         try {
             String inputString = (String) input;
-            int result = Integer.parseInt(inputString);
+            Integer.parseInt(inputString);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -1024,6 +1024,11 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public boolean isGroupFlagSet() {
         return YesNoFlag.NO.getValue().equals(this.getGroupFlagValue());
+    }
+
+    @Deprecated
+    public void setParentCustomerMeeting(MeetingBO parentCustomerMeeting) {
+        this.parentCustomerMeeting = parentCustomerMeeting;
     }
 
 }

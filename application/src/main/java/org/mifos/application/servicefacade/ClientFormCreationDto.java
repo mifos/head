@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 
@@ -48,12 +49,17 @@ public class ClientFormCreationDto {
     private final ClientRulesDto clientRules;
     private final List<SavingsDetailDto> savingsOfferings;
     private final List<PersonnelView> formedByPersonnelList;
+    private final MeetingBO parentCustomerMeeting;
 
     public ClientFormCreationDto(List<ValueListElement> salutations, List<ValueListElement> genders,
             List<ValueListElement> maritalStatuses, List<ValueListElement> citizenship,
             List<ValueListElement> ethinicity, List<ValueListElement> educationLevels,
             List<ValueListElement> businessActivity, List<ValueListElement> poverty,
-            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId, Short formedByPersonnelId, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees, List<PersonnelView> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings) {
+            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather,
+            List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId,
+            Short formedByPersonnelId, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees,
+            List<PersonnelView> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
+            MeetingBO parentCustomerMeeting) {
         this.salutations = salutations;
         this.genders = genders;
         this.maritalStatuses = maritalStatuses;
@@ -72,6 +78,7 @@ public class ClientFormCreationDto {
         this.applicableFees = applicableFees;
         this.formedByPersonnelList = formedByPersonnelList;
         this.savingsOfferings = savingsOfferings;
+        this.parentCustomerMeeting = parentCustomerMeeting;
     }
 
     public List<ValueListElement> getSalutations() {
@@ -144,5 +151,9 @@ public class ClientFormCreationDto {
 
     public List<PersonnelView> getFormedByPersonnelList() {
         return this.formedByPersonnelList;
+    }
+
+    public MeetingBO getParentCustomerMeeting() {
+        return this.parentCustomerMeeting;
     }
 }

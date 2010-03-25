@@ -1,22 +1,15 @@
 package org.mifos.customers.client.business;
 
 public class FamilyDetailDTO {
+
     private short relationship=0;
-
-    private String firstName=null;
-
-    private String middleName=null;
-
-    private String lastName=null;
-
-    private String dateOfBirthDD=null;
-
-    private String dateOfBirthMM=null;
-
-    private String dateOfBirthYY=null;
-
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private String dateOfBirthDD;
+    private String dateOfBirthMM;
+    private String dateOfBirthYY;
     private short gender=0;
-
     private short livingStatus=0;
 
     public short getRelationship() {

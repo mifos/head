@@ -418,8 +418,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
                         }
                     }
                 }
-                if (isErrorFound)
+                if (isErrorFound) {
                     break;
+                }
             }
         } catch (PageExpiredException pee) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
@@ -437,6 +438,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
         validateForDuplicatePeriodicFee(request, errors);
     }
 
+    @SuppressWarnings("unchecked")
     protected void validateForFeeRecurrence(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
         MeetingBO meeting = getCustomerMeeting(request);
@@ -449,8 +451,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
                     return;
                 }
             }
-            List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(
-                    CustomerConstants.ADDITIONAL_FEES_LIST, request);
+            List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
             for (FeeView selectedFee : getAdditionalFees()) {
                 for (FeeView fee : additionalFeeList) {
                     if (selectedFee.getFeeIdValue() != null && selectedFee.getFeeId().equals(fee.getFeeId())) {
@@ -498,10 +499,10 @@ public abstract class CustomerActionForm extends BaseActionForm {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
-        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(
-                CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
         for (FeeView selectedFee : getAdditionalFees()) {
             int count = 0;
             for (FeeView duplicateSelectedfee : getAdditionalFees()) {

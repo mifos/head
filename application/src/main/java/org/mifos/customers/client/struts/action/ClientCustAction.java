@@ -79,6 +79,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -178,33 +179,26 @@ public class ClientCustAction extends CustAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
+
+        // note doesn't complete reset all form values - some are retained
         clearActionForm(actionForm);
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        Short officeId = null;
+        Short officeId = actionForm.getOfficeIdValue();
+        Short groupFlag = actionForm.getGroupFlagValue();
+        String parentGroupId = actionForm.getParentGroupId();
+
         UserContext userContext = getUserContext(request);
+        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(userContext, groupFlag, officeId, parentGroupId);
 
-        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(
-                userContext, actionForm.isGroupFlagSet(), actionForm.getParentGroupId());
-
-        officeId = clientFormCreationDto.getOfficeId();
-        actionForm.setOfficeId(officeId.toString());
-        actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
-        actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
-
-        if (actionForm.isGroupFlagSet()) {
-
-            actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
-            SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto
-                    .getApplicableFees().getAdditionalFees(), request);
-            SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto
-                    .getPersonnelList(), request);
-
-        } else {
-            actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
-            SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto
-                    .getApplicableFees().getAdditionalFees(), request);
+        // FIXME - remove need for this after refactoring - create method
+//        actionForm.setParentGroup(parentCustomer);
+        if (clientFormCreationDto.getFormedByPersonnelId() != null) {
+            actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
+        actionForm.setOfficeId(clientFormCreationDto.getOfficeId().toString());
+
+        actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getSalutations(),
                 request);
@@ -225,14 +219,25 @@ public class ClientCustAction extends CustAction {
                 request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto
                 .getSpouseFather(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto
-                .getCustomFieldViews(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
 
-        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, clientFormCreationDto.getClientRules().isCenterHierarchyExists(), request);
-        SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, clientFormCreationDto.getClientRules().getMaxNumberOfFamilyMembers(), request);
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, clientFormCreationDto.getClientRules().isFamilyDetailsRequired(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
+
+        List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
+
+        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto.getApplicableFees().getAdditionalFees(), request);
+        actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
+
+
+        SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, savingsOfferings, request);
+
+        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(),
+                request);
+        SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules
+                .getMaximumNumberOfFamilyMembers(), request);
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),
+                request);
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -352,14 +357,14 @@ public class ClientCustAction extends CustAction {
          * warning otherwise if govt id is null or empty, and display name + dob combination is present in closed state
          * display warning
          */
-        if (StringUtils.isNotBlank(governmentId)
-                && clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(governmentId)) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
-        } else if (StringUtils.isBlank(governmentId)
-                && clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(actionForm.getClientName()
-                        .getDisplayName(), DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()))) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
-        }
+//        if (StringUtils.isNotBlank(governmentId)
+//                && clientPersistence.checkForDuplicacyOnGovtIdForClosedClients(governmentId)) {
+//            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+//        } else if (StringUtils.isBlank(governmentId)
+//                && clientPersistence.checkForDuplicacyForClosedClientsOnNameAndDob(actionForm.getClientName()
+//                        .getDisplayName(), DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()))) {
+//            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+//        }
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -547,13 +552,12 @@ public class ClientCustAction extends CustAction {
             checkPermissionForCreate(actionForm.getStatusValue().getValue(), getUserContext(request), null, officeId,
                     getUserContext(request).getId());
         }
-        List<SavingsOfferingBO> selectedOfferings1 = new ArrayList<SavingsOfferingBO>(
+        List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(
                 ClientConstants.MAX_OFFERINGS_SIZE);
-        List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
-                ClientConstants.SAVINGS_OFFERING_LIST, request);
+        List<SavingsDetailDto> offeringsList = getSavingsOfferingsFromSession(request);
         for (Short offeringId : actionForm.getSelectedOfferings()) {
             if (offeringId != null) {
-                for (SavingsOfferingBO savingsOffering : offeringsList) {
+                for (SavingsDetailDto savingsOffering : offeringsList) {
                     if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
                         selectedOfferings1.add(savingsOffering);
                     }
@@ -561,7 +565,9 @@ public class ClientCustAction extends CustAction {
             }
         }
 
-        List<SavingsOfferingBO> selectedOfferings = selectedOfferings1;
+        // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
+//        List<SavingsOfferingBO> selectedOfferings = selectedOfferings1;
+        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
         if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
             if (ClientRules.isFamilyDetailsRequired()) {
                 actionForm.setFamilyDateOfBirth();
@@ -630,6 +636,12 @@ public class ClientCustAction extends CustAction {
         client = null;
         actionForm.setEditFamily("notEdit");
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<SavingsDetailDto> getSavingsOfferingsFromSession(HttpServletRequest request)
+            throws PageExpiredException {
+        return (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
     }
 
     private void clearActionForm(ClientCustActionForm actionForm) {

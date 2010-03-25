@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -402,6 +404,14 @@ public class CustomerDaoHibernate implements CustomerDao {
     public List<ValueListElement> retrievePoverty() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("entityType", MasterConstants.POVERTY_STATUS);
+
+        return retrieveMasterData(queryParameters);
+    }
+
+    @Override
+    public List<ValueListElement> retrieveLivingStatus() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("entityType", MasterConstants.LIVING_STATUS);
 
         return retrieveMasterData(queryParameters);
     }
@@ -842,10 +852,58 @@ public class CustomerDaoHibernate implements CustomerDao {
         List<SavingsOfferingBO> savingOfferings = (List<SavingsOfferingBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
         for (SavingsOfferingBO savingsOffering : savingOfferings) {
 
-            SavingsDetailDto savingsDetailsWithOnlyPrdOfferingName = SavingsDetailDto.create(savingsOffering.getPrdOfferingName());
+            SavingsDetailDto savingsDetailsWithOnlyPrdOfferingName = SavingsDetailDto.create(savingsOffering.getPrdOfferingId(), savingsOffering.getPrdOfferingName());
             savingDetails.add(savingsDetailsWithOnlyPrdOfferingName);
         }
 
         return savingDetails;
+    }
+
+    @Override
+    public boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth) {
+
+        boolean result = doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
+        if (!result) {
+            result = checkForDuplicacyForClosedClientsOnNameAndDob(clientName, dateOfBirth);
+        }
+        return result;
+    }
+
+    private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
+        final Integer customerIdRepresentingClosedClient = Integer.valueOf(0);
+        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId, customerIdRepresentingClosedClient);
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId, final Integer customerId) {
+
+        if (StringUtils.isBlank(governmentId)) {
+            return false;
+        }
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
+        queryParameters.put("GOVT_ID", governmentId);
+        queryParameters.put("customerId", customerId);
+        queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
+        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return ((Long) queryResult.get(0)).intValue() > 0;
+    }
+
+    private boolean checkForDuplicacyForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth, Integer
+                .valueOf(0));
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth, final Integer customerId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("clientName", name);
+        queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
+        queryParameters.put("DATE_OFBIRTH", dateOfBirth.toDate());
+        queryParameters.put("customerId", customerId);
+        queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
+        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return ((Number) queryResult.get(0)).intValue() > 0;
     }
 }

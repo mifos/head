@@ -71,7 +71,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("6");
         form.setDateOfBirthMM("12");
         form.setDateOfBirthYY("1950");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(0, errors.size());
     }
 
@@ -79,7 +79,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("6");
         form.setDateOfBirthMM("12");
         form.setDateOfBirthYY("2108");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.FUTURE_DOB_EXCEPTION, message.getKey());
@@ -89,7 +89,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("20");
         form.setDateOfBirthYY("1980");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_DOB_EXCEPTION, message.getKey());
@@ -100,7 +100,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("02");
         form.setDateOfBirthYY("1qw0");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_DOB_EXCEPTION, message.getKey());
@@ -117,7 +117,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1999");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_AGE, message.getKey());
@@ -133,7 +133,7 @@ public class ClientCustActionFormTest extends TestCase {
         form.setDateOfBirthDD("2");
         form.setDateOfBirthMM("2");
         form.setDateOfBirthYY("1940");
-        form.validateDateOfBirth(null, errors);
+        form.validateDateOfBirth(errors);
         Assert.assertEquals(1, errors.size());
         ActionMessage message = (ActionMessage) errors.get().next();
         Assert.assertEquals(ClientConstants.INVALID_AGE, message.getKey());

@@ -22,6 +22,7 @@ package org.mifos.customers.persistence;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
@@ -111,6 +112,8 @@ public interface CustomerDao {
 
     List<ValueListElement> retrievePoverty();
 
+    List<ValueListElement> retrieveLivingStatus();
+
     CenterDisplayDto getCenterDisplayDto(Integer centerId, UserContext userContext);
 
     CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer centerId);
@@ -131,6 +134,8 @@ public interface CustomerDao {
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
+    boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth);
+
     // FIXME - #000003 - keithw - below are non customer related methods to be moved out
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
@@ -139,5 +144,6 @@ public interface CustomerDao {
     List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
 
     List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
+
 
 }

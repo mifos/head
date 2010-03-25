@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.exceptions.CustomerException;
@@ -36,7 +37,7 @@ public interface CustomerServiceFacade {
 
     GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, boolean isGroupFlatSet, String parentGroupId);
+    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag, Short officeId, String parentGroupId);
 
     CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
 
@@ -64,4 +65,8 @@ public interface CustomerServiceFacade {
     boolean isGroupHierarchyRequired();
 
     GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);
+
+    ClientFamilyDetailsDto retrieveClientFamilyDetails();
+
+    ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName);
 }

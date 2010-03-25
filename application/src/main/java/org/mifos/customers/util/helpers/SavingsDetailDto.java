@@ -31,14 +31,25 @@ public class SavingsDetailDto implements DataTransferObject {
     private final Short accountStateId;
     private final String accountStateName;
     private final Money savingsBalance;
+    private final Short prdOfferingId;
 
     public SavingsDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
             final String accountStateName, final Money outstandingBalance) {
+        this.prdOfferingId = null;
         this.globalAccountNum = globalAccountNum;
         this.prdOfferingName = prdOfferingName;
         this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
         this.savingsBalance = outstandingBalance;
+    }
+
+    private SavingsDetailDto(Short prdOfferingId, String prdOfferingName) {
+        this.prdOfferingId = prdOfferingId;
+        this.prdOfferingName = prdOfferingName;
+        this.globalAccountNum = null;
+        this.accountStateId = null;
+        this.accountStateName = null;
+        this.savingsBalance = null;
     }
 
     public String getGlobalAccountNum() {
@@ -61,8 +72,11 @@ public class SavingsDetailDto implements DataTransferObject {
         return this.savingsBalance;
     }
 
-    public static SavingsDetailDto create(String withPrdOfferingName) {
-        return new SavingsDetailDto("", withPrdOfferingName, null, "", null);
+    public static SavingsDetailDto create(Short withPrdOfferingId, String withPrdOfferingName) {
+        return new SavingsDetailDto(withPrdOfferingId, withPrdOfferingName);
     }
 
+    public Short getPrdOfferingId() {
+        return this.prdOfferingId;
+    }
 }
