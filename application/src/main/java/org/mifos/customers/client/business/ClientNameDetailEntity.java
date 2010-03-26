@@ -21,6 +21,7 @@
 package org.mifos.customers.client.business;
 
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Name;
 
@@ -115,7 +116,14 @@ public class ClientNameDetailEntity extends PersistentObject {
 
         return new ClientNameDetailView(this.nameType, this.salutation,
                 new StringBuilder(this.displayName), this.name.getFirstName(),
-                this.name.getMiddleName(), this.name.getLastName(), this.name.getSecondLastName());
+                this.name.getMiddleName(), this.name.getLastName(), this.name.getSecondLastName(), this.customerNameId);
     }
 
+    public boolean isNotClientNameType() {
+        return this.nameType.shortValue() != ClientConstants.CLIENT_NAME_TYPE;
+    }
+
+    public boolean matchesCustomerId(Integer customerNameIdToMatch) {
+        return this.customerNameId.equals(customerNameIdToMatch);
+    }
 }

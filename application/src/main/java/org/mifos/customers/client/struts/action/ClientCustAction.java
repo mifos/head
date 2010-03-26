@@ -26,7 +26,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,13 +37,11 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.business.SpouseFatherLookupEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
+import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientFormCreationDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoDto;
 import org.mifos.application.servicefacade.ClientRulesDto;
@@ -55,14 +53,10 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailEntity;
 import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
-import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
@@ -727,90 +721,68 @@ public class ClientCustAction extends CustAction {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         clearActionForm(actionForm);
         ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-
-        ClientBO clientBO = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());
-
-        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
-
-
-        SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, getCustomerBusinessService()
-                .retrieveMasterEntities(MasterConstants.LIVING_STATUS, getUserContext(request).getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, getCustomerBusinessService()
-                .retrieveMasterEntities(MasterConstants.GENDER, getUserContext(request).getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, getMasterEntities(
-                SpouseFatherLookupEntity.class, getUserContext(request).getLocaleId()), request);
-
-        ClientBO client1 = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-
-        if (client1.getPersonnel() != null) {
-            actionForm.setLoanOfficerId(client1.getPersonnel().getPersonnelId().toString());
-        }
-
-        actionForm.setCustomerId(client1.getCustomerId().toString());
-        actionForm.setGlobalCustNum(client1.getGlobalCustNum());
-        actionForm.setExternalId(client1.getExternalId());
-        actionForm.setAddress(client1.getAddress());
-
         UserContext userContext = getUserContext(request);
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldView> customFieldViews = CustomerCustomFieldEntity.toDto(client1.getCustomFields(),
-                fieldDefinitions, userContext);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldViews, request);
 
-        actionForm.setCustomFields(customFieldViews);
+        ClientFamilyInfoDto clientFamilyInfo = this.customerServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum(), userContext);
 
-        for (ClientNameDetailView nameView : createNameViews(client1.getNameDetailSet())) {
-            if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
-                actionForm.setClientName(nameView);
-            } else if (!ClientRules.isFamilyDetailsRequired()) {
-                actionForm.setSpouseName(nameView);
-            }
-        }
-        ClientDetailEntity customerDetail = client1.getCustomerDetail();
-        actionForm.setClientDetailView(new ClientDetailView(customerDetail.getEthinicity(), customerDetail
-                .getCitizenship(), customerDetail.getHandicapped(), customerDetail.getBusinessActivities(),
-                customerDetail.getMaritalStatus(), customerDetail.getEducationLevel(), customerDetail.getNumChildren(),
-                customerDetail.getGender(), customerDetail.getPovertyStatus()));
-        actionForm.setGovernmentId(client1.getGovernmentId());
-        actionForm.setDateOfBirth(DateUtils.makeDateAsSentFromBrowser(client1.getDateOfBirth()));
-        ClientBO client2 = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
+        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFamilyInfo.getClientDropdowns().getSpouseFather(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFamilyInfo.getCustomFieldViews(), request);
+
+        // customer specific
+        actionForm.setCustomerId(clientFamilyInfo.getCustomerDetail().getCustomerId().toString());
+        actionForm.setLoanOfficerId(clientFamilyInfo.getCustomerDetail().getLoanOfficerIdAsString());
+        actionForm.setGlobalCustNum(clientFamilyInfo.getCustomerDetail().getGlobalCustNum());
+        actionForm.setExternalId(clientFamilyInfo.getCustomerDetail().getExternalId());
+        actionForm.setAddress(clientFamilyInfo.getCustomerDetail().getAddress());
+
+        // client specific
+        actionForm.setGovernmentId(clientFamilyInfo.getClientDetail().getGovernmentId());
+        actionForm.setDateOfBirth(clientFamilyInfo.getClientDetail().getDateOfBirth());
         actionForm.initializeFamilyMember();
 
-        int familyMemberCount = 0;
-        for (ClientNameDetailEntity clientNameDetailEntity : client2.getNameDetailSet()) {
-            if (clientNameDetailEntity.getNameType().shortValue() != ClientConstants.CLIENT_NAME_TYPE) {
-                ClientNameDetailView nameView1 = createNameViewObject(clientNameDetailEntity);
-                actionForm.addFamilyMember();
-                actionForm.setFamilyPrimaryKey(familyMemberCount, clientNameDetailEntity.getCustomerNameId());
-                actionForm.setFamilyFirstName(familyMemberCount, nameView1.getFirstName());
-                actionForm.setFamilyMiddleName(familyMemberCount, nameView1.getMiddleName());
-                actionForm.setFamilyLastName(familyMemberCount, nameView1.getLastName());
-                actionForm.setFamilyRelationship(familyMemberCount, nameView1.getNameType());
-                for (ClientFamilyDetailEntity clientFamilyDetailEntity : client2.getFamilyDetailSet()) {
-                    if (clientNameDetailEntity.getCustomerNameId() == clientFamilyDetailEntity.getClientName()
-                            .getCustomerNameId()) {
-                        Calendar cal = Calendar.getInstance();
-                        // actionForm.setFamilyRelationship(i,clientFamilyDetailEntity.getRelationship());
-                        if (clientFamilyDetailEntity.getDateOfBirth() != null) {
-                            String date1 = DateUtils.makeDateAsSentFromBrowser(clientFamilyDetailEntity
-                                    .getDateOfBirth());
-                            java.util.Date date = DateUtils.getDate(date1);
-                            cal.setTime(date);
-                            actionForm.setFamilyDateOfBirthDD(familyMemberCount, String.valueOf(cal
-                                    .get(Calendar.DAY_OF_MONTH)));
-                            actionForm.setFamilyDateOfBirthMM(familyMemberCount, String
-                                    .valueOf(cal.get(Calendar.MONTH) + 1));
-                            actionForm
-                                    .setFamilyDateOfBirthYY(familyMemberCount, String.valueOf(cal.get(Calendar.YEAR)));
-                        }
+        actionForm.setClientDetailView(clientFamilyInfo.getClientDetail().getCustomerDetail());
+        actionForm.setClientName(clientFamilyInfo.getClientDetail().getClientName());
+        actionForm.setSpouseName(clientFamilyInfo.getClientDetail().getSpouseName());
+        actionForm.setCustomFields(clientFamilyInfo.getCustomFieldViews());
 
-                        actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailEntity.getGender());
-                        actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailEntity.getLivingStatus());
+        // client family specific
+        int familyMemberCount = 0;
+        for (ClientNameDetailView familyMember : clientFamilyInfo.getFamilyMembers()) {
+            actionForm.addFamilyMember();
+            actionForm.setFamilyPrimaryKey(familyMemberCount, familyMember.getCustomerNameId());
+            actionForm.setFamilyFirstName(familyMemberCount, familyMember.getFirstName());
+            actionForm.setFamilyMiddleName(familyMemberCount, familyMember.getMiddleName());
+            actionForm.setFamilyLastName(familyMemberCount, familyMember.getLastName());
+            actionForm.setFamilyRelationship(familyMemberCount, familyMember.getNameType());
+
+            Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetailsMap = clientFamilyInfo.getClientFamilyDetails();
+
+            Integer key = Integer.valueOf(familyMemberCount);
+            List<ClientFamilyDetailView> clientFamilyDetails = clientFamilyDetailsMap.get(key);
+            if (clientFamilyDetails != null) {
+                for (ClientFamilyDetailView clientFamilyDetailView : clientFamilyDetails) {
+                    Calendar cal = Calendar.getInstance();
+
+                    if (clientFamilyDetailView.getDateOfBirth() != null) {
+                        String date1 = DateUtils.makeDateAsSentFromBrowser(clientFamilyDetailView.getDateOfBirth());
+                        java.util.Date date = DateUtils.getDate(date1);
+                        cal.setTime(date);
+                        actionForm.setFamilyDateOfBirthDD(familyMemberCount, String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+                        actionForm.setFamilyDateOfBirthMM(familyMemberCount, String.valueOf(cal.get(Calendar.MONTH) + 1));
+                        actionForm.setFamilyDateOfBirthYY(familyMemberCount, String.valueOf(cal.get(Calendar.YEAR)));
                     }
+
+                    actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailView.getGender());
+                    actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailView.getLivingStatus());
                 }
-                familyMemberCount++;
             }
         }
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
+
         return mapping.findForward(ActionForwards.editFamilyInfo_success.toString());
     }
 
@@ -956,22 +928,6 @@ public class ClientCustAction extends CustAction {
         client.updateMfiInfo(personnel);
         client.setUserContext(getUserContext(request));
         return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
-    }
-
-    private List<ClientNameDetailView> createNameViews(Set<ClientNameDetailEntity> nameDetailSet) {
-        List<ClientNameDetailView> clientNameDetailViews = new ArrayList<ClientNameDetailView>();
-        for (ClientNameDetailEntity clientNameDetail : nameDetailSet) {
-            clientNameDetailViews.add(createNameViewObject(clientNameDetail));
-        }
-        return clientNameDetailViews;
-    }
-
-    private ClientNameDetailView createNameViewObject(ClientNameDetailEntity clientNameDetail) {
-        ClientNameDetailView nameView = new ClientNameDetailView(clientNameDetail.getNameType(), clientNameDetail
-                .getSalutation(), new StringBuilder(clientNameDetail.getDisplayName()), clientNameDetail.getName()
-                .getFirstName(), clientNameDetail.getName().getMiddleName(), clientNameDetail.getName().getLastName(),
-                clientNameDetail.getName().getSecondLastName());
-        return nameView;
     }
 
     private int calculateAge(Date date) {

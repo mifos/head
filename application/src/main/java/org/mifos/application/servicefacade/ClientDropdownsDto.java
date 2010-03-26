@@ -37,12 +37,14 @@ public class ClientDropdownsDto {
     private final List<ValueListElement> poverty;
     private final List<ValueListElement> handicapped;
     private final List<MasterDataEntity> spouseFather;
+    private final List<ValueListElement> livingStatus;
 
     public ClientDropdownsDto(List<ValueListElement> salutations, List<ValueListElement> genders,
             List<ValueListElement> maritalStatuses, List<ValueListElement> citizenship,
             List<ValueListElement> ethinicity, List<ValueListElement> educationLevels,
             List<ValueListElement> businessActivity, List<ValueListElement> poverty,
-            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather) {
+            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather, List<ValueListElement> livingStatus) {
+
         this.salutations = salutations;
         this.genders = genders;
         this.maritalStatuses = maritalStatuses;
@@ -53,6 +55,7 @@ public class ClientDropdownsDto {
         this.poverty = poverty;
         this.handicapped = handicapped;
         this.spouseFather = spouseFather;
+        this.livingStatus = livingStatus;
     }
 
     public List<ValueListElement> getSalutations() {
@@ -93,5 +96,9 @@ public class ClientDropdownsDto {
 
     public List<MasterDataEntity> getSpouseFather() {
         return this.spouseFather;
+    }
+
+    public List<ValueListElement> getLivingStatus() {
+        return this.livingStatus;
     }
 }

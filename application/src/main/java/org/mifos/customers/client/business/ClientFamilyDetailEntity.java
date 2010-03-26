@@ -7,22 +7,15 @@ import org.mifos.framework.business.PersistentObject;
 public class ClientFamilyDetailEntity extends PersistentObject {
 
     private final Integer customerFamilyId;
-
     private final ClientBO client;
-
     private final ClientNameDetailEntity clientName;
-
     private Short relationship;
-
     private Short gender;
-
     private Short livingStatus;
-
     private Date dateOfBirth;
 
     public ClientFamilyDetailEntity(ClientBO client,ClientNameDetailEntity clientName, ClientFamilyDetailView clientFamily){
         this.customerFamilyId=null;
-
         this.client=client;
         this.clientName=clientName;
         this.relationship=clientFamily.getRelationship();
@@ -40,9 +33,7 @@ public class ClientFamilyDetailEntity extends PersistentObject {
         this.gender=null;
         this.livingStatus=null;
         this.dateOfBirth=null;
-
     }
-
 
     public Short getRelationship() {
         return this.relationship;
@@ -95,6 +86,7 @@ public class ClientFamilyDetailEntity extends PersistentObject {
         this.setDateOfBirth(familyDetails.getDateOfBirth());
     }
 
-
-
+    public ClientFamilyDetailView toDto() {
+        return new ClientFamilyDetailView(relationship, gender, livingStatus, dateOfBirth);
+    }
 }

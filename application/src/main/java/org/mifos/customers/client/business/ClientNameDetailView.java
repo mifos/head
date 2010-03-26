@@ -29,19 +29,13 @@ import org.mifos.framework.business.util.Name;
 public class ClientNameDetailView {
 
     private Short nameType;
-
-    /* 47=Mr, 48=Mrs, 228=Ms (is this right?) */
     private Integer salutation;
-
     private StringBuilder displayName;
-
     private String firstName;
-
     private String middleName;
-
     private String lastName;
-
     private String secondLastName;
+    private Integer customerNameId;
 
     public ClientNameDetailView() {
         super();
@@ -49,11 +43,11 @@ public class ClientNameDetailView {
 
     public ClientNameDetailView(NameType nameType, Integer salutation, String firstName, String middleName,
             String lastName, String secondLastName) {
-        this(nameType.getValue(), salutation, new StringBuilder(), firstName, middleName, lastName, secondLastName);
+        this(nameType.getValue(), salutation, new StringBuilder(), firstName, middleName, lastName, secondLastName, null);
     }
 
     public ClientNameDetailView(Short nameType, Integer salutation, StringBuilder displayName, String firstName,
-            String middleName, String lastName, String secondLastName) {
+            String middleName, String lastName, String secondLastName, Integer customerNameId) {
         this.nameType = nameType;
         this.salutation = salutation;
         this.displayName = displayName;
@@ -61,6 +55,7 @@ public class ClientNameDetailView {
         this.middleName = middleName;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
+        this.customerNameId = customerNameId;
     }
 
     public void setDisplayName(StringBuilder displayName) {
@@ -148,6 +143,14 @@ public class ClientNameDetailView {
 
     public Name asName() {
         return new Name(getFirstName(), getMiddleName(), getSecondLastName(), getLastName());
+    }
+
+    public Integer getCustomerNameId() {
+        return this.customerNameId;
+    }
+
+    public void setCustomerNameId(Integer customerNameId) {
+        this.customerNameId = customerNameId;
     }
 
 }

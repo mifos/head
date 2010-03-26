@@ -22,7 +22,9 @@ package org.mifos.application.servicefacade;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
@@ -61,6 +63,9 @@ import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientFamilyDetailEntity;
+import org.mifos.customers.client.business.ClientFamilyDetailView;
+import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
@@ -258,7 +263,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<ValueListElement> businessActivity = this.customerDao.retrieveBusinessActivities();
         List<ValueListElement> poverty = this.customerDao.retrievePoverty();
         List<ValueListElement> handicapped = this.customerDao.retrieveHandicapped();
-        ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship, ethinicity, educationLevels, businessActivity, poverty, handicapped, spouseFather);
+        List<ValueListElement> livingStatus = this.customerDao.retrieveLivingStatus();
+
+        ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship, ethinicity, educationLevels, businessActivity, poverty, handicapped, spouseFather, livingStatus);
         return clientDropdowns;
     }
 
@@ -898,6 +905,58 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (ApplicationException e) {
             throw new MifosRuntimeException(e);
         } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum, UserContext userContext) {
+
+        try {
+            ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
+
+            List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+            List<CustomFieldView> customFieldViews = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
+                    fieldDefinitions, userContext);
+
+            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
+
+            ClientRulesDto clientRules = retrieveClientRules();
+
+            CustomerDetailDto customerDetail = client.toCustomerDetailDto();
+            ClientDetailDto clientDetail = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
+
+            List<ClientNameDetailView> familyMembers = new ArrayList<ClientNameDetailView>();
+            Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailView>>();
+            int familyMemberCount = 0;
+            for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
+
+                if (clientNameDetailEntity.isNotClientNameType()) {
+
+                    ClientNameDetailView nameView1 = clientNameDetailEntity.toDto();
+                    familyMembers.add(nameView1);
+
+                    for (ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()) {
+
+                        if (clientNameDetailEntity.matchesCustomerId(clientFamilyDetailEntity.getClientName().getCustomerNameId())) {
+                            ClientFamilyDetailView clientFamilyDetail = clientFamilyDetailEntity.toDto();
+
+                            final Integer mapKey = Integer.valueOf(familyMemberCount);
+                            if (clientFamilyDetails.containsKey(mapKey)) {
+                                clientFamilyDetails.get(mapKey).add(clientFamilyDetail);
+                            } else {
+                                List<ClientFamilyDetailView> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailView>();
+                                clientFamilyDetailsList.add(clientFamilyDetail);
+                                clientFamilyDetails.put(mapKey, clientFamilyDetailsList);
+                            }
+                        }
+                    }
+                    familyMemberCount++;
+                }
+            }
+
+            return new ClientFamilyInfoDto(clientDropdowns, customFieldViews, customerDetail, clientDetail, familyMembers, clientFamilyDetails);
+        } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }

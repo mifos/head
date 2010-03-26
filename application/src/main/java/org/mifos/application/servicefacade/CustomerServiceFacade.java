@@ -77,4 +77,6 @@ public interface CustomerServiceFacade {
 
     void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
             ClientCustActionForm actionForm);
+
+    ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum, UserContext userContext);
 }

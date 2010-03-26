@@ -7,22 +7,10 @@ import org.mifos.framework.util.helpers.DateUtils;
 public class ClientFamilyDetailView {
 
     private Short relationship;
-
     private Short gender;
-
     private Short livingStatus;
-
     private Date dateOfBirth;
-
     private String displayName;
-
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
 
     public ClientFamilyDetailView(Short relationship, Short gender, Short livingStatus, Date dateOfBirth) {
         super();
@@ -71,5 +59,11 @@ public class ClientFamilyDetailView {
         return null;
     }
 
+    public String getDisplayName() {
+        return this.displayName;
+    }
 
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 }
