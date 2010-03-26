@@ -81,4 +81,6 @@ public interface CustomerServiceFacade {
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum, UserContext userContext);
 
     void updateFamilyInfo(Integer customerId, UserContext userContext, Integer versionNo, ClientCustActionForm actionForm);
+
+    ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId, UserContext userContext);
 }

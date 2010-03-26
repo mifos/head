@@ -65,6 +65,7 @@ public class PersonnelPersistence extends Persistence {
     private final RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
     @SuppressWarnings("unchecked")
+    @Deprecated
     public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,
             Short userLevelId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();

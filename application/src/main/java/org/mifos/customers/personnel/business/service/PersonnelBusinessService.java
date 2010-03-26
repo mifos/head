@@ -29,10 +29,7 @@ import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -56,22 +53,8 @@ public class PersonnelBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
-    }
-
-    /**
-     * @deprecated - use {@link PersonnelDao#findActiveLoanOfficersForOffice(org.mifos.application.servicefacade.CenterCreation)}
-     */
-    @Deprecated
-    public List<PersonnelView> getActiveLoanOfficersInBranch(Short officeId, Short loggedInUserId,
-            Short loggedInUserLevelId) throws ServiceException {
-        try {
-            return new PersonnelPersistence().getActiveLoanOfficersInBranch(PersonnelLevel.LOAN_OFFICER.getValue(),
-                    officeId, loggedInUserId, loggedInUserLevelId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
@@ -101,7 +84,7 @@ public class PersonnelBusinessService implements BusinessService {
         }
     }
 
-    public List<SupportedLocalesEntity> getAllLocales() throws ServiceException {
+    public List<SupportedLocalesEntity> getAllLocales() {
         return new ApplicationConfigurationPersistence().getSupportedLocale();
     }
 

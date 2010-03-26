@@ -1358,8 +1358,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.editMfiInfo_success.toString());
-        Assert.assertNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
-
     }
 
     public void testPreviewEditMfiInfo() throws Exception {

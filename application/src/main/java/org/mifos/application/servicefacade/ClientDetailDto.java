@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 
 public class ClientDetailDto {
 
@@ -31,15 +32,28 @@ public class ClientDetailDto {
     private final ClientNameDetailView clientName;
     private final ClientNameDetailView spouseName;
     private final String clientDisplayName;
+    private final boolean groupFlagIsSet;
+    private final Integer parentGroupId;
+    private final boolean trained;
+    private final String trainedDate;
 
     public ClientDetailDto(String governmentId, String dateOfBirth, ClientDetailView customerDetail,
-            ClientNameDetailView clientName, ClientNameDetailView spouseName) {
+            ClientNameDetailView clientName, ClientNameDetailView spouseName, boolean groupFlagIsSet,
+            Integer parentGroupId, boolean trained, String trainedDate) {
         this.governmentId = governmentId;
         this.dateOfBirth = dateOfBirth;
         this.customerDetail = customerDetail;
         this.clientName = clientName;
-        this.clientDisplayName = clientName.getDisplayName();
+        if (clientName != null) {
+            this.clientDisplayName = clientName.getDisplayName();
+        } else {
+            this.clientDisplayName = "";
+        }
         this.spouseName = spouseName;
+        this.groupFlagIsSet = groupFlagIsSet;
+        this.parentGroupId = parentGroupId;
+        this.trained = trained;
+        this.trainedDate = trainedDate;
     }
 
     public ClientDetailDto(String governmentId, String dateOfBirth, String clientDisplayName) {
@@ -49,6 +63,10 @@ public class ClientDetailDto {
         this.customerDetail = null;
         this.clientName = null;
         this.spouseName = null;
+        this.groupFlagIsSet = false;
+        this.parentGroupId = null;
+        this.trained = false;
+        this.trainedDate = null;
     }
 
     public String getGovernmentId() {
@@ -73,5 +91,35 @@ public class ClientDetailDto {
 
     public String getClientDisplayName() {
         return this.clientDisplayName;
+    }
+
+    public boolean isGroupFlagIsSet() {
+        return this.groupFlagIsSet;
+    }
+
+    public Integer getParentGroupId() {
+        return this.parentGroupId;
+    }
+
+    public boolean isTrained() {
+        return this.trained;
+    }
+
+    public String getTrainedDate() {
+        return this.trainedDate;
+    }
+
+    public String getGroupFlagAsString() {
+        if (this.groupFlagIsSet) {
+            return ClientConstants.YES;
+        }
+        return ClientConstants.NO;
+    }
+
+    public String getTrainedAsString() {
+        if (this.trained) {
+            return ClientConstants.YES;
+        }
+        return ClientConstants.NO;
     }
 }

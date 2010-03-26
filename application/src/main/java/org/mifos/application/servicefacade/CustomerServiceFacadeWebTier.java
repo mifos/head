@@ -975,4 +975,29 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             throw new MifosRuntimeException(e);
         }
     }
+
+    @Override
+    public ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId, UserContext userContext) {
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
+
+        String groupDisplayName = "";
+        String centerDisplayName = "";
+        if (client.getParentCustomer() != null) {
+            groupDisplayName = client.getParentCustomer().getDisplayName();
+            if (client.getParentCustomer().getParentCustomer() != null) {
+                centerDisplayName = client.getParentCustomer().getParentCustomer().getDisplayName();
+            }
+        }
+
+        List<PersonnelView> loanOfficersList = new ArrayList<PersonnelView>();
+        if (!client.isClientUnderGroup()) {
+            CenterCreation centerCreation = new CenterCreation(client.getOffice().getOfficeId(), userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
+            loanOfficersList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+        }
+
+        CustomerDetailDto customerDetail = client.toCustomerDetailDto();
+        ClientDetailDto clientDetail = client.toClientDetailDto(ClientRules.isFamilyDetailsRequired());
+        return new ClientMfiInfoDto(groupDisplayName, centerDisplayName, loanOfficersList, customerDetail, clientDetail);
+    }
 }

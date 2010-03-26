@@ -43,6 +43,7 @@ import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientFormCreationDto;
+import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoDto;
 import org.mifos.application.servicefacade.ClientRulesDto;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
@@ -68,7 +69,6 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
@@ -819,58 +819,33 @@ public class ClientCustAction extends CustAction {
     public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
-
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         clearActionForm(actionForm);
+        UserContext userContext = getUserContext(request);
         ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         String clientSystemId = clientFromSession.getGlobalCustNum();
 
+        ClientMfiInfoDto mfiInfoDto = this.customerServiceFacade.retrieveMfiInfoForEdit(clientSystemId, userContext);
+
+        SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, mfiInfoDto.getLoanOfficersList(), request);
+
+        actionForm.setGroupDisplayName(mfiInfoDto.getGroupDisplayName());
+        actionForm.setCenterDisplayName(mfiInfoDto.getCenterDisplayName());
+
+        actionForm.setLoanOfficerId(mfiInfoDto.getCustomerDetail().getLoanOfficerIdAsString());
+        actionForm.setCustomerId(mfiInfoDto.getCustomerDetail().getCustomerId().toString());
+        actionForm.setGlobalCustNum(mfiInfoDto.getCustomerDetail().getGlobalCustNum());
+        actionForm.setExternalId(mfiInfoDto.getCustomerDetail().getExternalId());
+
+        actionForm.setGroupFlag(mfiInfoDto.getClientDetail().getGroupFlagAsString());
+        actionForm.setParentGroupId(mfiInfoDto.getClientDetail().getParentGroupId().toString());
+        actionForm.setTrained(mfiInfoDto.getClientDetail().getTrainedAsString());
+        actionForm.setTrainedDate(mfiInfoDto.getClientDetail().getTrainedDate());
+
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
-
-        if (client.getParentCustomer() != null) {
-            actionForm.setGroupDisplayName(client.getParentCustomer().getDisplayName());
-            if (client.getParentCustomer().getParentCustomer() != null) {
-                actionForm.setCenterDisplayName(client.getParentCustomer().getParentCustomer().getDisplayName());
-            }
-        }
-
-        clientFromSession = null;
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-        if (!client.isClientUnderGroup()) {
-            PersonnelBusinessService personnelService = new PersonnelBusinessService();
-
-            UserContext userContext = getUserContext(request);
-            List<PersonnelView> personnelList = personnelService.getActiveLoanOfficersInBranch(client.getOffice().getOfficeId(), userContext
-                    .getId(), userContext.getLevelId());
-            SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, personnelList, request);
-        }
-
-        ClientBO client1 = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        if (client1.getPersonnel() != null) {
-            actionForm.setLoanOfficerId(client1.getPersonnel().getPersonnelId().toString());
-            client1.getPersonnel().getDisplayName();
-        }
-        actionForm.setCustomerId(client1.getCustomerId().toString());
-        actionForm.setGlobalCustNum(client1.getGlobalCustNum());
-        actionForm.setExternalId(client1.getExternalId());
-        if (client1.isClientUnderGroup()) {
-            actionForm.setGroupFlag(ClientConstants.YES);
-            actionForm.setParentGroupId(client1.getParentCustomer().getCustomerId().toString());
-        } else {
-            actionForm.setGroupFlag(ClientConstants.NO);
-        }
-
-        if (client1.isTrained()) {
-            actionForm.setTrained(ClientConstants.YES);
-        } else {
-            actionForm.setTrained(ClientConstants.NO);
-        }
-
-        if (client1.getTrainedDate() != null) {
-            actionForm.setTrainedDate(DateUtils.makeDateAsSentFromBrowser(client1.getTrainedDate()));
-        }
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 
         return mapping.findForward(ActionForwards.editMfiInfo_success.toString());
     }

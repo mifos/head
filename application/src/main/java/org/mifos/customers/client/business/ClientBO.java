@@ -1027,7 +1027,10 @@ public class ClientBO extends CustomerBO {
 
         ClientDetailView customerDetailView = this.customerDetail.toDto();
 
-        String dateOfBirthAsString = DateUtils.makeDateAsSentFromBrowser(this.dateOfBirth);
+        String dateOfBirthAsString = "";
+        if (this.dateOfBirth != null) {
+            dateOfBirthAsString = DateUtils.makeDateAsSentFromBrowser(this.dateOfBirth);
+        }
 
         List<ClientNameDetailView> clientNameViews = toClientNameDetailViews();
 
@@ -1041,7 +1044,21 @@ public class ClientBO extends CustomerBO {
             }
         }
 
-        return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName);
+        boolean groupFlagIsSet = false;
+        Integer parentGroupId = Integer.valueOf(0);
+        if (isClientUnderGroup()) {
+            groupFlagIsSet = true;
+            parentGroupId = getParentCustomer().getCustomerId();
+        }
+
+        boolean trained = isTrained();
+
+        String trainedDate = "";
+        if (getTrainedDate() != null) {
+            trainedDate = DateUtils.makeDateAsSentFromBrowser(getTrainedDate());
+        }
+
+        return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName, groupFlagIsSet, parentGroupId, trained, trainedDate);
     }
 
     public void createOrUpdatePicture(Blob pictureAsBlob) {

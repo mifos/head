@@ -198,18 +198,6 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     }
 
-    public void testGetActiveLoanOfficersInBranch() throws ServiceException {
-        try {
-            TestObjectFactory.simulateInvalidConnection();
-            personnelBusinessService.getActiveLoanOfficersInBranch(PersonnelLevel.LOAN_OFFICER.getValue(), Short
-                    .valueOf("1"), Short.valueOf("1"));
-            Assert.fail();
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-
-        }
-    }
-
     public void testGetSupportedLocale() throws Exception {
         // asserting only on not null as suppored locales can be added by user
         Assert.assertNotNull(personnelBusinessService.getSupportedLocales());
