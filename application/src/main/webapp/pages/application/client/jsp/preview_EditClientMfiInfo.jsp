@@ -109,13 +109,13 @@ explanation of the license and how it is applied.
 									<fmt:message key="client.Centers">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
 									</fmt:message></span>
-									<span class="fontnormal"><c:out	value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /><br></span>
+									<span class="fontnormal"><c:out	value="${sessionScope.clientCustActionForm.centerDisplayName}" /><br></span>
 									</c:if>
 									<span class="fontnormalbold">
 									<fmt:message key="client.Centers">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 									</fmt:message></span>
-									  <span class="fontnormal"><c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" /></span>
+									  <span class="fontnormal"><c:out value="${sessionScope.clientCustActionForm.groupDisplayName}" /></span>
 									  <span class="fontnormal"><br></span>
 							</c:if> <br>
 						</tr>

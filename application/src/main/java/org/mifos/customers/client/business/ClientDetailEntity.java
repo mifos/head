@@ -28,31 +28,18 @@ import org.mifos.framework.business.PersistentObject;
 public class ClientDetailEntity extends PersistentObject {
 
     private final Integer customerId;
-
     private final ClientBO client;
-
     private Integer ethinicity;
-
     private Integer citizenship;
-
     private Integer handicapped;
-
     private Integer businessActivities;
-
     private Integer maritalStatus;
-
     private Integer educationLevel;
-
     private Short numChildren;
-
     private Short gender;
-
     private Date dateStarted;
-
     private String handicappedDetails;
-
     private Short povertyStatus;
-
     private Double povertyLikelihoodPercent;
 
     /**
@@ -210,5 +197,10 @@ public class ClientDetailEntity extends PersistentObject {
         this.povertyStatus = view.getPovertyStatus();
         this.dateStarted = null;
         this.handicappedDetails = null;
+    }
+
+    public ClientDetailView toDto() {
+        return new ClientDetailView(this.ethinicity, this.citizenship, this.handicapped, this.businessActivities,
+                this.maritalStatus, this.educationLevel, this.numChildren, this.gender, this.povertyStatus);
     }
 }

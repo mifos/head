@@ -185,6 +185,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
         MeetingBO parentCustomerMeeting = null;
         Short formedByPersonnelId = null;
+        String centerDisplayName = "";
         List<FeeBO> fees = new ArrayList<FeeBO>();
 
         if (YesNoFlag.YES.getValue().equals(groupFlag)) {
@@ -194,6 +195,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             if (parentCustomer.getPersonnel() != null) {
                 formedByPersonnelId = parentCustomer.getPersonnel().getPersonnelId();
+            }
+
+            if (parentCustomer.getParentCustomer() != null) {
+                centerDisplayName = parentCustomer.getParentCustomer().getDisplayName();
             }
 
             officeId = parentCustomer.getOffice().getOfficeId();
@@ -231,13 +236,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
 
         try {
-
-            boolean centerHierarchyExists = ClientRules.getCenterHierarchyExists();
-            int maxNumberOfFamilyMembers = ClientRules.getMaximumNumberOfFamilyMembers();
-            boolean familyDetailsRequired = ClientRules.isFamilyDetailsRequired();
-
-            ClientRulesDto clientRules = new ClientRulesDto(centerHierarchyExists, maxNumberOfFamilyMembers,
-                    familyDetailsRequired);
+            ClientRulesDto clientRules = retrieveClientRules();
 
             List<MasterDataEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
                     SpouseFatherLookupEntity.class, userContext.getLocaleId());
@@ -247,11 +246,40 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             return new ClientFormCreationDto(salutations, genders, maritalStatuses, citizenship, ethinicity,
                     educationLevels, businessActivity, poverty, handicapped, spouseFather, customFieldViews,
                     clientRules, officeId, formedByPersonnelId, personnelList, applicableFees, formedByPersonnel,
-                    savingsOfferings, parentCustomerMeeting);
+                    savingsOfferings, parentCustomerMeeting, centerDisplayName);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
 
+    @Override
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext) {
+
+        List<ValueListElement> salutations = this.customerDao.retrieveSalutations();
+        List<ValueListElement> genders = this.customerDao.retrieveGenders();
+        List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
+        List<ValueListElement> citizenship = this.customerDao.retrieveCitizenship();
+        List<ValueListElement> ethinicity = this.customerDao.retrieveEthinicity();
+        List<ValueListElement> educationLevels = this.customerDao.retrieveEducationLevels();
+        List<ValueListElement> businessActivity = this.customerDao.retrieveBusinessActivities();
+        List<ValueListElement> poverty = this.customerDao.retrievePoverty();
+        List<ValueListElement> handicapped = this.customerDao.retrieveHandicapped();
+
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+        List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
+
+        try {
+            List<MasterDataEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
+                    SpouseFatherLookupEntity.class, userContext.getLocaleId());
+
+            ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship, ethinicity, educationLevels, businessActivity, poverty, handicapped, spouseFather);
+
+            ClientRulesDto clientRules = retrieveClientRules();
+
+            return new ClientPersonalInfoDto(clientDropdowns, customFieldViews, clientRules);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     @Override
@@ -804,5 +832,15 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing);
+    }
+
+    private ClientRulesDto retrieveClientRules() {
+        boolean centerHierarchyExists = ClientRules.getCenterHierarchyExists();
+        int maxNumberOfFamilyMembers = ClientRules.getMaximumNumberOfFamilyMembers();
+        boolean familyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+
+        ClientRulesDto clientRules = new ClientRulesDto(centerHierarchyExists, maxNumberOfFamilyMembers,
+                familyDetailsRequired);
+        return clientRules;
     }
 }

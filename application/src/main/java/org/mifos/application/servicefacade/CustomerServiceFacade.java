@@ -69,4 +69,6 @@ public interface CustomerServiceFacade {
     ClientFamilyDetailsDto retrieveClientFamilyDetails();
 
     ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName);
+
+    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext);
 }

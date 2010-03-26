@@ -20,10 +20,8 @@
 
 package org.mifos.customers.struts.action;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,41 +32,24 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFlagMapping;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.struts.actionforms.CustActionForm;
-import org.mifos.customers.struts.actionforms.CustomerActionForm;
-import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -121,59 +102,6 @@ public class CustAction extends SearchAction {
     public ActionForward getBackToDetailsPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         return mapping.findForward(getCustomerDetailPage(((CustActionForm) form).getInput()));
-    }
-
-    protected void loadCustomFieldDefinitions(EntityType entityType, HttpServletRequest request)
-            throws ApplicationException {
-        MasterDataService masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.MasterDataService);
-        List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
-                .retrieveCustomFieldsDefinition(entityType);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
-    }
-
-    protected void loadFees(CustomerActionForm actionForm, HttpServletRequest request, FeeCategory feeCategory,
-            MeetingBO meeting) throws ApplicationException {
-        FeeBusinessService feeService = new FeeBusinessService();
-        List<FeeBO> fees = feeService.retrieveCustomerFeesByCategaroyType(feeCategory);
-        if (meeting != null) {
-            fees = removeMismatchPeriodicFee(fees, meeting);
-        }
-        List<FeeView> additionalFees = new ArrayList<FeeView>();
-        List<FeeView> defaultFees = new ArrayList<FeeView>();
-        for (FeeBO fee : fees) {
-            if (fee.isCustomerDefaultFee()) {
-                defaultFees.add(new FeeView(getUserContext(request), fee));
-            } else {
-                additionalFees.add(new FeeView(getUserContext(request), fee));
-            }
-        }
-        actionForm.setDefaultFees(defaultFees);
-        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
-    }
-
-    private List<FeeBO> removeMismatchPeriodicFee(List<FeeBO> feeList, MeetingBO meeting) {
-        List<FeeBO> fees = new ArrayList<FeeBO>();
-        for (FeeBO fee : feeList) {
-            if (fee.isOneTime() || (fee.isPeriodic() && isFrequencyMatches(fee, meeting))) {
-                fees.add(fee);
-            }
-        }
-        return fees;
-    }
-
-    private boolean isFrequencyMatches(FeeBO fee, MeetingBO meeting) {
-        return (fee.getFeeFrequency().getFeeMeetingFrequency().isMonthly() && meeting.isMonthly())
-                || (fee.getFeeFrequency().getFeeMeetingFrequency().isWeekly() && meeting.isWeekly());
-    }
-
-    protected void loadLoanOfficers(Short officeId, HttpServletRequest request) throws ApplicationException {
-        PersonnelBusinessService personnelService = new PersonnelBusinessService();
-
-        UserContext userContext = getUserContext(request);
-        List<PersonnelView> personnelList = personnelService.getActiveLoanOfficersInBranch(officeId, userContext
-                .getId(), userContext.getLevelId());
-        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, personnelList, request);
     }
 
     protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {

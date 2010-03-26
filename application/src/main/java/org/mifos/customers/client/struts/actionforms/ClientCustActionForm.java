@@ -77,6 +77,8 @@ public class ClientCustActionForm extends CustomerActionForm {
     private ClientNameDetailView spouseName;
 
     private String parentGroupId;
+    private String centerDisplayName;
+    private String groupDisplayName;
     private String governmentId;
     private String dateOfBirthDD;
     private String dateOfBirthMM;
@@ -982,5 +984,21 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public boolean isGroupFlagSet() {
         return YesNoFlag.NO.getValue().equals(this.getGroupFlagValue());
+    }
+
+    public String getCenterDisplayName() {
+        return this.centerDisplayName;
+    }
+
+    public void setCenterDisplayName(String centerDisplayName) {
+        this.centerDisplayName = centerDisplayName;
+    }
+
+    public String getGroupDisplayName() {
+        return this.groupDisplayName;
+    }
+
+    public void setGroupDisplayName(String groupDisplayName) {
+        this.groupDisplayName = groupDisplayName;
     }
 }

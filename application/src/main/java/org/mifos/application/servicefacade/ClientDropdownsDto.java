@@ -22,14 +22,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
 
-public class ClientFormCreationDto {
+public class ClientDropdownsDto {
 
     private final List<ValueListElement> salutations;
     private final List<ValueListElement> genders;
@@ -41,26 +37,12 @@ public class ClientFormCreationDto {
     private final List<ValueListElement> poverty;
     private final List<ValueListElement> handicapped;
     private final List<MasterDataEntity> spouseFather;
-    private final List<CustomFieldView> customFieldViews;
-    private final Short officeId;
-    private final Short formedByPersonnelId;
-    private final List<PersonnelView> personnelList;
-    private final CustomerApplicableFeesDto applicableFees;
-    private final ClientRulesDto clientRules;
-    private final List<SavingsDetailDto> savingsOfferings;
-    private final List<PersonnelView> formedByPersonnelList;
-    private final MeetingBO parentCustomerMeeting;
-    private final String centerDisplayName;
 
-    public ClientFormCreationDto(List<ValueListElement> salutations, List<ValueListElement> genders,
+    public ClientDropdownsDto(List<ValueListElement> salutations, List<ValueListElement> genders,
             List<ValueListElement> maritalStatuses, List<ValueListElement> citizenship,
             List<ValueListElement> ethinicity, List<ValueListElement> educationLevels,
             List<ValueListElement> businessActivity, List<ValueListElement> poverty,
-            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather,
-            List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId,
-            Short formedByPersonnelId, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees,
-            List<PersonnelView> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
-            MeetingBO parentCustomerMeeting, String centerDisplayName) {
+            List<ValueListElement> handicapped, List<MasterDataEntity> spouseFather) {
         this.salutations = salutations;
         this.genders = genders;
         this.maritalStatuses = maritalStatuses;
@@ -71,16 +53,6 @@ public class ClientFormCreationDto {
         this.poverty = poverty;
         this.handicapped = handicapped;
         this.spouseFather = spouseFather;
-        this.customFieldViews = customFieldViews;
-        this.clientRules = clientRules;
-        this.officeId = officeId;
-        this.formedByPersonnelId = formedByPersonnelId;
-        this.personnelList = personnelList;
-        this.applicableFees = applicableFees;
-        this.formedByPersonnelList = formedByPersonnelList;
-        this.savingsOfferings = savingsOfferings;
-        this.parentCustomerMeeting = parentCustomerMeeting;
-        this.centerDisplayName = centerDisplayName;
     }
 
     public List<ValueListElement> getSalutations() {
@@ -121,45 +93,5 @@ public class ClientFormCreationDto {
 
     public List<MasterDataEntity> getSpouseFather() {
         return this.spouseFather;
-    }
-
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
-    }
-
-    public Short getOfficeId() {
-        return this.officeId;
-    }
-
-    public Short getFormedByPersonnelId() {
-        return this.formedByPersonnelId;
-    }
-
-    public List<PersonnelView> getPersonnelList() {
-        return this.personnelList;
-    }
-
-    public CustomerApplicableFeesDto getApplicableFees() {
-        return this.applicableFees;
-    }
-
-    public ClientRulesDto getClientRules() {
-        return this.clientRules;
-    }
-
-    public List<SavingsDetailDto> getSavingsOfferings() {
-        return this.savingsOfferings;
-    }
-
-    public List<PersonnelView> getFormedByPersonnelList() {
-        return this.formedByPersonnelList;
-    }
-
-    public MeetingBO getParentCustomerMeeting() {
-        return this.parentCustomerMeeting;
-    }
-
-    public String getCenterDisplayName() {
-        return this.centerDisplayName;
     }
 }
