@@ -41,6 +41,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
@@ -774,6 +775,29 @@ public class CustomerServiceImpl implements CustomerService {
                 client.createOrUpdatePicture(pictureAsBlob);
             }
 
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+
+        try {
+            setInitialObjectForAuditLogging(client);
+            // FIXME - #000025 - keithw - pull out persistence/delete of primary keys??
+            client.updateFamilyInfo(clientFamilyInfoUpdate);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+        try {
+            StaticHibernateUtil.startTransaction();
             customerDao.save(client);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {

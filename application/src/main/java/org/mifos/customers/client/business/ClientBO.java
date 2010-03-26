@@ -46,6 +46,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
+import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -63,7 +64,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -456,13 +456,11 @@ public class ClientBO extends CustomerBO {
     /**
      * This method is called for client family and name details update
      */
-     public void updateFamilyInfo(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) throws PersistenceException {
+     public void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws PersistenceException {
 
-         updateFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
-         deleteFamilyAndNameDetails(primaryKeys);
-         insertFamilyAndNameDetails(primaryKeys,clientNameDetailView,clientFamilyDetailView);
-
-         new CustomerPersistence().createOrUpdate(this);
+         updateFamilyAndNameDetails(clientFamilyInfoUpdate);
+         deleteFamilyAndNameDetails(clientFamilyInfoUpdate.getFamilyPrimaryKey());
+         insertFamilyAndNameDetails(clientFamilyInfoUpdate);
      }
 
      /**
@@ -484,30 +482,28 @@ public class ClientBO extends CustomerBO {
 
      /**
       * This method is used to update the Client Family and Name Details
-      *
-      * @param primaryKeys
-      * @param clientNameDetailView
-      * @param clientFamilyDetailView
       */
-     public void updateFamilyAndNameDetails (final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) {
-         for(int key=0;key<primaryKeys.size();key++) {
-             // check for the primary key if that is not null update the data
-            if(primaryKeys.get(key)!=null){
-              //update name details
+     public void updateFamilyAndNameDetails (ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+
+         List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
+
+         for(int key=0; key < primaryKeys.size(); key++) {
+            if(primaryKeys.get(key) != null){
+                List<ClientNameDetailView> clientNameDetailView = clientFamilyInfoUpdate.getFamilyNames();
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
                     if(clientNameDetailEntity.getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
                         clientNameDetailEntity.updateNameDetails(clientNameDetailView.get(key));
-                    }// if clientNameDetailEntity.getCustomerNameId()
-                }//inner for clientNameDetailEntity
+                    }
+                }
 
-                //update family details
+                List<ClientFamilyDetailView> clientFamilyDetailView = clientFamilyInfoUpdate.getFamilyDetails();
                 for (ClientFamilyDetailEntity clientFamilyDetailEntity  : familyDetailSet){
-                    if(clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
+                    if(clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key).intValue()){
                         clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailView.get(key));
-                    }// if clientFamilyDetailEntity
-                }//end of for clientFamilyDetailEntity
-            }// end of if
-        }//End of for
+                    }
+                }
+            }
+        }
      }
 
      /**
@@ -549,18 +545,16 @@ public class ClientBO extends CustomerBO {
 
      /**
       * This method is used to insert the Client Family and Name Details
-      *
-      * @param primaryKeys
-      * @param clientNameDetailView
-      * @param clientFamilyDetailView
       */
-     public void insertFamilyAndNameDetails(final List<Integer> primaryKeys,final List<ClientNameDetailView> clientNameDetailView, final List<ClientFamilyDetailView> clientFamilyDetailView) {
-       //INSERT data
-         for(int i=0;i<primaryKeys.size();i++){
-             if(primaryKeys.get(i)==null){
-                 ClientNameDetailEntity nameDetail=new ClientNameDetailEntity(this,null,clientNameDetailView.get(i));
+     public void insertFamilyAndNameDetails(ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+
+         List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
+
+         for(int i=0; i < primaryKeys.size(); i++){
+             if( primaryKeys.get(i) == null){
+                 ClientNameDetailEntity nameDetail = new ClientNameDetailEntity(this,null,clientFamilyInfoUpdate.getFamilyNames().get(i));
                  nameDetailSet.add(nameDetail);
-                 familyDetailSet.add(new ClientFamilyDetailEntity(this,nameDetail,clientFamilyDetailView.get(i)));
+                 familyDetailSet.add(new ClientFamilyDetailEntity(this,nameDetail, clientFamilyInfoUpdate.getFamilyDetails().get(i)));
              }
          }
      }

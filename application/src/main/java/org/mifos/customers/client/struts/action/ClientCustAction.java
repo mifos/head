@@ -801,21 +801,17 @@ public class ClientCustAction extends CustAction {
     public ActionForward updateFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
-        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
-        client.setVersionNo(clientInSession.getVersionNo());
-        clientInSession = null;
-        client.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(client);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
+        UserContext userContext = getUserContext(request);
+        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
+        Integer customerId = clientInSession.getCustomerId();
+        this.customerServiceFacade.updateFamilyInfo(customerId, userContext, clientInSession.getVersionNo(), actionForm);
+
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
-        // client.updateFamilyInfo(actionForm.getRelativePrimaryKey(),actionForm.getFamilyNames(),actionForm.getFamilyDetails());
-        client.updateFamilyInfo(actionForm.getFamilyPrimaryKey(), actionForm.getFamilyNames(), actionForm
-                .getFamilyDetails());
-        client.setUserContext(getUserContext(request));
 
+        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         return mapping.findForward(ActionForwards.updateFamilyInfo_success.toString());
     }
 
