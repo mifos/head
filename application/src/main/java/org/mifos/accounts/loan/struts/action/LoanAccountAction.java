@@ -1434,13 +1434,14 @@ public class LoanAccountAction extends AccountAppAction {
             throws AccountException, ServiceException, PropertyNotFoundException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-            LoanBO individualLoan = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
+            Predicate predicate = new Predicate() {
 
                 public boolean evaluate(final Object object) {
-                    return ((LoanBO) object).getCustomer().getGlobalCustNum().equals(loanAccountDetail.getClientId());
+                    return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(loanAccountDetail.getClientId());
                 }
 
-            });
+            };
+            LoanBO individualLoan = (LoanBO) CollectionUtils.find(individualLoans, predicate);
             if (individualLoan == null) {
                 glimLoanUpdater.createIndividualLoan(loanAccountActionForm, loanBO, isRepaymentIndepOfMeetingEnabled,
                         loanAccountDetail);

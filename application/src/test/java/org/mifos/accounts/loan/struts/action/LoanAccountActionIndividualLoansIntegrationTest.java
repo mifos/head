@@ -71,7 +71,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         expect(loanMock.getAccountId()).andReturn(2).anyTimes();
         ClientBO customerMock = createMock(ClientBO.class);
         expect(loanMock.getCustomer()).andReturn(customerMock).anyTimes();
-        expect(customerMock.getGlobalCustNum()).andReturn("3").anyTimes();
+        expect(customerMock.getCustomerId()).andReturn(3).anyTimes();
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
         List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
         LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsViewHelper

@@ -42,7 +42,7 @@ public class GlimLoanUpdater {
             throws AccountException, ServiceException {
         LoanBO individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                 new CustomerBusinessService().getCustomer(Integer.valueOf(loanAccountDetail.getClientId())),
-                loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()), loan
+                loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount()), loan
                         .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                 loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
                 new ArrayList<CustomFieldView>(), true);
@@ -59,9 +59,14 @@ public class GlimLoanUpdater {
     void updateIndividualLoan(final LoanAccountDetailsViewHelper loanAccountDetail, LoanBO individualLoan)
             throws AccountException {
         String loanAmount = loanAccountDetail.getLoanAmount();
-        Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.toString().equals("-") ? loanAmount : "0");
-        individualLoan.updateLoan(loanMoney, !"-".equals(loanAccountDetail.getBusinessActivity()) ? Integer
+        Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
+        individualLoan.updateLoan(loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
                 .valueOf(loanAccountDetail.getBusinessActivity()) : 0);
+    }
+
+    private boolean businessActivityIsEmpty(LoanAccountDetailsViewHelper loanAccountDetail) {
+        String businessActivity = loanAccountDetail.getBusinessActivity();
+        return StringUtils.isBlank(businessActivity) || businessActivity.equals("-");
     }
 
     public void delete(LoanBO loan) throws AccountException {
