@@ -22,6 +22,7 @@ package org.mifos.customers.util.helpers;
 import java.util.Comparator;
 
 import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.util.helpers.ChapterNum;
 
 /**
@@ -32,16 +33,37 @@ public class CustomerDetailDto implements DataTransferObject {
     private String displayName;
     private String searchId;
     private String globalCustNum;
+    private final Short loanOfficerId;
+    private final String externalId;
+    private final Address address;
 
-    public CustomerDetailDto() {
+    protected CustomerDetailDto() {
         // Default empty constructor for hibernate
+        this.loanOfficerId = null;
+        this.externalId = null;
+        this.address = null;
     }
 
-    public CustomerDetailDto(final Integer id, final String displayName, final String searchId, final String globalCustNum) {
+    public CustomerDetailDto(final Integer id, final String displayName, final String searchId,
+            final String globalCustNum) {
         this.customerId = id;
         this.displayName = displayName;
         this.searchId = searchId;
         this.globalCustNum = globalCustNum;
+        this.loanOfficerId = null;
+        this.externalId = null;
+        this.address = null;
+    }
+
+    public CustomerDetailDto(final Integer id, final String displayName, final String searchId,
+            final String globalCustNum, Short loanOfficerId, String externalId, Address address) {
+        this.customerId = id;
+        this.displayName = displayName;
+        this.searchId = searchId;
+        this.globalCustNum = globalCustNum;
+        this.loanOfficerId = loanOfficerId;
+        this.externalId = externalId;
+        this.address = address;
     }
 
     public Integer getCustomerId() {
@@ -82,6 +104,25 @@ public class CustomerDetailDto implements DataTransferObject {
                 return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
             }
         };
+    }
+
+    public Short getLoanOfficerId() {
+        return this.loanOfficerId;
+    }
+
+    public String getLoanOfficerIdAsString() {
+        if (this.loanOfficerId != null) {
+            return this.loanOfficerId.toString();
+        }
+        return null;
+    }
+
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    public Address getAddress() {
+        return this.address;
     }
 
 }

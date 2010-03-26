@@ -23,21 +23,13 @@ package org.mifos.customers.client.business;
 public class ClientDetailView {
 
     private Integer ethinicity;
-
     private Integer citizenship;
-
     private Integer handicapped;
-
     private Integer businessActivities;
-
     private Integer maritalStatus;
-
     private Integer educationLevel;
-
     private Short numChildren;
-
     private Short gender;
-
     private Short povertyStatus;
 
     public static final int MARRIED = 66;

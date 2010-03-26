@@ -44,6 +44,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
@@ -1019,5 +1020,37 @@ public class ClientBO extends CustomerBO {
 
     public boolean isPending() {
         return this.getStatus().isClientPending();
+    }
+
+    public final List<ClientNameDetailView> toClientNameDetailViews() {
+
+        List<ClientNameDetailView> clientNameDetailViews = new ArrayList<ClientNameDetailView>();
+        for (ClientNameDetailEntity clientNameDetail : this.nameDetailSet) {
+
+            ClientNameDetailView clientNameDetailView = clientNameDetail.toDto();
+            clientNameDetailViews.add(clientNameDetailView);
+        }
+        return clientNameDetailViews;
+    }
+
+    public ClientDetailDto toClientDetailDto(boolean isFamilyDetailsRequired) {
+
+        ClientDetailView customerDetailView = this.customerDetail.toDto();
+
+        String dateOfBirthAsString = DateUtils.makeDateAsSentFromBrowser(this.dateOfBirth);
+
+        List<ClientNameDetailView> clientNameViews = toClientNameDetailViews();
+
+        ClientNameDetailView clientName = null;
+        ClientNameDetailView spouseName = null;
+        for (ClientNameDetailView nameView : clientNameViews) {
+            if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+                clientName = nameView;
+            } else if (!isFamilyDetailsRequired) {
+                spouseName = nameView;
+            }
+        }
+
+        return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName);
     }
 }

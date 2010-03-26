@@ -120,4 +120,11 @@ public class ClientNameDetailEntity extends PersistentObject {
         this.name = nameView.asName();
     }
 
+    public ClientNameDetailView toDto() {
+
+        return new ClientNameDetailView(this.nameType, this.salutation,
+                new StringBuilder(this.displayName), this.name.getFirstName(),
+                this.name.getMiddleName(), this.name.getLastName(), this.name.getSecondLastName());
+    }
+
 }

@@ -23,17 +23,22 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 
 public class ClientPersonalInfoDto {
 
     private final ClientDropdownsDto clientDropdowns;
     private final List<CustomFieldView> customFieldViews;
     private final ClientRulesDto clientRules;
+    private final CustomerDetailDto customerDetail;
+    private final ClientDetailDto clientDetail;
 
-    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules) {
+    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
         this.clientDropdowns = clientDropdowns;
         this.customFieldViews = customFieldViews;
         this.clientRules = clientRules;
+        this.customerDetail = customerDetailDto;
+        this.clientDetail = clientDetailDto;
     }
 
     public ClientDropdownsDto getClientDropdowns() {
@@ -46,5 +51,13 @@ public class ClientPersonalInfoDto {
 
     public ClientRulesDto getClientRules() {
         return this.clientRules;
+    }
+
+    public CustomerDetailDto getCustomerDetail() {
+        return this.customerDetail;
+    }
+
+    public ClientDetailDto getClientDetail() {
+        return this.clientDetail;
     }
 }

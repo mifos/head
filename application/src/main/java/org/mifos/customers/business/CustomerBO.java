@@ -64,6 +64,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.BusinessObject;
@@ -1373,4 +1374,21 @@ public abstract class CustomerBO extends BusinessObject {
     public void blacklist() {
         this.blackListed = YesNoFlag.YES.getValue();
     }
+
+    public CustomerDetailDto toCustomerDetailDto() {
+
+        Short loanOfficerId = null;
+        if (this.personnel != null) {
+            loanOfficerId = this.personnel.getPersonnelId();
+        }
+
+        Address address = null;
+        if (this.customerAddressDetail != null) {
+            address = this.customerAddressDetail.getAddress();
+        }
+
+        return new CustomerDetailDto(this.customerId, this.displayName, this.searchId, this.globalCustNum,
+                loanOfficerId, this.externalId, address);
+    }
+
 }
