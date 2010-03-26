@@ -54,6 +54,7 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
         this.customerDao = customerDao;
     }
 
+    // FIXME: why pass in levelId?
     @Override
     public CenterInformationDto getCenterInformationDto(String globalCustNum, UserContext userContext)
             throws ServiceException {

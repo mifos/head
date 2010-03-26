@@ -135,6 +135,7 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
+                <!-- FIXME: use "test" scope for this? -->
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>

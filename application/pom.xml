@@ -361,16 +361,6 @@
             <version>1.1.4</version>
         </dependency>
         <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>1.5.3</version>
-        </dependency>
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm-attrs</artifactId>
-            <version>1.5.3</version>
-        </dependency>
-        <dependency>
             <!--
                 This dependency overrides the earlier version of Rhino
                 included by spring modules (?). The earlier version of
@@ -614,6 +604,16 @@
             <groupId>org.mifos</groupId>
             <artifactId>mifos-spi</artifactId>
             <version>0.1a-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.4.0</version>
         </dependency>
     </dependencies>
     <build>
