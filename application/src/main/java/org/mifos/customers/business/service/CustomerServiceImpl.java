@@ -20,6 +20,8 @@
 
 package org.mifos.customers.business.service;
 
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +41,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.EntityType;
@@ -55,6 +58,7 @@ import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
+import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -745,11 +749,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (newStatus.isClientActive()) {
-
-//            boolean loanOfficerActive = false;
-//            boolean branchInactive = false;
-//            short officeId = client.getOffice().getOfficeId();
-
             if (client.getPersonnel() == null || client.getPersonnel().getPersonnelId() == null) {
                 throw new CustomerException(ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED);
             }
@@ -757,31 +756,36 @@ public class CustomerServiceImpl implements CustomerService {
             if (client.getCustomerMeeting() == null || client.getCustomerMeeting().getMeeting() == null) {
                 throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
             }
-
-// FIXME - keithw - commented out old validation which now appears at top of service method - delete when all update status work is confirmed to work ok.
-//            if (client.getPersonnel() != null) {
-//                try {
-//                    loanOfficerActive = new OfficePersistence().hasActivePeronnel(officeId);
-//                } catch (PersistenceException e) {
-//                    throw new CustomerException(e);
-//                }
-//            }
-//
-//            try {
-//                branchInactive = new OfficePersistence().isBranchInactive(officeId);
-//            } catch (PersistenceException e) {
-//                throw new CustomerException(e);
-//            }
-//            if (loanOfficerActive == false) {
-//                throw new CustomerException(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-//                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-//                                client.getUserContext()) });
-//            }
-//            if (branchInactive == true) {
-//                throw new CustomerException(CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-//                        new Object[] { MessageLookup.getInstance().lookup(ConfigurationConstants.BRANCHOFFICE,
-//                                client.getUserContext()) });
-//            }
         }
+    }
+
+    @Override
+    public void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+
+        setInitialObjectForAuditLogging(client);
+        client.updatePersonalInfo(personalInfo);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            InputStream pictureSteam = personalInfo.getPicture();
+
+            if (pictureSteam != null) {
+                Blob pictureAsBlob = new ClientPersistence().createBlob(pictureSteam);
+                client.createOrUpdatePicture(pictureAsBlob);
+            }
+
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    private void setInitialObjectForAuditLogging(Object object) {
+        StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
     }
 }

@@ -22,6 +22,7 @@ package org.mifos.customers.client.business;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -45,6 +46,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
+import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
@@ -71,6 +73,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -431,13 +434,23 @@ public class ClientBO extends CustomerBO {
                 .getValue());
     }
 
-    public void updatePersonalInfo(final String displayname, final String governmentId, final Date dateOfBirth) throws CustomerException {
-        validateForDuplicateNameOrGovtId(displayname, dateOfBirth, governmentId);
-        setDisplayName(displayname);
-        setGovernmentId(governmentId);
-        setDateOfBirth(dateOfBirth);
+    public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
 
-        super.update();
+        // FIXME - keithw - validation here or at service level?
+        this.governmentId = personalInfo.getGovernmentId();
+        this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+        ClientNameDetailView clientName = personalInfo.getClientNameDetails();
+        this.getClientName().updateNameDetails(clientName);
+        this.firstName = clientName.getFirstName();
+        this.lastName = clientName.getLastName();
+        this.secondLastName = clientName.getSecondLastName();
+
+        this.updateClientDetails(personalInfo.getClientDetail());
+        this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
+
+        setDisplayName(personalInfo.getClientDisplayName());
+        updateAddress(personalInfo.getAddress());
+        setUpdateDetails();
     }
 
     /**
@@ -636,26 +649,9 @@ public class ClientBO extends CustomerBO {
 
     public void updateClientDetails(final ClientDetailView clientDetailView) {
         customerDetail.updateClientDetails(clientDetailView);
-
     }
 
-    public void updatePicture(final InputStream picture) throws CustomerException {
-        if (customerPicture != null) {
-            try {
-                customerPicture.setPicture(getClientPersistence().createBlob(picture));
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        } else {
-            try {
-                this.customerPicture = new CustomerPictureEntity(this, getClientPersistence().createBlob(picture));
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
-        }
-
-    }
-
+    @Deprecated
     private void createPicture(final InputStream picture) throws CustomerException {
         try {
             if (picture != null && picture.available() > 0) {
@@ -1052,5 +1048,13 @@ public class ClientBO extends CustomerBO {
         }
 
         return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName);
+    }
+
+    public void createOrUpdatePicture(Blob pictureAsBlob) {
+        if (this.customerPicture != null) {
+            this.customerPicture.setPicture(pictureAsBlob);
+        } else {
+            this.customerPicture = new CustomerPictureEntity(this, pictureAsBlob);
+        }
     }
 }

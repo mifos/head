@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,10 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.FamilyDetailDTO;
+import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
@@ -850,6 +854,49 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             this.customerDao.validateGovernmentIdForClient(clientDetailDto.getGovernmentId(), clientDetailDto.getClientDisplayName(), dateOfBirth);
 
             return retrieveClientRules();
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
+            ClientCustActionForm actionForm) {
+
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(customerId);
+
+        try {
+            checkVersionMismatch(oldClientVersionNumber, client.getVersionNo());
+            client.setUserContext(userContext);
+
+            List<CustomFieldView> customFields = actionForm.getCustomFields();
+            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+
+            List<CustomerCustomFieldEntity> clientCustomFields = CustomerCustomFieldEntity.fromDto(customFields, client);
+
+            ClientNameDetailView spouseFather = null;
+            if (!ClientRules.isFamilyDetailsRequired()) {
+                spouseFather = actionForm.getSpouseName();
+            }
+
+            InputStream picture = null;
+            if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
+                picture = actionForm.getCustomerPicture();
+            }
+
+            Address address = actionForm.getAddress();
+            ClientNameDetailView clientNameDetails = actionForm.getClientName();
+            ClientDetailView clientDetail = actionForm.getClientDetailView();
+
+            String governmentId = actionForm.getGovernmentId();
+            String clientDisplayName = actionForm.getClientName().getDisplayName();
+            String dateOfBirth = actionForm.getDateOfBirth();
+
+            ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(clientCustomFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId, clientDisplayName, dateOfBirth);
+            this.customerService.updateClientPersonalInfo(client, personalInfo);
+
+        } catch (ApplicationException e) {
+            throw new MifosRuntimeException(e);
         } catch (InvalidDateException e) {
             throw new MifosRuntimeException(e);
         }

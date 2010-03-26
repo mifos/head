@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -84,7 +83,6 @@ import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -710,45 +708,15 @@ public class ClientCustAction extends CustAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException, InvalidDateException {
+            @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException {
+
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        Integer oldClientVersionNumber = clientInSession.getVersionNo();
+        Integer customerId = clientInSession.getCustomerId();
         UserContext userContext = getUserContext(request);
 
-        ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientInSession.getCustomerId());
-
-        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
-        client.setVersionNo(clientInSession.getVersionNo());
-        clientInSession = null;
-
-        client.setUserContext(userContext);
-        setInitialObjectForAuditLogging(client);
-
-        client.updateAddress(actionForm.getAddress());
-        convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(), userContext.getPreferredLocale());
-        for (CustomFieldView fieldView : actionForm.getCustomFields()) {
-            for (CustomerCustomFieldEntity fieldEntity : client.getCustomFields()) {
-                if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
-                    fieldEntity.setFieldValue(fieldView.getFieldValue());
-                }
-            }
-        }
-
-        client.getClientName().updateNameDetails(actionForm.getClientName());
-        if (!ClientRules.isFamilyDetailsRequired()) {
-            client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
-        }
-
-        client.setFirstName(actionForm.getClientName().getFirstName());
-        client.setLastName(actionForm.getClientName().getLastName());
-        client.setSecondLastName(actionForm.getClientName().getSecondLastName());
-        if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
-            client.updatePicture(actionForm.getCustomerPicture());
-        }
-        client.setUserContext(getUserContext(request));
-        client.updateClientDetails(actionForm.getClientDetailView());
-        client.updatePersonalInfo(actionForm.getClientName().getDisplayName(), actionForm.getGovernmentId(), DateUtils
-                .getDateAsSentFromBrowser(actionForm.getDateOfBirth()));
+        this.customerServiceFacade.updateClientPersonalInfo(userContext, oldClientVersionNumber, customerId, actionForm);
 
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }
@@ -761,9 +729,8 @@ public class ClientCustAction extends CustAction {
         ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         ClientBO clientBO = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());
-        clientFromSession = null;
 
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, clientBO, request);
 
 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, getCustomerBusinessService()

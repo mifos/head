@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -33,6 +34,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.security.util.UserContext;
 
 public interface CustomerService {
@@ -54,4 +56,6 @@ public interface CustomerService {
     void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus) throws CustomerException;
 
     void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, UserContext userContext, Short flagId, String notes) throws CustomerException;
+
+    void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo) throws InvalidDateException;
 }

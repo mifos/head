@@ -46,6 +46,7 @@ public class ClientDetailEntity extends PersistentObject {
      * Create a new instance based on a view.
      *
      */
+    @Deprecated
     public ClientDetailEntity(ClientBO client, ClientDetailView view) {
         super();
         this.customerId = null;

@@ -26,20 +26,12 @@ import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailEntity extends PersistentObject {
 
-    // Set/gotten by Hibernate
     private final Integer customerNameId;
-
     private final ClientBO client;
-
     private Short nameType;
-
-    /* 47=Mr, 48=Mrs, 228=Ms (is this right?) */
     private Integer salutation;
-
     private String secondMiddleName;
-
     private String displayName;
-
     private Name name;
 
     public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
@@ -115,7 +107,6 @@ public class ClientNameDetailEntity extends PersistentObject {
     public void updateNameDetails(ClientNameDetailView nameView) {
         this.nameType = nameView.getNameType();
         this.salutation = nameView.getSalutation();
-        // this.secondMiddleName = what?;
         this.displayName = nameView.getDisplayName();
         this.name = nameView.asName();
     }
