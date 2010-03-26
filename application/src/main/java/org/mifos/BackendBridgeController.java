@@ -34,7 +34,6 @@ import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.security.util.UserContext;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -92,7 +91,7 @@ public class BackendBridgeController extends AbstractController {
             user.setPreferredLocale(Localization.getInstance().getMainLocale());
             user.setLocaleId((short) 1);
             CenterInformationDto center = centerDetailsServiceFacade.getCenterInformationDto(idOfObjectToFetch,
-                    CustomerLevel.CENTER.getValue(), user);
+                    user);
             //response.getWriter().write(JSONObject.fromObject(center).toString());
             //ObjectMapper mapper = new ObjectMapper();
             jsonObjectMapper.writeValue(response.getWriter(), center);
