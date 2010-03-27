@@ -23,9 +23,6 @@ package org.mifos.customers.center.business.service;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
-/**
- *
- */
 public interface CenterDetailsServiceFacade {
     CenterInformationDto getCenterInformationDto(String globalCustNum, UserContext userContext)
             throws ServiceException;
