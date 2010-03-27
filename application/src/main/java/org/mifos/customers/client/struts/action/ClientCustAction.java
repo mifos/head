@@ -23,7 +23,6 @@ package org.mifos.customers.client.struts.action;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +34,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.CenterDetailsDto;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
@@ -50,9 +48,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
@@ -61,12 +57,8 @@ import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
@@ -78,7 +70,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -427,151 +418,16 @@ public class ClientCustAction extends CustAction {
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        // TODO - refactor create
-        ClientBO client = null;
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         UserContext userContext = getUserContext(request);
 
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-        List<CustomFieldView> customFields = actionForm.getCustomFields();
-        CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
-
-        Short personnelId = null;
-        Short officeId = null;
-
-        if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-
-            Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
-            CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
-
-            if (group.getPersonnel() != null) {
-                personnelId = group.getPersonnel().getPersonnelId();
-            }
-
-            if (group.getParentCustomer() != null) {
-                actionForm.setGroupDisplayName(group.getDisplayName());
-                if (group.getParentCustomer() != null) {
-                    actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
-                }
-            }
-
-            officeId = group.getOffice().getOfficeId();
-        } else {
-            personnelId = actionForm.getLoanOfficerIdValue();
-            officeId = actionForm.getOfficeIdValue();
-        }
-
-        if (personnelId != null) {
-            if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), getUserContext(request),
-            officeId, personnelId)) {
-                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-            }
-        } else {
-            if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), getUserContext(request),
-            officeId, getUserContext(request).getId())) {
-                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-            }
-        }
-
-        List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(ClientConstants.MAX_OFFERINGS_SIZE);
-
         List<SavingsDetailDto> offeringsList = getSavingsOfferingsFromSession(request);
-        for (Short offeringId : actionForm.getSelectedOfferings()) {
-            if (offeringId != null) {
-                for (SavingsDetailDto savingsOffering : offeringsList) {
-                    if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
-                        selectedOfferings1.add(savingsOffering);
-                    }
-                }
-            }
-        }
 
-        // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
-//        List<SavingsOfferingBO> selectedOfferings = selectedOfferings1;
-        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+        CenterDetailsDto clientDetails = this.customerServiceFacade.createClient(actionForm, meeting, userContext, offeringsList);
 
-        if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-
-            if (ClientRules.isFamilyDetailsRequired()) {
-                actionForm.setFamilyDateOfBirth();
-                actionForm.constructFamilyDetails();
-
-                client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                        .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
-                        .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
-                        selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
-                                .getFormedByPersonnelValue()), new OfficePersistence().getOffice(actionForm
-                                .getOfficeIdValue()), meeting, new PersonnelPersistence().getPersonnel(actionForm
-                                .getLoanOfficerIdValue()), DateUtils.getDateAsSentFromBrowser(actionForm
-                                .getDateOfBirth()), actionForm.getGovernmentId(), actionForm.getTrainedValue(),
-                        DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
-                        actionForm.getGroupFlagValue(), actionForm.getClientName(), null, actionForm
-                                .getClientDetailView(), actionForm.getCustomerPicture());
-
-                client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-
-            } else {
-
-                client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                        .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
-                        .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
-                        selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
-                                .getFormedByPersonnelValue()), new OfficePersistence().getOffice(actionForm
-                                .getOfficeIdValue()), meeting, new PersonnelPersistence().getPersonnel(actionForm
-                                .getLoanOfficerIdValue()), DateUtils.getDateAsSentFromBrowser(actionForm
-                                .getDateOfBirth()), actionForm.getGovernmentId(), actionForm.getTrainedValue(),
-                        DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
-                        actionForm.getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
-                        actionForm.getClientDetailView(), actionForm.getCustomerPicture());
-            }
-
-        } else {
-            Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
-            CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
-
-            if (group.getParentCustomer() != null) {
-                actionForm.setGroupDisplayName(group.getDisplayName());
-                if (group.getParentCustomer() != null) {
-                    actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
-                }
-            }
-
-            if (ClientRules.isFamilyDetailsRequired()) {
-                actionForm.setFamilyDateOfBirth();
-                actionForm.constructFamilyDetails();
-
-                client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                        .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
-                        .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
-                        selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
-                                .getFormedByPersonnelValue()), group.getOffice(), group, DateUtils
-                                .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm.getGovernmentId(),
-                        actionForm.getTrainedValue(), DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
-                        actionForm.getGroupFlagValue(), actionForm.getClientName(), null, actionForm
-                                .getClientDetailView(), actionForm.getCustomerPicture());
-
-                client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-            } else {
-
-                client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                        .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
-                        .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
-                        selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
-                                .getFormedByPersonnelValue()), group.getOffice(), group, DateUtils
-                                .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm.getGovernmentId(),
-                        actionForm.getTrainedValue(), DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
-                        actionForm.getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
-                        actionForm.getClientDetailView(), actionForm.getCustomerPicture());
-            }
-
-        }
-
-        new CustomerPersistence().saveCustomer(client);
-
-
-        actionForm.setCustomerId(client.getCustomerId().toString());
-        actionForm.setGlobalCustNum(client.getGlobalCustNum());
-        client = null;
+        actionForm.setCustomerId(clientDetails.getId().toString());
+        actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
         actionForm.setEditFamily("notEdit");
         return mapping.findForward(ActionForwards.create_success.toString());
     }

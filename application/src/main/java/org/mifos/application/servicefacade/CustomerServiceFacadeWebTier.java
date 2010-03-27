@@ -33,6 +33,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -69,6 +70,7 @@ import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
@@ -80,11 +82,13 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDto;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -409,6 +413,152 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             return new CenterDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
         } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public CenterDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList) {
+
+        try {
+            ClientBO client = null;
+            List<CustomFieldView> customFields = actionForm.getCustomFields();
+            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+
+            Short personnelId = null;
+            Short officeId = null;
+
+            if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+
+                Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
+                CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
+
+                if (group.getPersonnel() != null) {
+                    personnelId = group.getPersonnel().getPersonnelId();
+                }
+
+                if (group.getParentCustomer() != null) {
+                    actionForm.setGroupDisplayName(group.getDisplayName());
+                    if (group.getParentCustomer() != null) {
+                        actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
+                    }
+                }
+
+                officeId = group.getOffice().getOfficeId();
+            } else {
+                personnelId = actionForm.getLoanOfficerIdValue();
+                officeId = actionForm.getOfficeIdValue();
+            }
+
+            if (personnelId != null) {
+                if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), userContext, officeId, personnelId)) {
+                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                }
+            } else {
+                if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), userContext, officeId, userContext.getId())) {
+                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                }
+            }
+
+            List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(ClientConstants.MAX_OFFERINGS_SIZE);
+
+            for (Short offeringId : actionForm.getSelectedOfferings()) {
+                if (offeringId != null) {
+                    for (SavingsDetailDto savingsOffering : offeringsList) {
+                        if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
+                            selectedOfferings1.add(savingsOffering);
+                        }
+                    }
+                }
+            }
+
+            // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
+            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+
+            if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+
+                if (ClientRules.isFamilyDetailsRequired()) {
+                    actionForm.setFamilyDateOfBirth();
+                    actionForm.constructFamilyDetails();
+
+                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
+                            .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
+                            .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
+                            selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getFormedByPersonnelValue()), new OfficePersistence().getOffice(actionForm
+                                    .getOfficeIdValue()), meeting, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getLoanOfficerIdValue()), DateUtils.getDateAsSentFromBrowser(actionForm
+                                    .getDateOfBirth()), actionForm.getGovernmentId(), actionForm.getTrainedValue(),
+                            DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
+                            actionForm.getGroupFlagValue(), actionForm.getClientName(), null, actionForm
+                                    .getClientDetailView(), actionForm.getCustomerPicture());
+
+                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+
+                } else {
+
+                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
+                            .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
+                            .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
+                            selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getFormedByPersonnelValue()), new OfficePersistence().getOffice(actionForm
+                                    .getOfficeIdValue()), meeting, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getLoanOfficerIdValue()), DateUtils.getDateAsSentFromBrowser(actionForm
+                                    .getDateOfBirth()), actionForm.getGovernmentId(), actionForm.getTrainedValue(),
+                            DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
+                            actionForm.getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
+                            actionForm.getClientDetailView(), actionForm.getCustomerPicture());
+                }
+
+            } else {
+                Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
+                CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
+
+                if (group.getParentCustomer() != null) {
+                    actionForm.setGroupDisplayName(group.getDisplayName());
+                    if (group.getParentCustomer() != null) {
+                        actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
+                    }
+                }
+
+                if (ClientRules.isFamilyDetailsRequired()) {
+                    actionForm.setFamilyDateOfBirth();
+                    actionForm.constructFamilyDetails();
+
+                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
+                            .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
+                            .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
+                            selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getFormedByPersonnelValue()), group.getOffice(), group, DateUtils
+                                    .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm.getGovernmentId(),
+                            actionForm.getTrainedValue(), DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
+                            actionForm.getGroupFlagValue(), actionForm.getClientName(), null, actionForm
+                                    .getClientDetailView(), actionForm.getCustomerPicture());
+
+                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                } else {
+
+                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
+                            .getStatusValue(), actionForm.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
+                            .getMfiJoiningDate()), actionForm.getAddress(), customFields, actionForm.getFeesToApply(),
+                            selectedOfferings, new PersonnelPersistence().getPersonnel(actionForm
+                                    .getFormedByPersonnelValue()), group.getOffice(), group, DateUtils
+                                    .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm.getGovernmentId(),
+                            actionForm.getTrainedValue(), DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()),
+                            actionForm.getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
+                            actionForm.getClientDetailView(), actionForm.getCustomerPicture());
+                }
+
+            }
+
+            new CustomerPersistence().saveCustomer(client);
+
+            return new CenterDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        } catch (CustomerException e) {
             throw new MifosRuntimeException(e);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

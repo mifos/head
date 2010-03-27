@@ -20,6 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
@@ -28,6 +30,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
+import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.security.util.UserContext;
 
 public interface CustomerServiceFacade {
@@ -43,6 +46,8 @@ public interface CustomerServiceFacade {
     CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
 
     CenterDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws CustomerException;
+
+    CenterDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList);
 
     CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
 
