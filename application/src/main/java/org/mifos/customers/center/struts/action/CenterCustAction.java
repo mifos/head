@@ -20,8 +20,6 @@
 
 package org.mifos.customers.center.struts.action;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,8 +27,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.application.servicefacade.CenterDetailsDto;
@@ -43,17 +39,13 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -68,16 +60,7 @@ public class CenterCustAction extends CustAction {
     private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator
             .locateCustomerServiceFacade();
     private final CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
-
-    @Override
-    protected BusinessService getService() {
-        return new DummyBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
+    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("centerCustAction");
@@ -122,7 +105,7 @@ public class CenterCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
-        clearActionForm(actionForm);
+        actionForm.clearActionFormFields();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
         UserContext userContext = getUserContext(request);
@@ -193,7 +176,7 @@ public class CenterCustAction extends CustAction {
 
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
 
-        clearActionForm(actionForm);
+        actionForm.clearActionFormFields();
         CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         final Integer centerId = center.getCustomerId();
         UserContext userContext = getUserContext(request);
@@ -292,8 +275,7 @@ public class CenterCustAction extends CustAction {
         SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
         // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp
-        CenterBO center = (CenterBO) new CustomerBusinessService().getCustomer(centerInformationDto.getCenterDisplay()
-                .getCustomerId());
+        CenterBO center = (CenterBO) this.customerDao.findCustomerById(centerInformationDto.getCenterDisplay().getCustomerId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, center, request);
 
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -352,28 +334,5 @@ public class CenterCustAction extends CustAction {
             throws PageExpiredException {
         actionForm.setSearchString(null);
         cleanUpSearch(request);
-    }
-
-    private void clearActionForm(CenterCustActionForm actionForm) {
-        actionForm.setDefaultFees(new ArrayList<FeeView>());
-        actionForm.setAdditionalFees(new ArrayList<FeeView>());
-        actionForm.setCustomerPositions(new ArrayList<CustomerPositionView>());
-        actionForm.setCustomFields(new ArrayList<CustomFieldView>());
-        actionForm.setAddress(new Address());
-        actionForm.setDisplayName(null);
-        actionForm.setMfiJoiningDate(null);
-        actionForm.setGlobalCustNum(null);
-        actionForm.setCustomerId(null);
-        actionForm.setExternalId(null);
-        actionForm.setLoanOfficerId(null);
-    }
-
-    private class DummyBusinessService implements BusinessService {
-
-        @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
-            return null;
-        }
-
     }
 }

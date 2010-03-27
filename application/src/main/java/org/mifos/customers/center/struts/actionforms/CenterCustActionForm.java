@@ -20,18 +20,24 @@
 
 package org.mifos.customers.center.struts.actionforms;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.business.CustomerPositionView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
@@ -92,8 +98,7 @@ public class CenterCustActionForm extends CustomerActionForm {
     /*
      * Validation is done in the order that the fields appear on the UI.
      *
-     * @see
-     * org.mifos.customers.struts.actionforms.CustomerActionForm#
+     * @see org.mifos.customers.struts.actionforms.CustomerActionForm#
      * validateFields(javax.servlet.http.HttpServletRequest, java.lang.String)
      */
     @Override
@@ -123,7 +128,7 @@ public class CenterCustActionForm extends CustomerActionForm {
         return errors;
     }
 
-    protected void validateMfiJoiningDate(HttpServletRequest request, ActionErrors errors) {
+    protected void validateMfiJoiningDate(@SuppressWarnings("unused") HttpServletRequest request, ActionErrors errors) {
         if (ValidateMethods.isNullOrBlank(getMfiJoiningDate())) {
             errors.add(CustomerConstants.MFI_JOINING_DATE_MANDATORY, new ActionMessage(
                     CustomerConstants.MFI_JOINING_DATE_MANDATORY));
@@ -140,5 +145,19 @@ public class CenterCustActionForm extends CustomerActionForm {
     @Override
     protected MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException {
         return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+    }
+
+    public void clearActionFormFields() {
+        setDefaultFees(new ArrayList<FeeView>());
+        setAdditionalFees(new ArrayList<FeeView>());
+        setCustomerPositions(new ArrayList<CustomerPositionView>());
+        setCustomFields(new ArrayList<CustomFieldView>());
+        setAddress(new Address());
+        setDisplayName(null);
+        setMfiJoiningDate(null);
+        setGlobalCustNum(null);
+        setCustomerId(null);
+        setExternalId(null);
+        setLoanOfficerId(null);
     }
 }

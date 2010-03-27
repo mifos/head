@@ -21,12 +21,10 @@
 package org.mifos.customers.struts.action;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -34,26 +32,18 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.struts.actionforms.CustActionForm;
-import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -62,11 +52,11 @@ public class CustAction extends SearchAction {
 
     @Override
     protected BusinessService getService() {
-        return getCustomerBusinessService();
+        return new DummyBusinessService();
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -79,55 +69,34 @@ public class CustAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getClosedAccounts(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         logger.debug("In CustAction::getClosedAccounts()");
+        UserContext userContext = getUserContext(request);
+
+        // FIXME - #000022 - refactor away from customer business service
         Integer customerId = getIntegerValue(((CustActionForm) form).getCustomerId());
-        CustomerBusinessService customerService = getCustomerBusinessService();
+        CustomerBusinessService customerService = new CustomerBusinessService();
         List<AccountBO> loanAccountsList = customerService.getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT
                 .getValue());
         List<AccountBO> savingsAccountList = customerService.getAllClosedAccount(customerId,
                 AccountTypes.SAVINGS_ACCOUNT.getValue());
         for (AccountBO savingsBO : savingsAccountList) {
-            setLocaleIdForToRetrieveMasterDataName(savingsBO, request);
+            setLocaleIdForToRetrieveMasterDataName(savingsBO, userContext);
         }
         for (AccountBO loanBO : loanAccountsList) {
-            setLocaleIdForToRetrieveMasterDataName(loanBO, request);
+            setLocaleIdForToRetrieveMasterDataName(loanBO, userContext);
         }
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, loanAccountsList, request);
         SessionUtils.setCollectionAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST, savingsAccountList, request);
+
         return mapping.findForward(ActionForwards.getAllClosedAccounts.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward getBackToDetailsPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getBackToDetailsPage(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(getCustomerDetailPage(((CustActionForm) form).getInput()));
-    }
-
-    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
-        for (CustomFieldView customField : customFields) {
-            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNotBlank(customField.getFieldValue())) {
-                customField.convertDateToUniformPattern(locale);
-            }
-        }
-    }
-
-    protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
-            Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
-            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    protected boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
-            Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
-                recordOfficeId, recordLoanOfficerId);
-    }
-
-    protected CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
     }
 
     private String getCustomerDetailPage(String input) {
@@ -142,10 +111,18 @@ public class CustAction extends SearchAction {
         return forward;
     }
 
-    private void setLocaleIdForToRetrieveMasterDataName(AccountBO accountBO, HttpServletRequest request) {
-        accountBO.getAccountState().setLocaleId(getUserContext(request).getLocaleId());
+    private void setLocaleIdForToRetrieveMasterDataName(AccountBO accountBO, UserContext userContext) {
+        accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
         for (AccountFlagMapping accountFlagMapping : accountBO.getAccountFlags()) {
-            accountFlagMapping.getFlag().setLocaleId(getUserContext(request).getLocaleId());
+            accountFlagMapping.getFlag().setLocaleId(userContext.getLocaleId());
+        }
+    }
+
+    private class DummyBusinessService implements BusinessService {
+
+        @Override
+        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+            return null;
         }
     }
 }

@@ -48,10 +48,9 @@ import org.mifos.customers.group.business.service.GroupInformationDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -70,16 +69,7 @@ public class GroupCustAction extends CustAction {
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
     private final GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
-
-    @Override
-    protected BusinessService getService() {
-        return new DummyBusinessService();
-    }
+    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("groupCustAction");
@@ -226,8 +216,7 @@ public class GroupCustAction extends CustAction {
 
         // John W - 'BusinessKey' attribute linked to GroupBo is still used by other actions (e.g. meeting related)
         // further on and also breadcrumb.
-        GroupBO group = (GroupBO) getCustomerBusinessService().getCustomer(
-                groupInformationDto.getGroupDisplay().getCustomerId());
+        GroupBO group = (GroupBO) this.customerDao.findCustomerById(groupInformationDto.getGroupDisplay().getCustomerId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 
         logger.debug("Exiting GroupCustAction get method ");
@@ -404,15 +393,6 @@ public class GroupCustAction extends CustAction {
         String method = (String) request.getAttribute("methodCalled");
 
         return mapping.findForward(method + "_failure");
-
-    }
-
-    private class DummyBusinessService implements BusinessService {
-
-        @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
-            return null;
-        }
 
     }
 }

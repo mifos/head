@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -56,14 +55,13 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
 import org.mifos.customers.client.business.ClientNameDetailView;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
@@ -72,8 +70,6 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -82,6 +78,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -92,20 +89,6 @@ public class ClientCustAction extends CustAction {
     private final ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator
             .locateClientDetailsServiceFacade();
     private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
-
-    @Override
-    protected BusinessService getService() {
-        return getClientBusinessService();
-    }
-
-    private ClientBusinessService getClientBusinessService() {
-        return new ClientBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("clientCustAction");
@@ -169,8 +152,7 @@ public class ClientCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
-        // note doesn't complete reset all form values - some are retained
-        clearActionForm(actionForm);
+        actionForm.clearMostButNotAllFieldsOnActionForm();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
         Short officeId = actionForm.getOfficeIdValue();
@@ -366,7 +348,7 @@ public class ClientCustAction extends CustAction {
     public ActionForward retrievePicture(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        ClientBO clientBO = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientBO = getClientFromSession(request);
         InputStream in = clientBO.getCustomerPicture().getPicture().getBinaryStream();
 
         in.mark(0);
@@ -480,11 +462,15 @@ public class ClientCustAction extends CustAction {
         }
 
         if (personnelId != null) {
-            checkPermissionForCreate(actionForm.getStatusValue().getValue(), getUserContext(request), null, officeId,
-                    personnelId);
+            if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), getUserContext(request),
+            officeId, personnelId)) {
+                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            }
         } else {
-            checkPermissionForCreate(actionForm.getStatusValue().getValue(), getUserContext(request), null, officeId,
-                    getUserContext(request).getId());
+            if (!ActivityMapper.getInstance().isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), getUserContext(request),
+            officeId, getUserContext(request).getId())) {
+                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            }
         }
 
         List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(ClientConstants.MAX_OFFERINGS_SIZE);
@@ -628,9 +614,9 @@ public class ClientCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        clearActionForm(actionForm);
+        actionForm.clearMostButNotAllFieldsOnActionForm();
         UserContext userContext = getUserContext(request);
-        ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientFromSession = getClientFromSession(request);
         final String clientSystemId = clientFromSession.getGlobalCustNum();
 
         ClientPersonalInfoDto personalInfo = this.customerServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, userContext);
@@ -703,7 +689,7 @@ public class ClientCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientInSession = getClientFromSession(request);
         Integer oldClientVersionNumber = clientInSession.getVersionNo();
         Integer customerId = clientInSession.getCustomerId();
         UserContext userContext = getUserContext(request);
@@ -717,8 +703,8 @@ public class ClientCustAction extends CustAction {
     public ActionForward editFamilyInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        clearActionForm(actionForm);
-        ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        actionForm.clearMostButNotAllFieldsOnActionForm();
+        ClientBO clientFromSession = getClientFromSession(request);
         UserContext userContext = getUserContext(request);
 
         ClientFamilyInfoDto clientFamilyInfo = this.customerServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum(), userContext);
@@ -801,7 +787,7 @@ public class ClientCustAction extends CustAction {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         UserContext userContext = getUserContext(request);
-        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientInSession = getClientFromSession(request);
 
         Integer customerId = clientInSession.getCustomerId();
         this.customerServiceFacade.updateFamilyInfo(customerId, userContext, clientInSession.getVersionNo(), actionForm);
@@ -818,9 +804,9 @@ public class ClientCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        clearActionForm(actionForm);
+        actionForm.clearMostButNotAllFieldsOnActionForm();
         UserContext userContext = getUserContext(request);
-        ClientBO clientFromSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientFromSession = getClientFromSession(request);
 
         String clientSystemId = clientFromSession.getGlobalCustNum();
 
@@ -869,7 +855,7 @@ public class ClientCustAction extends CustAction {
 
         UserContext userContext = getUserContext(request);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        ClientBO clientInSession = getClientFromSession(request);
 
         Integer clientId = clientInSession.getCustomerId();
         Integer oldVersionNumber = clientInSession.getVersionNo();
@@ -884,49 +870,13 @@ public class ClientCustAction extends CustAction {
         return age;
     }
 
+    private ClientBO getClientFromSession(HttpServletRequest request) throws PageExpiredException {
+        return (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+    }
+
     @SuppressWarnings("unchecked")
     private List<SavingsDetailDto> getSavingsOfferingsFromSession(HttpServletRequest request)
             throws PageExpiredException {
         return (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
-    }
-
-    private void clearActionForm(ClientCustActionForm actionForm) {
-        actionForm.setDefaultFees(new ArrayList<FeeView>());
-        actionForm.setAdditionalFees(new ArrayList<FeeView>());
-        actionForm.setCustomFields(new ArrayList<CustomFieldView>());
-        actionForm.setFamilyNames(new ArrayList<ClientNameDetailView>());
-        actionForm.setFamilyDetails(new ArrayList<ClientFamilyDetailView>());
-        actionForm.setFamilyRelationship(new ArrayList<Short>());
-        actionForm.setFamilyFirstName(new ArrayList<String>());
-        actionForm.setFamilyMiddleName(new ArrayList<String>());
-        actionForm.setFamilyLastName(new ArrayList<String>());
-        actionForm.setFamilyDateOfBirthDD(new ArrayList<String>());
-        actionForm.setFamilyDateOfBirthMM(new ArrayList<String>());
-        actionForm.setFamilyDateOfBirthYY(new ArrayList<String>());
-        actionForm.setFamilyGender(new ArrayList<Short>());
-        actionForm.setFamilyLivingStatus(new ArrayList<Short>());
-        actionForm.initializeFamilyMember();
-        actionForm.addFamilyMember();
-        actionForm.setAddress(new Address());
-        actionForm.setDisplayName(null);
-        actionForm.setDateOfBirthDD(null);
-        actionForm.setDateOfBirthMM(null);
-        actionForm.setDateOfBirthYY(null);
-        actionForm.setGovernmentId(null);
-        actionForm.setMfiJoiningDate(null);
-        actionForm.setGlobalCustNum(null);
-        actionForm.setCustomerId(null);
-        actionForm.setExternalId(null);
-        actionForm.setLoanOfficerId(null);
-        actionForm.setFormedByPersonnel(null);
-        actionForm.setTrained(null);
-        actionForm.setTrainedDate(null);
-        actionForm.setClientName(new ClientNameDetailView());
-        actionForm.setSpouseName(new ClientNameDetailView());
-        actionForm.setClientDetailView(new ClientDetailView());
-        actionForm.setNextOrPreview("next");
-        for (int i = 0; i < actionForm.getSelectedOfferings().size(); i++) {
-            actionForm.getSelectedOfferings().set(i, null);
-        }
     }
 }
