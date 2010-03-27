@@ -567,7 +567,6 @@ public class ClientBO extends CustomerBO {
         for (AccountBO account : this.getAccounts()) {
             account.setPersonnel(this.getPersonnel());
         }
-        super.update();
     }
 
     public void transferToBranch(final OfficeBO officeToTransfer) throws CustomerException {

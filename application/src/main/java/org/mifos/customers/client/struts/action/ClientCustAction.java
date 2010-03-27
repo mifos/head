@@ -68,8 +68,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -869,35 +867,15 @@ public class ClientCustAction extends CustAction {
     public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
-        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
-        client.setVersionNo(clientInSession.getVersionNo());
-        clientInSession = null;
-        client.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(client);
+        UserContext userContext = getUserContext(request);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        client.setExternalId(actionForm.getExternalId());
+        ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue())) {
-            client.setTrained(true);
-        } else {
-            client.setTrained(false);
-        }
+        Integer clientId = clientInSession.getCustomerId();
+        Integer oldVersionNumber = clientInSession.getVersionNo();
 
-        client.setTrainedDate(DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
-        PersonnelBO personnel = null;
+        this.customerServiceFacade.updateClientMfiInfo(clientId, oldVersionNumber, userContext, actionForm);
 
-        if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-            if (actionForm.getLoanOfficerIdValue() != null) {
-                personnel = new PersonnelBusinessService().getPersonnel(actionForm.getLoanOfficerIdValue());
-            }
-        } else if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-            personnel = client.getPersonnel();
-        }
-
-        client.updateMfiInfo(personnel);
-        client.setUserContext(getUserContext(request));
         return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
     }
 

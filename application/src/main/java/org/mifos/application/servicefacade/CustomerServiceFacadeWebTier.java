@@ -1000,4 +1000,38 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         ClientDetailDto clientDetail = client.toClientDetailDto(ClientRules.isFamilyDetailsRequired());
         return new ClientMfiInfoDto(groupDisplayName, centerDisplayName, loanOfficersList, customerDetail, clientDetail);
     }
+
+    @Override
+    public void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, UserContext userContext, ClientCustActionForm actionForm) {
+
+        try {
+            ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientId);
+            checkVersionMismatch(oldVersionNumber, client.getVersionNo());
+
+            client.setUserContext(userContext);
+
+            boolean trained = false;
+            if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue())) {
+                trained = true;
+            }
+
+            DateTime trainedDate = new DateTime(DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
+
+            Short personnelId = null;
+            if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+                if (actionForm.getLoanOfficerIdValue() != null) {
+                    personnelId = actionForm.getLoanOfficerIdValue();
+                }
+            } else if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+                personnelId = client.getPersonnel().getPersonnelId();
+            }
+
+            ClientMfiInfoUpdate clientMfiInfoUpdate = new ClientMfiInfoUpdate(personnelId, actionForm.getExternalId(), trained, trainedDate);
+            this.customerService.updateClientMfiInfo(client, clientMfiInfoUpdate);
+        } catch (ApplicationException e) {
+            throw new MifosRuntimeException(e);
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
 }

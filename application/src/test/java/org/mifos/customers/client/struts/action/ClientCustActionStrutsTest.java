@@ -1318,8 +1318,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
         Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
 
-        Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
-
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")) {
                 matchValues(auditLogRecord, "loan officer", "mifos");

@@ -42,6 +42,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
+import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
@@ -795,6 +796,30 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public void updateClientMfiInfo(ClientBO client, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
+
+        client.setExternalId(clientMfiInfoUpdate.getExternalId());
+        client.setTrained(clientMfiInfoUpdate.isTrained());
+        client.setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+
+        setInitialObjectForAuditLogging(client);
+
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(clientMfiInfoUpdate.getPersonnelId());
+        client.updateMfiInfo(personnel);
 
         try {
             StaticHibernateUtil.startTransaction();
