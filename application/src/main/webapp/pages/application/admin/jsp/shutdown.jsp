@@ -55,7 +55,7 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.shutdown.timeout" bundle="adminUIResources" /></span></td>
 						<td>
                             <span class="fontnormal" id="shutdown.text.timeout">
-                                <mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" />
+                                <mifos:mifosnumbertext name="shutdownActionForm" property="shutdownTimeout" maxlength="7" />
                                 <mifos:mifoslabel name="admin.shutdown.timeout.unit" bundle="adminUIResources" />
                             </span>
                         </td>
