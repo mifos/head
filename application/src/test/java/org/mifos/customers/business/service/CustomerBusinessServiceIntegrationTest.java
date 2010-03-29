@@ -46,7 +46,6 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
@@ -67,7 +66,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerRecentActivityView;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -628,24 +626,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertEquals(1, customers.size());
     }
 
-    public void ignore_testGetListOfActiveCentersUnderUser() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
-        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-        List<CustomerDetailDto> customers = service.getListOfActiveCentersUnderUser(personnel);
-        Assert.assertNotNull(customers);
-        Assert.assertEquals(1, customers.size());
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "make center inactive");
-//        center.update();
-        StaticHibernateUtil.commitTransaction();
-
-        customers = service.getListOfActiveCentersUnderUser(personnel);
-        Assert.assertNotNull(customers);
-        Assert.assertEquals(0, customers.size());
-    }
-
     public void testFailureGetActiveCentersUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
@@ -671,24 +651,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertEquals(1, customers.size());
     }
 
-    public void ignore_testGetListOfGroupsUnderUser() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-        List<CustomerDetailDto> customers = service.getListOfGroupsUnderUser(personnel);
-        Assert.assertNotNull(customers);
-        Assert.assertEquals(1, customers.size());
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        group.changeStatus(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM, "make group closed");
-//        group.update();
-        StaticHibernateUtil.commitTransaction();
-
-        customers = service.getListOfGroupsUnderUser(personnel);
-        Assert.assertNotNull(customers);
-        Assert.assertEquals(0, customers.size());
-    }
     public void testFailuregetGroupsUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
@@ -719,15 +681,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         List<CustomerBO> center = service.getCustomersByLevelId(Short.parseShort("3"));
         Assert.assertNotNull(center);
         Assert.assertEquals(1, client.size());
-
-    }
-
-    private AccountBO getLoanAccount(CustomerBO customer, AccountState accountState, MeetingBO meeting,
-            String offeringName, String shortName, MifosCurrency currency) {
-        Date startDate = new Date(System.currentTimeMillis());
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(offeringName, shortName, startDate, meeting,
-                currency);
-        return TestObjectFactory.createBasicLoanAccount(customer, accountState, startDate, loanOffering);
 
     }
 

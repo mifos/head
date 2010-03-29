@@ -178,8 +178,9 @@ public class CustomerBusinessService implements BusinessService {
         int count = 0;
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
-            if (++count == 3)
+            if (++count == 3) {
                 break;
+            }
         }
         return customerActivityViewList;
     }
@@ -205,7 +206,7 @@ public class CustomerBusinessService implements BusinessService {
         }
 
     }
-    
+
     public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws ServiceException {
         try {
             return new CustomerPersistence().getStatusChecklist(statusId, customerLevelId);
@@ -277,8 +278,9 @@ public class CustomerBusinessService implements BusinessService {
 
     public void checkPermissionForStatusChange(Short newState, UserContext userContext, Short flagSelected,
             Short recordOfficeId, Short recordLoanOfficerId) throws ServiceException {
-        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId))
+        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
     }
 
     public boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
@@ -494,18 +496,21 @@ public class CustomerBusinessService implements BusinessService {
         customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
         customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
         Money amount = removeSign(customerActivityEntity.getAmount());
-        if (amount.isZero())
+        if (amount.isZero()) {
             customerRecentActivityView.setAmount("-");
-        else
+        } else {
             customerRecentActivityView.setAmount(amount.toString());
-        if (customerActivityEntity.getPersonnel() != null)
+        }
+        if (customerActivityEntity.getPersonnel() != null) {
             customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+        }
         return customerRecentActivityView;
     }
 
     private Money removeSign(Money amount) {
-        if (amount != null && amount.isLessThanZero())
+        if (amount != null && amount.isLessThanZero()) {
             return amount.negate();
+        }
         return amount;
     }
 
@@ -556,23 +561,10 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public List<CustomerDetailDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
-        return new CustomerPersistence().getListOfActiveCentersUnderUser(personnel);
-    }
-
-    public List<CustomerDetailDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
-        return new CustomerPersistence().getListOfGroupsUnderUser(personnel);
-    }
-
-    public Integer getActiveAndOnHoldClientCountForGroup(String searchId, Short branchId) throws ServiceException {
-
-        try {
-            return customerPersistence.getActiveAndOnHoldChildrenCount(searchId, branchId, CustomerLevel.CLIENT);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
+    /**
+     * FIXME - move to customerDao
+     */
+    @Deprecated
     public List<CustomerDetailDto> getClientsOtherThanClosedAndCancelledForGroup(final String searchId,
             final Short branchId) throws ServiceException {
 

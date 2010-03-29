@@ -136,6 +136,12 @@ public interface CustomerDao {
 
     boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth);
 
+    Integer getActiveAndOnHoldClientCountForGroup(String searchId, Short branchId);
+
+    List<CustomerDetailDto> findActiveCentersUnderUser(PersonnelBO personnel);
+
+    List<CustomerDetailDto> findGroupsUnderUser(PersonnelBO personnel);
+
     // FIXME - #000003 - keithw - below are non customer related methods to be moved out
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
@@ -144,6 +150,4 @@ public interface CustomerDao {
     List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
 
     List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
-
-
 }

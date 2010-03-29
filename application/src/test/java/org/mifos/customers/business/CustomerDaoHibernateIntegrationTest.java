@@ -40,6 +40,9 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 
@@ -57,6 +60,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
 
     // collaborators
     private final GenericDao genericDao = new GenericDaoHibernate();
+    private final PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
 
     // test data
     private MeetingBO weeklyMeeting;
@@ -157,5 +161,23 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertThat(activeGroup, is(notNullValue()));
         assertThat(activeGroup.getParentCustomer(), is(notNullValue()));
         assertThat(activeGroup.getParentCustomer().getDisplayName(), is(notNullValue()));
+    }
+
+    public void testShouldFindActiveCenters() {
+
+        // exercise test
+        List<CustomerDetailDto> activeCenters = customerDao.findActiveCentersUnderUser(center.getPersonnel());
+
+        // verification
+        assertThat(activeCenters.size(), is(1));
+    }
+
+    public void testShouldFindActiveGroups() {
+
+        // exercise test
+        List<CustomerDetailDto> activeGroups = customerDao.findGroupsUnderUser(group.getPersonnel());
+
+        // verification
+        assertThat(activeGroups.size(), is(1));
     }
 }

@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
@@ -39,6 +40,7 @@ import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -47,11 +49,9 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -63,6 +63,8 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustSearchAction extends SearchAction {
+
+    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("custSearchAction");
@@ -81,12 +83,25 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
 
         if (actionForm.getLoanOfficerId() != null) {
-            loadLoanOfficerCustomerList(new PersonnelBusinessService().getPersonnel(getShortValue(actionForm
-                    .getLoanOfficerId())), request);
+            PersonnelBO personnel = new PersonnelBusinessService().getPersonnel(getShortValue(actionForm
+                    .getLoanOfficerId()));
+            List<CustomerDetailDto> customerList = null;
+
+            boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
+
+            if (isCenterHierarchyExist) {
+                customerList = this.customerDao.findActiveCentersUnderUser(personnel);
+            } else {
+                customerList = this.customerDao.findGroupsUnderUser(personnel);
+            }
+            SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
+            SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
+            SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER,
+                    request);
         }
         String officeName = null;
         if (actionForm.getOfficeId() != null && !actionForm.getOfficeId().equals("")) {
@@ -106,7 +121,7 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(conditionToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         if (actionForm.getOfficeId() != null) {
             List<PersonnelBO> personnelList = new PersonnelBusinessService()
@@ -131,7 +146,7 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward loadAllBranches(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         actionForm.setOfficeId("0");
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
@@ -144,7 +159,7 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward getHomePage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         actionForm.setSearchString(null);
 
@@ -169,7 +184,7 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward loadSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         actionForm.setSearchString(null);
         if (request.getParameter("perspective") != null) {
@@ -181,7 +196,7 @@ public class CustSearchAction extends SearchAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward loadMainSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String forward = null;
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
         actionForm.setSearchString(null);
@@ -237,10 +252,8 @@ public class CustSearchAction extends SearchAction {
         Short loggedUserLevel = getUserContext(request).getLevelId();
         if (loggedUserLevel.equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
             return loadMainSearch(mapping, form, request, response);
-        } else {
-            return preview(mapping, form, request, response);
         }
-
+        return preview(mapping, form, request, response);
     }
 
     private String loadMasterData(Short userId, HttpServletRequest request, CustSearchActionForm form) throws Exception {
@@ -251,25 +264,6 @@ public class CustSearchAction extends SearchAction {
         }
         return loadNonLoanOfficer(personnel, request, form);
 
-    }
-
-    private String loadLoanOfficerCustomerList(PersonnelBO personnel, HttpServletRequest request) throws Exception {
-
-        List<CustomerDetailDto> customerList = null;
-
-        boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
-
-        if (isCenterHierarchyExist) {
-            customerList = getCustomerBusinessService().getListOfActiveCentersUnderUser(personnel);
-        } else {
-            customerList = getCustomerBusinessService().getListOfGroupsUnderUser(personnel);
-        }
-        SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST, customerList, request);
-        SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist, request);
-        SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD, CustomerSearchConstants.LOADFORWARDLOANOFFICER,
-                request);
-
-        return CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS;
     }
 
     private String loadLoanOfficer(PersonnelBO personnel, HttpServletRequest request) throws Exception {
@@ -305,15 +299,14 @@ public class CustSearchAction extends SearchAction {
                     CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
             form.setOfficeId(personnel.getOffice().getOfficeId().toString());
             return CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS;
-        } else {
-            SessionUtils.setCollectionAttribute(CustomerSearchConstants.OFFICESLIST, new OfficeBusinessService()
-                    .getActiveBranchesUnderUser(personnel), request);
-            SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
-                    CustomerSearchConstants.LOADFORWARDNONBRANCHOFFICE, request);
-
-            return CustomerSearchConstants.LOADFORWARDOFFICE_SUCCESS;
         }
 
+        SessionUtils.setCollectionAttribute(CustomerSearchConstants.OFFICESLIST, new OfficeBusinessService()
+                .getActiveBranchesUnderUser(personnel), request);
+        SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
+                CustomerSearchConstants.LOADFORWARDNONBRANCHOFFICE, request);
+
+        return CustomerSearchConstants.LOADFORWARDOFFICE_SUCCESS;
     }
 
     @Override
@@ -349,12 +342,12 @@ public class CustSearchAction extends SearchAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
     protected CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+        return new CustomerBusinessService();
     }
 
     @Override

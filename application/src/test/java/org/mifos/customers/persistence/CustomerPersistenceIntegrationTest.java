@@ -77,7 +77,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -432,23 +431,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.cleanUp(client4);
     }
 
-    public void testGetListOfClientsUnderGroupOtherThanClosedAndCancelled() throws Exception {
-        CustomerPersistence customerPersistence = new CustomerPersistence();
-        center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
-        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group);
-        ClientBO client4 = TestObjectFactory.createClient("client4", CustomerStatus.CLIENT_PENDING, group);
-
-        List<CustomerDetailDto> customerList = customerPersistence.getListOfClientsUnderGroupOtherThanClosedAndCancelled(group.getSearchId(), group.getOffice()
-                .getOfficeId());
-        Assert.assertEquals(2, customerList.size());
-
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
-    }
     public void testGetAllChildern() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         center = createCenter();

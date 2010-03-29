@@ -88,6 +88,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
 
         CustomerAddressDto groupAddress = this.customerDao.getCustomerAddressDto(group);
 
+//        this.customerDao.findClientsThatAreNotCancelledOrClosed(searchId, branchId);
         List<CustomerDetailDto> clients = this.customerBusinessService.getClientsOtherThanClosedAndCancelledForGroup(
                 searchId, branchId);
 
@@ -97,7 +98,6 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
 
         List<CustomerFlagDto> customerFlags = this.customerBusinessService.getCustomerFlagDto(group.getCustomerFlags());
 
-        // List<LoanDetailDto> loanDetail = getCustomerBusinessService().getLoanDetailDto(groupId, userContext);
         List<LoanDetailDto> loanDetail = this.customerBusinessService.getLoanDetailDto(group.getOpenLoanAccounts());
 
         List<SavingsDetailDto> savingsDetail = this.customerDao.getSavingsDetailDto(groupId, userContext);
@@ -120,8 +120,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
             GroupPerformanceHistoryEntity groupPerformanceHistory, String searchId, Short branchId, Integer groupId)
             throws ServiceException {
 
-        Integer activeClientCount = this.customerBusinessService.getActiveAndOnHoldClientCountForGroup(searchId,
-                branchId);
+        Integer activeClientCount = this.customerDao.getActiveAndOnHoldClientCountForGroup(searchId, branchId);
 
         Money lastGroupLoanAmountMoney = groupPerformanceHistory.getLastGroupLoanAmount();
         String lastGroupLoanAmount = "";
@@ -159,7 +158,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
                 loanCycleCounters);
     }
 
-    protected String localizedMessageLookup(String key) {
+    private String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
     }
 

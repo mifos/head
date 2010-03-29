@@ -33,19 +33,21 @@ public class CustomerDetailDto implements DataTransferObject {
     private String displayName;
     private String searchId;
     private String globalCustNum;
-    private final Short loanOfficerId;
-    private final String externalId;
-    private final Address address;
+    private Short loanOfficerId;
+    private String externalId;
+    private Address address;
 
-    protected CustomerDetailDto() {
+    /*
+     * requires public constructor as using hibernates aliasToBean transformer
+     */
+    public CustomerDetailDto() {
         // Default empty constructor for hibernate
         this.loanOfficerId = null;
         this.externalId = null;
         this.address = null;
     }
 
-    public CustomerDetailDto(final Integer id, final String displayName, final String searchId,
-            final String globalCustNum) {
+    public CustomerDetailDto(final Integer id, final String displayName, final String searchId, final String globalCustNum) {
         this.customerId = id;
         this.displayName = displayName;
         this.searchId = searchId;
@@ -124,5 +126,4 @@ public class CustomerDetailDto implements DataTransferObject {
     public Address getAddress() {
         return this.address;
     }
-
 }

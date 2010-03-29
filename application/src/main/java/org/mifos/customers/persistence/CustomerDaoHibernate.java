@@ -71,6 +71,7 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
+import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerSurveyDto;
 import org.mifos.customers.util.helpers.Param;
@@ -765,6 +766,11 @@ public class CustomerDaoHibernate implements CustomerDao {
                 totalSavings, portfolioAtRisk);
     }
 
+    @Override
+    public Integer getActiveAndOnHoldClientCountForGroup(final String searchId, final Short branchId) {
+        return getActiveAndOnHoldChildrenCount(searchId, branchId, CustomerLevel.CLIENT);
+    }
+
     private Integer getActiveAndOnHoldChildrenCount(final String parentSearchId, final Short parentOfficeId,
             final CustomerLevel childrenLevel) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -905,5 +911,27 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
         return ((Number) queryResult.get(0)).intValue() > 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CustomerDetailDto> findActiveCentersUnderUser(PersonnelBO personnel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
+        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
+        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.CENTER.getValue());
+        queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE, CustomerStatus.CENTER_ACTIVE.getValue());
+
+        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_active_centers", queryParameters, CustomerDetailDto.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CustomerDetailDto> findGroupsUnderUser(PersonnelBO personnel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
+        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
+        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
+        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_groups", queryParameters, CustomerDetailDto.class);
     }
 }

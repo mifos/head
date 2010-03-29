@@ -1145,21 +1145,6 @@ public class CustomerPersistence extends Persistence {
         }
     }
 
-    /**
-     * @deprecated - use {@link CustomerDao}
-     */
-    @Deprecated
-    public Integer getActiveAndOnHoldChildrenCount(final String parentSearchId, final Short parentOfficeId,
-            final CustomerLevel childrenLevel) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
-        queryParameters.put("OFFICE_ID", parentOfficeId);
-        queryParameters.put("LEVEL_ID", childrenLevel.getValue());
-        Integer count = ((Long) execUniqueResultNamedQuery(NamedQueryConstants.GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT,
-                queryParameters)).intValue();
-        return count;
-    }
-
     public CollectionSheetCustomerDto findCustomerWithNoAssocationsLoaded(final Integer customerId) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -1171,29 +1156,10 @@ public class CustomerPersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CustomerDetailDto> getListOfActiveCentersUnderUser(PersonnelBO personnel) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
-        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
-        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.CENTER.getValue());
-        queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE, CustomerStatus.CENTER_ACTIVE.getValue());
-
-        return executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_active_centers",
-                queryParameters, CustomerDetailDto.class);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CustomerDetailDto> getListOfGroupsUnderUser(PersonnelBO personnel) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
-        queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
-        queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
-        return executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_groups", queryParameters,
-                CustomerDetailDto.class);
-    }
-
-    @SuppressWarnings("unchecked")
+    /**
+     * FIXME - move to customerDao
+     */
+    @Deprecated
     public List<CustomerDetailDto> getListOfClientsUnderGroupOtherThanClosedAndCancelled(final String searchId,
             final Short branchId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
