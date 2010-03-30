@@ -23,6 +23,7 @@ package org.mifos.accounts.persistence;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -119,7 +120,9 @@ public class AccountPersistence extends Persistence {
         queryParameters.put("ONHOLD_CLIENT_STATE", CustomerConstants.CLIENT_ONHOLD);
         queryParameters.put("ONHOLD_GROUP_STATE", GroupConstants.HOLD);
         queryParameters.put("CURRENT_DATE", currentDateCalendar.getTime());
-        return executeNamedQuery("getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate", queryParameters);
+        return executeNamedQuery(
+                "getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate",
+                queryParameters);
     }
 
     public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException {
@@ -143,8 +146,10 @@ public class AccountPersistence extends Persistence {
         LocalDate date = new LocalDate();
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("DATE", date.toString());
-        List<Integer> customerIds = executeNamedQuery("getActiveCustomerAccountIdsForGenerateMeetingsTask", queryParameters);
-        List<Integer> savingsIds = executeNamedQuery("getActiveSavingsAccountIdsForGenerateMeetingsTask", queryParameters);
+        List<Integer> customerIds = executeNamedQuery("getActiveCustomerAccountIdsForGenerateMeetingsTask",
+                queryParameters);
+        List<Integer> savingsIds = executeNamedQuery("getActiveSavingsAccountIdsForGenerateMeetingsTask",
+                queryParameters);
 
         customerIds.addAll(savingsIds);
         return customerIds;
@@ -253,9 +258,8 @@ public class AccountPersistence extends Persistence {
     }
 
     /*
-     * Execute a named query during initialization that does not include logging
-     * or other dependencies. This is a workaround for issues related to
-     * interdependencies between initialization routines in {@link
+     * Execute a named query during initialization that does not include logging or other dependencies. This is a
+     * workaround for issues related to interdependencies between initialization routines in {@link
      * ApplicationInitializer}
      */
     private List executeNamedQueryAtInit(String queryName, Map queryParameters) throws PersistenceException {
@@ -273,19 +277,17 @@ public class AccountPersistence extends Persistence {
     }
 
     /**
-     * Return the COABO (general ledger account) id that corresponds to the
-     * GLCode (general ledger code) passed in or return null if no account is
-     * found for the glCode.
+     * Return the COABO (general ledger account) id that corresponds to the GLCode (general ledger code) passed in or
+     * return null if no account is found for the glCode.
      */
     public Short getAccountIdFromGlCode(String glCode) {
         return getAccountIdFromGlCode(glCode, false);
     }
 
     /**
-     * This method is equivalent to {@link AccountPersistence#getAccountIdFromGlCode(String)} and is only
-     * for use during initialization as a workaround for avoiding dependencies
-     * on auditing & string resolution during application startup. We should try
-     * to refactor the startup code so that this method can be eliminated.
+     * This method is equivalent to {@link AccountPersistence#getAccountIdFromGlCode(String)} and is only for use during
+     * initialization as a workaround for avoiding dependencies on auditing & string resolution during application
+     * startup. We should try to refactor the startup code so that this method can be eliminated.
      */
     public Short getAccountIdFromGlCodeDuringInitialization(String glCode) {
         return getAccountIdFromGlCode(glCode, true);
@@ -378,9 +380,8 @@ public class AccountPersistence extends Persistence {
     }
 
     /**
-     * Persists given entities required to represent a new general ledger
-     * account. Does not confirm that given account does not already exist in
-     * database. It appears that accounts are unique only by GL code.
+     * Persists given entities required to represent a new general ledger account. Does not confirm that given account
+     * does not already exist in database. It appears that accounts are unique only by GL code.
      */
     public COABO addGeneralLedgerAccount(String name, String glCode, String parentGLCode, GLCategoryType categoryType) {
         return addGeneralLedgerAccount(name, glCode, getAccountIdFromGlCode(parentGLCode), categoryType);
@@ -421,8 +422,8 @@ public class AccountPersistence extends Persistence {
     }
 
     /**
-     * A "category" is a top-level general ledger account. Use this method to
-     * fetch a single, specific category from the database.
+     * A "category" is a top-level general ledger account. Use this method to fetch a single, specific category from the
+     * database.
      */
     public COABO getCategory(GLCategoryType categoryType) {
         Query topLevelAccount = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_ACCOUNT);
@@ -454,7 +455,19 @@ public class AccountPersistence extends Persistence {
 
         Session session = getHibernateUtil().getSessionTL();
         for (AccountBO account : customerAccounts) {
-           session.save(account);
+            session.save(account);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public List<Integer> getListOfAccountIdsWithLoanSchedulesWithinDates(Date fromDate, Date thruDate)
+            throws PersistenceException {
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("FROM_DATE", fromDate);
+        parameters.put("THRU_DATE", thruDate);
+
+        return executeNamedQuery("getListOfAccountIdsWithLoanSchedulesWithinDates", parameters);
+    }
+
 }

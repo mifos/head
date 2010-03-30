@@ -563,5 +563,15 @@
 			where lfs.id = :LOAN_SCHEDULE_ID
 		]]>
 	</sql-query>
+	
+	
+	<query name="getListOfAccountIdsWithLoanSchedulesWithinDates">
+		<![CDATA[select loanAccount.accountId 
+				from org.mifos.accounts.loan.business.LoanBO as loanAccount
+				inner join loanAccount.accountActionDates loanSchedule
+				 where loanSchedule.actionDate >= date(:FROM_DATE)
+				   and loanSchedule.actionDate <= date(:THRU_DATE)
+		]]>
+	</query>
 
 </hibernate-mapping>
