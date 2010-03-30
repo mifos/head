@@ -1208,7 +1208,15 @@ public class LoanBO extends AccountBO {
         Money interest = new Money(getCurrency());
         Money penalty = new Money(getCurrency());
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
+        // Fix for http://mifosforge.jira.com/browse/MIFOS-2397
+        // exclude next installment only if it exits.
+        // when all installments dates are past then all fee should 
+        // be waived, FIXME there should be a cleaner way to implement
+        // waiving fees and panelties because the getApplicableIdsForDueInstallments()
+        // is not seperating current installment (which referred as next installment here)
+        if(getDetailsOfNextInstallment()!=null){
         accountActionDateList.remove(accountActionDateList.size() - 1);
+        }
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             chargeWaived = chargeWaived.add(((LoanScheduleEntity) accountActionDateEntity).waiveFeeCharges());
         }
