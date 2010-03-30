@@ -199,7 +199,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
         MeetingBO parentCustomerMeeting = null;
         Short formedByPersonnelId = null;
+        String formedByPersonnelName = "";
         String centerDisplayName = "";
+        String groupDisplayName = "";
+        String officeName = "";
         List<FeeBO> fees = new ArrayList<FeeBO>();
 
         if (YesNoFlag.YES.getValue().equals(groupFlag)) {
@@ -207,8 +210,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             Integer parentCustomerId = Integer.valueOf(parentGroupId);
             CustomerBO parentCustomer = this.customerDao.findCustomerById(parentCustomerId);
 
+            groupDisplayName = parentCustomer.getDisplayName();
+
             if (parentCustomer.getPersonnel() != null) {
                 formedByPersonnelId = parentCustomer.getPersonnel().getPersonnelId();
+                formedByPersonnelName = parentCustomer.getPersonnel().getDisplayName();
             }
 
             if (parentCustomer.getParentCustomer() != null) {
@@ -216,6 +222,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             }
 
             officeId = parentCustomer.getOffice().getOfficeId();
+            officeName = parentCustomer.getOffice().getOfficeName();
 
             if (parentCustomer.getCustomerMeeting() != null) {
                 parentCustomerMeeting = parentCustomer.getCustomerMeetingValue();
@@ -247,8 +254,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<PersonnelView> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
 
             return new ClientFormCreationDto(clientDropdowns, customFieldViews,
-                    clientRules, officeId, formedByPersonnelId, personnelList, applicableFees, formedByPersonnel,
-                    savingsOfferings, parentCustomerMeeting, centerDisplayName);
+                    clientRules, officeId, officeName, formedByPersonnelId, formedByPersonnelName, personnelList, applicableFees, formedByPersonnel,
+                    savingsOfferings, parentCustomerMeeting, centerDisplayName, groupDisplayName);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

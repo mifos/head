@@ -157,7 +157,14 @@ public class ClientCustAction extends CustAction {
             actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
         actionForm.setCenterDisplayName(clientFormCreationDto.getCenterDisplayName());
+        actionForm.setGroupDisplayName(clientFormCreationDto.getGroupDisplayName());
         actionForm.setOfficeId(clientFormCreationDto.getOfficeId().toString());
+        actionForm.setOfficeName(clientFormCreationDto.getOfficeName());
+
+        if (clientFormCreationDto.getFormedByPersonnelId() != null) {
+            actionForm.setLoanOfficerId(clientFormCreationDto.getFormedByPersonnelId().toString());
+        }
+        actionForm.setLoanOfficerName(clientFormCreationDto.getFormedByPersonnelName());
         actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
         actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
 
@@ -175,9 +182,7 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto.getApplicableFees().getAdditionalFees(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
-
-        List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
-        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, savingsOfferings, request);
+        SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),request);

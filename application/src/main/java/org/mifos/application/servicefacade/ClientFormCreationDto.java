@@ -40,23 +40,29 @@ public class ClientFormCreationDto {
     private final MeetingBO parentCustomerMeeting;
     private final String centerDisplayName;
     private final ClientDropdownsDto clientDropdowns;
+    private final String formedByPersonnelName;
+    private final String groupDisplayName;
+    private final String officeName;
 
-    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId,
-            Short formedByPersonnelId, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees,
+    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId, String officeName,
+            Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees,
             List<PersonnelView> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
-            MeetingBO parentCustomerMeeting, String centerDisplayName) {
+            MeetingBO parentCustomerMeeting, String centerDisplayName, String groupDisplayName) {
 
         this.clientDropdowns = clientDropdowns;
         this.customFieldViews = customFieldViews;
         this.clientRules = clientRules;
         this.officeId = officeId;
+        this.officeName = officeName;
         this.formedByPersonnelId = formedByPersonnelId;
+        this.formedByPersonnelName = formedByPersonnelName;
         this.personnelList = personnelList;
         this.applicableFees = applicableFees;
         this.formedByPersonnelList = formedByPersonnelList;
         this.savingsOfferings = savingsOfferings;
         this.parentCustomerMeeting = parentCustomerMeeting;
         this.centerDisplayName = centerDisplayName;
+        this.groupDisplayName = groupDisplayName;
     }
 
     public List<CustomFieldView> getCustomFieldViews() {
@@ -101,5 +107,17 @@ public class ClientFormCreationDto {
 
     public ClientDropdownsDto getClientDropdowns() {
         return this.clientDropdowns;
+    }
+
+    public String getFormedByPersonnelName() {
+        return this.formedByPersonnelName;
+    }
+
+    public String getGroupDisplayName() {
+        return this.groupDisplayName;
+    }
+
+    public String getOfficeName() {
+        return this.officeName;
     }
 }

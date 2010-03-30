@@ -547,7 +547,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         handeClientChangeOfStatus(client, newStatus);
         if (newStatus.isClientActive()) {
-            this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(), userContext);
+            // FIXME - #000023 - keithw - verify business validaton when updating clients
+//            this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(), userContext);
         }
 
         try {

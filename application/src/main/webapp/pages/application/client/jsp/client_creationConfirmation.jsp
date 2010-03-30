@@ -64,7 +64,7 @@ explanation of the license and how it is applied.
 						</span> <!-- Link to view the center details -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.parentGroup.office.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}">
+						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
 						</c:when>
 						<c:otherwise>
 						<a id="client_creationConfirmation.link.viewClientDetailsLink" href="clientCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.clientCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.clientCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.clientCustActionForm.loanOfficerId}">
@@ -107,7 +107,7 @@ explanation of the license and how it is applied.
 						</c:if> <!-- Link to create a new group -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
+						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
 						</c:when>
 						<c:otherwise>
 						<a id="client_creationConfirmation.link.createNewGroup" href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">

@@ -111,6 +111,8 @@ public class ClientCustActionForm extends CustomerActionForm {
     private List<Integer> familyPrimaryKey;
     private List<String> familyDateOfBirth;
 
+    private String loanOfficerName;
+
     public ClientCustActionForm() {
         super();
         selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
@@ -1058,6 +1060,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         setCustomerId(null);
         setExternalId(null);
         setLoanOfficerId(null);
+        setLoanOfficerName("");
         setFormedByPersonnel(null);
         setTrained(null);
         setTrainedDate(null);
@@ -1069,5 +1072,21 @@ public class ClientCustActionForm extends CustomerActionForm {
         for (int i = 0; i < getSelectedOfferings().size(); i++) {
             getSelectedOfferings().set(i, null);
         }
+    }
+
+    public void setLoanOfficerName(String loanOfficerName) {
+        this.loanOfficerName = loanOfficerName;
+    }
+
+    public String getLoanOfficerName() {
+        return this.loanOfficerName;
+    }
+
+    public MeetingBO getParentCustomerMeeting() {
+        return this.parentCustomerMeeting;
+    }
+
+    public void setParentCustomerMeeting(MeetingBO parentCustomerMeeting) {
+        this.parentCustomerMeeting = parentCustomerMeeting;
     }
 }

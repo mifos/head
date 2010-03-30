@@ -219,16 +219,16 @@ explanation of the license and how it is applied.
 												<fmt:message key="client.BranchSelected">
 													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
 												</fmt:message></span>
-											<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeName}" /></td>
+											<c:out value="${sessionScope.clientCustActionForm.officeName}" /></td>
 										</tr>
 										<tr>
 											<td><br>
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" />
+												value="${sessionScope.clientCustActionForm.loanOfficerName}" />
 											</span> <html-el:hidden property="loanOfficerId"
-												value="${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}" />
+												value="${sessionScope.clientCustActionForm.loanOfficerId}" />
 											</td></tr>
 											<c:choose>
 												<c:when test="${CenterHierarchyExist == true}">
@@ -240,7 +240,7 @@ explanation of the license and how it is applied.
 														</fmt:message>
 													</span>
 													<span class="fontnormal">
-														<c:out value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" />
+														<c:out value="${sessionScope.clientCustActionForm.centerDisplayName}" />
 													</span></tr>
 										<tr>
 											<td>
@@ -250,7 +250,7 @@ explanation of the license and how it is applied.
 														</fmt:message>
 													</span>
 													<span class="fontnormal">
-														<c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" />
+														<c:out value="${sessionScope.clientCustActionForm.groupDisplayName}" />
 													</span></td></tr>
 												</c:when>
 												<c:otherwise><tr>
@@ -261,7 +261,7 @@ explanation of the license and how it is applied.
 														</fmt:message>
 													</span>
 													<span class="fontnormal">
-														<c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" />
+														<c:out value="${sessionScope.clientCustActionForm.groupDisplayName}" />
 													</span></td></tr>
 												</c:otherwise>
 											</c:choose>
@@ -270,12 +270,12 @@ explanation of the license and how it is applied.
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
-												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting,UserContext)}" />
+												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentCustomerMeeting.meeting,UserContext)}" />
 											<br>
 											</span> <span class="fontnormalbold"><mifos:mifoslabel
 												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting.meetingPlace}" />
+												value="${sessionScope.clientCustActionForm.parentCustomerMeeting.meeting.meetingPlace}" />
 											<br>
 											</span></td>
 

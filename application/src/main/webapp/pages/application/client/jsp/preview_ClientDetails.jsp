@@ -187,7 +187,7 @@ explanation of the license and how it is applied.
 										</fmt:message></span>
 									<c:choose>
 										<c:when	test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-											<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeName}" />
+											<c:out value="${sessionScope.clientCustActionForm.officeName}" />
 										</c:when>
 										<c:otherwise>
 											<c:out value="${sessionScope.clientCustActionForm.officeName}" />
@@ -502,7 +502,7 @@ explanation of the license and how it is applied.
 									<c:if test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 										<span class="fontnormalbold"> <mifos:mifoslabel	name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></span>
 										<span class="fontnormal">
-											<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
+											<c:out value="${sessionScope.clientCustActionForm.loanOfficerName}" /><br>
 										</span>
 										<c:if test="${CenterHierarchyExist == true}">
 										<span class="fontnormalbold"> 
@@ -510,7 +510,7 @@ explanation of the license and how it is applied.
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
 											</fmt:message></span>
 										<span class="fontnormal"><c:out
-											value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /> <br>
+											value="${sessionScope.clientCustActionForm.centerDisplayName}" /> <br>
 										</span>
 										</c:if>
 										<span class="fontnormalbold">
@@ -518,7 +518,7 @@ explanation of the license and how it is applied.
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 											</fmt:message></span>
 										<span class="fontnormal"> <c:out
-											value="${sessionScope.clientCustActionForm.parentGroup.displayName}" /></span>
+											value="${sessionScope.clientCustActionForm.groupDisplayName}" /></span>
 										<span class="fontnormal"><br>
 										</span>
 
@@ -536,13 +536,13 @@ explanation of the license and how it is applied.
 									<c:choose>
 										<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 											<span class="fontnormal"><c:out
-												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting,sessionScope.UserContext)}" />
+												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentCustomerMeeting.meeting,sessionScope.UserContext)}" />
 											</span>
 											<br>
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span><span
 												class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting.meetingPlace}" /><br>
+												value="${sessionScope.clientCustActionForm.parentCustomerMeeting.meeting.meetingPlace}" /><br>
 											</span>
 										</c:when>
 										<c:otherwise>
