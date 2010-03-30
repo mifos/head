@@ -197,11 +197,9 @@ public class Column {
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         LabelTagUtils labelTagUtils = LabelTagUtils.getInstance();
         String labelText = null;
-        if (labelText == null) {
-            try {
-                labelText = labelTagUtils.getLabel(pageContext, bundle, userContext.getPreferredLocale(), key, null);
-            } catch (Exception e) {
-            }
+        try {
+            labelText = labelTagUtils.getLabel(pageContext, bundle, userContext.getPreferredLocale(), key, null);
+        } catch (Exception e) {
         }
         if (labelText == null) {
             labelText = MessageLookup.getInstance().lookup(key);

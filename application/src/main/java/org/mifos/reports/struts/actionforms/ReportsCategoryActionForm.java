@@ -72,7 +72,7 @@ public class ReportsCategoryActionForm extends ValidatorActionForm {
         validateMethod(errors, Methods.preview.toString(), method);
         validateMethod(errors, Methods.editPreview.toString(), method);
 
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", method);
         }

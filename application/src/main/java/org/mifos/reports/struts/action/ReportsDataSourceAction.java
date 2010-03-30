@@ -105,7 +105,7 @@ public class ReportsDataSourceAction extends BaseAction {
         if (strDataSourceId == null) {
             strDataSourceId = actionForm.getDatasourceId() + "";
         }
-        if (strDataSourceId == null || strDataSourceId.equals("")) {
+        if (strDataSourceId.equals("")) {
             strDataSourceId = "0";
         }
         int dataSourceId = Integer.parseInt(strDataSourceId);

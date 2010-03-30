@@ -1604,7 +1604,7 @@ public class LoanBO extends AccountBO {
             // Else reverse payments equal to number of transactions reversed.
             if (accountReOpened) {
                 updatePerformanceHistoryOnAdjustment(1);
-            } else if (reversedTrxns != null && reversedTrxns.size() > 0) {
+            } else if (reversedTrxns.size() > 0) {
                 updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
             }
             PersonnelBO personnel;

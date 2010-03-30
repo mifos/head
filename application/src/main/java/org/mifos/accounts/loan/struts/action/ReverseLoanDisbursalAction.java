@@ -192,7 +192,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
         List<LoanActivityView> payments = new ArrayList<LoanActivityView>();
         List<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
         int i = accountPayments.size() - 1;
-        if (accountPayments != null && accountPayments.size() > 0) {
+        if (accountPayments.size() > 0) {
             for (AccountPaymentEntity accountPayment : accountPayments) {
                 if (accountPayment.getAmount().isGreaterThanZero()) {
                     Money amount = new Money(accountPayment.getAmount().getCurrency());

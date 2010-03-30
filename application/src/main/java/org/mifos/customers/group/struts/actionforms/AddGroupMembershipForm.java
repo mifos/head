@@ -43,7 +43,7 @@ public class AddGroupMembershipForm extends BaseActionForm {
         if (method.equals(Methods.updateParent.toString())) {
 
         }
-        if (method != null && !method.equals(Methods.validate.toString())) {
+        if (!method.equals(Methods.validate.toString())) {
             request.setAttribute(GroupConstants.METHODCALLED, method);
         }
         return errors;

@@ -20,6 +20,7 @@
 
 package org.mifos.framework.hibernate.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -35,8 +36,8 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
     String searchString = null;
 
     @Override
-    public List get(int position, int noOfObjects) throws HibernateSearchException {
-        java.util.List returnList = new java.util.ArrayList();
+    public List<Object> get(int position, int noOfObjects) throws HibernateSearchException {
+        List<Object> returnList = new ArrayList<Object>();
 
         try {
             Session session = QuerySession.openSession();
@@ -56,7 +57,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
                                 CustomerSearchConstants.LOAN_TYPE);
                         query.setShort("savingsAccountTypeId", CustomerSearchConstants.SAVINGS_TYPE);
                         query.setString("searchString", searchString);
-                        List accountNumAndTypeId = query.list();
+                        List<?> accountNumAndTypeId = query.list();
                         Object[] obj2 = (Object[]) accountNumAndTypeId.get(0);
                         search.setLoanGlobalAccountNumber(obj2[0].toString());
                         Short accountTypeId = (Short) obj2[1];

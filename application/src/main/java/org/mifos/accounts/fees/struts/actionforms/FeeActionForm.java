@@ -284,15 +284,13 @@ public class FeeActionForm extends BaseActionForm {
         } else {
             request.setAttribute("methodCalled", request.getAttribute("methodCalled"));
         }
-        if (null != methodCalled) {
-            if (methodCalled.equals(Methods.preview.toString())) {
-                // fee creation
-                errors.add(super.validate(mapping, request));
-                validateForPreview(errors, locale);
-            } else if (methodCalled.equalsIgnoreCase(Methods.editPreview.toString())) {
-                // editing fees
-                validateForEditPreview(errors, locale);
-            }
+        if (methodCalled.equals(Methods.preview.toString())) {
+            // fee creation
+            errors.add(super.validate(mapping, request));
+            validateForPreview(errors, locale);
+        } else if (methodCalled.equalsIgnoreCase(Methods.editPreview.toString())) {
+            // editing fees
+            validateForEditPreview(errors, locale);
         }
 
         if (!errors.isEmpty()) {

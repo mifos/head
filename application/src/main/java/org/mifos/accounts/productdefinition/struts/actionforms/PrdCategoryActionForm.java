@@ -87,7 +87,7 @@ public class PrdCategoryActionForm extends BaseActionForm {
                 errors.add(super.validate(mapping, request));
             }
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", methodCalled);
         }

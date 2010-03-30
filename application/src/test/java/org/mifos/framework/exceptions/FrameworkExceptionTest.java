@@ -31,9 +31,10 @@ import org.testng.annotations.Test;
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
 public class FrameworkExceptionTest extends TestCase {
 
+    @SuppressWarnings("null")
     public void testAppNotConfiguredException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -42,10 +43,11 @@ public class FrameworkExceptionTest extends TestCase {
         }
     }
 
+    @SuppressWarnings("null")
     public void testHibernateSearchException() throws Exception {
         HibernateSearchException hse = null;
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -58,9 +60,10 @@ public class FrameworkExceptionTest extends TestCase {
         Assert.assertNotNull(hse);
     }
 
+    @SuppressWarnings("null")
     public void testLoggerConfigurationException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -69,9 +72,10 @@ public class FrameworkExceptionTest extends TestCase {
         }
     }
 
+    @SuppressWarnings("null")
     public void testHibernateProcessException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -81,9 +85,10 @@ public class FrameworkExceptionTest extends TestCase {
         }
     }
 
+    @SuppressWarnings("null")
     public void testXMLReaderException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -92,9 +97,10 @@ public class FrameworkExceptionTest extends TestCase {
         }
     }
 
+    @SuppressWarnings("null")
     public void testMenuParseException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -103,9 +109,10 @@ public class FrameworkExceptionTest extends TestCase {
         }
     }
 
+    @SuppressWarnings("null")
     public void testSecurityException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {
@@ -116,9 +123,10 @@ public class FrameworkExceptionTest extends TestCase {
        Assert.assertEquals("key", se.getKey());
     }
 
+    @SuppressWarnings("null")
     public void testConnectionNotFoundException() throws Exception {
         try {
-            ArrayList arrayList = null;
+            ArrayList<?> arrayList = null;
             arrayList.size();
             Assert.fail();
         } catch (Exception ex) {

@@ -1976,15 +1976,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 }
 
             }
-            if (fileInputStream != null) {
-                fileInputStream.close();
-            }
-            if (inputStreamReader != null) {
-                inputStreamReader.close();
-            }
-            if (bufferedReader != null) {
-                bufferedReader.close();
-            }
+            fileInputStream.close();
+            inputStreamReader.close();
+            bufferedReader.close();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -74,8 +74,7 @@ public class DisplayName {
     }
 
     /**
-     * A helper method which gets the display name according to the label using
-     * another helper method
+     * A helper method which gets the display name according to the label using another helper method
      *
      * @param obj
      * @return displayNames
@@ -102,12 +101,11 @@ public class DisplayName {
             // if object is a collection also then store the value of collection
             // in collectionObject and string in a string array.
 
-            if (object instanceof Collection) {
+            if (object instanceof Collection<?>) {
                 /**
-                 * Used to store the value of collection if object is a
-                 * collection
+                 * Used to store the value of collection if object is a collection
                  */
-                collectionObject = (Collection) object;
+                collectionObject = (Collection<?>) object;
                 stringArray[i] = null;
             }
 
@@ -135,12 +133,11 @@ public class DisplayName {
 
         if (collectionObject != null) {
             string = new String[collectionObject.size()];
-            Iterator it = collectionObject.iterator();
+            Iterator<?> it = collectionObject.iterator();
             for (int k = 0; it.hasNext(); k++) {
                 StringBuilder stringbuilder = new StringBuilder();
                 /**
-                 * Used to store the value of the collection object. if the
-                 * string is null or empty return null.
+                 * Used to store the value of the collection object. if the string is null or empty return null.
                  */
                 String collValue = (String) it.next();
                 if (collValue != null && !(collValue.trim().equals("")) && !(collValue.trim().equalsIgnoreCase("null"))) {
@@ -156,15 +153,11 @@ public class DisplayName {
         } else {
             string = new String[1];
             StringBuilder stringbuilder = new StringBuilder();
-            if (stringArray != null) {
-                for (int i = 0; i < stringArray.length; i++) {
+            for (int i = 0; i < stringArray.length; i++) {
 
-                    stringbuilder.append(getData(fragment[i], stringArray[i], span));
-                }
-                string[0] = stringbuilder.toString();
-            } else {
-                string[0] = null;
+                stringbuilder.append(getData(fragment[i], stringArray[i], span));
             }
+            string[0] = stringbuilder.toString();
         }
         return string;
     }

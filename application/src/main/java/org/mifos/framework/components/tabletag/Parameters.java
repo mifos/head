@@ -138,21 +138,18 @@ public class Parameters {
         } else {
             paramString = new String[1];
             StringBuilder str = new StringBuilder();
-            if (stringArray != null) {
 
-                for (int i = 0; i < stringArray.length; i++) {
-                    try {
-                        str.append(param[i].getParameterName()).append("=").append(
-                                URLEncoder.encode((stringArray[i] != null ? stringArray[i] : ""), "UTF-8")).append(
-                                (i == (param.length - 1)) ? "" : "&");
-                    } catch (UnsupportedEncodingException uee) {
-                        throw new TableTagException(uee);
-                    }
+            for (int i = 0; i < stringArray.length; i++) {
+                try {
+                    str.append(param[i].getParameterName()).append("=").append(
+                            URLEncoder.encode((stringArray[i] != null ? stringArray[i] : ""), "UTF-8")).append(
+                            (i == (param.length - 1)) ? "" : "&");
+                } catch (UnsupportedEncodingException uee) {
+                    throw new TableTagException(uee);
                 }
-                paramString[0] = str.toString();
-            } else {
-                paramString[0] = null;
             }
+            paramString[0] = str.toString();
+
         }
         return paramString;
     }

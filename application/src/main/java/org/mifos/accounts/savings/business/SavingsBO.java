@@ -1566,7 +1566,6 @@ public class SavingsBO extends AccountBO {
             if (oldAccntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
                 SavingsTrxnDetailEntity oldSavingsAccntTrxn = (SavingsTrxnDetailEntity) oldAccntTrxn;
                 if (oldAccntTrxn.getInstallmentId() != null) {
-                    accountTrxn = null;
                     SavingsScheduleEntity accountAction = (SavingsScheduleEntity) getAccountActionDate(
                             oldSavingsAccntTrxn.getInstallmentId(), oldSavingsAccntTrxn.getCustomer().getCustomerId());
                     if (accountAction.getDeposit().isLessThanOrEqual(newAmount)) {
@@ -1601,6 +1600,8 @@ public class SavingsBO extends AccountBO {
                         accountAction.setPaymentStatus(PaymentStatus.UNPAID);
                     }
                     accountAction.setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
+                    // FIXME : accountTrxn could only be null here, see eclipse warning
+                    // it should be causing null pointer exception sometimes.
                     getSavingsPerformance().setTotalDeposits(
                             getSavingsPerformance().getTotalDeposits().add(accountTrxn.getDepositAmount()));
                     break;

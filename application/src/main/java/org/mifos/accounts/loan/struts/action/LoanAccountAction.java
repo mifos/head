@@ -146,7 +146,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -453,8 +452,8 @@ public class LoanAccountAction extends AccountAppAction {
 
         }
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail,
-                    customerBO.getCustomerMeeting().getMeeting().getMeetingDetails());
+            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail, customerBO
+                    .getCustomerMeeting().getMeeting().getMeetingDetails());
         }
 
         SessionUtils.removeAttribute(LOANOFFERING, request);
@@ -464,8 +463,8 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail,
-            MeetingDetailsEntity customerMeetingDetail) {
+    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm,
+            MeetingDetailsEntity meetingDetail, MeetingDetailsEntity customerMeetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
         loanActionForm.setMonthRank("0");
@@ -479,8 +478,8 @@ public class LoanAccountAction extends AccountAppAction {
 
     private List<FeeView> getFilteredFeesByCurrency(List<FeeView> defaultFees, Short currencyId) {
         List<FeeView> filteredFees = new ArrayList<FeeView>();
-        for(FeeView feeView:defaultFees) {
-            if(feeView.isValidForCurrency(currencyId)) {
+        for (FeeView feeView : defaultFees) {
+            if (feeView.isValidForCurrency(currencyId)) {
                 filteredFees.add(feeView);
             }
         }
@@ -564,54 +563,53 @@ public class LoanAccountAction extends AccountAppAction {
                 }
             }
 
-            if (perspective != null) {
-                request.setAttribute(PERSPECTIVE, perspective);
+            request.setAttribute(PERSPECTIVE, perspective);
 
-                if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0
-                        && customer.getCustomerLevel().isGroup()) {
+            if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0
+                    && customer.getCustomerLevel().isGroup()) {
 
-                    List<String> ids_clients_selected = loanAccountForm.getClients();
+                List<String> ids_clients_selected = loanAccountForm.getClients();
 
-                    List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
-                    List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm.getClientDetails();
-                    for (String index : ids_clients_selected) {
-                        if (isNotEmpty(index)) {
-                            LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
-                            ClientBO clt = clientBusinessService.getClient(getIntegerValue(index));
-                            LoanAccountDetailsViewHelper account = null;
-                            for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-                                if (tempAccount.getClientId().equals(index)) {
-                                    account = tempAccount;
-                                }
+                List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
+                List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm.getClientDetails();
+                for (String index : ids_clients_selected) {
+                    if (isNotEmpty(index)) {
+                        LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
+                        ClientBO clt = clientBusinessService.getClient(getIntegerValue(index));
+                        LoanAccountDetailsViewHelper account = null;
+                        for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+                            if (tempAccount.getClientId().equals(index)) {
+                                account = tempAccount;
                             }
-                            tempLoanAccount.setClientId(clt.getGlobalCustNum().toString());
-                            tempLoanAccount.setClientName(clt.getDisplayName());
-                            tempLoanAccount.setLoanAmount((null != account.getLoanAmount()
-                                    && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount()
-                                    : "0.0"));
-
-                            List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
-                                    .getAttribute("BusinessActivities", request);
-
-                            String businessActName = null;
-                            for (ValueListElement busact : businessActEntity) {
-
-                                if (busact.getId().toString().equals(account.getBusinessActivity())) {
-                                    businessActName = busact.getName();
-
-                                }
-                            }
-                            tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
-                            tempLoanAccount
-                                    .setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName
-                                            : "-").toString());
-                            tempLoanAccount.setGovermentId((StringUtils.isNotBlank(clt.getGovernmentId()) ? clt
-                                    .getGovernmentId() : "-").toString());
-                            loanAccountDetailsView.add(tempLoanAccount);
                         }
+                        tempLoanAccount.setClientId(clt.getGlobalCustNum().toString());
+                        tempLoanAccount.setClientName(clt.getDisplayName());
+                        tempLoanAccount
+                                .setLoanAmount((null != account.getLoanAmount()
+                                        && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount()
+                                        : "0.0"));
+
+                        List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
+                                .getAttribute("BusinessActivities", request);
+
+                        String businessActName = null;
+                        for (ValueListElement busact : businessActEntity) {
+
+                            if (busact.getId().toString().equals(account.getBusinessActivity())) {
+                                businessActName = busact.getName();
+
+                            }
+                        }
+                        tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
+                        tempLoanAccount
+                                .setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName
+                                        : "-").toString());
+                        tempLoanAccount.setGovermentId((StringUtils.isNotBlank(clt.getGovernmentId()) ? clt
+                                .getGovernmentId() : "-").toString());
+                        loanAccountDetailsView.add(tempLoanAccount);
                     }
-                    SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
                 }
+                SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
             }
         }
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -1236,8 +1234,8 @@ public class LoanAccountAction extends AccountAppAction {
                 if (businessActivityId != null) {
                     clientDetail.setBusinessActivity(Integer.toString(businessActivityId));
 
-                    ValueListElement businessActivityElement = (ValueListElement) CollectionUtils.find(businessActivities,
-                            new Predicate() {
+                    ValueListElement businessActivityElement = (ValueListElement) CollectionUtils.find(
+                            businessActivities, new Predicate() {
 
                                 public boolean evaluate(final Object object) {
                                     return ((ValueListElement) object).getId().equals(businessActivityId);
@@ -1272,7 +1270,7 @@ public class LoanAccountAction extends AccountAppAction {
         if (isGlimEnabled()) {
             performGlimSpecificOnManagePreview(request, loanAccountForm, localeId);
         }
-        if (null !=  getFund(loanAccountForm)) {
+        if (null != getFund(loanAccountForm)) {
             request.setAttribute("sourceOfFunds", getFund(loanAccountForm).getFundName());
         }
 
@@ -1437,7 +1435,8 @@ public class LoanAccountAction extends AccountAppAction {
             Predicate predicate = new Predicate() {
 
                 public boolean evaluate(final Object object) {
-                    return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(loanAccountDetail.getClientId());
+                    return ((LoanBO) object).getCustomer().getCustomerId().toString().equals(
+                            loanAccountDetail.getClientId());
                 }
 
             };
@@ -1524,7 +1523,8 @@ public class LoanAccountAction extends AccountAppAction {
         LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
                 customer.getMaxLoanCycleForProduct(loanOffering));
         loanAccountActionForm.setLoanAmountRange(eligibleLoanAmount);
-        loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount(), loanOffering.getCurrency()));
+        loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount(),
+                loanOffering.getCurrency()));
         LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                 .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
         loanAccountActionForm.setInstallmentRange(eligibleNoOfInstall);

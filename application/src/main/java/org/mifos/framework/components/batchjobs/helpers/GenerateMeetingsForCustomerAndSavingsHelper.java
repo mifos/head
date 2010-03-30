@@ -142,9 +142,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         } catch (Exception e) {
             getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());
             StaticHibernateUtil.rollbackTransaction();
-            if (currentAccountId != null) {
-                errorList.add(currentAccountId.toString());
-            }
             errorList.add(currentAccountId.toString());
             getLogger().error("Unable to generate schedules for account with ID " + currentAccountId, e);
         } finally {

@@ -86,40 +86,37 @@ public class ReportsUploadAction extends BaseAction {
                 : request.getParameter("reportId");
         int reportId = Integer.parseInt(strreportId);
         File reportUploadFile = new File(filename);
-        if (reportUploadFile != null) {
-            String reportUploadFileName = reportUploadFile.getAbsolutePath();
-            if ((reportUploadFileName.endsWith(".xml")) || (reportUploadFileName.endsWith(".jrxml"))) {
-                try {
-                    System.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
-                    JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
+        String reportUploadFileName = reportUploadFile.getAbsolutePath();
+        if ((reportUploadFileName.endsWith(".xml")) || (reportUploadFileName.endsWith(".jrxml"))) {
+            try {
+                System.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
+                JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
+
+                JasperCompileManager.compileReportToFile(reportUploadFileName);
+            } catch (Exception e) {
+                // TODO: What kind of exception? This is awfully broad.
+                if (e.toString().indexOf("groovy") > -1) {
+                    System.setProperty(JRProperties.COMPILER_CLASS, "net.sf.jasperreports.compilers.JRGroovyCompiler");
+                    JRProperties.setProperty(JRProperties.COMPILER_CLASS,
+                            "net.sf.jasperreports.compilers.JRGroovyCompiler");
 
                     JasperCompileManager.compileReportToFile(reportUploadFileName);
-                } catch (Exception e) {
-                    // TODO: What kind of exception? This is awfully broad.
-                    if (e.toString().indexOf("groovy") > -1) {
-                        System.setProperty(JRProperties.COMPILER_CLASS,
-                                "net.sf.jasperreports.compilers.JRGroovyCompiler");
-                        JRProperties.setProperty(JRProperties.COMPILER_CLASS,
-                                "net.sf.jasperreports.compilers.JRGroovyCompiler");
-
-                        JasperCompileManager.compileReportToFile(reportUploadFileName);
-                    } else {
-                        throw e;
-                    }
+                } else {
+                    throw e;
                 }
             }
-            String fname = reportUploadFile.getName();
-            if (fname != null) {
-                fname = fname.replaceAll(".jrxml", ".jasper");
-            }
-
-            ReportsJasperMap objmap = new ReportsJasperMap();
-            objmap.setReportId((short) reportId);
-            objmap.setReportJasper(fname);
-            reportsPersistence.updateReportsJasperMap(objmap);
-            request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
-                    new ReportsPersistence().getAllReportCategories());
         }
+        String fname = reportUploadFile.getName();
+        if (fname != null) {
+            fname = fname.replaceAll(".jrxml", ".jasper");
+        }
+
+        ReportsJasperMap objmap = new ReportsJasperMap();
+        objmap.setReportId((short) reportId);
+        objmap.setReportJasper(fname);
+        reportsPersistence.updateReportsJasperMap(objmap);
+        request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+                new ReportsPersistence().getAllReportCategories());
 
         return mapping.findForward("administerreports_path");
 

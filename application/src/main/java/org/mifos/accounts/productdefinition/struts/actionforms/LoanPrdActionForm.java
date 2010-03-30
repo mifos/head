@@ -1879,7 +1879,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         if (oldStartDate != null && changedStartDate != null) {
             if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime()).compareTo(
                     DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
-                    && (changedStartDate != null && DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
+                    && (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
                             .compareTo(DateUtils.getDateWithoutTimeStamp(changedStartDate.getTime())) != 0)) {
                 addError(errors, "startDate", ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION);
             }

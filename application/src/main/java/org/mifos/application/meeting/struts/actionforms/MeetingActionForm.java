@@ -214,7 +214,7 @@ public class MeetingActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String method = request.getParameter("method");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
-        ActionErrors errors = null;
+        ActionErrors errors = new ActionErrors();
         try {
             errors = validateFields(request, method);
         } catch (ApplicationException ae) {

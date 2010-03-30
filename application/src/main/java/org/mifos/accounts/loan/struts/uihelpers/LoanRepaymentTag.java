@@ -56,207 +56,200 @@ public class LoanRepaymentTag extends BodyTagSupport {
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
-            Money totalPrincipal = new Money(loanBO.getCurrency(),"0");
-            Money totalInterest = new Money(loanBO.getCurrency(),"0");
-            Money totalFees = new Money(loanBO.getCurrency(),"0");
+            Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
+            Money totalInterest = new Money(loanBO.getCurrency(), "0");
+            Money totalFees = new Money(loanBO.getCurrency(), "0");
 
             /*
-             * LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute(
-             * Constants.BUSINESS_KEY);
+             * LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute( Constants.BUSINESS_KEY);
              */
-            if (loanBO != null) {
-                List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
-                list.addAll(loanBO.getAccountActionDates());
-                UserContext userContext = (UserContext) pageContext.getSession().getAttribute(
-                        Constants.USER_CONTEXT_KEY);
-                locale = userContext.getPreferredLocale();
-                if (list != null && list.size() != 0) {
-                    // topmost table
-                    html.startTag("table", "width", "100%", "border", "0", "cellspacing", "0", "cellpadding", "0");
-                    // Left side header
-                    XmlBuilder htmlHeader1 = new XmlBuilder();
-                    htmlHeader1.startTag("tr");
-                    htmlHeader1.startTag("td", "width", "6%", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.no", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.due_date", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.date_paid", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.principal", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
-                    htmlHeader1.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,
+            List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
+            list.addAll(loanBO.getAccountActionDates());
+            UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
+            locale = userContext.getPreferredLocale();
+            if (list.size() != 0) {
+                // topmost table
+                html.startTag("table", "width", "100%", "border", "0", "cellspacing", "0", "cellpadding", "0");
+                // Left side header
+                XmlBuilder htmlHeader1 = new XmlBuilder();
+                htmlHeader1.startTag("tr");
+                htmlHeader1.startTag("td", "width", "6%", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.no", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.due_date", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "18%", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.date_paid", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.principal", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST, userContext));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.fees", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
+                htmlHeader1.text(getLabel("loan.total", locale));
+                htmlHeader1.endTag("td");
+                htmlHeader1.endTag("tr");
+
+                for (AccountActionDateEntity acctDate : list) {
+                    LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
+                    totalPrincipal = totalPrincipal.add(loanScheduleEntity.getPrincipal());
+                    totalInterest = totalInterest.add(loanScheduleEntity.getInterest());
+                    totalFees = totalFees.add(loanScheduleEntity.getTotalScheduledFeeAmountWithMiscFee());
+                }
+
+                // check if at least the first installment is paid
+                LoanScheduleEntity firstInstallment = (LoanScheduleEntity) list.get(0);
+                XmlBuilder html1 = new XmlBuilder();
+                XmlBuilder html2 = new XmlBuilder();
+                XmlBuilder htmlHeader2 = new XmlBuilder();
+                if (!firstInstallment.getTotalDueWithFees().equals(firstInstallment.getTotalScheduleAmountWithFees())) {
+                    twoTables = true;
+                    // installments paid and running balance table is
+                    // required
+                    htmlHeader2.startTag("tr");
+                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.text(getLabel("loan.principal", locale));
+                    htmlHeader2.endTag("td");
+                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,
                             userContext));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "14%", "align", "right", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.fees", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.startTag("td", "width", "15%", "align", "right", "class", "drawtablerowbold");
-                    htmlHeader1.text(getLabel("loan.total", locale));
-                    htmlHeader1.endTag("td");
-                    htmlHeader1.endTag("tr");
+                    htmlHeader2.endTag("td");
+                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.text(getLabel("loan.fees", locale));
+                    htmlHeader2.endTag("td");
+                    htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
+                    htmlHeader2.text(getLabel("loan.total", locale));
+                    htmlHeader2.endTag("td");
+                    htmlHeader2.endTag("tr");
 
-                    for (AccountActionDateEntity acctDate : list) {
-                        LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
-                        totalPrincipal = totalPrincipal.add(loanScheduleEntity.getPrincipal());
-                        totalInterest = totalInterest.add(loanScheduleEntity.getInterest());
-                        totalFees = totalFees.add(loanScheduleEntity.getTotalScheduledFeeAmountWithMiscFee());
-                    }
+                }
 
-                    // check if at least the first installment is paid
-                    LoanScheduleEntity firstInstallment = (LoanScheduleEntity) list.get(0);
-                    XmlBuilder html1 = new XmlBuilder();
-                    XmlBuilder html2 = new XmlBuilder();
-                    XmlBuilder htmlHeader2 = new XmlBuilder();
-                    if (!firstInstallment.getTotalDueWithFees()
-                            .equals(firstInstallment.getTotalScheduleAmountWithFees())) {
-                        twoTables = true;
-                        // installments paid and running balance table is
-                        // required
-                        htmlHeader2.startTag("tr");
-                        htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
-                        htmlHeader2.text(getLabel("loan.principal", locale));
-                        htmlHeader2.endTag("td");
-                        htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
-                        htmlHeader2.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,
-                                userContext));
-                        htmlHeader2.endTag("td");
-                        htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
-                        htmlHeader2.text(getLabel("loan.fees", locale));
-                        htmlHeader2.endTag("td");
-                        htmlHeader2.startTag("td", "width", "25%", "align", "right", "class", "drawtablerowbold");
-                        htmlHeader2.text(getLabel("loan.total", locale));
-                        htmlHeader2.endTag("td");
-                        htmlHeader2.endTag("tr");
+                html1.startTag("tr");
+                html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                html1.nonBreakingSpace();
+                html1.endTag("td");
+                html1.endTag("tr");
+                html2.startTag("tr");
+                html2.startTag("td", "colspan", "4", "class", "drawtablerowbold");
+                html2.text(getLabel("loan.running_bal", locale));
+                html2.endTag("td");
+                html2.endTag("tr");
 
-                    }
+                html1.append(htmlHeader1);
+                html2.append(htmlHeader2);
 
+                if (twoTables) {
                     html1.startTag("tr");
                     html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
-                    html1.nonBreakingSpace();
+                    html1.text(getLabel("loan.instt_paid", locale));
                     html1.endTag("td");
                     html1.endTag("tr");
                     html2.startTag("tr");
                     html2.startTag("td", "colspan", "4", "class", "drawtablerowbold");
-                    html2.text(getLabel("loan.running_bal", locale));
+                    html2.nonBreakingSpace();
                     html2.endTag("td");
                     html2.endTag("tr");
+                }
 
-                    html1.append(htmlHeader1);
-                    html2.append(htmlHeader2);
+                int index = 0;
+                boolean toContinue = true;
+                LoanScheduleEntity installment = (LoanScheduleEntity) list.get(index);
+                while (index <= list.size() - 1 && toContinue
+                        && !installment.getTotalDueWithFees().equals(installment.getTotalScheduleAmountWithFees())) {
 
-                    if (twoTables) {
-                        html1.startTag("tr");
-                        html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
-                        html1.text(getLabel("loan.instt_paid", locale));
-                        html1.endTag("td");
-                        html1.endTag("tr");
-                        html2.startTag("tr");
-                        html2.startTag("td", "colspan", "4", "class", "drawtablerowbold");
-                        html2.nonBreakingSpace();
-                        html2.endTag("td");
-                        html2.endTag("tr");
-                    }
+                    html1.append(createInstallmentRow(installment, true));
+                    html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees));
+                    totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
+                    totalInterest = totalInterest.subtract(installment.getInterestPaid());
+                    totalFees = totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee());
+                    if (index != list.size() - 1 && installment.isPaid()) {
+                        index++;
+                        installment = (LoanScheduleEntity) list.get(index);
 
-                    int index = 0;
-                    boolean toContinue = true;
-                    LoanScheduleEntity installment = (LoanScheduleEntity) list.get(index);
-                    while (index <= list.size() - 1 && toContinue
-                            && !installment.getTotalDueWithFees().equals(installment.getTotalScheduleAmountWithFees())) {
-
-                        html1.append(createInstallmentRow(installment, true));
-                        html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees));
-                        totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
-                        totalInterest = totalInterest.subtract(installment.getInterestPaid());
-                        totalFees = totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee());
-                        if (index != list.size() - 1 && installment.isPaid()) {
-                            index++;
-                            installment = (LoanScheduleEntity) list.get(index);
-
-                        } else {
-                            toContinue = false;
-                        }
-                    }
-
-                    boolean dueInstallments = false;
-                    if (!installment.isPaid()
-                            && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
-                                    .getTime()) {
-                        dueInstallments = true;
-                    }
-
-                    if (dueInstallments) {
-                        html1.startTag("tr");
-                        html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
-                        html1.text(getLabel("loan.instt_due", locale));
-                        html1.endTag("td");
-                        html1.endTag("tr");
-                        while (index < list.size() - 1
-                                && !installment.isPaid()
-                                && installment.getActionDate().getTime() <= new DateTimeService()
-                                        .getCurrentJavaDateTime().getTime()) {
-                            index++;
-                            html1.append(createInstallmentRow(installment, false));
-                            installment = (LoanScheduleEntity) list.get(index);
-                        }
-                    }
-
-                    boolean futureInstallments = false;
-                    if (!installment.isPaid()
-                            && installment.getActionDate().getTime() > new DateTimeService().getCurrentJavaDateTime()
-                                    .getTime()) {
-                        futureInstallments = true;
-                    }
-                    if (futureInstallments) {
-                        html1.startTag("tr");
-                        html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
-                        html1.text(getLabel("loan.future_install", locale));
-                        html1.endTag("td");
-                        html1.endTag("tr");
-                        while (index < list.size() - 1) {
-                            index++;
-                            html1.append(createInstallmentRow(installment, false));
-                            installment = (LoanScheduleEntity) list.get(index);
-                        }
-                    }
-                    // append the last transaction
-                    if (!installment.isPaid()) {
-                        html1.append(createInstallmentRow(installment, false));
-                    }
-
-                    if (twoTables) {
-                        // add a tr with 2 td for each of the 2 tables
-                        html.startTag("tr");
-                        html.startTag("td", "width", "70%");
-                        html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
-                        html.append(html1);
-                        html.endTag("table");
-                        html.endTag("td");
-                        html.startTag("td", "width", "25%", "valign", "top");
-                        html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
-                        html.append(html2);
-                        html.endTag("table");
-                        html.endTag("td");
-                        html.endTag("tr");
-                        html.endTag("table");
                     } else {
-                        html.startTag("tr");
-                        html.startTag("td", "width", "100%");
-                        html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
-                        html.append(html1);
-                        html.endTag("table");
-                        html.endTag("td");
-                        html.endTag("tr");
-                        html.endTag("table");
-
+                        toContinue = false;
                     }
                 }
-            }
 
+                boolean dueInstallments = false;
+                if (!installment.isPaid()
+                        && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
+                                .getTime()) {
+                    dueInstallments = true;
+                }
+
+                if (dueInstallments) {
+                    html1.startTag("tr");
+                    html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                    html1.text(getLabel("loan.instt_due", locale));
+                    html1.endTag("td");
+                    html1.endTag("tr");
+                    while (index < list.size() - 1
+                            && !installment.isPaid()
+                            && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
+                                    .getTime()) {
+                        index++;
+                        html1.append(createInstallmentRow(installment, false));
+                        installment = (LoanScheduleEntity) list.get(index);
+                    }
+                }
+
+                boolean futureInstallments = false;
+                if (!installment.isPaid()
+                        && installment.getActionDate().getTime() > new DateTimeService().getCurrentJavaDateTime()
+                                .getTime()) {
+                    futureInstallments = true;
+                }
+                if (futureInstallments) {
+                    html1.startTag("tr");
+                    html1.startTag("td", "colspan", "7", "class", "drawtablerowbold");
+                    html1.text(getLabel("loan.future_install", locale));
+                    html1.endTag("td");
+                    html1.endTag("tr");
+                    while (index < list.size() - 1) {
+                        index++;
+                        html1.append(createInstallmentRow(installment, false));
+                        installment = (LoanScheduleEntity) list.get(index);
+                    }
+                }
+                // append the last transaction
+                if (!installment.isPaid()) {
+                    html1.append(createInstallmentRow(installment, false));
+                }
+
+                if (twoTables) {
+                    // add a tr with 2 td for each of the 2 tables
+                    html.startTag("tr");
+                    html.startTag("td", "width", "70%");
+                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.append(html1);
+                    html.endTag("table");
+                    html.endTag("td");
+                    html.startTag("td", "width", "25%", "valign", "top");
+                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.append(html2);
+                    html.endTag("table");
+                    html.endTag("td");
+                    html.endTag("tr");
+                    html.endTag("table");
+                } else {
+                    html.startTag("tr");
+                    html.startTag("td", "width", "100%");
+                    html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "5");
+                    html.append(html1);
+                    html.endTag("table");
+                    html.endTag("td");
+                    html.endTag("tr");
+                    html.endTag("table");
+
+                }
+            }
             pageContext.getOut().write(html.toString());
         } catch (Exception e) {
             throw new JspException(e);

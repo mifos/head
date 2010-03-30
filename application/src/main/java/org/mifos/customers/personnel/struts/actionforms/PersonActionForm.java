@@ -438,7 +438,7 @@ public class PersonActionForm extends BaseActionForm {
             }
         }
 
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", method);
             // update the role list also

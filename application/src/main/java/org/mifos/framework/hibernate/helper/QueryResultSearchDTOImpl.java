@@ -20,6 +20,7 @@
 
 package org.mifos.framework.hibernate.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -31,17 +32,15 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 /**
- * This is the class that is returned on a search operation. Search would
- * typically result in a set of search result objects , these search result
- * objects would be obtained through hibernate scroll for pagination in the
- * front end , the associate hibernate session would be held in this object , a
- * call to close from the front end on this interface would result in the
- * hibernate session object getting closed.
+ * This is the class that is returned on a search operation. Search would typically result in a set of search result
+ * objects , these search result objects would be obtained through hibernate scroll for pagination in the front end ,
+ * the associate hibernate session would be held in this object , a call to close from the front end on this interface
+ * would result in the hibernate session object getting closed.
  */
 
 public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
 
-    java.util.List list = new java.util.ArrayList();
+    List<?> list = new ArrayList<Object>();
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER);
 
     /** Set the query inputs which will be used for query execution */
@@ -60,14 +59,13 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
     }
 
     /**
-     * Returns the requested set of search result objects based on the
-     * pagination at the front end.
+     * Returns the requested set of search result objects based on the pagination at the front end.
      */
     @Override
-    public java.util.List get(int position, int noOfObjects) throws HibernateSearchException {
+    public List<Object> get(int position, int noOfObjects) throws HibernateSearchException {
         Session session = null;
-        java.util.List returnList = new java.util.ArrayList();
-        java.util.List list = new java.util.ArrayList();
+        List<Object> returnList = new ArrayList<Object>();
+        List<?> list = new ArrayList<Object>();
         try {
             session = QuerySession.openSession();
             Query query = prepareQuery(session, queryInputs.getQueryStrings()[1]);
@@ -77,19 +75,18 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
             logger.debug("\n\nInside get of QueryResultSearchDTOImpl.java . size of main query=" + list.size());
             this.queryInputs.setTypes(query.getReturnTypes());
             dtoBuilder.setInputs(queryInputs);
-            returnList = new java.util.ArrayList();
-            if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    if (buildDTO) {
-                        returnList.add(buildDTO((Object[]) list.get(i)));
+            returnList = new ArrayList<Object>();
+            for (int i = 0; i < list.size(); i++) {
+                if (buildDTO) {
+                    returnList.add(buildDTO((Object[]) list.get(i)));
 
-                    } else {
-                        if (i < noOfObjects) {
-                            returnList.add(list.get(i));
-                        }
+                } else {
+                    if (i < noOfObjects) {
+                        returnList.add(list.get(i));
                     }
                 }
             }
+
             QuerySession.closeSession(session);
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);

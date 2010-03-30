@@ -91,9 +91,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
                                 + e.getMessage() + " at group " + groupId.toString(), e);
 
                 StaticHibernateUtil.rollbackTransaction();
-                if (groupId != null) {
-                    errorList.add(groupId.toString());
-                }
+                errorList.add(groupId.toString());
             } finally {
                 StaticHibernateUtil.closeSession();
             }

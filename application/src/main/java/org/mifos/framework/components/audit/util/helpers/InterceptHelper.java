@@ -554,11 +554,11 @@ public class InterceptHelper {
                             localeId);
                     initialValues.put(name, value);
                 } else {
-                    if (propertyValue instanceof Calendar && propertyValue != null) {
+                    if (propertyValue != null && propertyValue instanceof Calendar) {
                         initialValues.put(name, ((Calendar) propertyValue).getTime());
-                    } else if (propertyValue instanceof byte[] && propertyValue != null) {
+                    } else if (propertyValue != null && propertyValue instanceof byte[]) {
                         initialValues.put(name, new String((byte[]) propertyValue));
-                    } else if (propertyValue instanceof Date && propertyValue != null) {
+                    } else if (propertyValue != null && propertyValue instanceof Date) {
                         try {
                             Date date = (Date) propertyValue;
                             initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date
@@ -584,11 +584,11 @@ public class InterceptHelper {
                             localeId);
                     changedValues.put(name, value);
                 } else {
-                    if (propertyValue instanceof Calendar && propertyValue != null) {
+                    if (propertyValue != null && propertyValue instanceof Calendar) {
                         changedValues.put(name, ((Calendar) propertyValue).getTime());
-                    } else if (propertyValue instanceof byte[] && propertyValue != null) {
+                    } else if (propertyValue != null && propertyValue instanceof byte[]) {
                         changedValues.put(name, new String((byte[]) propertyValue));
-                    } else if (propertyValue instanceof Date && propertyValue != null) {
+                    } else if (propertyValue != null && propertyValue instanceof Date) {
                         try {
                             Date date = (Date) propertyValue;
                             changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date

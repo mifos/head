@@ -118,6 +118,7 @@ public class PersonnelNoteAction extends SearchAction {
             checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice().getOfficeId(),
                     personnel.getPersonnelId());
         } else {
+            // FIXME would be causing null pointer exception
             checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice().getOfficeId(),
                     getUserContext(request).getId());
         }

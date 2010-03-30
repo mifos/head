@@ -506,7 +506,7 @@ public class SurveyInstanceAction extends BaseAction {
 
         for (String key : results.keySet()) {
             Object value = results.get(key);
-            if (value.equals("") || value == null) {
+            if (value == null || value.equals("")) {
                 status = InstanceStatus.INCOMPLETE;
             } else if (key.startsWith(prefix)) {
                 SurveyResponse surveyResponse = new SurveyResponse();

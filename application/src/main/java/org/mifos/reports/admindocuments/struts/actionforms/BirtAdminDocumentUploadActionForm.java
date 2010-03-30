@@ -75,7 +75,7 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
         } else if (method.equals(Methods.editpreview.toString())) {
             validateMethod(errors, Methods.editpreview.toString(), method);
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", method);
         }

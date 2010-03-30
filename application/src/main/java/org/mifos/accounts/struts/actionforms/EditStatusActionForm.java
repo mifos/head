@@ -173,7 +173,7 @@ public class EditStatusActionForm extends BaseActionForm {
                 handleUpdateStatus(request, errors);
             }
         }
-        if (null != errors && !errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
             request.setAttribute("methodCalled", methodCalled);
         }

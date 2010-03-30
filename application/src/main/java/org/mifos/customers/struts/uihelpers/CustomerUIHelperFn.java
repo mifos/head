@@ -79,26 +79,22 @@ public class CustomerUIHelperFn {
         }
         if (stringBuilder.toString().equals("()")) {
             return "";
-        } else {
-            return stringBuilder.toString();
         }
+        return stringBuilder.toString();
     }
 
     public static String getMeetingSchedule(Object meeting, Object userContext) {
         if (meeting instanceof MeetingBO) {
-            return meeting != null ? new MeetingHelper().getMessage((MeetingBO) meeting, (UserContext) userContext)
-                    : null;
-        } else {
-            return null;
+            return new MeetingHelper().getMessage((MeetingBO) meeting, (UserContext) userContext);
         }
+        return null;
     }
 
     public static String getUpdatedMeetingSchedule(Object meeting, Object userContext) {
         if (meeting instanceof CustomerMeetingEntity) {
-            return meeting != null ? new MeetingHelper().getUpdatedMeetingScheduleMessage(
-                    (CustomerMeetingEntity) meeting, (UserContext) userContext) : null;
-        } else {
-            return null;
+            return new MeetingHelper().getUpdatedMeetingScheduleMessage(
+                    (CustomerMeetingEntity) meeting, (UserContext) userContext);
         }
+        return null;
     }
 }

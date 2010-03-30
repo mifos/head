@@ -106,7 +106,7 @@ public class AuditConfigurtion {
                 if (parentName == null) {
                     flag = entity.getParentName() == null;
                     return flag;
-                } else if (parentName != null && entity.getParentName() != null) {
+                } else if (entity.getParentName() != null) {
                     flag = entity.getParentName().equalsIgnoreCase(parentName);
                     return flag;
                 }

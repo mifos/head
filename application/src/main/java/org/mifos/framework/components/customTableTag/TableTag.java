@@ -114,9 +114,7 @@ public class TableTag extends BodyTagSupport {
         try {
 
             table = TableTagParser.getInstance().parser(
-                    ClasspathResource.getURI(
-                            moduleName + "/" + xmlFileName)
-                            .toString());
+                    ClasspathResource.getURI(moduleName + "/" + xmlFileName).toString());
 
             tableInfo = new StringBuilder();
             if (source == null || scope == null) {
@@ -140,12 +138,11 @@ public class TableTag extends BodyTagSupport {
             }
 
             if (passLocale != null && passLocale.equalsIgnoreCase("true")) {
-                if (obj != null || !obj.isEmpty()) {
-                    UserContext userContext = (UserContext) pageContext.getSession().getAttribute(
-                            Constants.USER_CONTEXT_KEY);
+                UserContext userContext = (UserContext) pageContext.getSession().getAttribute(
+                        Constants.USER_CONTEXT_KEY);
 
-                    populateLocale(userContext);
-                }
+                populateLocale(userContext);
+
             }
 
             table.getTable(tableInfo, obj, locale, prefferedLocale, mfiLocale, pageContext,
