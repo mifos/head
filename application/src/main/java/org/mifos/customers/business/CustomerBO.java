@@ -518,7 +518,13 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
     public void updateAddress(final Address address) {
-        if (getCustomerAddressDetail() == null) {
+
+        if (address == null) {
+            if (this.customerAddressDetail != null) {
+                this.customerAddressDetail.setAddress(null);
+                this.customerAddressDetail = null;
+            }
+        } else if (getCustomerAddressDetail() == null) {
             setCustomerAddressDetail(new CustomerAddressDetailEntity(this, address));
         } else {
             getCustomerAddressDetail().setAddress(address);

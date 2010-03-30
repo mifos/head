@@ -328,7 +328,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
                     centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId);
 
-            this.customerService.create(center, meeting, feesForCustomerAccount);
+            this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
             return new CenterDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
         } catch (InvalidDateException e) {

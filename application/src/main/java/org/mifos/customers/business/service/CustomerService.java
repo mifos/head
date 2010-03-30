@@ -29,7 +29,6 @@ import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -41,11 +40,11 @@ import org.mifos.security.util.UserContext;
 
 public interface CustomerService {
 
-    void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center);
-
-    void create(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees);
+    void createCenter(CenterBO center, MeetingBO meeting, List<AccountFeesEntity> accountFees);
 
     void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
+
+    void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center);
 
     void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws CustomerException;
 

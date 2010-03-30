@@ -97,6 +97,57 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
+
+        createCustomer(customer, meeting, accountFees);
+    }
+
+    @Override
+    public void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees)
+            throws CustomerException {
+
+        group.validate();
+
+        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+
+        createCustomer(group, meeting, accountFees);
+    }
+
+    private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            this.customerDao.save(customer);
+
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                    thisAndNextYearsHolidays);
+            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
+                    scheduledEvent);
+
+            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees, installmentDates);
+            customer.addAccount(customerAccount);
+            this.customerDao.save(customer);
+            StaticHibernateUtil.commitTransaction();
+
+            StaticHibernateUtil.startTransaction();
+            customer.generateGlobalCustomerNumber();
+            this.customerDao.save(customer);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
     public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center) {
 
         Short loanOfficerId = centerUpdate.getLoanOfficerId();
@@ -142,90 +193,6 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (InvalidDateException e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Override
-    public void create(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
-
-        try {
-            StaticHibernateUtil.startTransaction();
-            this.customerDao.save(customer);
-
-            // CREATE CUSTOMER FEE SCHEDULE AND MEETING SCHEDULE FROM CUSTOMER
-            // generate meeting schedule based on customer meeting!!!
-
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
-                    thisAndNextYearsHolidays);
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
-                    scheduledEvent);
-
-            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees, installmentDates);
-            customer.addAccount(customerAccount);
-            this.customerDao.save(customer);
-            StaticHibernateUtil.commitTransaction();
-
-            StaticHibernateUtil.startTransaction();
-            customer.generateGlobalCustomerNumber();
-            this.customerDao.save(customer);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Override
-    public void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees)
-            throws CustomerException {
-
-        group.validate();
-
-        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
-
-        try {
-            StaticHibernateUtil.startTransaction();
-
-            this.customerDao.save(group);
-
-            // CREATE CUSTOMER FEE SCHEDULE AND MEETING SCHEDULE FROM CUSTOMER
-            // generate meeting schedule based on customer meeting!!!
-
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
-                    thisAndNextYearsHolidays);
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
-                    scheduledEvent);
-
-            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(group, accountFees, installmentDates);
-            group.addAccount(customerAccount);
-            this.customerDao.save(group);
-            StaticHibernateUtil.commitTransaction();
-
-            StaticHibernateUtil.startTransaction();
-            group.generateGlobalCustomerNumber();
-            this.customerDao.save(group);
-            StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

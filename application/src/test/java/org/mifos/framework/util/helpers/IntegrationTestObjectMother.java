@@ -258,7 +258,7 @@ public class IntegrationTestObjectMother {
 
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
-        customerService.create(center, meeting, accountFees);
+        customerService.createCenter(center, meeting, accountFees);
     }
 
     public static void createCenter(CenterBO center, MeetingBO meeting,
@@ -272,7 +272,7 @@ public class IntegrationTestObjectMother {
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         accountFees.add(accountFee);
 
-        customerService.create(center, meeting, accountFees);
+        customerService.createCenter(center, meeting, accountFees);
     }
 
     public static void createGroup(GroupBO group, MeetingBO meeting) throws CustomerException {

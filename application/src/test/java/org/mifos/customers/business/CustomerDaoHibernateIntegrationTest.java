@@ -40,8 +40,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -60,7 +58,6 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
 
     // collaborators
     private final GenericDao genericDao = new GenericDaoHibernate();
-    private final PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
 
     // test data
     private MeetingBO weeklyMeeting;

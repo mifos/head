@@ -43,12 +43,12 @@ public class CenterBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private UserContext userContext = new UserContext();
+    private final UserContext userContext = new UserContext();
     private DateTime mfiJoiningDate = new DateTime();
     private int numberOfCustomersInOfficeAlready = 0;
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-    private Address address;
-    private String externalId;
+    private Address address = null;
+    private String externalId = null;
 
     public CenterBO build() {
 
@@ -84,6 +84,23 @@ public class CenterBuilder {
 
     public CenterBuilder withNumberOfExistingCustomersInOffice(final int withNumberOfExistingCustomersInOffice) {
         this.numberOfCustomersInOfficeAlready = withNumberOfExistingCustomersInOffice;
+        return this;
+    }
+
+    public CenterBuilder withAddress(Address withAddress) {
+        this.address = withAddress;
+        return this;
+    }
+
+    public CenterBuilder withUserContext() {
+        if (loanOfficer != null) {
+            userContext.setId(loanOfficer.getCreatedBy());
+        }
+
+        if (office != null) {
+            userContext.setBranchGlobalNum(office.getGlobalOfficeNum());
+            userContext.setBranchId(office.getOfficeId());
+        }
         return this;
     }
 }
