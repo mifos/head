@@ -50,11 +50,8 @@ public class MifosExceptionHandler extends ExceptionHandler {
      */
     @Override
     protected void logException(Exception e) {
-        if (e instanceof ApplicationException) {
-            ApplicationException appException = (ApplicationException) e;
-            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(appException.getKey(), true,
-                    appException.getValues(), e);
-        } else if (e instanceof SystemException) {
+
+        if (e instanceof SystemException) {
             SystemException sysException = (SystemException) e;
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(sysException.getKey(), true,
                     sysException.getValues(), e);
