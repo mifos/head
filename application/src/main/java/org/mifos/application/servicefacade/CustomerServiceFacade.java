@@ -57,13 +57,13 @@ public interface CustomerServiceFacade {
 
     void updateGroup(UserContext userContext, GroupUpdate groupUpdate);
 
-    CustomerSearch search(String searchString, UserContext userContext);
+    CustomerSearch search(String searchString, UserContext userContext) throws CustomerException;
 
     CenterHierarchySearchDto isCenterHierarchyConfigured(Short loggedInUserBranchId);
 
-    GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, UserContext userContext, Integer previousGroupVersionNo);
+    GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, UserContext userContext, Integer previousGroupVersionNo) throws CustomerException;
 
-    GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo);
+    GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo) throws CustomerException;
 
     void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId,
             String notes, UserContext userContext) throws CustomerException;
