@@ -234,12 +234,12 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
         return entityType.hashCode() * levelId.hashCode() * fieldType.hashCode();
     }
 
-    public static List<CustomFieldView> toDto(List<CustomFieldDefinitionEntity> customFieldsForCenter,
+    public static List<CustomFieldView> toDto(List<CustomFieldDefinitionEntity> customFieldDefinitions,
             Locale preferredUserLocale) {
 
         List<CustomFieldView> customFieldDtos = new ArrayList<CustomFieldView>();
 
-        for (CustomFieldDefinitionEntity fieldDef : customFieldsForCenter) {
+        for (CustomFieldDefinitionEntity fieldDef : customFieldDefinitions) {
 
             CustomFieldView fieldView;
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())

@@ -876,6 +876,13 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
+    public void validateOffice() throws CustomerException {
+        if (office == null) {
+            throw new CustomerException(CustomerConstants.INVALID_OFFICE);
+        }
+    }
+
+    @Deprecated
     protected void validateOffice(final OfficeBO office) throws CustomerException {
         if (office == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);

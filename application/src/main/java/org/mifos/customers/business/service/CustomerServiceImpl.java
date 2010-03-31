@@ -22,6 +22,7 @@ package org.mifos.customers.business.service;
 
 import java.io.InputStream;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -111,6 +113,90 @@ public class CustomerServiceImpl implements CustomerService {
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
         createCustomer(group, meeting, accountFees);
+    }
+
+    @Override
+    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException {
+
+        if (client.isStatusValidationRequired()) {
+            client.validateClientStatus();
+        }
+
+        client.validateOffice();
+        client.validateOfferings();
+//        FIXME - use customerDao.validate methods to validation governmentid and dob info for clients
+//        client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+
+        if (client.isActive()) {
+            client.validateFieldsForActiveClient();
+
+            UserContext userContext = client.getUserContext();
+
+            List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
+            for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
+                try {
+                    SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering
+                            .getSavingsOffering().getPrdOfferingId());
+                    if (savingsOffering.isActive()) {
+
+                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
+                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+
+                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
+                                customFieldDefs, userContext.getPreferredLocale());
+
+                        SavingsBO savingsAccount = new SavingsBO(userContext, savingsOffering, client,
+                                AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
+                                savingCustomFieldViews);
+                        savingsAccounts.add(savingsAccount);
+                    }
+                } catch (PersistenceException pe) {
+                    throw new MifosRuntimeException(pe);
+                } catch (AccountException pe) {
+                    throw new MifosRuntimeException(pe);
+                }
+            }
+
+            client.addSavingsAccounts(savingsAccounts);
+
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+            List<Holiday> holidays = new ArrayList<Holiday>();
+
+            try {
+                CustomerBO parentCustomer = client.getParentCustomer();
+                if (parentCustomer != null) {
+                    List<SavingsBO> groupSavingAccounts = new CustomerPersistence()
+                            .retrieveSavingsAccountForCustomer(parentCustomer.getCustomerId());
+
+                    CustomerBO grandParentCustomer = parentCustomer.getParentCustomer();
+                    if (grandParentCustomer != null) {
+                        List<SavingsBO> centerSavingAccounts = new CustomerPersistence()
+                                .retrieveSavingsAccountForCustomer(grandParentCustomer.getCustomerId());
+                        groupSavingAccounts.addAll(centerSavingAccounts);
+                    }
+
+                    for (SavingsBO savings : groupSavingAccounts) {
+                        savings.setUserContext(userContext);
+
+                        if (client.getCustomerMeetingValue() != null) {
+
+                            if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
+                                    .getRecommendedAmntUnit().getId().equals(
+                                            RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
+                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(),
+                                        workingDays, holidays);
+                            }
+                        }
+                    }
+                }
+            } catch (PersistenceException pe) {
+                throw new MifosRuntimeException(pe);
+            }
+        }
+
+        client.generateSearchId();
+
+        createCustomer(client, meeting, accountFees);
     }
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
@@ -543,12 +629,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, UserContext userContext, Short flagId, String notes) throws CustomerException {
+    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
+            UserContext userContext, Short flagId, String notes) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
         if (newStatus.isClientActive()) {
             // FIXME - #000023 - keithw - verify business validaton when updating clients
-//            this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(), userContext);
+            // this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(),
+            // userContext);
         }
 
         try {
@@ -569,12 +657,14 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void changeClientStatus(ClientBO client, CustomerStatus transitionToStatus, UserContext userContext) throws AccountException {
+    private void changeClientStatus(ClientBO client, CustomerStatus transitionToStatus, UserContext userContext)
+            throws AccountException {
         client.setCustomerStatus(new CustomerStatusEntity(transitionToStatus));
         changeClientStatus(client, userContext, null, "");
     }
 
-    private void changeClientStatus(ClientBO client, UserContext userContext, Short flagId, String notes) throws AccountException {
+    private void changeClientStatus(ClientBO client, UserContext userContext, Short flagId, String notes)
+            throws AccountException {
         if (client.isClosedOrCancelled()) {
 
             if (client.isClientUnderGroup()) {
@@ -696,9 +786,8 @@ public class CustomerServiceImpl implements CustomerService {
             if ((newStatus.isClientActive() || newStatus.isClientPending()) && client.isClientUnderGroup()) {
 
                 if (groupStatus.isGroupCancelled()) {
-                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED,
-                            new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                    client.getUserContext()) });
+                    throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
+                            .getInstance().lookupLabel(ConfigurationConstants.GROUP, client.getUserContext()) });
                 }
 
                 if (client.isGroupStatusLower(newStatus.getValue(), groupStatus.getValue())) {
@@ -730,7 +819,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+    public void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo)
+            throws InvalidDateException {
 
         setInitialObjectForAuditLogging(client);
         client.updatePersonalInfo(personalInfo);

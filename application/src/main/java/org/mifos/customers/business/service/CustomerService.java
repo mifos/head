@@ -44,6 +44,8 @@ public interface CustomerService {
 
     void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
 
+    void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
+
     void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center);
 
     void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws CustomerException;

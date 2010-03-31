@@ -135,12 +135,6 @@ public class ClientBO extends CustomerBO {
 
         client.setParentCustomer(group);
 
-//      checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
-//        validateOffice(office);
-//        validateOfferings(offeringsSelected);
-//        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
-
-
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
                 .fromCustomerCustomFieldEntity(customerCustomFields, client);
         for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
@@ -215,6 +209,9 @@ public class ClientBO extends CustomerBO {
         this.groupFlag = YesNoFlag.YES.getValue();
     }
 
+    /**
+     * @deprecated - use static factory classes
+     */
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
             final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
@@ -226,6 +223,9 @@ public class ClientBO extends CustomerBO {
                 trainedDate, groupFlag, clientNameDetailView, spouseNameDetailView, clientDetailView, picture);
     }
 
+    /**
+     * @deprecated - use static factory classes
+     */
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
             final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office, final MeetingBO meeting,
@@ -237,6 +237,9 @@ public class ClientBO extends CustomerBO {
                 trainedDate, groupFlag, clientNameDetailView, spouseNameDetailView, clientDetailView, picture);
     }
 
+    /**
+     * @deprecated - use static factory classes
+     */
     private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
             final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
@@ -286,7 +289,6 @@ public class ClientBO extends CustomerBO {
             this.setCustomerActivationDate(this.getCreatedDate());
             createAccountsForClient();
 
-            // FIXME - keithw - pass in this info to method
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
             createDepositSchedule(workingDays, holidays);
@@ -814,6 +816,19 @@ public class ClientBO extends CustomerBO {
                 : getCustomerId());
     }
 
+    public void validateFieldsForActiveClient() throws CustomerException {
+        if (isActive()) {
+            if (!isClientUnderGroup()) {
+                validateLO(this.getPersonnel());
+                validateMeeting(this.getCustomerMeetingValue());
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    @Deprecated
     public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting) throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
@@ -864,6 +879,28 @@ public class ClientBO extends CustomerBO {
         return false;
     }
 
+    public void validateClientStatus() throws CustomerException {
+
+        final Short clientStatusId = getStatus().getValue();
+        final Short groupStatus = getParentCustomer().getStatus().getValue();
+
+        if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
+                .equals(CustomerStatus.CLIENT_PENDING.getValue()))
+                && this.isClientUnderGroup()) {
+            if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue())) {
+                throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] { MessageLookup
+                        .getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()) });
+            }
+
+            if (isGroupStatusLower(clientStatusId, groupStatus)) {
+
+                throw new CustomerException(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, new Object[] {
+                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, this.getUserContext()),
+                        MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, this.getUserContext()) });
+            }
+        }
+    }
+
     @Deprecated
     public void checkIfClientStatusIsLower(final Short clientStatusId, final Short groupStatus) throws CustomerException {
         if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
@@ -883,6 +920,10 @@ public class ClientBO extends CustomerBO {
         }
     }
 
+    /**
+     * remove when constructor is removed
+     */
+    @Deprecated
     public void createAccountsForClient() throws CustomerException {
         if (offeringsAssociatedInCreate != null) {
             for (ClientInitialSavingsOfferingEntity clientOffering : offeringsAssociatedInCreate) {
@@ -919,6 +960,20 @@ public class ClientBO extends CustomerBO {
         return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId), CustomerStatus.fromInt(parentStatus));
     }
 
+    public void validateOfferings() throws CustomerException {
+
+        for (ClientInitialSavingsOfferingEntity savingsOfferingEntity : offeringsAssociatedInCreate) {
+            for (ClientInitialSavingsOfferingEntity savingsOfferingEntityInner : offeringsAssociatedInCreate) {
+                SavingsOfferingBO savingsProduct = savingsOfferingEntity.getSavingsOffering();
+                SavingsOfferingBO savingsProductInner = savingsOfferingEntityInner.getSavingsOffering();
+                if (savingsProduct.getPrdOfferingId().equals(savingsProductInner.getPrdOfferingId())) {
+                    throw new CustomerException(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED);
+                }
+            }
+        }
+    }
+
+    @Deprecated
     private void validateOfferings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
         if (offeringsSelected != null) {
             for (int i = 0; i < offeringsSelected.size() - 1; i++) {
@@ -931,6 +986,9 @@ public class ClientBO extends CustomerBO {
         }
     }
 
+    /**
+     * delete when usage in constructor is removed...
+     */
     @Deprecated
     public void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws CustomerException {
         try {
@@ -956,7 +1014,6 @@ public class ClientBO extends CustomerBO {
     public void updateClientFlag() throws CustomerException, PersistenceException {
         this.groupFlag = YesNoFlag.NO.getValue();
         update();
-
     }
 
     public void validateBeforeAddingClientToGroup(GroupBO targetGroup) throws CustomerException {
@@ -1149,5 +1206,15 @@ public class ClientBO extends CustomerBO {
 
     public void setOfferingsAssociatedInCreate(Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
         this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
+    }
+
+    public void addSavingsAccounts(List<SavingsBO> savingsAccounts) {
+        for (SavingsBO savingsAccount : savingsAccounts) {
+            addAccount(savingsAccount);
+        }
+    }
+
+    public boolean isStatusValidationRequired() {
+        return getParentCustomer() != null;
     }
 }

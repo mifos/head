@@ -31,13 +31,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -48,7 +46,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.MifosRuntimeException;
@@ -444,7 +441,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
-            List<SavingsDetailDto> offeringsList) {
+            List<SavingsDetailDto> offeringsList) throws CustomerException {
 
         try {
             String clientName = clientName(actionForm);
@@ -515,10 +512,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
                 officeId = group.getOffice().getOfficeId();
 
-                // FIXME - using static factory to create clients
-//                client = createClientInheritingFromGroup(actionForm, userContext, customFields, selectedOfferings,
-//                        spouseNameDetailView, group);
-
                 String secondMiddleName = null;
                 ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, clientNameDetailView);
 
@@ -551,16 +544,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
-                if (client.isActive()) {
-                    client.validateFieldsForActiveClient(loanOfficer, meeting);
-                    client.createAccountsForClient();
-
-                    // FIXME - keithw - pass in this info to method
-                    List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                    List<Holiday> holidays = new ArrayList<Holiday>();
-                    client.createDepositSchedule(workingDays, holidays);
-                }
-                client.generateSearchId();
+                this.customerService.createClient(client, client.getCustomerMeetingValue(), new ArrayList<AccountFeesEntity>());
 
             } else {
                 personnelId = actionForm.getLoanOfficerIdValue();
@@ -568,20 +552,18 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
                 client = createClientOutOfGroupHierarchy(actionForm, meeting, userContext, customFields,
                         selectedOfferings, spouseNameDetailView);
+
+                checkPermissionForCreate(actionForm.getStatusValue().getValue(), userContext, officeId, personnelId);
+
+                new CustomerPersistence().saveCustomer(client);
             }
 
             if (ClientRules.isFamilyDetailsRequired()) {
                 client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
             }
 
-            checkPermissionForCreate(actionForm.getStatusValue().getValue(), userContext, officeId, personnelId);
-
-            new CustomerPersistence().saveCustomer(client);
-
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
         } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
-        } catch (CustomerException e) {
             throw new MifosRuntimeException(e);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

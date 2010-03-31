@@ -47,7 +47,7 @@ public interface CustomerServiceFacade {
 
     CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws CustomerException;
 
-    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList);
+    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList) throws CustomerException;
 
     CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
 

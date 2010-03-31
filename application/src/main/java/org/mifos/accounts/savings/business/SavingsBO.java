@@ -908,6 +908,9 @@ public class SavingsBO extends AccountBO {
         return interestAmount;
     }
 
+    /**
+     * remove after usuage in constructor is removed.
+     */
     @Deprecated
     public void generateAndUpdateDepositActionsForClient(final ClientBO client, final List<Days> workingDays,
             final List<Holiday> holidays) throws AccountException {
