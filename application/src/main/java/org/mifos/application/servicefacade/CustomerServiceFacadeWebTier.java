@@ -311,7 +311,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext) {
+    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting,
+            UserContext userContext) {
 
         try {
             List<CustomFieldView> customFields = actionForm.getCustomFields();
@@ -511,40 +512,22 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             java.sql.Date trainedDate = trainedDate(actionForm);
             Short groupFlagValue = groupFlagValue(actionForm);
             ClientNameDetailView clientNameDetailView = clientNameDetailName(actionForm);
-            ClientNameDetailView spouseNameDetailView = null;
 
             ClientDetailView clientDetailView = clientDetailView(actionForm);
             InputStream picture = picture(actionForm);
 
-            if (groupFlagValue(actionForm).equals(YesNoFlag.NO.getValue())) {
+            ClientNameDetailView spouseNameDetailView = null;
+            if (ClientRules.isFamilyDetailsRequired()) {
+                actionForm.setFamilyDateOfBirth();
+                actionForm.constructFamilyDetails();
+            } else {
+                spouseNameDetailView = spouseFatherName(actionForm);
+            }
 
-                if (ClientRules.isFamilyDetailsRequired()) {
-                    actionForm.setFamilyDateOfBirth();
-                    actionForm.constructFamilyDetails();
+            if (YesNoFlag.NO.getValue().equals(groupFlagValue(actionForm))) {
 
-                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
-                            office(actionForm), meeting, loanOfficer(actionForm), dateOfBirth(actionForm),
-                            governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
-                            groupFlagValue(actionForm), clientNameDetailName(actionForm), null,
-                            clientDetailView(actionForm), picture(actionForm));
-
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-
-                } else {
-
-                    spouseNameDetailView = spouseFatherName(actionForm);
-
-                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
-                            office(actionForm), meeting, loanOfficer(actionForm), dateOfBirth(actionForm),
-                            governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
-                            groupFlagValue(actionForm), clientNameDetailName(actionForm), spouseFatherName(actionForm),
-                            clientDetailView(actionForm), picture(actionForm));
-                }
-
+                client = createClientOutOfGroupHierarchy(actionForm, meeting, userContext, customFields,
+                        selectedOfferings, spouseNameDetailView);
             } else {
                 Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
                 CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
@@ -556,29 +539,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     }
                 }
 
-                if (ClientRules.isFamilyDetailsRequired()) {
-                    actionForm.setFamilyDateOfBirth();
-                    actionForm.constructFamilyDetails();
+                client = createClientInheritingFromGroup(actionForm, userContext, customFields, selectedOfferings,
+                        spouseNameDetailView, group);
+            }
 
-                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
-                            group.getOffice(), group, dateOfBirth(actionForm), governmentId(actionForm),
-                            trainedValue(actionForm), trainedDate(actionForm), groupFlagValue(actionForm),
-                            clientNameDetailName(actionForm), spouseNameDetailView, clientDetailView(actionForm), picture(actionForm));
-
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-                } else {
-
-                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
-                            group.getOffice(), group, dateOfBirth(actionForm), governmentId(actionForm),
-                            trainedValue(actionForm), trainedDate(actionForm), groupFlagValue(actionForm),
-                            clientNameDetailName(actionForm), spouseFatherName(actionForm), clientDetailView(actionForm),
-                            picture(actionForm));
-                }
-
+            if (ClientRules.isFamilyDetailsRequired()) {
+                client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
             }
 
             new CustomerPersistence().saveCustomer(client);
@@ -591,6 +557,36 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    private ClientBO createClientInheritingFromGroup(ClientCustActionForm actionForm, UserContext userContext,
+            List<CustomFieldView> customFields, List<SavingsOfferingBO> selectedOfferings,
+            ClientNameDetailView spouseNameDetailView, CustomerBO group) throws CustomerException,
+            InvalidDateException, PersistenceException {
+
+        ClientBO client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm), group.getOffice(), group,
+                dateOfBirth(actionForm), governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
+                groupFlagValue(actionForm), clientNameDetailName(actionForm), spouseNameDetailView,
+                clientDetailView(actionForm), picture(actionForm));
+
+        return client;
+    }
+
+    private ClientBO createClientOutOfGroupHierarchy(ClientCustActionForm actionForm, MeetingBO meeting,
+            UserContext userContext, List<CustomFieldView> customFields, List<SavingsOfferingBO> selectedOfferings,
+            ClientNameDetailView spouseNameDetailView) throws CustomerException, InvalidDateException,
+            PersistenceException {
+
+        ClientBO client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm), office(actionForm), meeting,
+                loanOfficer(actionForm), dateOfBirth(actionForm), governmentId(actionForm), trainedValue(actionForm),
+                trainedDate(actionForm), groupFlagValue(actionForm), clientNameDetailName(actionForm),
+                spouseNameDetailView, clientDetailView(actionForm), picture(actionForm));
+
+        return client;
     }
 
     private ClientNameDetailView spouseFatherName(ClientCustActionForm actionForm) {
