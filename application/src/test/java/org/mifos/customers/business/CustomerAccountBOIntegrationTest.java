@@ -1187,6 +1187,30 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    public void testCustomerActivitDetailsSortingByDate()
+            throws Exception {
+        userContext = TestUtils.makeUser();
+        createInitialObjects();
+        client = TestObjectFactory.createClient("Client_Active_test", CustomerStatus.CLIENT_ACTIVE, group);
+        customerAccountBO = client.getCustomerAccount();
+        customerAccountBO.addCustomerActivity(new CustomerActivityEntity(customerAccountBO, center.getPersonnel(),
+                TestUtils.createMoney(10), AccountConstants.PAYMENT_RCVD, new Date(System.currentTimeMillis() + 172800000)));
+        customerAccountBO.addCustomerActivity(new CustomerActivityEntity(customerAccountBO, center.getPersonnel(),
+                TestUtils.createMoney(20), AccountConstants.PAYMENT_RCVD, new Date(System.currentTimeMillis())));
+        customerAccountBO.addCustomerActivity(new CustomerActivityEntity(customerAccountBO, center.getPersonnel(),
+                TestUtils.createMoney(30), AccountConstants.PAYMENT_RCVD, new Date(System.currentTimeMillis() + 345600000)));
+        customerAccountBO.update();
+        StaticHibernateUtil.commitTransaction();
+        TestObjectFactory.flushandCloseSession();
+        customerAccountBO = TestObjectFactory.getCustomer(client.getCustomerId()).getCustomerAccount();
+        UserContext uc = TestUtils.makeUser();
+        customerAccountBO.setUserContext(uc);
+        Assert.assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());
+        Assert.assertEquals(TestUtils.createMoney(30), customerAccountBO.getCustomerActivitDetails().get(0).getAmount());
+        Assert.assertEquals(TestUtils.createMoney(10), customerAccountBO.getCustomerActivitDetails().get(1).getAmount());
+        Assert.assertEquals(TestUtils.createMoney(20), customerAccountBO.getCustomerActivitDetails().get(2).getAmount());
+    }
+
     /*
      * Create a center with a default weekly maintenance fee of 100.
      */

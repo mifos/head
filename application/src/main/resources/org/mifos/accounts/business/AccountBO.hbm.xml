@@ -243,7 +243,7 @@
 			<key column="ACCOUNT_ID" />
 			<bag name="customerActivitDetails" cascade="all" inverse="true"
 				table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true"
-				order-by="CUSTOMER_ACCOUNT_ACTIVITY_ID desc">
+				order-by="CREATED_DATE desc">
 				<key column="ACCOUNT_ID" />
 				<one-to-many
 					class="org.mifos.customers.business.CustomerActivityEntity" />
