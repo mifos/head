@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CenterDetailsDto;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
@@ -429,7 +429,7 @@ public class ClientCustAction extends CustAction {
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         List<SavingsDetailDto> offeringsList = getSavingsOfferingsFromSession(request);
 
-        CenterDetailsDto clientDetails = this.customerServiceFacade.createClient(actionForm, meeting, userContext, offeringsList);
+        CustomerDetailsDto clientDetails = this.customerServiceFacade.createClient(actionForm, meeting, userContext, offeringsList);
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());

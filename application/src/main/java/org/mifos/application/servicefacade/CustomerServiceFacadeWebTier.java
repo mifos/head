@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import java.io.InputStream;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -310,7 +311,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext) {
+    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext) {
 
         try {
             List<CustomFieldView> customFields = actionForm.getCustomFields();
@@ -344,7 +345,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
-            return new CenterDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
+            return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
         } catch (InvalidDateException e) {
             throw new IllegalStateException(e);
         } catch (PersistenceException e) {
@@ -353,7 +354,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext)
+    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext)
             throws CustomerException {
 
         GroupBO group;
@@ -425,7 +426,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);
 
-            return new CenterDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
+            return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
         } catch (InvalidDateException e) {
             throw new MifosRuntimeException(e);
         } catch (PersistenceException e) {
@@ -434,7 +435,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
+    public CustomerDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
             List<SavingsDetailDto> offeringsList) {
 
         try {
@@ -445,7 +446,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             Short personnelId = null;
             Short officeId = null;
 
-            if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+            if (groupFlagValue(actionForm).equals(YesNoFlag.YES.getValue())) {
 
                 Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
                 CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
@@ -469,13 +470,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             if (personnelId != null) {
                 if (!ActivityMapper.getInstance().isSavePermittedForCustomer(
-                        actionForm.getStatusValue().getValue().shortValue(), userContext, officeId, personnelId)) {
+                        clientStatus(actionForm).getValue().shortValue(), userContext, officeId, personnelId)) {
                     throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
                 }
             } else {
-                if (!ActivityMapper.getInstance()
-                        .isSavePermittedForCustomer(actionForm.getStatusValue().getValue().shortValue(), userContext,
-                                officeId, userContext.getId())) {
+                if (!ActivityMapper.getInstance().isSavePermittedForCustomer(
+                        clientStatus(actionForm).getValue().shortValue(), userContext, officeId, userContext.getId())) {
                     throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
                 }
             }
@@ -496,41 +496,53 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
             List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
 
-            if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+            String clientName = clientName(actionForm);
+            CustomerStatus customerStatus = clientStatus(actionForm);
+            java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
+            String externalId = externalId(actionForm);
+            Address address = address(actionForm);
+            List<FeeView> fees = clientFees(actionForm);
+            PersonnelBO formedBy = formedByPersonnel(actionForm);
+            OfficeBO office = office(actionForm);
+            PersonnelBO loanOfficer = loanOfficer(actionForm);
+            java.sql.Date dateOfBirth = dateOfBirth(actionForm);
+            String governmentId = governmentId(actionForm);
+            Short trained = trainedValue(actionForm);
+            java.sql.Date trainedDate = trainedDate(actionForm);
+            Short groupFlagValue = groupFlagValue(actionForm);
+            ClientNameDetailView clientNameDetailView = clientNameDetailName(actionForm);
+            ClientNameDetailView spouseNameDetailView = null;
+
+            ClientDetailView clientDetailView = clientDetailView(actionForm);
+            InputStream picture = picture(actionForm);
+
+            if (groupFlagValue(actionForm).equals(YesNoFlag.NO.getValue())) {
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     actionForm.setFamilyDateOfBirth();
                     actionForm.constructFamilyDetails();
 
-                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                            .getStatusValue(), actionForm.getExternalId(), DateUtils
-                            .getDateAsSentFromBrowser(actionForm.getMfiJoiningDate()), actionForm.getAddress(),
-                            customFields, actionForm.getFeesToApply(), selectedOfferings, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getFormedByPersonnelValue()), new OfficePersistence()
-                                    .getOffice(actionForm.getOfficeIdValue()), meeting, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getLoanOfficerIdValue()), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm
-                                    .getGovernmentId(), actionForm.getTrainedValue(), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
-                                    .getGroupFlagValue(), actionForm.getClientName(), null, actionForm
-                                    .getClientDetailView(), actionForm.getCustomerPicture());
+                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
+                            office(actionForm), meeting, loanOfficer(actionForm), dateOfBirth(actionForm),
+                            governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
+                            groupFlagValue(actionForm), clientNameDetailName(actionForm), null,
+                            clientDetailView(actionForm), picture(actionForm));
 
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
 
                 } else {
 
-                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                            .getStatusValue(), actionForm.getExternalId(), DateUtils
-                            .getDateAsSentFromBrowser(actionForm.getMfiJoiningDate()), actionForm.getAddress(),
-                            customFields, actionForm.getFeesToApply(), selectedOfferings, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getFormedByPersonnelValue()), new OfficePersistence()
-                                    .getOffice(actionForm.getOfficeIdValue()), meeting, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getLoanOfficerIdValue()), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm
-                                    .getGovernmentId(), actionForm.getTrainedValue(), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
-                                    .getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
-                            actionForm.getClientDetailView(), actionForm.getCustomerPicture());
+                    spouseNameDetailView = spouseFatherName(actionForm);
+
+                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
+                            office(actionForm), meeting, loanOfficer(actionForm), dateOfBirth(actionForm),
+                            governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
+                            groupFlagValue(actionForm), clientNameDetailName(actionForm), spouseFatherName(actionForm),
+                            clientDetailView(actionForm), picture(actionForm));
                 }
 
             } else {
@@ -548,37 +560,30 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     actionForm.setFamilyDateOfBirth();
                     actionForm.constructFamilyDetails();
 
-                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                            .getStatusValue(), actionForm.getExternalId(), DateUtils
-                            .getDateAsSentFromBrowser(actionForm.getMfiJoiningDate()), actionForm.getAddress(),
-                            customFields, actionForm.getFeesToApply(), selectedOfferings, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getFormedByPersonnelValue()), group.getOffice(), group,
-                            DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm
-                                    .getGovernmentId(), actionForm.getTrainedValue(), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
-                                    .getGroupFlagValue(), actionForm.getClientName(), null, actionForm
-                                    .getClientDetailView(), actionForm.getCustomerPicture());
+                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
+                            group.getOffice(), group, dateOfBirth(actionForm), governmentId(actionForm),
+                            trainedValue(actionForm), trainedDate(actionForm), groupFlagValue(actionForm),
+                            clientNameDetailName(actionForm), spouseNameDetailView, clientDetailView(actionForm), picture(actionForm));
 
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
                 } else {
 
-                    client = new ClientBO(userContext, actionForm.getClientName().getDisplayName(), actionForm
-                            .getStatusValue(), actionForm.getExternalId(), DateUtils
-                            .getDateAsSentFromBrowser(actionForm.getMfiJoiningDate()), actionForm.getAddress(),
-                            customFields, actionForm.getFeesToApply(), selectedOfferings, new PersonnelPersistence()
-                                    .getPersonnel(actionForm.getFormedByPersonnelValue()), group.getOffice(), group,
-                            DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()), actionForm
-                                    .getGovernmentId(), actionForm.getTrainedValue(), DateUtils
-                                    .getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
-                                    .getGroupFlagValue(), actionForm.getClientName(), actionForm.getSpouseName(),
-                            actionForm.getClientDetailView(), actionForm.getCustomerPicture());
+                    client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
+                            externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
+                            clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm),
+                            group.getOffice(), group, dateOfBirth(actionForm), governmentId(actionForm),
+                            trainedValue(actionForm), trainedDate(actionForm), groupFlagValue(actionForm),
+                            clientNameDetailName(actionForm), spouseFatherName(actionForm), clientDetailView(actionForm),
+                            picture(actionForm));
                 }
 
             }
 
             new CustomerPersistence().saveCustomer(client);
 
-            return new CenterDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
+            return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
         } catch (InvalidDateException e) {
             throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
@@ -586,6 +591,78 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    private ClientNameDetailView spouseFatherName(ClientCustActionForm actionForm) {
+        return actionForm.getSpouseName();
+    }
+
+    private InputStream picture(ClientCustActionForm actionForm) {
+        return actionForm.getCustomerPicture();
+    }
+
+    private ClientDetailView clientDetailView(ClientCustActionForm actionForm) {
+        return actionForm.getClientDetailView();
+    }
+
+    private ClientNameDetailView clientNameDetailName(ClientCustActionForm actionForm) {
+        return actionForm.getClientName();
+    }
+
+    private Short groupFlagValue(ClientCustActionForm actionForm) {
+        return actionForm.getGroupFlagValue();
+    }
+
+    private Date trainedDate(ClientCustActionForm actionForm) throws InvalidDateException {
+        return DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
+    }
+
+    private Short trainedValue(ClientCustActionForm actionForm) {
+        return actionForm.getTrainedValue();
+    }
+
+    private String governmentId(ClientCustActionForm actionForm) {
+        return actionForm.getGovernmentId();
+    }
+
+    private Date dateOfBirth(ClientCustActionForm actionForm) throws InvalidDateException {
+        return DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
+    }
+
+    private PersonnelBO loanOfficer(ClientCustActionForm actionForm) throws PersistenceException {
+        return new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue());
+    }
+
+    private OfficeBO office(ClientCustActionForm actionForm) throws PersistenceException {
+        return new OfficePersistence().getOffice(actionForm.getOfficeIdValue());
+    }
+
+    private PersonnelBO formedByPersonnel(ClientCustActionForm actionForm) throws PersistenceException {
+        return new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue());
+    }
+
+    private List<FeeView> clientFees(ClientCustActionForm actionForm) {
+        return actionForm.getFeesToApply();
+    }
+
+    private Address address(ClientCustActionForm actionForm) {
+        return actionForm.getAddress();
+    }
+
+    private String externalId(ClientCustActionForm actionForm) {
+        return actionForm.getExternalId();
+    }
+
+    private Date mfiJoiningDate(ClientCustActionForm actionForm) throws InvalidDateException {
+        return DateUtils.getDateAsSentFromBrowser(actionForm.getMfiJoiningDate());
+    }
+
+    private CustomerStatus clientStatus(ClientCustActionForm actionForm) {
+        return actionForm.getStatusValue();
+    }
+
+    private String clientName(ClientCustActionForm actionForm) {
+        return clientNameDetailName(actionForm).getDisplayName();
     }
 
     private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
@@ -762,7 +839,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         String normalisedSearchString = org.mifos.framework.util.helpers.SearchUtils
-        .normalizeSearchString(searchString);
+                .normalizeSearchString(searchString);
 
         if (normalisedSearchString.equals("")) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
@@ -806,13 +883,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (CustomerException e) {
             throw e;
         } catch (ApplicationException e) {
-                throw new MifosRuntimeException(e);
+            throw new MifosRuntimeException(e);
         }
     }
 
     @Override
     public GroupBO transferGroupToBranch(String globalCustNum, Short officeId, UserContext userContext,
-            Integer previousGroupVersionNo) throws CustomerException{
+            Integer previousGroupVersionNo) throws CustomerException {
         try {
             OfficeBO transferToOffice = this.officeDao.findOfficeById(officeId);
             transferToOffice.setUserContext(userContext);
@@ -825,7 +902,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             GroupBO transferedGroup = this.customerService.transferGroupTo(group, transferToOffice);
 
             return transferedGroup;
-        }  catch (CustomerException e) {
+        } catch (CustomerException e) {
             throw e;
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -1066,20 +1143,20 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             ClientNameDetailView spouseFather = null;
             if (!ClientRules.isFamilyDetailsRequired()) {
-                spouseFather = actionForm.getSpouseName();
+                spouseFather = spouseFatherName(actionForm);
             }
 
             InputStream picture = null;
             if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
-                picture = actionForm.getCustomerPicture();
+                picture = picture(actionForm);
             }
 
-            Address address = actionForm.getAddress();
-            ClientNameDetailView clientNameDetails = actionForm.getClientName();
-            ClientDetailView clientDetail = actionForm.getClientDetailView();
+            Address address = address(actionForm);
+            ClientNameDetailView clientNameDetails = clientNameDetailName(actionForm);
+            ClientDetailView clientDetail = clientDetailView(actionForm);
 
-            String governmentId = actionForm.getGovernmentId();
-            String clientDisplayName = actionForm.getClientName().getDisplayName();
+            String governmentId = governmentId(actionForm);
+            String clientDisplayName = clientName(actionForm);
             String dateOfBirth = actionForm.getDateOfBirth();
 
             ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(clientCustomFields, address,
@@ -1202,22 +1279,22 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             client.setUserContext(userContext);
 
             boolean trained = false;
-            if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(YesNoFlag.YES.getValue())) {
+            if (trainedValue(actionForm) != null && trainedValue(actionForm).equals(YesNoFlag.YES.getValue())) {
                 trained = true;
             }
 
-            DateTime trainedDate = new DateTime(DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
+            DateTime trainedDate = new DateTime(trainedDate(actionForm));
 
             Short personnelId = null;
-            if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+            if (groupFlagValue(actionForm).equals(YesNoFlag.NO.getValue())) {
                 if (actionForm.getLoanOfficerIdValue() != null) {
                     personnelId = actionForm.getLoanOfficerIdValue();
                 }
-            } else if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+            } else if (groupFlagValue(actionForm).equals(YesNoFlag.YES.getValue())) {
                 personnelId = client.getPersonnel().getPersonnelId();
             }
 
-            ClientMfiInfoUpdate clientMfiInfoUpdate = new ClientMfiInfoUpdate(personnelId, actionForm.getExternalId(),
+            ClientMfiInfoUpdate clientMfiInfoUpdate = new ClientMfiInfoUpdate(personnelId, externalId(actionForm),
                     trained, trainedDate);
             this.customerService.updateClientMfiInfo(client, clientMfiInfoUpdate);
         } catch (ApplicationException e) {

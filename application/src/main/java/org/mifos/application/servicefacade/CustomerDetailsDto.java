@@ -20,12 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
-public class CenterDetailsDto {
+public class CustomerDetailsDto {
 
     private final Integer id;
     private final String globalCustNum;
 
-    public CenterDetailsDto(Integer id, String globalCustNum) {
+    public CustomerDetailsDto(Integer id, String globalCustNum) {
         this.id = id;
         this.globalCustNum = globalCustNum;
     }

@@ -29,7 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterCreation;
-import org.mifos.application.servicefacade.CenterDetailsDto;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterFormCreationDto;
 import org.mifos.application.servicefacade.CenterUpdate;
@@ -161,7 +161,7 @@ public class CenterCustAction extends CustAction {
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         UserContext userContext = getUserContext(request);
 
-        CenterDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, userContext);
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, userContext);
 
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());

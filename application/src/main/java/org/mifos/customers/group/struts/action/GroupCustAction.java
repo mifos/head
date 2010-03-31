@@ -27,7 +27,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CenterDetailsDto;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
@@ -189,7 +189,7 @@ public class GroupCustAction extends CustAction {
         UserContext userContext = getUserContext(request);
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        CenterDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext);
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext);
 
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());

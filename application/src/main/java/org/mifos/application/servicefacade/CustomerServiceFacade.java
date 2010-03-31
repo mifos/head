@@ -43,11 +43,11 @@ public interface CustomerServiceFacade {
 
     ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag, Short officeId, String parentGroupId);
 
-    CenterDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
+    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext);
 
-    CenterDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws CustomerException;
+    CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws CustomerException;
 
-    CenterDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList);
+    CustomerDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> offeringsList);
 
     CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
 
