@@ -35,6 +35,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -55,6 +57,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String transactionDateYY;
 
     private String amount;
+
+    private Short currencyId;
 
     private String receiptId;
 
@@ -180,7 +184,11 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     protected void validateAmount(ActionErrors errors, Locale locale) {
-        DoubleConversionResult conversionResult = validateAmount(getAmount(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
+        MifosCurrency currency = null;
+        if (getCurrencyId() != null && AccountingRules.isMultiCurrencyEnabled()) {
+            currency = AccountingRules.getCurrencyByCurrencyId(getCurrencyId());
+        }
+        DoubleConversionResult conversionResult = validateAmount(getAmount(), currency , AccountConstants.ACCOUNT_AMOUNT, errors, locale,
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         if (amountCannotBeZero() && conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
@@ -338,4 +346,11 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         this.transactionDateYY = transactionDateYY;
     }
 
+    public Short getCurrencyId() {
+        return this.currencyId;
+    }
+
+    public void setCurrencyId(Short currencyId) {
+        this.currencyId = currencyId;
+    }
 }

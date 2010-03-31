@@ -111,12 +111,15 @@ public class LoanDisbursementAction extends BaseAction {
                 request);
         loanDisbursementActionForm.setAmount(loan.getAmountTobePaidAtdisburtail().toString());
         loanDisbursementActionForm.setLoanAmount(loan.getLoanAmount().toString());
+        if (AccountingRules.isMultiCurrencyEnabled()) {
+            loanDisbursementActionForm.setCurrencyId(loan.getLoanAmount().getCurrency().getCurrencyId());
+        }
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
     private LoanBO getLoan(final LoanDisbursementActionForm loanDisbursementActionForm) throws ServiceException {
-        return ((LoanBusinessService) getService()).getAccount(Integer
-                .valueOf(loanDisbursementActionForm.getAccountId()));
+        return ((LoanBusinessService) getService()).getAccount(Integer.valueOf(loanDisbursementActionForm
+                .getAccountId()));
     }
 
     private static List<PaymentTypeEntity> getAcceptedPaymentTypes(final Short localeId) throws Exception {
@@ -132,7 +135,8 @@ public class LoanDisbursementAction extends BaseAction {
         if (AccountingRules.isBackDatedTxnAllowed()) {
             SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, loan.getDisbursementDate(), request);
         } else {
-            SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, DateUtils.toDatabaseFormat(currentDate), request);
+            SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, DateUtils.toDatabaseFormat(currentDate),
+                    request);
         }
     }
 
