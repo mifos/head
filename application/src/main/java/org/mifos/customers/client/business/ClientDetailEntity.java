@@ -28,7 +28,7 @@ import org.mifos.framework.business.PersistentObject;
 public class ClientDetailEntity extends PersistentObject {
 
     private final Integer customerId;
-    private final ClientBO client;
+    private ClientBO client;
     private Integer ethinicity;
     private Integer citizenship;
     private Integer handicapped;
@@ -65,7 +65,7 @@ public class ClientDetailEntity extends PersistentObject {
         this.povertyLikelihoodPercent = null;
     }
 
-    protected ClientDetailEntity() {
+    public ClientDetailEntity() {
         super();
         this.customerId = null;
         this.client = null;
@@ -184,6 +184,10 @@ public class ClientDetailEntity extends PersistentObject {
 
     public void setPovertyLikelihoodPercent(Double povertyLikelihoodPercent) {
         this.povertyLikelihoodPercent = povertyLikelihoodPercent;
+    }
+
+    public void setClient(ClientBO client) {
+        this.client = client;
     }
 
     public void updateClientDetails(ClientDetailView view) {

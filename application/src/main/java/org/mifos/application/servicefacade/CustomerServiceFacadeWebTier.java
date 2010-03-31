@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +31,13 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -45,6 +48,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.MifosRuntimeException;
@@ -64,12 +68,15 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientDetailEntity;
 import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
+import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.FamilyDetailDTO;
+import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -436,18 +443,61 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
+    public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
             List<SavingsDetailDto> offeringsList) {
 
         try {
+            String clientName = clientName(actionForm);
+            CustomerStatus clientStatus = clientStatus(actionForm);
+            java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
+            String externalId = externalId(actionForm);
+            Address address = address(actionForm);
+            List<FeeView> fees = clientFees(actionForm);
+            PersonnelBO formedBy = formedByPersonnel(actionForm);
+            OfficeBO office = office(actionForm);
+            PersonnelBO loanOfficer = loanOfficer(actionForm);
+            java.sql.Date dateOfBirth = dateOfBirth(actionForm);
+            String governmentId = governmentId(actionForm);
+            Short trained = trainedValue(actionForm);
+            java.sql.Date trainedDate = trainedDate(actionForm);
+            Short groupFlagValue = groupFlagValue(actionForm);
+            ClientNameDetailView clientNameDetailView = clientNameDetailName(actionForm);
+            ClientDetailView clientDetailView = clientDetailView(actionForm);
+            InputStream picture = picture(actionForm);
+
             ClientBO client = null;
             List<CustomFieldView> customFields = actionForm.getCustomFields();
             CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
+            List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
+
+            List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(ClientConstants.MAX_OFFERINGS_SIZE);
+
+            for (Short offeringId : actionForm.getSelectedOfferings()) {
+                if (offeringId != null) {
+                    for (SavingsDetailDto savingsOffering : offeringsList) {
+                        if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
+                            selectedOfferings1.add(savingsOffering);
+                        }
+                    }
+                }
+            }
+
+            // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
+            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+
             Short personnelId = null;
             Short officeId = null;
 
-            if (groupFlagValue(actionForm).equals(YesNoFlag.YES.getValue())) {
+            ClientNameDetailView spouseNameDetailView = null;
+            if (ClientRules.isFamilyDetailsRequired()) {
+                actionForm.setFamilyDateOfBirth();
+                actionForm.constructFamilyDetails();
+            } else {
+                spouseNameDetailView = spouseFatherName(actionForm);
+            }
+
+            if (YesNoFlag.YES.getValue().equals(groupFlagValue(actionForm))) {
 
                 Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
                 CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
@@ -464,88 +514,67 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 }
 
                 officeId = group.getOffice().getOfficeId();
+
+                // FIXME - using static factory to create clients
+//                client = createClientInheritingFromGroup(actionForm, userContext, customFields, selectedOfferings,
+//                        spouseNameDetailView, group);
+
+                String secondMiddleName = null;
+                ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, clientNameDetailView);
+
+                ClientNameDetailEntity spouseFatherNameDetailEntity = null;
+                if (spouseNameDetailView != null) {
+                    spouseFatherNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, spouseNameDetailView);
+                }
+
+                ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
+                clientDetailEntity.updateClientDetails(clientDetailView);
+
+                DateTime dob = new DateTime(dateOfBirth);
+                boolean trainedBool = isTrained(trained);
+                DateTime trainedDateTime = new DateTime(trainedDate);
+                String clientFirstName = clientNameDetailView.getFirstName();
+                String clientLastName = clientNameDetailView.getLastName();
+                String secondLastName = clientNameDetailView.getSecondLastName();
+
+                Blob pictureAsBlob = null;
+                if (picture != null) {
+                    pictureAsBlob = new ClientPersistence().createBlob(picture);
+                }
+
+                List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
+
+                for (SavingsOfferingBO offering : selectedOfferings) {
+                    offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
+                }
+
+                client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
+                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
+
+                if (client.isActive()) {
+                    client.validateFieldsForActiveClient(loanOfficer, meeting);
+                    client.createAccountsForClient();
+
+                    // FIXME - keithw - pass in this info to method
+                    List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+                    List<Holiday> holidays = new ArrayList<Holiday>();
+                    client.createDepositSchedule(workingDays, holidays);
+                }
+                client.generateSearchId();
+
             } else {
                 personnelId = actionForm.getLoanOfficerIdValue();
                 officeId = actionForm.getOfficeIdValue();
-            }
-
-            if (personnelId != null) {
-                if (!ActivityMapper.getInstance().isSavePermittedForCustomer(
-                        clientStatus(actionForm).getValue().shortValue(), userContext, officeId, personnelId)) {
-                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-                }
-            } else {
-                if (!ActivityMapper.getInstance().isSavePermittedForCustomer(
-                        clientStatus(actionForm).getValue().shortValue(), userContext, officeId, userContext.getId())) {
-                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-                }
-            }
-
-            List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(
-                    ClientConstants.MAX_OFFERINGS_SIZE);
-
-            for (Short offeringId : actionForm.getSelectedOfferings()) {
-                if (offeringId != null) {
-                    for (SavingsDetailDto savingsOffering : offeringsList) {
-                        if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
-                            selectedOfferings1.add(savingsOffering);
-                        }
-                    }
-                }
-            }
-
-            // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
-            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
-
-            String clientName = clientName(actionForm);
-            CustomerStatus customerStatus = clientStatus(actionForm);
-            java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
-            String externalId = externalId(actionForm);
-            Address address = address(actionForm);
-            List<FeeView> fees = clientFees(actionForm);
-            PersonnelBO formedBy = formedByPersonnel(actionForm);
-            OfficeBO office = office(actionForm);
-            PersonnelBO loanOfficer = loanOfficer(actionForm);
-            java.sql.Date dateOfBirth = dateOfBirth(actionForm);
-            String governmentId = governmentId(actionForm);
-            Short trained = trainedValue(actionForm);
-            java.sql.Date trainedDate = trainedDate(actionForm);
-            Short groupFlagValue = groupFlagValue(actionForm);
-            ClientNameDetailView clientNameDetailView = clientNameDetailName(actionForm);
-
-            ClientDetailView clientDetailView = clientDetailView(actionForm);
-            InputStream picture = picture(actionForm);
-
-            ClientNameDetailView spouseNameDetailView = null;
-            if (ClientRules.isFamilyDetailsRequired()) {
-                actionForm.setFamilyDateOfBirth();
-                actionForm.constructFamilyDetails();
-            } else {
-                spouseNameDetailView = spouseFatherName(actionForm);
-            }
-
-            if (YesNoFlag.NO.getValue().equals(groupFlagValue(actionForm))) {
 
                 client = createClientOutOfGroupHierarchy(actionForm, meeting, userContext, customFields,
                         selectedOfferings, spouseNameDetailView);
-            } else {
-                Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
-                CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
-
-                if (group.getParentCustomer() != null) {
-                    actionForm.setGroupDisplayName(group.getDisplayName());
-                    if (group.getParentCustomer() != null) {
-                        actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
-                    }
-                }
-
-                client = createClientInheritingFromGroup(actionForm, userContext, customFields, selectedOfferings,
-                        spouseNameDetailView, group);
             }
 
             if (ClientRules.isFamilyDetailsRequired()) {
                 client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
             }
+
+            checkPermissionForCreate(actionForm.getStatusValue().getValue(), userContext, officeId, personnelId);
 
             new CustomerPersistence().saveCustomer(client);
 
@@ -557,6 +586,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    private boolean isTrained(Short trainedValue) {
+        return Short.valueOf("1").equals(trainedValue);
     }
 
     private ClientBO createClientInheritingFromGroup(ClientCustActionForm actionForm, UserContext userContext,

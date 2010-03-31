@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -54,6 +55,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
@@ -82,52 +84,70 @@ import org.mifos.security.util.UserContext;
 
 public class ClientBO extends CustomerBO {
 
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
+
     private CustomerPictureEntity customerPicture;
-
-    private final Set<ClientNameDetailEntity> nameDetailSet;
-
-    private Set<ClientFamilyDetailEntity> familyDetailSet;
-
-    private final Set<ClientAttendanceBO> clientAttendances;
-
     private Date dateOfBirth;
-
     private String governmentId;
-
     private ClientPerformanceHistoryEntity clientPerformanceHistory;
-
     private Short groupFlag;
-
     private String firstName;
-
     private String lastName;
-
     private String secondLastName;
-
     private ClientDetailEntity customerDetail;
 
+    private final Set<ClientNameDetailEntity> nameDetailSet;
+    private Set<ClientFamilyDetailEntity> familyDetailSet;
+    private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
-
-    public void setOfferingsAssociatedInCreate(Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
-        this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
-    }
-
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 
     private ClientPersistence clientPersistence = null;
     private SavingsPersistence savingsPersistence = null;
     private SavingsPrdPersistence savingsPrdPersistence = null;
     private OfficePersistence officePersistence = null;
 
-    public OfficePersistence getOfficePersistence() {
-        if (null == officePersistence) {
-            officePersistence = new OfficePersistence();
-        }
-        return officePersistence;
-    }
+    public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
+            CustomerStatus clientStatus, DateTime mfiJoiningDate, CustomerBO group, PersonnelBO formedBy,
+            List<CustomerCustomFieldEntity> customerCustomFields, ClientNameDetailEntity clientNameDetailEntity,
+            DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
+            String clientFirstName, String clientLastName, String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
+            ClientDetailEntity clientDetailEntity, Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
 
-    public void setOfficePersistence(final OfficePersistence officePersistence) {
-        this.officePersistence = officePersistence;
+        // inherit settings from parent (group)
+        OfficeBO office = group.getOffice();
+        MeetingBO meeting = group.getCustomerMeetingValue();
+        PersonnelBO loanOfficer = group.getPersonnel();
+
+        ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
+                loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
+
+        clientNameDetailEntity.setClient(client);
+        client.addNameDetailSet(clientNameDetailEntity);
+
+        spouseFatherNameDetailEntity.setClient(client);
+        client.addNameDetailSet(spouseFatherNameDetailEntity);
+
+        client.createOrUpdatePicture(pictureAsBlob);
+
+        for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
+            client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
+        }
+
+        client.setParentCustomer(group);
+
+//      checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
+//        validateOffice(office);
+//        validateOfferings(offeringsSelected);
+//        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+
+
+        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+                .fromCustomerCustomFieldEntity(customerCustomFields, client);
+        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+            client.addCustomField(customerCustomFieldEntity);
+        }
+
+        return client;
     }
 
     /**
@@ -143,9 +163,44 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal legal constructor
+     * minimal constructor for client creation
+     */
+    public ClientBO(UserContext userContext, String clientName, CustomerStatus clientStatus, DateTime mfiJoiningDate,
+            OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, PersonnelBO formedBy, DateTime dateOfBirth,
+            String governmentId, boolean trained, DateTime trainedDate, Short groupFlag, String clientFirstName, String clientLastName, String secondLastName, ClientDetailEntity clientDetailEntity) {
+        super(userContext, clientName, CustomerLevel.CLIENT, clientStatus, mfiJoiningDate, office, meeting,
+                loanOfficer, formedBy);
+
+        this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
+        this.clientAttendances = new HashSet<ClientAttendanceBO>();
+        this.offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
+        this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
+        this.familyDetailSet = null;
+        this.dateOfBirth = dateOfBirth.toDate();
+        this.governmentId = governmentId;
+
+        if (trained) {
+            setTrained(trained);
+        } else {
+            setTrained(YesNoFlag.NO.getValue());
+        }
+        setTrainedDate(trainedDate.toDate());
+
+        this.groupFlag = groupFlag;
+        this.firstName = clientFirstName;
+        this.lastName = clientLastName;
+        this.secondLastName = secondLastName;
+
+        clientDetailEntity.setClient(this);
+        this.customerDetail = clientDetailEntity;
+
+        if (isActive()) {
+            this.setCustomerActivationDate(this.getCreatedDate());
+        }
+    }
+
+    /**
+     * @deprecated - use static factory classes
      */
     public ClientBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
             final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
@@ -195,27 +250,30 @@ public class ClientBO extends CustomerBO {
         validateOfferings(offeringsSelected);
         nameDetailSet = new HashSet<ClientNameDetailEntity>();
         clientAttendances = new HashSet<ClientAttendanceBO>();
+        offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
         this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
         this.familyDetailSet=null;
         this.dateOfBirth = dateOfBirth;
         this.governmentId = governmentId;
+
         if (trained != null) {
             setTrained(trained);
         } else {
             setTrained(YesNoFlag.NO.getValue());
         }
         setTrainedDate(trainedDate);
+
         this.groupFlag = groupFlag;
         this.firstName = clientNameDetailView.getFirstName();
         this.lastName = clientNameDetailView.getLastName();
         this.secondLastName = clientNameDetailView.getSecondLastName();
+
         this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailView));
         if(spouseNameDetailView!=null) {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         }
         this.customerDetail = new ClientDetailEntity(this, clientDetailView);
         createPicture(picture);
-        offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
         createAssociatedOfferings(offeringsSelected);
         validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
@@ -234,6 +292,11 @@ public class ClientBO extends CustomerBO {
             createDepositSchedule(workingDays, holidays);
         }
         generateSearchId();
+    }
+
+    public void addOfferingAssociatedInCreate(final ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity) {
+        clientInitialSavingsOfferingEntity.setClient(this);
+        this.offeringsAssociatedInCreate.add(clientInitialSavingsOfferingEntity);
     }
 
     public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView, final List<ClientFamilyDetailView> familyDetailView) {
@@ -359,9 +422,10 @@ public class ClientBO extends CustomerBO {
 
     public void addFamilyDetailSet(final ClientFamilyDetailEntity clientFamilyDetail){
         this.familyDetailSet.add(clientFamilyDetail);
-     }
+    }
+
     @Override
-    public boolean isActive() {
+    public final boolean isActive() {
         return getStatus() == CustomerStatus.CLIENT_ACTIVE;
     }
 
@@ -640,6 +704,10 @@ public class ClientBO extends CustomerBO {
         return null;
     }
 
+    /**
+     * @deprecated -
+     */
+    @Deprecated
     public void updateClientDetails(final ClientDetailView clientDetailView) {
         customerDetail.updateClientDetails(clientDetailView);
     }
@@ -660,10 +728,10 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void createAssociatedOfferings(final List<SavingsOfferingBO> offeringsSelected) {
+    public void createAssociatedOfferings(final List<SavingsOfferingBO> offeringsSelected) {
         if (offeringsSelected != null) {
             for (SavingsOfferingBO offering : offeringsSelected) {
-                offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(this, offering));
+                this.offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(this, offering));
             }
         }
     }
@@ -723,7 +791,7 @@ public class ClientBO extends CustomerBO {
 
     }
 
-    private void generateSearchId() throws CustomerException {
+    public void generateSearchId() throws CustomerException {
         int count;
         if (getParentCustomer() != null) {
             childAddedForParent(getParentCustomer());
@@ -740,13 +808,13 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void validateForDuplicateNameOrGovtId(final String displayName, final Date dateOfBirth, final String governmentId)
+    public void validateForDuplicateNameOrGovtId(final String displayName, final Date dateOfBirth, final String governmentId)
             throws CustomerException {
         checkForDuplicates(displayName, dateOfBirth, governmentId, getCustomerId() == null ? Integer.valueOf("0")
                 : getCustomerId());
     }
 
-    private void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting) throws CustomerException {
+    public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting) throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
                 validateLO(loanOfficer);
@@ -1066,5 +1134,20 @@ public class ClientBO extends CustomerBO {
         } else {
             this.customerPicture = new CustomerPictureEntity(this, pictureAsBlob);
         }
+    }
+
+    public OfficePersistence getOfficePersistence() {
+        if (null == officePersistence) {
+            officePersistence = new OfficePersistence();
+        }
+        return officePersistence;
+    }
+
+    public void setOfficePersistence(final OfficePersistence officePersistence) {
+        this.officePersistence = officePersistence;
+    }
+
+    public void setOfferingsAssociatedInCreate(Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
+        this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
     }
 }

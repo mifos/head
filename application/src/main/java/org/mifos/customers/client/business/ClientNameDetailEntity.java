@@ -28,7 +28,7 @@ import org.mifos.framework.business.util.Name;
 public class ClientNameDetailEntity extends PersistentObject {
 
     private final Integer customerNameId;
-    private final ClientBO client;
+    private ClientBO client;
     private Short nameType;
     private Integer salutation;
     private String secondMiddleName;
@@ -125,5 +125,9 @@ public class ClientNameDetailEntity extends PersistentObject {
 
     public boolean matchesCustomerId(Integer customerNameIdToMatch) {
         return this.customerNameId.equals(customerNameIdToMatch);
+    }
+
+    public void setClient(ClientBO client) {
+        this.client = client;
     }
 }

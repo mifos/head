@@ -24,12 +24,11 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class ClientInitialSavingsOfferingEntity extends PersistentObject {
+
     @SuppressWarnings("unused")
-    // see .hbm.xml file
     private final Integer clientOfferingId;
     @SuppressWarnings("unused")
-    // see .hbm.xml file
-    private final ClientBO client;
+    private ClientBO client;
     private final SavingsOfferingBO savingsOffering;
 
     public ClientInitialSavingsOfferingEntity(ClientBO client, SavingsOfferingBO savingsOffering) {
@@ -46,5 +45,9 @@ public class ClientInitialSavingsOfferingEntity extends PersistentObject {
 
     public SavingsOfferingBO getSavingsOffering() {
         return savingsOffering;
+    }
+
+    public void setClient(ClientBO client) {
+        this.client = client;
     }
 }
