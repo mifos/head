@@ -20,8 +20,6 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.mifos.framework.util.helpers.DateUtils.getCalendar;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,9 +37,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
@@ -72,6 +68,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private long rollingStartTime;
     private int accountCount;
     private int currentRecordNumber;
+    private ScheduledDateGeneration dateGeneration;
 
     private enum ScheduleTypes {
         CUSTOMER, LOAN, SAVINGS;
@@ -86,7 +83,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 
-        currentRecordNumber = 0;
         outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
         batchSize = GeneralConfig.getBatchSizeForBatchJobs();
         // int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
@@ -102,6 +98,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         List<String> errorList = new ArrayList<String>();
         if (unappliedHolidays != null && !unappliedHolidays.isEmpty()) {
+
+            createDateGeneration();
             for (HolidayBO holiday : unappliedHolidays) {
                 logMessage("Processing Holiday: " + holiday.getHolidayName());
                 try {
@@ -162,6 +160,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         long startTime = new DateTimeService().getCurrentDateTime().getMillis();
         rollingStartTime = startTime;
+        currentRecordNumber = 0;
         accountCount = accountIds.size();
         logMessage("No. of " + scheduleType.toString() + " Accounts to Process: " + accountCount);
 
@@ -207,15 +206,16 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 throw new RuntimeException("No Loan Schedules were affected.  There should have been at least one.");
             }
 
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
             for (LoanScheduleEntity loanScheduleEntity : affectedDates) {
 
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(loanScheduleEntity.getActionDate()),
-                        loadedMeeting).getTime();
-                loanScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
+                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(loanScheduleEntity.getActionDate())
+                        .toDateMidnight().toDateTime();
+                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
+                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
+                loanScheduleEntity.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
             }
         } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (MeetingException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
         } catch (PersistenceException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
@@ -233,22 +233,23 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 throw new RuntimeException("No Savings Schedules were affected.  There should have been at least one.");
             }
 
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
             for (SavingsScheduleEntity savingScheduleEntity : affectedDates) {
 
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(savingScheduleEntity.getActionDate()),
-                        loadedMeeting).getTime();
-                savingScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
+                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(savingScheduleEntity
+                        .getActionDate()).toDateMidnight().toDateTime();
+                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
+                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
+                savingScheduleEntity.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
             }
         } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (MeetingException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
         } catch (PersistenceException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
         }
     }
 
-    public void rescheduleCustomerDates(final Integer accountId, final Date fromDate, final Date thruDate)
+    private void rescheduleCustomerDates(final Integer accountId, final Date fromDate, final Date thruDate)
             throws RuntimeException {
         try {
             CustomerAccountBO customerAccount = (CustomerAccountBO) new AccountBusinessService().getAccount(accountId);
@@ -259,20 +260,15 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 throw new RuntimeException("No Customer Schedules were affected.  There should have been at least one.");
             }
 
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
-
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
-                    thisAndNextYearsHolidays);
             for (CustomerScheduleEntity customerSchedule : affectedDates) {
 
-                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(customerSchedule.getActionDate()).toDateMidnight().toDateTime();
-                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1, previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
-//                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
-//                        loadedMeeting).getTime();
+                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(customerSchedule.getActionDate())
+                        .toDateMidnight().toDateTime();
+                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
+                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
+                // Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
+                // loadedMeeting).getTime();
                 customerSchedule.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
             }
         } catch (ServiceException e) {
@@ -285,6 +281,14 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     @Override
     public boolean isTaskAllowedToRun() {
         return true;
+    }
+
+    private void createDateGeneration() {
+
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+        dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, thisAndNextYearsHolidays);
     }
 
     private void houseKeeping() {
