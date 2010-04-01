@@ -827,8 +827,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    // FIXME - #000007 - keithw - put back in when savingofferings translation is done!
-    public void ignore_testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
+    public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsPrd1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
         List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
@@ -878,6 +877,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.preview_success.toString());
+
+        MeetingBO weeklyMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
+        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "create");
         addRequestParameter("input", "create");
@@ -887,6 +889,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
+
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
         client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
@@ -934,9 +937,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        MeetingBO weeklyMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
 
+        MeetingBO weeklyMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
+
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");

@@ -427,9 +427,9 @@ public class ClientCustAction extends CustAction {
         UserContext userContext = getUserContext(request);
 
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-        List<SavingsDetailDto> offeringsList = getSavingsOfferingsFromSession(request);
+        List<SavingsDetailDto> allowedSavingProducts = getSavingsOfferingsFromSession(request);
 
-        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, userContext, offeringsList);
+        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, userContext, allowedSavingProducts);
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());

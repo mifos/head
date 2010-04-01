@@ -116,14 +116,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException {
+    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees, List<SavingsOfferingBO> savingProducts) throws CustomerException {
 
         if (client.isStatusValidationRequired()) {
             client.validateClientStatus();
         }
 
         client.validateOffice();
-        client.validateOfferings();
+//        client.validateOfferings();
 //        FIXME - use customerDao.validate methods to validation governmentid and dob info for clients
 //        client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
@@ -139,15 +139,11 @@ public class CustomerServiceImpl implements CustomerService {
                             .getSavingsOffering().getPrdOfferingId());
                     if (savingsOffering.isActive()) {
 
-                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
-                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
 
-                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
-                                customFieldDefs, userContext.getPreferredLocale());
+                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefs, userContext.getPreferredLocale());
 
-                        SavingsBO savingsAccount = new SavingsBO(userContext, savingsOffering, client,
-                                AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
-                                savingCustomFieldViews);
+                        SavingsBO savingsAccount = new SavingsBO(userContext, savingsOffering, client,AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),savingCustomFieldViews);
                         savingsAccounts.add(savingsAccount);
                     }
                 } catch (PersistenceException pe) {
@@ -183,8 +179,7 @@ public class CustomerServiceImpl implements CustomerService {
                             if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
                                     .getRecommendedAmntUnit().getId().equals(
                                             RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(),
-                                        workingDays, holidays);
+                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
                             }
                         }
                     }

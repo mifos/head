@@ -23,6 +23,7 @@ package org.mifos.customers.business.service;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -44,7 +45,7 @@ public interface CustomerService {
 
     void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
 
-    void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
+    void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees, List<SavingsOfferingBO> selectedOfferings) throws CustomerException;
 
     void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center);
 

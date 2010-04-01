@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,7 +95,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     private FormFile picture;
     private InputStream customerPicture;
     private int age;
-    private final List<Short> selectedOfferings;
+    private List<Short> selectedOfferings = new ArrayList<Short>();
     private List<ClientNameDetailView> familyNames;
     private List<ClientFamilyDetailView> familyDetails;
     private int[] relativePrimaryKey = new int[ClientRules.getMaximumNumberOfFamilyMembers()];
@@ -115,11 +117,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     public ClientCustActionForm() {
         super();
-        selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
-        for (int i = 0; i < ClientConstants.MAX_OFFERINGS_SIZE; i++) {
-            selectedOfferings.add(null);
-        }
-
+        selectedOfferings = new ArrayList<Short>();
         initializeFamilyMember();
         addFamilyMember();
     }
@@ -312,17 +310,13 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     }
 
-    public List<Short> getSelectedOfferings() {
-        return selectedOfferings;
-    }
-
-    public Short getSavingsOffering(int i) {
-        return (i < ClientConstants.MAX_OFFERINGS_SIZE) ? selectedOfferings.get(i) : null;
+    public Set<Short> getSelectedOfferings() {
+        return new HashSet<Short>(selectedOfferings);
     }
 
     public void setSavingsOffering(int i, Short value) {
         if (i < ClientConstants.MAX_OFFERINGS_SIZE) {
-            selectedOfferings.set(i, value);
+            selectedOfferings.add(i, value);
         }
     }
 
@@ -527,31 +521,28 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     @SuppressWarnings("unchecked")
     private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
-        boolean duplicateFound = false;
-        for (int i = 0; i < selectedOfferings.size() - 1; i++) {
-            for (int j = i + 1; j < selectedOfferings.size(); j++) {
-                if (selectedOfferings.get(i) != null && selectedOfferings.get(j) != null
-                        && selectedOfferings.get(i).equals(selectedOfferings.get(j))) {
+
+        Set<Short> uniqueProducts = new HashSet<Short>();
+        for (Short productId : selectedOfferings) {
+
+            if (productId != null) {
+                boolean isUnique = uniqueProducts.add(productId);
+
+                if (!isUnique) {
                     String selectedOffering = "";
                     try {
                         List<SavingsDetailDto> offeringsList = (List<SavingsDetailDto>) SessionUtils.getAttribute(
                                 ClientConstants.SAVINGS_OFFERING_LIST, request);
                         for (SavingsDetailDto savingsOffering : offeringsList) {
-                            if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId())) {
+                            if (productId.equals(savingsOffering.getPrdOfferingId())) {
                                 selectedOffering = savingsOffering.getPrdOfferingName();
                             }
-                            break;
                         }
                     } catch (PageExpiredException pee) {
                     }
                     errors.add(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, new ActionMessage(
                             ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, selectedOffering));
-                    duplicateFound = true;
-                    break;
                 }
-            }
-            if (duplicateFound) {
-                break;
             }
         }
     }
@@ -1068,10 +1059,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         setSpouseName(new ClientNameDetailView());
         setClientDetailView(new ClientDetailView());
         setNextOrPreview("next");
-
-        for (int i = 0; i < getSelectedOfferings().size(); i++) {
-            getSelectedOfferings().set(i, null);
-        }
+        this.selectedOfferings = new ArrayList<Short>();
     }
 
     public void setLoanOfficerName(String loanOfficerName) {

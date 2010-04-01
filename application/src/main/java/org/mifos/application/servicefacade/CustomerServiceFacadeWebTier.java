@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
@@ -36,6 +37,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -75,7 +77,6 @@ import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
-import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
@@ -440,12 +441,14 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext,
-            List<SavingsDetailDto> offeringsList) throws CustomerException {
+            List<SavingsDetailDto> allowedSavingProducts) throws CustomerException {
 
         try {
+            Set<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
             String clientName = clientName(actionForm);
             CustomerStatus clientStatus = clientStatus(actionForm);
             java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
+            // FIXME - #00034 - keithw - set external id and address and fees on client accounts...
             String externalId = externalId(actionForm);
             Address address = address(actionForm);
             List<FeeView> fees = clientFees(actionForm);
@@ -465,20 +468,21 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
 
-            List<SavingsDetailDto> selectedOfferings1 = new ArrayList<SavingsDetailDto>(ClientConstants.MAX_OFFERINGS_SIZE);
+            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
 
-            for (Short offeringId : actionForm.getSelectedOfferings()) {
-                if (offeringId != null) {
-                    for (SavingsDetailDto savingsOffering : offeringsList) {
-                        if (offeringId.equals(savingsOffering.getPrdOfferingId())) {
-                            selectedOfferings1.add(savingsOffering);
+            for (Short productId : selectedSavingProducts) {
+
+                if (productId != null) {
+
+                    for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
+                        if (productId.equals(savingsOffering.getPrdOfferingId())) {
+
+                            SavingsOfferingBO savingsProduct = new SavingsPrdPersistence().getSavingsProduct(productId);
+                            selectedOfferings.add(savingsProduct);
                         }
                     }
                 }
             }
-
-            // FIXME - keithw - translate from savingsDetailsDto to savingsOfferings
-            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
 
             Short personnelId = null;
             Short officeId = null;
@@ -514,6 +518,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 pictureAsBlob = new ClientPersistence().createBlob(picture);
             }
 
+            // FIXME - keithw - is this required to be passed to client?
             List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
 
             for (SavingsOfferingBO offering : selectedOfferings) {
@@ -541,7 +546,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
-                this.customerService.createClient(client, client.getCustomerMeetingValue(), new ArrayList<AccountFeesEntity>());
+                this.customerService.createClient(client, client.getCustomerMeetingValue(), new ArrayList<AccountFeesEntity>(), selectedOfferings);
 
             } else {
                 personnelId = actionForm.getLoanOfficerIdValue();
@@ -555,7 +560,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
-                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>());
+                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>(), selectedOfferings);
             }
 
             if (ClientRules.isFamilyDetailsRequired()) {

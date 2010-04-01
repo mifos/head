@@ -995,19 +995,6 @@ public class ClientBO extends CustomerBO {
         return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId), CustomerStatus.fromInt(parentStatus));
     }
 
-    public void validateOfferings() throws CustomerException {
-
-        for (ClientInitialSavingsOfferingEntity savingsOfferingEntity : offeringsAssociatedInCreate) {
-            for (ClientInitialSavingsOfferingEntity savingsOfferingEntityInner : offeringsAssociatedInCreate) {
-                SavingsOfferingBO savingsProduct = savingsOfferingEntity.getSavingsOffering();
-                SavingsOfferingBO savingsProductInner = savingsOfferingEntityInner.getSavingsOffering();
-                if (savingsProduct.getPrdOfferingId().equals(savingsProductInner.getPrdOfferingId())) {
-                    throw new CustomerException(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED);
-                }
-            }
-        }
-    }
-
     @Deprecated
     private void validateOfferings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
         if (offeringsSelected != null) {
