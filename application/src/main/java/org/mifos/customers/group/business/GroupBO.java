@@ -201,6 +201,7 @@ public class GroupBO extends CustomerBO {
     // FIXME - GROUP-CUST-REFACTORING - move out from pojo into service level
     public void transferToBranch(final OfficeBO officeToTransfer) throws CustomerException {
 //        validateNewOffice(officeToTransfer);
+//        validateForActiveAccounts();
         logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() + "to branch : "
                 + officeToTransfer.getOfficeId());
 //        validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
