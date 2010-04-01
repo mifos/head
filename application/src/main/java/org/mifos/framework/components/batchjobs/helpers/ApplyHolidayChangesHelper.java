@@ -53,15 +53,15 @@ import org.mifos.framework.util.DateTimeService;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
-    List<HolidayBO> unappliedHolidays;
-    AccountPersistence accountPersistence = new AccountPersistence();
+    private List<HolidayBO> unappliedHolidays;
+    private AccountPersistence accountPersistence = new AccountPersistence();
 
-    int outputIntervalForBatchJobs;
-    int batchSize;
-    int recordCommittingSize;
-    long rollingStartTime;
-    int accountCount;
-    int currentRecordNumber;
+    private int outputIntervalForBatchJobs;
+    private int batchSize;
+    private int recordCommittingSize;
+    private long rollingStartTime;
+    private int accountCount;
+    private int currentRecordNumber;
 
     private enum ScheduleTypes {
         CUSTOMER, LOAN, SAVINGS;

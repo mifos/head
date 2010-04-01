@@ -44,12 +44,12 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
         scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
 
-        DateTime ninthOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(9).withDayOfWeek(DayOfWeek.wednesday())
+        DateTime wednesday7thOfApril = new DateTime().withDayOfMonth(7).withMonthOfYear(4).withYear(2010).withDayOfWeek(DayOfWeek.wednesday())
                 .toDateMidnight().toDateTime();
 
-        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(ninthOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(wednesday7thOfApril);
 
-        assertThat(result, is(tuesdayOnFirstWeekOneMonthFrom(ninthOfNextMonth)));
+        assertThat(result, is(tuesdayOnFirstWeekOneMonthFrom(wednesday7thOfApril)));
     }
 
     private DateTime tuesdayOnFirstWeekOneMonthFrom(final DateTime from) {
