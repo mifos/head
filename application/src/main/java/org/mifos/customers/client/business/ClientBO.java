@@ -144,6 +144,41 @@ public class ClientBO extends CustomerBO {
         return client;
     }
 
+    public static ClientBO createNewOutOfGroupHierarchy(UserContext userContext, String clientName,
+            CustomerStatus clientStatus, DateTime mfiJoiningDate, OfficeBO office, PersonnelBO loanOfficer,
+            MeetingBO meeting, PersonnelBO formedBy, List<CustomerCustomFieldEntity> customerCustomFields,
+            ClientNameDetailEntity clientNameDetailEntity, DateTime dob, String governmentId, boolean trainedBool,
+            DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
+            String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
+            ClientDetailEntity clientDetailEntity, Blob pictureAsBlob,
+            List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
+
+        ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
+                loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
+
+        clientNameDetailEntity.setClient(client);
+        client.addNameDetailSet(clientNameDetailEntity);
+
+        spouseFatherNameDetailEntity.setClient(client);
+        client.addNameDetailSet(spouseFatherNameDetailEntity);
+
+        client.createOrUpdatePicture(pictureAsBlob);
+
+        for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
+            client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
+        }
+
+        client.setParentCustomer(null);
+
+        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+                .fromCustomerCustomFieldEntity(customerCustomFields, client);
+        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+            client.addCustomField(customerCustomFieldEntity);
+        }
+
+        return client;
+    }
+
     /**
      * default cosntructor for hibernate
      */

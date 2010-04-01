@@ -87,7 +87,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDto;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -451,8 +450,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             Address address = address(actionForm);
             List<FeeView> fees = clientFees(actionForm);
             PersonnelBO formedBy = formedByPersonnel(actionForm);
-            OfficeBO office = office(actionForm);
-            PersonnelBO loanOfficer = loanOfficer(actionForm);
             java.sql.Date dateOfBirth = dateOfBirth(actionForm);
             String governmentId = governmentId(actionForm);
             Short trained = trainedValue(actionForm);
@@ -494,6 +491,35 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 spouseNameDetailView = spouseFatherName(actionForm);
             }
 
+            String secondMiddleName = null;
+            ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, clientNameDetailView);
+
+            ClientNameDetailEntity spouseFatherNameDetailEntity = null;
+            if (spouseNameDetailView != null) {
+                spouseFatherNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, spouseNameDetailView);
+            }
+
+            ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
+            clientDetailEntity.updateClientDetails(clientDetailView);
+
+            DateTime dob = new DateTime(dateOfBirth);
+            boolean trainedBool = isTrained(trained);
+            DateTime trainedDateTime = new DateTime(trainedDate);
+            String clientFirstName = clientNameDetailView.getFirstName();
+            String clientLastName = clientNameDetailView.getLastName();
+            String secondLastName = clientNameDetailView.getSecondLastName();
+
+            Blob pictureAsBlob = null;
+            if (picture != null) {
+                pictureAsBlob = new ClientPersistence().createBlob(picture);
+            }
+
+            List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
+
+            for (SavingsOfferingBO offering : selectedOfferings) {
+                offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
+            }
+
             if (YesNoFlag.YES.getValue().equals(groupFlagValue(actionForm))) {
 
                 Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
@@ -512,35 +538,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
                 officeId = group.getOffice().getOfficeId();
 
-                String secondMiddleName = null;
-                ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, clientNameDetailView);
-
-                ClientNameDetailEntity spouseFatherNameDetailEntity = null;
-                if (spouseNameDetailView != null) {
-                    spouseFatherNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, spouseNameDetailView);
-                }
-
-                ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
-                clientDetailEntity.updateClientDetails(clientDetailView);
-
-                DateTime dob = new DateTime(dateOfBirth);
-                boolean trainedBool = isTrained(trained);
-                DateTime trainedDateTime = new DateTime(trainedDate);
-                String clientFirstName = clientNameDetailView.getFirstName();
-                String clientLastName = clientNameDetailView.getLastName();
-                String secondLastName = clientNameDetailView.getSecondLastName();
-
-                Blob pictureAsBlob = null;
-                if (picture != null) {
-                    pictureAsBlob = new ClientPersistence().createBlob(picture);
-                }
-
-                List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
-
-                for (SavingsOfferingBO offering : selectedOfferings) {
-                    offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
-                }
-
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
@@ -550,12 +547,15 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 personnelId = actionForm.getLoanOfficerIdValue();
                 officeId = actionForm.getOfficeIdValue();
 
-                client = createClientOutOfGroupHierarchy(actionForm, meeting, userContext, customFields,
-                        selectedOfferings, spouseNameDetailView);
-
                 checkPermissionForCreate(actionForm.getStatusValue().getValue(), userContext, officeId, personnelId);
 
-                new CustomerPersistence().saveCustomer(client);
+                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
+                OfficeBO office = this.officeDao.findOfficeById(officeId);
+
+                client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields, clientNameDetailEntity, dob,
+                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
+
+                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>());
             }
 
             if (ClientRules.isFamilyDetailsRequired()) {
@@ -572,36 +572,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     private boolean isTrained(Short trainedValue) {
         return Short.valueOf("1").equals(trainedValue);
-    }
-
-    private ClientBO createClientInheritingFromGroup(ClientCustActionForm actionForm, UserContext userContext,
-            List<CustomFieldView> customFields, List<SavingsOfferingBO> selectedOfferings,
-            ClientNameDetailView spouseNameDetailView, CustomerBO group) throws CustomerException,
-            InvalidDateException, PersistenceException {
-
-        ClientBO client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm), group.getOffice(), group,
-                dateOfBirth(actionForm), governmentId(actionForm), trainedValue(actionForm), trainedDate(actionForm),
-                groupFlagValue(actionForm), clientNameDetailName(actionForm), spouseNameDetailView,
-                clientDetailView(actionForm), picture(actionForm));
-
-        return client;
-    }
-
-    private ClientBO createClientOutOfGroupHierarchy(ClientCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext, List<CustomFieldView> customFields, List<SavingsOfferingBO> selectedOfferings,
-            ClientNameDetailView spouseNameDetailView) throws CustomerException, InvalidDateException,
-            PersistenceException {
-
-        ClientBO client = new ClientBO(userContext, clientName(actionForm), clientStatus(actionForm),
-                externalId(actionForm), mfiJoiningDate(actionForm), address(actionForm), customFields,
-                clientFees(actionForm), selectedOfferings, formedByPersonnel(actionForm), office(actionForm), meeting,
-                loanOfficer(actionForm), dateOfBirth(actionForm), governmentId(actionForm), trainedValue(actionForm),
-                trainedDate(actionForm), groupFlagValue(actionForm), clientNameDetailName(actionForm),
-                spouseNameDetailView, clientDetailView(actionForm), picture(actionForm));
-
-        return client;
     }
 
     private ClientNameDetailView spouseFatherName(ClientCustActionForm actionForm) {
@@ -638,14 +608,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     private Date dateOfBirth(ClientCustActionForm actionForm) throws InvalidDateException {
         return DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
-    }
-
-    private PersonnelBO loanOfficer(ClientCustActionForm actionForm) throws PersistenceException {
-        return new PersonnelPersistence().getPersonnel(actionForm.getLoanOfficerIdValue());
-    }
-
-    private OfficeBO office(ClientCustActionForm actionForm) throws PersistenceException {
-        return new OfficePersistence().getOffice(actionForm.getOfficeIdValue());
     }
 
     private PersonnelBO formedByPersonnel(ClientCustActionForm actionForm) throws PersistenceException {

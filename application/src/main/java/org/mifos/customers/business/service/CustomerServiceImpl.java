@@ -463,6 +463,7 @@ public class CustomerServiceImpl implements CustomerService {
     public GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
 
         group.validateNewOffice(transferToOffice);
+        group.validateForActiveAccounts();
 
         if (group.isActive()) {
             group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));

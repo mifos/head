@@ -40,6 +40,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -910,8 +911,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
-                ClientConstants.POVERTY_STATUS, request);
+        List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
         List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
@@ -934,6 +934,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
+        MeetingBO weeklyMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.WEDNESDAY).build();
+
+        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");

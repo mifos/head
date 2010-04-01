@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -33,12 +35,16 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
@@ -50,6 +56,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
@@ -249,15 +259,23 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 throw new RuntimeException("No Customer Schedules were affected.  There should have been at least one.");
             }
 
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
+
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+                    thisAndNextYearsHolidays);
             for (CustomerScheduleEntity customerSchedule : affectedDates) {
 
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
-                        loadedMeeting).getTime();
-                customerSchedule.setActionDate(new java.sql.Date(adjustedDate.getTime()));
+                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(customerSchedule.getActionDate()).toDateMidnight().toDateTime();
+                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1, previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
+//                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
+//                        loadedMeeting).getTime();
+                customerSchedule.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
             }
         } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (MeetingException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
         } catch (PersistenceException e) {
             throw new RuntimeException("Account Id: " + accountId + " - " + e);
