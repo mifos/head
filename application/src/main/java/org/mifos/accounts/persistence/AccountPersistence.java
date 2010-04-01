@@ -48,11 +48,14 @@ import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -459,15 +462,78 @@ public class AccountPersistence extends Persistence {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Integer> getListOfAccountIdsWithLoanSchedulesWithinDates(Date fromDate, Date thruDate)
+    public List<Integer> getListOfAccountIdsHavingLoanSchedulesWithinDates(final Date fromDate, final Date thruDate)
             throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingLoanSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesWithinDates(final Date fromDate, final Date thruDate)
+            throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingSavingsSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesWithinDates(final Date fromDate, final Date thruDate)
+            throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingCustomerSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Integer> getListOfAccountIdsHavingSchedulesWithinDates(final String queryName, final Date fromDate,
+            final Date thruDate) throws PersistenceException {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("FROM_DATE", fromDate);
         parameters.put("THRU_DATE", thruDate);
 
-        return executeNamedQuery("getListOfAccountIdsWithLoanSchedulesWithinDates", parameters);
+        List<Integer> queryResult = executeNamedQuery(queryName, parameters);
+
+        List<Integer> accountIds = new ArrayList<Integer>();
+        for (Integer obj : queryResult) {
+            accountIds.add(obj);
+        }
+
+        return accountIds;
     }
 
+    @SuppressWarnings("unchecked")
+    public List<LoanScheduleEntity> getLoanSchedulesForAccountThatAreWithinDates(Integer accountId, Date fromDate,
+            Date thruDate) throws PersistenceException {
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("ACCOUNT_ID", accountId);
+        parameters.put("FROM_DATE", fromDate);
+        parameters.put("THRU_DATE", thruDate);
+
+        return executeNamedQuery("getLoanSchedulesForAccountThatAreWithinDates", parameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<SavingsScheduleEntity> getSavingsSchedulesForAccountThatAreWithinDates(Integer accountId,
+            Date fromDate, Date thruDate) throws PersistenceException {
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("ACCOUNT_ID", accountId);
+        parameters.put("FROM_DATE", fromDate);
+        parameters.put("THRU_DATE", thruDate);
+
+        return executeNamedQuery("getSavingsSchedulesForAccountThatAreWithinDates", parameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CustomerScheduleEntity> getCustomerSchedulesForAccountThatAreWithinDates(Integer accountId,
+            Date fromDate, Date thruDate) throws PersistenceException {
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("ACCOUNT_ID", accountId);
+        parameters.put("FROM_DATE", fromDate);
+        parameters.put("THRU_DATE", thruDate);
+
+        return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
+    }
 }

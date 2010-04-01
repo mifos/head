@@ -564,14 +564,57 @@
 		]]>
 	</sql-query>
 	
+	<sql-query name="getListOfAccountIdsHavingLoanSchedulesWithinDates">
+		<return-scalar column="accountId" type="integer" />
+		<![CDATA[select distinct(account.account_id) as accountId
+				from account
+				inner join loan_schedule schedule on account.account_id = schedule.account_id
+				where schedule.action_date >= date(:FROM_DATE)
+				and schedule.action_date <= date(:THRU_DATE)
+		]]>
+	</sql-query>
+	<sql-query name="getListOfAccountIdsHavingSavingsSchedulesWithinDates">
+		<return-scalar column="accountId" type="integer" />
+		<![CDATA[select distinct(account.account_id) as accountId
+				from account
+				inner join saving_schedule schedule on account.account_id = schedule.account_id
+				where schedule.action_date >= date(:FROM_DATE)
+				and schedule.action_date <= date(:THRU_DATE)
+		]]>
+	</sql-query>
 	
-	<query name="getListOfAccountIdsWithLoanSchedulesWithinDates">
-		<![CDATA[select loanAccount.accountId 
-				from org.mifos.accounts.loan.business.LoanBO as loanAccount
-				inner join loanAccount.accountActionDates loanSchedule
-				 where loanSchedule.actionDate >= date(:FROM_DATE)
-				   and loanSchedule.actionDate <= date(:THRU_DATE)
+	<sql-query name="getListOfAccountIdsHavingCustomerSchedulesWithinDates">
+		<return-scalar column="accountId" type="integer" />
+		<![CDATA[select distinct(account.account_id) as accountId
+				from account
+				inner join customer_schedule schedule on account.account_id = schedule.account_id
+				where schedule.action_date >= date(:FROM_DATE)
+				and schedule.action_date <= date(:THRU_DATE)
+		]]>
+	</sql-query>
+
+	<query name="getLoanSchedulesForAccountThatAreWithinDates">
+		<![CDATA[ from org.mifos.accounts.loan.business.LoanScheduleEntity actionDate
+				 where actionDate.actionDate >= date(:FROM_DATE)
+				   and actionDate.actionDate <= date(:THRU_DATE)
+				   and actionDate.account.accountId = :ACCOUNT_ID
 		]]>
 	</query>
-
+	
+	<query name="getSavingsSchedulesForAccountThatAreWithinDates">
+		<![CDATA[ from org.mifos.accounts.savings.business.SavingsScheduleEntity actionDate
+				 where actionDate.actionDate >= date(:FROM_DATE)
+				   and actionDate.actionDate <= date(:THRU_DATE)
+				   and actionDate.account.accountId = :ACCOUNT_ID
+		]]>
+	</query>
+	
+	<query name="getCustomerSchedulesForAccountThatAreWithinDates">
+		<![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity actionDate
+				 where actionDate.actionDate >= date(:FROM_DATE)
+				   and actionDate.actionDate <= date(:THRU_DATE)
+				   and actionDate.account.accountId = :ACCOUNT_ID
+		]]>
+	</query>
+	
 </hibernate-mapping>

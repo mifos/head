@@ -98,6 +98,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     }
 
     public void testExecuteAgainst_Un_AppliedHolidays() throws Exception {
+
         HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
         RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
         holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);

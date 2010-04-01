@@ -61,13 +61,6 @@
 		]]>
 	</query>
 
-    <query name="account.getAllCustomerSchedules">
-        <![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity customerSchedule
-                 where customerSchedule.actionDate >= date(:FROM_DATE)
-                   and customerSchedule.actionDate <= date(:THRU_DATE)
-        ]]>
-    </query>
-
 	<query name="customerScheduleEntity.getScheduleForIds">
 		<![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity customerSchedule
 				 where customerSchedule.id in (:ids)

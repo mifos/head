@@ -30,18 +30,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
 
@@ -54,21 +47,22 @@ public class HolidayUtils {
         return new FiscalCalendarRules().isWorkingDay(day);
     }
 
-
     /**
      * Find the holiday containing the given day.
-     * @param day the day to test
+     *
+     * @param day
+     *            the day to test
      * @return the holiday containing the day, if any, otherwise null
      */
     @Deprecated
-    public static HolidayBO inHoliday (Calendar day) {
+    public static HolidayBO inHoliday(Calendar day) {
         HolidayBO holiday;
         try {
             holiday = inHoliday(day, getAllHolidaysInCurrentAndNextYears(day.get(Calendar.YEAR)));
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
-       return holiday;
+        return holiday;
     }
 
     static HolidayBO inHoliday(final Calendar pday, final List<HolidayBO> holidays) {
@@ -106,8 +100,8 @@ public class HolidayUtils {
         return day;
     }
 
-    private static Calendar adjustDateUsingRepaymentRule(final Short repaymentRuleId, final Calendar adjustedDate, final MeetingBO meeting)
-            throws MeetingException {
+    private static Calendar adjustDateUsingRepaymentRule(final Short repaymentRuleId, final Calendar adjustedDate,
+            final MeetingBO meeting) throws MeetingException {
         if (NEXT_WORKING_DAY.getValue().equals(repaymentRuleId)) {
             adjustedDate.add(Calendar.DATE, 1);
             return adjustDate(adjustedDate, meeting);
@@ -126,55 +120,4 @@ public class HolidayUtils {
         return holidays;
     }
 
-    public static void rescheduleLoanRepaymentDates(final HolidayBO holiday) throws RuntimeException {
-        try {
-            List<LoanScheduleEntity> loanSchedulsList = new HolidayBusinessService().getAllLoanSchedule(holiday);
-            for (LoanScheduleEntity loanScheduleEntity : loanSchedulsList) {
-                LoanBO loan = new LoanBusinessService().getAccount(loanScheduleEntity.getAccount().getAccountId());
-                MeetingBO loadedMeeting = loan.getLoanMeeting();
-
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(loanScheduleEntity.getActionDate()),
-                        loadedMeeting).getTime();
-                loanScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        } catch (MeetingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void rescheduleSavingDates(final HolidayBO holiday) throws RuntimeException {
-        try {
-            List<SavingsScheduleEntity> savingSchedulsList = new HolidayBusinessService().getAllSavingSchedule(holiday);
-            for (SavingsScheduleEntity savingScheduleEntity : savingSchedulsList) {
-                SavingsBO saving = (SavingsBO) new AccountBusinessService().getAccount(savingScheduleEntity
-                        .getAccount().getAccountId());
-                MeetingBO loadedMeeting = saving.getCustomer().getCustomerMeeting().getMeeting();
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(savingScheduleEntity.getActionDate()),
-                        loadedMeeting).getTime();
-                savingScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        } catch (MeetingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void rescheduleCustomerDates(HolidayBO holiday) {
-        try {
-            List<CustomerScheduleEntity> customerSchedulesList = new HolidayBusinessService().getAllCustomerSchedule(holiday);
-            for (CustomerScheduleEntity customerSchedule : customerSchedulesList) {
-                MeetingBO loadedMeeting = customerSchedule.getCustomer().getCustomerMeeting().getMeeting();
-                Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
-                        loadedMeeting).getTime();
-                customerSchedule.setActionDate(new java.sql.Date(adjustedDate.getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        } catch (MeetingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

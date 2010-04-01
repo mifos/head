@@ -25,8 +25,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
@@ -34,7 +32,6 @@ import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.calendar.MoratoriumSwitch;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -45,9 +42,9 @@ import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 
 public class HolidayBusinessService implements BusinessService {
-    
+
     private MoratoriumSwitch moratoriumSwitch = new MoratoriumSwitch();
-    
+
     public void setMoratoriumSwitch (MoratoriumSwitch moratoriumSwitch) {
         this.moratoriumSwitch = moratoriumSwitch;
     }
@@ -99,30 +96,6 @@ public class HolidayBusinessService implements BusinessService {
                 return rule.getId() < 4;
             }
         };
-    }
-
-    public List<LoanScheduleEntity> getAllLoanSchedule(final HolidayBO holiday) throws ServiceException {
-        try {
-            return new HolidayPersistence().getAllLoanSchedules(holiday);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    public List<SavingsScheduleEntity> getAllSavingSchedule(final HolidayBO holiday) throws ServiceException {
-        try {
-            return new HolidayPersistence().getAllSavingSchedules(holiday);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    public List<CustomerScheduleEntity> getAllCustomerSchedule(HolidayBO holiday) throws ServiceException {
-        try {
-            return new HolidayPersistence().getAllCustomerSchedules(holiday);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
     }
 
     public List<HolidayBO> getDistinctYears() throws ServiceException {

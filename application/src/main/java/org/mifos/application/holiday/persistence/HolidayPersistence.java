@@ -27,14 +27,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
@@ -87,35 +84,11 @@ public class HolidayPersistence extends MasterPersistence {
         return (RepaymentRuleEntity) execUniqueResultNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE, parameters);
     }
 
-    public List<LoanScheduleEntity> getAllLoanSchedules(final HolidayBO holiday) throws PersistenceException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FROM_DATE", holiday.getHolidayFromDate());
-        parameters.put("THRU_DATE", holiday.getHolidayThruDate());
-
-        return executeNamedQuery(NamedQueryConstants.ALL_LOAN_SCHEDULE, parameters);
-    }
-
     public List<HolidayBO> getUnAppliedHolidays() throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("FLAG", YesNoFlag.NO.getValue());
         List<HolidayBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS_BY_FLAG, queryParameters);
         return queryResult;
-    }
-
-    public List<SavingsScheduleEntity> getAllSavingSchedules(final HolidayBO holiday) throws PersistenceException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FROM_DATE", holiday.getHolidayFromDate());
-        parameters.put("THRU_DATE", holiday.getHolidayThruDate());
-
-        return executeNamedQuery(NamedQueryConstants.ALL_SAVING_SCHEDULE, parameters);
-    }
-
-    public List<CustomerScheduleEntity> getAllCustomerSchedules(final HolidayBO holiday) throws PersistenceException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FROM_DATE", holiday.getHolidayFromDate());
-        parameters.put("THRU_DATE", holiday.getHolidayThruDate());
-
-        return executeNamedQuery(NamedQueryConstants.ALL_CUSTOMER_SCHEDULE, parameters);
     }
 
     public int isValidHolidayState(final Short levelId, final Short stateId, final boolean isCustomer) throws PersistenceException {

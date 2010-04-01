@@ -20,10 +20,6 @@
 
 package org.mifos.accounts.persistence;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +27,7 @@ import junit.framework.Assert;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
@@ -38,6 +35,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.GLCategoryType;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -45,16 +43,22 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -240,7 +244,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
     public void testSearchAccount() throws Exception {
-        SavingsBO savingsBO = createSavingsAccount();
+        savingsBO = createSavingsAccount();
 
         QueryResult queryResult = null;
 
@@ -248,7 +252,6 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
-        TestObjectFactory.cleanUp(savingsBO);
     }
 
     public void testSearchCustomerAccount() throws Exception {
@@ -264,6 +267,93 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
+    public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {
+
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(23);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<CustomerScheduleEntity> affectedDates = accountPersistence
+                .getCustomerSchedulesForAccountThatAreWithinDates(center.getCustomerAccount().getAccountId(), fromDate,
+                        thruDate);
+
+        Assert.assertNotNull(affectedDates);
+        Assert.assertEquals(3, affectedDates.size());
+    }
+
+    public void testGetListOfAccountIdsHavingCustomerSchedulesWithinDates() throws Exception {
+
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(fromDate,
+                thruDate);
+
+        Assert.assertNotNull(accountIds);
+        // should pick up center and group customer accounts
+        Assert.assertEquals(2, accountIds.size());
+    }
+
+    public void testGetLoanSchedulesForAccountThatAreWithinDates() throws Exception {
+
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(30);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<LoanScheduleEntity> affectedDates = accountPersistence.getLoanSchedulesForAccountThatAreWithinDates(
+                accountBO.getAccountId(), fromDate, thruDate);
+
+        Assert.assertNotNull(affectedDates);
+        Assert.assertEquals(4, affectedDates.size());
+    }
+
+    public void testGetListOfAccountIdsHavingLoanSchedulesWithinDates() throws Exception {
+
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(fromDate,
+                thruDate);
+
+        Assert.assertNotNull(accountIds);
+        // should pick up group loan account
+        Assert.assertEquals(1, accountIds.size());
+    }
+
+    public void testGetSavingsSchedulesForAccountThatAreWithinDates() throws Exception {
+
+        savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
+                false, false);
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(37);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<SavingsScheduleEntity> affectedDates = accountPersistence.getSavingsSchedulesForAccountThatAreWithinDates(
+                savingsBO.getAccountId(), fromDate, thruDate);
+
+        Assert.assertNotNull(affectedDates);
+        Assert.assertEquals(5, affectedDates.size());
+
+    }
+
+    public void testGetListOfAccountIdsHavingSavingsSchedulesWithinDates() throws Exception {
+
+        savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
+                false, false);
+        LocalDate fromDateLocal = new LocalDate().plusDays(1);
+        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
+        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
+        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingSavingsSchedulesWithinDates(fromDate,
+                thruDate);
+
+        Assert.assertNotNull(accountIds);
+        // should pick up group savings account
+        Assert.assertEquals(1, accountIds.size());
+    }
+
     private SavingsBO createSavingsAccount() throws Exception {
         return TestObjectFactory.createSavingsAccount("12345678910", group, AccountState.SAVINGS_ACTIVE, new Date(),
                 createSavingsOffering("qqqqq"), TestUtils.makeUser());
@@ -272,10 +362,10 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     private SavingsOfferingBO createSavingsOffering(String offeringName) {
         Date startDate = new Date(System.currentTimeMillis());
 
-        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
-                EVERY_WEEK, CUSTOMER_MEETING));
-        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
-                EVERY_WEEK, CUSTOMER_MEETING));
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(RecurrenceType.WEEKLY,
+                TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING));
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(RecurrenceType.WEEKLY,
+                TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING));
         return TestObjectFactory.createSavingsProduct(offeringName, ApplicableTo.GROUPS, startDate,
                 PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0,
                 SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);

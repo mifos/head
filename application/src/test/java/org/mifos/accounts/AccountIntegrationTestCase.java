@@ -32,6 +32,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -47,6 +48,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     }
 
     protected LoanBO accountBO;
+    protected SavingsBO savingsBO;
     protected CustomerBO center;
     protected CustomerBO group;
     protected AccountPersistence accountPersistence;
@@ -63,6 +65,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     protected void tearDown() throws Exception {
         try {
             TestObjectFactory.cleanUp(accountBO);
+            TestObjectFactory.cleanUp(savingsBO);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
             accountPersistence = null;
