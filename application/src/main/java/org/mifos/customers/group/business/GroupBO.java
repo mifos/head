@@ -194,6 +194,7 @@ public class GroupBO extends CustomerBO {
 
     public void transferToBranch(final OfficeBO officeToTransfer) throws CustomerException {
         validateNewOffice(officeToTransfer);
+        validateForActiveAccounts();
         logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() + "to branch : "
                 + officeToTransfer.getOfficeId());
         validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
