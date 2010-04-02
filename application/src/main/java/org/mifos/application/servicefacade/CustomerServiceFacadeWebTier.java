@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
@@ -444,7 +443,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<SavingsDetailDto> allowedSavingProducts) throws CustomerException {
 
         try {
-            Set<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
+            List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
             String clientName = clientName(actionForm);
             CustomerStatus clientStatus = clientStatus(actionForm);
             java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
