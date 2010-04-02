@@ -545,6 +545,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
+                if (ClientRules.isFamilyDetailsRequired()) {
+                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                }
+
                 this.customerService.createClient(client, client.getCustomerMeetingValue(), new ArrayList<AccountFeesEntity>(), selectedOfferings);
 
             } else {
@@ -559,11 +563,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields, clientNameDetailEntity, dob,
                         governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
 
-                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>(), selectedOfferings);
-            }
+                if (ClientRules.isFamilyDetailsRequired()) {
+                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                }
 
-            if (ClientRules.isFamilyDetailsRequired()) {
-                client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>(), selectedOfferings);
             }
 
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
