@@ -840,11 +840,11 @@ public class LoanBO extends AccountBO {
     @Override
     public void applyCharge(final Short feeId, final Double charge) throws AccountException, PersistenceException {
         List<AccountActionDateEntity> dueInstallments = getTotalDueInstallments();
-        if (dueInstallments.isEmpty()) {
-            throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
-        }
         if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
                 || feeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+            if (dueInstallments.isEmpty()) {
+                dueInstallments.add(getLastUnpaidInstallment());
+            }
             applyMiscCharge(feeId, new Money(getCurrency(), String.valueOf(charge)), dueInstallments.get(0));
 
             // Don't re-apply rounding to already-rounded charges, since
@@ -853,6 +853,9 @@ public class LoanBO extends AccountBO {
                 applyRounding();
             }
         } else {
+            if (dueInstallments.isEmpty()) {
+                throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
+            }
             FeeBO fee = new FeePersistence().getFee(feeId);
 
             if (havePaymentsBeenMade()
@@ -869,6 +872,18 @@ public class LoanBO extends AccountBO {
                 applyRounding();
             }
         }
+    }
+
+    private AccountActionDateEntity getLastUnpaidInstallment() throws AccountException {
+        Set<AccountActionDateEntity> accountActionDateSet = getAccountActionDates();
+        List<AccountActionDateEntity> objectList = Arrays.asList(accountActionDateSet.toArray(new AccountActionDateEntity[accountActionDateSet.size()]));
+        for (int i = objectList.size() - 1; i >=0; i--) {
+            AccountActionDateEntity accountActionDateEntity = objectList.get(i);
+            if (!accountActionDateEntity.isPaid()) {
+                return accountActionDateEntity;
+            }
+        }
+        throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
     }
 
     /**
