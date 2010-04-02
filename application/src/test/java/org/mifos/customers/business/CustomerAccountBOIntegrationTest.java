@@ -1244,10 +1244,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Center_Active_test").withOffice(
                 sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
-//
-//        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-//                CUSTOMER_MEETING));
-//        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
 
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
     }

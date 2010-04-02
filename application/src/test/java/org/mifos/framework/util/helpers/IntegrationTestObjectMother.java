@@ -30,18 +30,14 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -70,11 +66,8 @@ public class IntegrationTestObjectMother {
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
-    private static final GroupPersistence groupPersistence = new GroupPersistence();
-    private static final ClientPersistence clientPersistence = new ClientPersistence();
 
     private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
-    private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static OfficeBO sampleBranchOffice() {
         if (sampleBranchOffice == null) {
@@ -129,32 +122,6 @@ public class IntegrationTestObjectMother {
         }
     }
 
-    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group,
-            final ClientBO client, final ClientBO client2, final MeetingBO meeting,
-            final AmountFeeBO weeklyPeriodicFeeForCenterOnly, final AmountFeeBO weeklyPeriodicFeeForGroupOnly,
-            final AmountFeeBO weeklyPeriodicFeeForClientsOnly,
-            final AmountFeeBO secondClientWeeklyPeriodicFeeForClientsOnly) {
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerPersistence.createOrUpdate(meeting);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForCenterOnly);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForGroupOnly);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForClientsOnly);
-            customerPersistence.createOrUpdate(secondClientWeeklyPeriodicFeeForClientsOnly);
-            customerPersistence.saveCustomer(center);
-            groupPersistence.saveGroup(group);
-            clientPersistence.saveClient(client);
-            clientPersistence.saveClient(client2);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-
     public static void cleanMeeting(MeetingBO weeklyMeeting) {
         try {
             TestObjectFactory.cleanUp(weeklyMeeting);
@@ -171,27 +138,6 @@ public class IntegrationTestObjectMother {
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
             TestObjectFactory.cleanUp(weeklyMeeting);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public static void saveCustomerHierarchyWithMeetingAndFees(final CustomerBO center, final GroupBO group,
-            final ClientBO client, final MeetingBO meeting, final AmountFeeBO weeklyPeriodicFeeForCenterOnly,
-            final AmountFeeBO weeklyPeriodicFeeForGroupOnly, final AmountFeeBO weeklyPeriodicFeeForClientsOnly) {
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerPersistence.createOrUpdate(meeting);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForCenterOnly);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForGroupOnly);
-            customerPersistence.createOrUpdate(weeklyPeriodicFeeForClientsOnly);
-            customerPersistence.saveCustomer(center);
-            groupPersistence.saveGroup(group);
-            clientPersistence.saveClient(client);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -298,41 +244,35 @@ public class IntegrationTestObjectMother {
         customerService.createGroup(group, meeting, accountFees);
     }
 
+    public static void createClient(ClientBO client, MeetingBO meeting) throws CustomerException {
+        UserContext userContext = TestUtils.makeUser();
+        client.setUserContext(userContext);
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+
+        customerService.createClient(client, meeting, accountFees, selectedOfferings);
+    }
+
+    public static void createClient(ClientBO client, MeetingBO meeting, AmountFeeBO fee) throws CustomerException {
+
+        UserContext userContext = TestUtils.makeUser();
+        client.setUserContext(userContext);
+
+        AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue());
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        accountFees.add(accountFee);
+
+        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+
+        customerService.createClient(client, meeting, accountFees, selectedOfferings);
+    }
+
     public static void saveFee(AmountFeeBO fee) {
         try {
             StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(fee);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public static void saveClient(ClientBO client) {
-        try {
-            StaticHibernateUtil.startTransaction();
-            clientPersistence.saveClient(client);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public static void saveCustomerAccount(CustomerAccountBO customerAccount) {
-
-        customerAccount.setUserContext(TestUtils.makeUser());
-        customerAccount.setCreateDetails();
-        customerAccount.setUpdateDetails();
-
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerDao.save(customerAccount);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();

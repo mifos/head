@@ -42,7 +42,6 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.application.collectionsheet.persistence.CustomerAccountBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -50,11 +49,9 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.TestUtils;
@@ -183,16 +180,7 @@ public class TestSaveCollectionSheetUtils {
         client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName(
                 "Client 1").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group)
                 .buildForIntegrationTests();
-        IntegrationTestObjectMother.saveClient(client);
-
-        client.setClientPerformanceHistory(new ClientPerformanceHistoryEntity(client));
-        IntegrationTestObjectMother.saveClient(client);
-
-        CustomerAccountBO customerAccount = new CustomerAccountBuilder().withCustomer(client).withOffice(
-                sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForFirstClients).buildForIntegrationTests();
-
-        IntegrationTestObjectMother.saveCustomerAccount(customerAccount);
-        IntegrationTestObjectMother.saveClient(client);
+        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
 
         MeetingBO loanMeeting = TestObjectFactory.createLoanMeeting(client.getCustomerMeeting().getMeeting());
 

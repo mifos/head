@@ -57,7 +57,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -113,35 +112,42 @@ public class ClientBO extends CustomerBO {
             String clientFirstName, String clientLastName, String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
             ClientDetailEntity clientDetailEntity, Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
 
-        // inherit settings from parent (group)
-        OfficeBO office = group.getOffice();
-        MeetingBO meeting = group.getCustomerMeetingValue();
-        PersonnelBO loanOfficer = group.getPersonnel();
+            // inherit settings from parent (group)
+            OfficeBO office = group.getOffice();
 
-        ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
-                loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
+            MeetingBO meeting = group.getCustomerMeetingValue();
 
-        clientNameDetailEntity.setClient(client);
-        client.addNameDetailSet(clientNameDetailEntity);
+            PersonnelBO loanOfficer = group.getPersonnel();
 
-        spouseFatherNameDetailEntity.setClient(client);
-        client.addNameDetailSet(spouseFatherNameDetailEntity);
+            ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
+                    loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
 
-        client.createOrUpdatePicture(pictureAsBlob);
+            if (clientNameDetailEntity != null) {
+                clientNameDetailEntity.setClient(client);
+                client.addNameDetailSet(clientNameDetailEntity);
+            }
 
-        for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
-            client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
-        }
+            if (spouseFatherNameDetailEntity != null) {
+                // when familydetails required setting is on.. this is filled in..
+                spouseFatherNameDetailEntity.setClient(client);
+                client.addNameDetailSet(spouseFatherNameDetailEntity);
+            }
 
-        client.setParentCustomer(group);
+            client.createOrUpdatePicture(pictureAsBlob);
 
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                .fromCustomerCustomFieldEntity(customerCustomFields, client);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            client.addCustomField(customerCustomFieldEntity);
-        }
+            for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
+                client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
+            }
 
-        return client;
+            client.setParentCustomer(group);
+
+            List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+                    .fromCustomerCustomFieldEntity(customerCustomFields, client);
+            for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+                client.addCustomField(customerCustomFieldEntity);
+            }
+
+            return client;
     }
 
     public static ClientBO createNewOutOfGroupHierarchy(UserContext userContext, String clientName,
@@ -220,28 +226,14 @@ public class ClientBO extends CustomerBO {
         this.lastName = clientLastName;
         this.secondLastName = secondLastName;
 
-        clientDetailEntity.setClient(this);
-        this.customerDetail = clientDetailEntity;
+        if (clientDetailEntity != null) {
+            clientDetailEntity.setClient(this);
+            this.customerDetail = clientDetailEntity;
+        }
 
         if (isActive()) {
             this.setCustomerActivationDate(this.getCreatedDate());
         }
-    }
-
-    /**
-     * @deprecated - use static factory classes
-     */
-    public ClientBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
-            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final String searchId, final CustomerBO parentCustomer) {
-        super(customerLevel, customerStatus, name, office, loanOfficer, customerMeeting, parentCustomer);
-        this.setSearchId(searchId);
-        this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
-        this.clientAttendances = new HashSet<ClientAttendanceBO>();
-        this.clientPerformanceHistory = null;
-        this.offeringsAssociatedInCreate = null;
-        this.familyDetailSet=null;
-        this.groupFlag = YesNoFlag.YES.getValue();
     }
 
     /**

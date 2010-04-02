@@ -20,6 +20,8 @@
 
 package org.mifos.customers.center.struts.action;
 
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,16 +31,15 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.application.collectionsheet.persistence.FeeBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -70,7 +71,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -81,19 +82,12 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private CenterBO center;
-
     private GroupBO group;
-
     private ClientBO client;
-
     private String flowKey;
-
     private final SavingsTestHelper helper = new SavingsTestHelper();
-
     private SavingsOfferingBO savingsOffering;
-
     private SavingsBO savingsBO;
-
     private static final String dateFormat = "dd/MM/yyyy";
 
     @Override
@@ -361,19 +355,23 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    // FIXME - ask john about this
-    public void ignore_testSuccessfulCreate() throws Exception {
-        List<FeeBO> allFeeList = getFeesForCreate(RecurrenceType.MONTHLY);
+    public void testSuccessfulCreate() throws Exception {
+
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+
+        AmountFeeBO monthlyPeriodicFeeForFirstClients = new FeeBuilder().appliesToCenterOnly().withFeeAmount("200.0")
+        .withName("PeriodicAmountFee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice()).build();
+        IntegrationTestObjectMother.saveFee(monthlyPeriodicFeeForFirstClients);
+
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
         actionPerform();
-        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
+        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
 
         List<CustomFieldView> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        Assert.assertEquals(1, feeList.size());
+        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+
         FeeView fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -396,9 +394,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.create_success.toString());
-        removeInactiveFees(allFeeList);
-        CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
-                "centerCustActionForm");
+        CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute("centerCustActionForm");
         center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
     }
 
@@ -616,109 +612,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
     }
 
- // FIXME - ask john about this
-    public void ignore_testFlowSuccess() throws Exception {
-        getFees(RecurrenceType.MONTHLY);
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
-        actionPerform();
-
-        FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        Assert.assertEquals(true, fm.isFlowValid(flowKey));
-
-        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
-        List<CustomFieldView> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        FeeView fee = feeList.get(0);
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("displayName", "center");
-        addRequestParameter("loanOfficerId", "1");
-        int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
-        addRequestParameter("selectedFee[0].amount", fee.getAmount());
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        Assert.assertEquals(true, fm.isFlowValid(flowKey));
-
-        verifyForward(ActionForwards.preview_success.toString());
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        verifyNoActionErrors();
-        verifyForward(ActionForwards.create_success.toString());
-
-        CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
-                "centerCustActionForm");
-        center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
-        Assert.assertEquals(false, fm.isFlowValid(flowKey));
-    }
-
- // FIXME - ask john about this
-    public void ignore_testFlowFailure() throws Exception {
-        getFees(RecurrenceType.MONTHLY);
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        FlowManager fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
-        String flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        Assert.assertEquals(true, fm.isFlowValid(flowKey));
-
-        SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
-        List<CustomFieldView> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        FeeView fee = feeList.get(0);
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("displayName", "center");
-        addRequestParameter("loanOfficerId", "1");
-        int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
-        addRequestParameter("selectedFee[0].amount", fee.getAmount());
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        Assert.assertEquals(true, fm.isFlowValid(flowKey));
-
-        verifyForward(ActionForwards.preview_success.toString());
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        verifyNoActionErrors();
-        verifyForward(ActionForwards.create_success.toString());
-
-        CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
-                "centerCustActionForm");
-        center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
-        Assert.assertEquals(false, fm.isFlowValid(flowKey));
-
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "create");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-        verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
-        verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
-    }
-
     public void testLoadSearch() throws Exception {
         addActionAndMethod(Methods.loadSearch.toString());
         addRequestParameter("input", "search");
@@ -771,32 +664,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         return fees;
     }
 
-    private List<FeeBO> getFeesForCreate(RecurrenceType frequency) throws Exception {
-        List<FeeBO> fees = new ArrayList<FeeBO>();
-        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
-                FeeCategory.CENTER, "200", frequency, Short.valueOf("2"));
-        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
-                FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-        fee2.updateStatus(FeeStatus.INACTIVE);
-        fee2.update();
-        fees.add(fee1);
-        fees.add(fee2);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        return fees;
-    }
-
     private void removeFees(List<FeeView> feesToRemove) {
         for (FeeView fee : feesToRemove) {
             TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-        }
-    }
-
-    private void removeInactiveFees(List<FeeBO> feesToRemove) {
-        for (FeeBO fee : feesToRemove) {
-            if (!fee.isActive()) {
-                TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeId()));
-            }
         }
     }
 

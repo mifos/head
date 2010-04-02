@@ -73,6 +73,7 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -91,10 +92,10 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
@@ -106,10 +107,10 @@ import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -5729,44 +5730,41 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testDisbursementDateInvalidForRedoIfDisbursementBeforeCustomerActivationDate() throws Exception {
+
+        DateTime jan2nd2008 = new DateTime().withYear(2008).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
+        ClientBO client = new ClientBuilder().withCustomerActivationDate(jan2nd2008).buildForUnitTests();
+
         Assert.assertFalse(LoanBO.isDibursementDateValidForRedoLoan(new LoanOfferingBO() {
             @Override
             public Date getStartDate() {
                 return DateUtils.getDate(2008, Calendar.JANUARY, 1);
             }
-        }, new ClientBO() {
-            @Override
-            public Date getCustomerActivationDate() {
-                return DateUtils.getDate(2008, Calendar.JANUARY, 2);
-            }
-        }, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+        }, client, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 
     public void testDisbursementDateInvalidForRedoIfDisbursementBeforeProductStartDate() throws Exception {
+
+        DateTime jan1st2008 = new DateTime().withYear(2008).withMonthOfYear(1).withDayOfMonth(1).toDateMidnight().toDateTime();
+        ClientBO client = new ClientBuilder().withCustomerActivationDate(jan1st2008).buildForUnitTests();
+
         Assert.assertFalse(LoanBO.isDibursementDateValidForRedoLoan(new LoanOfferingBO() {
             @Override
             public Date getStartDate() {
                 return DateUtils.getDate(2008, Calendar.JANUARY, 2);
             }
-        }, new ClientBO() {
-            @Override
-            public Date getCustomerActivationDate() {
-                return DateUtils.getDate(2008, Calendar.JANUARY, 1);
-            }
-        }, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+        }, client, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 
     public void testDisbursementDateValidForRedoIfDisbursementAfterActivationAndProductStartDate() throws Exception {
+
+        DateTime jan1st2008 = new DateTime().withYear(2008).withMonthOfYear(1).withDayOfMonth(1).toDateMidnight().toDateTime();
+        ClientBO client = new ClientBuilder().withCustomerActivationDate(jan1st2008).buildForUnitTests();
+
         Assert.assertTrue(LoanBO.isDibursementDateValidForRedoLoan(new LoanOfferingBO() {
             @Override
             public Date getStartDate() {
                 return DateUtils.getDate(2008, Calendar.JANUARY, 1);
             }
-        }, new ClientBO() {
-            @Override
-            public Date getCustomerActivationDate() {
-                return DateUtils.getDate(2008, Calendar.JANUARY, 1);
-            }
-        }, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+        }, client, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
 }

@@ -313,7 +313,6 @@ public class MeetingBO extends BusinessObject {
             if (!HolidayUtils.isWorkingDay(c)) {
                 currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
             }
-
         }
 
         boolean isRepaymentIndepOfMeetingEnabled;
@@ -324,12 +323,11 @@ public class MeetingBO extends BusinessObject {
         }
         if (isRepaymentIndepOfMeetingEnabled) {
             return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0;
-        } else {
-            // If repayment date is dependend on meeting date, then they need to
-            // match
-            return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0 && currentScheduleDate
-                    .compareTo(meetingDateWOTimeStamp) == 0;
         }
+        // If repayment date is dependend on meeting date, then they need to
+        // match
+        return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0
+                && currentScheduleDate.compareTo(meetingDateWOTimeStamp) == 0;
     }
 
     public boolean isValidMeetingDate(final Date meetingDate, final int occurrences) throws MeetingException {

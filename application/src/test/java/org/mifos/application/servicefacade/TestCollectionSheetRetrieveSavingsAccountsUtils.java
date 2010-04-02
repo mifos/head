@@ -119,34 +119,37 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         // groupPerIndividualSavingsAccount) are created last... this kicks of a process that creates schedules for all
         // the relevant clients.
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Savings Center")
                 .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).build();
-        IntegrationTestObjectMother.saveCustomer(center);
+        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
         if (!onlyCreateCenterAndItsSavingsAccount) {
             groupCompleteGroup = new GroupBuilder().withSearchId(center.getSearchId() + ".1").withMeeting(weeklyMeeting).withName(
                     "Savings Group Complete Group").withOffice(sampleBranchOffice()).withLoanOfficer(testUser())
                     .withParentCustomer(center).build();
-            IntegrationTestObjectMother.saveCustomer(groupCompleteGroup);
+            IntegrationTestObjectMother.createGroup(groupCompleteGroup, weeklyMeeting);
             groupCompleteGroupSavingsAccount = createSavingsAccount(groupCompleteGroup, "gvcg", "2.0", true, false);
 
-            clientOfGroupCompleteGroup = new ClientBuilder().withSearchId(center.getSearchId() + ".1.1").withMeeting(weeklyMeeting)
+            MeetingBO weeklyClientMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+            groupCompleteGroup.setMeeting(weeklyClientMeeting);
+            clientOfGroupCompleteGroup = new ClientBuilder().withSearchId(center.getSearchId() + ".1.1").withMeeting(weeklyClientMeeting)
                     .withName("Savings Client Of Group Complete Group").withOffice(sampleBranchOffice())
                     .withLoanOfficer(testUser()).withParentCustomer(groupCompleteGroup).buildForIntegrationTests();
-            IntegrationTestObjectMother.saveCustomer(clientOfGroupCompleteGroup);
+            IntegrationTestObjectMother.createClient(clientOfGroupCompleteGroup, weeklyClientMeeting);
             clientOfGroupCompleteGroupSavingsAccount = createSavingsAccount(clientOfGroupCompleteGroup, "clm", "3.0",
                     false, false);
 
             groupPerIndividual = new GroupBuilder().withSearchId(center.getSearchId() + ".2").withMeeting(weeklyMeeting).withName(
                     "Savings Group Per Individual").withOffice(sampleBranchOffice()).withLoanOfficer(testUser())
                     .withParentCustomer(center).build();
-            IntegrationTestObjectMother.saveCustomer(groupPerIndividual);
+            IntegrationTestObjectMother.createGroup(groupPerIndividual, weeklyMeeting);
 
             clientOfGroupPerIndividual = new ClientBuilder().withSearchId(center.getSearchId() + ".2.1").withMeeting(weeklyMeeting)
                     .withName("Savings Client Of Group Per Individual").withOffice(sampleBranchOffice())
                     .withLoanOfficer(testUser()).withParentCustomer(groupPerIndividual).buildForIntegrationTests();
-            IntegrationTestObjectMother.saveCustomer(clientOfGroupPerIndividual);
+            IntegrationTestObjectMother.createClient(clientOfGroupPerIndividual, weeklyMeeting);
             clientOfGroupPerIndividualSavingsAccount = createSavingsAccount(clientOfGroupPerIndividual, "clv", "5.0",
                     true, false);
 

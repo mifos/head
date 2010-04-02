@@ -36,6 +36,7 @@ import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -75,40 +76,45 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         super.setUp();
 
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         weeklyPeriodicFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly().withFeeAmount("100.0").withName(
                 "Center Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
                 .build();
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
         center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
+        IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
         weeklyPeriodicFeeForGroupOnly = new FeeBuilder().appliesToGroupsOnly().withFeeAmount("50.0").withName(
                 "Group Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
                 .build();
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForGroupOnly);
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForGroupOnly).withParentCustomer(center).build();
+        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
 
         weeklyPeriodicFeeForClientsOnly = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
                 "Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
                 .build();
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForClientsOnly);
 
         activeClient = new ClientBuilder().active().withMeeting(weeklyMeeting).withName("Active Client").withOffice(
                 sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForClientsOnly)
                 .withParentCustomer(group).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(activeClient, weeklyMeeting);
 
         weeklyPeriodicFeeForSecondClient = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
                 "Inactive Client Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
                 .build();
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForSecondClient);
 
         inActiveClient = new ClientBuilder().inActive().withMeeting(weeklyMeeting).withName("Inactive Client")
                 .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForSecondClient)
                 .withParentCustomer(group).buildForIntegrationTests();
-
-        IntegrationTestObjectMother.saveCustomerHierarchyWithMeetingAndFees(center, group, activeClient,
-                inActiveClient, weeklyMeeting, weeklyPeriodicFeeForCenterOnly, weeklyPeriodicFeeForGroupOnly,
-                weeklyPeriodicFeeForClientsOnly, weeklyPeriodicFeeForSecondClient);
+        IntegrationTestObjectMother.createClient(inActiveClient, weeklyMeeting);
 
         customerDao = new CustomerDaoHibernate(genericDao);
     }

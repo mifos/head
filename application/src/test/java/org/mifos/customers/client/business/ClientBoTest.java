@@ -21,26 +21,31 @@
 package org.mifos.customers.client.business;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * I test {@link ClientBO}.
  */
-public class ClientBoTest extends TestCase {
+public class ClientBoTest {
 
     // class under test
     private ClientBO client;
 
-    @Override
-    public void setUp() throws Exception {
+    @Before
+    public void setup() throws Exception {
+        Money.setDefaultCurrency(TestUtils.RUPEE);
         client = new ClientBuilder().buildForUnitTests();
     }
 
+    @Test
     public void testAddClientAttendance() {
         Assert.assertEquals("Expecting no attendance entries on a new object", 0, client.getClientAttendances().size());
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
@@ -48,6 +53,7 @@ public class ClientBoTest extends TestCase {
         Assert.assertEquals("Expecting no attendance entries on a new object", 1, client.getClientAttendances().size());
     }
 
+    @Test
     public void testGetClientAttendanceForMeeting() {
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
         client.addClientAttendance(buildClientAttendance(meetingDate.toDate()));
@@ -55,6 +61,7 @@ public class ClientBoTest extends TestCase {
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
     }
 
+    @Test
     public void testHandleAttendance() throws Exception {
 
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
@@ -70,6 +77,7 @@ public class ClientBoTest extends TestCase {
                 .getClientAttendanceForMeeting(meetingDate.toDate()).getAttendanceAsEnum());
     }
 
+    @Test
     public void testHandleAttendanceForDifferentDates() throws Exception {
 
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();

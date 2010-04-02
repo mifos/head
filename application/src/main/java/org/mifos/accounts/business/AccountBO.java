@@ -385,6 +385,9 @@ public class AccountBO extends BusinessObject {
     }
 
     protected void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
+        if (this.accountStatusChangeHistory == null) {
+            this.accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
+        }
         this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
     }
 
@@ -407,6 +410,9 @@ public class AccountBO extends BusinessObject {
     }
 
     public void addAccountNotes(final AccountNotesEntity notes) {
+        if (this.accountNotes == null) {
+            this.accountNotes = new HashSet<AccountNotesEntity>();
+        }
         accountNotes.add(notes);
     }
 

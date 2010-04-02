@@ -124,7 +124,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForClientsOnly).withParentCustomer(group)
                 .buildForIntegrationTests();
-        IntegrationTestObjectMother.saveClient(client);
+        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
 
         collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     }

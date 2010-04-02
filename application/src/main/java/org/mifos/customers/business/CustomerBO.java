@@ -384,6 +384,10 @@ public abstract class CustomerBO extends BusinessObject {
         return customerMeeting.getMeeting();
     }
 
+    public void setMeeting(final MeetingBO meeting) {
+        this.customerMeeting = new CustomerMeetingEntity(this, meeting);
+    }
+
     public void setCustomerMeeting(final CustomerMeetingEntity customerMeeting) {
         this.customerMeeting = customerMeeting;
     }

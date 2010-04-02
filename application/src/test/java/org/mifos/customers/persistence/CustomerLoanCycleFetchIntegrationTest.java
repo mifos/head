@@ -20,10 +20,6 @@
 
 package org.mifos.customers.persistence;
 
-import junit.framework.Assert;
-
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 
@@ -34,41 +30,16 @@ public class CustomerLoanCycleFetchIntegrationTest extends MifosIntegrationTestC
     }
 
     public void testFetchLoanCountersForGroupQueryIsValid() throws Exception {
-        try {
-            new CustomerPersistence().fetchLoanCycleCounter(new GroupBO() {
-                @Override
-                public Integer getCustomerId() {
-                    return 1;
-                }
 
-            }.getCustomerId(), CustomerLevel.GROUP.getValue());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Exception fetching customer loan counters");
-        }
+        Integer customerId = Integer.valueOf(1);
+
+        new CustomerPersistence().fetchLoanCycleCounter(customerId, CustomerLevel.GROUP.getValue());
     }
 
     public void testFetchLoanCountersForClientQueryIsValid() throws Exception {
-        try {
-            new CustomerPersistence().fetchLoanCycleCounter(new ClientBO() {
-                @Override
-                public Integer getCustomerId() {
-                    return 1;
-                }
 
-                @Override
-                public boolean isGroup() {
-                    return false;
-                }
+        Integer customerId = Integer.valueOf(1);
 
-                @Override
-                public boolean isClient() {
-                    return true;
-                }
-            }.getCustomerId(), CustomerLevel.CLIENT.getValue());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Exception fetching customer loan counters");
-        }
+        new CustomerPersistence().fetchLoanCycleCounter(customerId, CustomerLevel.CLIENT.getValue());
     }
 }
