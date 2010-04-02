@@ -295,6 +295,9 @@
 	<query name="Customer.getCustomerCountForOffice">
 	    <![CDATA[select count(*) from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
 	</query>
+	<query name="Customer.getSearchIdsForOffice">
+	    <![CDATA[select searchId from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =:LEVEL_ID and customer.office.officeId =:OFFICE_ID]]>
+	</query>
 	<query name="Customer.getNonClosedClientBasedOnGovtId">
 	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client where 
 			    client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerStatus.id!=:clientStatus and

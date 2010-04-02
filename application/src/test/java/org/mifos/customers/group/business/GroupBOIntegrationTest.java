@@ -161,6 +161,51 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
+    public void testDuplicateSearchIdAfterTransferToBranch() throws Exception {
+        StaticHibernateUtil.startTransaction();
+        group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
+        client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
+        client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+        client2 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+        officeBO = createOffice();
+        client2.changeStatus(CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "comment");
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        group.setUserContext(TestUtils.makeUser());
+        Assert.assertNull(client.getActiveCustomerMovement());
+
+        group.transferToBranch(officeBO);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+        client1 = TestObjectFactory.getClient(client1.getCustomerId());
+        client2 = TestObjectFactory.getClient(client2.getCustomerId());
+        officeBO = new OfficePersistence().getOffice(officeBO.getOfficeId());
+        Assert.assertNotNull(group.getActiveCustomerMovement());
+        Assert.assertNotNull(client.getActiveCustomerMovement());
+        Assert.assertNotNull(client1.getActiveCustomerMovement());
+        Assert.assertNotNull(client2.getActiveCustomerMovement());
+
+       Assert.assertEquals(officeBO.getOfficeId(), group.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client1.getOffice().getOfficeId());
+       Assert.assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
+
+       Assert.assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client1.getStatus());
+       Assert.assertEquals(CustomerStatus.CLIENT_CLOSED, client2.getStatus());
+
+        Assert.assertNull(group.getPersonnel());
+        Assert.assertNull(client.getPersonnel());
+        Assert.assertNull(client1.getPersonnel());
+        Assert.assertNull(client2.getPersonnel());
+    }
+
     public void testGeneratePortfolioAtRisk() throws Exception {
         createInitialObject();
         TestObjectFactory.flushandCloseSession();

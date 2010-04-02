@@ -124,13 +124,12 @@ public class CalendarUtilsTest {
     @Test
     public void shouldRollDateForwardToNearestMonthGivenWeekAndWeekDay() {
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
-        DateTime firstThursdayOfNextMonth = firstOfNextMonth.withDayOfWeek(DayOfWeek.thursday());
+        DateTime thursdayFirstOfApril2010 = new DateTime().withDayOfMonth(1).withMonthOfYear(4).withYear(2010).toDateMidnight().toDateTime();
 
         // exercise test
-        DateTime adjustedDate = CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(firstThursdayOfNextMonth, 1, DayOfWeek.friday());
+        DateTime adjustedDate = CalendarUtils.getFirstDayForMonthUsingWeekRankAndWeekday(thursdayFirstOfApril2010, 1, DayOfWeek.friday());
 
-        assertThat(adjustedDate, is(firstThursdayOfNextMonth.plusDays(1)));
+        assertThat(adjustedDate, is(thursdayFirstOfApril2010.plusDays(1)));
     }
 
     @Test
@@ -183,13 +182,14 @@ public class CalendarUtilsTest {
     @Test
     public void shouldRollDateForwardToNextDateThatMatchesGivenWeekAndWeekDayHaveBeenPassedInCurrentMonth() {
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
-        DateTime firstThursdayOfNextMonth = firstOfNextMonth.withDayOfWeek(DayOfWeek.thursday());
+        DateTime wednesday7thOfApril2010 = new DateTime().withDayOfMonth(7).withMonthOfYear(4).withYear(2010).toDateMidnight().toDateTime();
+        DateTime thursday = wednesday7thOfApril2010.plusDays(1);
 
         // exercise test
-        DateTime adjustedDate = CalendarUtils.getNextDayForMonthUsingWeekRankAndWeekday(firstThursdayOfNextMonth, 1, DayOfWeek.wednesday(), 1);
+        DateTime adjustedDate = CalendarUtils.getNextDayForMonthUsingWeekRankAndWeekday(thursday, 1, DayOfWeek.wednesday(), 1);
 
-        assertThat(adjustedDate, is(firstWednesdayOfTwoMonthsAway()));
+        DateTime wednesday5thOfMay2010 = new DateTime().withDayOfMonth(5).withMonthOfYear(5).withYear(2010).toDateMidnight().toDateTime();
+        assertThat(adjustedDate, is(wednesday5thOfMay2010));
     }
 
     @Test

@@ -453,9 +453,8 @@ public class GroupBO extends CustomerBO {
             searchId = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
         } else {
             try {
-                int customerCount = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP,
-                        getOffice().getOfficeId());
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(customerCount + 1);
+                int newSearchIdSuffix = getCustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, getOffice().getOfficeId()) + 1;
+                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
             } catch (PersistenceException pe) {
                 throw new CustomerException(pe);
             }

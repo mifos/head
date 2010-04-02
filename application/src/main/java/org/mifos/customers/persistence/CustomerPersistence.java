@@ -691,6 +691,39 @@ public class CustomerPersistence extends Persistence {
         return getCountFromQueryResult(queryResult);
     }
 
+    /**
+     * Get a list of the search ids under a given office which are of the form a.b or a.b.c or a.b.c.d (eg. 1.23)
+     * and return the largest suffix of those returned
+     * @param customerLevel whether to search for client/group/center
+     * @param officeId id of the office to search under
+     * @return
+     * @throws PersistenceException
+     */
+    public int getMaxSearchIdSuffix(final CustomerLevel customerLevel, final Short officeId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", customerLevel.getValue());
+        queryParameters.put("OFFICE_ID", officeId);
+        List<String> queryResult = executeNamedQuery(NamedQueryConstants.GET_SEARCH_IDS_FOR_OFFICE, queryParameters);
+        int maxValue = 0;
+        for (String searchId: queryResult) {
+            if (searchId.startsWith("1.") && searchId.lastIndexOf('.') == 1) {
+                int suffixValue = Integer.parseInt(searchId.substring(2));
+                if (suffixValue > maxValue) {
+                    maxValue = suffixValue;
+                }
+            }
+        }
+        return maxValue;
+    }
+
+
+    public List<Integer> getCustomerSearchIds(final Short customerLevelId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", customerLevelId);
+        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
+        return queryResult;
+    }
+
     public List<LoanCycleCounter> fetchLoanCycleCounter(final CustomerBO customerBO) throws PersistenceException {
         if (customerBO.isGroup()) {
             return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP, customerBO);
