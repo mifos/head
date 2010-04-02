@@ -165,8 +165,11 @@ public class ClientBO extends CustomerBO {
         clientNameDetailEntity.setClient(client);
         client.addNameDetailSet(clientNameDetailEntity);
 
-        spouseFatherNameDetailEntity.setClient(client);
-        client.addNameDetailSet(spouseFatherNameDetailEntity);
+        if (spouseFatherNameDetailEntity != null) {
+            // when familydetails required setting is on.. this is filled in..
+            spouseFatherNameDetailEntity.setClient(client);
+            client.addNameDetailSet(spouseFatherNameDetailEntity);
+        }
 
         client.createOrUpdatePicture(pictureAsBlob);
 
