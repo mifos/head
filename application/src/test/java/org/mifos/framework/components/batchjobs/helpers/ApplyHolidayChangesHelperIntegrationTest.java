@@ -32,18 +32,25 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
+import org.mifos.application.servicefacade.TestSaveCollectionSheetUtils;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTestCase {
@@ -55,7 +62,13 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     private CustomerBO center;
     private HolidayBO holidayEntity;
     private ApplyHolidayChangesHelper applyHolidayChangesHelper;
-    DateTimeService dateTimeService = new DateTimeService();
+    private DateTimeService dateTimeService = new DateTimeService();
+
+    // john w - Collection Sheet Util Classes just used to create center hierarchies
+    private TestSaveCollectionSheetUtils testSaveCollectionSheetUtils;
+    private TestCollectionSheetRetrieveSavingsAccountsUtils testCollectionSheetRetrieveSavingsAccountsUtils;
+    private SavingsBO newCenterSavingsAccount;
+    private SavingsBO newGroupSavingsAccount;
 
     @Override
     protected void setUp() throws Exception {
@@ -64,6 +77,10 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
                 .withDayOfMonth(23));
         ApplyHolidayChangesTask applyHolidayChangesTask = new ApplyHolidayChangesTask();
         applyHolidayChangesHelper = (ApplyHolidayChangesHelper) applyHolidayChangesTask.getTaskHelper();
+
+        testSaveCollectionSheetUtils = new TestSaveCollectionSheetUtils();
+        testCollectionSheetRetrieveSavingsAccountsUtils = new TestCollectionSheetRetrieveSavingsAccountsUtils();
+
     }
 
     @Override
@@ -74,7 +91,22 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.deleteHoliday(holidayEntity);
         applyHolidayChangesHelper = null;
         holidayEntity = null;
+
+        // John W - clean up data related to newer tests
+        if (newCenterSavingsAccount != null) {
+            newCenterSavingsAccount = (SavingsBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                    newCenterSavingsAccount.getAccountId());
+        }
+        if (newGroupSavingsAccount != null) {
+            newGroupSavingsAccount = (SavingsBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                    newGroupSavingsAccount.getAccountId());
+        }
+        TestObjectFactory.cleanUp(newCenterSavingsAccount);
+        TestObjectFactory.cleanUp(newGroupSavingsAccount);
+        testSaveCollectionSheetUtils.clearObjects();
+
         StaticHibernateUtil.closeSession();
+
         dateTimeService.resetToCurrentSystemDateTime();
         super.tearDown();
     }
@@ -158,4 +190,89 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         Assert.assertEquals("customer schedule adjusted", LocalDate.fromDateFields(displacedPaybackDate), LocalDate
                 .fromDateFields(accountActionDates.toArray(new AccountActionDateEntity[] {})[1].getActionDate()));
     }
+
+    public void testThatAllTypesofSchedulesAreUpdatedGivenALengthyHoliday() throws Exception {
+
+        // create center hierarchy with loan and savings and customer accounts.
+        final Date today = dateTimeService.getCurrentJavaDateTime();
+        createCenterHierarchy(today);
+
+        // Creating Holiday
+        final LocalDate holidayFromDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
+                .withDayOfMonth(9).toLocalDate();
+        final LocalDate holidayThruDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
+                .withDayOfMonth(28).toLocalDate();
+        final HolidayPK holidayPK = new HolidayPK((short) 1, DateUtils.getDateFromLocalDate(holidayFromDate));
+        final RepaymentRuleEntity entity = new HolidayPersistence()
+                .getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
+        holidayEntity = new HolidayBO(holidayPK, DateUtils.getDateFromLocalDate(holidayThruDate), "Brand New Holiday",
+                entity);
+        holidayEntity.save();
+        StaticHibernateUtil.commitTransaction();
+
+        // Generate expected results
+        final LocalDate adjustedLocalDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
+                .withDayOfMonth(29).toLocalDate();
+        final java.sql.Date adjustedDate = new java.sql.Date(DateUtils.getDateFromLocalDate(adjustedLocalDate)
+                .getTime());
+        List<java.sql.Date> resultDates = createResultDates(new java.sql.Date(today.getTime()), adjustedDate);
+
+        // run the batch job
+        StaticHibernateUtil.startTransaction();
+        applyHolidayChangesHelper.execute(today.getTime());
+        System.out.println("finished");
+
+        // verify results by refreshing data and comparing with expected results
+        CustomerAccountBO refreshedCenterCustomerAccount = (CustomerAccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                testSaveCollectionSheetUtils.getCenter().getCustomerAccount().getAccountId());
+        verifyAccountActionDates(refreshedCenterCustomerAccount.getAccountActionDates(), resultDates);
+
+        newGroupSavingsAccount = (SavingsBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                newGroupSavingsAccount.getAccountId());
+        verifyAccountActionDates(newGroupSavingsAccount.getAccountActionDates(), resultDates);
+
+        LoanBO refreshedClientLoanAccount = (LoanBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
+                testSaveCollectionSheetUtils.getClientLoan().getAccountId());
+        //loan schedules start a week later so taking the first 'week' out of resultDates
+        resultDates.remove(0);
+        verifyAccountActionDates(refreshedClientLoanAccount.getAccountActionDates(), resultDates);
+
+    }
+
+    private void verifyAccountActionDates(Set<AccountActionDateEntity> accountActionDates,
+            List<java.sql.Date> resultDates) {
+
+        for (AccountActionDateEntity date : accountActionDates) {
+            java.sql.Date expectedDate = resultDates.get(date.getInstallmentId() - 1);
+            assertEquals(expectedDate.toString(), date.getActionDate().toString());
+        }
+
+    }
+
+    private List<java.sql.Date> createResultDates(java.sql.Date startDate, java.sql.Date adjustedDate) {
+
+        //assuming that 50 is more than enough dates to cater for (to compare against scheduled dates)
+        List<java.sql.Date> dates = new ArrayList<java.sql.Date>(50);
+        dates.add(startDate);
+        for (Integer i = 0; i < 49; i++) {
+            LocalDate nextLocalDate = DateUtils.getLocalDateFromDate(dates.get(i)).plusDays(7);
+            java.sql.Date nextDate = new java.sql.Date(DateUtils.getDateFromLocalDate(nextLocalDate).getTime());
+            dates.add(nextDate);
+        }
+        // Adjust Dates for holiday as per expected
+        dates.set(2, adjustedDate);
+        dates.set(3, adjustedDate);
+        dates.set(4, adjustedDate);
+        return dates;
+    }
+
+    private void createCenterHierarchy(Date today) throws Exception {
+        // John W - apologies for ugliness of reusing Collection Sheet test utility class here.
+        testSaveCollectionSheetUtils.createSampleCenterHierarchy(today);
+        newCenterSavingsAccount = testCollectionSheetRetrieveSavingsAccountsUtils.createSavingsAccount(
+                testSaveCollectionSheetUtils.getCenter(), "cvi", "6.6", true, true);
+        newGroupSavingsAccount = testCollectionSheetRetrieveSavingsAccountsUtils.createSavingsAccount(
+                testSaveCollectionSheetUtils.getGroup(), "gm", "2.5", false, false);
+    }
+
 }

@@ -159,7 +159,7 @@ public class TestSaveCollectionSheetUtils {
     }
 
     /**
-     * By default generates 1 center, 1 group and 1 client with 1 savings account and 1 loan to be disbursed and 1
+     * By default generates 1 center, 1 group and 1 client with 1 loan to be disbursed and 1
      * weekly account collection fee. Can be configured to add in other invalid entries.
      */
     public void createSampleCenterHierarchy(Date date) throws Exception {
@@ -216,6 +216,14 @@ public class TestSaveCollectionSheetUtils {
 
     public CenterBO getCenter() {
         return this.center;
+    }
+
+    public GroupBO getGroup() {
+        return this.group;
+    }
+
+    public LoanBO getClientLoan() {
+        return this.loan;
     }
 
     /**

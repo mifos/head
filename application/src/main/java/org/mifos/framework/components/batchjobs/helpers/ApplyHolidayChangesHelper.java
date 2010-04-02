@@ -52,6 +52,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -101,7 +102,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
             createDateGeneration();
             for (HolidayBO holiday : unappliedHolidays) {
-                logMessage("Processing Holiday: " + holiday.getHolidayName());
+                logMessage("Processing Holiday: " + holiday.getHolidayName() + " From: "
+                        + DateUtils.getLocalDateFromDate(holiday.getHolidayFromDate()) + " To: "
+                        + DateUtils.getLocalDateFromDate(holiday.getHolidayThruDate()));
                 try {
                     handleHolidayApplication(holiday);
                     String endHolidayMessage = "Completed Processing for Holiday: " + holiday.getHolidayName()
