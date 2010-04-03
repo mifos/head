@@ -27,35 +27,20 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.center.CenterTemplate;
-import org.mifos.customers.center.CenterTemplateImpl;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
-import org.mifos.customers.client.ClientTemplate;
-import org.mifos.customers.client.ClientTemplateImpl;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.GroupTemplate;
-import org.mifos.customers.group.GroupTemplateImpl;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.persistence.GroupPersistence;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.business.OfficeTemplateImpl;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
 
 public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public ClientPersistenceIntegrationTest() throws Exception {
@@ -72,7 +57,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private SavingsOfferingBO savingsOffering4;
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
-    private GroupPersistence groupPersistence;
     private ClientPersistence clientPersistence;
     private MeetingBO meeting;
     private CenterBO center;
@@ -87,7 +71,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super.setUp();
         this.officePersistence = new OfficePersistence();
         this.centerPersistence = new CenterPersistence();
-        this.groupPersistence = new GroupPersistence();
         this.clientPersistence = new ClientPersistence();
         initializeStatisticsService();
     }
@@ -106,47 +89,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(center);
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    public void testCreateClient() throws Exception {
-        try {
-            UserContext userContext = TestUtils.makeUser();
-
-            OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
-            OfficeBO office = getOfficePersistence().createOffice(userContext, template);
-
-            MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
-
-            CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
-            CenterBO center = getCenterPersistence().createCenter(userContext, centerTemplate);
-
-            GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
-            GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
-
-            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(office.getOfficeId(),
-                    group.getCustomerId());
-            ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
-
-            Assert.assertNotNull(client.getCustomerId());
-           Assert.assertTrue(client.isActive());
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-        }
-    }
-
-    public void testCreateClientInvalidParentCustomer() throws PersistenceException, CustomerException {
-        try {
-            UserContext userContext = TestUtils.makeUser();
-            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate((short) 1, -11);
-            try {
-                ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
-                Assert.fail("should not have been able to create client " + client.getDisplayName());
-            } catch (ValidationException e) {
-               Assert.assertTrue(e.getMessage().equals(CustomerConstants.INVALID_PARENT));
-            }
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-        }
     }
 
     public void testGetActiveClientsUnderParent() throws PersistenceException {
@@ -242,10 +184,6 @@ public class ClientPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public CenterPersistence getCenterPersistence() {
         return centerPersistence;
-    }
-
-    public GroupPersistence getGroupPersistence() {
-        return groupPersistence;
     }
 
     public ClientPersistence getClientPersistence() {

@@ -143,7 +143,7 @@ public class IntegrationTestObjectMother {
         }
     }
 
-    public static void cleanCustomerHierarchyWithMeetingAndFees(final ClientBO client, final GroupBO group,
+    public static void cleanCustomerHierarchyWithMeeting(final ClientBO client, final GroupBO group,
             final CustomerBO center, final MeetingBO weeklyMeeting) {
         try {
             TestObjectFactory.cleanUp(client);

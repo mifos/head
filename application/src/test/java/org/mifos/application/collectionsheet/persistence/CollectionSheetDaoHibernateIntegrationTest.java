@@ -135,7 +135,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount, savingsAccount2);
         TestObjectFactory.cleanUp(loan);
-        IntegrationTestObjectMother.cleanCustomerHierarchyWithMeetingAndFees(client, group, center, weeklyMeeting);
+        IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
     public void testShouldRetrieveCustomerHierarchyWithACenterAsRootByBranchId() throws Exception {

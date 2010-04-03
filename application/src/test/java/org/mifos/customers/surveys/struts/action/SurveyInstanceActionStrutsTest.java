@@ -36,23 +36,20 @@ import junit.framework.Assert;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
-import org.mifos.customers.client.business.NameType;
-import org.mifos.customers.client.persistence.ClientPersistence;
-import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.ppi.business.PPISurvey;
 import org.mifos.customers.ppi.business.PPISurveyInstance;
@@ -76,11 +73,10 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -111,31 +107,34 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    private ClientBO createClient() throws PersistenceException {
-        ClientBO client = null;
-        try {
-            OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-            PersonnelBO formedBy = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.MAYBE_CLIENT,
-                    TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
-                    TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                    .valueOf("1"), Short.valueOf("41"));
-            client = new ClientBO(TestUtils.makeUserWithLocales(), "Test Client ", CustomerStatus.CLIENT_PARTIAL, null,
-                    null, null, null, TestObjectFactory.getFees(), null, formedBy, office, null, new Date(
-                            1222333444000L), null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
-                    spouseNameDetailView, clientDetailView, null);
-            new ClientPersistence().saveClient(client);
-            StaticHibernateUtil.commitTransaction();
-        } catch (CustomerException e) {
-            throw new RuntimeException(e);
-        } catch (SystemException e) {
-            throw new RuntimeException(e);
-        }
-        TestObjectFactory.addObject(client);
-        return client;
-    }
+    // private ClientBO createClient() throws PersistenceException {
+    // ClientBO client = null;
+    // try {
+    // OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+    // PersonnelBO formedBy = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
+    // ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.MAYBE_CLIENT,
+    // TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
+    // ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+    // TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
+    // ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+    // .valueOf("1"), Short.valueOf("41"));
+    //
+    // client = new ClientBuilder().withOffice(office).buildForIntegrationTests();
+    //
+    // client = new ClientBO(TestUtils.makeUserWithLocales(), "Test Client ", CustomerStatus.CLIENT_PARTIAL, null,
+    // null, null, null, TestObjectFactory.getFees(), null, formedBy, office, null, new Date(
+    // 1222333444000L), null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
+    // spouseNameDetailView, clientDetailView, null);
+    // new ClientPersistence().saveClient(client);
+    // StaticHibernateUtil.commitTransaction();
+    // } catch (CustomerException e) {
+    // throw new RuntimeException(e);
+    // } catch (SystemException e) {
+    // throw new RuntimeException(e);
+    // }
+    // TestObjectFactory.addObject(client);
+    // return client;
+    // }
 
     public void testGet() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
@@ -171,17 +170,17 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward("get_success");
         SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
-       Assert.assertEquals(sampleInstance.getInstanceId(), retrievedInstance.getInstanceId());
-       Assert.assertEquals(testName, retrievedInstance.getSurvey().getName());
+        Assert.assertEquals(sampleInstance.getInstanceId(), retrievedInstance.getInstanceId());
+        Assert.assertEquals(testName, retrievedInstance.getSurvey().getName());
         String expectedUrl = "clientCustAction.do?method=get&globalCustNum="
                 + sampleInstance.getCustomer().getGlobalCustNum();
-       Assert.assertEquals(expectedUrl, request.getAttribute(SurveysConstants.KEY_REDIRECT_URL));
+        Assert.assertEquals(expectedUrl, request.getAttribute(SurveysConstants.KEY_REDIRECT_URL));
     }
 
     public void testDeleteInstance() throws Exception {
         SurveyInstance instance = SurveyIntegrationTest.makeSurveyInstance("testDeleteInstance survey name");
         SurveysPersistence persistence = new SurveysPersistence();
-       Assert.assertTrue(persistence.getInstance(instance.getInstanceId()) != null);
+        Assert.assertTrue(persistence.getInstance(instance.getInstanceId()) != null);
         setRequestPathInfo("/surveyInstanceAction");
         addRequestParameter("method", "delete");
         addRequestParameter("value(surveyType)", "client");
@@ -189,7 +188,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         Assert.assertNull(persistence.getInstance(instance.getInstanceId()));
-       Assert.assertEquals(0, persistence.retrieveResponsesByInstance(instance).size());
+        Assert.assertEquals(0, persistence.retrieveResponsesByInstance(instance).size());
     }
 
     public void testSurveyValidation() throws Exception {
@@ -234,8 +233,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         retrievedSurvey = (Survey) StaticHibernateUtil.getSessionTL().get(Survey.class, retrievedSurvey.getSurveyId());
 
-       Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
-       Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
+        Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
+        Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
                 (String) request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 
         InstanceStatus status = InstanceStatus.COMPLETED;
@@ -270,6 +269,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
     /**
      * this test is disabled because of this issue http://mifosforge.jira.com/browse/MIFOS-2753
+     *
      * @throws Exception
      */
     public void xtestCreate() throws Exception {
@@ -320,8 +320,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
 
         Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-       Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
-       Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
+        Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
+        Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
                 (String) request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 
         int surveyQuestion3Id = surveyQuestion3.getSurveyQuestionId();
@@ -352,24 +352,24 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
 
         List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
-       Assert.assertEquals(2, retrievedInstances.size());
+        Assert.assertEquals(2, retrievedInstances.size());
         SurveyInstance newInstance = retrievedInstances.get(0);
-       Assert.assertEquals(clientId, Integer.toString(newInstance.getCustomer().getCustomerId()));
+        Assert.assertEquals(clientId, Integer.toString(newInstance.getCustomer().getCustomerId()));
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(newInstance.getDateConducted());
-       Assert.assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
-       Assert.assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
-       Assert.assertEquals(2007, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
+        Assert.assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
+        Assert.assertEquals(2007, calendar.get(Calendar.YEAR));
         List<SurveyResponse> responses = surveysPersistence.retrieveResponsesByInstance(newInstance);
-       Assert.assertEquals(5, responses.size());
-       Assert.assertEquals("answer 1", responses.get(0).getFreetextValue());
-       Assert.assertEquals(2.0, responses.get(1).getNumberValue(), DELTA);
+        Assert.assertEquals(5, responses.size());
+        Assert.assertEquals("answer 1", responses.get(0).getFreetextValue());
+        Assert.assertEquals(2.0, responses.get(1).getNumberValue(), DELTA);
         Date retrievedDate = responses.get(2).getDateValue();
         calendar.setTime(retrievedDate);
-       Assert.assertEquals(14, calendar.get(Calendar.DAY_OF_MONTH));
-       Assert.assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
-       Assert.assertEquals(2006, calendar.get(Calendar.YEAR));
-       Assert.assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
+        Assert.assertEquals(14, calendar.get(Calendar.DAY_OF_MONTH));
+        Assert.assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
+        Assert.assertEquals(2006, calendar.get(Calendar.YEAR));
+        Assert.assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
     }
 
     public void testCreateWithOfficerDisplayName() throws Exception {
@@ -514,7 +514,30 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
 
-        ClientBO client = createClient();
+        MeetingBO weeklyMeeting = null;
+        CenterBO center = null;
+        GroupBO group = null;
+        ClientBO client = null;
+
+        OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
+        PersonnelBO testUser = IntegrationTestObjectMother.testUser();
+
+        weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
+
+        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(office).withLoanOfficer(
+                testUser).build();
+        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
+
+        group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(office).withLoanOfficer(
+                testUser).withParentCustomer(center).build();
+        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
+
+        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(office)
+                .withLoanOfficer(testUser).withParentCustomer(group).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
+
+        // ClientBO client = createClient();
         String globalCustNum = client.getGlobalCustNum();
 
         setRequestPathInfo("/surveyInstanceAction");
@@ -560,46 +583,75 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
-       Assert.assertTrue(retrievedInstance instanceof PPISurveyInstance);
-       Assert.assertTrue(retrievedInstance.getSurvey() instanceof PPISurvey);
-       Assert.assertEquals(0, ((PPISurveyInstance) retrievedInstance).getScore());
-       Assert.assertEquals(82.2, ((PPISurveyInstance) retrievedInstance).getBottomHalfBelowPovertyLinePercent(), DELTA);
-       Assert.assertEquals(6.2, ((PPISurveyInstance) retrievedInstance).getTopHalfBelowPovertyLinePercent(), DELTA);
+        Assert.assertTrue(retrievedInstance instanceof PPISurveyInstance);
+        Assert.assertTrue(retrievedInstance.getSurvey() instanceof PPISurvey);
+        Assert.assertEquals(0, ((PPISurveyInstance) retrievedInstance).getScore());
+        Assert
+                .assertEquals(82.2, ((PPISurveyInstance) retrievedInstance).getBottomHalfBelowPovertyLinePercent(),
+                        DELTA);
+        Assert.assertEquals(6.2, ((PPISurveyInstance) retrievedInstance).getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
     public void testChooseSurveyForClient() throws Exception {
-        ClientBO client = createClient();
-        String globalCustNum = client.getGlobalCustNum();
 
-        String nameBase = "testChooseSurveyForClient survey";
-        Survey survey1 = new Survey(nameBase + "1", SurveyState.ACTIVE, SurveyType.CLIENT);
-        Survey survey2 = new Survey(nameBase + "2", SurveyState.ACTIVE, SurveyType.LOAN);
-        Survey survey3 = new Survey(nameBase + "3", SurveyState.ACTIVE, SurveyType.ALL);
-        SurveysPersistence persistence = new SurveysPersistence();
-        persistence.createOrUpdate(survey1);
-        persistence.createOrUpdate(survey2);
-        persistence.createOrUpdate(survey3);
+        MeetingBO weeklyMeeting = null;
+        CenterBO center = null;
+        GroupBO group = null;
+        ClientBO client = null;
+        try {
+            OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
+            PersonnelBO testUser = IntegrationTestObjectMother.testUser();
 
-        setRequestPathInfo("/surveyInstanceAction");
-        addRequestParameter("method", "choosesurvey");
-        addRequestParameter("surveyType", SurveyType.CLIENT.getValue());
-        addRequestParameter("globalNum", globalCustNum);
-        actionPerform();
-        verifyNoActionErrors();
-       Assert.assertEquals(client.getDisplayName(), request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
-        List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
-       Assert.assertEquals(2, surveysList.size());
+            weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+            IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-       Assert.assertEquals(nameBase + "1", surveysList.get(0).getName());
+            center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(office)
+                    .withLoanOfficer(testUser).build();
+            IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
-        addRequestParameter("method", "create_entry");
-        addRequestParameter("value(surveyId)", Integer.toString(surveysList.get(0).getSurveyId()));
-        addRequestParameter("value(globalNum)", globalCustNum);
-        actionPerform();
-        verifyNoActionMessages();
-        Survey chosenSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-        Assert.assertNotNull(chosenSurvey);
-       Assert.assertEquals(survey1.getName(), chosenSurvey.getName());
+            group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(office).withLoanOfficer(
+                    testUser).withParentCustomer(center).build();
+            IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
+
+            client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(office)
+                    .withLoanOfficer(testUser).withParentCustomer(group).buildForIntegrationTests();
+            IntegrationTestObjectMother.createClient(client, weeklyMeeting);
+            // ClientBO client = createClient();
+            String globalCustNum = client.getGlobalCustNum();
+
+            String nameBase = "testChooseSurveyForClient survey";
+            Survey survey1 = new Survey(nameBase + "1", SurveyState.ACTIVE, SurveyType.CLIENT);
+            Survey survey2 = new Survey(nameBase + "2", SurveyState.ACTIVE, SurveyType.LOAN);
+            Survey survey3 = new Survey(nameBase + "3", SurveyState.ACTIVE, SurveyType.ALL);
+            SurveysPersistence persistence = new SurveysPersistence();
+            persistence.createOrUpdate(survey1);
+            persistence.createOrUpdate(survey2);
+            persistence.createOrUpdate(survey3);
+
+            setRequestPathInfo("/surveyInstanceAction");
+            addRequestParameter("method", "choosesurvey");
+            addRequestParameter("surveyType", SurveyType.CLIENT.getValue());
+            addRequestParameter("globalNum", globalCustNum);
+            actionPerform();
+            verifyNoActionErrors();
+            Assert.assertEquals(client.getDisplayName(), request
+                    .getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
+            List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
+            Assert.assertEquals(2, surveysList.size());
+
+            Assert.assertEquals(nameBase + "1", surveysList.get(0).getName());
+
+            addRequestParameter("method", "create_entry");
+            addRequestParameter("value(surveyId)", Integer.toString(surveysList.get(0).getSurveyId()));
+            addRequestParameter("value(globalNum)", globalCustNum);
+            actionPerform();
+            verifyNoActionMessages();
+            Survey chosenSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+            Assert.assertNotNull(chosenSurvey);
+            Assert.assertEquals(survey1.getName(), chosenSurvey.getName());
+        } finally {
+            IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
+        }
     }
 
     public void testChooseSurveyForLoan() throws Exception {
@@ -612,7 +664,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         LoanBO loan = createLoan();
         String globalAccountNum = loan.getGlobalAccountNum();
-       Assert.assertEquals("000100000000002", globalAccountNum);
+        Assert.assertEquals("000100000000002", globalAccountNum);
 
         setRequestPathInfo("/surveyInstanceAction");
         addRequestParameter("method", "choosesurvey");
@@ -621,8 +673,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
-       Assert.assertEquals(1, surveysList.size());
-       Assert.assertEquals(survey2.getName(), surveysList.get(0).getName());
+        Assert.assertEquals(1, surveysList.size());
+        Assert.assertEquals(survey2.getName(), surveysList.get(0).getName());
 
         addRequestParameter("method", "create_entry");
         addRequestParameter("value(surveyId)", Integer.toString(surveysList.get(0).getSurveyId()));
@@ -631,21 +683,17 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         Survey chosenSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         Assert.assertNotNull(chosenSurvey);
-       Assert.assertEquals(survey2.getName(), chosenSurvey.getName());
+        Assert.assertEquals(survey2.getName(), chosenSurvey.getName());
     }
 
     /*
      * public void testValidateSuccess() throws Exception {
      *
-     * String dateConducted = DateUtils.makeDateAsSentFromBrowser();
-     * //InstanceStatus status = InstanceStatus.INCOMPLETE;
-     * addRequestParameter("customerId", "4");
-     * addRequestParameter("officerName", "Someone's Name");
-     * addRequestDateParameter("dateSurveyed", dateConducted);
-     * //addRequestParameter("instanceStatus",
-     * Integer.toString(status.getValue()));
-     * setRequestPathInfo("/surveyInstanceAction");
-     * addRequestParameter("method", "preview"); actionPerform();
+     * String dateConducted = DateUtils.makeDateAsSentFromBrowser(); //InstanceStatus status =
+     * InstanceStatus.INCOMPLETE; addRequestParameter("customerId", "4"); addRequestParameter("officerName",
+     * "Someone's Name"); addRequestDateParameter("dateSurveyed", dateConducted);
+     * //addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
+     * setRequestPathInfo("/surveyInstanceAction"); addRequestParameter("method", "preview"); actionPerform();
      * verifyNoActionErrors(); }
      */
 
@@ -659,15 +707,15 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testRedirectUrl() throws Exception {
         String globalNum = "12345";
-       Assert.assertEquals("clientCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
+        Assert.assertEquals("clientCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
                 SurveyType.CLIENT, globalNum));
-       Assert.assertEquals("groupCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
+        Assert.assertEquals("groupCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
                 SurveyType.GROUP, globalNum));
-       Assert.assertEquals("centerCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
+        Assert.assertEquals("centerCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
                 SurveyType.CENTER, globalNum));
-       Assert.assertEquals("loanAccountAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction.getRedirectUrl(
-                SurveyType.LOAN, globalNum));
-       Assert.assertEquals("savingsAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction.getRedirectUrl(
+        Assert.assertEquals("loanAccountAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction
+                .getRedirectUrl(SurveyType.LOAN, globalNum));
+        Assert.assertEquals("savingsAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction.getRedirectUrl(
                 SurveyType.SAVINGS, globalNum));
     }
 

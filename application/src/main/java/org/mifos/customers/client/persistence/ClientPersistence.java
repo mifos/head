@@ -29,46 +29,19 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.ClientTemplate;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.security.util.UserContext;
 
 public class ClientPersistence extends Persistence {
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-
-    public ClientBO createClient(final UserContext userContext, final ClientTemplate template) throws CustomerException,
-            PersistenceException, ValidationException {
-        CustomerBO parentCustomer = null;
-        if (template.getParentCustomerId() != null) {
-            parentCustomer = getCustomerPersistence().getCustomer(template.getParentCustomerId());
-            if (parentCustomer == null) {
-                throw new ValidationException(CustomerConstants.INVALID_PARENT);
-            }
-        }
-
-        ClientBO client = new ClientBO(userContext, template.getDisplayName(), template.getCustomerStatus(), template
-                .getExternalId(), template.getMfiJoiningDate(), template.getAddress(), template.getCustomFieldViews(),
-                template.getFees(), template.getOfferingsSelected(), personnelPersistence.getPersonnel(template
-                        .getFormedById()), officePersistence.getOffice(template.getOfficeId()), parentCustomer,
-                template.getDateOfBirth(), template.getGovernmentId(), template.getTrained(),
-                template.getTrainedDate(), template.getGroupFlag(), template.getClientNameDetailView(), template
-                        .getSpouseNameDetailView(), template.getClientDetailView(), template.getPicture());
-        customerPersistence.saveCustomer(client);
-        return client;
-    }
 
     /**
      * Get a client by Id and inject any required dependencies

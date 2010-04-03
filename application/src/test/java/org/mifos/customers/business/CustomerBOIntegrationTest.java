@@ -36,7 +36,6 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -48,16 +47,14 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
@@ -79,7 +76,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -89,23 +85,14 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private AccountBO accountBO;
-
     private CenterBO center;
-
     private GroupBO group;
-
     private ClientBO client;
-
     private CustomerPersistence customerPersistence = new CustomerPersistence();
-
     private MeetingBO meeting;
-
     private SavingsTestHelper helper = new SavingsTestHelper();
-
     private SavingsOfferingBO savingsOffering;
-
-    PersonnelBO loanOfficer;
-
+    private PersonnelBO loanOfficer;
     private OfficeBO createdBranchOffice;
 
     @Override
@@ -159,7 +146,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testHasActiveLoanAccountsForProductReturnsTrueIfCustomerHasSuchAccounts() throws Exception {
-        client = createClientToTestActiveLoanProducts();
+        client = new ClientBuilder().active().buildForUnitTests();
         LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
         LoanBO accountMock = createMock(LoanBO.class);
         client.addAccount(accountMock);
@@ -172,7 +159,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testHasActiveLoanAccountsForProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct()
             throws Exception {
-        client = createClientToTestActiveLoanProducts();
+        client = new ClientBuilder().active().buildForUnitTests();
         LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
         LoanOfferingBO loanProduct2 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product2", "TLP2");
         LoanBO accountMock = createMock(LoanBO.class);
@@ -185,7 +172,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testHasActiveLoanAccountsForProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts() throws Exception {
-        client = createClientToTestActiveLoanProducts();
+        client = new ClientBuilder().active().buildForUnitTests();
         LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
         LoanBO accountMock = createMock(LoanBO.class);
         client.addAccount(accountMock);
@@ -193,14 +180,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         replay(accountMock);
         Assert.assertFalse(client.hasActiveLoanAccountsForProduct(loanProduct1));
         verify(accountMock);
-    }
-
-    private ClientBO createClientToTestActiveLoanProducts() throws CustomerException {
-        return new ClientBO(TestUtils.makeUserWithLocales(), "customerName", CustomerStatus.CLIENT_ACTIVE, null, null,
-                null, null, new ArrayList<FeeView>(), null, getSystemUser(), getHeadOffice(), null, null, null, null,
-                null, YesNoFlag.YES.getValue(), TestObjectFactory.clientNameView(NameType.CLIENT, "customerName"),
-                TestObjectFactory.clientNameView(NameType.SPOUSE, "customerName"), new ClientDetailView(1, 1, 1, 1, 1,
-                        1, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("41")), null);
     }
 
     public void testCheckIfClientIsATitleHolder() throws Exception {
@@ -326,7 +305,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
                 .getDelinquentPortfolioAmount());
     }
 
-    public void testGetBalanceForAccountsAtRisk() throws PersistenceException {
+    public void testGetBalanceForAccountsAtRisk() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -356,23 +335,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         return amount;
     }
 
-    /*
-     * Removing this test for now since this test case is the only place the method getDelinquentPortfolioAmount() is
-     * called
-     *
-     * public void testGetDelinquentPortfolioAmount() { createInitialObjects(); accountBO = getLoanAccount(client,
-     * meeting); TestObjectFactory.flushandCloseSession(); accountBO = TestObjectFactory.getObject(AccountBO.class,
-     * accountBO.getAccountId()); setActionDateToPastDate(); TestObjectFactory.updateObject(accountBO);
-     * TestObjectFactory.flushandCloseSession(); client = TestObjectFactory.getClient(ClientBO.class,
-     * client.getCustomerId());Assert.assertEquals(new Money(getCurrency(), "0.7"),
-     * client.getDelinquentPortfolioAmount()); TestObjectFactory.flushandCloseSession(); center =
-     * TestObjectFactory.getCenter(CenterBO.class, center .getCustomerId()); group =
-     * TestObjectFactory.getGroup(GroupBO.class, group .getCustomerId()); client =
-     * TestObjectFactory.getClient(ClientBO.class, client .getCustomerId()); accountBO =
-     * TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId()); }
-     */
-
-    public void testGetOutstandingLoanAmount() throws PersistenceException {
+    public void testGetOutstandingLoanAmount() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -385,7 +348,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetActiveLoanCounts() throws PersistenceException {
+    public void testGetActiveLoanCounts() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -398,7 +361,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetOpenIndividualLoanAccounts() throws PersistenceException {
+    public void testGetOpenIndividualLoanAccounts() {
         createInitialObjects();
         accountBO = getIndividualLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -414,7 +377,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetLoanAccountInUse() throws PersistenceException {
+    public void testGetLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -445,7 +408,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testHasAnyLoanAccountInUse() throws PersistenceException {
+    public void testHasAnyLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -682,26 +645,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private void setActionDateToPastDate() {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        calendar.add(calendar.WEEK_OF_MONTH, -1);
-        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());
-
-        Calendar date = new GregorianCalendar();
-        date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        date.add(date.WEEK_OF_MONTH, -2);
-        java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date.getTimeInMillis());
-
-        for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
-            if (installment.getInstallmentId().intValue() == 1) {
-                LoanBOTestUtils.setActionDate(installment, lastWeekDate);
-            } else if (installment.getInstallmentId().intValue() == 2) {
-                LoanBOTestUtils.setActionDate(installment, twoWeeksBeforeDate);
-            }
-        }
-    }
-
     private SavingsBO getSavingsAccount(String offeringName, String shortName) throws Exception {
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering(offeringName, shortName);
@@ -782,6 +725,5 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     @Override
     protected OfficeBO getBranchOffice() {
         return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-
     }
 }

@@ -124,7 +124,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         super.tearDown();
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount);
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(secondSavingsAccount);
-        IntegrationTestObjectMother.cleanCustomerHierarchyWithMeetingAndFees(client, group, center, weeklyMeeting);
+        IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 
     public void testShouldReturnEmptyListWhenNoMandatorySavingsAccountsExistForClientsOrGroupsWithCompleteGroupStatus() {
