@@ -109,45 +109,47 @@ public class ClientBO extends CustomerBO {
             CustomerStatus clientStatus, DateTime mfiJoiningDate, CustomerBO group, PersonnelBO formedBy,
             List<CustomerCustomFieldEntity> customerCustomFields, ClientNameDetailEntity clientNameDetailEntity,
             DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
-            String clientFirstName, String clientLastName, String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
-            ClientDetailEntity clientDetailEntity, Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
+            String clientFirstName, String clientLastName, String secondLastName,
+            ClientNameDetailEntity spouseFatherNameDetailEntity, ClientDetailEntity clientDetailEntity,
+            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
 
-            // inherit settings from parent (group)
-            OfficeBO office = group.getOffice();
+        // inherit settings from parent (group)
+        OfficeBO office = group.getOffice();
 
-            MeetingBO meeting = group.getCustomerMeetingValue();
+        MeetingBO meeting = group.getCustomerMeetingValue();
 
-            PersonnelBO loanOfficer = group.getPersonnel();
+        PersonnelBO loanOfficer = group.getPersonnel();
 
-            ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
-                    loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
+        ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
+                loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName,
+                clientLastName, secondLastName, clientDetailEntity);
 
-            if (clientNameDetailEntity != null) {
-                clientNameDetailEntity.setClient(client);
-                client.addNameDetailSet(clientNameDetailEntity);
-            }
+        if (clientNameDetailEntity != null) {
+            clientNameDetailEntity.setClient(client);
+            client.addNameDetailSet(clientNameDetailEntity);
+        }
 
-            if (spouseFatherNameDetailEntity != null) {
-                // when familydetails required setting is on.. this is filled in..
-                spouseFatherNameDetailEntity.setClient(client);
-                client.addNameDetailSet(spouseFatherNameDetailEntity);
-            }
+        if (spouseFatherNameDetailEntity != null) {
+            // when familydetails required setting is on.. this is filled in..
+            spouseFatherNameDetailEntity.setClient(client);
+            client.addNameDetailSet(spouseFatherNameDetailEntity);
+        }
 
-            client.createOrUpdatePicture(pictureAsBlob);
+        client.createOrUpdatePicture(pictureAsBlob);
 
-            for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
-                client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
-            }
+        for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
+            client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
+        }
 
-            client.setParentCustomer(group);
+        client.setParentCustomer(group);
 
-            List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                    .fromCustomerCustomFieldEntity(customerCustomFields, client);
-            for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-                client.addCustomField(customerCustomFieldEntity);
-            }
+        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+                .fromCustomerCustomFieldEntity(customerCustomFields, client);
+        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+            client.addCustomField(customerCustomFieldEntity);
+        }
 
-            return client;
+        return client;
     }
 
     public static ClientBO createNewOutOfGroupHierarchy(UserContext userContext, String clientName,
@@ -160,7 +162,8 @@ public class ClientBO extends CustomerBO {
             List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
-                loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, clientDetailEntity);
+                loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
+                clientFirstName, clientLastName, secondLastName, clientDetailEntity);
 
         clientNameDetailEntity.setClient(client);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -197,7 +200,7 @@ public class ClientBO extends CustomerBO {
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
-        this.familyDetailSet=null;
+        this.familyDetailSet = null;
     }
 
     /**
@@ -205,7 +208,8 @@ public class ClientBO extends CustomerBO {
      */
     public ClientBO(UserContext userContext, String clientName, CustomerStatus clientStatus, DateTime mfiJoiningDate,
             OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, PersonnelBO formedBy, DateTime dateOfBirth,
-            String governmentId, boolean trained, DateTime trainedDate, Short groupFlag, String clientFirstName, String clientLastName, String secondLastName, ClientDetailEntity clientDetailEntity) {
+            String governmentId, boolean trained, DateTime trainedDate, Short groupFlag, String clientFirstName,
+            String clientLastName, String secondLastName, ClientDetailEntity clientDetailEntity) {
         super(userContext, clientName, CustomerLevel.CLIENT, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy);
 
@@ -240,27 +244,37 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
+     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
+     * IntegrationTestObjectMother pattern
+     *
      * @deprecated - use static factory classes
      */
-    public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
-            final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+    public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
+            final String externalId, final Date mfiJoiningDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
-            final CustomerBO parentCustomer, final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,
-            final Short groupFlag, final ClientNameDetailView clientNameDetailView, final ClientNameDetailView spouseNameDetailView,
-            final ClientDetailView clientDetailView, final InputStream picture) throws CustomerException {
+            final CustomerBO parentCustomer, final Date dateOfBirth, final String governmentId, final Short trained,
+            final Date trainedDate, final Short groupFlag, final ClientNameDetailView clientNameDetailView,
+            final ClientNameDetailView spouseNameDetailView, final ClientDetailView clientDetailView,
+            final InputStream picture) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, parentCustomer, null, null, dateOfBirth, governmentId, trained,
                 trainedDate, groupFlag, clientNameDetailView, spouseNameDetailView, clientDetailView, picture);
     }
 
     /**
+     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
+     * IntegrationTestObjectMother pattern
+     *
      * @deprecated - use static factory classes
      */
-    public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
-            final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
-            final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office, final MeetingBO meeting,
-            final PersonnelBO loanOfficer, final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,
-            final Short groupFlag, final ClientNameDetailView clientNameDetailView, final ClientNameDetailView spouseNameDetailView,
+    public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
+            final String externalId, final Date mfiJoiningDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
+            final MeetingBO meeting, final PersonnelBO loanOfficer, final Date dateOfBirth, final String governmentId,
+            final Short trained, final Date trainedDate, final Short groupFlag,
+            final ClientNameDetailView clientNameDetailView, final ClientNameDetailView spouseNameDetailView,
             final ClientDetailView clientDetailView, final InputStream picture) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, null, meeting, loanOfficer, dateOfBirth, governmentId, trained,
@@ -268,15 +282,20 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
+     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
+     * IntegrationTestObjectMother pattern
+     *
      * @deprecated - use static factory classes
      */
-    private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus, final String externalId,
-            final Date mfiJoiningDate, final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+    private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
+            final String externalId, final Date mfiJoiningDate, final Address address,
+            final List<CustomFieldView> customFields, final List<FeeView> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
-            final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer, final Date dateOfBirth,
-            final String governmentId, final Short trained, final Date trainedDate, final Short groupFlag,
-            final ClientNameDetailView clientNameDetailView, final ClientNameDetailView spouseNameDetailView,
-            final ClientDetailView clientDetailView, final InputStream picture) throws CustomerException {
+            final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer,
+            final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,
+            final Short groupFlag, final ClientNameDetailView clientNameDetailView,
+            final ClientNameDetailView spouseNameDetailView, final ClientDetailView clientDetailView,
+            final InputStream picture) throws CustomerException {
         super(userContext, displayName, CustomerLevel.CLIENT, customerStatus, externalId, mfiJoiningDate, address,
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
         validateOffice(office);
@@ -285,7 +304,7 @@ public class ClientBO extends CustomerBO {
         clientAttendances = new HashSet<ClientAttendanceBO>();
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
         this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
-        this.familyDetailSet=null;
+        this.familyDetailSet = null;
         this.dateOfBirth = dateOfBirth;
         this.governmentId = governmentId;
 
@@ -302,7 +321,7 @@ public class ClientBO extends CustomerBO {
         this.secondLastName = clientNameDetailView.getSecondLastName();
 
         this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailView));
-        if(spouseNameDetailView!=null) {
+        if (spouseNameDetailView != null) {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         }
         this.customerDetail = new ClientDetailEntity(this, clientDetailView);
@@ -326,23 +345,26 @@ public class ClientBO extends CustomerBO {
         generateSearchId();
     }
 
-    public void addOfferingAssociatedInCreate(final ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity) {
+    public void addOfferingAssociatedInCreate(
+            final ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity) {
         clientInitialSavingsOfferingEntity.setClient(this);
         this.offeringsAssociatedInCreate.add(clientInitialSavingsOfferingEntity);
     }
 
-    public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView, final List<ClientFamilyDetailView> familyDetailView) {
-        Iterator iterator2=familyDetailView.iterator();
-        familyDetailSet=new HashSet<ClientFamilyDetailEntity>();
+    public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView,
+            final List<ClientFamilyDetailView> familyDetailView) {
+        Iterator iterator2 = familyDetailView.iterator();
+        familyDetailSet = new HashSet<ClientFamilyDetailEntity>();
         for (Object element : familyNameDetailView) {
             ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) element;
-            ClientFamilyDetailView clientFamilyDetailView2= (ClientFamilyDetailView) iterator2.next();
-            ClientNameDetailEntity nameEntity=new ClientNameDetailEntity(this, null,clientNameDetailView2);
+            ClientFamilyDetailView clientFamilyDetailView2 = (ClientFamilyDetailView) iterator2.next();
+            ClientNameDetailEntity nameEntity = new ClientNameDetailEntity(this, null, clientNameDetailView2);
             this.addNameDetailSet(nameEntity);
-            this.addFamilyDetailSet(new ClientFamilyDetailEntity(this,nameEntity, clientFamilyDetailView2));
+            this.addFamilyDetailSet(new ClientFamilyDetailEntity(this, nameEntity, clientFamilyDetailView2));
         }
 
     }
+
     public Set<ClientNameDetailEntity> getNameDetailSet() {
         return nameDetailSet;
     }
@@ -416,13 +438,11 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
-     * TODO: This method is deprecated and should be removed once method
-     * attachPpiSurvey is implemented. Poverty likelihood should be set based on
-     * the results of a PPI survey and should not be over-writable in order to
+     * TODO: This method is deprecated and should be removed once method attachPpiSurvey is implemented. Poverty
+     * likelihood should be set based on the results of a PPI survey and should not be over-writable in order to
      * maintain the integrity of this data.
      *
-     * The method is included here in order to test hibernate mappings through
-     * customerDetail.
+     * The method is included here in order to test hibernate mappings through customerDetail.
      */
     public void setPovertyLikelihoodPercent(final Double pct) {
         this.customerDetail.setPovertyLikelihoodPercent(pct);
@@ -452,7 +472,7 @@ public class ClientBO extends CustomerBO {
         this.nameDetailSet.add(customerNameDetail);
     }
 
-    public void addFamilyDetailSet(final ClientFamilyDetailEntity clientFamilyDetail){
+    public void addFamilyDetailSet(final ClientFamilyDetailEntity clientFamilyDetail) {
         this.familyDetailSet.add(clientFamilyDetail);
     }
 
@@ -480,8 +500,8 @@ public class ClientBO extends CustomerBO {
     }
 
     // when this method is called from Bulk Entry preview persist will be false
-    public void handleAttendance(final Date meetingDate, final Short attendance, final boolean persist) throws ServiceException,
-            CustomerException {
+    public void handleAttendance(final Date meetingDate, final Short attendance, final boolean persist)
+            throws ServiceException, CustomerException {
         ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
         if (clientAttendance == null) {
             clientAttendance = new ClientAttendanceBO();
@@ -526,8 +546,8 @@ public class ClientBO extends CustomerBO {
     @Override
     public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return (oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
-                .equals(CustomerStatus.CLIENT_PENDING.getValue())) && newStatusId.equals(CustomerStatus.CLIENT_ACTIVE
-                .getValue());
+                .equals(CustomerStatus.CLIENT_PENDING.getValue()))
+                && newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue());
     }
 
     public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
@@ -552,110 +572,113 @@ public class ClientBO extends CustomerBO {
     /**
      * This method is called for client family and name details update
      */
-     public void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws PersistenceException {
+    public void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws PersistenceException {
 
-         updateFamilyAndNameDetails(clientFamilyInfoUpdate);
-         deleteFamilyAndNameDetails(clientFamilyInfoUpdate.getFamilyPrimaryKey());
-         insertFamilyAndNameDetails(clientFamilyInfoUpdate);
-     }
+        updateFamilyAndNameDetails(clientFamilyInfoUpdate);
+        deleteFamilyAndNameDetails(clientFamilyInfoUpdate.getFamilyPrimaryKey());
+        insertFamilyAndNameDetails(clientFamilyInfoUpdate);
+    }
 
-     /**
-      * This method return boolean value
-      *
-      * @param clientNameId
-      * @param primaryKeys
-      * @return
-      */
-     private boolean isKeyExists(final int clientNameId, final List<Integer> primaryKeys){
-         boolean keyFound = false;
-         for(int i=0;i<primaryKeys.size();i++){
-             if(primaryKeys.get(i)!=null && primaryKeys.get(i)==clientNameId){
-                 keyFound = true;
-             }
-         }
-         return keyFound;
-     }
+    /**
+     * This method return boolean value
+     *
+     * @param clientNameId
+     * @param primaryKeys
+     * @return
+     */
+    private boolean isKeyExists(final int clientNameId, final List<Integer> primaryKeys) {
+        boolean keyFound = false;
+        for (int i = 0; i < primaryKeys.size(); i++) {
+            if (primaryKeys.get(i) != null && primaryKeys.get(i) == clientNameId) {
+                keyFound = true;
+            }
+        }
+        return keyFound;
+    }
 
-     /**
-      * This method is used to update the Client Family and Name Details
-      */
-     public void updateFamilyAndNameDetails (ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+    /**
+     * This method is used to update the Client Family and Name Details
+     */
+    public void updateFamilyAndNameDetails(ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
 
-         List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
+        List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
 
-         for(int key=0; key < primaryKeys.size(); key++) {
-            if(primaryKeys.get(key) != null){
+        for (int key = 0; key < primaryKeys.size(); key++) {
+            if (primaryKeys.get(key) != null) {
                 List<ClientNameDetailView> clientNameDetailView = clientFamilyInfoUpdate.getFamilyNames();
-                for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
-                    if(clientNameDetailEntity.getCustomerNameId().intValue()==primaryKeys.get(key).intValue()){
+                for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
+                    if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
                         clientNameDetailEntity.updateNameDetails(clientNameDetailView.get(key));
                     }
                 }
 
                 List<ClientFamilyDetailView> clientFamilyDetailView = clientFamilyInfoUpdate.getFamilyDetails();
-                for (ClientFamilyDetailEntity clientFamilyDetailEntity  : familyDetailSet){
-                    if(clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key).intValue()){
+                for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
+                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key)
+                            .intValue()) {
                         clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailView.get(key));
                     }
                 }
             }
         }
-     }
+    }
 
-     /**
-     *  This method is used to delete the Client Family and Name Details
+    /**
+     * This method is used to delete the Client Family and Name Details
      *
      * @param primaryKeys
      * @throws PersistenceException
      */
-     public void deleteFamilyAndNameDetails(final List<Integer> primaryKeys) throws PersistenceException{
-         // check for the primary  if that is null crate the data
-         //get all the family entities to delete
-         List<ClientFamilyDetailEntity> deleteFamilyDetailEntity = new ArrayList<ClientFamilyDetailEntity>();
-         for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet){
-             if(!isKeyExists(clientFamilyDetailEntity.getClientName().getCustomerNameId(),primaryKeys)){
-                 deleteFamilyDetailEntity.add(clientFamilyDetailEntity);
-             }
-         }
-        //get all the name entities to delete
-         List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
-         for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet){
-             //Ignoring name entities of client type
-             if(!clientNameDetailEntity.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
-                 if(!isKeyExists(clientNameDetailEntity.getCustomerNameId(),primaryKeys)){
-                     deleteNameDetailEntity.add(clientNameDetailEntity);
-                 }
-             }
-         }
-         //Delete ClientFamilyDetailEntity
-         for(int i=0;i<deleteFamilyDetailEntity.size();i++){
-             familyDetailSet.remove(deleteFamilyDetailEntity.get(i));
+    public void deleteFamilyAndNameDetails(final List<Integer> primaryKeys) throws PersistenceException {
+        // check for the primary if that is null crate the data
+        // get all the family entities to delete
+        List<ClientFamilyDetailEntity> deleteFamilyDetailEntity = new ArrayList<ClientFamilyDetailEntity>();
+        for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
+            if (!isKeyExists(clientFamilyDetailEntity.getClientName().getCustomerNameId(), primaryKeys)) {
+                deleteFamilyDetailEntity.add(clientFamilyDetailEntity);
+            }
+        }
+        // get all the name entities to delete
+        List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
+        for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
+            // Ignoring name entities of client type
+            if (!clientNameDetailEntity.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+                if (!isKeyExists(clientNameDetailEntity.getCustomerNameId(), primaryKeys)) {
+                    deleteNameDetailEntity.add(clientNameDetailEntity);
+                }
+            }
+        }
+        // Delete ClientFamilyDetailEntity
+        for (int i = 0; i < deleteFamilyDetailEntity.size(); i++) {
+            familyDetailSet.remove(deleteFamilyDetailEntity.get(i));
             getCustomerPersistence().delete(deleteFamilyDetailEntity.get(i));
-         }
-       //Delete ClientNameDetailEntity
-         for(int i=0;i<deleteNameDetailEntity.size();i++){
-             nameDetailSet.remove(deleteNameDetailEntity.get(i));
-             getCustomerPersistence().delete(deleteNameDetailEntity.get(i));
-         }
-     }
+        }
+        // Delete ClientNameDetailEntity
+        for (int i = 0; i < deleteNameDetailEntity.size(); i++) {
+            nameDetailSet.remove(deleteNameDetailEntity.get(i));
+            getCustomerPersistence().delete(deleteNameDetailEntity.get(i));
+        }
+    }
 
-     /**
-      * This method is used to insert the Client Family and Name Details
-      */
-     public void insertFamilyAndNameDetails(ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+    /**
+     * This method is used to insert the Client Family and Name Details
+     */
+    public void insertFamilyAndNameDetails(ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
 
-         List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
+        List<Integer> primaryKeys = clientFamilyInfoUpdate.getFamilyPrimaryKey();
 
-         for(int i=0; i < primaryKeys.size(); i++){
-             if( primaryKeys.get(i) == null){
-                 ClientNameDetailEntity nameDetail = new ClientNameDetailEntity(this,null,clientFamilyInfoUpdate.getFamilyNames().get(i));
-                 nameDetailSet.add(nameDetail);
-                 familyDetailSet.add(new ClientFamilyDetailEntity(this,nameDetail, clientFamilyInfoUpdate.getFamilyDetails().get(i)));
-             }
-         }
-     }
+        for (int i = 0; i < primaryKeys.size(); i++) {
+            if (primaryKeys.get(i) == null) {
+                ClientNameDetailEntity nameDetail = new ClientNameDetailEntity(this, null, clientFamilyInfoUpdate
+                        .getFamilyNames().get(i));
+                nameDetailSet.add(nameDetail);
+                familyDetailSet.add(new ClientFamilyDetailEntity(this, nameDetail, clientFamilyInfoUpdate
+                        .getFamilyDetails().get(i)));
+            }
+        }
+    }
 
-     public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
+    public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
         if (isActive() || isOnHold()) {
             validateLO(personnel);
         }
@@ -840,8 +863,8 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void validateForDuplicateNameOrGovtId(final String displayName, final Date dateOfBirth, final String governmentId)
-            throws CustomerException {
+    public void validateForDuplicateNameOrGovtId(final String displayName, final Date dateOfBirth,
+            final String governmentId) throws CustomerException {
         checkForDuplicates(displayName, dateOfBirth, governmentId, getCustomerId() == null ? Integer.valueOf("0")
                 : getCustomerId());
     }
@@ -859,7 +882,8 @@ public class ClientBO extends CustomerBO {
      *
      */
     @Deprecated
-    public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting) throws CustomerException {
+    public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting)
+            throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
                 validateLO(loanOfficer);
@@ -868,31 +892,31 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private void checkForDuplicates(final String name, final Date dob, final String governmentId, final Integer customerId)
-            throws CustomerException {
+    private void checkForDuplicates(final String name, final Date dob, final String governmentId,
+            final Integer customerId) throws CustomerException {
 
         // FIXME - #000004 - keithw - put back in governmentId validation for clients
-//        if (StringUtils.isNotBlank(governmentId)) {
-//            try {
-//                if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-//                    String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
-//                            userContext);
-//                    throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] {
-//                            governmentId, label });
-//                }
-//            } catch (PersistenceException e) {
-//                throw new CustomerException(e);
-//            }
-//        } else {
-//            try {
-//                if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-//                    throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
-//                            new Object[] { name });
-//                }
-//            } catch (PersistenceException e) {
-//                throw new CustomerException(e);
-//            }
-//        }
+        // if (StringUtils.isNotBlank(governmentId)) {
+        // try {
+        // if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
+        // String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
+        // userContext);
+        // throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] {
+        // governmentId, label });
+        // }
+        // } catch (PersistenceException e) {
+        // throw new CustomerException(e);
+        // }
+        // } else {
+        // try {
+        // if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
+        // throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
+        // new Object[] { name });
+        // }
+        // } catch (PersistenceException e) {
+        // throw new CustomerException(e);
+        // }
+        // }
 
     }
 
@@ -932,7 +956,8 @@ public class ClientBO extends CustomerBO {
     }
 
     @Deprecated
-    public void checkIfClientStatusIsLower(final Short clientStatusId, final Short groupStatus) throws CustomerException {
+    public void checkIfClientStatusIsLower(final Short clientStatusId, final Short groupStatus)
+            throws CustomerException {
         if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
                 && this.isClientUnderGroup()) {
@@ -1007,7 +1032,8 @@ public class ClientBO extends CustomerBO {
      * delete when usage in constructor is removed...
      */
     @Deprecated
-    public void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws CustomerException {
+    public void createDepositSchedule(final List<Days> workingDays, final List<Holiday> holidays)
+            throws CustomerException {
         try {
             if (getParentCustomer() != null) {
                 List<SavingsBO> savingsList = getCustomerPersistence().retrieveSavingsAccountForCustomer(
@@ -1095,7 +1121,8 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnReversal(final LoanBO loan, final Money lastLoanAmount)
+            throws CustomerException {
         ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
         clientPerfHistory.updateOnReversal(loan.getLoanOffering(), lastLoanAmount);
     }
@@ -1107,7 +1134,8 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount) throws CustomerException {
+    public void updatePerformanceHistoryOnLastInstlPayment(final LoanBO loan, final Money totalAmount)
+            throws CustomerException {
         updatePerformanceHistoryOnRepayment(loan, totalAmount);
     }
 
@@ -1199,7 +1227,8 @@ public class ClientBO extends CustomerBO {
             trainedDate = DateUtils.makeDateAsSentFromBrowser(getTrainedDate());
         }
 
-        return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName, groupFlagIsSet, parentGroupId, trained, trainedDate);
+        return new ClientDetailDto(this.governmentId, dateOfBirthAsString, customerDetailView, clientName, spouseName,
+                groupFlagIsSet, parentGroupId, trained, trainedDate);
     }
 
     public void createOrUpdatePicture(Blob pictureAsBlob) {

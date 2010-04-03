@@ -49,6 +49,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 /**
  * This class denotes the Group (row in customer table) object and all attributes associated with it. It has a
@@ -64,6 +65,9 @@ public class GroupBO extends CustomerBO {
             PersonnelBO formedBy, CustomerBO parentCustomer,
             List<CustomerCustomFieldEntity> customerCustomFields, Address address, String externalId, boolean trained,
             DateTime trainedOn, CustomerStatus customerStatus) {
+
+        Assert.notNull(customerStatus, "customerStatus cannot be null");
+        Assert.notNull(parentCustomer, "parentCustomer cannot be null");
 
         DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
         PersonnelBO loanOfficer = parentCustomer.getPersonnel();
@@ -82,7 +86,9 @@ public class GroupBO extends CustomerBO {
         group.updateAddress(address);
         group.setTrained(trained);
         if (trained) {
-            group.setTrainedDate(trainedOn.toDate());
+            if (trainedOn != null) {
+                group.setTrainedDate(trainedOn.toDate());
+            }
         }
 
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
@@ -98,6 +104,9 @@ public class GroupBO extends CustomerBO {
             PersonnelBO formedBy, MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO office,
             List<CustomerCustomFieldEntity> customerCustomFields, Address address, String externalId, boolean trained,
             DateTime trainedOn, CustomerStatus customerStatus, String searchId) {
+
+        Assert.notNull(customerStatus, "customerStatus cannot be null");
+        Assert.notNull(meeting, "meeting cannot be null");
 
         DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
@@ -196,104 +205,6 @@ public class GroupBO extends CustomerBO {
             groupPerformanceHistory.setGroup(this);
         }
         this.groupPerformanceHistory = groupPerformanceHistory;
-    }
-
-    // FIXME - GROUP-CUST-REFACTORING - move out from pojo into service level
-    public void transferToBranch(final OfficeBO officeToTransfer) throws CustomerException {
-//        validateNewOffice(officeToTransfer);
-//        validateForActiveAccounts();
-        logger.debug("In GroupBO::transferToBranch(), transfering customerId: " + getCustomerId() + "to branch : "
-                + officeToTransfer.getOfficeId());
-//        validateForDuplicateName(getDisplayName(), officeToTransfer.getOfficeId());
-
-//        if (isActive()) {
-//            setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-//        }
-//
-//        makeCustomerMovementEntries(officeToTransfer);
-//        setPersonnel(null);
-//        String searchId1 = null;
-//        if (getParentCustomer() != null) {
-//            getParentCustomer().incrementChildCount();
-//            searchId1 = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
-//        } else {
-//            try {
-//                int customerCount = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP,
-//                        getOffice().getOfficeId());
-//                searchId1 = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(customerCount + 1);
-//            } catch (PersistenceException pe) {
-//                throw new CustomerException(pe);
-//            }
-//        }
-//
-//        String searchId = searchId1;
-//
-//        setSearchId(searchId);
-//        update();
-//        if (getChildren() != null) {
-//            for (CustomerBO client : getChildren()) {
-//                client.setUserContext(getUserContext());
-//                ((ClientBO) client).handleGroupTransfer();
-//            }
-//        }
-        logger.debug("In GroupBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());
-    }
-
-    public void transferToCenter(final CenterBO newParent) throws CustomerException {
-//        validateNewCenter(newParent);
-//        logger.debug("In GroupBO::transferToCenter(), transfering customerId: " + getCustomerId() + "to Center Id : "
-//                + newParent.getCustomerId());
-//
-//        validateForActiveAccounts();
-//
-//        if (!isSameBranch(newParent.getOffice())) {
-//            makeCustomerMovementEntries(newParent.getOffice());
-//            if (isActive()) {
-//                setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-//            }
-//        }
-
-//        CustomerBO oldParent = getParentCustomer();
-//        setParentCustomer(newParent);
-//
-//        CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-//        if (null != currentHierarchy) {
-//            currentHierarchy.makeInactive(userContext.getId());
-//        }
-//        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-
-//        // handle parent
-//        setPersonnel(getParentCustomer().getPersonnel());
-//        if (getParentCustomer().getCustomerMeeting() != null) {
-//            if (getCustomerMeeting() != null) {
-//                if (!getCustomerMeeting().getMeeting().getMeetingId().equals(
-//                        getParentCustomer().getCustomerMeeting().getMeeting().getMeetingId())) {
-//                    setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
-//                }
-//            } else {
-//                setCustomerMeeting(createCustomerMeeting(getParentCustomer().getCustomerMeeting().getMeeting()));
-//            }
-//        } else if (getCustomerMeeting() != null) {
-//            deleteCustomerMeeting();
-//        }
-
-//        if (oldParent != null) {
-//            oldParent.decrementChildCount();
-//            oldParent.setUserContext(getUserContext());
-//            oldParent.update();
-//        }
-//
-//        newParent.incrementChildCount();
-//        setSearchId(newParent.getSearchId() + "." + String.valueOf(newParent.getMaxChildCount()));
-//
-//        newParent.setUserContext(getUserContext());
-//        newParent.update();
-
-//        CustomerHierarchyEntity currentHierarchy1 = getActiveCustomerHierarchy();
-//        currentHierarchy1.makeInactive(userContext.getId());
-//        this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-//
-//        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
     }
 
     @Override
@@ -406,25 +317,9 @@ public class GroupBO extends CustomerBO {
         }
     }
 
-    private String generateSearchId() throws CustomerException {
-        String searchId = null;
-        if (getParentCustomer() != null) {
-            childAddedForParent(getParentCustomer());
-            searchId = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
-        } else {
-            try {
-                int customerCount = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP,
-                        getOffice().getOfficeId());
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(customerCount + 1);
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-        }
-        return searchId;
-    }
-
+    @Override
     public void validate() throws CustomerException {
-        validateFormedBy(getCustomerFormedByPersonnel());
+        super.validate();
     }
 
     private void validateFields(final String displayName, final PersonnelBO formedBy, final boolean trained,
@@ -551,7 +446,6 @@ public class GroupBO extends CustomerBO {
         } catch (PersistenceException e) {
             throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
         }
-//        throw new UnsupportedOperationException("update for group has removed - use DAO");
     }
 
     public void validateGroupCanBeActive() throws CustomerException {

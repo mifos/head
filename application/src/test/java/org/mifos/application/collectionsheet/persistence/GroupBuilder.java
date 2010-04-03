@@ -20,7 +20,9 @@
 package org.mifos.application.collectionsheet.persistence;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -30,7 +32,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.business.util.Address;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -45,15 +47,37 @@ public class GroupBuilder {
     private OfficeBO office;
     private PersonnelBO loanOfficer;
     private String searchId = null;
-    private final Short updatedFlag = Constants.NO;
-    private final CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
+    private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer;
+    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
+    private Address address;
+    private String externalId;
+    private boolean trained = false;
+    private DateTime trainedOn = new DateTime();
+    private PersonnelBO formedBy;
 
     public GroupBO build() {
 
+        if (formedBy == null) {
+            this.formedBy = this.loanOfficer;
+        }
+
         UserContext userContext = TestUtils.makeUser();
-        group = GroupBO.createGroupWithCenterAsParent(userContext, name, loanOfficer, parentCustomer, new ArrayList<CustomerCustomFieldEntity>(),
-                null, "", false, null, customerStatus);
+        group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
+                customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
+
+        return group;
+    }
+
+    public GroupBO buildAsTopOfHierarchy() {
+
+        if (formedBy == null) {
+            this.formedBy = this.loanOfficer;
+        }
+
+        UserContext userContext = TestUtils.makeUser();
+        group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, name, formedBy, meeting, loanOfficer, office,
+                customerCustomFields, address, externalId, trained, trainedOn, customerStatus, searchId);
 
         return group;
     }
@@ -90,6 +114,26 @@ public class GroupBuilder {
 
     public GroupBuilder withSearchId(String withSearchId) {
         this.searchId = withSearchId;
+        return this;
+    }
+
+    public GroupBuilder withStatus(CustomerStatus groupStatus) {
+        this.customerStatus = groupStatus;
+        return this;
+    }
+
+    public GroupBuilder isTrained() {
+        this.trained = true;
+        return this;
+    }
+
+    public GroupBuilder trainedOn(DateTime withTrainedDate) {
+        this.trainedOn = withTrainedDate;
+        return this;
+    }
+
+    public GroupBuilder formedBy(PersonnelBO withFormedBy) {
+        this.formedBy = withFormedBy;
         return this;
     }
 }

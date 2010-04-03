@@ -54,7 +54,6 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -99,7 +98,6 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
-import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -120,7 +118,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
@@ -132,7 +129,7 @@ import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -147,6 +144,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -158,30 +156,18 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private static final double DELTA = 0.00000001;
-
     private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 
     private LoanOfferingBO loanOffering = null;
-
-    // TODO: probably should be of type LoanBO
     private AccountBO accountBO = null;
-
     private AccountBO badAccountBO = null;
-
     private CustomerBO center = null;
-
     private CustomerBO group = null;
-
     private CustomerBO client = null;
-
-    private AccountPersistence accountPersistence = null;
-
     private MeetingBO meeting;
-
     private UserContext userContext = null;
 
     private final List<FeeView> feeViews = new ArrayList<FeeView>();
-
     private BigDecimal savedInitialRoundOffMultiple = null;
     private BigDecimal savedFinalRoundOffMultiple = null;
     private RoundingMode savedCurrencyRoundingMode = null;
@@ -190,9 +176,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private Short savedDigitAfterDecimal;
 
     private LoanDao loanDao;
-
-    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-    private List<Holiday> holidays = new ArrayList<Holiday>();
+    private AccountPersistence accountPersistence = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -254,8 +238,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         new DateTimeService().resetToCurrentSystemDateTime();
         new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 0);
-
-        super.tearDown();
     }
 
     private AccountBO getLoanAccount(final Date startDate, final AccountState state) throws MeetingException {
@@ -279,8 +261,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private HolidayBO createHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
         // next working day repayment rule
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY
-                .getValue());
+        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
         HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, holidayDate), holidayDate, "a holiday", entity);
         holiday.setValidationEnabled(false);
         holiday.save();
@@ -300,16 +281,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         new DateTimeService().setCurrentDateTime(new LocalDate(2010, 2, 25).toDateTimeAtStartOfDay());
         new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 1);
 
-         MeetingBO meeting = TestObjectFactory.createMeeting(new MeetingBuilder().buildMonthlyForDayNumber(1));
-         center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting,
-                 TestObjectFactory.SAMPLE_BRANCH_OFFICE, PersonnelConstants.TEST_USER, null);
-         group = TestObjectFactory.createNoFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                 CustomerStatus.GROUP_ACTIVE, center);
-         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                 CustomerStatus.CLIENT_ACTIVE, group, null, (String) null, new Date(1222333444000L));
+        OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
+        PersonnelBO testUser = IntegrationTestObjectMother.testUser();
+
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().monthly().every(1).onDayOfMonth(1).build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
+
+        center = new CenterBuilder().withMeeting(weeklyMeeting).withName(this.getClass().getSimpleName() + " Center").withOffice(office).withLoanOfficer(
+                testUser).build();
+        IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
+
+        group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(office).withLoanOfficer(
+                testUser).withParentCustomer(center).build();
+        IntegrationTestObjectMother.createGroup((GroupBO)group, weeklyMeeting);
+
+        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(office)
+                .withLoanOfficer(testUser).withParentCustomer(group).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient((ClientBO)client, weeklyMeeting);
+
          LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS,
                  new DateTimeService().getCurrentJavaDateTime(), PrdStatus.LOAN_ACTIVE, 300.0, 12.0,
                  (short) 3, InterestType.DECLINING, center.getCustomerMeeting().getMeeting());
+
          List<FeeView> feeViewList = new ArrayList<FeeView>();
 
          boolean loanScheduleIndependentOfMeeting = true;
@@ -336,7 +329,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
          actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
          paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
          Assert.assertEquals(new LocalDate(2010,4,1), new LocalDate(paymentsArray[0].getActionDate().getTime()));
-
  }
 
     public void testCreateLoanAccountWithDecliningInterestGraceAllRepaymentsWithLsimOn() throws Exception {

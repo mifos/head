@@ -152,7 +152,11 @@ public class PersonnelBO extends BusinessObject {
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
     }
 
-    PersonnelBO() {
+    /**
+     * default constructor for hibernate
+     */
+    @Deprecated
+    public PersonnelBO() {
         this(null, null, null, null);
         this.personnelDetails = new PersonnelDetailsEntity();
         this.preferredLocale = new SupportedLocalesEntity();
@@ -313,7 +317,7 @@ public class PersonnelBO extends BusinessObject {
         this.lastLogin = lastLogin;
     }
 
-    void setLevel(final PersonnelLevelEntity level) {
+    public void setLevel(final PersonnelLevelEntity level) {
         this.level = level;
     }
 

@@ -434,15 +434,14 @@ public class TestObjectFactory {
         return createClient(customerName, status, parentCustomer, getFees(), (String) null, new Date(1222333444000L));
     }
 
-    public static ClientBO createClient(final String customerName, final CustomerStatus status,
+    private static ClientBO createClient(final String customerName, final CustomerStatus status,
             final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
+
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        // john w - changed maybe_client to client... as with new spouse_father functionality... maybe_client is father!
-
-        // ClientNameDetailView clientNameDetailView = clientNameView(NameType.MAYBE_CLIENT, customerName);
         ClientNameDetailView clientNameDetailView = clientNameView(NameType.CLIENT, customerName);
         ClientNameDetailView spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
+
         ClientBO client;
         try {
             client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, null, null, fees,

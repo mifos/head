@@ -175,4 +175,14 @@ public class ClientBuilder {
         this.activationDate = withActivationDate;
         return this;
     }
+
+    public ClientBuilder withStatus(CustomerStatus withClientStatus) {
+        this.customerStatus = withClientStatus;
+        return this;
+    }
+
+    public ClientBuilder withGovernmentId(String clientGovernmentId) {
+        this.governmentId = clientGovernmentId;
+        return this;
+    }
 }

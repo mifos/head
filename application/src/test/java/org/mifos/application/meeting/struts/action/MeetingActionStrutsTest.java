@@ -92,7 +92,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
-       Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
+        Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
     }
 
     public void testLoadForGroup() throws Exception {
@@ -109,7 +109,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
-       Assert.assertEquals(CustomerLevel.GROUP, actionForm.getCustomerLevelValue());
+        Assert.assertEquals(CustomerLevel.GROUP, actionForm.getCustomerLevelValue());
     }
 
     public void testLoadForClient() throws Exception {
@@ -126,7 +126,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
-       Assert.assertEquals(CustomerLevel.CLIENT, actionForm.getCustomerLevelValue());
+        Assert.assertEquals(CustomerLevel.CLIENT, actionForm.getCustomerLevelValue());
     }
 
     public void testLoad_WeeklyMeetingExists() throws Exception {
@@ -153,10 +153,10 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
 
-       Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
-       Assert.assertEquals(WeekDay.MONDAY, actionForm.getWeekDayValue());
-       Assert.assertEquals(recurAfter, actionForm.getRecurWeekValue());
-       Assert.assertEquals(RecurrenceType.WEEKLY, actionForm.getRecurrenceType());
+        Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
+        Assert.assertEquals(WeekDay.MONDAY, actionForm.getWeekDayValue());
+        Assert.assertEquals(recurAfter, actionForm.getRecurWeekValue());
+        Assert.assertEquals(RecurrenceType.WEEKLY, actionForm.getRecurrenceType());
     }
 
     public void testLoad_MonthlyOnDateMeetingExists() throws Exception {
@@ -184,11 +184,11 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
 
-       Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
-       Assert.assertEquals("1", actionForm.getMonthType());
-       Assert.assertEquals(dayNumber, actionForm.getMonthDayValue());
-       Assert.assertEquals(recurAfter, actionForm.getDayRecurMonthValue());
-       Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
+        Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
+        Assert.assertEquals("1", actionForm.getMonthType());
+        Assert.assertEquals(dayNumber, actionForm.getMonthDayValue());
+        Assert.assertEquals(recurAfter, actionForm.getDayRecurMonthValue());
+        Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
     }
 
     public void testLoad_MonthlyOnWeekMeetingExists() throws Exception {
@@ -216,12 +216,12 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
 
-       Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
-       Assert.assertEquals("2", actionForm.getMonthType());
-       Assert.assertEquals(WeekDay.FRIDAY, actionForm.getMonthWeekValue());
-       Assert.assertEquals(RankType.SECOND, actionForm.getMonthRankValue());
-       Assert.assertEquals(recurAfter, actionForm.getRecurMonthValue());
-       Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
+        Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
+        Assert.assertEquals("2", actionForm.getMonthType());
+        Assert.assertEquals(WeekDay.FRIDAY, actionForm.getMonthWeekValue());
+        Assert.assertEquals(RankType.SECOND, actionForm.getMonthRankValue());
+        Assert.assertEquals(recurAfter, actionForm.getRecurMonthValue());
+        Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
     }
 
     public void testFailureCreateMeeting_RecurrenceIsNull() throws Exception {
@@ -234,7 +234,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("RecurrenceType", 1, getErrorSize(MeetingConstants.INVALID_RECURRENCETYPE));
+        Assert.assertEquals("RecurrenceType", 1, getErrorSize(MeetingConstants.INVALID_RECURRENCETYPE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -252,8 +252,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
 
         actionPerform();
-       Assert.assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
-       Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+        Assert.assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+        Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -271,8 +271,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
-       Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+        Assert.assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+        Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -290,7 +290,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+        Assert.assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -313,10 +313,10 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadCreateCenter.toString());
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-       Assert.assertTrue(meeting.isWeekly());
-       Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
-       Assert.assertEquals(Short.valueOf("2"), meeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+        Assert.assertTrue(meeting.isWeekly());
+        Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
+        Assert.assertEquals(Short.valueOf("2"), meeting.getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
     }
 
     public void testFailureCreateMonthlyMeetingOnDate_DayNumAndRecurAfterIsNull() throws Exception {
@@ -332,7 +332,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
+        Assert.assertEquals("Month Recurrence On Date", 1,
+                getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -352,7 +353,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
+        Assert.assertEquals("Month Recurrence On Date", 1,
+                getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -371,7 +373,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("meetingPlace", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-       Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+        Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -397,11 +399,11 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadCreateCenter.toString());
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-       Assert.assertTrue(meeting.isMonthly());
-       Assert.assertTrue(meeting.isMonthlyOnDate());
-       Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
-       Assert.assertEquals(recurAfter, meeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
+        Assert.assertTrue(meeting.isMonthly());
+        Assert.assertTrue(meeting.isMonthlyOnDate());
+        Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
+        Assert.assertEquals(recurAfter, meeting.getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
     }
 
     public void testFailureCreateMonthlyMeetingOnWeekDay_AllNull() throws Exception {
@@ -418,7 +420,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Month Recurrence On WeekDay", 1,
+        Assert.assertEquals("Month Recurrence On WeekDay", 1,
                 getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
@@ -439,7 +441,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Month Recurrence On WeekDay", 1,
+        Assert.assertEquals("Month Recurrence On WeekDay", 1,
                 getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
@@ -460,9 +462,9 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "create");
         actionPerform();
 
-       Assert.assertEquals("Month Recurrence On WeekDay", 1,
+        Assert.assertEquals("Month Recurrence On WeekDay", 1,
                 getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
-       Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+        Assert.assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
         verifyInputForward();
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         Assert.assertNull(meeting);
@@ -488,12 +490,12 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.loadCreateCenter.toString());
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-       Assert.assertTrue(meeting.isMonthly());
+        Assert.assertTrue(meeting.isMonthly());
         Assert.assertFalse(meeting.isMonthlyOnDate());
-       Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
-       Assert.assertEquals(recurAfter, meeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
-       Assert.assertEquals(RankType.FOURTH, meeting.getMeetingDetails().getWeekRank());
+        Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
+        Assert.assertEquals(recurAfter, meeting.getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+        Assert.assertEquals(RankType.FOURTH, meeting.getMeetingDetails().getWeekRank());
     }
 
     public void testSuccessfulCancelCreate() throws Exception {
@@ -539,7 +541,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         MeetingActionForm actionForm = (MeetingActionForm) request.getSession().getAttribute("meetingActionForm");
-       Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
+        Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
@@ -578,16 +580,18 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
         MeetingBO updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting();
-       Assert.assertTrue(updatedMeeting.isWeekly());
-       Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
-       Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.MONDAY, updatedMeeting.getMeetingDetails().getWeekDay());
+        Assert.assertTrue(updatedMeeting.isWeekly());
+        Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
+        Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails()
+                .getRecurAfter());
+        Assert.assertEquals(WeekDay.MONDAY, updatedMeeting.getMeetingDetails().getWeekDay());
 
         updatedMeeting = group.getCustomerMeeting().getUpdatedMeeting();
-       Assert.assertTrue(updatedMeeting.isWeekly());
-       Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
-       Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.MONDAY, updatedMeeting.getMeetingDetails().getWeekDay());
+        Assert.assertTrue(updatedMeeting.isWeekly());
+        Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
+        Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails()
+                .getRecurAfter());
+        Assert.assertEquals(WeekDay.MONDAY, updatedMeeting.getMeetingDetails().getWeekDay());
     }
 
     public void testSuccessfulCreateMeetingFromGroupDetail() throws Exception {
@@ -635,21 +639,21 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(client1.getCustomerMeeting());
         Assert.assertNotNull(client2.getCustomerMeeting());
 
-       Assert.assertTrue(group.getCustomerMeeting().getMeeting().isWeekly());
-       Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
-       Assert.assertTrue(client2.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(group.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(client2.getCustomerMeeting().getMeeting().isWeekly());
 
-       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 
-       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
 
-       Assert.assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
     }
 
     public void testSuccessfulUpdateMeetingFromGroupDetail() throws Exception {
@@ -698,21 +702,27 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
 
-       Assert.assertTrue(group.getCustomerMeeting().getMeeting().isWeekly());
-       Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
-       Assert.assertTrue(client2.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(group.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertTrue(client2.getCustomerMeeting().getMeeting().isWeekly());
 
-       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getWeekDay());
+        Assert.assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getWeekDay());
 
-       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+        Assert.assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 
-       Assert.assertEquals(recurAfter, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(recurAfter, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(recurAfter, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getRecurAfter());
+        Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getRecurAfter());
+        Assert.assertEquals(recurAfter, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
+                .getRecurAfter());
     }
 
     public void testSuccessfulEditCancel() throws Exception {
@@ -777,10 +787,10 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
 
         Assert.assertNotNull(client1.getCustomerMeeting());
-       Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
-       Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-       Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+        Assert.assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
+        Assert.assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
+        Assert.assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
     }
 
     public void testSuccessfulUpdateMeetingForClient() throws Exception {
@@ -817,10 +827,11 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
 
         MeetingBO updatedMeeting = client1.getCustomerMeeting().getUpdatedMeeting();
-       Assert.assertTrue(updatedMeeting.isWeekly());
-       Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
-       Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.FRIDAY, updatedMeeting.getMeetingDetails().getWeekDay());
+        Assert.assertTrue(updatedMeeting.isWeekly());
+        Assert.assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
+        Assert.assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails()
+                .getRecurAfter());
+        Assert.assertEquals(WeekDay.FRIDAY, updatedMeeting.getMeetingDetails().getWeekDay());
     }
 
     private CenterBO createCenter(MeetingBO meeting) throws Exception {

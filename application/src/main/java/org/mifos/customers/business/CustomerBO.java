@@ -879,7 +879,7 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void validateOffice() throws CustomerException {
+    public final void validateOffice() throws CustomerException {
         if (office == null) {
             throw new CustomerException(CustomerConstants.INVALID_OFFICE);
         }
@@ -892,13 +892,21 @@ public abstract class CustomerBO extends BusinessObject {
         }
     }
 
-    public void validateLO(final PersonnelBO loanOfficer) throws CustomerException {
+    public final void validateLoanOfficer() throws CustomerException {
+        if (this.personnel == null) {
+            throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+        }
+    }
+
+    @Deprecated
+    public final void validateLO(final PersonnelBO loanOfficer) throws CustomerException {
         if (loanOfficer == null || loanOfficer.getPersonnelId() == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
     }
 
-    public void validateLO(final Short loanOfficerId) throws CustomerException {
+    @Deprecated
+    public final void validateLO(final Short loanOfficerId) throws CustomerException {
         if (loanOfficerId == null) {
             throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
         }
@@ -1130,7 +1138,31 @@ public abstract class CustomerBO extends BusinessObject {
         this.accounts.add(account);
     }
 
-    private void validateFields(final String displayName, final CustomerStatus customerStatus) throws CustomerException {
+    public void validate() throws CustomerException {
+        if (StringUtils.isBlank(displayName)) {
+            throw new CustomerException(CustomerConstants.INVALID_NAME);
+        }
+
+        validateOffice();
+        validateLoanOfficer();
+        validateFormedBy();
+        validateTrained();
+    }
+
+    public final void validateTrained() throws CustomerException {
+        if (this.isTrained() && this.trainedDate == null || !this.isTrained() && this.trainedDate != null) {
+            throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
+        }
+    }
+
+    public final void validateFormedBy() throws CustomerException {
+        if (this.formedByPersonnel == null) {
+            throw new CustomerException(CustomerConstants.INVALID_FORMED_BY);
+        }
+    }
+
+    @Deprecated
+    public void validateFields(final String displayName, final CustomerStatus customerStatus) throws CustomerException {
         if (StringUtils.isBlank(displayName)) {
             throw new CustomerException(CustomerConstants.INVALID_NAME);
         }
@@ -1406,5 +1438,4 @@ public abstract class CustomerBO extends BusinessObject {
         return new CustomerDetailDto(this.customerId, this.displayName, this.searchId, this.globalCustNum,
                 loanOfficerId, this.externalId, address);
     }
-
 }
