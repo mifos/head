@@ -46,7 +46,6 @@ public class GroupBuilder {
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private String searchId = null;
     private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer;
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
@@ -55,6 +54,7 @@ public class GroupBuilder {
     private boolean trained = false;
     private DateTime trainedOn = new DateTime();
     private PersonnelBO formedBy;
+    private int numberOfChildrenUnderBranch = 0;
 
     public GroupBO build() {
 
@@ -77,7 +77,7 @@ public class GroupBuilder {
 
         UserContext userContext = TestUtils.makeUser();
         group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, name, formedBy, meeting, loanOfficer, office,
-                customerCustomFields, address, externalId, trained, trainedOn, customerStatus, searchId);
+                customerCustomFields, address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch);
 
         return group;
     }
@@ -112,11 +112,6 @@ public class GroupBuilder {
         return this;
     }
 
-    public GroupBuilder withSearchId(String withSearchId) {
-        this.searchId = withSearchId;
-        return this;
-    }
-
     public GroupBuilder withStatus(CustomerStatus groupStatus) {
         this.customerStatus = groupStatus;
         return this;
@@ -127,6 +122,11 @@ public class GroupBuilder {
         return this;
     }
 
+    public GroupBuilder isNotTrained() {
+        this.trained = false;
+        return this;
+    }
+
     public GroupBuilder trainedOn(DateTime withTrainedDate) {
         this.trainedOn = withTrainedDate;
         return this;
@@ -134,6 +134,16 @@ public class GroupBuilder {
 
     public GroupBuilder formedBy(PersonnelBO withFormedBy) {
         this.formedBy = withFormedBy;
+        return this;
+    }
+
+    public GroupBuilder withAddress(Address withAddress) {
+        this.address = withAddress;
+        return this;
+    }
+
+    public GroupBuilder withSearchId(int withChildrenUnderBranch) {
+        this.numberOfChildrenUnderBranch = withChildrenUnderBranch;
         return this;
     }
 }

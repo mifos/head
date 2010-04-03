@@ -20,20 +20,14 @@
 
 package org.mifos.customers.group.business;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeView;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -46,12 +40,9 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
@@ -60,7 +51,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -69,7 +59,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -94,8 +83,6 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsOfferingBO savingsOffering;
     private final Short officeId3 = 3;
     private final Short officeId1 = 1;
-    private OfficeBO officeBo1;
-
     private final Short personnelId = 3;
     private PersonnelBO personnelBo;
 
@@ -105,7 +92,6 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         personnelBo = personnelPersistence.getPersonnel(personnelId);
-        officeBo1 = new OfficePersistence().getOffice(officeId1);
     }
 
     @Override
@@ -127,68 +113,6 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    public void testSuccessfulCreate_Group_UnderCenter() throws Exception {
-        createCenter();
-        String name = "GroupTest";
-        Date trainedDate = getDate("11/12/2005");
-        String externalId = "1234";
-        StaticHibernateUtil.closeSession();
-        Assert.assertEquals(0, center.getMaxChildCount().intValue());
-
-        group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
-                getAddress(), getCustomFields(), getFees(), personnelBo, center);
-        new GroupPersistence().saveGroup(group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        Assert.assertEquals(name, group.getDisplayName());
-        Assert.assertEquals(externalId, group.getExternalId());
-        Assert.assertTrue(group.isTrained());
-        Assert.assertEquals(trainedDate, DateUtils.getDateWithoutTimeStamp(group.getTrainedDate().getTime()));
-        Assert.assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
-        Address address = group.getCustomerAddressDetail().getAddress();
-        Assert.assertEquals("Aditi", address.getLine1());
-        Assert.assertEquals("Bangalore", address.getCity());
-        Assert.assertEquals(getCustomFields().size(), group.getCustomFields().size());
-        Assert.assertEquals(1, center.getMaxChildCount().intValue());
-        Assert.assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
-        Assert.assertEquals("1.1.1", group.getSearchId());
-        Assert.assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory().getGroup().getCustomerId());
-        client = TestObjectFactory
-                .createClient("new client", CustomerStatus.CLIENT_ACTIVE, group, new java.util.Date());
-        Assert.assertEquals(1, group.getGroupPerformanceHistory().getActiveClientCount().intValue());
-    }
-
-    public void testSuccessfulCreate_Group_UnderBranch() throws Exception {
-        String name = "GroupTest";
-        String externalId = "1234";
-        group = new GroupBO(TestUtils.makeUser(), name, CustomerStatus.GROUP_ACTIVE, externalId, false, null,
-                getAddress(), getCustomFields(), getFees(), personnelBo, officeBo1, getMeeting(), personnelBo);
-        new GroupPersistence().saveGroup(group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-
-        Assert.assertEquals(name, group.getDisplayName());
-        Assert.assertEquals(externalId, group.getExternalId());
-        Assert.assertFalse(group.isTrained());
-        Assert.assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
-        Address address = group.getCustomerAddressDetail().getAddress();
-        Assert.assertEquals("Aditi", address.getLine1());
-        Assert.assertEquals("Bangalore", address.getCity());
-        Assert.assertEquals(getCustomFields().size(), group.getCustomFields().size());
-
-        Assert.assertEquals(personnelId, group.getCustomerFormedByPersonnel().getPersonnelId());
-        Assert.assertEquals(personnelId, group.getPersonnel().getPersonnelId());
-        Assert.assertEquals(officeId1, group.getOffice().getOfficeId());
-        Assert.assertNotNull(group.getCustomerMeeting().getMeeting());
-        Assert.assertEquals("1.1", group.getSearchId());
     }
 
     public void testGetTotalOutStandingLoanAmount() throws Exception {
@@ -558,30 +482,11 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         return meeting;
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("4"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("3"), "value2", CustomFieldType.NUMERIC));
-        return fields;
-    }
-
     private Address getAddress() {
         Address address = new Address();
         address.setLine1("Aditi");
         address.setCity("Bangalore");
         return address;
-    }
-
-    private List<FeeView> getFees() {
-        List<FeeView> fees = new ArrayList<FeeView>();
-        AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
-                FeeCategory.GROUP, "200", RecurrenceType.WEEKLY, Short.valueOf("2"));
-        AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
-                FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-        fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
-        fees.add(new FeeView(TestObjectFactory.getContext(), fee2));
-        StaticHibernateUtil.commitTransaction();
-        return fees;
     }
 
     private ClientBO createClient(GroupBO group, CustomerStatus clientStatus) {

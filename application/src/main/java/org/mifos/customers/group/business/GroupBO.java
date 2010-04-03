@@ -103,7 +103,7 @@ public class GroupBO extends CustomerBO {
     public static GroupBO createGroupAsTopOfCustomerHierarchy(UserContext userContext, String groupName,
             PersonnelBO formedBy, MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO office,
             List<CustomerCustomFieldEntity> customerCustomFields, Address address, String externalId, boolean trained,
-            DateTime trainedOn, CustomerStatus customerStatus, String searchId) {
+            DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
         Assert.notNull(meeting, "meeting cannot be null");
@@ -112,11 +112,14 @@ public class GroupBO extends CustomerBO {
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
                 mfiJoiningDate);
 
+        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(numberOfCustomersInOfficeAlready + 1);
         group.setSearchId(searchId);
         group.setExternalId(externalId);
         group.updateAddress(address);
         group.setTrained(trained);
-        group.setTrainedDate(trainedOn.toDate());
+        if (trained) {
+            group.setTrainedDate(trainedOn.toDate());
+        }
 
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
                 .fromCustomerCustomFieldEntity(customerCustomFields, group);

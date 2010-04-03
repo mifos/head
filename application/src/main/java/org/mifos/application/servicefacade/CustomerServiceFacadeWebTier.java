@@ -420,12 +420,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
                 int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(
                         CustomerLevel.GROUP, officeId);
-                String searchId = GroupConstants.PREFIX_SEARCH_STRING
-                        + String.valueOf(numberOfCustomersInOfficeAlready + 1);
 
                 group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, groupName, formedBy, groupMeeting,
                         loanOfficer, office, customerCustomFields, address, externalId, trained, trainedOn,
-                        customerStatus, searchId);
+                        customerStatus, numberOfCustomersInOfficeAlready);
             }
 
             this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);

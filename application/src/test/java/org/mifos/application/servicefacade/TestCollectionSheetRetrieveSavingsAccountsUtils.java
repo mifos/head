@@ -126,7 +126,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
         if (!onlyCreateCenterAndItsSavingsAccount) {
-            groupCompleteGroup = new GroupBuilder().withSearchId(center.getSearchId() + ".1").withMeeting(weeklyMeeting).withName(
+            groupCompleteGroup = new GroupBuilder().withMeeting(weeklyMeeting).withName(
                     "Savings Group Complete Group").withOffice(sampleBranchOffice()).withLoanOfficer(testUser())
                     .withParentCustomer(center).build();
             IntegrationTestObjectMother.createGroup(groupCompleteGroup, weeklyMeeting);
@@ -141,7 +141,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
             clientOfGroupCompleteGroupSavingsAccount = createSavingsAccount(clientOfGroupCompleteGroup, "clm", "3.0",
                     false, false);
 
-            groupPerIndividual = new GroupBuilder().withSearchId(center.getSearchId() + ".2").withMeeting(weeklyMeeting).withName(
+            groupPerIndividual = new GroupBuilder().withMeeting(weeklyMeeting).withName(
                     "Savings Group Per Individual").withOffice(sampleBranchOffice()).withLoanOfficer(testUser())
                     .withParentCustomer(center).build();
             IntegrationTestObjectMother.createGroup(groupPerIndividual, weeklyMeeting);

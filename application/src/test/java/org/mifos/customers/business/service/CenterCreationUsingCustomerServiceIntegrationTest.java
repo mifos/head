@@ -34,7 +34,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -92,12 +91,6 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void shouldDoX() {
-
-    }
-
-    @Ignore
-    @Test
     public void shouldCreateCenterAndRelatedCustomerAccountWithGlobalCustomerNumbersGenerated() {
 
         // setup
@@ -122,7 +115,6 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
         assertThat(center.getCustomerAccount().getGlobalAccountNum(), is(notNullValue()));
     }
 
-    @Ignore
     @Test
     public void shouldCreateCenterWithoutReferenceToAnyAddressDetail() {
 

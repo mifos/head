@@ -49,6 +49,8 @@ public class DatabaseCleaner {
 //        template.execute("delete from recurrence_detail");
 //        template.execute("delete from meeting");
 
+        template.execute("delete from group_perf_history");
+        template.execute("update customer set parent_customer_id = null");
         template.execute("delete from customer");
     }
 }
