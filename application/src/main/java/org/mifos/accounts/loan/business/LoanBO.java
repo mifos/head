@@ -1251,7 +1251,11 @@ public class LoanBO extends AccountBO {
         Money interest = new Money(getCurrency());
         Money fee = new Money(getCurrency());
         List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
-        accountActionDateList.remove(accountActionDateList.size() - 1);
+        // Remove last installment only if a next installment exists
+        // Fix for http://mifosforge.jira.com/browse/MIFOS-2826
+        if (getDetailsOfNextInstallment() != null) {
+            accountActionDateList.remove(accountActionDateList.size() - 1);
+        }
         for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
             chargeWaived = chargeWaived.add(((LoanScheduleEntity) accountActionDateEntity).waivePenaltyCharges());
         }
