@@ -50,7 +50,6 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
@@ -70,8 +69,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.audit.business.AuditLog;
-import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -199,36 +196,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUpChangeLog();
     }
 
-    public void ignore_testStatusChangeForGroupForLogging() throws Exception {
-        createGroup();
-
-        group.setUserContext(TestUtils.makeUserWithLocales());
-
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(group);
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        group.changeStatus(CustomerStatus.GROUP_CANCELLED, CustomerStatusFlag.GROUP_CANCEL_DUPLICATE, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, group.getCustomerId());
-        Assert.assertEquals(1, auditLogList.size());
-        Assert.assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0).getEntityType());
-        Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
-        for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
-                Assert.assertEquals("Active", auditLogRecord.getOldValue());
-                Assert.assertEquals("Cancelled", auditLogRecord.getNewValue());
-            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status Change Explanation")) {
-                Assert.assertEquals("-", auditLogRecord.getOldValue());
-                Assert.assertEquals("Duplicate", auditLogRecord.getNewValue());
-            } else {
-                Assert.fail("unexpected record " + auditLogRecord.getFieldName());
-            }
-        }
-        TestObjectFactory.cleanUpChangeLog();
-    }
-
     public void testGroupPerfObject() throws PersistenceException {
         createInitialObjects();
         GroupPerformanceHistoryEntity groupPerformanceHistory = group.getGroupPerformanceHistory();
@@ -270,7 +237,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
                 .getDelinquentPortfolioAmount());
     }
 
-    public void ignore_testGetBalanceForAccountsAtRisk() {
+    public void testGetBalanceForAccountsAtRisk() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -300,7 +267,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         return amount;
     }
 
-    public void ignore_testGetOutstandingLoanAmount() {
+    public void testGetOutstandingLoanAmount() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -313,7 +280,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void ignore_testGetActiveLoanCounts() {
+    public void testGetActiveLoanCounts() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -326,7 +293,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void ignore_testGetOpenIndividualLoanAccounts() {
+    public void testGetOpenIndividualLoanAccounts() {
         createInitialObjects();
         accountBO = getIndividualLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -342,7 +309,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void ignore_testGetLoanAccountInUse() {
+    public void testGetLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -373,7 +340,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void ignore_testHasAnyLoanAccountInUse() {
+    public void testHasAnyLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -414,79 +381,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         TestObjectFactory.cleanUp(savings);
-    }
-
-    public void ignroe_testValidateStatusWithActiveGroups() throws Exception {
-        createInitialObjects();
-//        try {
-         // FIXME - keithw - use builder for creation of client for tests in given state.
-//            center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "Test");
-//            Assert.fail();
-//        } catch (CustomerException expected) {
-//            Assert.assertEquals(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION, expected.getKey());
-//            Assert.assertEquals(CustomerStatus.CENTER_ACTIVE, center.getStatus());
-//        }
-    }
-
-    public void ignore_testValidateStatusForClientWithCancelledGroups() throws Exception {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_CANCELLED, center);
-        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                CustomerStatus.CLIENT_PARTIAL, group);
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test");
-//            Assert.fail();
-//        } catch (CustomerException expected) {
-//            Assert.assertEquals(ClientConstants.ERRORS_GROUP_CANCELLED, expected.getKey());
-//            Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client.getStatus());
-//        }
-    }
-
-    public void ignore_testValidateStatusForClientWithPartialGroups() throws Exception {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_PARTIAL, center);
-        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                CustomerStatus.CLIENT_PARTIAL, group);
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Test");
-//            Assert.fail();
-//        } catch (CustomerException sce) {
-//            Assert.assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, sce.getKey());
-//            Assert.assertEquals(CustomerStatus.CLIENT_PARTIAL, client.getStatus());
-//        }
-    }
-
-    public void ignore_testValidateStatusForClientWithActiveAccounts() throws Exception {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + "  Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + "  Client",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        accountBO = getLoanAccount(client, meeting);
-        StaticHibernateUtil.closeSession();
-        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test");
-//            Assert.fail();
-//        } catch (CustomerException expected) {
-//            Assert.assertEquals(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION, expected.getKey());
-//            Assert.assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
-//        }
-
-        StaticHibernateUtil.closeSession();
-        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-        group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        accountBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
     }
 
     public void ignore_testValidateStatusChangeForCustomerWithInactiveLoanofficerAssigned() throws Exception {

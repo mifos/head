@@ -526,7 +526,9 @@ public class CustomerServiceImpl implements CustomerService {
             List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
                     .findClientsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
-            if (clientsThatAreNotClosedOrCanceled.size() > 0) {
+            List<CustomerView> groupsThatAreNotClosedOrCancelled = this.customerDao.findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
+
+            if (clientsThatAreNotClosedOrCanceled.size() > 0 || groupsThatAreNotClosedOrCancelled.size() > 0) {
                 throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
                         new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
                                 center.getUserContext()) });
@@ -556,6 +558,8 @@ public class CustomerServiceImpl implements CustomerService {
             throws CustomerException {
 
         validateChangeOfStatusForGroup(group, oldStatus, newStatus);
+
+        setInitialObjectForAuditLogging(group);
 
         try {
             StaticHibernateUtil.startTransaction();

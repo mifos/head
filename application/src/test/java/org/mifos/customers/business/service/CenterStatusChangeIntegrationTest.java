@@ -22,6 +22,7 @@ package org.mifos.customers.business.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 import java.util.Locale;
@@ -42,14 +43,17 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -80,9 +84,6 @@ public class CenterStatusChangeIntegrationTest {
     private PersonnelBO existingLoanOfficer;
     private OfficeBO existingOffice;
     private MeetingBO existingMeeting;
-    private CenterBO existingCenter;
-    private GroupBO existingPendingGroup;
-    private ClientBO existingCancelledClient;
 
     @BeforeClass
     public static void initialiseHibernateUtil() {
@@ -91,10 +92,7 @@ public class CenterStatusChangeIntegrationTest {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
         DatabaseSetup.initializeHibernate();
-
-        // For audit logs
-        Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        SpringUtil.initializeSpring();
     }
 
     @AfterClass
@@ -112,33 +110,39 @@ public class CenterStatusChangeIntegrationTest {
     public void cleanDatabaseTables() throws Exception {
         databaseCleaner.clean();
 
+        Locale locale = Localization.getInstance().getMainLocale();
+        AuditConfigurtion.init(locale);
+
         existingUser = IntegrationTestObjectMother.testUser();
         existingLoanOfficer = IntegrationTestObjectMother.testUser();
         existingOffice = IntegrationTestObjectMother.sampleBranchOffice();
 
         existingMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(existingMeeting);
-
-        existingCenter = new CenterBuilder().withMeeting(existingMeeting).withName("Center-IntegrationTest")
-                .withOffice(existingOffice).withLoanOfficer(existingLoanOfficer).withUserContext().build();
-        IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
-
-        existingPendingGroup = new GroupBuilder().withName("newGroup")
-                                            .withStatus(CustomerStatus.GROUP_CANCELLED)
-                                            .withParentCustomer(existingCenter)
-                                            .formedBy(existingUser).build();
-        IntegrationTestObjectMother.createGroup(existingPendingGroup, existingMeeting);
-
-        existingCancelledClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_CANCELLED).withParentCustomer(existingPendingGroup).buildForIntegrationTests();
-        IntegrationTestObjectMother.createClient(existingCancelledClient, existingMeeting);
     }
 
     @Test
     public void auditLogingTracksStatusChangeOfCenterFromActiveToInactive() throws Exception {
 
         // setup
-        existingCenter = this.customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
+        CenterBO existingCenter = new CenterBuilder().withName("Center-IntegrationTest")
+                                            .withMeeting(existingMeeting)
+                                            .withOffice(existingOffice)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withUserContext()
+                                            .build();
+        IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
 
+        GroupBO existingPendingGroup = new GroupBuilder().withName("newGroup")
+                                            .withStatus(CustomerStatus.GROUP_CANCELLED)
+                                            .withParentCustomer(existingCenter)
+                                            .formedBy(existingUser).build();
+        IntegrationTestObjectMother.createGroup(existingPendingGroup, existingMeeting);
+
+        ClientBO existingCancelledClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_CANCELLED).withParentCustomer(existingPendingGroup).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(existingCancelledClient, existingMeeting);
+
+        existingCenter = this.customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
         existingPendingGroup = this.customerDao.findGroupBySystemId(existingPendingGroup.getGlobalCustNum());
         existingCancelledClient = this.customerDao.findClientBySystemId(existingCancelledClient.getGlobalCustNum());
 
@@ -151,5 +155,43 @@ public class CenterStatusChangeIntegrationTest {
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, existingCenter.getCustomerId());
         assertThat(auditLogList.size(), is(1));
         assertThat(auditLogList.get(0).getEntityTypeAsEnum(), is(EntityType.CENTER));
+    }
+
+    @Test
+    public void shouldValidateStatusWithActiveGroups() throws Exception {
+
+        // setup
+        CenterBO existingCenter = new CenterBuilder().withName("Center-IntegrationTest")
+                                            .withMeeting(existingMeeting)
+                                            .withOffice(existingOffice)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withUserContext()
+                                            .build();
+        IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
+
+        GroupBO existingActiveGroup = new GroupBuilder().withName("newGroup")
+                                            .withStatus(CustomerStatus.GROUP_ACTIVE)
+                                            .withParentCustomer(existingCenter)
+                                            .formedBy(existingUser).build();
+        IntegrationTestObjectMother.createGroup(existingActiveGroup, existingMeeting);
+
+        ClientBO existingCancelledClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_CANCELLED).withParentCustomer(existingActiveGroup).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(existingCancelledClient, existingMeeting);
+
+        existingCenter = this.customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
+        existingCenter.setUserContext(TestUtils.makeUserWithLocales());
+
+        existingActiveGroup = this.customerDao.findGroupBySystemId(existingActiveGroup.getGlobalCustNum());
+        existingCancelledClient = this.customerDao.findClientBySystemId(existingCancelledClient.getGlobalCustNum());
+
+        // exercise test
+        try {
+            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE);
+            fail("should fail validation");
+        } catch (CustomerException expected) {
+            // verification
+            assertThat(expected.getKey(), is(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION));
+            assertThat(existingCenter.getStatus(), is(CustomerStatus.CENTER_ACTIVE));
+        }
     }
 }
