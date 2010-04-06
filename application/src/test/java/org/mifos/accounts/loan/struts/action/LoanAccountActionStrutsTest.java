@@ -370,7 +370,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
-    //FIXME - keithw - ignore after removal of center persistence
     public void ignore_testRedoLoanThenApplyPayment() throws Exception {
         createInitialObjectsForLoanRedo();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -399,7 +398,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         TestObjectFactory.cleanUp(clientForLoanRedo);
         TestObjectFactory.cleanUp(groupForLoanRedo);
         TestObjectFactory.cleanUp(centerForLoanRedo);
-
     }
 
     public void testCreateWithoutPermission() throws Exception {

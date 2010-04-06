@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
@@ -39,6 +40,8 @@ import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
+import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -67,15 +70,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private CustomerBO client;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private LoanBO loanBO;
-
     private String flowKey;
-
     private OfficeBO office;
 
     @Override
@@ -208,7 +206,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
-    public void ignore_testUpdateCenterStatus() throws Exception {
+    public void testUpdateCenterStatus() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -346,7 +344,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
-    public void ignore_testUpdateStatusForClient() throws PageExpiredException {
+    public void testUpdateStatusForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -421,7 +419,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
-    public void ignore_testUpdateStatusForClientForActiveLoanOfficer() throws CustomerException, PageExpiredException {
+    public void testUpdateStatusForClientForActiveLoanOfficer() throws CustomerException, PageExpiredException {
         createInitialObjects();
         CustomerBOTestUtils.setCustomerStatus(client,
                 new CustomerStatusEntity(CustomerStatus.CLIENT_PARTIAL.getValue()));
@@ -541,7 +539,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
-    public void ignore_testUpdateStatusForClientWhenClientIsAssignedPosition() throws CustomerException,
+    public void testUpdateStatusForClientWhenClientIsAssignedPosition() throws CustomerException,
             PageExpiredException {
         createInitialObjects();
         CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity(Short
@@ -781,7 +779,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
-    public void ignore_testUpdateStatusSuccess() {
+    public void testUpdateStatusSuccess() {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_BLACKLISTED);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -797,7 +795,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
-    public void ignore_testUpdateStatusSuccessWhileChangingStatusToActive() {
+    public void testUpdateStatusSuccessWhileChangingStatusToActive() {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_ACTIVE, null);
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -866,18 +864,24 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjectsOfficeInactive();
     }
 
-    public void ignore_testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial() {
+    public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial() throws Exception {
+
+        // setup
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
 
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "center is inactive now");
+        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
 
-        StaticHibernateUtil.commitTransaction();
+        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE);
+
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
         addRequestParameter("input", "group");
+
+        // exercise
         actionPerform();
+
+        // verification
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { GroupConstants.CENTER_INACTIVE });
         cleanInitialObjects();

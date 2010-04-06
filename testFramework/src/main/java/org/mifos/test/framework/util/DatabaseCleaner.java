@@ -35,6 +35,10 @@ public class DatabaseCleaner {
     }
 
     public void clean() {
+
+        template.execute("delete from change_log_detail");
+        template.execute("delete from change_log");
+
         template.execute("delete from customer_fee_schedule");
         template.execute("delete from customer_schedule");
         template.execute("delete from account_fees");

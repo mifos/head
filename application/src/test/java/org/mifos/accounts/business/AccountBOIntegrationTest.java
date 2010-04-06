@@ -42,25 +42,19 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.security.util.UserContext;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.UserContext;
 import org.testng.annotations.Test;
 
 @Test(groups = { "integration" }, dependsOnGroups = { "productMixTestSuite" })
@@ -116,67 +110,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
-    /**
-     * FIXME: - keithw - This test has started failing with a nullpointer down the chain due to loanTrxn when
-     * loan.adjustLastPayment is invoked..
-     */
-    // @Test(dependsOnMethods = {"testSuccessGetLastPmntAmntToBeAdjusted"})
-    // public void ignore_testSuccessAdjustLastPayment() throws Exception {
-    // LoanBO loan = accountBO;
-    // List<AccountActionDateEntity> accntActionDates = new
-    // ArrayList<AccountActionDateEntity>();
-    // accntActionDates.addAll(loan.getAccountActionDates());
-    // Date currentDate = new Date(System.currentTimeMillis());
-    // PaymentData firstPaymentData =
-    // TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-    // TestObjectFactory
-    // .getMoneyForMFICurrency(700), null, loan.getPersonnel(), "receiptNum",
-    // Short.valueOf("1"), currentDate,
-    // currentDate);
-    // loan.applyPaymentWithPersist(firstPaymentData);
-    //
-    // TestObjectFactory.updateObject(loan);
-    // TestObjectFactory.flushandCloseSession();
-    //
-    // PaymentData secondPaymentData =
-    // TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-    // TestObjectFactory
-    // .getMoneyForMFICurrency(100), null, loan.getPersonnel(), "receiptNum",
-    // Short.valueOf("1"), currentDate,
-    // currentDate);
-    // loan.applyPaymentWithPersist(secondPaymentData);
-    // TestObjectFactory.updateObject(loan);
-    // TestObjectFactory.flushandCloseSession();
-    // loan.setUserContext(TestUtils.makeUser());
-    // try {
-    // loan.adjustLastPayment("Payment with amount 100 has been adjusted by test code");
-    // } catch (AccountException e) {
-    //
-    // Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust",
-    // e.getKey());
-    // }
-    // TestObjectFactory.updateObject(loan);
-    // /*
-    // *Assert.assertEquals("The amount returned should have been 0.0", 0.0,
-    // * loan.getLastPmntAmntToBeAdjusted());
-    // */
-    // try {
-    // loan.adjustLastPayment("Payment with amount 700 has been adjusted by test code");
-    //
-    // } catch (AccountException e) {
-    //
-    // Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust",
-    // e.getKey());
-    // }
-    // TestObjectFactory.updateObject(loan);
-    // /*
-    // *Assert.assertEquals("The amount returned should have been : 0.0", 0.0,
-    // * loan.getLastPmntAmntToBeAdjusted());
-    // */
-    //
-    // accountBO = TestObjectFactory.getObject(LoanBO.class,
-    // loan.getAccountId());
-    // }
     @Test(dependsOnMethods = { "testSuccessGetLastPmntAmntToBeAdjusted" })
     public void testSuccessUpdateAccountActionDateEntity() {
         List<Short> installmentIdList;
@@ -186,7 +119,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         while (itr.hasNext()) {
             accountBO.updateAccountActionDateEntity(installmentIdList, itr.next().getFees().getFeeId());
         }
-        // TODO: assert what?
+
     }
 
     @Test(dependsOnMethods = { "testSuccessUpdateAccountActionDateEntity" })
@@ -539,24 +472,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         return installmentIdList;
     }
 
-    private void checkScheduleDates(final List<java.util.Date> meetingDates,
-            final AccountActionDateEntity actionDateEntity) {
-        // first installment should remain today, ie meeting unchanged
-        if (actionDateEntity.getInstallmentId() == 1) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getCurrentDateWithoutTimeStamp());
-        } else if (actionDateEntity.getInstallmentId() == 2) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getDateWithoutTimeStamp(meetingDates.get(1)));
-        } else if (actionDateEntity.getInstallmentId() == 3) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), DateUtils
-                    .getDateWithoutTimeStamp(meetingDates.get(2)));
-        }
-    }
-
     private void disburseLoan(final LoanBO loan, final Date startDate) throws Exception {
-        loan.disburseLoan("receiptNum", startDate, Short.valueOf("1"), loan.getPersonnel(), startDate, Short
-                .valueOf("1"));
+        loan.disburseLoan("receiptNum", startDate, Short.valueOf("1"), loan.getPersonnel(), startDate, Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
     }
 

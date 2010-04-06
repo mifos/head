@@ -182,51 +182,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void ignore_testSuccessfulUpdateWithoutLO_in_InActiveState() throws Exception {
-        createCustomers();
-
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-//        client.changeStatus(CustomerStatus.CLIENT_CANCELLED, CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW,
-//                "client cancelled");
-//        client.update();
-
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        group.changeStatus(CustomerStatus.GROUP_CANCELLED, CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, "group cancelled");
-//        group.update();
-//
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "Center_Inactive");
-//        center.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        StaticHibernateUtil.startTransaction();
-
-     // FIXME - keithw - this test of update is for DAO now
-//        center.update(TestUtils.makeUser(), null, center.getExternalId(), center.getMfiJoiningDate(), center
-//                .getAddress(), null, null);
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-        Assert.assertNull(center.getPersonnel());
-        Assert.assertNull(group.getPersonnel());
-        Assert.assertNull(client.getPersonnel());
-    }
-
     public void testUpdateMeeting_SaveToUpdateLater() throws Exception {
         createCustomers();
         String oldMeetingPlace = "Delhi";

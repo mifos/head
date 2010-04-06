@@ -523,10 +523,10 @@ public class CustomerServiceImpl implements CustomerService {
 
             center.validateChangeToInActive();
 
-            List<CustomerView> groupsThatAreNotClosedOrCanceled = this.customerDao
+            List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
                     .findClientsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
-            if (groupsThatAreNotClosedOrCanceled.size() > 0) {
+            if (clientsThatAreNotClosedOrCanceled.size() > 0) {
                 throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
                         new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
                                 center.getUserContext()) });
@@ -536,12 +536,13 @@ public class CustomerServiceImpl implements CustomerService {
             center.validateChangeToActive();
         }
 
+        setInitialObjectForAuditLogging(center);
+        center.updateCustomerStatus(newStatus);
+
         try {
             StaticHibernateUtil.startTransaction();
-
             customerDao.save(center);
             StaticHibernateUtil.commitTransaction();
-
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

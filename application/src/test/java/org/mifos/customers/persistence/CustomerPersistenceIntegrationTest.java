@@ -58,6 +58,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
@@ -70,6 +71,7 @@ import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerSearch;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
@@ -1121,14 +1123,17 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Inactive Center", meeting);
-
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // center.changeStatus(CustomerStatus.CENTER_INACTIVE, CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED,
-        // "Made Inactive");
-
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+
+        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE);
+
+        // center.changeStatus(CustomerStatus.CENTER_INACTIVE, CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED, "Made Inactive");
+
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
+
         verifyCustomerNotLoaded(center.getCustomerId(), center.getDisplayName());
     }
 

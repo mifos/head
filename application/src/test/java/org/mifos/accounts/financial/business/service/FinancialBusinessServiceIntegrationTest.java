@@ -103,14 +103,12 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         super.tearDown();
     }
 
-    // FIXME - keithw - IGNORED AFTER CENTER PERSISTENCE REMOVAL
-    public void ignore_testLoanAdjustmentAccountingEntries() throws Exception {
+    public void testLoanAdjustmentAccountingEntries() throws Exception {
         Date currentDate = new Date(System.currentTimeMillis());
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
-                "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")),
-                new Date(System.currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), "1111",
+                currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
         accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
@@ -119,7 +117,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         financialBusinessService.buildAccountingEntries(accountTrxnEntity);
 
         TestObjectFactory.updateObject(loan);
-       Assert.assertEquals(accountTrxnEntity.getFinancialTransactions().size(), 10);
+        Assert.assertEquals(accountTrxnEntity.getFinancialTransactions().size(), 10);
 
         for (FinancialTransactionBO finTrxn : accountTrxnEntity.getFinancialTransactions()) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("1")) && finTrxn.isCreditEntry()) {
@@ -175,12 +173,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         LoanScheduleEntity accountAction = (LoanScheduleEntity) loan.getAccountActionDate(Short.valueOf("1"));
 
         LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), accountAction
-                        .getActionDate(), TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
-                TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200),
-                TestUtils.createMoney(300), TestUtils.createMoney(),
-                TestUtils.createMoney(10), TestUtils.createMoney(20), null,
-                masterPersistenceService);
+                AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), accountAction.getActionDate(),
+                TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
+                TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200), TestUtils
+                        .createMoney(300), TestUtils.createMoney(), TestUtils.createMoney(10), TestUtils
+                        .createMoney(20), null, masterPersistenceService);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestUtils.createMoney(100));
@@ -196,8 +193,10 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + "","FL",startDate, meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + "", "FL",
+                startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
     }
@@ -240,17 +239,18 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
-       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+        Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
         for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
             if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-               Assert.assertTrue(true);
-               Assert.assertEquals(2, trxn.getFinancialTransactions().size());
+                Assert.assertTrue(true);
+                Assert.assertEquals(2, trxn.getFinancialTransactions().size());
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
                     if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isCreditEntry()) {
                         Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
-                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isDebitEntry()) {
+                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19"))
+                            && finTrxn.isDebitEntry()) {
                         Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
@@ -301,17 +301,18 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         payment = savings.getLastPmnt();
-       Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
+        Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
         for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
             if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-               Assert.assertTrue(true);
-               Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
+                Assert.assertTrue(true);
+                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
                 for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
                     if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isCreditEntry()) {
                         Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
-                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isDebitEntry()) {
+                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21"))
+                            && finTrxn.isDebitEntry()) {
                         Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
                         Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
@@ -333,10 +334,11 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
             Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.7");
             java.util.Date trxnDate = helper.getDate("20/05/2006");
 
-            AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, new Money(getCurrency()),
-                    trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
+            AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, new Money(
+                    getCurrency()), trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
+                    group);
 
-           Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
+            Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
             FinancialBusinessService financialBusinessService = new FinancialBusinessService();
             AccountTestUtils.addAccountPayment(payment, savings);
             SavingsTrxnDetailEntity accountTrxn = null;
@@ -348,7 +350,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                     "");
             financialBusinessService.buildAccountingEntries(accountTrxn);
             Set<FinancialTransactionBO> financialTrxns = accountTrxn.getFinancialTransactions();
-           Assert.assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
+            Assert.assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
 
             int withdrawalTrxns = 0;
             int roundingTrxns = 0;
@@ -359,9 +361,9 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                     withdrawalTrxns++;
                 }
             }
-           Assert.assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
-           Assert.assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);
-           Assert.assertEquals(new Money(getCurrency(), "1000.7"), accountTrxn.getWithdrawlAmount());
+            Assert.assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
+            Assert.assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);
+            Assert.assertEquals(new Money(getCurrency(), "1000.7"), accountTrxn.getWithdrawlAmount());
 
             TestObjectFactory.flushandCloseSession();
 
@@ -376,8 +378,10 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     private void createInitialObjectsForSavings() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center_Active_test",
+                meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName()
+                + " Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1", (short) 31, (short) 7);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -387,25 +391,25 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testLoanWriteOffAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
-                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
-                .currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), null,
+                null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity,
-                AccountActionTypes.WRITEOFF, accountActionDateEntity.getInstallmentId(),
-                accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
+                AccountActionTypes.WRITEOFF, accountActionDateEntity.getInstallmentId(), accountActionDateEntity
+                        .getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Written Off", null,
-                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), null, new MasterPersistence());
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
+                new MasterPersistence());
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);
         financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
         TestObjectFactory.updateObject(loan);
         Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
-       Assert.assertEquals(finTrxnSet.size(), 2);
+        Assert.assertEquals(finTrxnSet.size(), 2);
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("22")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));
@@ -425,9 +429,8 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     public void testLoanRescheduleAccountingEntries() throws Exception {
         loan = getLoanAccount();
         loan.setUserContext(TestUtils.makeUser());
-        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630),
-                null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System
-                .currentTimeMillis()));
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loan, TestUtils.createMoney(630), null,
+                null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         AccountActionDateEntity accountActionDateEntity = loan.getAccountActionDate(Short.valueOf("1"));
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan.getUserContext().getId());
@@ -435,15 +438,16 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 AccountActionTypes.LOAN_RESCHEDULED, accountActionDateEntity.getInstallmentId(),
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Rescheduled", null,
-                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), null, new MasterPersistence());
+                ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
+                new MasterPersistence());
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);
         financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
         TestObjectFactory.updateObject(loan);
         Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity.getFinancialTransactions();
-       Assert.assertEquals(finTrxnSet.size(), 2);
+        Assert.assertEquals(finTrxnSet.size(), 2);
         for (FinancialTransactionBO finTrxn : finTrxnSet) {
             if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("23")) && finTrxn.isCreditEntry()) {
                 Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("100"));

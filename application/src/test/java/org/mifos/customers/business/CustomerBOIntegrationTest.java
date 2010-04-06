@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -197,40 +196,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        TestObjectFactory.cleanUpChangeLog();
-    }
-
-    public void ignore_testStatusChangeForCenterForLogging() throws Exception {
-        OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-        StaticHibernateUtil.closeSession();
-        createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
-                createdBranchOffice.getOfficeId());
-        createPersonnel(PersonnelLevel.LOAN_OFFICER);
-
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting,
-                getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
-        center.setUserContext(TestUtils.makeUserWithLocales());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(center);
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, center.getCustomerId());
-        Assert.assertEquals(1, auditLogList.size());
-        Assert.assertEquals(EntityType.CENTER, auditLogList.get(0).getEntityTypeAsEnum());
-        Set<AuditLogRecord> records = auditLogList.get(0).getAuditLogRecords();
-        Assert.assertEquals(1, records.size());
-        AuditLogRecord record = records.iterator().next();
-        Assert.assertEquals("Status", record.getFieldName());
-        Assert.assertEquals("Active", record.getOldValue());
-        Assert.assertEquals("Inactive", record.getNewValue());
         TestObjectFactory.cleanUpChangeLog();
     }
 

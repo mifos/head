@@ -173,8 +173,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         if (!isCenterHierarchyExists) {
             Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
         }
-        List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
-                CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        List<FeeView> additionalFees = getFeesFromSession();
         Assert.assertNotNull(additionalFees);
         Assert.assertEquals(0, additionalFees.size());
         Assert.assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, request));
@@ -200,8 +199,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         if (!isCenterHierarchyExists) {
             Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
         }
-        List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
-                CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        List<FeeView> additionalFees = getFeesFromSession();
         Assert.assertNotNull(additionalFees);
         Assert.assertEquals(1, additionalFees.size());
         Assert.assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, request));
@@ -275,9 +273,9 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @SuppressWarnings("unchecked")
     private List<CustomFieldView> getCustomFieldsFromSession() throws PageExpiredException {
-        return (List<CustomFieldView>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        return (List<CustomFieldView>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
     }
 
     public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception {
@@ -329,8 +327,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeView> feeList = getFeesFromSession();
         FeeView fee = feeList.get(0);
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -355,8 +352,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeView> feeList = getFeesFromSession();
         FeeView fee = feeList.get(0);
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -380,8 +376,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeView> feeList = getFeesFromSession();
         FeeView fee = feeList.get(0);
 
         List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
@@ -409,6 +404,11 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(feesToRemove);
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, request));
         center = TestObjectFactory.getCenter(center.getCustomerId());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<FeeView> getFeesFromSession() throws PageExpiredException {
+        return (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
     }
 
     public void testSuccessfulPrevious() throws Exception {
@@ -503,8 +503,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         actionForm.setParentCustomer(null);
     }
 
-    // FIXME - keithw - creating group with duplicate name not picking up exception correctly at moment.
-    public void ignore_testFailureCreate_DuplicateName() throws Exception {
+    public void testFailureCreate_DuplicateName() throws Exception {
         createGroupWithCenter();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");

@@ -86,15 +86,19 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -113,33 +117,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private UserContext userContext;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private CustomerBO client1;
-
     private CustomerBO client2;
-
     private SavingsBO savings;
-
     private SavingsOfferingBO savingsOffering;
-
     private final SavingsTestHelper helper = new SavingsTestHelper();
-
     private final SavingsPersistence savingsPersistence = new SavingsPersistence();
-
     private final AccountPersistence accountPersistence = new AccountPersistence();
-
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
-
     private final MifosCurrency currency = Configuration.getInstance().getSystemConfig().getCurrency();
-
     private PersonnelBO createdBy = null;
-
-    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-    private List<Holiday> holidays = new ArrayList<Holiday>();
 
     private Money getRoundedMoney(final Money value) {
         return MoneyUtils.currencyRound(value);
@@ -3261,13 +3250,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void ignore_testGetTotalAmountDueForActiveCustomers() throws Exception {
         savings = getSavingsAccountForCenter();
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        client1.changeStatus(CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED,
-//                "Client closed");
-//
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
+
+        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        customerService.updateClientStatus((ClientBO)client1, client1.getStatus(), CustomerStatus.CLIENT_CLOSED, userContext, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED.getValue(), "Client closed");
+
         savings = new SavingsPersistence().findById(savings.getAccountId());
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
             if (actionDate.getInstallmentId().shortValue() == 1) {
@@ -3278,23 +3266,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(dueAmount, savings.getTotalAmountDue());
         client1 = TestObjectFactory.getClient(client1.getCustomerId());
         client2 = TestObjectFactory.getClient(client2.getCustomerId());
-    }
-
-    public void ignore_testSuccessfulCloseCustomerAccount() throws Exception {
-        savings = getSavingsAccountForCenter();
-
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        client1.changeStatus(CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED,
-//                "Client closed");
-//
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        for (AccountBO account : client1.getAccounts()) {
-            Assert.assertNotNull(account.getClosedDate());
-            if (account.isOfType(AccountTypes.CUSTOMER_ACCOUNT)) {
-                Assert.assertTrue(account.getAccountState().isInState(AccountState.CUSTOMER_ACCOUNT_INACTIVE));
-            }
-        }
     }
 
     public void testGetTotalAmountDueForCenter() throws Exception {
