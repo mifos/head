@@ -482,6 +482,13 @@ public abstract class PrdOfferingBO extends BusinessObject {
         } else if (!prdOfferingId.equals(other.getPrdOfferingId())) {
             return false;
         }
+
+        if (this.globalPrdOfferingNum != null && other.getGlobalPrdOfferingNum() != null) {
+            if (!other.getGlobalPrdOfferingNum().equals(this.globalPrdOfferingNum)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

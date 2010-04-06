@@ -25,19 +25,21 @@ import junit.framework.TestCase;
 
 import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+@Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class PrdOfferingBOTest extends TestCase {
 
     public void testReturnTrueForEqualsIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));
-       Assert.assertTrue(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
+        Assert.assertTrue(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
         Assert.assertFalse(loanOfferingBO.equals(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
         Assert.assertFalse(loanOfferingBO.equals(SavingsOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
     }
 
     public void testReturnTrueForIsOfSameOfferingIfPrdOfferingIdIsSame() {
         LoanOfferingBO loanOfferingBO = LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"));
-       Assert.assertTrue(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
-        Assert.assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("4321"))));
+        Assert.assertTrue(loanOfferingBO.isOfSameOffering(LoanOfferingBO.createInstanceForTest(Short.valueOf("1234"))));
+        Assert
+                .assertFalse(loanOfferingBO.isOfSameOffering(LoanOfferingBO
+                        .createInstanceForTest(Short.valueOf("4321"))));
     }
 }

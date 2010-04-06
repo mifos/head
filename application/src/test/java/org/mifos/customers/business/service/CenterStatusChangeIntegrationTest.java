@@ -48,11 +48,17 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -74,6 +80,9 @@ public class CenterStatusChangeIntegrationTest {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private PersonnelDao personnelDao;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -193,5 +202,58 @@ public class CenterStatusChangeIntegrationTest {
             assertThat(expected.getKey(), is(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION));
             assertThat(existingCenter.getStatus(), is(CustomerStatus.CENTER_ACTIVE));
         }
+    }
+
+    @Test
+    public void givenCenterIsInactiveAndAssignedLoanOfficerIsInactiveShouldNotPassValidationWhenTryingToTranistionClientToActive() throws Exception {
+
+        // setup
+        CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
+                                            .withName("Center-IntegrationTest")
+                                            .withOffice(existingOffice)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withUserContext()
+                                            .build();
+        existingCenter.updateCustomerStatus(CustomerStatus.CENTER_INACTIVE);
+        IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
+
+        existingLoanOfficer = this.personnelDao.findPersonnelById(existingLoanOfficer.getPersonnelId());
+        updatePersonnel(existingLoanOfficer, PersonnelLevel.LOAN_OFFICER, PersonnelStatus.INACTIVE, existingOffice);
+
+        GroupBO existingPartialGroup = new GroupBuilder().withName("newGroup")
+                                                 .withStatus(CustomerStatus.GROUP_PARTIAL)
+                                                 .withParentCustomer(existingCenter)
+                                                 .formedBy(existingUser).build();
+        IntegrationTestObjectMother.createGroup(existingPartialGroup, existingMeeting);
+
+        ClientBO existingPartialClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_PARTIAL).withParentCustomer(
+                existingPartialGroup).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(existingPartialClient, existingMeeting);
+
+        existingCenter = this.customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
+        existingCenter.setUserContext(TestUtils.makeUser());
+        existingPartialGroup = this.customerDao.findGroupBySystemId(existingPartialGroup.getGlobalCustNum());
+        existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
+        existingPartialClient.setUserContext(TestUtils.makeUser());
+
+        // exercise test
+        try {
+            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_ACTIVE);
+            fail("should fail validation");
+        } catch (CustomerException expected) {
+            assertThat(expected.getKey(), is(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION));
+            assertThat(existingCenter.getStatus(), is(CustomerStatus.CENTER_INACTIVE));
+        }
+    }
+
+    private void updatePersonnel(PersonnelBO loanOfficer, PersonnelLevel personnelLevel, PersonnelStatus newStatus, OfficeBO office)
+            throws Exception {
+        Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
+        Name name = new Name("XYZ", null, null, "Last Name");
+        loanOfficer.update(newStatus, personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
+                "rajendersaini@yahoo.com", null, null, name, Integer.valueOf("1"), Integer.valueOf("1"), address, Short
+                        .valueOf("1"));
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
     }
 }

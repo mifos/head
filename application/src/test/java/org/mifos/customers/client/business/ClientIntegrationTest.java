@@ -22,8 +22,6 @@ package org.mifos.customers.client.business;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -90,16 +88,12 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private SavingsOfferingBO savingsOffering1;
     private SavingsOfferingBO savingsOffering2;
     private ClientBO client;
-
     private MeetingBO meeting;
-
-    PersonnelBO personnel;
+    private PersonnelBO personnel;
     private Short officeId = 1;
-
     private OfficeBO office;
     private OfficeBO officeBo;
     private CustomerPersistence customerPersistence = new CustomerPersistence();
-    private MasterPersistence masterPersistence = new MasterPersistence();
 
     @Override
     protected void setUp() throws Exception {
@@ -137,7 +131,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         new ClientPersistence().createOrUpdate(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        Integer clientId = client.getCustomerId();
         ClientBO retrievedClient = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
                 client.getCustomerId());
         Assert.assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
@@ -1283,22 +1276,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
         StaticHibernateUtil.closeSession();
-    }
-
-    private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
-        ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
-        clientAttendance.setAttendance(AttendanceType.PRESENT);
-        clientAttendance.setMeetingDate(meetingDate);
-        return clientAttendance;
-    }
-
-    private Date getDateOffset(int numberOfDays) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, (day - numberOfDays));
-        return new Date(currentDateCalendar.getTimeInMillis());
     }
 
     private MeetingBO getMeeting() throws Exception {

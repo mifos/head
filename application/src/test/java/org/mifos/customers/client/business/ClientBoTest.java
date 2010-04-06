@@ -20,29 +20,96 @@
 
 package org.mifos.customers.client.business;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 import junit.framework.Assert;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * I test {@link ClientBO}.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ClientBoTest {
 
     // class under test
     private ClientBO client;
 
+    @Mock
+    private LoanBO loanAccount;
+
     @Before
     public void setup() throws Exception {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         client = new ClientBuilder().buildForUnitTests();
+    }
+
+    @Test
+    public void testHasActiveLoanAccountsForProductReturnsTrueIfCustomerHasSuchAccounts() throws Exception {
+
+        // setup
+        client = new ClientBuilder().active().buildForUnitTests();
+        LoanOfferingBO loanProduct = new LoanProductBuilder().active().buildForUnitTests();
+        client.addAccount(loanAccount);
+
+        // stubbing
+        when(loanAccount.isActiveLoanAccount()).thenReturn(true);
+        when(loanAccount.getLoanOffering()).thenReturn(loanProduct);
+
+        // exercise
+        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct);
+
+        assertThat(hasActiveAccounts, is(true));
+    }
+
+    @Test
+    public void testHasActiveLoanAccountsForProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct() throws Exception {
+
+        // setup
+        client = new ClientBuilder().active().buildForUnitTests();
+        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111").buildForUnitTests();
+        LoanOfferingBO loanProduct2 = new LoanProductBuilder().withGlobalProductNumber("xxxx-222").buildForUnitTests();
+        client.addAccount(loanAccount);
+
+        // stubbing
+        when(loanAccount.isActiveLoanAccount()).thenReturn(true);
+        when(loanAccount.getLoanOffering()).thenReturn(loanProduct2);
+
+        // exercise
+        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct1);
+
+        assertThat(hasActiveAccounts, is(false));
+    }
+
+    @Test
+    public void testHasActiveLoanAccountsForProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts() throws Exception {
+
+        // setup
+        client = new ClientBuilder().active().buildForUnitTests();
+        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111").buildForUnitTests();
+        client.addAccount(loanAccount);
+
+        // stubbing
+        when(loanAccount.isActiveLoanAccount()).thenReturn(false);
+
+        // exercise
+        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct1);
+
+        assertThat(hasActiveAccounts, is(false));
     }
 
     @Test

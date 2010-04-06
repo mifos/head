@@ -536,6 +536,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         } else if (newStatus.isCenterActive()) {
             center.validateChangeToActive();
+            center.validateLoanOfficerIsActive();
         }
 
         setInitialObjectForAuditLogging(center);

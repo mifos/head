@@ -20,11 +20,6 @@
 
 package org.mifos.customers.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +33,6 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBOFixture;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -46,7 +40,6 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -58,11 +51,9 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupTestUtils;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -139,43 +130,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         Assert.assertEquals(res, false);
         TestObjectFactory.cleanUpChangeLog();
-    }
-
-    public void testHasActiveLoanAccountsForProductReturnsTrueIfCustomerHasSuchAccounts() throws Exception {
-        client = new ClientBuilder().active().buildForUnitTests();
-        LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
-        LoanBO accountMock = createMock(LoanBO.class);
-        client.addAccount(accountMock);
-        expect(accountMock.isActiveLoanAccount()).andReturn(true);
-        expect(accountMock.getLoanOffering()).andReturn(loanProduct1);
-        replay(accountMock);
-        Assert.assertTrue(client.hasActiveLoanAccountsForProduct(loanProduct1));
-        verify(accountMock);
-    }
-
-    public void testHasActiveLoanAccountsForProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct()
-            throws Exception {
-        client = new ClientBuilder().active().buildForUnitTests();
-        LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
-        LoanOfferingBO loanProduct2 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product2", "TLP2");
-        LoanBO accountMock = createMock(LoanBO.class);
-        client.addAccount(accountMock);
-        expect(accountMock.isActiveLoanAccount()).andReturn(true);
-        expect(accountMock.getLoanOffering()).andReturn(loanProduct2);
-        replay(accountMock);
-        Assert.assertFalse(client.hasActiveLoanAccountsForProduct(loanProduct1));
-        verify(accountMock);
-    }
-
-    public void testHasActiveLoanAccountsForProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts() throws Exception {
-        client = new ClientBuilder().active().buildForUnitTests();
-        LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
-        LoanBO accountMock = createMock(LoanBO.class);
-        client.addAccount(accountMock);
-        expect(accountMock.isActiveLoanAccount()).andReturn(false);
-        replay(accountMock);
-        Assert.assertFalse(client.hasActiveLoanAccountsForProduct(loanProduct1));
-        verify(accountMock);
     }
 
     public void testCheckIfClientIsATitleHolder() throws Exception {
@@ -383,81 +337,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.cleanUp(savings);
     }
 
-    public void ignore_testValidateStatusChangeForCustomerWithInactiveLoanofficerAssigned() throws Exception {
-        createPersonnel(PersonnelLevel.LOAN_OFFICER);
-        createCenter(getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.INACTIVE, getBranchOffice());
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            center.changeStatus(CustomerStatus.CENTER_ACTIVE, null, "comment");
-//            Assert.fail();
-//        } catch (CustomerException expected) {
-//            Assert.assertEquals(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION, expected.getKey());
-//            Assert.assertEquals(CustomerStatus.CENTER_INACTIVE, center.getStatus());
-//        }
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-    }
-
-    public void ignore_testValidateStatusChangeForCustomerWithLoanofficerAssignedToDifferentBranch() throws Exception {
-        OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-        StaticHibernateUtil.closeSession();
-        createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
-                createdBranchOffice.getOfficeId());
-        createPersonnel(PersonnelLevel.LOAN_OFFICER);
-        createCenter(getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
-//        center.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        updatePersonnel(PersonnelLevel.LOAN_OFFICER, PersonnelStatus.ACTIVE, createdBranchOffice);
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            center.changeStatus(CustomerStatus.CENTER_ACTIVE, null, "comment");
-//            Assert.assertFalse(true);
-//        } catch (CustomerException ce) {
-//            Assert.assertTrue(true);
-//            Assert.assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
-//            Assert.assertEquals(CustomerStatus.CENTER_INACTIVE.getValue(), center.getCustomerStatus().getId());
-//        }
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-    }
-
-    public void ignore_testValidateStatusForClientSavingsAccountInactive() throws Exception {
-        accountBO = getSavingsAccount("fsaf6", "ads6");
-        accountBO.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(), null, "changed status");
-        accountBO.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-     // FIXME - keithw - use builder for creation of client for tests in given state.
-//        try {
-//            client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test");
-//            Assert.fail();
-//        } catch (CustomerException expected) {
-//            Assert.assertEquals(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION, expected.getKey());
-//            Assert.assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
-//        }
-        StaticHibernateUtil.closeSession();
-        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-        group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        accountBO = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, accountBO.getAccountId());
-    }
-
     public void testApplicablePrdforCustomLevel() throws Exception {
         createInitialObjects();
         Assert.assertEquals(Short.valueOf("1"), client.getCustomerLevel().getProductApplicableType());
@@ -551,34 +430,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
                 loanOfficer.getPersonnelId());
 
-    }
-
-    private void updatePersonnel(PersonnelLevel personnelLevel, PersonnelStatus newStatus, OfficeBO office)
-            throws Exception {
-        Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
-        Name name = new Name("XYZ", null, null, "Last Name");
-        loanOfficer.update(newStatus, personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
-                "rajendersaini@yahoo.com", null, null, name, Integer.valueOf("1"), Integer.valueOf("1"), address, Short
-                        .valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-
-    }
-
-    private void createCenter(Short officeId, Short personnelId) {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting,
-                officeId, personnelId);
-    }
-
-    private void createGroup() {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_ACTIVE, center);
     }
 
     @Override
