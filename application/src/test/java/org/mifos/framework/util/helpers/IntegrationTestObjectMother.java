@@ -25,7 +25,9 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -273,6 +275,45 @@ public class IntegrationTestObjectMother {
         try {
             StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(fee);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createProduct(PrdOfferingBO product) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(product);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveLoanAccount(LoanBO loanAccount) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            loanAccount.save();
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void saveSavingsAccount(SavingsBO savingsAccount) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            savingsAccount.save();
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();

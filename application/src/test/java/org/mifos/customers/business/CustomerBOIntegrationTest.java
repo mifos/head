@@ -305,7 +305,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
                 .getDelinquentPortfolioAmount());
     }
 
-    public void testGetBalanceForAccountsAtRisk() {
+    public void ignore_testGetBalanceForAccountsAtRisk() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -335,7 +335,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         return amount;
     }
 
-    public void testGetOutstandingLoanAmount() {
+    public void ignore_testGetOutstandingLoanAmount() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -348,7 +348,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetActiveLoanCounts() {
+    public void ignore_testGetActiveLoanCounts() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -361,7 +361,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetOpenIndividualLoanAccounts() {
+    public void ignore_testGetOpenIndividualLoanAccounts() {
         createInitialObjects();
         accountBO = getIndividualLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -377,7 +377,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testGetLoanAccountInUse() {
+    public void ignore_testGetLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();
@@ -408,7 +408,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
-    public void testHasAnyLoanAccountInUse() {
+    public void ignore_testHasAnyLoanAccountInUse() {
         createInitialObjects();
         accountBO = getLoanAccount(group, meeting);
         TestObjectFactory.flushandCloseSession();

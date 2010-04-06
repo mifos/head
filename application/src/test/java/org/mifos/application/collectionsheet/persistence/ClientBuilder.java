@@ -143,6 +143,11 @@ public class ClientBuilder {
 
     public ClientBuilder withParentCustomer(final CustomerBO withParentCustomer) {
         this.parentCustomer = withParentCustomer;
+        if (withParentCustomer != null) {
+            this.meeting = withParentCustomer.getCustomerMeetingValue();
+            this.office = withParentCustomer.getOffice();
+            this.loanOfficer = withParentCustomer.getPersonnel();
+        }
         return this;
     }
 

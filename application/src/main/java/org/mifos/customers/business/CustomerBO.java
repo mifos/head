@@ -292,6 +292,10 @@ public abstract class CustomerBO extends BusinessObject {
         this.customerStatus = customerStatus;
     }
 
+    public void updateCustomerStatus(CustomerStatus newCustomerStatus) {
+        this.customerStatus = new CustomerStatusEntity(newCustomerStatus);
+    }
+
     public String getDisplayAddress() {
         return displayAddress;
     }

@@ -141,7 +141,7 @@ public class LoanBO extends AccountBO {
     private Short gracePeriodDuration;
     private Short gracePeriodPenalty;
     private Double interestRate;
-    private Boolean redone;
+    private boolean redone;
     private Integer collateralTypeId;
     private String collateralNote;
     private Short groupFlag;
@@ -195,20 +195,20 @@ public class LoanBO extends AccountBO {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal constructor
+     * constructor used from builder.
      */
     public LoanBO(final LoanOfferingBO loanProduct, final Short numOfInstallments, final GraceType gracePeriodType,
             final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
-            final Integer offsettingAllowable) {
+            final Integer offsettingAllowable, Money loanAmount, Money loanBalance) {
         super(accountType, accountState, customer, offsettingAllowable, new LinkedHashSet<AccountActionDateEntity>(),
                 new HashSet<AccountFeesEntity>(), null, null, null, null);
         this.loanOffering = loanProduct;
         this.noOfInstallments = numOfInstallments;
         this.gracePeriodType = new GracePeriodTypeEntity(gracePeriodType);
+        this.loanAmount = loanAmount;
+        this.loanBalance = loanBalance;
 
-        this.loanSummary = null;
+        this.loanSummary = buildLoanSummary();
         this.performanceHistory = null;
     }
 

@@ -19,9 +19,8 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
-import org.joda.time.DateTime;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
@@ -30,6 +29,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -44,12 +44,22 @@ public class LoanAccountBuilder {
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
-    private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-    private final Date createdDate = new DateTime().minusDays(14).toDate();
+    private double orgininalLoanAmount = Double.valueOf("300.0");
+    private double remainingLoanBalance = Double.valueOf("300.0");
 
     public LoanBO build() {
+
+        BigDecimal amount = BigDecimal.valueOf(orgininalLoanAmount);
+        Money loanAmount = new Money(Money.getDefaultCurrency(), amount);
+
+        BigDecimal balance = BigDecimal.valueOf(remainingLoanBalance);
+        Money loanBalance = new Money(Money.getDefaultCurrency(), balance);
+
         final LoanBO loanAccount = new LoanBO(loanProduct, numOfInstallments, gracePeriodType, accountType,
-                accountState, customer, offsettingAllowable);
+                accountState, customer, offsettingAllowable, loanAmount, loanBalance);
+        loanAccount.setUserContext(TestUtils.makeUser());
+        loanAccount.setCreateDetails();
+
         return loanAccount;
     }
 
@@ -60,6 +70,17 @@ public class LoanAccountBuilder {
 
     public LoanAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
+        return this;
+    }
+
+    public LoanAccountBuilder withOriginalLoanAmount(double withLoanAmount) {
+        this.orgininalLoanAmount = withLoanAmount;
+        this.remainingLoanBalance = withLoanAmount;
+        return this;
+    }
+
+    public LoanAccountBuilder remainingLoanBalance(double withRemainingLoanBalance) {
+        this.remainingLoanBalance = withRemainingLoanBalance;
         return this;
     }
 }

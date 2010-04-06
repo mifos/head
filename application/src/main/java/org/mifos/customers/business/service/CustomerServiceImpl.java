@@ -581,6 +581,8 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
 
+            group.updateCustomerStatus(newStatus);
+
             customerDao.save(group);
             StaticHibernateUtil.commitTransaction();
 

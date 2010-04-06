@@ -73,7 +73,7 @@ public class LoanBOTestUtils {
      * <b>createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int, Short)</b>
      * but differs in various ways.
      * <p/>
-     * TODO: This test code needs to be refactored! By creating the loan with a
+     * This test code needs to be refactored! By creating the loan with a
      * set of terms, then directly manipulating instance variables to completely
      * change the repayment schedule, it leaves the loan in an inconsistent
      * state, which leads one to suspect the validity of any of the 67 unit
@@ -86,7 +86,6 @@ public class LoanBOTestUtils {
      * this method.
      *
      * @param globalNum
-     *            Currently ignored (TODO: remove it or honor it)
      */
     public static LoanBO createLoanAccount(final String globalNum, final CustomerBO customer, final AccountState state, final Date startDate,
             final LoanOfferingBO loanOffering) {

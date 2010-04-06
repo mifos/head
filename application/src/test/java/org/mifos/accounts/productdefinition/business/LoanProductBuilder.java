@@ -40,13 +40,13 @@ public class LoanProductBuilder {
 
     // PRD_OFFERING FIELDS
     private String globalProductNumber = "ZZZZZ-1111";
-    private final Date startDate = new DateTime().minusDays(14).toDate();
-    private final String name = "testLoanProduct";
-    private final String shortName = "TLP1";
-    
+    private Date startDate = new DateTime().minusDays(14).toDate();
+    private String name = "testLoanProduct";
+    private String shortName = "TLP1";
+
     private final Date createdDate = new DateTime().minusDays(14).toDate();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-    
+
     private final GLCodeEntity depositGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private final GLCodeEntity interesetGLCode = new GLCodeEntity(Short.valueOf("2"), "11000");
 
@@ -60,7 +60,7 @@ public class LoanProductBuilder {
     private final InterestType interestType = InterestType.FLAT;
     private final Double minInterestRate = Double.valueOf("0.0");
     private final Double maxInterestRate = Double.valueOf("5.0");
-    private final Double defaultInterestRate = Double.valueOf("3.0");
+    private Double defaultInterestRate = Double.valueOf("3.0");
     private final Short interestPaidAtDisbursement = Constants.NO;
     private final Short principalDueLastInstallment = Constants.NO;
     private final Short minNoOfInstallmentsForLoan = Short.valueOf("1");
@@ -68,7 +68,7 @@ public class LoanProductBuilder {
     private final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
     private PrdStatus productStatus = PrdStatus.LOAN_ACTIVE;
     private PrdStatusEntity productStatusEntity;
-    
+
     public LoanOfferingBO buildForUnitTests() {
 
         LoanOfferingBO loanProduct = build();
@@ -77,24 +77,24 @@ public class LoanProductBuilder {
     }
 
     private LoanOfferingBO build() {
-        
+
         final LoanOfferingBO loanProduct = new LoanOfferingBO(depositGLCode, interesetGLCode, interestType,
                 minInterestRate, maxInterestRate, defaultInterestRate, interestPaidAtDisbursement,
                 principalDueLastInstallment, new NoOfInstallSameForAllLoanBO(), name, shortName, globalProductNumber,
                 startDate, applicableToCustomer, category, productStatusEntity, createdDate, createdByUserId);
-        
+
         final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan = new NoOfInstallSameForAllLoanBO(
                 minNoOfInstallmentsForLoan, maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct);
-        
+
         loanProduct.setNoOfInstallSameForAllLoan(noOfInstallSameForAllLoan);
         loanProduct.setGracePeriodType(new GracePeriodTypeEntity(graceType));
         loanProduct.setLoanOfferingMeeting(new PrdOfferingMeetingEntity(meeting, loanProduct, MeetingType.LOAN_INSTALLMENT));
-        
+
         return loanProduct;
     }
 
     public LoanOfferingBO buildForIntegrationTests() {
-        
+
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
 
@@ -135,14 +135,34 @@ public class LoanProductBuilder {
         this.globalProductNumber = withGlobalProductNumber;
         return this;
     }
-    
-    public LoanProductBuilder withGraceType (final GraceType graceType) {
+
+    public LoanProductBuilder withGraceType(final GraceType graceType) {
         this.graceType = graceType;
         return this;
     }
-    
-    public LoanProductBuilder withMeeting (final MeetingBO meeting) {
+
+    public LoanProductBuilder withMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
+        return this;
+    }
+
+    public LoanProductBuilder withName(final String withName) {
+        this.name = withName;
+        return this;
+    }
+
+    public LoanProductBuilder withShortName(final String withShortName) {
+        this.shortName = withShortName;
+        return this;
+    }
+
+    public LoanProductBuilder withStartDate(DateTime withStartDate) {
+        this.startDate = withStartDate.toDate();
+        return this;
+    }
+
+    public LoanProductBuilder withDefaultInterest(double withDefaultInterestRate) {
+        this.defaultInterestRate = withDefaultInterestRate;
         return this;
     }
 }

@@ -54,13 +54,9 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private CustomerBO center;
-
     private CustomerBO group;
-
     private CustomerBO client;
-
     private MeetingBO meeting;
-
     private String flowKey;
 
     private UserContext userContext;
@@ -97,7 +93,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    public void ignore_testUIHelperWhenClientIsAssignedPosition() throws CustomerException, PageExpiredException {
+    public void testUIHelperWhenClientIsAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         PositionEntity positionEntity = (PositionEntity) TestObjectFactory.getObject(PositionEntity.class, Short
                 .valueOf("1"));
@@ -170,7 +166,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
-    public void ignore_testUIHelperWhenClientIsNotAssignedPosition() throws CustomerException, PageExpiredException {
+    public void testUIHelperWhenClientIsNotAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         PositionEntity positionEntity = (PositionEntity) TestObjectFactory.getObject(PositionEntity.class, Short
                 .valueOf("1"));
