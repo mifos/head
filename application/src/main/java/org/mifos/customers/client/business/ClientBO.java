@@ -233,6 +233,7 @@ public class ClientBO extends CustomerBO {
     /**
      * @deprecated - use static factory classes
      */
+    @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
             final List<CustomFieldView> customFields, final List<FeeView> fees,
@@ -249,6 +250,7 @@ public class ClientBO extends CustomerBO {
     /**
      * @deprecated - use static factory classes
      */
+    @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
             final List<CustomFieldView> customFields, final List<FeeView> fees,
@@ -265,6 +267,7 @@ public class ClientBO extends CustomerBO {
     /**
      * @deprecated - use static factory classes
      */
+    @Deprecated
     private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
             final List<CustomFieldView> customFields, final List<FeeView> fees,

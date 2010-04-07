@@ -30,6 +30,7 @@ public class FinancialRulesTest extends TestCase {
 
     FinancialRules mock;
 
+    @Override
     public void setUp() throws Exception {
         mock = new FinancialRules();
         Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
@@ -40,6 +41,7 @@ public class FinancialRulesTest extends TestCase {
         mock.setActionToDebitAccount(actionToDebitAccount);
     }
 
+    @Override
     public void tearDown() {
         mock = null;
     }

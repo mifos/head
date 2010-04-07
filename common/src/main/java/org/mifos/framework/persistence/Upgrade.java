@@ -131,6 +131,7 @@ public abstract class Upgrade {
      *
      * @deprecated
      */
+    @Deprecated
     protected int insertLookupValue(Connection connection, int lookupEntity) throws SQLException {
         return insertLookupValue(connection, lookupEntity, " ");
     }
@@ -214,6 +215,7 @@ public abstract class Upgrade {
     /**
      * @deprecated use {@link #addLookupEntity(Connection, String, String)} instead
      */
+    @Deprecated
     @SuppressWarnings("PMD.CloseResource")
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void addLookupEntity(Connection connection, int entityId, String name, String description)

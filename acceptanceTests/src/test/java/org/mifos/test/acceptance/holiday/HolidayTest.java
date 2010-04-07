@@ -53,6 +53,7 @@ public class HolidayTest extends UiTestCaseBase {
     public static final String HOLIDAY = "HOLIDAY";
     private static final String HOLIDAY_RESULT_DATA_SET = "HolidayTest_001_result_dbunit.xml.zip";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {

@@ -95,6 +95,7 @@ public class SimpleDataSet {
      * Returns a DbUnit FlatXmlDataSet string representation of the data set.
      */
 
+    @Override
     @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // test method doesn't need performance optimization yet
     public String toString() {
         StringBuffer dataSet = new StringBuffer();
@@ -155,6 +156,7 @@ public class SimpleDataSet {
             return new ColumnAndValuePair(tokens[0], tokens[1]);
         }
 
+        @Override
         @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // test method doesn't need performance optimization yet
         public String toString() {
             StringBuffer rowDataSet = new StringBuffer();
@@ -187,6 +189,7 @@ public class SimpleDataSet {
             return value;
         }
 
+        @Override
         @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // test method doesn't need performance optimization yet
         public String toString() {
             StringBuffer columnValuePairDataSet = new StringBuffer();

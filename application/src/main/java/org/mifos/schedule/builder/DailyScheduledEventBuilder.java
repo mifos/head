@@ -28,6 +28,7 @@ import org.mifos.schedule.internal.DailyScheduledEvent;
  */
 public class DailyScheduledEventBuilder extends ScheduledEventBuilder {
 
+    @Override
     public ScheduledEvent build() {
         return new DailyScheduledEvent(every);
     }

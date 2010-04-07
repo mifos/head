@@ -59,6 +59,7 @@ public class UpdateCustomPropertiesTest extends UiTestCaseBase {
     String errorInterestExceedsLimit = "The max interest is invalid because it is not in between";
     String errorInterestDigitsAfterDecimal ="The max interest is invalid because the number of digits after the decimal separator";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod

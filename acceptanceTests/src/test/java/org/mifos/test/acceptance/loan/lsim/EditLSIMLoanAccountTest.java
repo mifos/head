@@ -56,6 +56,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
 
     private static final String START_DATA_SET = "acceptance_small_011_dbunit.xml.zip";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {

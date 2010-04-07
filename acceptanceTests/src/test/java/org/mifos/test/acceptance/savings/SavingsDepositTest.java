@@ -60,6 +60,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
     private static final String startDataSet = "acceptance_small_008_dbunit.xml.zip";
 
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {

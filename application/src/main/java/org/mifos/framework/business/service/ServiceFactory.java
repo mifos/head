@@ -44,6 +44,7 @@ public class ServiceFactory {
      * @deprecated Call the constructor of the business service directly. For
      *             example, <code>new ConfigurationBusinessService();</code>
      */
+    @Deprecated
     public BusinessService getBusinessService(BusinessServiceName key) throws ServiceUnavailableException {
         if (!businessServicesMap.containsKey(key)) {
             try {

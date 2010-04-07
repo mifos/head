@@ -54,6 +54,7 @@ public class GroupTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod(groups = {"smoke","group","acceptance","ui"})
     public void setUp() throws Exception {

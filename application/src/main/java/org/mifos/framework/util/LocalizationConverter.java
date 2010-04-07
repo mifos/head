@@ -90,6 +90,7 @@ public class LocalizationConverter {
      * @deprecated Members are no longer static, hence, this no longer works for
      *             unit tests. No replacement available.
      */
+    @Deprecated
     public void setCurrentLocale(Locale locale) {
         currentLocale = locale;
         decimalFormatLocale = locale;

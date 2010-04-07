@@ -37,10 +37,12 @@ public class FieldConfigurationHelperIntegrationTest extends MifosIntegrationTes
 
     private UserContext userContext = TestUtils.makeUser();
 
+    @Override
     protected void setUp() throws Exception {
         MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "Village", userContext);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MessageLookup.getInstance().setCustomLabel(ConfigurationConstants.ADDRESS3, "NULL", userContext);
     }

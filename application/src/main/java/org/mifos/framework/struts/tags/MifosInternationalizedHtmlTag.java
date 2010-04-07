@@ -47,6 +47,7 @@ public class MifosInternationalizedHtmlTag extends ELHtmlTag {
      * Renders an &lt;html&gt; element with appropriate language attributes.
      * @since Struts 1.2
      */
+    @Override
     protected String renderHtmlStartElement() {
         StringBuffer sb = new StringBuffer("<html");
 

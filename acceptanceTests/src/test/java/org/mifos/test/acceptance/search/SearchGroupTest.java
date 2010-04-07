@@ -48,6 +48,7 @@ public class SearchGroupTest extends SearchTestBase {
 
     private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod

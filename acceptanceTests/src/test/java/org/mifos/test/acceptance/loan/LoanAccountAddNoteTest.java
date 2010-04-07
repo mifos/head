@@ -59,6 +59,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     private static final String TEST_ACCOUNT = "000100000000004";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for Issue 2456";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {

@@ -65,6 +65,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
     private static final String CLIENT_LOAN_ID = "000100000000121";
     private static final String GROUP_LOAN_ID = "000100000000206 ";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {

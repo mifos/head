@@ -84,7 +84,8 @@ public class LoginPage extends MifosPage {
 		return new LoginPage(selenium);
 	}
 
-	public LoginPage logout() {
+	@Override
+    public LoginPage logout() {
 		selenium.open("loginAction.do?method=logout");
 		waitForPageToLoad();
 		return new LoginPage(selenium);

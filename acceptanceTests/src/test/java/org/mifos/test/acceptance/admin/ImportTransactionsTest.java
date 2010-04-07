@@ -61,6 +61,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     public static final String LOAN_SUMMARY = "LOAN_SUMMARY";
     public static final String LOAN_TRXN_DETAIL = "LOAN_TRXN_DETAIL";
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod

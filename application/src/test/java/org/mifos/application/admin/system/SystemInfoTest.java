@@ -38,6 +38,7 @@ public class SystemInfoTest extends TestCase {
 
     private SystemInfo info;
 
+    @Override
     public void setUp() throws Exception {
         ServletContext servletContext = new ServletContextSimulator();
         MockDatabaseMetaData metaData = new MockDatabaseMetaData();

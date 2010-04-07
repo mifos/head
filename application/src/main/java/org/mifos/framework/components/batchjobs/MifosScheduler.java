@@ -123,6 +123,7 @@ public class MifosScheduler {
      * @deprecated YAGNI. Not currently used, and not known to be necessary. No
      *             replacement has been identified.
      */
+    @Deprecated
     public void schedule(MifosTask task, Date initial) {
         timer.schedule(task, initial);
         tasks.add(task);

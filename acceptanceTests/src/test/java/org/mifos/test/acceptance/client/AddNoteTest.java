@@ -49,6 +49,7 @@ public class AddNoteTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod

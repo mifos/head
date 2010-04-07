@@ -40,10 +40,12 @@ class WeeklySchedule extends Schedule {
 
     private final WeekDay dayOfWeek;
 
+    @Override
     public HolidayBusinessService getHolidayBusinessService() {
         return this.holidayBusinessService;
     }
 
+    @Override
     public void setHolidayBusinessService(HolidayBusinessService holidayBusinessService) {
         this.holidayBusinessService = holidayBusinessService;
     }
@@ -54,6 +56,7 @@ class WeeklySchedule extends Schedule {
         this.dayOfWeek = dayOfWeek;
     }
 
+    @Override
     public List<Date> getAllDates() {
         List<Date> dates;
         if (adjustForHolidays) {
@@ -221,6 +224,7 @@ class WeeklySchedule extends Schedule {
      * TODO Move this method to a generic calendaring class.
      *
      */
+    @Override
     protected Date getFirstDate(Date startDate) {
         final GregorianCalendar firstDateForWeek = new GregorianCalendar();
         firstDateForWeek.setTime(startDate);

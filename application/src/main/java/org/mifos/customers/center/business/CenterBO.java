@@ -114,6 +114,7 @@ public class CenterBO extends CustomerBO {
     /**
      * @deprecated - pull out of domain model up towards service level.
      */
+    @Deprecated
     @Override
     public void updateMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CenterBO::updateMeeting(), customerId: " + getCustomerId());

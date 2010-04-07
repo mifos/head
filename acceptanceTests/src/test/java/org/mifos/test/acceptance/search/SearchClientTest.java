@@ -52,6 +52,7 @@ public class SearchClientTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod

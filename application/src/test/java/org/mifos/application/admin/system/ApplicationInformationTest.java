@@ -34,6 +34,7 @@ public class ApplicationInformationTest extends TestCase {
 
     private ApplicationInformationService applicationInfoService;
 
+    @Override
     public void setUp() throws Exception {
         applicationInfoService = new StandardApplicationInformationService();
         ApplicationInformationDto applicationInformationDto = new ApplicationInformationDto();

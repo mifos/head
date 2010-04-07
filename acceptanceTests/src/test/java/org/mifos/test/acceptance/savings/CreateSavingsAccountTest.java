@@ -47,6 +47,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
+    @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     @BeforeMethod(groups = { "smoke", "savings", "acceptance", "ui" })
