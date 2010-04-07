@@ -37,6 +37,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -547,6 +548,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         group.addCustomerPosition(customerPositionEntity);
         group.update();
         StaticHibernateUtil.commitTransaction();
+
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
         addRequestParameter("customerId", client.getCustomerId().toString());
@@ -871,7 +873,10 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
         CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
 
-        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE);
+        CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
+
+        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
 
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
         setRequestPathInfo("/editCustomerStatusAction.do");

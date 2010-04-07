@@ -14,6 +14,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -32,6 +33,7 @@ import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -170,7 +172,10 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
         StaticHibernateUtil.commitTransaction();
 
-        customerService.updateCenterStatus((CenterBO) center, CustomerStatus.CENTER_INACTIVE);
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
+
+        customerService.updateCenterStatus((CenterBO) center, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
 
         Assert.assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));

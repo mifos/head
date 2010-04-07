@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +42,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -53,6 +55,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -157,8 +160,11 @@ public class CenterStatusChangeIntegrationTest {
 
         existingCenter.setUserContext(TestUtils.makeUserWithLocales());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go inactive", new Date(), existingCenter.getPersonnel(), existingCenter);
+
         // exercise test
-        customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE);
+        customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
 
         // verification
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, existingCenter.getCustomerId());
@@ -193,9 +199,12 @@ public class CenterStatusChangeIntegrationTest {
         existingActiveGroup = this.customerDao.findGroupBySystemId(existingActiveGroup.getGlobalCustNum());
         existingCancelledClient = this.customerDao.findClientBySystemId(existingCancelledClient.getGlobalCustNum());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go inactive", new Date(), existingCenter.getPersonnel(), existingCenter);
+
         // exercise test
         try {
-            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE);
+            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
             fail("should fail validation");
         } catch (CustomerException expected) {
             // verification
@@ -236,9 +245,12 @@ public class CenterStatusChangeIntegrationTest {
         existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
         existingPartialClient.setUserContext(TestUtils.makeUser());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go active", new Date(), existingCenter.getPersonnel(), existingCenter);
+
         // exercise test
         try {
-            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_ACTIVE);
+            customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_ACTIVE, customerStatusFlag, customerNote);
             fail("should fail validation");
         } catch (CustomerException expected) {
             assertThat(expected.getKey(), is(CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION));

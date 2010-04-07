@@ -75,6 +75,8 @@ public class DatabaseCleaner {
         template.execute("delete from group_perf_history");
         template.execute("delete from client_perf_history");
 
+        template.execute("delete from customer_flag_detail");
+        template.execute("delete from customer_note");
         template.execute("delete from customer_picture");
 
         template.execute("update customer set parent_customer_id = null");

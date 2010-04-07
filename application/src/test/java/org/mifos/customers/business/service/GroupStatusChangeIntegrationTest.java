@@ -40,6 +40,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -47,6 +48,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
@@ -137,9 +139,11 @@ public class GroupStatusChangeIntegrationTest {
         existingActiveGroup = this.customerDao.findGroupBySystemId(existingActiveGroup.getGlobalCustNum());
         existingActiveGroup.setUserContext(TestUtils.makeUserWithLocales());
 
+        CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), existingActiveGroup.getPersonnel(), existingActiveGroup);
+
         // exercise test
-        customerService.updateGroupStatus(existingActiveGroup, existingActiveGroup.getStatus(),
-                CustomerStatus.GROUP_CANCELLED);
+        customerService.updateGroupStatus(existingActiveGroup, existingActiveGroup.getStatus(), CustomerStatus.GROUP_CANCELLED, customerStatusFlag, customerNote);
 
         // verification
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, existingActiveGroup.getCustomerId());
@@ -178,9 +182,11 @@ public class GroupStatusChangeIntegrationTest {
         existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
         existingPendingClient = this.customerDao.findClientBySystemId(existingPendingClient.getGlobalCustNum());
 
+        CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), existingPendingGroup.getPersonnel(), existingPendingGroup);
+
         // exercise test
-        customerService.updateGroupStatus(existingPendingGroup, existingPendingGroup.getStatus(),
-                CustomerStatus.GROUP_CANCELLED);
+        customerService.updateGroupStatus(existingPendingGroup, existingPendingGroup.getStatus(), CustomerStatus.GROUP_CANCELLED, customerStatusFlag, customerNote);
 
         // verification
         assertThat(existingPendingGroup.getStatus(), is(CustomerStatus.GROUP_CANCELLED));

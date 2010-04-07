@@ -55,8 +55,6 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -97,6 +95,7 @@ import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -890,7 +889,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
-            String newStatusIdAsString, String notes, UserContext userContext) throws CustomerException {
+            String newStatusIdAsString, String notes, UserContext userContext) throws ApplicationException {
 
         runningTime = System.currentTimeMillis();
         startTime = System.currentTimeMillis();
@@ -898,11 +897,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
 
-        try {
-            checkVersionMismatch(previousCustomerVersionNo, customerBO.getVersionNo());
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e);
-        }
+        checkVersionMismatch(previousCustomerVersionNo, customerBO.getVersionNo());
 
         customerBO.setUserContext(userContext);
 
@@ -927,63 +922,32 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
         CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
-
-        customerBO.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
-        markposition("after clearCustomerFlagsIfApplicable");
-
-        CustomerStatusEntity customerStatus;
-        try {
-            customerStatus = (CustomerStatusEntity) new MasterPersistence().getPersistentObject(
-                    CustomerStatusEntity.class, newStatusId);
-        } catch (PersistenceException e) {
-            throw new CustomerException(e);
-        }
-        markposition("after customerStatus");
-
-        CustomerStatusFlagEntity customerStatusFlagEntity = null;
+        CustomerStatusFlag customerStatusFlag = null;
         if (flagId != null) {
-            try {
-                customerStatusFlagEntity = (CustomerStatusFlagEntity) new MasterPersistence().getPersistentObject(
-                        CustomerStatusFlagEntity.class, flagId);
-            } catch (PersistenceException e) {
-                throw new CustomerException(e);
-            }
+            customerStatusFlag = CustomerStatusFlag.fromInt(flagId);
         }
-        markposition("after customerStatusFlagEntity");
 
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
 
         markposition("after loggedInUser");
-        CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(),
-                loggedInUser, customerBO);
+        CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(), loggedInUser, customerBO);
         markposition("after customerNote new");
-
-        customerBO.setCustomerStatus(customerStatus);
-        markposition("after setCustomerStatus");
-
-        customerBO.addCustomerNotes(customerNote);
-
-        if (customerStatusFlagEntity != null) {
-            customerBO.addCustomerFlag(customerStatusFlagEntity);
-        }
-
-        markposition("after notes and addcustomerflag");
 
         if (customerBO.isGroup()) {
 
             GroupBO group = (GroupBO) customerBO;
-            this.customerService.updateGroupStatus(group, oldStatus, newStatus);
+            this.customerService.updateGroupStatus(group, oldStatus, newStatus, customerStatusFlag, customerNote);
             markposition("after updateGroupStatus");
         } else if (customerBO.isClient()) {
 
             ClientBO client = (ClientBO) customerBO;
 
-            this.customerService.updateClientStatus(client, oldStatus, newStatus, userContext, flagId, notes);
+            this.customerService.updateClientStatus(client, oldStatus, newStatus, customerStatusFlag, customerNote);
             markposition("after updateClientStatus");
 
         } else {
             CenterBO center = (CenterBO) customerBO;
-            this.customerService.updateCenterStatus(center, newStatus);
+            this.customerService.updateCenterStatus(center, newStatus, customerStatusFlag, customerNote);
             markposition("after updateCenterStatus");
         }
 

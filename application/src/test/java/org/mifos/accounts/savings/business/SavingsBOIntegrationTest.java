@@ -91,6 +91,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -3253,8 +3254,11 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("close", new java.util.Date(), client1.getPersonnel(), client1);
+        client1.setUserContext(userContext);
+
         CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
-        customerService.updateClientStatus((ClientBO)client1, client1.getStatus(), CustomerStatus.CLIENT_CLOSED, userContext, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED.getValue(), "Client closed");
+        customerService.updateClientStatus((ClientBO)client1, client1.getStatus(), CustomerStatus.CLIENT_CLOSED, CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, customerNote);
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {

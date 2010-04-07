@@ -24,6 +24,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,6 +43,7 @@ import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -51,6 +54,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -143,9 +147,12 @@ public class ClientStatusChangeIntegrationTest {
         existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
         existingPartialClient.setUserContext(TestUtils.makeUser());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go active", new Date(), existingPartialClient.getPersonnel(), existingPartialClient);
+
         // exercise test
         try {
-            customerService.updateClientStatus(existingPartialClient, existingPartialClient.getStatus(), CustomerStatus.CLIENT_ACTIVE, existingPartialClient.getUserContext(), null, "go active");
+            customerService.updateClientStatus(existingPartialClient, existingPartialClient.getStatus(), CustomerStatus.CLIENT_ACTIVE, customerStatusFlag, customerNote);
             fail("should fail validation");
         } catch (CustomerException expected) {
             assertThat(expected.getKey(), is(ClientConstants.ERRORS_GROUP_CANCELLED));
@@ -178,9 +185,12 @@ public class ClientStatusChangeIntegrationTest {
         existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
         existingPartialClient.setUserContext(TestUtils.makeUser());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go active", new Date(), existingPartialClient.getPersonnel(), existingPartialClient);
+
         // exercise test
         try {
-            customerService.updateClientStatus(existingPartialClient, existingPartialClient.getStatus(), CustomerStatus.CLIENT_ACTIVE, existingPartialClient.getUserContext(), null, "go active");
+            customerService.updateClientStatus(existingPartialClient, existingPartialClient.getStatus(), CustomerStatus.CLIENT_ACTIVE, customerStatusFlag, customerNote);
             fail("should fail validation");
         } catch (CustomerException expected) {
             assertThat(expected.getKey(), is(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION));
@@ -227,9 +237,12 @@ public class ClientStatusChangeIntegrationTest {
         existingActiveClient = this.customerDao.findClientBySystemId(existingActiveClient.getGlobalCustNum());
         existingActiveClient.setUserContext(TestUtils.makeUser());
 
+        CustomerStatusFlag customerStatusFlag = null;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("go active", new Date(), existingActiveClient.getPersonnel(), existingActiveClient);
+
         // exercise test
         try {
-            customerService.updateClientStatus(existingActiveClient, existingActiveClient.getStatus(), CustomerStatus.CLIENT_CLOSED, existingActiveClient.getUserContext(), null, "close client");
+            customerService.updateClientStatus(existingActiveClient, existingActiveClient.getStatus(), CustomerStatus.CLIENT_CLOSED, customerStatusFlag, customerNote);
             fail("should fail validation");
         } catch (CustomerException expected) {
             assertThat(expected.getKey(), is(CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION));

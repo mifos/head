@@ -31,6 +31,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 
 public interface CustomerServiceFacade {
@@ -65,8 +66,7 @@ public interface CustomerServiceFacade {
 
     GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo) throws CustomerException;
 
-    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId,
-            String notes, UserContext userContext) throws CustomerException;
+    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes, UserContext userContext) throws ApplicationException;
 
     boolean isGroupHierarchyRequired();
 

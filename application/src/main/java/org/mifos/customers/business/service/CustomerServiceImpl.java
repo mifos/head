@@ -41,6 +41,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -57,7 +58,9 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -76,6 +79,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -517,7 +521,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus) throws CustomerException {
+    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         if (newStatus.isCenterInActive()) {
 
@@ -539,11 +543,18 @@ public class CustomerServiceImpl implements CustomerService {
             center.validateLoanOfficerIsActive();
         }
 
-        setInitialObjectForAuditLogging(center);
-        center.updateCustomerStatus(newStatus);
+        CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
             StaticHibernateUtil.startTransaction();
+            setInitialObjectForAuditLogging(center);
+            center.clearCustomerFlagsIfApplicable(center.getStatus(), newStatus);
+            center.updateCustomerStatus(newStatus);
+            center.addCustomerNotes(customerNote);
+            if (customerStatusFlagEntity != null) {
+                center.addCustomerFlag(customerStatusFlagEntity);
+            }
+
             customerDao.save(center);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -555,15 +566,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus)
-            throws CustomerException {
+    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         validateChangeOfStatusForGroup(group, oldStatus, newStatus);
 
-        setInitialObjectForAuditLogging(group);
+        CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
             StaticHibernateUtil.startTransaction();
+            setInitialObjectForAuditLogging(group);
+
+            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
 
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
@@ -581,13 +594,18 @@ public class CustomerServiceImpl implements CustomerService {
 
                     if (client.isPending()) {
                         client.setUserContext(group.getUserContext());
-                        changeClientStatus(client, CustomerStatus.CLIENT_PARTIAL, group.getUserContext());
+                        client.updateCustomerStatus(CustomerStatus.CLIENT_PARTIAL);
+                        changeClientStatus(client, customerStatusFlag, customerNote);
                         customerDao.save(client);
                     }
                 }
             }
 
             group.updateCustomerStatus(newStatus);
+            group.addCustomerNotes(customerNote);
+            if (customerStatusFlagEntity != null) {
+                group.addCustomerFlag(customerStatusFlagEntity);
+            }
 
             customerDao.save(group);
             StaticHibernateUtil.commitTransaction();
@@ -598,6 +616,20 @@ public class CustomerServiceImpl implements CustomerService {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    private CustomerStatusFlagEntity populateCustomerStatusFlag(CustomerStatusFlag customerStatusFlag)
+            throws CustomerException {
+        CustomerStatusFlagEntity customerStatusFlagEntity = null;
+        if (customerStatusFlag != null) {
+            try {
+                customerStatusFlagEntity = (CustomerStatusFlagEntity) new MasterPersistence().getPersistentObject(
+                        CustomerStatusFlagEntity.class, customerStatusFlag.getValue());
+            } catch (PersistenceException e) {
+                throw new CustomerException(e);
+            }
+        }
+        return customerStatusFlagEntity;
     }
 
     private void validateChangeOfStatusForGroup(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus)
@@ -633,8 +665,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
-            UserContext userContext, Short flagId, String notes) throws CustomerException {
+    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
         if (newStatus.isClientActive()) {
@@ -643,12 +674,22 @@ public class CustomerServiceImpl implements CustomerService {
             // userContext);
         }
 
+        CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
+
         try {
             StaticHibernateUtil.startTransaction();
 
-            changeStatus(client, newStatus.getValue(), userContext);
+            changeStatus(client, newStatus.getValue());
 
-            this.changeClientStatus(client, userContext, flagId, notes);
+            setInitialObjectForAuditLogging(client);
+            client.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
+
+            client.updateCustomerStatus(newStatus);
+            if (customerStatusFlagEntity != null) {
+                client.addCustomerFlag(customerStatusFlagEntity);
+            }
+            client.addCustomerNotes(customerNote);
+            this.changeClientStatus(client, customerStatusFlag, customerNote);
 
             customerDao.save(client);
             StaticHibernateUtil.commitTransaction();
@@ -661,13 +702,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void changeClientStatus(ClientBO client, CustomerStatus transitionToStatus, UserContext userContext)
-            throws AccountException {
-        client.setCustomerStatus(new CustomerStatusEntity(transitionToStatus));
-        changeClientStatus(client, userContext, null, "");
-    }
-
-    private void changeClientStatus(ClientBO client, UserContext userContext, Short flagId, String notes)
+    private void changeClientStatus(ClientBO client, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote)
             throws AccountException {
         if (client.isClosedOrCancelled()) {
 
@@ -676,11 +711,11 @@ public class CustomerServiceImpl implements CustomerService {
                 CustomerBO parentCustomer = client.getParentCustomer();
 
                 client.resetPositions(parentCustomer);
-                parentCustomer.setUserContext(userContext);
+                parentCustomer.setUserContext(client.getUserContext());
                 CustomerBO center = parentCustomer.getParentCustomer();
                 if (center != null) {
                     parentCustomer.resetPositions(center);
-                    center.setUserContext(userContext);
+                    center.setUserContext(client.getUserContext());
                 }
             }
 
@@ -688,15 +723,15 @@ public class CustomerServiceImpl implements CustomerService {
 
             CustomerAccountBO customerAccount = client.getCustomerAccount();
             if (customerAccount.isOpen()) {
-                customerAccount.setUserContext(userContext);
+                customerAccount.setUserContext(client.getUserContext());
 
-                customerAccount.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, flagId, notes);
+                customerAccount.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, customerStatusFlag.getValue(), customerNote.getComment());
                 customerAccount.update();
             }
         }
     }
 
-    private void changeStatus(CustomerBO customer, Short newStatusId, UserContext userContext) throws CustomerException {
+    private void changeStatus(CustomerBO customer, Short newStatusId) throws CustomerException {
         Short oldStatusId = customer.getCustomerStatus().getId();
 
         if (customer.isClient()) {
@@ -725,7 +760,7 @@ public class CustomerServiceImpl implements CustomerService {
                                         .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
 
                                 List<CustomFieldView> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
-                                        customFieldDefs, userContext.getPreferredLocale());
+                                        customFieldDefs, customer.getUserContext().getPreferredLocale());
 
                                 client.addAccount(new SavingsBO(client.getUserContext(), savingsOffering, client,
                                         AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),

@@ -86,6 +86,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -1126,10 +1127,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
-        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
-        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE);
+        CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
+        CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
 
-        // center.changeStatus(CustomerStatus.CENTER_INACTIVE, CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED, "Made Inactive");
+        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
 
         CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());

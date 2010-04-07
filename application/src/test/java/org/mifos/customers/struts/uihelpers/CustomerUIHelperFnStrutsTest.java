@@ -89,10 +89,6 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    public void testDummy() {
-
-    }
-
     public void testUIHelperWhenClientIsAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         PositionEntity positionEntity = (PositionEntity) TestObjectFactory.getObject(PositionEntity.class, Short

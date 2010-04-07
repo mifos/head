@@ -58,4 +58,12 @@ public enum CustomerStatusFlag {
                 || this == GROUP_CANCEL_BLACKLISTED || this == GROUP_CLOSED_BLACKLISTED;
     }
 
+    public static CustomerStatusFlag fromInt(int value) {
+        for (CustomerStatusFlag status : CustomerStatusFlag.values()) {
+            if (status.getValue() == value) {
+                return status;
+            }
+        }
+        throw new RuntimeException("no customer status flag " + value);
+    }
 }
