@@ -41,6 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations={"/integration-test-context.xml", "/hibernate-daos.xml", "/services.xml"})
 public class ClientCreationUsingCustomerServiceIntegrationTest {
 
+    // FIXME - #000003 - keithw - rewrite client creation tests
     @Autowired
     private CustomerService customerService;
 
@@ -76,21 +77,17 @@ public class ClientCreationUsingCustomerServiceIntegrationTest {
 
     @Test
     public void shouldThrowExceptionWhenTryingToCreateACustomerWithSameGovtId() {
-        // FIXME - keithw - fill in test
     }
 
     @Test
     public void shouldNotThrowExceptionWhenTryingToCreateACustomerWithSameGovtIdWhenOldIsInClosedState() {
-        // FIXME - keithw - fill in test
     }
 
     @Test
     public void shouldNotThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAClosedClient() {
-        // FIXME - keithw - fill in test
     }
 
     @Test
     public void shouldThrowExceptionWhenTryingToUpdateClientGovtIdToGovtIdOfAnActiveClient() {
-        // FIXME - keithw - fill in test
     }
 }

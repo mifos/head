@@ -107,9 +107,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - work in progress -
-     *
-     * Minimal legal constructor
+     * Minimal legal constructor uses from builders only
      */
     public PrdOfferingBO(final String name, final String shortName, final String globalProductNumber,
             final Date startDate, final ApplicableTo applicableToCustomer, final ProductCategoryBO category,

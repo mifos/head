@@ -48,8 +48,6 @@ public class CustomerMeetingEntity extends PersistentObject {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
      * minimal constructor for builder
      */
     public CustomerMeetingEntity(final MeetingBO meeting, final Short updatedFlag) {

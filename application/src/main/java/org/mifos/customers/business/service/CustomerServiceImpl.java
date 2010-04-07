@@ -31,7 +31,6 @@ import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -95,11 +94,13 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
     private final OfficeDao officeDao;
+    private HolidayDao holidayDao;
 
-    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao, HolidayDao holidayDao) {
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.officeDao = officeDao;
+        this.holidayDao = holidayDao;
     }
 
     @Override
@@ -127,8 +128,8 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         client.validateOffice();
+//      FIXME - #00003 - keithw verify validation here when creating clients
 //        client.validateOfferings();
-//        FIXME - use customerDao.validate methods to validation governmentid and dob info for clients
 //        client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
         if (client.isActive()) {
@@ -137,17 +138,13 @@ public class CustomerServiceImpl implements CustomerService {
             UserContext userContext = client.getUserContext();
 
             List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
-            for (ClientInitialSavingsOfferingEntity clientOffering : client.getOfferingsAssociatedInCreate()) {
+            for (SavingsOfferingBO clientSavingsProduct : savingProducts) {
                 try {
-                    SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering
-                            .getSavingsOffering().getPrdOfferingId());
-                    if (savingsOffering.isActive()) {
-
+                    if (clientSavingsProduct.isActive()) {
                         List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-
                         List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefs, userContext.getPreferredLocale());
 
-                        SavingsBO savingsAccount = new SavingsBO(userContext, savingsOffering, client,AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),savingCustomFieldViews);
+                        SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client, AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(), savingCustomFieldViews);
                         savingsAccounts.add(savingsAccount);
                     }
                 } catch (PersistenceException pe) {
@@ -204,7 +201,6 @@ public class CustomerServiceImpl implements CustomerService {
             this.customerDao.save(customer);
 
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
             List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
 
             DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
@@ -239,13 +235,15 @@ public class CustomerServiceImpl implements CustomerService {
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
         try {
-            if (center.isActive()) {
-                center.validateLO(loanOfficer);
-            }
-
+            PersonnelBO oldLoanOfficer = center.getPersonnel();
+            center.setLoanOfficer(loanOfficer);
             center.setMfiJoiningDate(centerUpdate.getMfiJoiningDateTime().toDate());
 
-            if (center.isLOChanged(loanOfficerId)) {
+            if (center.isActive()) {
+                center.validateLoanOfficer();
+            }
+
+            if (center.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
                 // accounts.
@@ -254,8 +252,6 @@ public class CustomerServiceImpl implements CustomerService {
 
                 new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, center.getSearchId(), center
                         .getOffice().getOfficeId());
-
-                center.setLoanOfficer(loanOfficer);
             }
 
             center.setExternalId(centerUpdate.getExternalId());
@@ -314,11 +310,14 @@ public class CustomerServiceImpl implements CustomerService {
                 group.setTrained(false);
             }
 
+            PersonnelBO oldLoanOfficer = group.getPersonnel();
+            group.setLoanOfficer(loanOfficer);
+
             if (group.isActive()) {
-                group.validateLO(loanOfficer);
+                group.validateLoanOfficer();
             }
 
-            if (group.isLOChanged(loanOfficerId)) {
+            if (group.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
                 // accounts.
@@ -327,8 +326,6 @@ public class CustomerServiceImpl implements CustomerService {
 
                 new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, group.getSearchId(), group
                         .getOffice().getOfficeId());
-
-                group.setLoanOfficer(loanOfficer);
             }
 
             group.setExternalId(groupUpdate.getExternalId());
@@ -363,7 +360,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public GroupBO transferGroupTo(GroupBO group, CenterBO transferToCenter) throws CustomerException {
 
-        // FIXME - keithw - moved out transfer logic into service as first step in cleaning up.
         group.validateNewCenter(transferToCenter);
         group.validateForActiveAccounts();
 
@@ -399,12 +395,7 @@ public class CustomerServiceImpl implements CustomerService {
                 group.setCustomerMeeting(customerMeeting);
             }
         } else if (groupMeeting != null) {
-            // try {
-            // new CustomerPersistence().deleteCustomerMeeting(group);
             group.setCustomerMeeting(null);
-            // } catch (PersistenceException e) {
-            // throw new MifosRuntimeException(e);
-            // }
         }
 
         if (oldParent != null) {
@@ -417,16 +408,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         transferToCenter.setUserContext(group.getUserContext());
 
-        // CustomerHierarchyEntity currentHierarchy1 = getActiveCustomerHierarchy();
-        // currentHierarchy1.makeInactive(userContext.getId());
-        // this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-        //
-        // addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-
         try {
             StaticHibernateUtil.startTransaction();
 
-            // group.transferToCenter(transferToCenter);
             group.setUpdateDetails();
 
             if (oldParent != null) {
@@ -653,8 +637,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (oldStatus.isGroupCancelled() && newStatus.isGroupPartial()) {
-
-            // handleValidationsForCancelToPartial
             if (group.getParentCustomer() != null && group.getParentCustomer().getCustomerId() != null) {
                 group.validateTransitionFromCancelledToPartialIsAllowedBasedOnCenter();
             } else {
@@ -719,8 +701,6 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
 
-            // close customer account - #MIFOS-1504
-
             CustomerAccountBO customerAccount = client.getCustomerAccount();
             if (customerAccount.isOpen()) {
                 customerAccount.setUserContext(client.getUserContext());
@@ -780,7 +760,6 @@ public class CustomerServiceImpl implements CustomerService {
                 List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao()
                         .findAllHolidaysThisYearAndNext();
 
-                // createDepositSchedule
                 try {
                     if (client.getParentCustomer() != null) {
                         List<SavingsBO> savingsList = new CustomerPersistence()
@@ -793,7 +772,6 @@ public class CustomerServiceImpl implements CustomerService {
                         for (SavingsBO savings : savingsList) {
                             savings.setUserContext(client.getUserContext());
 
-                            // generateAndUpdateDepositActionsForClient
                             if (client.getCustomerMeeting().getMeeting() != null) {
                                 if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
                                         .getRecommendedAmntUnit().getId().equals(
@@ -888,7 +866,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         try {
             setInitialObjectForAuditLogging(client);
-            // FIXME - #000025 - keithw - pull out persistence/delete of primary keys??
             client.updateFamilyInfo(clientFamilyInfoUpdate);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

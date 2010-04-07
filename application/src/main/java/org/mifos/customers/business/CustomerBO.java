@@ -688,8 +688,6 @@ public abstract class CustomerBO extends BusinessObject {
         return BigDecimal.ZERO;
     }
 
-    // TODO: Abstract method doesn't work with Hibernate 3.2?
-    // public abstract CustomerPerformanceHistory getPerformanceHistory();
     public CustomerPerformanceHistory getPerformanceHistory() {
         if (this instanceof ClientBO) {
             return ((ClientBO) this).getClientPerformanceHistory();
@@ -1018,6 +1016,20 @@ public abstract class CustomerBO extends BusinessObject {
         this.personnel = loanOfficer;
     }
 
+    public boolean isLoanOfficerChanged(PersonnelBO oldLoanOfficer) {
+
+        if (oldLoanOfficer == null && this.personnel == null) {
+            return false;
+        }
+
+        if (oldLoanOfficer == null && this.personnel != null) {
+            return true;
+        }
+
+        return oldLoanOfficer.isDifferentIdentityTo(this.personnel);
+    }
+
+    @Deprecated
     public boolean isLOChanged(final Short loanOfficerId) {
         return getPersonnel() == null && loanOfficerId != null || getPersonnel() != null && loanOfficerId == null
                 || getPersonnel() != null && loanOfficerId != null
@@ -1358,7 +1370,6 @@ public abstract class CustomerBO extends BusinessObject {
     }
 
 
-    // FIXME - keithw - remove persistence/dao from domain model.
     public CustomerPersistence getCustomerPersistence() {
         if (null == customerPersistence) {
             customerPersistence = new CustomerPersistence();

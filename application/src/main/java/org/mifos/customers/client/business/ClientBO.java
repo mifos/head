@@ -81,6 +81,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
+/**
+ * FIXME - keithw - move all usage of deprecated constructors in tests and TestObjectFactory towards newer builder + IntegrationTestObjectMother pattern
+ */
 public class ClientBO extends CustomerBO {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
@@ -111,37 +114,27 @@ public class ClientBO extends CustomerBO {
             DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
             String clientFirstName, String clientLastName, String secondLastName,
             ClientNameDetailEntity spouseFatherNameDetailEntity, ClientDetailEntity clientDetailEntity,
-            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
+            Blob pictureAsBlob, List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address) {
 
         // inherit settings from parent (group)
         OfficeBO office = group.getOffice();
-
         MeetingBO meeting = group.getCustomerMeetingValue();
-
         PersonnelBO loanOfficer = group.getPersonnel();
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlag, clientFirstName,
                 clientLastName, secondLastName, clientDetailEntity);
 
-        if (clientNameDetailEntity != null) {
-            clientNameDetailEntity.setClient(client);
-            client.addNameDetailSet(clientNameDetailEntity);
-        }
-
-        if (spouseFatherNameDetailEntity != null) {
-            // when familydetails required setting is on.. this is filled in..
-            spouseFatherNameDetailEntity.setClient(client);
-            client.addNameDetailSet(spouseFatherNameDetailEntity);
-        }
-
+        client.setParentCustomer(group);
+        client.updateAddress(address);
+        client.setExternalId(externalId);
+        client.addNameDetailSet(clientNameDetailEntity);
+        client.addNameDetailSet(spouseFatherNameDetailEntity);
         client.createOrUpdatePicture(pictureAsBlob);
 
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
         }
-
-        client.setParentCustomer(group);
 
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
                 .fromCustomerCustomFieldEntity(customerCustomFields, client);
@@ -159,28 +152,22 @@ public class ClientBO extends CustomerBO {
             DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
             String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
             ClientDetailEntity clientDetailEntity, Blob pictureAsBlob,
-            List<ClientInitialSavingsOfferingEntity> associatedOfferings) {
+            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address) {
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                 clientFirstName, clientLastName, secondLastName, clientDetailEntity);
 
-        clientNameDetailEntity.setClient(client);
+        client.setParentCustomer(null);
+        client.updateAddress(address);
+        client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
-
-        if (spouseFatherNameDetailEntity != null) {
-            // when familydetails required setting is on.. this is filled in..
-            spouseFatherNameDetailEntity.setClient(client);
-            client.addNameDetailSet(spouseFatherNameDetailEntity);
-        }
-
+        client.addNameDetailSet(spouseFatherNameDetailEntity);
         client.createOrUpdatePicture(pictureAsBlob);
 
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
         }
-
-        client.setParentCustomer(null);
 
         List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
                 .fromCustomerCustomFieldEntity(customerCustomFields, client);
@@ -244,9 +231,6 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
-     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
-     * IntegrationTestObjectMother pattern
-     *
      * @deprecated - use static factory classes
      */
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
@@ -263,9 +247,6 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
-     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
-     * IntegrationTestObjectMother pattern
-     *
      * @deprecated - use static factory classes
      */
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
@@ -282,9 +263,6 @@ public class ClientBO extends CustomerBO {
     }
 
     /**
-     * FIXME - keithw - move all usage of this in tests and TestObjectFactory towards newer builder +
-     * IntegrationTestObjectMother pattern
-     *
      * @deprecated - use static factory classes
      */
     private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
@@ -327,7 +305,7 @@ public class ClientBO extends CustomerBO {
         this.customerDetail = new ClientDetailEntity(this, clientDetailView);
         createPicture(picture);
         createAssociatedOfferings(offeringsSelected);
-        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+//        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
         if (parentCustomer != null) {
             checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
@@ -353,11 +331,11 @@ public class ClientBO extends CustomerBO {
 
     public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView,
             final List<ClientFamilyDetailView> familyDetailView) {
-        Iterator iterator2 = familyDetailView.iterator();
+        Iterator<ClientFamilyDetailView> iterator2 = familyDetailView.iterator();
         familyDetailSet = new HashSet<ClientFamilyDetailEntity>();
         for (Object element : familyNameDetailView) {
             ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) element;
-            ClientFamilyDetailView clientFamilyDetailView2 = (ClientFamilyDetailView) iterator2.next();
+            ClientFamilyDetailView clientFamilyDetailView2 = iterator2.next();
             ClientNameDetailEntity nameEntity = new ClientNameDetailEntity(this, null, clientNameDetailView2);
             this.addNameDetailSet(nameEntity);
             this.addFamilyDetailSet(new ClientFamilyDetailEntity(this, nameEntity, clientFamilyDetailView2));
@@ -469,7 +447,11 @@ public class ClientBO extends CustomerBO {
     }
 
     public void addNameDetailSet(final ClientNameDetailEntity customerNameDetail) {
-        this.nameDetailSet.add(customerNameDetail);
+
+        if (customerNameDetail != null) {
+            customerNameDetail.setClient(this);
+            this.nameDetailSet.add(customerNameDetail);
+        }
     }
 
     public void addFamilyDetailSet(final ClientFamilyDetailEntity clientFamilyDetail) {
@@ -552,7 +534,6 @@ public class ClientBO extends CustomerBO {
 
     public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
 
-        // FIXME - keithw - validation here or at service level?
         this.governmentId = personalInfo.getGovernmentId();
         this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
         ClientNameDetailView clientName = personalInfo.getClientNameDetails();
@@ -863,12 +844,6 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void validateForDuplicateNameOrGovtId(final String displayName, final Date dateOfBirth,
-            final String governmentId) throws CustomerException {
-        checkForDuplicates(displayName, dateOfBirth, governmentId, getCustomerId() == null ? Integer.valueOf("0")
-                : getCustomerId());
-    }
-
     public void validateFieldsForActiveClient() throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
@@ -890,34 +865,6 @@ public class ClientBO extends CustomerBO {
                 validateMeeting(meeting);
             }
         }
-    }
-
-    private void checkForDuplicates(final String name, final Date dob, final String governmentId,
-            final Integer customerId) throws CustomerException {
-
-        // FIXME - #000004 - keithw - put back in governmentId validation for clients
-        // if (StringUtils.isNotBlank(governmentId)) {
-        // try {
-        // if (getClientPersistence().checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-        // String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
-        // userContext);
-        // throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] {
-        // governmentId, label });
-        // }
-        // } catch (PersistenceException e) {
-        // throw new CustomerException(e);
-        // }
-        // } else {
-        // try {
-        // if (getClientPersistence().checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-        // throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
-        // new Object[] { name });
-        // }
-        // } catch (PersistenceException e) {
-        // throw new CustomerException(e);
-        // }
-        // }
-
     }
 
     private boolean isGroupStatusLower(final CustomerStatus clientStatus, final CustomerStatus groupStatus) {

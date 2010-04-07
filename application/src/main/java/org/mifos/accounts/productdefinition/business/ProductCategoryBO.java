@@ -65,8 +65,6 @@ public class ProductCategoryBO extends BusinessObject {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
      * minimal legal constructor
      */
     public ProductCategoryBO(final Short id, final String globalPrdCategoryNum) {

@@ -23,7 +23,6 @@ package org.mifos.framework.components.batchjobs.helpers;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
-// FIXME: - keithw - is this really needed? whats the performance gain?
 /**
  * The purpose of this {@link MifosTask} is to execute the queries against the
  * database so that the collection sheet BIRT report that uses these queries

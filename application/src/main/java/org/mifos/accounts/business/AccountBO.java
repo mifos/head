@@ -261,8 +261,6 @@ public class AccountBO extends BusinessObject {
         accountType = null;
         accountFees = new HashSet<AccountFeesEntity>();
         accountPayments = new ArrayList<AccountPaymentEntity>();
-        // TODO: Need an ordered collection here - this generalized Set
-        // attribute should ultimately be a List
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
         accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         accountNotes = new HashSet<AccountNotesEntity>();
@@ -277,8 +275,6 @@ public class AccountBO extends BusinessObject {
         validate(userContext, customer, accountType, accountState);
         accountFees = new HashSet<AccountFeesEntity>();
         accountPayments = new ArrayList<AccountPaymentEntity>();
-        // TODO: Need an ordered collection here - this generalized Set
-        // attribute should ultimately be a List
         accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
         accountCustomFields = new HashSet<AccountCustomFieldEntity>();
         accountNotes = new HashSet<AccountNotesEntity>();
@@ -454,7 +450,6 @@ public class AccountBO extends BusinessObject {
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
     /**
-     * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     public final void applyPayment(final PaymentData paymentData, final boolean persistChanges) throws AccountException {
@@ -469,7 +464,6 @@ public class AccountBO extends BusinessObject {
     }
 
     /**
-     * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     public final void applyPaymentWithPersist(final PaymentData paymentData) throws AccountException {
@@ -1445,18 +1439,15 @@ public class AccountBO extends BusinessObject {
     }
 
     /**
-     * FIXME: - keithw - this should use model concept
      * {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     protected AccountPaymentEntity makePayment(final PaymentData accountPaymentData) throws AccountException {
         return null;
     }
 
-    // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalFeeAmount(final Money totalFeeAmount) {
     }
 
-    // FIXME - keithw - empty implementation so should be abstract (account is an abstract concept?)
     protected void updateTotalPenaltyAmount(final Money totalPenaltyAmount) {
     }
 

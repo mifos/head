@@ -109,7 +109,7 @@ public class DependencyInjectedServiceLocator {
     public static CustomerService locateCustomerService() {
 
         if (customerService == null) {
-            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao);
+            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao);
         }
         return customerService;
     }

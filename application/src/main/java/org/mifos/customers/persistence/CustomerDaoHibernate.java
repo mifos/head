@@ -113,7 +113,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
 
-        // FIXME - keithw - might have to refine query to initialise parent customer and others
         return (CenterBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CENTER_BY_SYSTEMID,
                 queryParameters);
     }
@@ -124,7 +123,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
 
-        // FIXME - keithw - might have to refine query to initialise parent customer and others
         return (GroupBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_GROUP_BY_SYSTEMID,
                 queryParameters);
     }
@@ -134,7 +132,6 @@ public class CustomerDaoHibernate implements CustomerDao {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
 
-        // FIXME - keithw - might have to refine query to initialise parent customer and others
         return (ClientBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.GET_CLIENT_BY_SYSTEMID,
                 queryParameters);
     }
@@ -232,7 +229,6 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     private List<FeeBO> retrieveFeesApplicableTo(HashMap<String, Object> queryParameters) {
-        // FIXME - consider using dto approach
         return (List<FeeBO>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE,
                 queryParameters);
     }
@@ -283,7 +279,6 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     private List<CustomerView> findCustomersThatAreNotClosedOrCanceled(Map<String, Object> queryParameters) {
-        // FIXME - performance - keithw - use hibernate dto approach rather than getting back and converting
         List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
 
         List<CustomerView> customerViews = new ArrayList<CustomerView>();

@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeView;
@@ -334,14 +335,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
                     .fromDto(customFields, null);
 
-            List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
-            List<FeeView> feesToApply = actionForm.getFeesToApply();
-            for (FeeView feeView : feesToApply) {
-                FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeView.getAmount());
-                AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, feeAmount);
-                feesForCustomerAccount.add(accountFee);
-            }
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
 
             CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
                     centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId);
@@ -356,6 +350,19 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
     }
 
+    private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<FeeView> feesToApply) {
+        List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
+        for (FeeView feeView : feesToApply) {
+            FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
+            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeView.getAmount());
+
+            AccountBO nullReferenceForNow = null;
+            AccountFeesEntity accountFee = new AccountFeesEntity(nullReferenceForNow, fee, feeAmount);
+            feesForCustomerAccount.add(accountFee);
+        }
+        return feesForCustomerAccount;
+    }
+
     @Override
     public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext)
             throws CustomerException {
@@ -363,15 +370,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         GroupBO group;
 
         try {
-
-            List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
-            List<FeeView> feesToApply = actionForm.getFeesToApply();
-            for (FeeView feeView : feesToApply) {
-                FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeView.getAmount());
-                AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, feeAmount);
-                feesForCustomerAccount.add(accountFee);
-            }
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
 
             List<CustomFieldView> customFields = actionForm.getCustomFields();
             CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
@@ -444,10 +443,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             String clientName = clientName(actionForm);
             CustomerStatus clientStatus = clientStatus(actionForm);
             java.sql.Date mfiJoiningDate = mfiJoiningDate(actionForm);
-            // FIXME - #00034 - keithw - set external id and address and fees on client accounts...
             String externalId = externalId(actionForm);
             Address address = address(actionForm);
-            List<FeeView> fees = clientFees(actionForm);
             PersonnelBO formedBy = formedByPersonnel(actionForm);
             java.sql.Date dateOfBirth = dateOfBirth(actionForm);
             String governmentId = governmentId(actionForm);
@@ -462,14 +459,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<CustomFieldView> customFields = actionForm.getCustomFields();
             CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(clientFees(actionForm));
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(customFields, null);
 
             List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
-
             for (Short productId : selectedSavingProducts) {
-
                 if (productId != null) {
-
                     for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
                         if (productId.equals(savingsOffering.getPrdOfferingId())) {
 
@@ -478,6 +473,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                         }
                     }
                 }
+            }
+
+            List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
+            for (SavingsOfferingBO offering : selectedOfferings) {
+                offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
             }
 
             Short personnelId = null;
@@ -514,13 +514,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 pictureAsBlob = new ClientPersistence().createBlob(picture);
             }
 
-            // FIXME - keithw - is this required to be passed to client?
-            List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
-
-            for (SavingsOfferingBO offering : selectedOfferings) {
-                offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
-            }
-
             if (YesNoFlag.YES.getValue().equals(groupFlagValue(actionForm))) {
 
                 Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
@@ -540,13 +533,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 officeId = group.getOffice().getOfficeId();
 
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
-                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
+                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
                 }
 
-                this.customerService.createClient(client, client.getCustomerMeetingValue(), new ArrayList<AccountFeesEntity>(), selectedOfferings);
+                this.customerService.createClient(client, client.getCustomerMeetingValue(), feesForCustomerAccount, selectedOfferings);
 
             } else {
                 personnelId = actionForm.getLoanOfficerIdValue();
@@ -558,13 +551,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
 
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields, clientNameDetailEntity, dob,
-                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate);
+                        governmentId, trainedBool, trainedDateTime, groupFlagValue, clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
                 }
 
-                this.customerService.createClient(client, meeting, new ArrayList<AccountFeesEntity>(), selectedOfferings);
+                this.customerService.createClient(client, meeting, feesForCustomerAccount, selectedOfferings);
             }
 
             return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());

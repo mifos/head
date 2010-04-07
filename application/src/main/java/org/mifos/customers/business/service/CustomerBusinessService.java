@@ -562,7 +562,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     /**
-     * FIXME - move to customerDao
+     * @deprecated - move to customerDao
      */
     @Deprecated
     public List<CustomerDetailDto> getClientsOtherThanClosedAndCancelledForGroup(final String searchId,

@@ -74,7 +74,7 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
         databaseCleaner.clean();
     }
 
-    // FIXME - keithw - fill in all tests
+    // FIXME - #000002 - keithw - rewrite all transfer tests
     @Test
     public void givenSuccessfullTransferToCenterInSameBranchShouldExecuteLogging() throws Exception {
 //        createObjectsForTranferToCenterInSameBranch();

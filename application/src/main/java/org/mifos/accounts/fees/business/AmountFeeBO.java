@@ -48,9 +48,7 @@ public class AmountFeeBO extends FeeBO {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal legal constructor
+     * minimal legal constructor used from builders only
      *
      * @param office
      */

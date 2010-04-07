@@ -72,7 +72,7 @@ public class OfficeListTag extends BodyTagSupport {
                 officeListString = getOfficeList(officeHierarchyDto);
             } else {
 
-                // FIXME - keithw - group creation and personnel creation use this still
+                // FIXME - #00006 - keithw - personnel creation use this still
                 UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
                 OfficePersistence officePersistence = new OfficePersistence();
                 OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());

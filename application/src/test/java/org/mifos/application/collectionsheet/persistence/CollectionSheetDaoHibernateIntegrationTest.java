@@ -202,9 +202,6 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         assertNull("client should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
-    // TODO - keithw - write another test for loans on clients and set up all
-    // types of
-    // fees, one-time, periodic, penalties, miscFee etc
     public void testShouldFindAllLoanRepaymentInCenterHierarchy() {
 
         // setup

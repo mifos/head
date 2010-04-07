@@ -21,4 +21,7 @@
     	<constructor-arg ref="genericDao" />
     </bean>
 
+    <bean id="holidayDao" class="org.mifos.application.holiday.persistence.HolidayDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
 </beans>

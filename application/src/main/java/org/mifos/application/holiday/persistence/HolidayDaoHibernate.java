@@ -78,7 +78,7 @@ public class HolidayDaoHibernate implements HolidayDao {
 
     @Override
     public void save(final HolidayBO holiday) {
-        // FIXME - keithw - transaction code will move up towards service layer.
+        // TODO: transaction code will move up towards service layer.
         try {
             StaticHibernateUtil.startTransaction();
             genericDao.createOrUpdate(holiday);

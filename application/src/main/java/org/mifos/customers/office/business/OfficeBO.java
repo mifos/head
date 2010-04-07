@@ -102,8 +102,6 @@ public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
      * minimal legal constructor
      */
     public OfficeBO(final String name, final String globalOfficeNum) {

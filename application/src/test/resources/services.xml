@@ -11,6 +11,7 @@
     	<constructor-arg ref="customerDao" />
     	<constructor-arg ref="personnelDao" />
     	<constructor-arg ref="officeDao" />
+    	<constructor-arg ref="holidayDao" />
     </bean>
 
 </beans>

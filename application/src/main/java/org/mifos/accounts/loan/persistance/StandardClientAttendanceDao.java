@@ -36,10 +36,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  */
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
-    /*
-     * FIXME - keithw - no need to have MasterPersistence, DAO should
-     * extend/composed of base class implementing hibernate functionality.
-     */
     private final MasterPersistence masterPersistence;
     private HibernateUtil hibernateUtil;
 

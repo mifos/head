@@ -39,6 +39,7 @@ import org.mifos.customers.client.business.ClientNameDetailView;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.business.util.Address;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -76,6 +77,8 @@ public class ClientBuilder {
     private List<ClientInitialSavingsOfferingEntity> associatedOfferings = new ArrayList<ClientInitialSavingsOfferingEntity>();
 
     private CustomerBO parentCustomer;
+    private String externalId;
+    private Address address;
 
     public ClientBO buildForIntegrationTests() {
 
@@ -86,7 +89,7 @@ public class ClientBuilder {
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, customerCustomFields, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings);
+                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
         client.setMeeting(this.meeting);
         client.setCustomerActivationDate(activationDate.toDate());
 
@@ -97,7 +100,8 @@ public class ClientBuilder {
 
         ClientDetailView clientDetailView = new ClientDetailView(Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1),
                 Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1).shortValue(), Integer.valueOf(1).shortValue(), Integer.valueOf(1).shortValue());
-        this.clientDetailEntity = new ClientDetailEntity(null, clientDetailView);
+        this.clientDetailEntity = new ClientDetailEntity();
+        this.clientDetailEntity.updateClientDetails(clientDetailView);
 
         ClientNameDetailView clientNameDetailView = new ClientNameDetailView();
         this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailView);
@@ -109,7 +113,7 @@ public class ClientBuilder {
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, customerCustomFields, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
-                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings);
+                spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
         client.setCustomerActivationDate(activationDate.toDate());
 
         customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer).buildForUnitTests();

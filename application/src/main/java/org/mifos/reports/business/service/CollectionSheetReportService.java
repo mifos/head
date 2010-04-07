@@ -54,12 +54,9 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
 import org.mifos.reports.util.helpers.ReportUtils;
 import org.springframework.core.io.ClassPathResource;
 
-// public interface for services used by collection sheet report
 /**
  *
- * @deprecated keithw - don't think that this is useful anymore???
  */
-@Deprecated
 public class CollectionSheetReportService implements ICollectionSheetReportService {
     private final OfficeBusinessService officeBusinessService;
     private final CollectionSheetService collectionSheetService;

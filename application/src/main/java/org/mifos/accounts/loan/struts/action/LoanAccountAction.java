@@ -292,13 +292,19 @@ public class LoanAccountAction extends AccountAppAction {
         this.loanProductService = loanProductService;
     }
 
-    // FIXME - keithw - used in tests only.
+    /**
+     * @deprecated - test only
+     */
+    @Deprecated
     LoanAccountAction(final LoanBusinessService loanBusinessService, final ConfigurationBusinessService configService,
             final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater);
     }
 
-    // FIXME - keithw - used in tests only.
+    /**
+     * test only constructor
+     */
+    @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
             final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater, new FeeBusinessService(),
@@ -880,13 +886,8 @@ public class LoanAccountAction extends AccountAppAction {
     private CustomerBO getCustomer(final HttpServletRequest request) throws PageExpiredException, ServiceException {
         CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
         CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
-        // TODO: Why are these getters being called without the values used
-        // anywhere?
-        // To avoid lazy loading?
         customer.getPersonnel().getDisplayName();
         customer.getOffice().getOfficeName();
-        // TODO: I'm not sure why we're resetting version number - need to
-        // investigate this
         customer.setVersionNo(oldCustomer.getVersionNo());
         return customer;
     }
@@ -1843,8 +1844,6 @@ public class LoanAccountAction extends AccountAppAction {
             storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNERISACLIENT,
                     LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
 
-            // FIXME - keithw - prevent real domain objects from being pushed up
-            // to presentation
             storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules()
                     .getWorkingDays());
 
@@ -1880,5 +1879,4 @@ public class LoanAccountAction extends AccountAppAction {
         return masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
                 .getLocaleId());
     }
-
 }

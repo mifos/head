@@ -826,4 +826,8 @@ public class PersonnelBO extends BusinessObject {
     public String toString() {
         return "{" + getDisplayName() + ", " + getPersonnelId() + "}";
     }
+
+    public boolean isDifferentIdentityTo(PersonnelBO personnel) {
+        return !this.personnelId.equals(personnel.getPersonnelId());
+    }
 }

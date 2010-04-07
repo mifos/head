@@ -150,8 +150,6 @@ public class GroupCreationUsingCustomerServiceIntegrationTest {
         assertThat(group.getGroupPerformanceHistory().getGroup().getCustomerId(), is(group.getCustomerId()));
         assertThat(group.getCustomFields().size(), is(0));
         assertThat(group.getMaxChildCount(), is(0));
-
-        // FIXME - keithw - is this persisted in database?
         assertThat(existingCenter.getMaxChildCount(), is(1));
     }
 

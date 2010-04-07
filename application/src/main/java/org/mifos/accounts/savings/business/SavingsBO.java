@@ -176,9 +176,7 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * TODO - keithw - work in progress
-     *
-     * minimal constructor for builder
+     * minimal constructor for builder (will be deprecated after accounts refactoring)
      */
     public SavingsBO(final SavingsOfferingBO savingsProduct, final SavingsType savingsType,
             final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
@@ -201,8 +199,6 @@ public class SavingsBO extends AccountBO {
         this.timePerForInstcalc = scheduleForInterestCalculation;
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
         this.recommendedAmount = recommendedAmount;
-
-        // FIXME - keithw - usercontext seems redundant
         this.userContext = new UserContext();
         this.userContext.setId(createdByUserId);
 
@@ -232,7 +228,6 @@ public class SavingsBO extends AccountBO {
         // generated the deposit action dates only if savings account is being
         // saved in approved state
         if (isActive()) {
-            // FIXME - keithw - pass in this info to method
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
             setValuesForActiveState(workingDays, holidays);
@@ -577,6 +572,7 @@ public class SavingsBO extends AccountBO {
     private Money calculateInterest(Date fromDate, final Date toDate, final double interestRate,
             final SavingsTrxnDetailEntity adjustedTrxn) throws AccountException {
         boolean initialBalance = false;
+
         if (fromDate == null) {
             fromDate = getFromDate();
         }
@@ -600,10 +596,6 @@ public class SavingsBO extends AccountBO {
                 }
 
                 if (trxn == null || trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_ADJUSTMENT)) {
-                    // trxn = (new
-                    // SavingsPersistence()).retrieveLastTransactionAtAdjustment(getAccountId(),
-                    // fromDate);
-
                     final List<AccountTrxnEntity> transactions = this.getAccountTrxnsOrderByTrxnCreationDate();
 
                     if (transactions != null && !transactions.isEmpty()) {
@@ -1099,8 +1091,6 @@ public class SavingsBO extends AccountBO {
         savingsPerformance.setPaymentDetails(amountToDeposit);
 
         final Date transactionDate = payment.getPaymentDate();
-        // FIXME - keithw - question - should transactionDate really be todays
-        // date?
         final SavingsActivityEntity savingsActivity = savingsTransactionActivityHelper.createSavingsActivityForDeposit(
                 payment.getCreatedByUser(), amountToDeposit, this.savingsBalance, transactionDate, this);
 
@@ -1228,7 +1218,6 @@ public class SavingsBO extends AccountBO {
     @Override
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
 
-        // FIXME - keithw - pass in this info to method
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> holidays = new ArrayList<Holiday>();
 

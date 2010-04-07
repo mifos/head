@@ -36,7 +36,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 /**
  * Utility class contain side-effect free functions for processing date and calendar functionality.
  *
- * FIXME - keithw - refactor all methods to use joda-time rather than java.util.Date and Calendar.
+ * TODO - refactor all methods to use joda-time rather than java.util.Date and Calendar.
  */
 public class CalendarUtils {
 

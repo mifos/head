@@ -39,11 +39,11 @@ import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 
 public class FeeInstallment {
-    
+
     private Short installmentId;
     private Money accountFee;
     private AccountFeesEntity accountFeesEntity = null;
-    
+
     public static FeeInstallment buildFeeInstallment(final Short installmentId, final Money accountFeeAmount,
             final AccountFeesEntity accountFee) {
         FeeInstallment feeInstallment = new FeeInstallment();
@@ -97,7 +97,7 @@ public class FeeInstallment {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
                 noHolidays);
-        // FIXME - should generate dates upto last repayment date got from non-holiday adjusted scheduledDates - keithw
+        // FIXME - #00003 - keithw - should generate dates upto last repayment date got from non-holiday adjusted scheduledDates
         List<DateTime> feeDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate, scheduledEvent);
 
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();

@@ -38,9 +38,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 /**
- * not sure this is used anymore - keithw
+ *
  */
-@Deprecated
 public class CollectionSheetService {
 
     private final CollectionSheetReportPersistence collectionSheetReportPersistence;

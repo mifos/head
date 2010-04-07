@@ -109,8 +109,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
     /**
-     * TODO - keithw - work in progress
-     *
      * used by builders to construct legal {@link LoanOfferingBO}'s
      */
     public LoanOfferingBO(final GLCodeEntity principalGLcode, final GLCodeEntity interestGLCode,

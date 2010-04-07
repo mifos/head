@@ -1157,7 +1157,7 @@ public class CustomerPersistence extends Persistence {
 
     @SuppressWarnings("unchecked")
     /**
-     * FIXME - move to customerDao
+     * @deprecated - move to customerDao
      */
     @Deprecated
     public List<CustomerDetailDto> getListOfClientsUnderGroupOtherThanClosedAndCancelled(final String searchId,

@@ -65,7 +65,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * TODO - keithw - work in progress
+     * used from builders only.
      */
     public SavingsOfferingBO(final SavingsType savingsType, final String name, final String shortName,
             final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,

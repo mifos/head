@@ -205,8 +205,8 @@ public class ClientCustActionForm extends CustomerActionForm {
                 }
 
             } catch (InvalidDateException e) {
-                // FIXME - empty catch!
             }
+
             this.familyNames.add(familyNames);
             this.familyDetails.add(familyDetails);
         }

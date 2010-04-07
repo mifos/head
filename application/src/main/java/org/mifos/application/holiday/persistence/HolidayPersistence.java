@@ -36,8 +36,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * @deprecated - please use {@link HolidayDao} instead.
- *
- * FIXME - move holiday dao functionality from here to {@link HolidayDaoHibernate}.
  */
 @Deprecated
 public class HolidayPersistence extends MasterPersistence {

@@ -882,8 +882,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulTransferToGroupFromOutsideGroup() throws Exception {
         createObjectsForTransferToGroup_OutsideGroup();
 
-        client.addClientToGroup((GroupBO) group); // FIXME: this method should
-        // be adding hierarchy
+        client.addClientToGroup((GroupBO) group); // FIXME: this method should be adding hierarchy
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
@@ -1067,7 +1066,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
 
-    // FIXME - pull up to service level
     public void ignore_testUpdateFailureIfLoanOffcierNotThereInActiveState() throws Exception {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
         try {
@@ -1079,7 +1077,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
     }
 
-    // FIXME - pull up to service level
     public void ignore_testUpdateFailureIfLoanOffcierNotThereInHoldState() throws Exception {
         createObjectsForClient("Client 1", CustomerStatus.CLIENT_HOLD);
         try {

@@ -1437,10 +1437,7 @@ public class LoanBO extends AccountBO {
 
     /*
      * PaymentData is the payment information entered in the UI
-     *
      * An AccountPaymentEntity is created from the PaymentData passed in.
-     *
-     * FIXME: - keithw - this should use model concept {@link AccountPaymentEntity} and not {@link PaymentData} dto
      */
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
