@@ -61,21 +61,8 @@
 	    <return-scalar column="loanfees" type="string"/>
 	    <return-scalar column="tloanfees" type="big_decimal"/>	    
 	    
-	    <![CDATA[
-	    select coll.*, 
-       ifnull(loan.loanbal,0) as loanbal, 
-       round(ifnull(loan.tloanbal,0),0) as tloanbal, 
-       
-       ifnull(loanduesch.loandue,0) as loandue ,
-       round(ifnull(loanduesch.tloandue,0),0) as tloandue ,
-       
-       ifnull(ld.loandis,0) as loandis,
-       round(ifnull(ld.tloandis,0),0) as tloandis, 
-       
-       ifnull(ld.loanfees,0) as loanfees, 
-       round(ifnull(ld.tloanfees,0),0) as tloanfees from
-       
-       (SELECT concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
+	    <![CDATA[	    
+	   SELECT concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
         left(date(:MEETING_DATE),4)) as colldate ,        
         o.office_id as offid, 
         o.DISPLAY_NAME as offname, 
@@ -86,8 +73,20 @@
         g.customer_id as groupid,
         g.display_name as groupname,
         M.customer_id as Memid, 
-        M.display_name as Memname
+        M.display_name as Memname,
         
+       ifnull(loan.loanbal,0) as loanbal, 
+       round(ifnull(loan.tloanbal,0),0) as tloanbal, 
+       
+       ifnull(group_concat(ifnull(loanduesch.loandue,0) separator '||'),0) as loandue,
+       round(ifnull(sum(loanduesch.tloandue),0),0) as tloandue,
+       
+       ifnull(group_concat(ifnull(ld.loandis,0) separator '||'),0) as loandis,
+       if(round(ifnull(sum(ld.tloandis),0),0) = 0, null,round(ifnull(sum(ld.tloandis),0),0)) as tloandis, 
+        
+       ifnull(group_concat(ifnull(ld.loanfees,0) separator '||'),0) as loanfees, 
+       if(round(ifnull(sum(ld.tloanfees),0),0) = 0, null, round(ifnull(sum(ld.tloanfees),0),0)) as tloanfees 
+       
 	FROM customer K
 	 left join personnel p on K.loan_officer_id = P.personnel_id
 	 left join office o on P.office_id = o.office_id
@@ -96,19 +95,6 @@
 	 left join customer_meeting cm on cm.CUSTOMER_ID=K.CUSTOMER_ID
 	 left join recurrence_detail rd on rd.meeting_id = cm.meeting_id
 	 left join recur_on_day r on r.details_id = rd.details_id	
-
-	Where 
-	   o.office_id = :BRANCH_ID 
-	   and P.personnel_status = 1
-	   and P.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then P.personnel_id else (:PERSONNEL_ID) end)
-	   and K.customer_id = (case (:CENTER_ID)  when 'ALL' then K.customer_id else (:CENTER_ID) end)
-	   and K.status_id = 13 
-	   and G.status_id = 9 
-	   and M.status_id = 3 
-	   and r.days = dayofweek(:MEETING_DATE)
-	   
-           order by K.customer_id, G.customer_id, M.customer_id
-        ) coll
 
 	left join
 	
@@ -133,17 +119,11 @@
 		   a.account_state_id = 5 or a.account_state_id = 9
 		   ) and a.office_id = :BRANCH_ID and a.account_type_id = 1
 		group by a.customer_id
-	 ) loan on coll.memid = loan.customer_id
+	 ) loan on M.customer_id = loan.customer_id
 
 	 left join
 	 
-	 (select c.customer_id as customer_id, 
-	         group_concat(ifnull(loansch.loandue,0) separator '||') as loandue , 
-	         ifnull(sum(loansch.tloandue),0) as tloandue 
-	         from customer c
-		 left join
-
-                 (SELECT a.customer_id as customer_id, 
+	 (SELECT a.customer_id as customer_id, 
                          concat_ws(':',p.prd_offering_short_name, ifnull(round(
                             sum(l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)),2),0)
                          ) as loandue, 
@@ -154,29 +134,17 @@
 			 WHERE l.ACCOUNT_ID=a.ACCOUNT_ID 
 			 AND la.ACCOUNT_ID=a.ACCOUNT_ID 
 			 AND la.PRD_OFFERING_ID=p.PRD_OFFERING_ID
-                         and a.office_id = :BRANCH_ID
+                         and a.office_id =  :BRANCH_ID
                          and l.action_date <= date(:MEETING_DATE) 
                          and l.payment_status = 0 
                          and (a.account_state_id = 5 or a.account_state_id = 9) 
                          and a.account_type_id = 1                         
                          group by l.account_id
-                  ) loansch on loansch.customer_id = c.customer_id 
-                    where c.branch_id = :BRANCH_ID 
-                    and c.customer_level_id = 1
-                    group by c.customer_id 
-           ) loanduesch on coll.memid = loanduesch.customer_id
+                  ) loanduesch on M.customer_id = loanduesch.customer_id
 
 	   left join
 
-           (select c.customer_id as customer_id, 
-            	    group_concat(ifnull(loandisb.loandis,0) separator '||') as loandis,
-            	    sum(loandisb.tloandis) as tloandis, 
-            	    group_concat(ifnull(loandisb.loanfees,0) separator '||') as loanfees, 
-            	    sum(loandisb.tloanfees) as tloanfees 
-            	    from customer c
-		    left join
-		    
-		    (SELECT a.customer_id as customer_id, 
+           (SELECT a.customer_id as customer_id, 
 		            concat_ws(':',p.prd_offering_short_name, round(l.loan_amount,0)) as loandis,
 		            l.loan_amount as tloandis,
 			    concat_ws(':',p.prd_offering_short_name,round(ls.orig_fees,0)) as loanfees, 
@@ -187,14 +155,23 @@
 			    AND l.ACCOUNT_ID=a.ACCOUNT_ID 
 			    and l.disbursement_date = date(:MEETING_DATE)
 			    and a.account_state_id = 3 
-			    and a.office_id = :BRANCH_ID 
+			    and a.office_id =  :BRANCH_ID 
 			    and a.account_type_id = 1 
 			    AND l.PRD_OFFERING_ID=p.PRD_OFFERING_ID
-		     ) loandisb on loandisb.customer_id = c.customer_id 
-		       where c.branch_id = :BRANCH_ID 
-		       and c.customer_level_id = 1
-                       group by c.customer_id 
-             ) ld on coll.memid = ld.customer_id
+		     ) ld on M.customer_id = ld.customer_id
+             
+	Where 
+	   o.office_id = :BRANCH_ID
+	   and P.personnel_status = 1
+	   and P.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then P.personnel_id else (:PERSONNEL_ID) end)
+	   and K.customer_id = (case (:CENTER_ID)  when 'ALL' then K.customer_id else (:CENTER_ID) end)
+	   and K.status_id = 13 
+	   and G.status_id = 9 
+	   and M.status_id = 3 
+	   and r.days = dayofweek(:MEETING_DATE)
+	   
+       group by K.customer_id, G.customer_id, M.customer_id
+       order by K.customer_id, G.customer_id, M.customer_id
           ]]>   
 	</sql-query>
 	
