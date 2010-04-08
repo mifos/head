@@ -97,15 +97,19 @@ function showRateOrAmoount() {
     if (document.getElementsByName("categoryType")[0].value == document.getElementsByName("loanCategoryId")[0].value) {
         document.getElementById("rateDiv").style.display = "block";
         document.getElementById("rateDivHeading").style.display = "block";
-        document.getElementById("currencyDiv").style.display = "block";
-        document.getElementById("currencyDivHeading").style.display = "block";
+        if (document.getElementById("currencyDiv") != null) {
+            document.getElementById("currencyDiv").style.display = "block";
+            document.getElementById("currencyDivHeading").style.display = "block";
+        }
     } else {
         document.getElementsByName("rate")[0].value = "";
         document.getElementsByName("feeFormula")[0].selectedIndex = 0;
-        document.getElementById("currencyDivHeading").style.display = "none";
-        document.getElementById("currencyDiv").style.display = "none";
         document.getElementById("rateDiv").style.display = "none";
         document.getElementById("rateDivHeading").style.display = "none";
+        if (document.getElementById("currencyDiv") != null) {
+            document.getElementById("currencyDiv").style.display = "none";
+            document.getElementById("currencyDivHeading").style.display = "none";
+        }
     }
 }
 function fnCancel(form) {
