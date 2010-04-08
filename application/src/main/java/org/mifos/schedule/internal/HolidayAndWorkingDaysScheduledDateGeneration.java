@@ -42,6 +42,9 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
         this.upcomingHolidays = upcomingHolidays;
     }
 
+    /**
+     * @param lastScheduledDate starting point for schedule generation
+     */
     @Override
     public List<DateTime> generateScheduledDates(final int occurences, final DateTime lastScheduledDate,
             final ScheduledEvent scheduledEvent) {
@@ -54,15 +57,15 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
         for (int i = 0; i < occurences; i++) {
 
             DateAdjustmentStrategy workingDay = new BasicWorkingDayStrategy(workingDays);
-            DateTime ajustedForWorkingDay = workingDay.adjust(latestGeneratedDate);
+            DateTime adjustedForWorkingDay = workingDay.adjust(latestGeneratedDate);
 
-            DateAdjustmentStrategy holidayAjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
+            DateAdjustmentStrategy holidayAdjustment = new BasicHolidayStrategy(upcomingHolidays, workingDays,
                     scheduledEvent);
-            DateTime ajustedForHolidays = holidayAjustment.adjust(ajustedForWorkingDay);
+            DateTime adjustedForHolidays = holidayAdjustment.adjust(adjustedForWorkingDay);
 
-            scheduledDates.add(ajustedForHolidays);
+            scheduledDates.add(adjustedForHolidays);
 
-            latestGeneratedDate = scheduledEvent.nextEventDateAfter(ajustedForWorkingDay);
+            latestGeneratedDate = scheduledEvent.nextEventDateAfter(adjustedForWorkingDay);
         }
 
         return scheduledDates;

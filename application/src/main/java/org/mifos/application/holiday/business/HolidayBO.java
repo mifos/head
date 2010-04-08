@@ -32,8 +32,8 @@ import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.calendar.DateAdjustmentStrategy;
-import org.mifos.calendar.HolidayAdjustmentRuleFactory;
+import org.mifos.calendar.NextScheduledEventStrategy;
+import org.mifos.calendar.NextWorkingDayStrategy;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -248,15 +248,41 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
                 && date.compareTo(getDateWithoutTimeStamp(getHolidayThruDate().getTime())) <= 0;
     }
 
+    /**
+     * Shift the scheduled day according to the holiday's repayment rule.
+     */
     @Override
     public DateTime adjust(final DateTime scheduledDay, final List<Days> workingDays, final ScheduledEvent scheduledEvent) {
 
-        DateAdjustmentStrategy dateAdjustment = HolidayAdjustmentRuleFactory.createStrategy(scheduledDay, workingDays,
-                scheduledEvent, RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId()));
+        //This is a hack -- need to refactor into cleaner code or subclass HolidayBO into
+        //specialized classes for each repayment rule
 
-        DateTime dayAfterEndOfHoliday = new DateTime(this.getHolidayThruDate()).plusDays(1);
+        DateTime adjustedDate = scheduledDay;
+        switch (RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId())) {
+        case NEXT_MEETING_OR_REPAYMENT:
+            do {
+                adjustedDate = (new NextScheduledEventStrategy(scheduledEvent)).adjust(adjustedDate);
+            } while (this.containsDate(adjustedDate));
+            break;
+        case NEXT_WORKING_DAY:
+            adjustedDate = new NextWorkingDayStrategy(workingDays).adjust(new DateTime(this.getHolidayThruDate()).plusDays(1));
+            break;
+        case SAME_DAY:
+            break;
+        case REPAYMENT_MORATORIUM:
+            do {
+                adjustedDate = (new NextScheduledEventStrategy(scheduledEvent)).adjust(adjustedDate);
+            } while (this.containsDate(adjustedDate));
+            break;
+        default:
+            break;
+        }
+        return adjustedDate;
+    }
 
-        return dateAdjustment.adjust(dayAfterEndOfHoliday);
+    private boolean containsDate (DateTime date) {
+        return !(date.isBefore(new DateTime(this.getHolidayFromDate()))
+                 || date.isAfter(new DateTime(this.getHolidayThruDate())));
     }
 
 }

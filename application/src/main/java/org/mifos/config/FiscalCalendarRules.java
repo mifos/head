@@ -66,7 +66,7 @@ public class FiscalCalendarRules {
 
     public List<WeekDay> getWeekDaysList() {
         WeekDay[] weekDays = WeekDay.values();
-        List<WeekDay> list = new ArrayList();
+        List<WeekDay> list = new ArrayList<WeekDay>();
         for (WeekDay weekDay : weekDays) {
             list.add(weekDay);
         }
@@ -77,7 +77,7 @@ public class FiscalCalendarRules {
         if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
         }
-        List<WeekDay> workingDays = new ArrayList(); // returned working days
+        List<WeekDay> workingDays = new ArrayList<WeekDay>(); // returned working days
         for (String configWorkingDay : configWorkingDays) {
             workingDays.add(findWeekDay(configWorkingDay));
         }
@@ -89,7 +89,7 @@ public class FiscalCalendarRules {
         if (configWorkingDays == null) {
             throw new RuntimeException("The working days are not defined in the config file.");
         }
-        List<Short> offDays = new ArrayList(); // returned off days
+        List<Short> offDays = new ArrayList<Short>(); // returned off days
         WeekDay[] weekDays = WeekDay.values();
         for (int i = 0; i < weekDays.length; i++) {
             if (!isWorkingDay(weekDays[i])) {

@@ -17,11 +17,11 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
 
     /**
      * should be ordered by date ascending to avoid problems with overlapping holidays
+     * TODO: Fix to allow moratorium periods to overlap holidays. THIS IS IMPORTANT.
      */
     private final List<Holiday> upcomingHolidays;
     private final List<Days> workingDays;
     private final ScheduledEvent scheduledEvent;
-    private DateAdjustmentStrategy nonMoratoriumAdjustmentStrategy;
 
     public MoratoriumStrategy(final List<Holiday> upcomingHolidays, final List<Days> workingDays,
             final ScheduledEvent scheduledEvent) {
@@ -34,12 +34,9 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
     @Override
     public List<DateTime> adjust (List<DateTime> dates) {
 
-        assert dates != null;
+        if (dates == null) {throw new IllegalArgumentException("dates cannot be null.");}
 
         List<DateTime> adjustedDates = null;
-
-        nonMoratoriumAdjustmentStrategy
-            = new BasicHolidayStrategy(getNonMoratoriumHolidays(), workingDays, scheduledEvent);
 
         if (dates.isEmpty()) {
             adjustedDates = dates;
@@ -47,16 +44,6 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
            DateTime firstDate = dates.get(0);
            if ( isEnclosedByAHolidayWithRepaymentRule(firstDate, RepaymentRuleTypes.REPAYMENT_MORATORIUM) ) {
                adjustedDates = adjust (shiftSchedulePastMoratorium(dates));
-          /*
-           } else if ( isEnclosedByAHolidayWithRepaymentRule(firstDate, RepaymentRuleTypes.SAME_DAY)) {
-               int countDatesEnclosedBySameDayHoliday = countDatesEnclosedByHoliday(dates, getHolidayEnclosing(firstDate));
-               adjustedDates = joinLists (first(countDatesEnclosedBySameDayHoliday, dates),
-                                          adjust(allButFirst(countDatesEnclosedBySameDayHoliday, dates)));
-           } else if (isEnclosedByAHoliday(firstDate)){ //a rule that shifts the date forward
-               List<DateTime> datesShiftedPastHoliday = shiftDatesInNonMoratoriumHoliday(dates);
-               adjustedDates = adjust (joinLists (datesShiftedPastHoliday,
-                                                  allButFirst (datesShiftedPastHoliday.size(), dates)));
-           */
            } else if (isEnclosedByAHoliday(firstDate)) { //enclosed by a non-moratorium holiday
                adjustedDates = makeList(shiftDatePastNonMoratoriumHoliday(firstDate), adjust (rest(dates)));
            } else {
@@ -78,52 +65,16 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
 
     }
 
-    private List<DateTime> shiftByOneWeek(List<DateTime>dates) {
-
-        List<DateTime> pushedOutSchedule = new ArrayList<DateTime>();
-        for (DateTime date: dates) {
-            pushedOutSchedule.add(date.plusWeeks(1));
-        }
-        return pushedOutSchedule;
-
-    }
-
     private List<DateTime> shiftByOneScheduledEventRecurrence (List<DateTime> dates) {
 
         assert dates != null;
 
         List<DateTime> pushedOutSchedule = new ArrayList<DateTime>();
         for (DateTime date: dates) {
-            pushedOutSchedule.add(scheduledEvent.nextEventDateAfter(date));
+            pushedOutSchedule.add(WorkingDay.nearestWorkingDayOnOrAfter(scheduledEvent.nextEventDateAfter(date),
+                                                                        workingDays));
         }
         return pushedOutSchedule;
-    }
-
-    /**
-     * Given that the first date in the list falls in a non-Moratorium holiday,
-     * return the list of dates that fall in the holiday, but shifted out of the holiday
-     * using the holiday's repayment rule.
-     * TODO keithp: once dates are shifted past all non-moratorium holidays, then check whether
-     * any fall in a moratorium period. If they do, push them past the moratorium, but do not
-     * push out future dates.
-     * TODO keithp: if shifting a date does not change the date (e.g. same day holiday), then
-     * we're done with it, so move to the next date.
-     */
-    private List<DateTime> shiftDatesInNonMoratoriumHoliday (List<DateTime> dates) {
-
-        assert dates != null;
-        assert ! dates.isEmpty();
-        assert isEnclosedByAHoliday(dates.get(0));
-        assert ! isEnclosedByAHolidayWithRepaymentRule(dates.get(0), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-
-        Holiday enclosingHoliday = getHolidayEnclosing(dates.get(0));
-        List<DateTime> shiftedDatesInHoliday = new ArrayList<DateTime>();
-        for (int i = 0; i < dates.size(); i++) {
-            if (enclosingHoliday.encloses(dates.get(i).toDate())) {
-                shiftedDatesInHoliday.add(nonMoratoriumAdjustmentStrategy.adjust(dates.get(i)));
-            }
-        }
-        return shiftedDatesInHoliday;
     }
 
     /**
@@ -157,7 +108,8 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
                                                               mostRecentNonMoratoriumRepaymentRule)
                                     .adjust(previousDate, workingDays, scheduledEvent);
             } else {
-                adjustedDate = currentlyEnclosingHoliday.adjust(previousDate, workingDays, scheduledEvent);
+                adjustedDate = (new BasicWorkingDayStrategy(workingDays))
+                                    .adjust(currentlyEnclosingHoliday.adjust(previousDate, workingDays, scheduledEvent));
                 mostRecentNonMoratoriumRepaymentRule = currentlyEnclosingHoliday.getRepaymentRuleType();
             }
             if (isEnclosedByAHoliday(adjustedDate)) {
@@ -178,16 +130,6 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
         }
     }
 
-    private List<Holiday> getNonMoratoriumHolidays () {
-        List<Holiday> nonMoratoriumHolidays = new ArrayList<Holiday>();
-        for (Holiday holiday : this.upcomingHolidays) {
-            if ( ! (holiday.getRepaymentRuleType() == RepaymentRuleTypes.REPAYMENT_MORATORIUM) ) {
-                nonMoratoriumHolidays.add(holiday);
-            }
-        }
-        return nonMoratoriumHolidays;
-    }
-
     private boolean isEnclosedByAHolidayWithRepaymentRule (DateTime date, RepaymentRuleTypes rule) {
         for (Holiday holiday : this.upcomingHolidays) {
             if (holiday.encloses(date.toDate()) && (holiday.getRepaymentRuleType() == rule)) {
@@ -204,16 +146,6 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
             }
         }
         return false;
-    }
-
-    private int countDatesEnclosedByHoliday (List<DateTime> dates, Holiday holiday) {
-        int countEnclosedDates = 0;
-        for (int i = 0; i < dates.size(); i++) {
-            if (holiday.encloses(dates.get(i).toDate())) {
-                countEnclosedDates++;
-            }
-        }
-        return countEnclosedDates;
     }
 
     private Holiday getHolidayEnclosing (DateTime date) {
@@ -243,39 +175,6 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
         return rest;
     }
 
-    /**
-     * return list of first count items in dates
-     * @param count the number of dates to select
-     * @param dates the list to get the dates from
-     * @return dates(get(0)), .. dates.get(count-1) as a list
-     */
-    private List<DateTime> first (int count, List<DateTime> dates) {
-
-        assert dates != null;
-        assert count >= 0;
-        assert count < dates.size();
-
-        List<DateTime> firstPartOfList = new ArrayList<DateTime>();
-        for (int i = 0; i < count; i++) {
-            firstPartOfList.add(dates.get(i));
-        }
-        return firstPartOfList;
-    }
-
-    private List<DateTime> allButFirst (int count, List<DateTime> dates) {
-
-        assert dates != null;
-        assert count >= 0;
-        assert count <= dates.size();
-
-        List<DateTime> lastPartOfList = new ArrayList<DateTime>();
-        for (int i = count; i < dates.size(); i++) {
-            lastPartOfList.add(dates.get(i));
-        }
-        return lastPartOfList;
-
-    }
-
     private List<DateTime> makeList (DateTime first, List<DateTime> rest) {
 
         assert first != null;
@@ -283,16 +182,6 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
 
         List<DateTime> newList = rest;
         newList.add(0, first);
-        return newList;
-    }
-
-    private List<DateTime> joinLists (List<DateTime> first, List<DateTime> rest) {
-
-        assert first != null;
-        assert rest != null;
-
-        List<DateTime> newList = first;
-        newList.addAll(rest);
         return newList;
     }
 }

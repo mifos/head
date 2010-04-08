@@ -399,6 +399,7 @@ public class MeetingBO extends AbstractBusinessObject {
     }
 
     // TODO - keithw - I think this method gets all meeting dates from (meetingStartDate) up to (endDate)
+    @Deprecated
     public List<Date> getAllDates(final Date endDate) throws MeetingException {
         validateEndDate(endDate);
         List meetingDates = new ArrayList();
