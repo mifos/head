@@ -20,8 +20,8 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class CustomerPerformanceHistory extends PersistentObject {
+public class CustomerPerformanceHistory extends AbstractEntity {
 
 }

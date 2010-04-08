@@ -30,7 +30,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -53,7 +53,7 @@ public class PersonnelBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 

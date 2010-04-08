@@ -22,10 +22,10 @@ package org.mifos.framework.components.batchjobs.business;
 
 import java.sql.Timestamp;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 
-public class Task extends PersistentObject {
+public class Task extends AbstractEntity {
 
     private Integer id;
 

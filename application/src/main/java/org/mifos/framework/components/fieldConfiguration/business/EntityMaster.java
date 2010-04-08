@@ -28,7 +28,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 @NamedQueries(
  {
@@ -40,7 +40,7 @@ import org.mifos.framework.business.PersistentObject;
 )
 @Entity
 @Table(name = "ENTITY_MASTER")
-public class EntityMaster extends PersistentObject {
+public class EntityMaster extends AbstractEntity {
 
     private Short id;
 

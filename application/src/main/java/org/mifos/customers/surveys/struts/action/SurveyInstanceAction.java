@@ -69,7 +69,7 @@ import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -195,7 +195,7 @@ public class SurveyInstanceAction extends BaseAction {
 
         sessionValidator = new Schema();
         sessionValidator.setSimpleValidator(SurveysConstants.KEY_SURVEY, new IsInstanceValidator(Survey.class));
-        sessionValidator.setSimpleValidator(Constants.BUSINESS_KEY, new IsInstanceValidator(BusinessObject.class));
+        sessionValidator.setSimpleValidator(Constants.BUSINESS_KEY, new IsInstanceValidator(AbstractBusinessObject.class));
 
     }
 
@@ -282,7 +282,7 @@ public class SurveyInstanceAction extends BaseAction {
 
         SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
         Set<SurveyResponse> responses = instance.getSurveyResponses();
-        BusinessObject businessObject;
+        AbstractBusinessObject businessObject;
         String businessObjectName;
         String globalNum;
 
@@ -340,7 +340,7 @@ public class SurveyInstanceAction extends BaseAction {
         Survey survey = persistence.getSurvey(surveyId);
         request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
 
-        BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
         if (survey instanceof PPISurvey) {
@@ -350,7 +350,7 @@ public class SurveyInstanceAction extends BaseAction {
         }
     }
 
-    public static String getBusinessObjectName(BusinessObject businessObject) throws Exception {
+    public static String getBusinessObjectName(AbstractBusinessObject businessObject) throws Exception {
         if (businessObject instanceof CustomerBO) {
             return ((CustomerBO) businessObject).getDisplayName();
         } else if (businessObject instanceof LoanBO) {
@@ -404,7 +404,7 @@ public class SurveyInstanceAction extends BaseAction {
         throw new NotImplementedException();
     }
 
-    public static BusinessObject getBusinessObject(SurveyType surveyType, String globalNum) throws Exception {
+    public static AbstractBusinessObject getBusinessObject(SurveyType surveyType, String globalNum) throws Exception {
         if (surveyType == SurveyType.CLIENT) {
             ClientBO client = (ClientBO) CustomerBusinessService.getInstance().findBySystemId(globalNum,
                     CustomerLevel.CLIENT.getValue());
@@ -452,7 +452,7 @@ public class SurveyInstanceAction extends BaseAction {
         request.getSession().setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
         request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 
-        BusinessObject businessObject = getBusinessObject(surveyType, globalNum);
+        AbstractBusinessObject businessObject = getBusinessObject(surveyType, globalNum);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
@@ -464,7 +464,7 @@ public class SurveyInstanceAction extends BaseAction {
 
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
@@ -544,7 +544,7 @@ public class SurveyInstanceAction extends BaseAction {
         actionForm.clear();
         actionForm.setValue("officerName", getUserContext(request).getName());
         actionForm.setDateValue("dateSurveyed", new DateTimeService().getCurrentJavaDateTime());
-        BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
@@ -558,7 +558,7 @@ public class SurveyInstanceAction extends BaseAction {
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+        AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
@@ -596,7 +596,7 @@ public class SurveyInstanceAction extends BaseAction {
         SurveysPersistence persistence = new SurveysPersistence();
         PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
-        BusinessObject businessObject = (BusinessObject) results.get(Constants.BUSINESS_KEY);
+        AbstractBusinessObject businessObject = (AbstractBusinessObject) results.get(Constants.BUSINESS_KEY);
 
         // partially completed instances not supported yet
         InstanceStatus status = InstanceStatus.COMPLETED;

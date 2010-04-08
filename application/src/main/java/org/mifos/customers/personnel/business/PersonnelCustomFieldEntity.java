@@ -21,10 +21,10 @@
 package org.mifos.customers.personnel.business;
 
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 
-public class PersonnelCustomFieldEntity extends PersistentObject {
+public class PersonnelCustomFieldEntity extends AbstractEntity {
 
     private final Integer personnelCustomFieldId;
 

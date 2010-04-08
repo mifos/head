@@ -23,13 +23,13 @@ package org.mifos.customers.client.business;
 import java.util.Date;
 
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
 /**
  * This class is the value object for storing the attendance details of the
  * customer.
  */
-public class ClientAttendanceBO extends BusinessObject {
+public class ClientAttendanceBO extends AbstractBusinessObject {
 
     private Integer id;
     private Date meetingDate;

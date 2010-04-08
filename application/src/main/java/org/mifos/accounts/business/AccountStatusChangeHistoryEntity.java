@@ -24,11 +24,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class AccountStatusChangeHistoryEntity extends PersistentObject {
+public class AccountStatusChangeHistoryEntity extends AbstractEntity {
     private final Integer accountStatusChangeId;
 
     private final AccountBO account;

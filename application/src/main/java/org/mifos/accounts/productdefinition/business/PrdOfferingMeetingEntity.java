@@ -22,9 +22,9 @@ package org.mifos.accounts.productdefinition.business;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class PrdOfferingMeetingEntity extends PersistentObject {
+public class PrdOfferingMeetingEntity extends AbstractEntity {
 
     private final Short prdOfferingMeetingId;
 

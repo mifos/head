@@ -22,10 +22,10 @@ package org.mifos.accounts.loan.util.helpers;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class LoanAccountDetailsViewHelper extends BusinessObject {
+public class LoanAccountDetailsViewHelper extends AbstractBusinessObject {
 
     public LoanAccountDetailsViewHelper(Integer individualAccountId) {
         this.individualAccountId = individualAccountId;

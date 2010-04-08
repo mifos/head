@@ -41,7 +41,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -56,7 +56,7 @@ import org.mifos.schedule.ScheduledDateGeneration;
  * MeetingType entries. In this way a member like meetingPlace could be
  * associated with the CustomerMeeting rather than all MeetingTypes.
  */
-public class MeetingBO extends BusinessObject {
+public class MeetingBO extends AbstractBusinessObject {
 
     private final Integer meetingId;
 

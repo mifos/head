@@ -67,7 +67,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -84,7 +84,7 @@ import org.mifos.security.util.UserContext;
 /**
  * A class that represents a customer entity after being created.
  */
-public abstract class CustomerBO extends BusinessObject {
+public abstract class CustomerBO extends AbstractBusinessObject {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
 

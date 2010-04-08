@@ -46,7 +46,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
@@ -121,7 +121,7 @@ public abstract class BaseAction extends DispatchAction {
         Locale locale = getLocale(userContext);
         if (!skipActionFormToBusinessObjectConversion(request.getParameter("method"))) {
             try {
-                BusinessObject businessObject = getBusinessObjectFromSession(request);
+                AbstractBusinessObject businessObject = getBusinessObjectFromSession(request);
                 ConversionUtil.populateBusinessObject(actionForm, businessObject, locale);
             } catch (ValueObjectConversionException e) {
                 logger.debug("Value object conversion exception while validating BusinessObject: " + new LogUtils().getStackTrace(e));
@@ -255,14 +255,14 @@ public abstract class BaseAction extends DispatchAction {
         return request.getSession().getAttribute(Constants.BUSINESS_KEY).getClass().getName();
     }
 
-    private BusinessObject getBusinessObjectFromSession(HttpServletRequest request) throws ServiceException {
-        BusinessObject object = null;
+    private AbstractBusinessObject getBusinessObjectFromSession(HttpServletRequest request) throws ServiceException {
+        AbstractBusinessObject object = null;
         if (isNewBizRequired(request)) {
             UserContext userContext = (UserContext) request.getSession().getAttribute("UserContext");
             object = getService().getBusinessObject(userContext);
             request.getSession().setAttribute(Constants.BUSINESS_KEY, object);
         } else {
-            object = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+            object = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         }
         return object;
     }

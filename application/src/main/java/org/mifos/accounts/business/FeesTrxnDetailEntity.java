@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class FeesTrxnDetailEntity extends PersistentObject {
+public class FeesTrxnDetailEntity extends AbstractEntity {
 
     private Integer feesTrxnId;
     private AccountTrxnEntity accountTrxn;

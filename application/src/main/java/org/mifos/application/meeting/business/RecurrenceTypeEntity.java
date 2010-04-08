@@ -21,13 +21,13 @@
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulate the RecurrenceType for a meeting See also
  * {@link RecurrenceType}.
  */
-public class RecurrenceTypeEntity extends PersistentObject {
+public class RecurrenceTypeEntity extends AbstractEntity {
 
     private Short recurrenceId;
 

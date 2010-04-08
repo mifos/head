@@ -23,9 +23,9 @@ package org.mifos.customers.business;
 import java.util.Date;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class CustomerNoteEntity extends PersistentObject {
+public class CustomerNoteEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     private final Integer commentId;

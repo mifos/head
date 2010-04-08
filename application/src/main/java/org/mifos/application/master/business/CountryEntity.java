@@ -25,11 +25,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "COUNTRY")
-public class CountryEntity extends PersistentObject {
+public class CountryEntity extends AbstractEntity {
 
     private Short countryId;
     private String countryName;

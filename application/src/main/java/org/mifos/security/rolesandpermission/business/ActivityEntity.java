@@ -25,9 +25,9 @@ import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class ActivityEntity extends PersistentObject {
+public class ActivityEntity extends AbstractEntity {
 
     private final Short id;
 

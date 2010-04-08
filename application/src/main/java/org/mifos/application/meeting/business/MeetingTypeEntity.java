@@ -21,14 +21,14 @@
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulate the type of the meeting e.g loan meeting
  *
  * Also see {@link MeetingType}.
  */
-public class MeetingTypeEntity extends PersistentObject {
+public class MeetingTypeEntity extends AbstractEntity {
 
     private Short meetingTypeId;
 

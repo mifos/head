@@ -25,5 +25,5 @@ import java.io.Serializable;
 /**
  * Abstract class for persistent objects.
  */
-public abstract class PersistentObject implements Serializable {
+public abstract class AbstractEntity implements Serializable {
 }

@@ -25,9 +25,9 @@ import java.sql.Date;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public abstract class AccountActionDateEntity extends PersistentObject implements Comparable<AccountActionDateEntity> {
+public abstract class AccountActionDateEntity extends AbstractEntity implements Comparable<AccountActionDateEntity> {
 
     protected final Integer actionDateId;
 

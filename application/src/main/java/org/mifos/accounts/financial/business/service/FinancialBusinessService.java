@@ -49,7 +49,7 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -74,7 +74,7 @@ public class FinancialBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

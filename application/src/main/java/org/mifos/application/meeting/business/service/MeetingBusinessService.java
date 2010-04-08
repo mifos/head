@@ -27,7 +27,7 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -38,7 +38,7 @@ import org.mifos.security.util.UserContext;
 
 public class MeetingBusinessService implements BusinessService {
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

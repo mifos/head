@@ -22,7 +22,7 @@ package org.mifos.customers.center.business.service;
 
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -31,7 +31,7 @@ import org.mifos.security.util.UserContext;
 public class CenterBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 

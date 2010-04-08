@@ -22,9 +22,9 @@ package org.mifos.application.holiday.business;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class RepaymentRuleEntity extends BusinessObject {
+public class RepaymentRuleEntity extends AbstractBusinessObject {
 
     private LookUpValueEntity lookUpObject;
 

@@ -33,7 +33,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -91,7 +91,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
         return null;
     }
 

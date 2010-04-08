@@ -24,9 +24,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class BranchReportClientSummaryBO extends BusinessObject {
+public class BranchReportClientSummaryBO extends AbstractBusinessObject {
 
     public static final String CENTER_COUNT = "center.count";
     public static final String GROUP_COUNT = "group.count";

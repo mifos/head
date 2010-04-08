@@ -27,7 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.mifos.customers.client.business.AttendanceType;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * @deprecated Use {@link AttendanceType} instead.
@@ -35,7 +35,7 @@ import org.mifos.framework.business.PersistentObject;
 @Deprecated
 @Entity
 @Table(name = "CUSTOMER_ATTENDANCE_TYPES")
-public class CustomerAttendanceType extends PersistentObject {
+public class CustomerAttendanceType extends AbstractEntity {
 
     private short attendanceId;
     private Integer lookUpId;

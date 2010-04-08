@@ -21,7 +21,7 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class PersonnelTagGenerator extends TagGenerator {
@@ -31,12 +31,12 @@ public class PersonnelTagGenerator extends TagGenerator {
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, Object randomNum) {
         return build(obj, true, randomNum);
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         PersonnelBO personnel = (PersonnelBO) obj;
         StringBuilder strBuilder = getAssociatedGenerator().build(personnel.getOffice(), randomNum);
         if (strBuilder == null) {

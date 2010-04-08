@@ -24,12 +24,12 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingTypeEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulate the customer meeting
  */
-public class CustomerMeetingEntity extends PersistentObject {
+public class CustomerMeetingEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     // see .hbm.xml file

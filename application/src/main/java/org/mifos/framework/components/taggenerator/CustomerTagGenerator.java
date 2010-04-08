@@ -22,7 +22,7 @@ package org.mifos.framework.components.taggenerator;
 
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class CustomerTagGenerator extends TagGenerator {
@@ -31,12 +31,12 @@ public class CustomerTagGenerator extends TagGenerator {
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, Object randomNum) {
         return build(obj, true, randomNum);
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         CustomerBO customer = (CustomerBO) obj;
 
         StringBuilder strBuilder = getAssociatedGenerator().build(customer.getOffice(), randomNum);

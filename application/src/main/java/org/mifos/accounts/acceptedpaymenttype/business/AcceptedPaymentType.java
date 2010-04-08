@@ -21,9 +21,9 @@
 package org.mifos.accounts.acceptedpaymenttype.business;
 
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class AcceptedPaymentType extends PersistentObject {
+public class AcceptedPaymentType extends AbstractEntity {
 
     private Short acceptedPaymentTypeId;
     private TransactionTypeEntity transactionTypeEntity;

@@ -20,14 +20,14 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * A Customer can hold various positions like president ,vice president etc.
  * This class holds the relationship between the customer and the postion he
  * holds
  */
-public class CustomerPositionEntity extends PersistentObject {
+public class CustomerPositionEntity extends AbstractEntity {
 
     private final Integer customerPositionId;
 

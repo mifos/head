@@ -26,11 +26,11 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 
-public class BranchReportLoanArrearsAgingBO extends BusinessObject {
+public class BranchReportLoanArrearsAgingBO extends AbstractBusinessObject {
 
     private Integer arrearsAgingId;
     @SuppressWarnings("unused")

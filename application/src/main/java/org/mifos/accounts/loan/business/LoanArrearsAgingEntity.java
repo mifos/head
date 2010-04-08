@@ -22,10 +22,10 @@ package org.mifos.accounts.loan.business;
 
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanArrearsAgingEntity extends PersistentObject {
+public class LoanArrearsAgingEntity extends AbstractEntity {
     @SuppressWarnings("unused")
     // see .hbm.xml file
     private final Integer id;

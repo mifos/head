@@ -20,13 +20,13 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
 /**
  * This class encapsulates mapping between Jasper file and Reports
  */
-public class ReportsJasperMap extends BusinessObject {
+public class ReportsJasperMap extends AbstractBusinessObject {
 
     private Short reportId;
     private String reportJasper;

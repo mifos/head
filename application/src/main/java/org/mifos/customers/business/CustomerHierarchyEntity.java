@@ -23,13 +23,13 @@ package org.mifos.customers.business;
 import java.util.Date;
 
 import org.mifos.application.util.helpers.Status;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 
 /**
  * This class encapsulate the customer hierarchy
  */
-public class CustomerHierarchyEntity extends PersistentObject {
+public class CustomerHierarchyEntity extends AbstractEntity {
 
     private final Integer hierarchyId;
 

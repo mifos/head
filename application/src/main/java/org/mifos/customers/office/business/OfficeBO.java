@@ -39,7 +39,7 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -51,7 +51,7 @@ import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-public class OfficeBO extends BusinessObject implements Comparable<OfficeBO> {
+public class OfficeBO extends AbstractBusinessObject implements Comparable<OfficeBO> {
 
     private final Short officeId;
     private final Short operationMode;

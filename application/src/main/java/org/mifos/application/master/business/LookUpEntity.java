@@ -34,7 +34,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * {@link LookUpEntity} is now depreciated and should not be used. Use
@@ -62,7 +62,7 @@ import org.mifos.framework.business.PersistentObject;
 )
 @Entity
 @Table(name = "LOOKUP_ENTITY")
-public class LookUpEntity extends PersistentObject {
+public class LookUpEntity extends AbstractEntity {
 
     private Short entityId;
 

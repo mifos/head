@@ -23,9 +23,9 @@ package org.mifos.accounts.fees.business;
 import java.util.Set;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class FeeTypeEntity extends PersistentObject {
+public class FeeTypeEntity extends AbstractEntity {
 
     private Short feeTypeId;
 

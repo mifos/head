@@ -20,10 +20,10 @@
 
 package org.mifos.reports.admindocuments.business;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
-public class AdminDocumentBO extends BusinessObject {
+public class AdminDocumentBO extends AbstractBusinessObject {
 
     private Short admindocId;
     private String adminDocumentName;

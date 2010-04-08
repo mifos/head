@@ -23,12 +23,12 @@ package org.mifos.accounts.business;
 import java.sql.Date;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulate the notes associated with account
  */
-public class AccountNotesEntity extends PersistentObject {
+public class AccountNotesEntity extends AbstractEntity {
 
     private final Integer commentId;
 

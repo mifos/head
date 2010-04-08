@@ -24,7 +24,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
 public class AccountTagGenerator extends TagGenerator {
 
@@ -33,7 +33,7 @@ public class AccountTagGenerator extends TagGenerator {
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         AccountBO account = (AccountBO) obj;
         StringBuilder strBuilder = getAssociatedGenerator().build(account.getCustomer(), randomNum);
         strBuilder.append(" / ");

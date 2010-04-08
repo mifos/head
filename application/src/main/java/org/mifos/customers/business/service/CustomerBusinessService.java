@@ -56,7 +56,7 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -85,7 +85,7 @@ public class CustomerBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

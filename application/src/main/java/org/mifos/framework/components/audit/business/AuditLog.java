@@ -25,10 +25,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.audit.persistence.AuditPersistence;
 
-public class AuditLog extends PersistentObject {
+public class AuditLog extends AbstractEntity {
 
     private final Integer id;
 

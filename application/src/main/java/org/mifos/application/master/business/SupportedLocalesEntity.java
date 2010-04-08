@@ -20,9 +20,9 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class SupportedLocalesEntity extends PersistentObject {
+public class SupportedLocalesEntity extends AbstractEntity {
 
     private Short localeId;
 

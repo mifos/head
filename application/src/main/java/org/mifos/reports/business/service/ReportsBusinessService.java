@@ -36,7 +36,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -64,7 +64,7 @@ public class ReportsBusinessService implements BusinessService {
     private ReportsPersistence reportsPersistence = new ReportsPersistence();
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return new ReportsBO(userContext);
     }
 

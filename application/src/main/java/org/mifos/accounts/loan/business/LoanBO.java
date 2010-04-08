@@ -106,7 +106,7 @@ import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -1520,7 +1520,7 @@ public class LoanBO extends AccountBO {
         return accountPayment;
     }
 
-    private void delete(final PersistentObject objectoDelete) throws AccountException {
+    private void delete(final AbstractEntity objectoDelete) throws AccountException {
 
         if (objectoDelete != null) {
             try {

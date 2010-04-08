@@ -75,7 +75,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -89,7 +89,7 @@ import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
-public class AccountBO extends BusinessObject {
+public class AccountBO extends AbstractBusinessObject {
 
     private final Integer accountId;
     protected String globalAccountNum;

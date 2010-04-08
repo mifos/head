@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
 /**
  * Chart of Accounts.
@@ -67,7 +67,7 @@ import org.mifos.framework.business.BusinessObject;
  *  into the <code>COAHierarchyEntity</code> instead of half and half.
  */
 
-public class COABO extends BusinessObject {
+public class COABO extends AbstractBusinessObject {
 
     private Short accountId;
 

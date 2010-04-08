@@ -20,9 +20,9 @@
 
 package org.mifos.accounts.acceptedpaymenttype.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class TransactionTypeEntity extends PersistentObject {
+public class TransactionTypeEntity extends AbstractEntity {
 
     private Short transactionId;
     private String transactionName;

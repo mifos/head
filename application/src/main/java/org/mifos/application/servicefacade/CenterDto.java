@@ -28,13 +28,13 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPositionView;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 
 /**
- * I extend {@link BusinessObject} to keep custom tags in jsp working for now.
+ * I extend {@link AbstractBusinessObject} to keep custom tags in jsp working for now.
  */
-public class CenterDto extends BusinessObject {
+public class CenterDto extends AbstractBusinessObject {
 
     private final Short loanOfficerId;
     private final Integer customerId;

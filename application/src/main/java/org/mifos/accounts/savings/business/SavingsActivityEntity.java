@@ -26,10 +26,10 @@ import java.util.Date;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class SavingsActivityEntity extends PersistentObject {
+public class SavingsActivityEntity extends AbstractEntity {
 
     private final Integer id;
     private final PersonnelBO trxnCreatedBy;

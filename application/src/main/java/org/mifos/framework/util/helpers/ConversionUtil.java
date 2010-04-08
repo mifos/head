@@ -26,7 +26,7 @@ import java.util.Locale;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.struts.action.ActionForm;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.ValueObjectConversionException;
 
 /**
@@ -34,7 +34,7 @@ import org.mifos.framework.exceptions.ValueObjectConversionException;
  */
 public class ConversionUtil {
 
-    public static void populateBusinessObject(ActionForm actionForm, BusinessObject object, Locale locale)
+    public static void populateBusinessObject(ActionForm actionForm, AbstractBusinessObject object, Locale locale)
             throws ValueObjectConversionException {
 
         try {

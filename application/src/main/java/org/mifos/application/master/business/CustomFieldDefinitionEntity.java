@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
@@ -40,7 +40,7 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
  * defined for a particular entity {@link EntityType}.
  */
 
-public class CustomFieldDefinitionEntity extends PersistentObject {
+public class CustomFieldDefinitionEntity extends AbstractEntity {
 
     private static final Short DEFAULT_LOCALE_ID = 1;
 

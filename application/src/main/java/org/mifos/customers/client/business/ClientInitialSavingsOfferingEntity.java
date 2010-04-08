@@ -21,9 +21,9 @@
 package org.mifos.customers.client.business;
 
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class ClientInitialSavingsOfferingEntity extends PersistentObject {
+public class ClientInitialSavingsOfferingEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     private final Integer clientOfferingId;

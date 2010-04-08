@@ -22,14 +22,14 @@ package org.mifos.customers.personnel.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 
 /**
  * This obect has values for extra fields of a personnel.
  */
-public class PersonnelDetailsEntity extends PersistentObject {
+public class PersonnelDetailsEntity extends AbstractEntity {
 
     private Name name;
 

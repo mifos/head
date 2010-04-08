@@ -29,7 +29,7 @@ import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -38,7 +38,7 @@ import org.mifos.security.util.UserContext;
 public class CheckListBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

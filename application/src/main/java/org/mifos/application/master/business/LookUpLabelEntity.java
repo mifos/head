@@ -21,9 +21,9 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class LookUpLabelEntity extends PersistentObject {
+public class LookUpLabelEntity extends AbstractEntity {
 
     private String labelName;
 

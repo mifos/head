@@ -34,7 +34,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant classes.
@@ -61,7 +61,7 @@ import org.mifos.framework.business.PersistentObject;
   )
  }
 )
-public class MifosLookUpEntity extends PersistentObject {
+public class MifosLookUpEntity extends AbstractEntity {
 
     public static final Short DEFAULT_LOCALE_ID = 1;
 

@@ -20,9 +20,9 @@
 
 package org.mifos.framework.components.audit.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class AuditLogRecord extends PersistentObject {
+public class AuditLogRecord extends AbstractEntity {
 
     private final Integer squenceNo;
 

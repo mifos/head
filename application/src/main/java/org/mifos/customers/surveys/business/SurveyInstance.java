@@ -27,9 +27,9 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class SurveyInstance extends PersistentObject {
+public class SurveyInstance extends AbstractEntity {
 
     private int instanceId;
 

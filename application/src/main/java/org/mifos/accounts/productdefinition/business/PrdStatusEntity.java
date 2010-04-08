@@ -21,12 +21,12 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * Should generally (always?) be replaced with {@link PrdStatus}.
  */
-public class PrdStatusEntity extends PersistentObject {
+public class PrdStatusEntity extends AbstractEntity {
 
     private final Short offeringStatusId;
 

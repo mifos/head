@@ -42,7 +42,7 @@ import org.mifos.application.importexport.servicefacade.ImportTransactionsServic
 import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacade;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
 import org.mifos.application.servicefacade.ListItem;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -197,7 +197,7 @@ public class ImportTransactionsAction extends BaseAction {
 
     class DummyImportTransactionService implements BusinessService {
         @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+        public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
             return null;
         }
     }

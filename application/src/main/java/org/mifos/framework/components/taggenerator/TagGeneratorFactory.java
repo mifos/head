@@ -33,7 +33,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
 
@@ -71,7 +71,7 @@ public class TagGeneratorFactory {
         return instance;
     }
 
-    public TagGenerator getGenerator(BusinessObject bo) throws PageExpiredException {
+    public TagGenerator getGenerator(AbstractBusinessObject bo) throws PageExpiredException {
         try {
 
             if (bo == null) {
@@ -87,7 +87,7 @@ public class TagGeneratorFactory {
         }
     }
 
-    private String getClassName(BusinessObject bo) {
+    private String getClassName(AbstractBusinessObject bo) {
         if (bo instanceof CenterBO) {
             return "org.mifos.customers.center.business.CenterBO";
         }

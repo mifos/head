@@ -27,7 +27,7 @@ import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -38,7 +38,7 @@ public class OfficeBusinessService implements BusinessService {
     private OfficePersistence officePersistence = new OfficePersistence();
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

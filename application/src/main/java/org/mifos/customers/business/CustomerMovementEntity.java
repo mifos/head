@@ -24,10 +24,10 @@ import java.util.Date;
 
 import org.mifos.application.util.helpers.Status;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 
-public class CustomerMovementEntity extends PersistentObject {
+public class CustomerMovementEntity extends AbstractEntity {
 
     private final Integer customerMovementId;
 

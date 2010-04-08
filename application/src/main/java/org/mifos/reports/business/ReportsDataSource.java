@@ -20,13 +20,13 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
 /**
  * This class encapsulates the Reports Datasource
  */
-public class ReportsDataSource extends BusinessObject {
+public class ReportsDataSource extends AbstractBusinessObject {
 
     private int datasourceId;
     private String name;

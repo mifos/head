@@ -20,13 +20,13 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
 
 /**
  * This class encapsulate the details of the customer address
  */
-public class CustomerAddressDetailEntity extends PersistentObject {
+public class CustomerAddressDetailEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     // see .hbm.xml file

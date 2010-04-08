@@ -20,7 +20,7 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PageExpiredException;
 
 public abstract class TagGenerator {
@@ -35,15 +35,15 @@ public abstract class TagGenerator {
         this.associatedGenerator = associatedGenerator;
     }
 
-    public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired, Object randomNum)
+    public static String createHeaderLinks(AbstractBusinessObject bo, boolean selfLinkRequired, Object randomNum)
             throws PageExpiredException {
         TagGenerator generator = TagGeneratorFactory.getInstance().getGenerator(bo);
         return generator.build(bo, selfLinkRequired, randomNum).toString();
     }
 
-    protected StringBuilder build(BusinessObject obj, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, Object randomNum) {
         return build(obj, false, randomNum);
     }
 
-    protected abstract StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum);
+    protected abstract StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum);
 }

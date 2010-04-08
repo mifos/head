@@ -31,11 +31,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "FEELEVEL")
-public class FeeLevelEntity  extends PersistentObject {
+public class FeeLevelEntity  extends AbstractEntity {
     private Short feeLevelId;
     private Short levelId;
     private FeeBO fee;

@@ -27,10 +27,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class BranchReportStaffSummaryBO extends BusinessObject {
+public class BranchReportStaffSummaryBO extends AbstractBusinessObject {
 
     @SuppressWarnings("unused")
     private BranchReportBO branchReport;

@@ -25,7 +25,7 @@ import java.util.List;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -40,7 +40,7 @@ public class FeeBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     };
 

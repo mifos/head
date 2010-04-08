@@ -32,7 +32,7 @@ import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersisten
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -51,7 +51,7 @@ public class ProductMixBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

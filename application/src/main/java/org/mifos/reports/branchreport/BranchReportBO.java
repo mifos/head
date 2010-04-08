@@ -28,9 +28,9 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class BranchReportBO extends BusinessObject {
+public class BranchReportBO extends AbstractBusinessObject {
 
     private Integer branchReportId;
     private Date runDate;

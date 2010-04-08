@@ -20,9 +20,9 @@
 
 package org.mifos.security.rolesandpermission.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class RoleActivityEntity extends PersistentObject {
+public class RoleActivityEntity extends AbstractEntity {
 
     private RoleBO role;
 

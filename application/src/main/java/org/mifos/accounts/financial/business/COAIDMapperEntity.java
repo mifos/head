@@ -31,7 +31,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * Unused and candidate for removal.
@@ -46,7 +46,7 @@ import org.mifos.framework.business.PersistentObject;
 )
 @Entity
 @Table(name = "COA_IDMAPPER")
-public class COAIDMapperEntity  extends PersistentObject {
+public class COAIDMapperEntity  extends AbstractEntity {
 
     private Short constantId;
     private COABO coa;

@@ -24,9 +24,9 @@ import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.LocalizedTextLookup;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class LookUpValueEntity extends PersistentObject implements LocalizedTextLookup {
+public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLookup {
 
     private Integer lookUpId;
 

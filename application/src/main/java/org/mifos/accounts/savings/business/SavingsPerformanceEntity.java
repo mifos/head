@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.savings.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class SavingsPerformanceEntity extends PersistentObject {
+public class SavingsPerformanceEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     // See Hibernate mapping

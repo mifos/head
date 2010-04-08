@@ -28,14 +28,14 @@ import java.util.Set;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
 /**
  * This class encpsulate the custom field for the customer
  */
-public class CustomerCustomFieldEntity extends PersistentObject {
+public class CustomerCustomFieldEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     private final Integer customFieldId;

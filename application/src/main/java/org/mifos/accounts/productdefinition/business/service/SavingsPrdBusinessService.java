@@ -30,7 +30,7 @@ import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -39,7 +39,7 @@ import org.mifos.security.util.UserContext;
 public class SavingsPrdBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

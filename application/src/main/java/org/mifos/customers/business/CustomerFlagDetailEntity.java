@@ -22,13 +22,13 @@ package org.mifos.customers.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * A class that represents a row in the 'customer flag' table. A customer may
  * have several of these flags (rows).
  */
-public class CustomerFlagDetailEntity extends PersistentObject {
+public class CustomerFlagDetailEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     private final Integer customerFlagId;

@@ -23,9 +23,9 @@ package org.mifos.customers.client.business;
 import java.sql.Blob;
 
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class CustomerPictureEntity extends PersistentObject {
+public class CustomerPictureEntity extends AbstractEntity {
 
     private final Integer pictureId;
 

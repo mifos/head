@@ -30,12 +30,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 
 @Entity
 @Table(name = "ACCOUNT_CUSTOM_FIELD")
-public class AccountCustomFieldEntity extends PersistentObject {
+public class AccountCustomFieldEntity extends AbstractEntity {
 
     private Integer accountCustomFieldId;
 

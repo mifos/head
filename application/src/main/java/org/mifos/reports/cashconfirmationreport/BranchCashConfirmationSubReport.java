@@ -20,9 +20,9 @@
 
 package org.mifos.reports.cashconfirmationreport;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public abstract class BranchCashConfirmationSubReport extends BusinessObject {
+public abstract class BranchCashConfirmationSubReport extends AbstractBusinessObject {
 
     @SuppressWarnings("unused")
     private BranchCashConfirmationReportBO branchCashConfirmationReport;

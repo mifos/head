@@ -25,12 +25,12 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulate the details about the meeting
  */
-public class MeetingDetailsEntity extends PersistentObject {
+public class MeetingDetailsEntity extends AbstractEntity {
 
     private final Integer detailsId;
 

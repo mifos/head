@@ -23,7 +23,7 @@ package org.mifos.accounts.productsmix.business;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.PersistenceException;
  * This class encapsulate the product mix (Allowed / Not Allowed products)
  */
 
-public class ProductMixBO extends BusinessObject {
+public class ProductMixBO extends AbstractBusinessObject {
 
     private final Integer prdOfferingMixId;
     private PrdOfferingBO prdOfferingId;

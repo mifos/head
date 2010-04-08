@@ -29,7 +29,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -37,7 +37,7 @@ import org.mifos.framework.util.helpers.Money;
 /**
  *
  */
-public class AccountFeesEntity extends PersistentObject {
+public class AccountFeesEntity extends AbstractEntity {
 
     private final Integer accountFeeId;
 

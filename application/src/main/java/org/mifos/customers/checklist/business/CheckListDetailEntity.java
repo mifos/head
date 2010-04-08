@@ -21,9 +21,9 @@
 package org.mifos.customers.checklist.business;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class CheckListDetailEntity extends PersistentObject {
+public class CheckListDetailEntity extends AbstractEntity {
 
     private final Integer detailId;
 

@@ -39,7 +39,7 @@ import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -94,7 +94,7 @@ public class TestObjectPersistence {
      * This persists any object passed as parameter. It starts a new transaction
      * and commits it if the insertion was successful.
      */
-    public PersistentObject persist(PersistentObject obj) {
+    public AbstractEntity persist(AbstractEntity obj) {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(obj);
@@ -135,7 +135,7 @@ public class TestObjectPersistence {
     }
 
     /**
-     * TODO: This should just call {@link #update(PersistentObject)}, right? Or
+     * TODO: This should just call {@link #update(AbstractEntity)}, right? Or
      * is the difference between save and saveOrUpdate relevant here?
      */
     public LoanBO getLoanAccount(LoanBO loan) {
@@ -150,14 +150,14 @@ public class TestObjectPersistence {
         return (FeeFrequencyTypeEntity) session.get(FeeFrequencyTypeEntity.class, Short.valueOf("1"));
     }
 
-    public void removeObject(PersistentObject obj) {
+    public void removeObject(AbstractEntity obj) {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.delete(obj);
         StaticHibernateUtil.getTransaction().commit();
     }
 
-    public void update(PersistentObject obj) {
+    public void update(AbstractEntity obj) {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.saveOrUpdate(obj);

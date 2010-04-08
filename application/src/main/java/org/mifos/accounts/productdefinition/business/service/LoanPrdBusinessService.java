@@ -40,7 +40,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -49,7 +49,7 @@ import org.mifos.security.util.UserContext;
 public class LoanPrdBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(final UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(final UserContext userContext) {
         return null;
     }
 

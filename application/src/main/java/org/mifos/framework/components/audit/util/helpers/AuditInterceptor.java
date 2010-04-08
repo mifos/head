@@ -29,7 +29,7 @@ import java.util.Set;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Transaction;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.util.DateTimeService;
@@ -51,7 +51,7 @@ public class AuditInterceptor extends EmptyInterceptor {
     }
 
     public void createInitialValueMap(Object object) {
-        userContext = ((BusinessObject) object).getUserContext();
+        userContext = ((AbstractBusinessObject) object).getUserContext();
         interceptHelper.hibernateMeta(object, AuditConstants.TRANSACTIONBEGIN);
     }
 

@@ -21,10 +21,10 @@
 package org.mifos.customers.office.business;
 
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 
-public class OfficeCustomFieldEntity extends PersistentObject {
+public class OfficeCustomFieldEntity extends AbstractEntity {
 
     private final Integer officecustomFieldId;
 

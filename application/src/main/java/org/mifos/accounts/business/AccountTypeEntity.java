@@ -27,7 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class depicts the different account types. Obsolete; replaced by
@@ -35,7 +35,7 @@ import org.mifos.framework.business.PersistentObject;
  */
 @Entity
 @Table(name = "ACCOUNT_TYPE")
-public class AccountTypeEntity extends PersistentObject {
+public class AccountTypeEntity extends AbstractEntity {
 
     private Short accountTypeId;
     private String description;

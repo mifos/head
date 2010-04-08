@@ -27,9 +27,9 @@ import java.util.Set;
 
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class BranchCashConfirmationReportBO extends BusinessObject {
+public class BranchCashConfirmationReportBO extends AbstractBusinessObject {
 
     @SuppressWarnings("unused")
     private Integer branchCashConfirmationReportId;

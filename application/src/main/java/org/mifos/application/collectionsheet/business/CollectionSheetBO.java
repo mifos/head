@@ -36,7 +36,7 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstan
 import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -49,7 +49,7 @@ import org.mifos.framework.exceptions.SystemException;
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
-public class CollectionSheetBO extends BusinessObject {
+public class CollectionSheetBO extends AbstractBusinessObject {
 
     private static final int CUSTOMER_ID_MAP_INITIAL_CAPACITY = 10000;
 

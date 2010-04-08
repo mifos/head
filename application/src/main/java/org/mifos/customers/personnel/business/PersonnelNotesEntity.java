@@ -22,10 +22,10 @@ package org.mifos.customers.personnel.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 
-public class PersonnelNotesEntity extends PersistentObject {
+public class PersonnelNotesEntity extends AbstractEntity {
 
     private final Integer commentId;
 

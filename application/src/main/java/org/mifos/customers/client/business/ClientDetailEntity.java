@@ -23,9 +23,9 @@ package org.mifos.customers.client.business;
 import java.util.Date;
 
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class ClientDetailEntity extends PersistentObject {
+public class ClientDetailEntity extends AbstractEntity {
 
     private final Integer customerId;
     private ClientBO client;

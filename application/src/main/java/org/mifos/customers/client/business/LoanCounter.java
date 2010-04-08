@@ -25,10 +25,10 @@ import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Transformer;
 
-public class LoanCounter extends PersistentObject {
+public class LoanCounter extends AbstractEntity {
     public static Transformer<LoanCounter, Short> TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<LoanCounter, Short>() {
         public Short transform(LoanCounter input) {
             return input.getLoanCycleCounter();

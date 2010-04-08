@@ -21,9 +21,9 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class LoanOfferingFundEntity extends PersistentObject {
+public class LoanOfferingFundEntity extends AbstractEntity {
 
     private final Short loanOfferingFundId;
 

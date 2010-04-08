@@ -20,10 +20,10 @@
 
 package org.mifos.customers.office.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
 
-public class OfficeAddressEntity extends PersistentObject {
+public class OfficeAddressEntity extends AbstractEntity {
 
     private final Short officeAdressId;
 

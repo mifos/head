@@ -24,12 +24,12 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
-public class CollSheetSavingsDetailsEntity extends PersistentObject {
+public class CollSheetSavingsDetailsEntity extends AbstractEntity {
 
     public CollSheetSavingsDetailsEntity() {
         super();

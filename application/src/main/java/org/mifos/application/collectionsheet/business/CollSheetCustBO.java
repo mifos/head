@@ -31,7 +31,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.Money;
@@ -42,7 +42,7 @@ import org.mifos.framework.util.helpers.Money;
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
-public class CollSheetCustBO extends BusinessObject {
+public class CollSheetCustBO extends AbstractBusinessObject {
 
     private Long collSheetCustId;
 

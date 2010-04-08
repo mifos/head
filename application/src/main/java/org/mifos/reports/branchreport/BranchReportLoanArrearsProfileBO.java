@@ -25,10 +25,10 @@ import static org.mifos.framework.util.helpers.MoneyUtils.getMoneyAmount;
 import java.math.BigDecimal;
 
 import org.mifos.config.AccountingRules;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class BranchReportLoanArrearsProfileBO extends BusinessObject {
+public class BranchReportLoanArrearsProfileBO extends AbstractBusinessObject {
 
     @SuppressWarnings("unused")
     private BranchReportBO branchReport;

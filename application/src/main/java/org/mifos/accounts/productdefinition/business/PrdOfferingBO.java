@@ -34,7 +34,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -51,7 +51,7 @@ import org.mifos.security.util.UserContext;
  * "products" (that is what they are called in the functional specification, and
  * the wider microfinance industry).
  */
-public abstract class PrdOfferingBO extends BusinessObject {
+public abstract class PrdOfferingBO extends AbstractBusinessObject {
 
     private static final MifosLogger prdLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
     private final Short prdOfferingId;

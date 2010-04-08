@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.persistence.OfficeHierarchyPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -37,7 +37,7 @@ public class OfficeHierarchyBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

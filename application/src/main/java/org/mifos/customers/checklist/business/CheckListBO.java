@@ -31,11 +31,11 @@ import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 
-public abstract class CheckListBO extends BusinessObject {
+public abstract class CheckListBO extends AbstractBusinessObject {
 
     private final Short checklistId;
 

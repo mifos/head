@@ -34,12 +34,12 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.DateAdjustmentStrategy;
 import org.mifos.calendar.HolidayAdjustmentRuleFactory;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
 
-public class HolidayBO extends BusinessObject implements Holiday {
+public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     private HolidayPK holidayPK;
 

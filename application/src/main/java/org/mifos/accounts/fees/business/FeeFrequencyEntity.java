@@ -23,9 +23,9 @@ package org.mifos.accounts.fees.business;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class FeeFrequencyEntity extends PersistentObject {
+public class FeeFrequencyEntity extends AbstractEntity {
 
     private final Short feeFrequencyId;
 

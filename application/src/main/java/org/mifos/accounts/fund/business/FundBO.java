@@ -25,13 +25,13 @@ import org.mifos.accounts.fund.exception.FundException;
 import org.mifos.accounts.fund.persistence.FundPersistence;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 
-public class FundBO extends BusinessObject {
+public class FundBO extends AbstractBusinessObject {
     private final Short fundId;
 
     private final FundCodeEntity fundCode;

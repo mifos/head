@@ -39,12 +39,12 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.security.util.UserContext;
 
-public abstract class FeeBO extends BusinessObject {
+public abstract class FeeBO extends AbstractBusinessObject {
 
     private final Short feeId;
     private final String feeName;

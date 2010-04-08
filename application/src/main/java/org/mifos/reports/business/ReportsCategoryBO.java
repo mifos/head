@@ -23,9 +23,9 @@ package org.mifos.reports.business;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class ReportsCategoryBO extends BusinessObject {
+public class ReportsCategoryBO extends AbstractBusinessObject {
 
     public static short ANALYSIS = 6;
 

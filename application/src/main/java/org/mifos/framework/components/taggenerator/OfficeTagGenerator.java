@@ -21,7 +21,7 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class OfficeTagGenerator extends TagGenerator {
@@ -30,12 +30,12 @@ public class OfficeTagGenerator extends TagGenerator {
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, Object randomNum) {
         return build(obj, false, randomNum);
     }
 
     @Override
-    protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum) {
+    protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         OfficeBO office = (OfficeBO) obj;
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("<a href=\"custSearchAction.do?method=getOfficeHomePage&officeId=");

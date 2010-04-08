@@ -26,13 +26,13 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * This class encapsulate the MeetingRecurrence details
  */
-public class MeetingRecurrenceEntity extends PersistentObject {
+public class MeetingRecurrenceEntity extends AbstractEntity {
 
     private final Integer detailsId;
 

@@ -56,7 +56,7 @@ import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -566,7 +566,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     private class DummyBusinessService implements BusinessService {
 
         @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+        public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
             return null;
         }
 

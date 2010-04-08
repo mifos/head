@@ -35,7 +35,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustActionForm;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -121,7 +121,7 @@ public class CustAction extends SearchAction {
     private class DummyBusinessService implements BusinessService {
 
         @Override
-        public BusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
+        public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
             return null;
         }
     }

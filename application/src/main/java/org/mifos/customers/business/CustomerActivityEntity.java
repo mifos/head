@@ -23,10 +23,10 @@ package org.mifos.customers.business;
 import java.util.Date;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class CustomerActivityEntity extends PersistentObject {
+public class CustomerActivityEntity extends AbstractEntity {
 
     private final Integer customerActivityId;
 

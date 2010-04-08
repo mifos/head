@@ -31,13 +31,13 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
-public abstract class AccountTrxnEntity extends PersistentObject {
+public abstract class AccountTrxnEntity extends AbstractEntity {
 
     private final Integer accountTrxnId = null;
 

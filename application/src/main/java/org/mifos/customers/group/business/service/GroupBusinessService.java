@@ -23,7 +23,7 @@ package org.mifos.customers.group.business.service;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -37,7 +37,7 @@ import org.mifos.security.util.UserContext;
 public class GroupBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 

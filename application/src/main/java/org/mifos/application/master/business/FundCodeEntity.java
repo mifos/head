@@ -26,11 +26,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "FUND_CODE")
-public class FundCodeEntity extends PersistentObject {
+public class FundCodeEntity extends AbstractEntity {
 
     private Short fundCodeId;
 

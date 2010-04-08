@@ -20,10 +20,10 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
-public class ReportsBO extends BusinessObject {
+public class ReportsBO extends AbstractBusinessObject {
 
     public ReportsBO() {
         this.reportsCategoryBO = new ReportsCategoryBO();

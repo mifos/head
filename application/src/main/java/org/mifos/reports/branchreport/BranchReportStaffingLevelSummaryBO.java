@@ -20,9 +20,9 @@
 
 package org.mifos.reports.branchreport;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-public class BranchReportStaffingLevelSummaryBO extends BusinessObject implements
+public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject implements
         Comparable<BranchReportStaffingLevelSummaryBO> {
     public static final Integer TOTAL_STAFF_ROLE_ID = Integer.valueOf(-1);
     public static final String TOTAL_STAFF_ROLE_NAME = "Total Staff";

@@ -20,9 +20,9 @@
 
 package org.mifos.accounts.financial.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class COAHierarchyEntity extends PersistentObject {
+public class COAHierarchyEntity extends AbstractEntity {
     private Short accountId;
 
     private COABO coa;

@@ -30,7 +30,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class denotes the currency object. It contains information such as the
@@ -49,7 +49,7 @@ import org.mifos.framework.business.PersistentObject;
 )
 @Entity
 @Table(name = "CURRENCY")
-public final class MifosCurrency extends PersistentObject {
+public final class MifosCurrency extends AbstractEntity {
 
     public static final short CEILING_MODE = 1;
     public static final short FLOOR_MODE = 2;

@@ -32,7 +32,7 @@ import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.calendar.MoratoriumSwitch;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -50,7 +50,7 @@ public class HolidayBusinessService implements BusinessService {
     }
 
     @Override
-    public BusinessObject getBusinessObject(final UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(final UserContext userContext) {
         return null;
     }
 

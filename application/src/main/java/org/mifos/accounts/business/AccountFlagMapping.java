@@ -22,9 +22,9 @@ package org.mifos.accounts.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class AccountFlagMapping extends PersistentObject {
+public class AccountFlagMapping extends AbstractEntity {
 
     private Integer accountFlagId;
     private AccountStateFlagEntity flag;

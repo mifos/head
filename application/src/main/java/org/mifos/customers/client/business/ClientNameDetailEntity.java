@@ -22,10 +22,10 @@ package org.mifos.customers.client.business;
 
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Name;
 
-public class ClientNameDetailEntity extends PersistentObject {
+public class ClientNameDetailEntity extends AbstractEntity {
 
     private final Integer customerNameId;
     private ClientBO client;

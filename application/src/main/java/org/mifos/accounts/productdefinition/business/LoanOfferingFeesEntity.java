@@ -21,11 +21,11 @@
 package org.mifos.accounts.productdefinition.business;
 
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
-public class LoanOfferingFeesEntity extends PersistentObject {
+public class LoanOfferingFeesEntity extends AbstractEntity {
 
     private final Short prdOfferingFeeId;
 

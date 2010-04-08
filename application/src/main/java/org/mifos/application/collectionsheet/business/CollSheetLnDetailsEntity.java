@@ -27,14 +27,14 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
-public class CollSheetLnDetailsEntity extends PersistentObject {
+public class CollSheetLnDetailsEntity extends AbstractEntity {
 
     private Long loanDetailsId;
 

@@ -34,7 +34,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -48,7 +48,7 @@ public class MasterDataService implements BusinessService {
     private final MasterPersistence masterPersistence = new MasterPersistence();
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

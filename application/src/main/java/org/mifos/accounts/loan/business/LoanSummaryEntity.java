@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanSummaryEntity extends PersistentObject {
+public class LoanSummaryEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     // see .hbm.xml file

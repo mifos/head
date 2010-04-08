@@ -26,7 +26,7 @@ import org.mifos.accounts.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -35,7 +35,7 @@ import org.mifos.security.util.UserContext;
 public class ProductCategoryBusinessService implements BusinessService {
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

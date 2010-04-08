@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.taggenerator.TagGenerator;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
@@ -52,13 +52,13 @@ public class HeaderTag extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        BusinessObject obj = null;
+        AbstractBusinessObject obj = null;
         Object randomNum = pageContext.getSession().getAttribute(Constants.RANDOMNUM);
         try {
-            obj = (BusinessObject) SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext
+            obj = (AbstractBusinessObject) SessionUtils.getAttribute(Constants.BUSINESS_KEY, (HttpServletRequest) pageContext
                     .getRequest());
         } catch (PageExpiredException pex) {
-            obj = (BusinessObject) pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
+            obj = (AbstractBusinessObject) pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
         }
         try {
             String linkStr;

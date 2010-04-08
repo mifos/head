@@ -40,7 +40,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -116,9 +116,9 @@ public class InterceptHelper {
 
         if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
             // locale=((BusinessObject)object).getUserContext().getMfiLocale();
-            locale = ((BusinessObject) object).getUserContext().getCurrentLocale();
+            locale = ((AbstractBusinessObject) object).getUserContext().getCurrentLocale();
             // localeId=((BusinessObject)object).getUserContext().getMfiLocaleId();
-            localeId = ((BusinessObject) object).getUserContext().getLocaleId();
+            localeId = ((AbstractBusinessObject) object).getUserContext().getLocaleId();
             logger.debug("initial path class: " + AuditConfigurtion.getEntityToClassPath(object.getClass().getName()));
             entityName = AuditConfigurtion.getEntityToClassPath(object.getClass().getName());
             entityId = Integer.valueOf(customMeta.getIdentifier(object, EntityMode.POJO).toString());

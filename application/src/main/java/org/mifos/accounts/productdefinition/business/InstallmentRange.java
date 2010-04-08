@@ -22,9 +22,9 @@ package org.mifos.accounts.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.isBetween;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public abstract class InstallmentRange extends PersistentObject {
+public abstract class InstallmentRange extends AbstractEntity {
     private Short minNoOfInstall;
     private Short maxNoOfInstall;
 

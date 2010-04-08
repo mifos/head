@@ -23,7 +23,7 @@ package org.mifos.application.master.business;
 import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * Subclasses of this class provide access to the database tables which
@@ -33,7 +33,7 @@ import org.mifos.framework.business.PersistentObject;
  * generally expect to move looking up messages from the database for
  * localization (language and MFI) to {@link MessageLookup}.
  */
-public abstract class MasterDataEntity extends PersistentObject {
+public abstract class MasterDataEntity extends AbstractEntity {
     // values which override localized values are stored with locale =1
     public static Short CUSTOMIZATION_LOCALE_ID = (short) 1;
 

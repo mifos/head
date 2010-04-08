@@ -20,7 +20,7 @@
 
 package org.mifos.framework.business.service;
 
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -33,6 +33,6 @@ import org.mifos.security.util.UserContext;
  */
 public interface BusinessService {
 
-    public BusinessObject getBusinessObject(UserContext userContext);
+    public AbstractBusinessObject getBusinessObject(UserContext userContext);
 
 }

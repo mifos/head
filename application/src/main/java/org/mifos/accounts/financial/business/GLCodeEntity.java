@@ -28,11 +28,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "GL_CODE")
-public class GLCodeEntity extends PersistentObject {
+public class GLCodeEntity extends AbstractEntity {
 
     private Short glcodeId;
     private String glcode;

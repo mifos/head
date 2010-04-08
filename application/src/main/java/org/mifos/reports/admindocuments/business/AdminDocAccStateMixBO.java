@@ -21,10 +21,10 @@
 package org.mifos.reports.admindocuments.business;
 
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.security.util.UserContext;
 
-public class AdminDocAccStateMixBO extends BusinessObject {
+public class AdminDocAccStateMixBO extends AbstractBusinessObject {
 
     private Short adminDocAccStateMixId;
 

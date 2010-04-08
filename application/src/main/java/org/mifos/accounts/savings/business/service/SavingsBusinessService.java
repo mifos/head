@@ -29,7 +29,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -44,7 +44,7 @@ public class SavingsBusinessService implements BusinessService {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     @Override
-    public BusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 

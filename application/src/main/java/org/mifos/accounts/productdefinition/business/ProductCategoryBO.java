@@ -27,14 +27,14 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.UserContext;
 
-public class ProductCategoryBO extends BusinessObject {
+public class ProductCategoryBO extends AbstractBusinessObject {
 
     private static final MifosLogger prdLoanLogger = MifosLogManager.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 

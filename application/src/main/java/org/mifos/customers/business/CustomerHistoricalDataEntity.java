@@ -22,13 +22,13 @@ package org.mifos.customers.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class encapsulate the customer historical data
  */
-public class CustomerHistoricalDataEntity extends PersistentObject {
+public class CustomerHistoricalDataEntity extends AbstractEntity {
 
     private final Short historicalId;
 

@@ -20,13 +20,13 @@
 
 package org.mifos.accounts.fees.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * A class that represents a row in the 'fee_payments_categories_type' table.
  * This class may be customized as it is never re-generated after being created.
  */
-public class FeePaymentsCategoriesTypeEntity extends PersistentObject {
+public class FeePaymentsCategoriesTypeEntity extends AbstractEntity {
 
     private Short feePaymentsCategoryTypeId;
 

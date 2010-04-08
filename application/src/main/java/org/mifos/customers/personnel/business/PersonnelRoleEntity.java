@@ -20,10 +20,10 @@
 
 package org.mifos.customers.personnel.business;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
-public class PersonnelRoleEntity extends PersistentObject {
+public class PersonnelRoleEntity extends AbstractEntity {
 
     private final Integer personnelRoleId;
 

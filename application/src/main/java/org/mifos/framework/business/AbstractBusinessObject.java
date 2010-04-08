@@ -25,7 +25,7 @@ import java.util.Date;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
-public abstract class BusinessObject extends PersistentObject {
+public abstract class AbstractBusinessObject extends AbstractEntity {
 
     protected UserContext userContext;
 
@@ -79,11 +79,11 @@ public abstract class BusinessObject extends PersistentObject {
         this.versionNo = versionNo;
     }
 
-    public BusinessObject() {
+    public AbstractBusinessObject() {
         this.userContext = null;
     }
 
-    protected BusinessObject(UserContext userContext) {
+    protected AbstractBusinessObject(UserContext userContext) {
         this.userContext = userContext;
     }
 

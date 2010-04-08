@@ -22,9 +22,9 @@ package org.mifos.accounts.productdefinition.business;
 
 import static org.mifos.framework.util.helpers.NumberUtils.isBetween;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public abstract class AmountRange extends PersistentObject {
+public abstract class AmountRange extends AbstractEntity {
     private Double minLoanAmount;
     private Double maxLoanAmount;
 

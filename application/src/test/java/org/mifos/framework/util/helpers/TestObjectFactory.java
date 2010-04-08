@@ -164,7 +164,7 @@ import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -241,7 +241,7 @@ public class TestObjectFactory {
         return (OfficeBO) addObject(testObjectPersistence.getOffice(officeId));
     }
 
-    public static void removeObject(PersistentObject obj) {
+    public static void removeObject(AbstractEntity obj) {
         if (obj != null) {
             testObjectPersistence.removeObject(obj);
             obj = null;
@@ -1470,7 +1470,7 @@ public class TestObjectFactory {
         }
     }
 
-    public static void updateObject(final PersistentObject obj) {
+    public static void updateObject(final AbstractEntity obj) {
         testObjectPersistence.update(obj);
     }
 

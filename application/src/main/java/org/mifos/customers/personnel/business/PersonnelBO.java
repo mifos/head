@@ -40,7 +40,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -57,7 +57,7 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
 
-public class PersonnelBO extends BusinessObject {
+public class PersonnelBO extends AbstractBusinessObject {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
 

@@ -29,10 +29,10 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class LoanPerformanceHistoryEntity extends PersistentObject {
+public class LoanPerformanceHistoryEntity extends AbstractEntity {
 
     @SuppressWarnings("unused")
     // see .hbm.xml file
