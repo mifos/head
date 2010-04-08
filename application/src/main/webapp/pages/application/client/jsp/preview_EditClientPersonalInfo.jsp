@@ -299,7 +299,7 @@ explanation of the license and how it is applied.
 								<c:forEach var="customField"
 									items="${sessionScope.clientCustActionForm.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
-										<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
+										<mifos:mifoslabel name="${cf.lookUpEntityType}"
 											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel>
 		                	 <span class="fontnormal">	<c:out value="${customField.fieldValue}" /></span>
 										<br>

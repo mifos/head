@@ -1445,7 +1445,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             loanOfficerId = this.personnel.getPersonnelId();
         }
 
-        Address address = null;
+        Address address = new Address();
         if (this.customerAddressDetail != null) {
             address = this.customerAddressDetail.getAddress();
         }

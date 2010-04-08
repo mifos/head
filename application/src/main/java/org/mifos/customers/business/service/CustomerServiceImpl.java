@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -96,7 +97,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final OfficeDao officeDao;
     private HolidayDao holidayDao;
 
-    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao, HolidayDao holidayDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
+            HolidayDao holidayDao) {
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.officeDao = officeDao;
@@ -121,16 +123,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees, List<SavingsOfferingBO> savingProducts) throws CustomerException {
+    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees,
+            List<SavingsOfferingBO> savingProducts) throws CustomerException {
 
         if (client.isStatusValidationRequired()) {
             client.validateClientStatus();
         }
 
         client.validateOffice();
-//      FIXME - #00003 - keithw verify validation here when creating clients
-//        client.validateOfferings();
-//        client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+        // FIXME - #00003 - keithw verify validation here when creating clients
+        // client.validateOfferings();
+        // client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
         if (client.isActive()) {
             client.validateFieldsForActiveClient();
@@ -141,10 +144,14 @@ public class CustomerServiceImpl implements CustomerService {
             for (SavingsOfferingBO clientSavingsProduct : savingProducts) {
                 try {
                     if (clientSavingsProduct.isActive()) {
-                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefs, userContext.getPreferredLocale());
+                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
+                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
+                                customFieldDefs, userContext.getPreferredLocale());
 
-                        SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client, AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(), savingCustomFieldViews);
+                        SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
+                                AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
+                                savingCustomFieldViews);
                         savingsAccounts.add(savingsAccount);
                     }
                 } catch (PersistenceException pe) {
@@ -180,7 +187,8 @@ public class CustomerServiceImpl implements CustomerService {
                             if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
                                     .getRecommendedAmntUnit().getId().equals(
                                             RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
+                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(),
+                                        workingDays, holidays);
                             }
                         }
                     }
@@ -229,20 +237,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center) {
+    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center)
+            throws CustomerException {
 
         Short loanOfficerId = centerUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
+        PersonnelBO oldLoanOfficer = center.getPersonnel();
+        center.setLoanOfficer(loanOfficer);
+        center.setMfiJoiningDate(centerUpdate.getMfiJoiningDateTime().toDate());
+
+        if (center.isActive()) {
+            center.validateLoanOfficer();
+        }
+
         try {
-            PersonnelBO oldLoanOfficer = center.getPersonnel();
-            center.setLoanOfficer(loanOfficer);
-            center.setMfiJoiningDate(centerUpdate.getMfiJoiningDateTime().toDate());
-
-            if (center.isActive()) {
-                center.validateLoanOfficer();
-            }
-
             if (center.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
@@ -261,19 +270,14 @@ public class CustomerServiceImpl implements CustomerService {
             center.updateCustomerPositions(centerUpdate.getCustomerPositions());
             center.setUpdatedBy(userContext.getId());
             center.setUpdatedDate(new DateTime().toDate());
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
 
+        try {
             StaticHibernateUtil.startTransaction();
-
             customerDao.save(center);
-
             StaticHibernateUtil.commitTransaction();
-
-        } catch (CustomerException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } catch (InvalidDateException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -285,7 +289,26 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO group) throws CustomerException {
 
-        group.validate();
+        DateTime trainedDate = null;
+
+        try {
+            if (groupUpdate.getTrainedDateAsString() != null && !StringUtils.isBlank(groupUpdate.getTrainedDateAsString())) {
+                trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
+                        .getPreferredLocale());
+            }
+
+            if (groupUpdate.isTrained()) {
+                group.setTrained(groupUpdate.isTrained());
+            } else {
+                group.setTrained(false);
+            }
+
+            if (trainedDate != null) {
+                group.setTrainedDate(trainedDate.toDate());
+            }
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        }
 
         if (!group.getDisplayName().equals(groupUpdate.getDisplayName())) {
             // customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(),
@@ -295,28 +318,14 @@ public class CustomerServiceImpl implements CustomerService {
         Short loanOfficerId = groupUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
+        PersonnelBO oldLoanOfficer = group.getPersonnel();
+        group.setLoanOfficer(loanOfficer);
+
+        if (group.isActive()) {
+            group.validateLoanOfficer();
+        }
+
         try {
-            DateTime trainedDate = null;
-
-            if (groupUpdate.getTrainedDateAsString() != null) {
-                trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
-                        .getPreferredLocale());
-            }
-
-            if (groupUpdate.isTrained()) {
-                group.setTrained(groupUpdate.isTrained());
-                group.setTrainedDate(trainedDate.toDate());
-            } else {
-                group.setTrained(false);
-            }
-
-            PersonnelBO oldLoanOfficer = group.getPersonnel();
-            group.setLoanOfficer(loanOfficer);
-
-            if (group.isActive()) {
-                group.validateLoanOfficer();
-            }
-
             if (group.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
@@ -336,19 +345,18 @@ public class CustomerServiceImpl implements CustomerService {
             group.setUpdatedBy(userContext.getId());
             group.setUpdatedDate(new DateTime().toDate());
             group.setDisplayName(groupUpdate.getDisplayName());
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
 
+        group.validate();
+
+        try {
             StaticHibernateUtil.startTransaction();
 
             customerDao.save(group);
 
             StaticHibernateUtil.commitTransaction();
-
-        } catch (CustomerException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } catch (InvalidDateException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -505,7 +513,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
+    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag,
+            CustomerNoteEntity customerNote) throws CustomerException {
 
         if (newStatus.isCenterInActive()) {
 
@@ -514,7 +523,8 @@ public class CustomerServiceImpl implements CustomerService {
             List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
                     .findClientsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
-            List<CustomerView> groupsThatAreNotClosedOrCancelled = this.customerDao.findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
+            List<CustomerView> groupsThatAreNotClosedOrCancelled = this.customerDao
+                    .findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0 || groupsThatAreNotClosedOrCancelled.size() > 0) {
                 throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
@@ -550,7 +560,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
+    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus,
+            CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         validateChangeOfStatusForGroup(group, oldStatus, newStatus);
 
@@ -647,7 +658,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
+    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
+            CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
         if (newStatus.isClientActive()) {
@@ -684,8 +696,8 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void changeClientStatus(ClientBO client, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote)
-            throws AccountException {
+    private void changeClientStatus(ClientBO client, CustomerStatusFlag customerStatusFlag,
+            CustomerNoteEntity customerNote) throws AccountException {
         if (client.isClosedOrCancelled()) {
 
             if (client.isClientUnderGroup()) {
@@ -705,7 +717,8 @@ public class CustomerServiceImpl implements CustomerService {
             if (customerAccount.isOpen()) {
                 customerAccount.setUserContext(client.getUserContext());
 
-                customerAccount.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, customerStatusFlag.getValue(), customerNote.getComment());
+                customerAccount.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, customerStatusFlag.getValue(),
+                        customerNote.getComment());
                 customerAccount.update();
             }
         }

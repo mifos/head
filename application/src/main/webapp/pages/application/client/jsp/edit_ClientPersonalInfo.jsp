@@ -474,8 +474,8 @@ explanation of the license and how it is applied.
 								<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 									<tr class="fontnormal">
 										<td width="17%" align="right"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
-											name="${customFieldDef.lookUpEntity.entityType}"
-											mandatory="${customFieldDef.mandatoryStringValue}"
+											name="${customFieldDef.lookUpEntityType}"
+											mandatory="${customFieldDef.mandatoryString}"
 											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span></td>
 										<td width="83%"><c:if test="${customFieldDef.fieldType == CustomFieldType.NUMERIC.value}">
 											<mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" name="clientCustActionForm"

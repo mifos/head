@@ -366,7 +366,7 @@ explanation of the license and how it is applied.
 									<c:if test="${cfdef.fieldId==cf.fieldId}">
 										<tr class="fontnormal">
 											<td width="25%" align="right">
-												<span id="edit_groupdetails.label.customField"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources" isColonRequired="Yes"></mifos:mifoslabel></span>
+												<span id="edit_groupdetails.label.customField"><mifos:mifoslabel name="${cfdef.lookUpEntityType}" mandatory="${cfdef.mandatoryString}" bundle="GroupUIResources" isColonRequired="Yes"></mifos:mifoslabel></span>
 												
 											</td>
 											<td width="75%">

@@ -49,7 +49,7 @@ public interface CustomerService {
 
     void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees, List<SavingsOfferingBO> selectedOfferings) throws CustomerException;
 
-    void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center);
+    void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center) throws CustomerException;
 
     void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws CustomerException;
 
