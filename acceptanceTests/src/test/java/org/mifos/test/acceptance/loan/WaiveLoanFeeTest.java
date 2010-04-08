@@ -62,7 +62,6 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)  // issue 2397 needs to be resolved for this test to pass
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void waiveFeeOnLastInstallment() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_006_dbunit.xml.zip", dataSource, selenium);
