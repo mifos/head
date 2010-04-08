@@ -1037,6 +1037,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     }
 
+    public final int countOfCustomerMovements() {
+        return this.customerMovements.size();
+    }
+
     public void makeCustomerMovementEntries(final OfficeBO officeToTransfer) {
         CustomerMovementEntity currentCustomerMovement = getActiveCustomerMovement();
         if (currentCustomerMovement == null) {

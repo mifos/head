@@ -366,12 +366,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public GroupBO transferGroupTo(GroupBO group, CenterBO transferToCenter) throws CustomerException {
+    public GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
-        group.validateNewCenter(transferToCenter);
+        group.validateNewCenter(receivingCenter);
         group.validateForActiveAccounts();
 
-        OfficeBO centerOffice = transferToCenter.getOffice();
+        OfficeBO centerOffice = receivingCenter.getOffice();
         if (group.isDifferentBranch(centerOffice)) {
             group.makeCustomerMovementEntries(centerOffice);
             if (group.isActive()) {
@@ -380,18 +380,18 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         CustomerBO oldParent = group.getParentCustomer();
-        group.setParentCustomer(transferToCenter);
+        group.setParentCustomer(receivingCenter);
 
         CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
         if (null != currentHierarchy) {
             currentHierarchy.makeInactive(group.getUserContext().getId());
         }
-        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, transferToCenter));
+        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, receivingCenter));
 
         // handle parent
-        group.setPersonnel(transferToCenter.getPersonnel());
+        group.setPersonnel(receivingCenter.getPersonnel());
 
-        MeetingBO centerMeeting = transferToCenter.getCustomerMeetingValue();
+        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
         MeetingBO groupMeeting = group.getCustomerMeetingValue();
         if (centerMeeting != null) {
             if (groupMeeting != null) {
@@ -411,10 +411,10 @@ public class CustomerServiceImpl implements CustomerService {
             oldParent.setUserContext(group.getUserContext());
         }
 
-        transferToCenter.incrementChildCount();
-        group.setSearchId(transferToCenter.getSearchId() + "." + String.valueOf(transferToCenter.getMaxChildCount()));
+        receivingCenter.incrementChildCount();
+        group.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
 
-        transferToCenter.setUserContext(group.getUserContext());
+        receivingCenter.setUserContext(group.getUserContext());
 
         try {
             StaticHibernateUtil.startTransaction();
@@ -424,7 +424,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (oldParent != null) {
                 customerDao.save(oldParent);
             }
-            customerDao.save(transferToCenter);
+            customerDao.save(receivingCenter);
 
             customerDao.save(group);
 

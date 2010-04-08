@@ -539,7 +539,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     private void setupOfficeAndCenterAndGroupAndLoanOfferingForMeeting (MeetingBO meeting) {
         office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
-        center = new CenterBuilder().withMeeting(meeting).withOffice(office).build();
+        center = new CenterBuilder().withMeeting(meeting).with(office).build();
         group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
 

@@ -67,6 +67,10 @@ public enum CustomerStatus {
         return CustomerStatus.GROUP_ACTIVE.getValue().equals(this.value);
     }
 
+    public boolean isGroupOnHold() {
+        return CustomerStatus.GROUP_HOLD.getValue().equals(this.value);
+    }
+
     public boolean isGroupClosed() {
         return CustomerStatus.GROUP_CLOSED.getValue().equals(this.value);
     }

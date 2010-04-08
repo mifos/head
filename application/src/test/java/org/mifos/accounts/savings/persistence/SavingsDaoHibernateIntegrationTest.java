@@ -90,7 +90,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").withOffice(sampleBranchOffice())
+        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").with(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 

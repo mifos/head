@@ -119,7 +119,7 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest {
         IntegrationTestObjectMother.saveMeeting(existingMeeting);
 
         existingCenter = new CenterBuilder().withMeeting(existingMeeting).withName("Center-IntegrationTest")
-                .withOffice(existingOffice).withLoanOfficer(existingLoanOfficer).withUserContext().build();
+                .with(existingOffice).withLoanOfficer(existingLoanOfficer).withUserContext().build();
         IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
 
         existingGroup = new GroupBuilder().withName("newGroup")

@@ -98,7 +98,7 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
 
         CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
-                                            .withOffice(sampleBranchOffice())
+                                            .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
                                             .build();
 
@@ -121,7 +121,7 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
         // setup
         Address address = null;
         CenterBO center = new CenterBuilder().withName("Center-IntegrationTest")
-                                            .withOffice(sampleBranchOffice())
+                                            .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser())
                                             .withAddress(address).withUserContext()
                                             .build();

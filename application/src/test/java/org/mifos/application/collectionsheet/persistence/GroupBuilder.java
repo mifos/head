@@ -27,6 +27,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -55,6 +56,7 @@ public class GroupBuilder {
     private DateTime trainedOn = new DateTime();
     private PersonnelBO formedBy;
     private int numberOfChildrenUnderBranch = 0;
+    private UserContext userContext = TestUtils.makeUser();
 
     public GroupBO build() {
 
@@ -62,7 +64,6 @@ public class GroupBuilder {
             this.formedBy = this.loanOfficer;
         }
 
-        UserContext userContext = TestUtils.makeUser();
         group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
                 customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
 
@@ -144,6 +145,16 @@ public class GroupBuilder {
 
     public GroupBuilder withSearchId(int withChildrenUnderBranch) {
         this.numberOfChildrenUnderBranch = withChildrenUnderBranch;
+        return this;
+    }
+
+    public GroupBuilder inSameBranchAs(CenterBO center) {
+        this.office = center.getOffice();
+        return this;
+    }
+
+    public GroupBuilder with(UserContext withUserContext) {
+        this.userContext = withUserContext;
         return this;
     }
 }

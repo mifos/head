@@ -1034,7 +1034,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         meeting = new MeetingBuilder().weekly().occuringOnA(WeekDay.MONDAY).startingFrom(disbursementDate).build();
         // IntegrationTestObjectMother.saveMeeting(meeting);
 
-        center = new CenterBuilder().withOffice(office).withLoanOfficer(null).withMeeting(meeting).build();
+        center = new CenterBuilder().with(office).withLoanOfficer(null).withMeeting(meeting).build();
         // IntegrationTestObjectMother.saveCustomer(center);
 
         GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());

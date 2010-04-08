@@ -104,13 +104,17 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     /**
      * minimal legal constructor
      */
-    public OfficeBO(final String name, final String globalOfficeNum) {
+    public OfficeBO(final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel, String searchId) {
         this.officeId = null;
         this.officeName = name;
+        this.shortName = shortName;
         this.globalOfficeNum = globalOfficeNum;
+        this.searchId = searchId;
+        this.parentOffice = parentOffice;
+        this.level = new OfficeLevelEntity(officeLevel);
         this.operationMode = OperationMode.REMOTE_SERVER.getValue();
         this.status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
-        this.address = new OfficeAddressEntity();
+        this.address = null;
     }
 
     /**

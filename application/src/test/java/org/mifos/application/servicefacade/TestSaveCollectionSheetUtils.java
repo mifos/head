@@ -165,7 +165,7 @@ public class TestSaveCollectionSheetUtils {
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName(
-                "Center").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).build();
+                "Center").with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
@@ -260,7 +260,7 @@ public class TestSaveCollectionSheetUtils {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
-        anotherCenter = new CenterBuilder().withMeeting(weeklyMeeting).withName("Another Center").withOffice(
+        anotherCenter = new CenterBuilder().withMeeting(weeklyMeeting).withName("Another Center").with(
                 sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.saveCustomer(anotherCenter);
 

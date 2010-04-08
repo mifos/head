@@ -185,6 +185,19 @@ public class IntegrationTestObjectMother {
         }
     }
 
+    public static void createOffice(OfficeBO office) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(office);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
     public static void saveLoanProducts(final LoanOfferingBO... loanProducts) {
         try {
             StaticHibernateUtil.startTransaction();
@@ -209,8 +222,7 @@ public class IntegrationTestObjectMother {
         customerService.createCenter(center, meeting, accountFees);
     }
 
-    public static void createCenter(CenterBO center, MeetingBO meeting,
-            AmountFeeBO fee) {
+    public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO fee) {
 
         UserContext userContext = TestUtils.makeUser();
         center.setUserContext(userContext);
@@ -223,14 +235,18 @@ public class IntegrationTestObjectMother {
         customerService.createCenter(center, meeting, accountFees);
     }
 
-    public static void createGroup(GroupBO group, MeetingBO meeting) throws CustomerException {
+    public static void createGroup(GroupBO group, MeetingBO meeting) {
 
         UserContext userContext = TestUtils.makeUser();
         group.setUserContext(userContext);
 
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
-        customerService.createGroup(group, meeting, accountFees);
+        try {
+            customerService.createGroup(group, meeting, accountFees);
+        } catch (CustomerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void createGroup(GroupBO group, MeetingBO meeting, AmountFeeBO fee) throws CustomerException {

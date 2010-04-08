@@ -51,7 +51,7 @@ public class GroupCreationAndValidationTest {
         PersonnelBO loanOfficer = new PersonnelBuilder().asLoanOfficer().build();
         MeetingBO meeting = new MeetingBuilder().customerMeeting().build();
 
-        center = new CenterBuilder().withOffice(office).withLoanOfficer(loanOfficer).withMeeting(meeting).build();
+        center = new CenterBuilder().with(office).withLoanOfficer(loanOfficer).withMeeting(meeting).build();
     }
 
     @Test

@@ -128,7 +128,7 @@ public class ClientStatusChangeIntegrationTest {
         // setup
         CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
                                             .withName("Center-IntegrationTest")
-                                            .withOffice(existingOffice)
+                                            .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
                                             .withUserContext().build();
         IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
@@ -166,7 +166,7 @@ public class ClientStatusChangeIntegrationTest {
         // setup
         CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
                                             .withName("Center-IntegrationTest")
-                                            .withOffice(existingOffice)
+                                            .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
                                             .withUserContext().build();
         IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
@@ -204,7 +204,7 @@ public class ClientStatusChangeIntegrationTest {
         // setup
         CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
                                             .withName("Center-IntegrationTest")
-                                            .withOffice(existingOffice)
+                                            .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
                                             .withUserContext().build();
         IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);

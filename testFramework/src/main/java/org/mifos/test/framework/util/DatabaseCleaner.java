@@ -78,8 +78,13 @@ public class DatabaseCleaner {
         template.execute("delete from customer_flag_detail");
         template.execute("delete from customer_note");
         template.execute("delete from customer_picture");
+        template.execute("delete from customer_hierarchy");
+        template.execute("delete from customer_movement");
 
         template.execute("update customer set parent_customer_id = null");
         template.execute("delete from customer");
+
+        template.execute("update office set parent_office_id = null where office_id > 3");
+        template.execute("delete from office where office_id > 3");
     }
 }

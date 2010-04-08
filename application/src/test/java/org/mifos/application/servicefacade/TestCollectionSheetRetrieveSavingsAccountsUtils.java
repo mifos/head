@@ -122,7 +122,7 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Savings Center")
-                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).build();
+                .with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
         if (!onlyCreateCenterAndItsSavingsAccount) {

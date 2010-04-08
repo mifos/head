@@ -20,17 +20,22 @@
 package org.mifos.application.collectionsheet.persistence;
 
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 
 /**
  *
  */
 public class OfficeBuilder {
 
-    private String name;
-    private String globalOfficeNum;
+    private String name = "builder-branch-office";
+    private String globalOfficeNum = "xxx-0000001";
+    private OfficeBO parentOffice = null;
+    private OfficeLevel officeLevel = OfficeLevel.BRANCHOFFICE;
+    private String searchId = "1.1.1.1.";
+    private String shortName = "bf1";
 
     public OfficeBO build() {
-        final OfficeBO office = new OfficeBO(name, globalOfficeNum);
+        final OfficeBO office = new OfficeBO(name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId);
         return office;
     }
 
@@ -41,6 +46,36 @@ public class OfficeBuilder {
 
     public OfficeBuilder withGlobalOfficeNum(final String withGlobalOfficeNum) {
         this.globalOfficeNum = withGlobalOfficeNum;
+        return this;
+    }
+
+    public OfficeBuilder withSearchId(String withSearchId) {
+        this.searchId = withSearchId;
+        return this;
+    }
+
+    public OfficeBuilder headOffice() {
+        this.officeLevel = OfficeLevel.HEADOFFICE;
+        return this;
+    }
+
+    public OfficeBuilder areaOffice() {
+        this.officeLevel = OfficeLevel.AREAOFFICE;
+        return this;
+    }
+
+    public OfficeBuilder branchOffice() {
+        this.officeLevel = OfficeLevel.BRANCHOFFICE;
+        return this;
+    }
+
+    public OfficeBuilder withParentOffice(OfficeBO withParentOffice) {
+        this.parentOffice = withParentOffice;
+        return this;
+    }
+
+    public OfficeBuilder withShortName(String withShortName) {
+        this.shortName = withShortName;
         return this;
     }
 }

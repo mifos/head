@@ -40,17 +40,22 @@ public class CenterBuilder {
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
-    private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office;
     private PersonnelBO loanOfficer;
-    private final UserContext userContext = new UserContext();
+    private UserContext userContext = new UserContext();
     private DateTime mfiJoiningDate = new DateTime();
     private int numberOfCustomersInOfficeAlready = 0;
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address = null;
     private String externalId = null;
+    private MeetingBuilder meetingBuilder = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
+    private MeetingBO meeting;
 
     public CenterBO build() {
+
+        if (meeting == null) {
+            meeting = meetingBuilder.build();
+        }
 
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
                 numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId);
@@ -62,12 +67,17 @@ public class CenterBuilder {
         return this;
     }
 
+    public CenterBuilder with(MeetingBuilder withMeetingBuilder) {
+        this.meetingBuilder = withMeetingBuilder;
+        return this;
+    }
+
     public CenterBuilder withMeeting(final MeetingBO withMeeting) {
         this.meeting = withMeeting;
         return this;
     }
 
-    public CenterBuilder withOffice(final OfficeBO withOffice) {
+    public CenterBuilder with(final OfficeBO withOffice) {
         this.office = withOffice;
         return this;
     }
@@ -101,6 +111,11 @@ public class CenterBuilder {
             userContext.setBranchGlobalNum(office.getGlobalOfficeNum());
             userContext.setBranchId(office.getOfficeId());
         }
+        return this;
+    }
+
+    public CenterBuilder with(UserContext withUserContext) {
+        this.userContext = withUserContext;
         return this;
     }
 }

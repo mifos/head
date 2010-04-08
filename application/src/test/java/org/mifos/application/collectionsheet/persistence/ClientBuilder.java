@@ -106,7 +106,7 @@ public class ClientBuilder {
         ClientNameDetailView clientNameDetailView = new ClientNameDetailView();
         this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailView);
 
-        CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).withMeeting(meeting).withOffice(office)
+        CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).withMeeting(meeting).with(office)
                 .build();
         parentCustomer = new GroupBuilder().withParentCustomer(center).build();
 
