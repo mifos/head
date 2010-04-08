@@ -35,6 +35,8 @@ public class PrdPmntTypeEntity extends PersistentObject {
 
     private Short status;
 
+    private int versionNo;
+
     public PrdPmntTypeEntity() {
         super();
 
@@ -79,6 +81,14 @@ public class PrdPmntTypeEntity extends PersistentObject {
 
     public void setStatus(Short status) {
         this.status = status;
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

@@ -41,6 +41,10 @@ public class PersonnelMovementEntity extends PersistentObject {
 
     private Short status;
 
+    private Date updatedDate;
+    
+    private Short updatedBy;
+
     public PersonnelMovementEntity(PersonnelBO personnel, Date startDate) {
         this.personnel = personnel;
         this.office = personnel.getOffice();
@@ -86,4 +90,21 @@ public class PersonnelMovementEntity extends PersistentObject {
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         setEndDate(new DateTimeService().getCurrentJavaDateTime());
     }
+
+    public Short getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
 }

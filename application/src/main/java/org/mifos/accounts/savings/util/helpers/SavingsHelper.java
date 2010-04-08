@@ -160,8 +160,6 @@ public class SavingsHelper {
             Date date, Short userId, Money amount) {
         AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
                 new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, amount);
-        actionDate.setCreatedBy(userId);
-        actionDate.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
         return actionDate;
     }
 
@@ -179,10 +177,6 @@ public class SavingsHelper {
             PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy, Date transactionDate) {
         AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity,
                 transactionDate);
-        if (createdBy != null) {
-            payment.setCreatedBy(createdBy.getPersonnelId());
-        }
-        payment.setCreatedDate(transactionDate);
         payment.setAmount(amount);
         return payment;
     }

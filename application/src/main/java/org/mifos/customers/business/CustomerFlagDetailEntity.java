@@ -35,6 +35,9 @@ public class CustomerFlagDetailEntity extends PersistentObject {
 
     private final CustomerStatusFlagEntity statusFlag;
 
+    private Date createdDate;
+    private Short createdBy;
+
     /*
      * Adding a default constructor is hibernate's requirement and should not be
      * used to create a valid Object.
@@ -55,4 +58,22 @@ public class CustomerFlagDetailEntity extends PersistentObject {
     public CustomerStatusFlagEntity getStatusFlag() {
         return statusFlag;
     }
+    
+    
+    public Short getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Short createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+    
 }

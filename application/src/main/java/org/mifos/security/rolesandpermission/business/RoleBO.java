@@ -21,6 +21,7 @@
 package org.mifos.security.rolesandpermission.business;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,16 @@ public class RoleBO extends BusinessObject {
     private Short id = null;
 
     private String name;
+
+    private Date createdDate;
+    
+    private Short createdBy;
+    
+    private Date updatedDate;
+    
+    private Short updatedBy;
+    
+    private Integer versionNo;
 
     private final Set<RoleActivityEntity> activities = new HashSet<RoleActivityEntity>();
 
@@ -98,6 +109,46 @@ public class RoleBO extends BusinessObject {
             ids.add(roleActivityEntity.getActivity().getId());
         }
         return ids;
+    }
+    
+        public Short getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Short createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Short getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Integer getVersionNo() {
+        return versionNo;
+    }
+
+    public void setVersionNo(Integer versionNo) {
+        this.versionNo = versionNo;
     }
 
     public void save() throws RolesPermissionException {

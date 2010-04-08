@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class depicts the different account types. Obsolete; replaced by
@@ -36,7 +35,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
  */
 @Entity
 @Table(name = "ACCOUNT_TYPE")
-public class AccountTypeEntity implements Serializable {
+public class AccountTypeEntity extends PersistentObject {
 
     private Short accountTypeId;
     private String description;

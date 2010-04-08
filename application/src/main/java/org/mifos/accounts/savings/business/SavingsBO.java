@@ -660,8 +660,6 @@ public class SavingsBO extends AccountBO {
                 payment.addAccountTrxn(helper.createAccountPaymentTrxn(payment, new Money(getCurrency()),
                         AccountActionTypes.SAVINGS_WITHDRAWAL, customer, loggedInUser, getSavingsPersistence(),
                         transactionDate));
-
-                payment.setCreatedDate(transactionDate);
                 this.addAccountPayment(payment);
                 addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(), new Money(getCurrency()),
                         AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), payment.getPaymentDate(), loggedInUser));

@@ -19,17 +19,17 @@
  */
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.mifos.framework.business.PersistentObject;
+
 @Entity
 @Table(name = "COUNTRY")
-public class CountryEntity implements Serializable {
+public class CountryEntity extends PersistentObject {
 
     private Short countryId;
     private String countryName;

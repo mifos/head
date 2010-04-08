@@ -36,6 +36,8 @@ public class PrdStatusEntity extends PersistentObject {
 
     private Short status;
 
+    private int versionNo;
+
     protected PrdStatusEntity() {
         offeringStatusId = null;
         prdType = null;
@@ -66,6 +68,14 @@ public class PrdStatusEntity extends PersistentObject {
 
     public ProductTypeEntity getPrdType() {
         return prdType;
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

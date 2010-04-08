@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,11 +30,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.ApplicationException;
 
 @Entity
 @Table(name = "ACCOUNT_CUSTOM_FIELD")
-public class AccountCustomFieldEntity implements Serializable {
+public class AccountCustomFieldEntity extends PersistentObject {
 
     private Integer accountCustomFieldId;
 

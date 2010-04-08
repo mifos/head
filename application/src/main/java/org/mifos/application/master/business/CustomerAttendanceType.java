@@ -20,8 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.mifos.customers.client.business.AttendanceType;
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * @deprecated Use {@link AttendanceType} instead.
@@ -36,7 +35,7 @@ import org.mifos.customers.client.business.AttendanceType;
 @Deprecated
 @Entity
 @Table(name = "CUSTOMER_ATTENDANCE_TYPES")
-public class CustomerAttendanceType implements Serializable {
+public class CustomerAttendanceType extends PersistentObject {
 
     private short attendanceId;
     private Integer lookUpId;

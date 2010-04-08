@@ -47,6 +47,8 @@ public class MeetingDetailsEntity extends PersistentObject {
 
     private final MeetingBO meeting;
 
+    private int versionNo;
+
     protected MeetingDetailsEntity() {
         detailsId = null;
         recurrenceType = null;
@@ -138,6 +140,14 @@ public class MeetingDetailsEntity extends PersistentObject {
 
     public void setMeetingRecurrence(final MeetingRecurrenceEntity meetingRecurrence) {
         this.meetingRecurrence = meetingRecurrence;
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

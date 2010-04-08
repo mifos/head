@@ -38,6 +38,10 @@ public class CustomerActivityEntity extends PersistentObject {
 
     private final PersonnelBO personnel;
 
+    private Date createdDate;
+
+    private Short createdBy;
+
     protected CustomerActivityEntity() {
         customerActivityId = null;
         this.customerAccount = null;
@@ -55,6 +59,22 @@ public class CustomerActivityEntity extends PersistentObject {
         this.amount = amount;
         this.description = description;
         this.createdDate = trxnDate;
+    }
+
+    public Short getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Short createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Money getAmount() {

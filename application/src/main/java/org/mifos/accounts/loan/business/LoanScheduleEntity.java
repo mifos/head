@@ -62,6 +62,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     private Set<AccountFeesActionDetailEntity> accountFeesActionDetails;
 
+    private int versionNo;
+
     protected LoanScheduleEntity() {
         super(null, null, null, null, null);
     }
@@ -428,6 +430,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public boolean isPaymentApplied() {
         return getPrincipalPaid().isNonZero() || getInterestPaid().isNonZero() || getMiscFeePaid().isNonZero()
                 || getMiscPenaltyPaid().isNonZero() || isPaymentAppliedToAccountFees();
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

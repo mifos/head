@@ -41,6 +41,10 @@ public class CustomerMovementEntity extends PersistentObject {
 
     private final OfficeBO office;
 
+    private Date updatedDate;
+    
+    private Short updatedBy;
+
     public CustomerMovementEntity(CustomerBO customer, Date startDate) {
         this.customer = customer;
         this.office = customer.getOffice();
@@ -90,4 +94,21 @@ public class CustomerMovementEntity extends PersistentObject {
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         setEndDate(new DateTimeService().getCurrentJavaDateTime());
     }
+    
+        public Short getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
 }

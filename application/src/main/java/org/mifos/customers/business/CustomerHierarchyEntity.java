@@ -41,6 +41,12 @@ public class CustomerHierarchyEntity extends PersistentObject {
 
     private Date endDate;
 
+    private Date createdDate;
+    
+    private Date updatedDate;
+    
+    private Short updatedBy;
+
     public CustomerHierarchyEntity(CustomerBO customer, CustomerBO parentCustomer) {
         this.customer = customer;
         this.parentCustomer = parentCustomer;
@@ -77,6 +83,30 @@ public class CustomerHierarchyEntity extends PersistentObject {
 
     void updateStatus(Status status) {
         this.status = status.getValue();
+    }
+
+public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Short getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public boolean isActive() {

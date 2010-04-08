@@ -55,6 +55,8 @@ public class AccountFeesEntity extends PersistentObject {
 
     private Date lastAppliedDate;
 
+    private int versionNo;
+
     /**
      * default constructor for hibernate usage
      */
@@ -224,6 +226,14 @@ public class AccountFeesEntity extends PersistentObject {
 
     public void setAccount(AccountBO account) {
         this.account = account;
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

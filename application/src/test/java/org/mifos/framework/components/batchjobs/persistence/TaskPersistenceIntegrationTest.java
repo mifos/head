@@ -20,7 +20,6 @@
 
 package org.mifos.framework.components.batchjobs.persistence;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -53,8 +52,6 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testHasLoanArrearsTaskRunSuccessfully() throws PersistenceException {
         Task task1 = new Task();
-        task1.setCreatedBy((short) 1);
-        task1.setCreatedDate(new Date(System.currentTimeMillis()));
         task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
         task1.setStartTime(new Timestamp(System.currentTimeMillis()));
         task1.setEndTime(new Timestamp(System.currentTimeMillis()));
@@ -68,8 +65,6 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
         p = new TaskPersistence();
        Assert.assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
         Task task2 = new Task();
-        task2.setCreatedBy((short) 1);
-        task2.setCreatedDate(new Date(System.currentTimeMillis()));
         task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
         task2.setStartTime(new Timestamp(System.currentTimeMillis()));
         task2.setEndTime(new Timestamp(System.currentTimeMillis()));
@@ -85,8 +80,6 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSaveAndCommit() throws PersistenceException {
         Task task = new Task();
-        task.setCreatedBy((short) 1);
-        task.setCreatedDate(new Date(System.currentTimeMillis()));
         task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
         task.setStartTime(new Timestamp(System.currentTimeMillis()));
         task.setEndTime(new Timestamp(System.currentTimeMillis()));
@@ -109,8 +102,6 @@ public class TaskPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testSaveAndCommitForInvalidConnection() {
         Task task = new Task();
         task.setId(1);
-        task.setCreatedBy((short) 1);
-        task.setCreatedDate(new Date(System.currentTimeMillis()));
         task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
         task.setStartTime(new Timestamp(System.currentTimeMillis()));
         task.setEndTime(new Timestamp(System.currentTimeMillis()));

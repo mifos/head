@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.business;
 
+import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -39,6 +40,8 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
     private final PersonnelBO personnel;
 
     private Locale locale = null;
+
+    private Date createdDate;
 
     protected AccountStatusChangeHistoryEntity() {
         accountStatusChangeId = null;
@@ -60,6 +63,14 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
 
     public AccountBO getAccount() {
         return account;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Integer getAccountStatusChangeId() {

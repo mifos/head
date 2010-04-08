@@ -20,8 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
-
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.View;
 
@@ -35,7 +33,7 @@ import org.mifos.framework.business.View;
  *
  * A better name for this class might be ValueListElementForLocale.
  */
-public class CustomValueListElement extends View implements Serializable {
+public class CustomValueListElement extends View {
 
     /**
      * The id of an associated object linked to this list element. This only

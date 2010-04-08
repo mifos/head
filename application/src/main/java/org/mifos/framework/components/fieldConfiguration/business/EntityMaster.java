@@ -20,8 +20,6 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +27,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.mifos.framework.business.PersistentObject;
 
 @NamedQueries(
  {
@@ -40,7 +40,7 @@ import javax.persistence.Table;
 )
 @Entity
 @Table(name = "ENTITY_MASTER")
-public class EntityMaster implements Serializable {
+public class EntityMaster extends PersistentObject {
 
     private Short id;
 

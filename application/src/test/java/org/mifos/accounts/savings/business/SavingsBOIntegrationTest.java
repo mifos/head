@@ -3115,9 +3115,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 (AccountActionEntity) StaticHibernateUtil.getSessionTL().get(AccountActionEntity.class,
                         Short.valueOf("1")), new Money(getCurrency(), "100"), new Money(getCurrency(), "22"), new Date(), savings);
 
-        savingsActivity.setCreatedBy(Short.valueOf("1"));
-        savingsActivity.setCreatedDate(new Date(System.currentTimeMillis()));
-
         savings.addSavingsActivityDetails(savingsActivity);
 
         savings.update();

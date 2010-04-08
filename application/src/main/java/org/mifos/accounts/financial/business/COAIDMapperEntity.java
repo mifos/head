@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.financial.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +30,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * Unused and candidate for removal.
@@ -46,7 +46,7 @@ import javax.persistence.Table;
 )
 @Entity
 @Table(name = "COA_IDMAPPER")
-public class COAIDMapperEntity implements Serializable {
+public class COAIDMapperEntity  extends PersistentObject {
 
     private Short constantId;
     private COABO coa;

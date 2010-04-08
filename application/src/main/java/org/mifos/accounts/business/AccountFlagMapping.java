@@ -20,12 +20,32 @@
 
 package org.mifos.accounts.business;
 
+import java.util.Date;
+
 import org.mifos.framework.business.PersistentObject;
 
 public class AccountFlagMapping extends PersistentObject {
 
     private Integer accountFlagId;
     private AccountStateFlagEntity flag;
+    private Date createdDate;
+    private Short createdBy;
+
+    public Short getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Short createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public Integer getAccountFlagId() {
         return accountFlagId;

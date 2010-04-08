@@ -20,17 +20,17 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.mifos.framework.business.PersistentObject;
+
 @Entity
 @Table(name = "FUND_CODE")
-public class FundCodeEntity implements Serializable {
+public class FundCodeEntity extends PersistentObject {
 
     private Short fundCodeId;
 

@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.financial.business;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,9 +28,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.mifos.framework.business.PersistentObject;
+
 @Entity
 @Table(name = "GL_CODE")
-public class GLCodeEntity implements Serializable {
+public class GLCodeEntity extends PersistentObject {
 
     private Short glcodeId;
     private String glcode;

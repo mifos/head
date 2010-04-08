@@ -28,6 +28,8 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerFeeScheduleEntity extends AccountFeesActionDetailEntity {
 
+    private int versionNo;
+
     public CustomerFeeScheduleEntity(AccountActionDateEntity accountActionDate, FeeBO fee,
             AccountFeesEntity accountFee, Money feeAmount) {
         super(accountActionDate, fee, accountFee, feeAmount);
@@ -60,5 +62,13 @@ public class CustomerFeeScheduleEntity extends AccountFeesActionDetailEntity {
     @Override
     protected Money waiveCharges() {
         return super.waiveCharges();
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 }

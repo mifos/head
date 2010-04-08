@@ -86,9 +86,7 @@ public class SavingsTestHelper {
     public AccountPaymentEntity createAccountPayment(AccountBO account, Integer paymentId, Money amount,
             Date paymentDate, PersonnelBO createdBy) {
         AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, new PaymentTypeEntity(
-                Short.valueOf("1")), new Date(System.currentTimeMillis()));
-        payment.setCreatedBy(createdBy.getPersonnelId());
-        payment.setCreatedDate(new Date());
+                Short.valueOf("1")), paymentDate);
         return payment;
     }
 

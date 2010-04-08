@@ -20,7 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
@@ -30,6 +29,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class denotes the currency object. It contains information such as the
@@ -48,7 +49,7 @@ import javax.persistence.Table;
 )
 @Entity
 @Table(name = "CURRENCY")
-public final class MifosCurrency implements Serializable {
+public final class MifosCurrency extends PersistentObject {
 
     public static final short CEILING_MODE = 1;
     public static final short FLOOR_MODE = 2;

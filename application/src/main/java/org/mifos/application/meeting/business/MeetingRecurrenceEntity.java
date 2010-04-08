@@ -44,6 +44,8 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 
     private final MeetingDetailsEntity meetingDetails;
 
+    private int versionNo;
+
     /**
      * default constructor for hibernate
      */
@@ -184,5 +186,13 @@ public class MeetingRecurrenceEntity extends PersistentObject {
         if (dayNumber != null && (dayNumber < 1 || dayNumber > 31)) {
             throw new MeetingException(MeetingConstants.INVALID_DAYNUMBER);
         }
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 }

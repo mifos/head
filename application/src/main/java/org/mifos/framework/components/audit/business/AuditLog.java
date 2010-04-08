@@ -38,6 +38,10 @@ public class AuditLog extends PersistentObject {
 
     private final String modifierName;
 
+    private Date updatedDate;
+    
+    private Short updatedBy;
+
     private final Set<AuditLogRecord> auditLogRecords;
 
     protected AuditLog() {
@@ -88,6 +92,22 @@ public class AuditLog extends PersistentObject {
 
     public void save() {
         new AuditPersistence().save(this);
+    }
+    
+        public Short getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
 }

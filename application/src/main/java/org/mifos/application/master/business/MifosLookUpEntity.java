@@ -20,7 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,6 +33,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant classes.
@@ -60,7 +61,7 @@ import javax.persistence.Table;
   )
  }
 )
-public class MifosLookUpEntity implements Serializable {
+public class MifosLookUpEntity extends PersistentObject {
 
     public static final Short DEFAULT_LOCALE_ID = 1;
 

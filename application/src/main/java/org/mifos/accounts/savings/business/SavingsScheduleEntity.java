@@ -29,9 +29,11 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsScheduleEntity extends AccountActionDateEntity {
-    protected Money deposit;
+    private Money deposit;
 
-    protected Money depositPaid;
+    private Money depositPaid;
+
+    private int versionNo;
 
     protected SavingsScheduleEntity() {
         super(null, null, null, null, null);
@@ -74,6 +76,14 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
         Money depositDue = getTotalDepositDue();
         deposit = deposit.subtract(depositDue);
         setPaymentStatus(PaymentStatus.PAID);
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

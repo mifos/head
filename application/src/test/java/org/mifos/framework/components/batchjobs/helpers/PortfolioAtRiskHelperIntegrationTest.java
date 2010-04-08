@@ -86,8 +86,6 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
     // PortfolioAtRisk needs this LoanArrearsTask to run successfully first
     private Task insertLoanArrearsTask() throws Exception {
         Task task = new Task();
-        task.setCreatedBy((short) 1);
-        task.setCreatedDate(new Date(System.currentTimeMillis()));
         task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
         task.setStartTime(new Timestamp(System.currentTimeMillis()));
         task.setEndTime(new Timestamp(System.currentTimeMillis()));

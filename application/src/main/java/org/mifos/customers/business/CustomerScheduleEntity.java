@@ -45,6 +45,8 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 
     private Set<AccountFeesActionDetailEntity> accountFeesActionDetails;
 
+    private int versionNo;
+
     protected CustomerScheduleEntity() {
         super(null, null, null, null, null);
     }
@@ -201,6 +203,14 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
         } else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
             setMiscPenalty(getMiscPenalty().add(charge));
         }
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

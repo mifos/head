@@ -20,7 +20,6 @@
 
 package org.mifos.application.master.business;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,6 +33,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.mifos.framework.business.PersistentObject;
 
 /**
  * {@link LookUpEntity} is now depreciated and should not be used. Use
@@ -61,7 +62,7 @@ import javax.persistence.Table;
 )
 @Entity
 @Table(name = "LOOKUP_ENTITY")
-public class LookUpEntity implements Serializable {
+public class LookUpEntity extends PersistentObject {
 
     private Short entityId;
 

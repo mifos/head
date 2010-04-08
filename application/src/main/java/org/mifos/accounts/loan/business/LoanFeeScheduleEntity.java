@@ -28,6 +28,8 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanFeeScheduleEntity extends AccountFeesActionDetailEntity {
 
+    private int versionNo;
+
     protected LoanFeeScheduleEntity() {
         super(null, null, null, null);
     }
@@ -60,6 +62,14 @@ public class LoanFeeScheduleEntity extends AccountFeesActionDetailEntity {
     @Override
     protected Money waiveCharges() {
         return super.waiveCharges();
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 
 }

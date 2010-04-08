@@ -944,8 +944,6 @@ public class CustomerAccountBO extends AccountBO {
         AccountFeesActionDetailEntity accountFeesActionDetail = installment.getAccountFeesAction(fee.getAccountFeeId());
         if (accountFeesActionDetail != null) {
             ((CustomerFeeScheduleEntity) accountFeesActionDetail).setFeeAmount(fee.getAccountFeeAmount());
-            accountFeesActionDetail.setUpdatedBy(Short.valueOf("1"));
-            accountFeesActionDetail.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         }
     }
 
