@@ -29,8 +29,8 @@
     </distributionManagement>
     
     <properties>
-    	<hibernate.version>3.5.0-CR-2</hibernate.version>
-    	<spring.version>3.0.1.RELEASE</spring.version>
+    	<hibernate.version>3.5.0-Final</hibernate.version>
+    	<spring.version>3.0.2.RELEASE</spring.version>
     </properties>
     <modules>
         <module>common</module>
