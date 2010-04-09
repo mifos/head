@@ -48,7 +48,7 @@ public class GroupBuilder {
     private OfficeBO office;
     private PersonnelBO loanOfficer;
     private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
-    private CustomerBO parentCustomer;
+    private CustomerBO parentCustomer = new CenterBuilder().build();
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address;
     private String externalId;

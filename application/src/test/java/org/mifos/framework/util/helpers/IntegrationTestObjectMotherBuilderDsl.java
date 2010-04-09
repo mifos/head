@@ -92,6 +92,10 @@ public class IntegrationTestObjectMotherBuilderDsl {
         return IntegrationTestObjectMother.testUser();
     }
 
+    public static PersonnelBO aDifferentExistingLoanOfficer() {
+        return IntegrationTestObjectMother.systemUser();
+    }
+
     public static PersonnelBO anExistingApplicationUser() {
         return IntegrationTestObjectMother.testUser();
     }

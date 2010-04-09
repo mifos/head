@@ -184,6 +184,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.customerPositions = new HashSet<CustomerPositionEntity>();
         this.customFields = new HashSet<CustomerCustomFieldEntity>();
         this.accounts = new HashSet<AccountBO>();
+        this.children = new HashSet<CustomerBO>();
+        this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
         this.customerNotes = new HashSet<CustomerNoteEntity>();
         this.mfiJoiningDate = mfiJoiningDate.toDate();
         this.displayName = customerName;
@@ -929,7 +931,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public final boolean isSameBranch(final OfficeBO officeObj) {
-        return this.office.getOfficeId().equals(officeObj.getOfficeId());
+        return this.office.getGlobalOfficeNum().equals(officeObj.getGlobalOfficeNum());
     }
 
     public final boolean isDifferentBranch(final OfficeBO otherOffice) {
@@ -1456,5 +1458,12 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         return new CustomerDetailDto(this.customerId, this.displayName, this.searchId, this.globalCustNum,
                 loanOfficerId, this.externalId, address);
+    }
+
+    public boolean hasSameIdentityAs(CustomerBO customer) {
+        if ((this.customerId == null && customer.getCustomerId() == null) && (this.globalCustNum == null && customer.getGlobalCustNum() == null)) {
+            return this.displayName.equals(customer.displayName);
+        }
+        return this.globalCustNum.equals(customer.getGlobalCustNum());
     }
 }

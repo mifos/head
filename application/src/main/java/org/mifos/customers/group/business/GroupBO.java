@@ -288,7 +288,7 @@ public class GroupBO extends CustomerBO {
         boolean isSame = false;
         CustomerBO parent = getParentCustomer();
         if (parent != null) {
-            return parent.getCustomerId().equals(center.getCustomerId());
+            return parent.hasSameIdentityAs(center);
         }
         return isSame;
     }

@@ -31,20 +31,14 @@ import org.mifos.framework.util.DateTimeService;
  */
 public class CustomerHierarchyEntity extends AbstractEntity {
 
+    @SuppressWarnings("unused")
     private final Integer hierarchyId;
-
     private final CustomerBO parentCustomer;
-
     private final CustomerBO customer;
-
     private Short status;
-
     private Date endDate;
-
     private Date createdDate;
-    
     private Date updatedDate;
-    
     private Short updatedBy;
 
     public CustomerHierarchyEntity(CustomerBO customer, CustomerBO parentCustomer) {
@@ -85,7 +79,7 @@ public class CustomerHierarchyEntity extends AbstractEntity {
         this.status = status.getValue();
     }
 
-public Date getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 

@@ -371,6 +371,8 @@ public class CustomerServiceImpl implements CustomerService {
         group.validateNewCenter(receivingCenter);
         group.validateForActiveAccounts();
 
+        setInitialObjectForAuditLogging(group);
+
         OfficeBO centerOffice = receivingCenter.getOffice();
         if (group.isDifferentBranch(centerOffice)) {
             group.makeCustomerMovementEntries(centerOffice);
@@ -396,6 +398,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (centerMeeting != null) {
             if (groupMeeting != null) {
                 if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
+                    // FIXME - #000002 - this will store meeting waiting for batch job to come along and update schedules to match updated meeting frequency
                     group.setUpdatedMeeting(centerMeeting);
                 }
             } else {
@@ -407,6 +410,8 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (oldParent != null) {
+            // FIXME - #00001 - question - if we decrease maxChildCount then its likely we run into problems with searchId generation
+            // should we not only increase it so we always get a unique searchId?
             oldParent.decrementChildCount();
             oldParent.setUserContext(group.getUserContext());
         }
@@ -455,6 +460,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         group.validateNewOffice(transferToOffice);
         group.validateForActiveAccounts();
+
+        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 
         if (group.isActive()) {
             group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));

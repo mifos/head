@@ -29,6 +29,7 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
 import org.mifos.security.util.UserContext;
 
@@ -40,7 +41,7 @@ public class CenterBuilder {
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
-    private OfficeBO office;
+    private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").build();
     private PersonnelBO loanOfficer;
     private UserContext userContext = new UserContext();
     private DateTime mfiJoiningDate = new DateTime();
@@ -50,6 +51,7 @@ public class CenterBuilder {
     private String externalId = null;
     private MeetingBuilder meetingBuilder = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
     private MeetingBO meeting;
+    private CustomerStatus status = CustomerStatus.CENTER_ACTIVE;
 
     public CenterBO build() {
 
@@ -59,6 +61,8 @@ public class CenterBuilder {
 
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
                 numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId);
+        center.updateCustomerStatus(status);
+
         return center;
     }
 
@@ -116,6 +120,11 @@ public class CenterBuilder {
 
     public CenterBuilder with(UserContext withUserContext) {
         this.userContext = withUserContext;
+        return this;
+    }
+
+    public CenterBuilder inActive() {
+        this.status = CustomerStatus.CENTER_INACTIVE;
         return this;
     }
 }

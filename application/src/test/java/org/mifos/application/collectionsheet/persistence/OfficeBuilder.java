@@ -21,6 +21,7 @@ package org.mifos.application.collectionsheet.persistence;
 
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.customers.office.util.helpers.OfficeStatus;
 
 /**
  *
@@ -33,9 +34,10 @@ public class OfficeBuilder {
     private OfficeLevel officeLevel = OfficeLevel.BRANCHOFFICE;
     private String searchId = "1.1.1.1.";
     private String shortName = "bf1";
+    private OfficeStatus status = OfficeStatus.ACTIVE;
 
     public OfficeBO build() {
-        final OfficeBO office = new OfficeBO(name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId);
+        final OfficeBO office = new OfficeBO(name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId, status);
         return office;
     }
 
@@ -76,6 +78,11 @@ public class OfficeBuilder {
 
     public OfficeBuilder withShortName(String withShortName) {
         this.shortName = withShortName;
+        return this;
+    }
+
+    public OfficeBuilder inActive() {
+        this.status = OfficeStatus.INACTIVE;
         return this;
     }
 }

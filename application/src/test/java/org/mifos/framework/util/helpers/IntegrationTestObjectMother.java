@@ -59,6 +59,7 @@ public class IntegrationTestObjectMother {
     // user
     private static final Short DEFAULT_INTEGRATION_TEST_USER = PersonnelConstants.TEST_USER;
     private static PersonnelBO testUser = null;
+    private static PersonnelBO systemUser = null;
 
     // office
     private static final Short SAMPLE_BRANCH_OFFICE = 3;
@@ -94,6 +95,19 @@ public class IntegrationTestObjectMother {
         }
 
         return testUser;
+    }
+
+    public static PersonnelBO systemUser() {
+        if (systemUser == null) {
+            try {
+                systemUser = personnelPersistence.getPersonnel(PersonnelConstants.SYSTEM_USER);
+            } catch (PersistenceException e) {
+                throw new IllegalStateException("PersonnelBO with id [" + PersonnelConstants.SYSTEM_USER + "]. "
+                        + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
+            }
+        }
+
+        return systemUser;
     }
 
     public static void saveMeeting(final MeetingBO meeting) {
