@@ -54,10 +54,16 @@ public class Upgrade240 extends Upgrade {
 
     private void fixDuplicateGroupSearchIds(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "select customer_id, customer_level_id, branch_id, search_id from " +
-        "customer where customer_level_id = 2 and (search_id, branch_id) in " +
-        "(select search_id, branch_id FROM customer " +
-        "GROUP BY customer_level_id, branch_id, search_id HAVING count(*) > 1)";
+        String query = "select customer_id, customer_level_id, branch_id, search_id " +
+        "from customer c " +
+        "where c.customer_level_id = 2 " +
+        "and 1 < " +
+        "(select count(*) " +
+        "FROM customer customerProbs " +
+        "where c.branch_id = customerProbs.branch_id " +
+        "and c.search_id = customerProbs.search_id " +
+        "and customerProbs.customer_level_id = 2)";
+
         List<Integer> customerIdList = new ArrayList<Integer>();
         try {
             ResultSet results = statement.executeQuery(query);
