@@ -175,13 +175,21 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public static String getUploadStorageDirectory() {
-        return ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
-                "$HOME/.mifos/uploads").replaceFirst("\\$HOME", System.getProperty("user.home"));
+        String uploadsDir = ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
+                "$HOME/.mifos/uploads");
+        if (File.separatorChar == '\\') { // windows platform
+            uploadsDir = uploadsDir.replaceAll("/", "\\\\");
+        }
+        int id = uploadsDir.indexOf("$HOME");
+        if (id != -1) {
+            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id+5);
+        }
+        return uploadsDir;
     }
 
     public static String getCustomReportStorageDirectory() {
-        return getUploadStorageDirectory().endsWith("/") ?
-                getUploadStorageDirectory() + "report" : getUploadStorageDirectory() + "/report";
+        return getUploadStorageDirectory().endsWith(File.separator) ?
+                getUploadStorageDirectory() + "report" : getUploadStorageDirectory() + File.separator + "report";
     }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
