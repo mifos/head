@@ -449,9 +449,11 @@ public class GroupBO extends CustomerBO {
     private String generateSearchId() throws CustomerException {
         String searchId = null;
         if (getParentCustomer() != null) {
+            // for a group that is under a center
             childAddedForParent(getParentCustomer());
             searchId = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
         } else {
+            // for a group that is under an office/branch
             try {
                 int newSearchIdSuffix = getCustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, getOffice().getOfficeId()) + 1;
                 searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
@@ -573,6 +575,21 @@ public class GroupBO extends CustomerBO {
             getCustomerPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+        }
+    }
+
+    /*
+     * This methed is used to regenerate the searchId for a group
+     * which has a bad searchId due to previous bugs (such as MIFOS-2737)
+     */
+    public void updateSearchId() throws CustomerException {
+        setSearchId(generateSearchId());
+        update();
+        if (getChildren() != null) {
+            for (CustomerBO client : getChildren()) {
+                client.setUserContext(getUserContext());
+                ((ClientBO) client).handleGroupTransfer();
+            }
         }
     }
 }

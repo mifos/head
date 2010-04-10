@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.util.helpers.Money;
 
 public class AccountingRules {
 
@@ -108,7 +107,7 @@ public class AccountingRules {
      */
     public static  LinkedList<MifosCurrency> getCurrencies() {
         if (currencies.size() == 0) {
-            currencies.add(Money.getDefaultCurrency());
+            currencies.add(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
             ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
             for (String currencyCode: AccountingRules.getAdditionalCurrencyCodes()) {
                 currencies.add(getMifosCurrency(currencyCode, configurationPersistence));

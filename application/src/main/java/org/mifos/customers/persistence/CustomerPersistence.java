@@ -692,7 +692,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     /**
-     * Get a list of the search ids under a given office which are of the form a.b or a.b.c or a.b.c.d (eg. 1.23)
+     * Get a list of the search ids under a given office which are of the form 1.x (eg. 1.23)
      * and return the largest suffix of those returned
      * @param customerLevel whether to search for client/group/center
      * @param officeId id of the office to search under

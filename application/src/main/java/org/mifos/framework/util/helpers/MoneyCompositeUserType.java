@@ -34,7 +34,7 @@ import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.business.Configuration;
+import org.mifos.config.persistence.ConfigurationPersistence;
 
 /**
  * This class denotes a composite user type that has been created for the Money
@@ -42,11 +42,25 @@ import org.mifos.config.business.Configuration;
  * Hibernate
  */
 public class MoneyCompositeUserType implements CompositeUserType {
+    private static MifosCurrency defaultCurrency = null;
 
     public MoneyCompositeUserType() {
         super();
 
     }
+
+    public static MifosCurrency getDefaultCurrency() {
+        if (defaultCurrency == null) {
+            // to let tests pass that have not called ApplicationInitializer
+            defaultCurrency = AccountingRules.getMifosCurrency(new ConfigurationPersistence());
+        }
+        return defaultCurrency;
+    }
+
+    public static void setDefaultCurrency(MifosCurrency defaultCurrency) {
+        MoneyCompositeUserType.defaultCurrency = defaultCurrency;
+    }
+
 
     /**
      * Properties that the Money class is composed off. These are the properties
@@ -98,7 +112,7 @@ public class MoneyCompositeUserType implements CompositeUserType {
             return null;
         }
         Short currencyId = resultSet.getShort(names[0]);
-        MifosCurrency configCurrency = Configuration.getInstance().getSystemConfig().getCurrency();
+        MifosCurrency configCurrency = getDefaultCurrency(); //Configuration.getInstance().getSystemConfig().getCurrency();
         // If currency id retrieved has a value of 0 or is null then the default
         // currency is retrieved. This
         // has been done so that there is a compatibility with M1 code
