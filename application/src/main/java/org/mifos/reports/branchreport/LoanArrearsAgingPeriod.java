@@ -20,9 +20,8 @@
 
 package org.mifos.reports.branchreport;
 
-import java.io.Serializable;
 
-public enum LoanArrearsAgingPeriod implements Serializable {
+public enum LoanArrearsAgingPeriod {
     ONE_WEEK("1", 1, 7), TWO_WEEK("2", 8, 14), THREE_WEEK("3", 15, 21), FOUR_WEEK("4", 22, 28), FIVE_TO_EIGHT_WEEK(
             "5-8", 29, 56), NINE_TO_TWELVE_WEEK("9-12", 57, 84), MORE_THAN_TWELVE("12+", 85, Integer.MAX_VALUE - 1);
 
