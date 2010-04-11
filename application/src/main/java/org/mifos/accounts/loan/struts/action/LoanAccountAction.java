@@ -1383,7 +1383,7 @@ public class LoanAccountAction extends AccountAppAction {
 
         // Set newMeetingForRepaymentDay if isRepaymentIndepOfMeetingEnabled
         // flag is true
-        CustomerBO customer = loanBOInSession.getCustomer();
+        CustomerBO customer = loanBO.getCustomer();
         MeetingBO newMeetingForRepaymentDay = null;
         boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
 
