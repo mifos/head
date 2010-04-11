@@ -195,7 +195,7 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">
 							<td width="20%" align="right"><span id="editoffice.label.address1"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS1}" keyhm="Office.Address1" isColonRequired="yes"
-								bundle="OfficeUIResources"/></span>:</td>
+								bundle="OfficeUIResources"/></span></td>
 							<td width="80%"><mifos:mifosalphanumtext styleId="editoffice.input.address1"
 								property="address.line1" keyhm="Office.Address1"
 								value="${offActionForm.address.line1}"
@@ -212,8 +212,7 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal" id="Office.Address3">
 							<td align="right"><span id="editoffice.label.address3"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS3}"
-								bundle="OfficeUIResources" keyhm="Office.Address3">
-								</mifos:mifoslabel></span>:</td>
+								bundle="OfficeUIResources" keyhm="Office.Address3" isColonRequired="yes"/></span></td>
 							<td><mifos:mifosalphanumtext styleId="editoffice.input.address3" property="address.line3"
 								value="${offActionForm.address.line3}"
 								maxlength="200" keyhm="Office.Address3">
@@ -221,9 +220,10 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><span id="editoffice.label.city"><mifos:mifoslabel
-								name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources"/></span>:</td>
+								name="${ConfigurationConstants.CITY}"
+                                bundle="OfficeUIResources" keyhm="Office.City" isColonRequired="yes"/></span></td>
 							<td><mifos:mifosalphanumtext styleId="editoffice.input.city" property="address.city"
-								value="${offActionForm.address.city}" maxlength="100"/>
+								value="${offActionForm.address.city}" maxlength="100" keyhm="Office.City"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">

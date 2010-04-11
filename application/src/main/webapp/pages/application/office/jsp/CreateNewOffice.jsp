@@ -181,15 +181,15 @@ explanation of the license and how it is applied.
 										name="${ConfigurationConstants.ADDRESS3}"
 										bundle="OfficeUIResources" 
 										keyhm="Office.Address3"
-										isColonRequired="yes"></mifos:mifoslabel></span></td>
+										isColonRequired="yes"/></span></td>
 									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.address3" property="address.line3"
-										maxlength="200" keyhm="Office.Address3"></mifos:mifosalphanumtext></td>
+										maxlength="200" keyhm="Office.Address3"/></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><span id="CreateNewOffice.label.city"><mifos:mifoslabel
-										name="${ConfigurationConstants.CITY}" bundle="OfficeResources"></mifos:mifoslabel></span>:</td>
+										name="${ConfigurationConstants.CITY}" bundle="OfficeResources" keyhm="Office.City" isColonRequired="yes"/></span></td>
 									<td><mifos:mifosalphanumtext styleId="CreateNewOffice.input.city" property="address.city"
-										maxlength="100"></mifos:mifosalphanumtext></td>
+										maxlength="100" keyhm="Office.City"/></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><span id="CreateNewOffice.label.state"><mifos:mifoslabel
