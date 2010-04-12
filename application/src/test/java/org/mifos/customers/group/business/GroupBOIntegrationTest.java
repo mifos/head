@@ -267,7 +267,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(WeekDay.THURSDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
                 .getWeekDay());
 
-        Integer updatedMeetingId = group.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
+        Integer oldMeetingId = weeklyMeeting.getMeetingId();
 
         client1.changeUpdatedMeeting();
         group.changeUpdatedMeeting();
@@ -287,7 +287,7 @@ public class GroupBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(client1.getCustomerMeeting().getUpdatedMeeting());
         Assert.assertNull(client2.getCustomerMeeting().getUpdatedMeeting());
 
-        MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeetingId);
+        MeetingBO meeting = new MeetingPersistence().getMeeting(oldMeetingId);
         Assert.assertNull(meeting);
     }
 

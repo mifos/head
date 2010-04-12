@@ -42,6 +42,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -73,6 +74,8 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.batchjobs.helpers.RegenerateScheduleHelper;
+import org.mifos.framework.components.batchjobs.helpers.RegenerateScheduleTask;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
@@ -128,6 +131,50 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
+
+
+    // This test demonstrated the problem described in MIFOS-2652 when transfering a client
+    // from one group to another would also change the meeting of the group the client was
+    // being transferred from.
+    public void testTransferFromGroupToGroupShouldNotAffectFromGroup() throws Exception {
+        Short officeId = new Short("3");
+        Short personnel = new Short("1");
+        MeetingBO groupMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        String groupPlace = "groupPlace";
+        groupMeeting.setMeetingPlace(groupPlace);
+        MeetingBO group1Meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.FRIDAY).build();
+        String group1Place = "group1Place";
+        group1Meeting.setMeetingPlace(group1Place);
+
+        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, groupMeeting,
+                personnel);
+        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
+                group1Meeting, personnel);
+        client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
+                new java.util.Date());
+
+        client.transferToGroup(group1);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.closeSession();
+
+        RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
+        RegenerateScheduleHelper regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask.getTaskHelper();
+        long dummy = 0;
+        regenerateScheduleHelper.execute(dummy);
+
+        group = TestObjectFactory.getGroup(group.getCustomerId());
+        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
+        client = TestObjectFactory.getClient(client.getCustomerId());
+
+        Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(groupPlace, group.getCustomerMeetingValue().getMeetingPlace());
+        Assert.assertEquals(WeekDay.FRIDAY, group1.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(group1Place, group1.getCustomerMeetingValue().getMeetingPlace());
+        Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+        Assert.assertEquals(group1Place, client.getCustomerMeetingValue().getMeetingPlace());
+
+    }
+
 
     public void testPovertyLikelihoodHibernateMapping() throws Exception {
         createInitialObjects();

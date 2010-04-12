@@ -785,22 +785,12 @@ public abstract class CustomerBO extends BusinessObject {
         MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
         MeetingBO oldMeeting = getCustomerMeeting().getMeeting();
         if (newMeeting != null) {
-            if (sameRecurrence(oldMeeting, newMeeting)) {
-                logger.debug("In CustomerBO::changeUpdatedMeeting(), Same Recurrence Found, customerId: "
-                        + getCustomerId());
-                updateMeeting(oldMeeting, newMeeting);
-                resetUpdatedMeetingForChildren(oldMeeting);
-                if (getParentCustomer() == null) {
-                    deleteMeeting(newMeeting);
-                }
-            } else {
-                logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
-                        + getCustomerId());
-                getCustomerMeeting().setMeeting(newMeeting);
-                resetUpdatedMeetingForChildren(newMeeting);
-                if (getParentCustomer() == null) {
-                    deleteMeeting(oldMeeting);
-                }
+            logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
+                    + getCustomerId());
+            getCustomerMeeting().setMeeting(newMeeting);
+            resetUpdatedMeetingForChildren(newMeeting);
+            if (getParentCustomer() == null) {
+                deleteMeeting(oldMeeting);
             }
             getCustomerMeeting().setUpdatedMeeting(null);
         }

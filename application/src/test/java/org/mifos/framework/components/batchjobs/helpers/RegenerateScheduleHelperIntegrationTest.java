@@ -302,6 +302,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         DateTime startDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime();
         DateTime testDate = new DateMidnight(2010,DateTimeConstants.FEBRUARY,20).toDateTime();
         meeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
+        MeetingBO savingsMeeting = setupWeeklyMeeting(startDate, EVERY_WEEK);
 
         List<DateTime> expectedMeetingDates = new ArrayList<DateTime>();
         expectedMeetingDates.add(new DateMidnight(2010,DateTimeConstants.FEBRUARY,11).toDateTime());
@@ -314,7 +315,7 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
                 CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
                 CustomerStatus.CLIENT_ACTIVE, group);
-        SavingsBO savings = createSavingsAccount(meeting);
+        SavingsBO savings = createSavingsAccount(savingsMeeting);
 
         // move weekly center meeting
         MeetingBO newMeeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(RecurrenceType.WEEKLY,
