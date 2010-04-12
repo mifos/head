@@ -47,7 +47,6 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
@@ -821,28 +820,6 @@ public abstract class CustomerBO extends BusinessObject {
         } catch (PersistenceException pe) {
             throw new CustomerException(pe);
         }
-    }
-
-    protected void updateMeeting(final MeetingBO oldMeeting, final MeetingBO newMeeting) throws CustomerException {
-        try {
-            if (oldMeeting.isWeekly()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingPlace());
-            } else if (oldMeeting.isMonthlyOnDate()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getDayNumber(), newMeeting.getMeetingPlace());
-            } else if (oldMeeting.isMonthly()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingDetails()
-                        .getWeekRank(), newMeeting.getMeetingPlace());
-            }
-
-        } catch (MeetingException me) {
-            throw new CustomerException(me);
-        }
-    }
-
-    private boolean sameRecurrence(final MeetingBO oldMeeting, final MeetingBO newMeeting) {
-        return oldMeeting.isWeekly() && newMeeting.isWeekly()
-                || oldMeeting.isMonthlyOnDate() && newMeeting.isMonthlyOnDate() || oldMeeting.isMonthly()
-                && !oldMeeting.isMonthlyOnDate() && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate();
     }
 
     private void validateLoanOfficerAssigned() throws CustomerException {
