@@ -132,6 +132,11 @@ public class ClientBO extends CustomerBO {
         client.addNameDetailSet(spouseFatherNameDetailEntity);
         client.createOrUpdatePicture(pictureAsBlob);
 
+        if (clientStatus.isClientActive()) {
+            CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, group);
+            client.addCustomerHierarchy(hierarchy);
+        }
+
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
         }

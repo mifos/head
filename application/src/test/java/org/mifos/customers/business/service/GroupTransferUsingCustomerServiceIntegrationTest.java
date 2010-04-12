@@ -185,10 +185,8 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
         GroupBO groupForTransfer = anExistingGroupUnderCenterInSameBranchAs(centerWithWeeklyMeeting.withName("center-with-group"));
 
         // pre-verification
-        // FIXME - #000002 - keithw - no active customer hierarchies exist after customer creation so should remove concept
-        // as seems redundant to track this only for 'transfers' - or maybe they should exist after customer creation and services are wrong!.
         assertThat(centerWithNoChildren.getActiveCustomerHierarchy(), is(nullValue()));
-        assertThat(groupForTransfer.getActiveCustomerHierarchy(), is(nullValue()));
+        assertThat(groupForTransfer.getActiveCustomerHierarchy().getParentCustomer().getDisplayName(), is("center-with-group"));
         final String oldGroupParentSystemId = groupForTransfer.getParentCustomer().getGlobalCustNum();
 
         // exercise test

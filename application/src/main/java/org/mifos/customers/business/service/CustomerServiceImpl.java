@@ -583,6 +583,11 @@ public class CustomerServiceImpl implements CustomerService {
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
 
+                if (group.getParentCustomer() != null) {
+                    CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(group, group.getParentCustomer());
+                    group.addCustomerHierarchy(hierarchy);
+                }
+
                 group.getCustomerAccount().generateCustomerFeeSchedule();
             }
 
@@ -740,6 +745,11 @@ public class CustomerServiceImpl implements CustomerService {
 
             if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
                 try {
+                    if (client.getParentCustomer() != null) {
+                        CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, client.getParentCustomer());
+                        client.addCustomerHierarchy(hierarchy);
+                    }
+
                     client.getCustomerAccount().generateCustomerFeeSchedule();
                 } catch (AccountException ae1) {
                     throw new CustomerException(ae1);

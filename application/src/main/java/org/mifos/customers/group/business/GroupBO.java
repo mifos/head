@@ -34,6 +34,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -79,6 +80,12 @@ public class GroupBO extends CustomerBO {
 
         group.childAddedForParent(parentCustomer);
         group.setParentCustomer(parentCustomer);
+
+        if (customerStatus.isGroupActive()) {
+            CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(group, parentCustomer);
+            group.addCustomerHierarchy(hierarchy);
+        }
+
         String searchId = parentCustomer.getSearchId() + "." + parentCustomer.getMaxChildCount();
 
         group.setSearchId(searchId);
