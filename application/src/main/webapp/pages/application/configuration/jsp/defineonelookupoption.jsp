@@ -43,7 +43,8 @@ function goToLookupOptionPage(){
 
   function doKeyPress(event) {
 	 var keycode = (!event) ? window.event.keyCode:event.which;
-     if (keycode == 13) {
+	 var RETURN_KEYCODE = 13;
+     if (keycode == RETURN_KEYCODE) {
         goToLookupOptionPage();
      }
   }
@@ -54,7 +55,7 @@ function goToLookupOptionPage(){
 	<span id="page.id" title="defineonelookupoption" />
 	
 
-		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >
+		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >  
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
