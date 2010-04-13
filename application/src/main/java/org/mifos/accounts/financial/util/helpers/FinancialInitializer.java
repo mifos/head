@@ -27,7 +27,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -169,8 +169,8 @@ public class FinancialInitializer {
         Session session = StaticHibernateUtil.getSessionTL();
         try {
             Query queryFinancialAction = session.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
-            List<FinancialActionBO> listFinancialAction = queryFinancialAction.list();
-            for (FinancialActionBO fabo : listFinancialAction) {
+            List<FinancialActionTypeEntity> listFinancialAction = queryFinancialAction.list();
+            for (FinancialActionTypeEntity fabo : listFinancialAction) {
                 FinancialActionCache.addToCache(fabo);
             }
         } catch (Exception e) {

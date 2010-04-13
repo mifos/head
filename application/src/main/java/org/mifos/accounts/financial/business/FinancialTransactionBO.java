@@ -36,7 +36,7 @@ public class FinancialTransactionBO extends AbstractBusinessObject {
 
     private final FinancialTransactionBO relatedFinancialTrxn;
 
-    private final FinancialActionBO financialAction;
+    private final FinancialActionTypeEntity financialAction;
 
     private final GLCodeEntity glcode;
 
@@ -73,7 +73,7 @@ public class FinancialTransactionBO extends AbstractBusinessObject {
     }
 
     public FinancialTransactionBO(AccountTrxnEntity accountTrxn, FinancialTransactionBO relatedFinancialTrxn,
-            FinancialActionBO financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
+            FinancialActionTypeEntity financialAction, GLCodeEntity glcode, Date actionDate, PersonnelBO postedBy,
             Short accountingUpdated, Money postedAmount, String notes, Short debitCreditFlag, Date postedDate) {
         this.trxnId = null;
         this.accountTrxn = accountTrxn;
@@ -114,7 +114,7 @@ public class FinancialTransactionBO extends AbstractBusinessObject {
         return actionDate;
     }
 
-    public FinancialActionBO getFinancialAction() {
+    public FinancialActionTypeEntity getFinancialAction() {
         return financialAction;
     }
 

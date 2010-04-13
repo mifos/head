@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -33,7 +33,7 @@ public class DisbursalAmountReversalAccountingEntry extends BaseAccountingEntry 
     @Override
     protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
-        FinancialActionBO finloanDibursal = getFinancialAction(FinancialActionConstants.DISBURSAL);
+        FinancialActionTypeEntity finloanDibursal = getFinancialAction(FinancialActionConstants.DISBURSAL);
         // debit take form the prd offering
 
         GLCodeEntity glcodeDebit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();

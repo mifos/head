@@ -38,7 +38,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetApplicableDebit() throws FinancialException {
-        FinancialActionBO finActionPrincipal = FinancialActionCache
+        FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
         Set<COABO> applicableDebitCategory = finActionPrincipal.getApplicableDebitCharts();
@@ -54,7 +54,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetApplicableCredit() throws FinancialException {
-        FinancialActionBO finActionPrincipal = FinancialActionCache
+        FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
         Set<COABO> applicableCreditCategory = finActionPrincipal.getApplicableCreditCharts();
@@ -63,7 +63,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testRoundingCredit() throws FinancialException {
-        FinancialActionBO finActionRounding = FinancialActionCache
+        FinancialActionTypeEntity finActionRounding = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
         Set<COABO> applicableCreditCategory = finActionRounding.getApplicableCreditCharts();
        Assert.assertEquals(applicableCreditCategory.size(), 1);

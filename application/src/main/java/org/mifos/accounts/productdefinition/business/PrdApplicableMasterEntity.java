@@ -20,7 +20,12 @@
 
 package org.mifos.accounts.productdefinition.business;
 
+import java.util.Set;
+
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 
 /**
@@ -33,11 +38,54 @@ public class PrdApplicableMasterEntity extends MasterDataEntity {
     }
 
     public PrdApplicableMasterEntity(ApplicableTo prdApplicableMaster) {
-        super(prdApplicableMaster.getValue());
+        this.id = prdApplicableMaster.getValue();
     }
 
     public ApplicableTo asEnum() {
         return ApplicableTo.fromInt(getId());
     }
 
+    private Short localeId;
+
+    /** The composite primary key value */
+    private Short id;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
+    public Short getId() {
+        return id;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getLookUpValue());
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
 }

@@ -320,7 +320,7 @@ public class FeeAction extends BaseAction {
     private List<MasterDataEntity> getTimeOfChargeForCustomer(List<MasterDataEntity> timeOfCharges) {
         List<MasterDataEntity> customerTimeOfCharges = new ArrayList<MasterDataEntity>();
         for (MasterDataEntity entity : timeOfCharges) {
-            if (entity.getId().equals(FeePayment.UPFRONT.getValue())) {
+            if (((FeePaymentEntity)entity).getId().equals(FeePayment.UPFRONT.getValue())) {
                 customerTimeOfCharges.add(entity);
             }
         }

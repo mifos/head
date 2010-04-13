@@ -20,7 +20,12 @@
 
 package org.mifos.customers.business;
 
+import java.util.Set;
+
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -28,27 +33,55 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
 
 /**
- * This class represents customer level e.g client,center etc. Most code will
- * want {@link CustomerLevel} (or perhaps something else entirely, like calling
- * a method in {@link CustomerBO} which can be implemented differently for
+ * This class represents customer level e.g client,center etc. Most code will want {@link CustomerLevel} (or perhaps
+ * something else entirely, like calling a method in {@link CustomerBO} which can be implemented differently for
  * {@link ClientBO}, {@link CenterBO}, and {@link GroupBO}).
  */
 // FIXME: this should just be an enum, not a persisted class
 public class CustomerLevelEntity extends MasterDataEntity {
 
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
     // Set/gotten via .hbm.xml file
     private CustomerLevelEntity parentCustomerLevel;
 
-    public CustomerLevelEntity(CustomerLevel customerLevel) {
-        super(customerLevel.getValue());
-    }
-
     /*
-     * Adding a default constructor is hibernate's requirement and should not be
-     * used to create a valid Object.
+     * Adding a default constructor is hibernate's requirement and should not be used to create a valid Object.
      */
     protected CustomerLevelEntity() {
         super();
+    }
+
+    public CustomerLevelEntity(CustomerLevel customerLevel) {
+        this.id = customerLevel.getValue();
+    }
+
+    public Short getId() {
+        return id;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
     }
 
     public CustomerLevelEntity getParentCustomerLevel() {
@@ -56,9 +89,8 @@ public class CustomerLevelEntity extends MasterDataEntity {
     }
 
     /**
-     * Based on the customer level , it returns the product applicable type.
-     * This is being used, when savings/loan products are to find as per
-     * customer level.
+     * Based on the customer level , it returns the product applicable type. This is being used, when savings/loan
+     * products are to find as per customer level.
      */
     public Short getProductApplicableType() {
         if (getId().equals(CustomerLevel.CLIENT.getValue())) {
@@ -74,12 +106,28 @@ public class CustomerLevelEntity extends MasterDataEntity {
         return getId().equals(CustomerLevel.CENTER.getValue());
     }
 
+    public boolean isClient() {
+        return getId().equals(CustomerLevel.CLIENT.getValue());
+    }
+
     public boolean isGroup() {
         return getId().equals(CustomerLevel.GROUP.getValue());
     }
 
-    public boolean isClient() {
-        return getId().equals(CustomerLevel.CLIENT.getValue());
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 
 }

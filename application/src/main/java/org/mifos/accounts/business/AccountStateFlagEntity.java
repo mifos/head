@@ -20,14 +20,27 @@
 
 package org.mifos.accounts.business;
 
+import java.util.Set;
+
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class AccountStateFlagEntity extends MasterDataEntity {
-    private Short statusId;
-
     private String flagDescription;
 
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
     private Short retained;
+
+    private Short statusId;
 
     protected AccountStateFlagEntity() {
     }
@@ -36,28 +49,64 @@ public class AccountStateFlagEntity extends MasterDataEntity {
         return flagDescription;
     }
 
-    public void setFlagDescription(String flagDescription) {
-        this.flagDescription = flagDescription;
+    public Short getId() {
+        return id;
     }
 
-    public Short getStatusId() {
-        return statusId;
+    public Short getLocaleId() {
+        return localeId;
     }
 
-    public void setStatusId(Short statusId) {
-        this.statusId = statusId;
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
     }
 
-    void setRetained(Short retained) {
-        this.retained = retained;
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
     }
 
     Short getRetained() {
         return this.retained;
     }
 
+    public Short getStatusId() {
+        return statusId;
+    }
+
     public boolean isFlagRetained() {
         return this.getRetained() == 1;
     }
 
+    public void setFlagDescription(String flagDescription) {
+        this.flagDescription = flagDescription;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
+
+    void setRetained(Short retained) {
+        this.retained = retained;
+    }
+
+    public void setStatusId(Short statusId) {
+        this.statusId = statusId;
+    }
 }

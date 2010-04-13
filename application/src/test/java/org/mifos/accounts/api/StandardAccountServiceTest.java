@@ -98,6 +98,7 @@ public class StandardAccountServiceTest {
     public void setup() {
         standardAccountService = new StandardAccountService();
         standardAccountService.setAccountPersistence(accountPersistence);
+        Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);
         accountBO.setCustomerPersistence(customerPersistence);

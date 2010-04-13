@@ -37,86 +37,13 @@ public abstract class MasterDataEntity extends AbstractEntity {
     // values which override localized values are stored with locale =1
     public static Short CUSTOMIZATION_LOCALE_ID = (short) 1;
 
-    private Short localeId;
+    public abstract Short getId();
 
-    /** The composite primary key value */
-    private Short id;
+    public abstract Set<LookUpValueLocaleEntity> getNames();
 
-    /** The value of the lookupValue association. */
-    private LookUpValueEntity lookUpValue;
+    public abstract String getName();
 
-    public MasterDataEntity(LookUpValueEntity lookUpValueEntity) {
-        this.lookUpValue = lookUpValueEntity;
-    }
+    public abstract void setLocaleId(Short locale);
 
-    public MasterDataEntity() {
-    }
-
-    public MasterDataEntity(Short id) {
-        this.id = id;
-    }
-
-    public MasterDataEntity(Short id, Short localeId) {
-        this.id = id;
-        this.localeId = localeId;
-    }
-
-    public Short getId() {
-        return id;
-    }
-
-    protected void setId(Short id) {
-        this.id = id;
-    }
-
-    public LookUpValueEntity getLookUpValue() {
-        return lookUpValue;
-    }
-
-    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
-        this.lookUpValue = lookUpValue;
-    }
-
-    public Short getLocaleId() {
-        return localeId;
-    }
-
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
-    }
-
-    /*
-     * We ignore the locale, in order to treat values in the database as
-     * customized values for all locales.
-     */
-    public String getName() {
-        // test cases depend upon the null locale behavior
-        // it seems like a hack which should be refactored
-        // TODO: remove test dependency on null localeId behavior
-        // if (localeId == null) {
-        // return null;
-        // }
-        String name = MessageLookup.getInstance().lookup(getLookUpValue());
-        return name;
-
-    }
-
-    // public String getName() {
-    // return getName(getLocaleId());
-    // }
-
-    /*
-     * This method is currently used just for insuring that all data is loaded
-     * within a given Hibernate session.
-     */
-    public Set<LookUpValueLocaleEntity> getNames() {
-        return getLookUpValue().getLookUpValueLocales();
-    }
-
-    /*
-     * Jan 18, 2008 work in progress
-     */
-    protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
-    }
+    public abstract LookUpValueEntity getLookUpValue();
 }

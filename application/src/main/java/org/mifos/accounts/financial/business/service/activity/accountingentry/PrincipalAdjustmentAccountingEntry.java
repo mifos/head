@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
@@ -38,7 +38,7 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getPrincipalGLcode();
 
-        FinancialActionBO finActionPrincipal = FinancialActionCache
+        FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
         addAccountEntryDetails(loanTrxn.getPrincipalAmount(), finActionPrincipal,
                 getGLcode(finActionPrincipal.getApplicableDebitCharts()), FinancialConstants.CREDIT);
@@ -55,7 +55,7 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
         Money roundedAmount = Money.round(loanTrxn.getPrincipalAmount(),
                 loanTrxn.getPrincipalAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(loanTrxn.getPrincipalAmount())) {
-            FinancialActionBO finActionRounding = FinancialActionCache
+            FinancialActionTypeEntity finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);
 
             addAccountEntryDetails(roundedAmount.subtract(loanTrxn.getPrincipalAmount()).negate(), finActionRounding,

@@ -20,18 +20,27 @@
 
 package org.mifos.application.master.business;
 
+import java.util.Set;
+
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.AbstractEntity;
 
 public class SupportedLocalesEntity extends AbstractEntity {
 
+    private CountryEntity country;
+
+    private Short defaultLocale;
+
+    /** The composite primary key value */
+    private Short id;
+
+    private LanguageEntity language;
     private Short localeId;
 
     private String localeName;
 
-    private Short defaultLocale;
-
-    private LanguageEntity language;
-    private CountryEntity country;
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
 
     public SupportedLocalesEntity() {
         super();
@@ -43,12 +52,28 @@ public class SupportedLocalesEntity extends AbstractEntity {
         this.localeId = localeId;
     }
 
+    public CountryEntity getCountry() {
+        return country;
+    }
+
     public String getCountryCode() {
         return country.getCountryShortName();
     }
 
     public String getCountryName() {
         return country.getCountryName();
+    }
+
+    public Short getDefaultLocale() {
+        return defaultLocale;
+    }
+
+    public Short getId() {
+        return id;
+    }
+
+    public LanguageEntity getLanguage() {
+        return language;
     }
 
     public String getLanguageCode() {
@@ -59,44 +84,57 @@ public class SupportedLocalesEntity extends AbstractEntity {
         return language.getLanguageName();
     }
 
-    public Short getDefaultLocale() {
-        return defaultLocale;
-    }
-
-    public void setDefaultLocale(Short defaultLocale) {
-        this.defaultLocale = defaultLocale;
-    }
-
     public Short getLocaleId() {
         return localeId;
-    }
-
-    public void setLocaleId(Short localeId) {
-        this.localeId = localeId;
     }
 
     public String getLocaleName() {
         return localeName;
     }
 
-    public void setLocaleName(String localeName) {
-        this.localeName = localeName;
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
     }
 
-    public CountryEntity getCountry() {
-        return country;
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
     }
 
     public void setCountry(CountryEntity country) {
         this.country = country;
     }
 
-    public LanguageEntity getLanguage() {
-        return language;
+    public void setDefaultLocale(Short defaultLocale) {
+        this.defaultLocale = defaultLocale;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
     }
 
     public void setLanguage(LanguageEntity language) {
         this.language = language;
     }
 
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    public void setLocaleName(String localeName) {
+        this.localeName = localeName;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
 }

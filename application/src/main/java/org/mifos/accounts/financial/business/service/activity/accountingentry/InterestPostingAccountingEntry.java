@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
@@ -35,7 +35,7 @@ public class InterestPostingAccountingEntry extends BaseAccountingEntry {
 
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
 
-        FinancialActionBO finIntPostingAction = getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
+        FinancialActionTypeEntity finIntPostingAction = getFinancialAction(FinancialActionConstants.SAVINGS_INTERESTPOSTING);
         SavingsOfferingBO savingsOffering = ((SavingsBO) savingsTrxn.getAccount()).getSavingsOffering();
 
         addAccountEntryDetails(savingsTrxn.getInterestAmount(), finIntPostingAction, savingsOffering

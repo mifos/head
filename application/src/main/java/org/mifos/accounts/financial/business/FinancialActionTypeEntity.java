@@ -26,9 +26,12 @@ import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialRules;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 
-public class FinancialActionBO extends MasterDataEntity {
+public class FinancialActionTypeEntity extends MasterDataEntity {
 
     public Set<COABO> getApplicableDebitCharts() throws FinancialException {
         COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance().getGLAccountForAction(getId(),
@@ -42,4 +45,47 @@ public class FinancialActionBO extends MasterDataEntity {
         return chart.getAssociatedChartOfAccounts();
     }
 
+    private Short localeId;
+
+    /** The composite primary key value */
+    private Short id;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
+    public Short getId() {
+        return id;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getLookUpValue());
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
 }

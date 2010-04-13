@@ -20,24 +20,69 @@
 
 package org.mifos.application.master.business;
 
+import java.util.Set;
+
+import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 
 public class SpouseFatherLookupEntity extends MasterDataEntity {
 
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
     protected SpouseFatherLookupEntity() {
         super();
     }
-
     public SpouseFatherLookupEntity(Short id) {
-        super(id);
+        this.id = id;
     }
 
-    public boolean isSpouse() {
-        return getId().equals(ClientConstants.SPOUSE_VALUE);
+    public Short getId() {
+        return id;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getLookUpValue());
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
     }
 
     public boolean isOneTime() {
         return getId().equals(ClientConstants.FATHER_VALUE);
     }
 
+    public boolean isSpouse() {
+        return getId().equals(ClientConstants.SPOUSE_VALUE);
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
 }

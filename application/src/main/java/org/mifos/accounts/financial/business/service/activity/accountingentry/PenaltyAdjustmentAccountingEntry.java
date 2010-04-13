@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -33,7 +33,7 @@ public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
     protected void applySpecificAccountActionEntry() throws FinancialException {
         Money amount = financialActivity.getMiscPenaltyAmount();
 
-        FinancialActionBO finActionMiscPenalty = FinancialActionCache
+        FinancialActionTypeEntity finActionMiscPenalty = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
         addAccountEntryDetails(amount, finActionMiscPenalty, getGLcode(finActionMiscPenalty
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);

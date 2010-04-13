@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
@@ -97,7 +97,7 @@ public abstract class BaseAccountingEntry {
      * [KeithP] FinancialActionCache is now encapsulated in FinancialBusinessService, where it can
      * be refactored away without affecting this class.
      */
-    protected FinancialActionBO getFinancialAction(final FinancialActionConstants financialActionId)
+    protected FinancialActionTypeEntity getFinancialAction(final FinancialActionConstants financialActionId)
             throws FinancialException {
         // FinancialActionCache.getFinancialAction(financialActionId);
         return financialBusinessService.getFinancialAction(financialActionId);
@@ -120,7 +120,7 @@ public abstract class BaseAccountingEntry {
         applySpecificAccountActionEntry();
     }
 
-    protected void addAccountEntryDetails(final Money postedMoney, final FinancialActionBO financialAction, final GLCodeEntity glcode,
+    protected void addAccountEntryDetails(final Money postedMoney, final FinancialActionTypeEntity financialAction, final GLCodeEntity glcode,
             final FinancialConstants debitCredit) {
         if (postedMoney.isNonZero()) {
             Money amountToPost = removeSign(postedMoney);

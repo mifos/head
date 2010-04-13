@@ -23,24 +23,24 @@ package org.mifos.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
 
 // TODO: why does this cache exist? Is FinancialActionConstants not enough?
 public class FinancialActionCache {
 
-    private static Map<Short, FinancialActionBO> financialCacheRepository = new HashMap<Short, FinancialActionBO>();
+    private static Map<Short, FinancialActionTypeEntity> financialCacheRepository = new HashMap<Short, FinancialActionTypeEntity>();
 
-    public static void addToCache(FinancialActionBO financialAction) {
+    public static void addToCache(FinancialActionTypeEntity financialAction) {
         if ((financialAction != null) && (financialCacheRepository.get(financialAction.getId()) == null)) {
             financialCacheRepository.put(financialAction.getId(), financialAction);
         }
     }
 
-    public static FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId)
+    public static FinancialActionTypeEntity getFinancialAction(FinancialActionConstants financialActionId)
             throws FinancialException {
-        FinancialActionBO financialAction = financialCacheRepository.get(financialActionId.getValue());
+        FinancialActionTypeEntity financialAction = financialCacheRepository.get(financialActionId.getValue());
         if (financialAction == null) {
             throw new FinancialException(FinancialExceptionConstants.ACTIONNOTFOUND);
         }

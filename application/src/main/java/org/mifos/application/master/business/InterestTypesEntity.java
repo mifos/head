@@ -20,11 +20,22 @@
 
 package org.mifos.application.master.business;
 
+import java.util.Set;
+
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.application.master.MessageLookup;
 
 public class InterestTypesEntity extends MasterDataEntity {
     private java.lang.String descripton;
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
     private ProductTypeEntity productType;
 
     protected InterestTypesEntity() {
@@ -32,27 +43,62 @@ public class InterestTypesEntity extends MasterDataEntity {
     }
 
     public InterestTypesEntity(InterestType interestType) {
-        super(interestType.getValue());
-    }
-
-    public java.lang.String getDescripton() {
-        return descripton;
-    }
-
-    public void setDescripton(java.lang.String descripton) {
-        this.descripton = descripton;
-    }
-
-    public ProductTypeEntity getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductTypeEntity productType) {
-        this.productType = productType;
+        this.id = interestType.getValue();
     }
 
     public InterestType asEnum() {
         return InterestType.fromInt(getId());
     }
 
+    public java.lang.String getDescripton() {
+        return descripton;
+    }
+    public Short getId() {
+        return id;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getLookUpValue());
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    public ProductTypeEntity getProductType() {
+        return productType;
+    }
+
+    public void setDescripton(java.lang.String descripton) {
+        this.descripton = descripton;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
+
+    public void setProductType(ProductTypeEntity productType) {
+        this.productType = productType;
+    }
 }
+

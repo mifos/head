@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
@@ -35,7 +35,7 @@ public class WriteOffAccountingEntry extends BaseAccountingEntry {
     protected void applySpecificAccountActionEntry() throws FinancialException {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
 
-        FinancialActionBO finActionWriteOff = FinancialActionCache
+        FinancialActionTypeEntity finActionWriteOff = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.WRITEOFF);
         addAccountEntryDetails(loanTrxn.getPrincipalAmount(), finActionWriteOff, getGLcode(finActionWriteOff
                 .getApplicableDebitCharts()), FinancialConstants.DEBIT);

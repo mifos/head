@@ -22,7 +22,7 @@ package org.mifos.accounts.financial.util.helpers;
 import junit.framework.Assert;
 
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -41,7 +41,7 @@ public class FinancialInitializerIntegrationTest extends MifosIntegrationTestCas
 
     public void testFinancialActionInitializer() throws FinancialException {
         FinancialInitializer.initalizeFinancialAction();
-        FinancialActionBO financialActionPrincipal = FinancialActionCache
+        FinancialActionTypeEntity financialActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
        Assert.assertEquals(financialActionPrincipal.getId().shortValue(), FinancialActionConstants.PRINCIPALPOSTING.value);

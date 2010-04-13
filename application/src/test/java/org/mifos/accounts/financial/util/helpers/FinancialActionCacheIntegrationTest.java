@@ -22,7 +22,7 @@ package org.mifos.accounts.financial.util.helpers;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -37,14 +37,14 @@ public class FinancialActionCacheIntegrationTest extends MifosIntegrationTestCas
 
         FinancialActionCache.addToCache(createFinancialAction());
 
-        FinancialActionBO principalAction = FinancialActionCache
+        FinancialActionTypeEntity principalAction = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
        Assert.assertEquals(principalAction.getId().shortValue(), 1);
 
     }
 
-    private FinancialActionBO createFinancialAction() {
-        return (FinancialActionBO) StaticHibernateUtil.getSessionTL().get(FinancialActionBO.class,
+    private FinancialActionTypeEntity createFinancialAction() {
+        return (FinancialActionTypeEntity) StaticHibernateUtil.getSessionTL().get(FinancialActionTypeEntity.class,
                 FinancialActionConstants.PRINCIPALPOSTING.value);
 
     }

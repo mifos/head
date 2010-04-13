@@ -26,7 +26,7 @@
 		</property>
 		<many-to-one name="accountTrxn" column="ACCOUNT_TRXN_ID" class="org.mifos.accounts.business.AccountTrxnEntity" insert="true" update="false" access="field" />
 		<many-to-one name="relatedFinancialTrxn" column="RELATED_FIN_TRXN" class="org.mifos.accounts.financial.business.FinancialTransactionBO" insert="true" update="false" access="field" />
-		<many-to-one name="financialAction" column="FIN_ACTION_ID" class="org.mifos.accounts.financial.business.FinancialActionBO" insert="true" update="false" access="field" />
+		<many-to-one name="financialAction" column="FIN_ACTION_ID" class="org.mifos.accounts.financial.business.FinancialActionTypeEntity" insert="true" update="false" access="field" />
 		<many-to-one name="glcode" column="GLCODE_ID" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
 		<many-to-one name="postedBy" column="POSTED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" access="field" />
 	</class>

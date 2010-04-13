@@ -20,14 +20,63 @@
 
 package org.mifos.customers.personnel.business;
 
+import java.util.Set;
+
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 
 public class PersonnelStatusEntity extends MasterDataEntity {
     public PersonnelStatusEntity(PersonnelStatus personnelStatus) {
-        super(personnelStatus.getValue());
+        this.id = personnelStatus.getValue();
     }
 
     protected PersonnelStatusEntity() {
+    }
+
+    private Short localeId;
+
+    /** The composite primary key value */
+    private Short id;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
+    public Short getId() {
+        return id;
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getLookUpValue());
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 }

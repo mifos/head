@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
@@ -48,7 +48,7 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
             amountToPost = principalAmountNotRounded;
         }
 
-        FinancialActionBO finActionPrincipal = FinancialActionCache
+        FinancialActionTypeEntity finActionPrincipal = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
         addAccountEntryDetails(amountToPost, finActionPrincipal, getGLcode(finActionPrincipal
                 .getApplicableDebitCharts()), FinancialConstants.DEBIT);
@@ -63,7 +63,7 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 
         // v1 version log the 999 account to the principal account
         // check if rounding is required
-        FinancialActionBO finActionRounding = FinancialActionCache
+        FinancialActionTypeEntity finActionRounding = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
 
         if (amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) > 0) {

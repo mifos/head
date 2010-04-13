@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -38,7 +38,7 @@ public class CustomerFeesAdjustmentAccountingEntry extends BaseAccountingEntry {
         CustomerTrxnDetailEntity customertrxn = (CustomerTrxnDetailEntity) financialActivity.getAccountTrxn();
         Set<FeesTrxnDetailEntity> feesTrxn = customertrxn.getFeesTrxnDetails();
         Iterator<FeesTrxnDetailEntity> iterFees = feesTrxn.iterator();
-        FinancialActionBO finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
+        FinancialActionTypeEntity finActionFee = getFinancialAction(FinancialActionConstants.FEEPOSTING);
         while (iterFees.hasNext()) {
             FeesTrxnDetailEntity feeTrxn = iterFees.next();
             addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee, feeTrxn.getAccountFees().getFees()
@@ -48,7 +48,7 @@ public class CustomerFeesAdjustmentAccountingEntry extends BaseAccountingEntry {
                     .getApplicableDebitCharts()), FinancialConstants.CREDIT);
         }
         // For Misc Fee
-        FinancialActionBO finActionMiscFee = FinancialActionCache
+        FinancialActionTypeEntity finActionMiscFee = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING);
         addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee,
                 getGLcode(finActionMiscFee.getApplicableDebitCharts()), FinancialConstants.CREDIT);

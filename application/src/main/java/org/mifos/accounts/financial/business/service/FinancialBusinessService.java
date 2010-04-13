@@ -27,7 +27,7 @@ import java.util.Set;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.accounts.financial.business.service.activity.CustomerAccountRepaymentFinancialActivity;
@@ -64,7 +64,7 @@ public class FinancialBusinessService implements BusinessService {
         return ChartOfAccountsCache.get(glcode);
     }
 
-    public FinancialActionBO getFinancialAction(final FinancialActionConstants financialActionId)
+    public FinancialActionTypeEntity getFinancialAction(final FinancialActionConstants financialActionId)
             throws FinancialException {
         return FinancialActionCache.getFinancialAction(financialActionId);
     }
@@ -128,7 +128,7 @@ public class FinancialBusinessService implements BusinessService {
             throws SystemException, ApplicationException {
         List<GLCodeEntity> glCodeList = new ArrayList<GLCodeEntity>();
         Set<COABO> applicableCategory = null;
-        FinancialActionBO finActionFees = FinancialActionCache.getFinancialAction(financialAction);
+        FinancialActionTypeEntity finActionFees = FinancialActionCache.getFinancialAction(financialAction);
         if (debitCredit.equals(FinancialConstants.DEBIT)) {
             applicableCategory = finActionFees.getApplicableDebitCharts();
         } else if (debitCredit.equals(FinancialConstants.CREDIT)) {

@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
@@ -48,7 +48,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
     private void logTransactions_v1(LoanTrxnDetailEntity loanTrxn) throws FinancialException {
         GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getInterestGLcode();
 
-        FinancialActionBO finActionInterest = FinancialActionCache
+        FinancialActionTypeEntity finActionInterest = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
         addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
@@ -60,7 +60,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
         Money roundedAmount = Money.round(loanTrxn.getInterestAmount(),
                 loanTrxn.getInterestAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(loanTrxn.getInterestAmount())) {
-            FinancialActionBO finActionRounding = FinancialActionCache
+            FinancialActionTypeEntity finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);
 
             addAccountEntryDetails(roundedAmount.subtract(loanTrxn.getInterestAmount()).negate(), finActionRounding,
@@ -76,7 +76,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
         GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getInterestGLcode();
 
-        FinancialActionBO finActionInterest = FinancialActionCache
+        FinancialActionTypeEntity finActionInterest = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
         addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
                 .getApplicableDebitCharts()), FinancialConstants.CREDIT);
@@ -101,7 +101,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
             return;
         }
 
-        FinancialActionBO finActionRounding = FinancialActionCache
+        FinancialActionTypeEntity finActionRounding = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
         GLCodeEntity codeToDebit = null;
         GLCodeEntity codeToCredit = null;

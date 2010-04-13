@@ -3,7 +3,7 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.financial.business.FinancialActionBO" table="FINANCIAL_ACTION">
+	<class name="org.mifos.accounts.financial.business.FinancialActionTypeEntity" table="FINANCIAL_ACTION">
 		<id name="id" column="FIN_ACTION_ID">
 			<generator class="native" />
 		</id>
@@ -11,7 +11,7 @@
 	</class>
 	<query name="GETALLFINANCIALACTION">
 		<![CDATA[
-    		    from  org.mifos.accounts.financial.business.FinancialActionBO 
+    		    from  org.mifos.accounts.financial.business.FinancialActionTypeEntity 
     		]]>
 	</query>
 </hibernate-mapping>

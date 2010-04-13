@@ -20,28 +20,36 @@
 
 package org.mifos.accounts.fees.business;
 
+import java.util.Set;
+
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeFormulaEntity extends MasterDataEntity {
 
     private FeeFormula feeFormula;
 
-    public FeeFormulaEntity(FeeFormula feeFormula) {
-        super(feeFormula.getValue());
-        this.feeFormula = feeFormula;
-    }
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
 
     protected FeeFormulaEntity() {
     }
 
-    public FeeFormula getFeeFormula() {
-        return feeFormula;
+    public FeeFormulaEntity(FeeFormula feeFormula) {
+        this.id  = feeFormula.getValue();
+        this.feeFormula = feeFormula;
     }
 
-    public String getFormulaString(Short locale) {
-        return "Formula: % " + getName();
+    public FeeFormula getFeeFormula() {
+        return feeFormula;
     }
 
     public String getFormulaString() {
@@ -54,5 +62,47 @@ public class FeeFormulaEntity extends MasterDataEntity {
         }
 
         return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
+    }
+
+    public String getFormulaString(Short locale) {
+        return "Formula: % " + getName();
+    }
+
+    public Short getId() {
+        return id;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 }

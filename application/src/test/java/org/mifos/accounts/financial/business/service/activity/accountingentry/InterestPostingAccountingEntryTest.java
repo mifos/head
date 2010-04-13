@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -81,7 +81,7 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
     COABO coaClientsSavings;
 
     @Mock
-    private FinancialActionBO financialAction;
+    private FinancialActionTypeEntity financialAction;
 
     @Before
     public void setupAndInjectMocks() {
@@ -94,7 +94,7 @@ public class InterestPostingAccountingEntryTest extends BaseAccountingEntryTestC
         interestPostingAccountingEntry = new InterestPostingAccountingEntry() {
 
             @Override
-            protected FinancialActionBO getFinancialAction(
+            protected FinancialActionTypeEntity getFinancialAction(
                     @SuppressWarnings("unused") final FinancialActionConstants financialActionId)
                     throws FinancialException {
                 return financialAction;

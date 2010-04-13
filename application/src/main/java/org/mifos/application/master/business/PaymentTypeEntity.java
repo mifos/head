@@ -20,11 +20,27 @@
 
 package org.mifos.application.master.business;
 
+import java.util.Set;
+
+import org.mifos.application.master.MessageLookup;
+
 
 public class PaymentTypeEntity extends MasterDataEntity {
 
+    private Short localeId;
+
+    /** The composite primary key value */
+    private Short id;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
+
     public PaymentTypeEntity() {
         super();
+    }
+
+    public PaymentTypeEntity(LookUpValueEntity lookUpValueEntity) {
+        this.lookUpValue = lookUpValueEntity;
     }
 
     /**
@@ -35,19 +51,54 @@ public class PaymentTypeEntity extends MasterDataEntity {
      *
      */
     public PaymentTypeEntity(Short id) {
-        super(id);
+        this.id = id;
     }
 
-    public PaymentTypeEntity(LookUpValueEntity lookUpValueEntity) {
-        super(lookUpValueEntity);
+    public Short getId() {
+        return id;
     }
 
-    public void update(String name) {
-        setName(name);
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 
     @Override
     public String toString() {
         return getName();
+    }
+
+    public void update(String name) {
+        setName(name);
     }
 }

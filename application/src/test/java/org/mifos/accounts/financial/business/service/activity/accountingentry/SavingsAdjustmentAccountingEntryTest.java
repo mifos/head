@@ -35,7 +35,7 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -95,7 +95,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
     @Mock
     COABO mockedSavingsGLAccount;
     @Mock
-    FinancialActionBO mockedFinancialAction;
+    FinancialActionTypeEntity mockedFinancialAction;
     @Mock
     SavingsHelper mockedSavingsHelper;
     @Mock
@@ -132,7 +132,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
         mockedBankGLCategory = mock(COABO.class);
         mockedBankGLAccount = mock(COABO.class);
         mockedSavingsGLAccount = mock(COABO.class);
-        mockedFinancialAction = mock(FinancialActionBO.class);
+        mockedFinancialAction = mock(FinancialActionTypeEntity.class);
         mockedSavingsHelper = mock(SavingsHelper.class);
 
         // Hard-coded values that are just passed through and thus not relevant to what's being tested
@@ -323,7 +323,7 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
 
     private void verifyCreatedTransactions(Money transactionAmount,
             SavingsAdjustmentFinancialActivity mockedFinancialActivity,
-            SavingsTrxnDetailEntity mockedIncomingTransaction, FinancialActionBO mockedFinancialAction,
+            SavingsTrxnDetailEntity mockedIncomingTransaction, FinancialActionTypeEntity mockedFinancialAction,
             GLCodeEntity mockedBankGLCode, GLCodeEntity mockedSavingsDepositGLCode, GLCategoryType bankCategoryType,
             FinancialConstants bankDebitCredit, GLCategoryType savingsCategoryType,
             FinancialConstants savingsDebitCredit) {

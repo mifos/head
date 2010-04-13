@@ -20,24 +20,74 @@
 
 package org.mifos.accounts.business;
 
+import java.util.Set;
+
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * Also see {@link AccountActionTypes}.
  */
-public class AccountActionEntity extends MasterDataEntity {
+public class AccountActionEntity extends AbstractEntity {
+
+    /** The composite primary key value */
+    private Short id;
+
+    private Short localeId;
+
+    /** The value of the lookupValue association. */
+    private LookUpValueEntity lookUpValue;
 
     public AccountActionEntity() {
-        super();
     }
 
     public AccountActionEntity(AccountActionTypes myEnum) {
-        super(myEnum.getValue());
+        this.id = myEnum.getValue();
     }
 
     public AccountActionTypes asEnum() {
         return AccountActionTypes.fromInt(getId());
+    }
+
+    public Short getId() {
+        return id;
+    }
+
+    public Short getLocaleId() {
+        return localeId;
+    }
+
+    public LookUpValueEntity getLookUpValue() {
+        return lookUpValue;
+    }
+
+    public String getName() {
+        String name = MessageLookup.getInstance().lookup(getLookUpValue());
+        return name;
+
+    }
+
+    public Set<LookUpValueLocaleEntity> getNames() {
+        return getLookUpValue().getLookUpValueLocales();
+    }
+
+    protected void setId(Short id) {
+        this.id = id;
+    }
+
+    public void setLocaleId(Short localeId) {
+        this.localeId = localeId;
+    }
+
+    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
+    }
+
+    protected void setName(String name) {
+        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 
     @Override

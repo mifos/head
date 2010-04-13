@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
@@ -34,7 +34,7 @@ public class DepositAccountingEntry extends BaseAccountingEntry {
     protected void applySpecificAccountActionEntry() throws FinancialException {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
         SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
-        FinancialActionBO finActionDeposit = null;
+        FinancialActionTypeEntity finActionDeposit = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
         }

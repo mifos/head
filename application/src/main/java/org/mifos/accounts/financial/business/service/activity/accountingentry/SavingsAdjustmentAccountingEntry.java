@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
@@ -178,7 +178,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 
 
     private void adjustWithdrawal(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn) throws FinancialException {
-        FinancialActionBO finActionWithrawal = null;
+        FinancialActionTypeEntity finActionWithrawal = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT);
         }
@@ -192,7 +192,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
     }
 
     private void adjustDeposit(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn) throws FinancialException {
-        FinancialActionBO finActionDeposit = null;
+        FinancialActionTypeEntity finActionDeposit = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT);
         }

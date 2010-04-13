@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -92,7 +92,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
     @Mock
     COABO mockedSavingsGLAccount;
     @Mock
-    FinancialActionBO mockedFinancialAction;
+    FinancialActionTypeEntity mockedFinancialAction;
 
     @Before
     public void setupForAllTests() {
@@ -119,7 +119,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
         mockedBankGLCategory = mock(COABO.class);
         mockedBankGLAccount = mock(COABO.class);
         mockedSavingsGLAccount = mock(COABO.class);
-        mockedFinancialAction = mock(FinancialActionBO.class);
+        mockedFinancialAction = mock(FinancialActionTypeEntity.class);
 
     }
 
@@ -215,7 +215,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
 
     private void verifyCreatedTransactions(String transactionAmount,
             SavingsDepositFinancialActivity mockedFinancialActivity, SavingsTrxnDetailEntity mockedIncomingTransaction,
-            FinancialActionBO mockedFinancialAction, GLCodeEntity mockedBankGLCode,
+            FinancialActionTypeEntity mockedFinancialAction, GLCodeEntity mockedBankGLCode,
             GLCodeEntity mockedSavingsDepositGLCode, GLCategoryType bankCategoryType,
             FinancialConstants bankDebitCredit, GLCategoryType savingsCategoryType,
             FinancialConstants savingsDebitCredit) {

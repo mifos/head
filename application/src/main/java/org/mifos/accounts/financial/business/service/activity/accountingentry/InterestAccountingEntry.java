@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
@@ -36,7 +36,7 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
         LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity.getAccountTrxn();
         GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount()).getLoanOffering().getInterestGLcode();
 
-        FinancialActionBO finActionInterest = FinancialActionCache
+        FinancialActionTypeEntity finActionInterest = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
         addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest, getGLcode(finActionInterest
                 .getApplicableDebitCharts()), FinancialConstants.DEBIT);
@@ -68,7 +68,7 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
             return;
         }
 
-        FinancialActionBO finActionRounding = FinancialActionCache
+        FinancialActionTypeEntity finActionRounding = FinancialActionCache
                 .getFinancialAction(FinancialActionConstants.ROUNDING);
         GLCodeEntity codeToDebit = null;
         GLCodeEntity codeToCredit = null;

@@ -116,7 +116,7 @@
 		<mapping resource="org/mifos/accounts/financial/business/COABO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/COAHierarchyEntity.hbm.xml" />
 		<mapping class="org.mifos.accounts.financial.business.COAIDMapperEntity" />
-		<mapping resource="org/mifos/accounts/financial/business/FinancialActionBO.hbm.xml" />
+		<mapping resource="org/mifos/accounts/financial/business/FinancialActionTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/financial/business/FinancialTransactionBO.hbm.xml" />
 		<mapping class="org.mifos.application.master.business.CustomerAttendanceType" />
 		<mapping resource="org/mifos/accounts/fees/business/CategoryTypeEntity.hbm.xml" />

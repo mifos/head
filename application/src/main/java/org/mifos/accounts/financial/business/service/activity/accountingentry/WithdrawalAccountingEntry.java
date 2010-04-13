@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -38,7 +38,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
     protected void applySpecificAccountActionEntry() throws FinancialException {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
         SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
-        FinancialActionBO finActionWithrawal = null;
+        FinancialActionTypeEntity finActionWithrawal = null;
         if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL);
         }
@@ -61,7 +61,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
         Money roundedAmount = Money.round(savingsTrxn.getWithdrawlAmount(),
                 savingsTrxn.getWithdrawlAmount().getCurrency().getRoundingAmount(), AccountingRules.getCurrencyRoundingMode());
         if (!roundedAmount.equals(savingsTrxn.getWithdrawlAmount())) {
-            FinancialActionBO finActionRounding = FinancialActionCache
+            FinancialActionTypeEntity finActionRounding = FinancialActionCache
                     .getFinancialAction(FinancialActionConstants.ROUNDING);
             if (roundedAmount.isGreaterThan(savingsTrxn.getWithdrawlAmount())) {
                 addEntriesForIncreasedAmount(savings, finActionRounding, roundedAmount, savingsTrxn
@@ -75,7 +75,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
         }
     }
 
-    private void addEntriesForIncreasedAmount(SavingsBO savings, FinancialActionBO finActionRounding, Money roundedAmt,
+    private void addEntriesForIncreasedAmount(SavingsBO savings, FinancialActionTypeEntity finActionRounding, Money roundedAmt,
             Money withdrawalAmt) throws FinancialException {
         addAccountEntryDetails(roundedAmt.subtract(withdrawalAmt), finActionRounding, getGLcode(finActionRounding
                 .getApplicableDebitCharts()), FinancialConstants.DEBIT);
@@ -83,7 +83,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
                 .getDepositGLCode(), FinancialConstants.CREDIT);
     }
 
-    private void addEntriesForDecreasedAmount(SavingsBO savings, FinancialActionBO finActionRounding, Money roundedAmt,
+    private void addEntriesForDecreasedAmount(SavingsBO savings, FinancialActionTypeEntity finActionRounding, Money roundedAmt,
             Money withdrawalAmt) throws FinancialException {
         addAccountEntryDetails(withdrawalAmt.subtract(roundedAmt), finActionRounding, savings.getSavingsOffering()
                 .getDepositGLCode(), FinancialConstants.DEBIT);

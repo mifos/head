@@ -35,7 +35,7 @@ import java.util.Set;
 
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.financial.business.COABO;
-import org.mifos.accounts.financial.business.FinancialActionBO;
+import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.activity.BaseFinancialActivity;
@@ -79,7 +79,7 @@ public class BaseAccountingEntryTestCase {
 
     protected void verifyCreatedFinancialTransaction(FinancialTransactionBO actualTransaction,
             AccountTrxnEntity expectedAccountTrxn, FinancialTransactionBO expectedRelatedFinancialTrxn,
-            FinancialActionBO expectedFinancialAction, GLCodeEntity expectedGlcode, Date expectedActionDate,
+            FinancialActionTypeEntity expectedFinancialAction, GLCodeEntity expectedGlcode, Date expectedActionDate,
             PersonnelBO expectedPostedBy, Short expectedAccountingUpdated, Money expectedPostedAmount,
             String expectedNotes, Short expectedDebitCreditFlag, Date expectedPostedDate) {
 
