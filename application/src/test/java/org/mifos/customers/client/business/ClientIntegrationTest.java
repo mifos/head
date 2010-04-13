@@ -195,7 +195,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
             Assert.assertEquals(targetPlace, client.getCustomerMeetingValue().getMeetingPlace());
         } finally {
-
+            new DateTimeService().resetToCurrentSystemDateTime();
         }
     }
 
