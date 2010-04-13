@@ -20,14 +20,13 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.security.util.UserContext;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulates the Reports Parameters
  */
 
-public class ReportsParamsValue extends AbstractBusinessObject {
+public class ReportsParamsValue extends AbstractEntity {
     private int parameterId;
     private String name;
     private String type;
@@ -38,10 +37,6 @@ public class ReportsParamsValue extends AbstractBusinessObject {
 
     public ReportsParamsValue() {
 
-    }
-
-    public ReportsParamsValue(UserContext userContext) {
-        super(userContext);
     }
 
     public int getParameterId() {

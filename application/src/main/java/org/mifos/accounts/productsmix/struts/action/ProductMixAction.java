@@ -298,8 +298,6 @@ public class ProductMixAction extends BaseAction {
         List<ProductTypeEntity> productTypeList = getPrdMixBusinessService().getProductTypes();
         ProductTypeEntity savingsProductEntity = null;
         for (ProductTypeEntity productTypeEntity : productTypeList) {
-            productTypeEntity.setUserContext(userContext);
-
             if (productTypeEntity.getProductTypeID().equals(ProductType.SAVINGS.getValue())) {
                 savingsProductEntity = productTypeEntity;
             }
@@ -449,7 +447,6 @@ public class ProductMixAction extends BaseAction {
         if (listPrdOfferingBO != null) {
             for (PrdOfferingBO prdOfferingBO : listPrdOfferingBO) {
                 prdOfferingBO.getPrdCategory().getPrdCategoryStatus().setLocaleId(userContext.getLocaleId());
-                prdOfferingBO.getPrdCategory().getProductType().setUserContext(userContext);
             }
         }
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTCATEGORYLIST,
@@ -560,7 +557,6 @@ public class ProductMixAction extends BaseAction {
         if (productCategoryList != null) {
             for (ProductCategoryBO productCategoryBO : productCategoryList) {
                 productCategoryBO.getPrdCategoryStatus().setLocaleId(userContext.getLocaleId());
-                productCategoryBO.getProductType().setUserContext(userContext);
             }
         }
         return productCategoryList;

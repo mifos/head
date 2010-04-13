@@ -25,10 +25,10 @@ import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.framework.business.AbstractBusinessObject;
+import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
-public class ProductTypeEntity extends AbstractBusinessObject {
+public class ProductTypeEntity extends AbstractEntity {
 
     private Short productTypeID;
 
@@ -37,6 +37,8 @@ public class ProductTypeEntity extends AbstractBusinessObject {
     private Short latenessDays;
 
     private Short dormancyDays;
+
+    private int versionNo;
 
     public ProductTypeEntity(Short prdTypeId) {
         super();
@@ -100,5 +102,13 @@ public class ProductTypeEntity extends AbstractBusinessObject {
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public int getVersionNo() {
+        return versionNo;
     }
 }

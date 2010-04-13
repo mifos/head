@@ -20,13 +20,12 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.security.util.UserContext;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulates the Reports Parameters with Reports Datasource
  */
-public class ReportsParams extends AbstractBusinessObject {
+public class ReportsParams extends AbstractEntity {
     private ReportsDataSource reportsDataSource;
     private int parameterId;
     private String name;
@@ -39,10 +38,6 @@ public class ReportsParams extends AbstractBusinessObject {
 
     public ReportsParams() {
         this.reportsDataSource = new ReportsDataSource();
-    }
-
-    public ReportsParams(UserContext userContext) {
-        super(userContext);
     }
 
     public int getParameterId() {

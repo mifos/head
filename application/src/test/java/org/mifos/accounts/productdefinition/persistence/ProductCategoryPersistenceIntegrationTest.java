@@ -70,7 +70,6 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         List<ProductTypeEntity> productTypeList = productCategoryPersistence.getProductTypes();
        Assert.assertEquals(2, productTypeList.size());
         for (ProductTypeEntity productTypeEntity : productTypeList) {
-            productTypeEntity.setUserContext(TestUtils.makeUser());
             if (productTypeEntity.getType() == ProductType.LOAN) {
                Assert.assertEquals("Loan", productTypeEntity.getName());
             } else {

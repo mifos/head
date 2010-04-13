@@ -20,22 +20,17 @@
 
 package org.mifos.reports.business;
 
-import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.security.util.UserContext;
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class encapsulates mapping between Jasper file and Reports
  */
-public class ReportsJasperMap extends AbstractBusinessObject {
+public class ReportsJasperMap extends AbstractEntity {
 
     private Short reportId;
     private String reportJasper;
 
     public ReportsJasperMap() {
-    }
-
-    public ReportsJasperMap(UserContext userContext) {
-        super(userContext);
     }
 
     public ReportsJasperMap(Short reportId, String reportJasper) {

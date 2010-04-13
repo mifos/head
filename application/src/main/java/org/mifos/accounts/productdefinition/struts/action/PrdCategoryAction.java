@@ -56,9 +56,7 @@ public class PrdCategoryAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         doCleanUp(request, form);
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(),
                 request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -114,7 +112,7 @@ public class PrdCategoryAction extends BaseAction {
         doCleanUp(request, form);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(),
                 request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, getBusinessService().findByGlobalNum(
                 request.getParameter("globalPrdCategoryNum")), request);
@@ -198,11 +196,8 @@ public class PrdCategoryAction extends BaseAction {
         return new ProductCategoryBusinessService();
     }
 
-    private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws Exception {
+    private List<ProductTypeEntity> getProductTypes() throws Exception {
         List<ProductTypeEntity> productCategoryList = getBusinessService().getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productCategoryList) {
-            productTypeEntity.setUserContext(userContext);
-        }
         return productCategoryList;
     }
 
@@ -229,7 +224,6 @@ public class PrdCategoryAction extends BaseAction {
         if (productCategoryList != null) {
             for (ProductCategoryBO productCategoryBO : productCategoryList) {
                 productCategoryBO.getPrdCategoryStatus().setLocaleId(userContext.getLocaleId());
-                productCategoryBO.getProductType().setUserContext(userContext);
             }
         }
         return productCategoryList;

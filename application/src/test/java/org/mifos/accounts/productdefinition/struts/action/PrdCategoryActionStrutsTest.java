@@ -100,7 +100,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreatePreview() throws PersistenceException, PageExpiredException {
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(),
                 request);
         setRequestPathInfo("/productCategoryAction.do");
         addRequestParameter("method", "createPreview");
@@ -117,7 +117,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreatePrevious() throws PersistenceException, PageExpiredException {
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(),
                 request);
         setRequestPathInfo("/productCategoryAction.do");
         addRequestParameter("method", "createPrevious");
@@ -135,7 +135,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreate() throws PersistenceException, PageExpiredException {
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(userContext),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(),
                 request);
         setRequestPathInfo("/productCategoryAction.do");
         addRequestParameter("method", "create");
@@ -153,7 +153,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGet() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         setRequestPathInfo("/productCategoryAction.do");
@@ -171,7 +171,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testManage() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO, request);
@@ -191,7 +191,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testManagePreview() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO, request);
@@ -213,7 +213,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testManagePrevious() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO, request);
@@ -229,7 +229,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testUpdate() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO, request);
@@ -253,7 +253,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testGetAllCategories() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         productCategoryBO.save();
         setRequestPathInfo("/productCategoryAction.do");
@@ -270,7 +270,7 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testPrdDefException() throws Exception {
-        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes(userContext).get(0),
+        ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, getProductTypes().get(0),
                 "product category", "created a category");
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -280,11 +280,8 @@ public class PrdCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
-    private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws PersistenceException {
+    private List<ProductTypeEntity> getProductTypes() throws PersistenceException {
         List<ProductTypeEntity> productCategoryList = productCategoryPersistence.getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productCategoryList) {
-            productTypeEntity.setUserContext(userContext);
-        }
         return productCategoryList;
     }
 

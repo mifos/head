@@ -220,7 +220,6 @@ public class ChkListAction extends BaseAction {
         } else {
             AccountCheckListBO accountCheckList = (AccountCheckListBO) checkList;
             accountCheckList.getAccountStateEntity().setLocaleId(localeId);
-            accountCheckList.getProductTypeEntity().setUserContext(getUserContext(request));
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountCheckList, request);
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.ACCOUNT_CHECKLIST.getValue(), request);
         }
@@ -408,7 +407,6 @@ public class ChkListAction extends BaseAction {
                 form.setType("4");
             }
             ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
-            ((AccountCheckListBO) checkList).getProductTypeEntity().setUserContext(getUserContext(request));
             form.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
             form.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
             form.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));

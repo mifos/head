@@ -67,7 +67,6 @@ import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
 public class BirtAdminDocumentUploadAction extends BaseAction {
 
@@ -105,17 +104,13 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         uploadForm.clear();
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
-                getProductTypes(getUserContext(request)), request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    private List<ProductTypeEntity> getProductTypes(UserContext userContext) throws Exception {
+    private List<ProductTypeEntity> getProductTypes() throws Exception {
         List<ProductTypeEntity> productTypeList = ((ProductMixBusinessService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.PrdMix)).getProductTypes();
-        for (ProductTypeEntity productTypeEntity : productTypeList) {
-            productTypeEntity.setUserContext(userContext);
-        }
         return productTypeList;
     }
 
@@ -231,14 +226,14 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         }
         int id = uploadsDir.indexOf("$HOME");
         if (id != -1) {
-            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id+5);
+            uploadsDir = uploadsDir.substring(0, id) + System.getProperty("user.home") + uploadsDir.substring(id + 5);
         }
         return uploadsDir;
     }
 
     public static String getAdminDocumentStorageDirectory() {
-        return getUploadStorageDirectory().endsWith(File.separator) ?
-                getUploadStorageDirectory() + "adminReport" : getUploadStorageDirectory() + File.separator + "adminReport";
+        return getUploadStorageDirectory().endsWith(File.separator) ? getUploadStorageDirectory() + "adminReport"
+                : getUploadStorageDirectory() + File.separator + "adminReport";
     }
 
     private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
@@ -248,11 +243,9 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         InputStream is = formFile.getInputStream();
         OutputStream os;
         /*
-         * for test purposes, if the real path does not exist (if we're
-         * operating outside a deployed environment) the file is just written to
-         * a ByteArrayOutputStream which is not actually stored. !! This does
-         * not produce any sort of file that can be retirieved. !! it only
-         * allows us to perform the upload action.
+         * for test purposes, if the real path does not exist (if we're operating outside a deployed environment) the
+         * file is just written to a ByteArrayOutputStream which is not actually stored. !! This does not produce any
+         * sort of file that can be retirieved. !! it only allows us to perform the upload action.
          */
         if (getServletRoot(getServlet()) != null) {
             os = new FileOutputStream(file);
@@ -303,8 +296,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             businessKey = admindoclist.get(0).getAdminDocumentID();
         }
 
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
-                getProductTypes(getUserContext(request)), request);
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
         List<AccountStateEntity> selectedlist = new ArrayList<AccountStateEntity>();
         for (AdminDocAccStateMixBO admindoc : admindoclist) {
             selectedlist.add(admindoc.getAccountStateID());
@@ -336,8 +328,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
         if (StringUtils.isEmpty(formFile.getFileName())) {
             formFile.destroy();
-        }
-        else {
+        } else {
             uploadFile(formFile);
             newFile = true;
         }
