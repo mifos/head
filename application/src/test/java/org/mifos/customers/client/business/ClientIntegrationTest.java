@@ -28,6 +28,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -79,6 +81,7 @@ import org.mifos.framework.components.batchjobs.helpers.RegenerateScheduleTask;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientIntegrationTest extends MifosIntegrationTestCase {
@@ -133,48 +136,68 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     }
 
 
-    // This test demonstrated the problem described in MIFOS-2652 when transfering a client
+    // This test demonstrated the problem described in MIFOS-2652 when transferring a client
     // from one group to another would also change the meeting of the group the client was
-    // being transferred from.
+    // being transferred from, also the fee schedule will be update accordingly
     public void testTransferFromGroupToGroupShouldNotAffectFromGroup() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        MeetingBO groupMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
-        String groupPlace = "groupPlace";
-        groupMeeting.setMeetingPlace(groupPlace);
-        MeetingBO group1Meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.FRIDAY).build();
-        String group1Place = "group1Place";
-        group1Meeting.setMeetingPlace(group1Place);
+        try {
+            DateTime dateTime = new DateTime(2010, 4, 13, 10, 0, 0, 0);
+            new DateTimeService().setCurrentDateTimeFixed(dateTime);
+            Short officeId = new Short("3");
+            Short personnel = new Short("1");
+            MeetingBO sourceMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+            String sourcePlace = "sourcePlace";
+            sourceMeeting.setMeetingPlace(sourcePlace);
+            MeetingBO targetMeeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.FRIDAY).build();
+            String targetPlace = "targetPlace";
+            targetMeeting.setMeetingPlace(targetPlace);
+            Short formedBy = PersonnelConstants.SYSTEM_USER;
+            List<FeeView> fees = new ArrayList<FeeView>();
+            AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
+                    FeeCategory.CLIENT, "200", RecurrenceType.WEEKLY, Short.valueOf("1"));
+            fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
+            StaticHibernateUtil.commitTransaction();
+            group = TestObjectFactory.createGroupUnderBranch("Source Group", CustomerStatus.GROUP_ACTIVE, null, false,
+                    null, null, null, fees, formedBy, officeId, sourceMeeting, personnel);
+            group1 = TestObjectFactory.createGroupUnderBranch("Target Group", CustomerStatus.GROUP_ACTIVE, officeId,
+                    targetMeeting, personnel);
+            client = TestObjectFactory.createClient("Test Client", CustomerStatus.CLIENT_ACTIVE, group,
+                    new java.util.Date());
 
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, groupMeeting,
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
-                group1Meeting, personnel);
-        client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
-                new java.util.Date());
+            int april = 4;
+            LocalDate expectedDate = new LocalDate(2010, april, 19);
+            LocalDate actualDate = new LocalDate(client.getCustomerAccount().getNextMeetingDate());
+            Assert.assertEquals(expectedDate, actualDate);
 
-        client.transferToGroup(group1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+            client.transferToGroup(group1);
+            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.closeSession();
 
-        RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
-        RegenerateScheduleHelper regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask.getTaskHelper();
-        long dummy = 0;
-        regenerateScheduleHelper.execute(dummy);
+            RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
+            RegenerateScheduleHelper regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask
+                    .getTaskHelper();
+            long dummy = 0;
+            regenerateScheduleHelper.execute(dummy);
 
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
+            group = TestObjectFactory.getGroup(group.getCustomerId());
+            group1 = TestObjectFactory.getGroup(group1.getCustomerId());
+            client = TestObjectFactory.getClient(client.getCustomerId());
 
-        Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
-        Assert.assertEquals(groupPlace, group.getCustomerMeetingValue().getMeetingPlace());
-        Assert.assertEquals(WeekDay.FRIDAY, group1.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
-        Assert.assertEquals(group1Place, group1.getCustomerMeetingValue().getMeetingPlace());
-        Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
-        Assert.assertEquals(group1Place, client.getCustomerMeetingValue().getMeetingPlace());
+            expectedDate = new LocalDate(2010, april, 23);
+            actualDate = new LocalDate(client.getCustomerAccount().getNextMeetingDate());
+            Assert.assertEquals(expectedDate, actualDate);
 
+
+            Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+            Assert.assertEquals(sourcePlace, group.getCustomerMeetingValue().getMeetingPlace());
+            Assert.assertEquals(WeekDay.FRIDAY, group1.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+            Assert.assertEquals(targetPlace, group1.getCustomerMeetingValue().getMeetingPlace());
+            Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeetingValue().getMeetingDetails().getWeekDay());
+            Assert.assertEquals(targetPlace, client.getCustomerMeetingValue().getMeetingPlace());
+        } finally {
+
+        }
     }
-
 
     public void testPovertyLikelihoodHibernateMapping() throws Exception {
         createInitialObjects();
