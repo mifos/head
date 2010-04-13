@@ -42,13 +42,11 @@ public class LookUpLabelEntity extends AbstractEntity {
     public String getLabelText() {
         if (labelName != null && labelName.length() > 0) {
             return labelName;
-        } else {
-
-            // if we don't find a label here, then it means that it has not been
-            // customized and
-            // we should return the default label from the properties file
-            return MessageLookup.getInstance().lookupLabel(getLabelKey());
         }
+        // if we don't find a label here, then it means that it has not been
+        // customized and
+        // we should return the default label from the properties file
+        return MessageLookup.getInstance().lookupLabel(getLabelKey());
     }
 
     /*

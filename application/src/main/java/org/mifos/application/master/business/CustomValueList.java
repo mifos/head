@@ -32,9 +32,6 @@ import org.mifos.framework.business.View;
  */
 public class CustomValueList extends View {
 
-    /**
-     * entityId refers to the {@link LookUpEntity} represented by this list
-     */
     private Short entityId;
 
     private Short localeId;
@@ -48,9 +45,9 @@ public class CustomValueList extends View {
 
     /**
      * This is only used in the HQL query "masterdata.entityvalue" in
-     * LookUpEntity.hbm.xml
+     * MifosLookUpEntity.hbm.xml
      */
-    public CustomValueList(java.lang.Short entityId, java.lang.Short localeId, java.lang.String entityLabel) {
+    public CustomValueList(Short entityId, Short localeId, String entityLabel) {
 
         this.entityId = entityId;
         this.localeId = localeId;

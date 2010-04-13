@@ -30,13 +30,13 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
     protected UserContext userContext;
 
     protected Date createdDate;
-    
+
     protected Short createdBy;
-    
+
     protected Date updatedDate;
-    
+
     protected Short updatedBy;
-    
+
     protected Integer versionNo;
 
     public Short getCreatedBy() {

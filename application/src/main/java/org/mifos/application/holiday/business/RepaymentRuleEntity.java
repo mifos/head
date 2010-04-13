@@ -22,11 +22,11 @@ package org.mifos.application.holiday.business;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.framework.business.AbstractBusinessObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class RepaymentRuleEntity extends AbstractBusinessObject {
+public class RepaymentRuleEntity extends AbstractEntity {
 
-    private LookUpValueEntity lookUpObject;
+    private LookUpValueEntity lookUpValue;
 
     private String lookUpValueKey;
 
@@ -34,7 +34,7 @@ public class RepaymentRuleEntity extends AbstractBusinessObject {
 
     protected RepaymentRuleEntity() {
         lookUpValueKey = null;
-        lookUpObject = null;
+        lookUpValue = null;
     }
 
     public RepaymentRuleEntity(Short id, String lookUpValueKey) {
@@ -47,22 +47,25 @@ public class RepaymentRuleEntity extends AbstractBusinessObject {
     }
 
     public LookUpValueEntity getLookUpObject() {
-        return this.lookUpObject;
+        return this.lookUpValue;
     }
 
     public String getLookUpValue() {
         return MessageLookup.getInstance().lookup(lookUpValueKey);
     }
 
+    @SuppressWarnings("unused")
     private void setId(Short Id) {
         this.id = Id;
     }
 
+    @SuppressWarnings("unused")
     private void setLookUpValueKey(String lookUpValueKey) {
         this.lookUpValueKey = lookUpValueKey;
     }
 
-    private void setLookUpValue(LookUpValueEntity lookUpObject) {
-        this.lookUpObject = lookUpObject;
+    @SuppressWarnings("unused")
+    private void setLookUpValue(LookUpValueEntity lookUpValue) {
+        this.lookUpValue = lookUpValue;
     }
 }

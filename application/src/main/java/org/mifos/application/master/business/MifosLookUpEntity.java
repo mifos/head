@@ -37,18 +37,13 @@ import javax.persistence.Table;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
- * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant classes.
- * {@link LookUpEntity} usage has now been replaced by this class.
- *
- * The entityType field should be a CamelCase name containing no whitespace
- * (since it is used as part of a properties file key value) The no whitespace
- * requirement is enforced by the unit test
+ * The entityType field should be a CamelCase name containing no whitespace (since it is used as part of a properties
+ * file key value) The no whitespace requirement is enforced by the unit test
  * ApplicationConfigurationPersistenceIntegrationTest.testGetLookupEntities()
  */
 @Entity
 @Table(name = "LOOKUP_ENTITY")
-@NamedQueries(
- {
+@NamedQueries( {
   @NamedQuery(
     name="entities",
     query="from MifosLookUpEntity "
@@ -58,9 +53,21 @@ import org.mifos.framework.business.AbstractEntity;
     query="select new org.mifos.application.master.business.BusinessActivityEntity(value.lookUpId ,value.lookUpName, value.lookUpName) "+
           "from MifosLookUpEntity entity, LookUpValueEntity value "+
           "where entity.entityId = value.lookUpEntity.entityId and entity.entityType=:entityType "
+  ),
+  @NamedQuery(
+    name = "masterdata.entityvalue",
+    query = "select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) "
+         + "from MifosLookUpEntity entity, LookUpLabelEntity label "
+         + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
+  ),
+  @NamedQuery(
+    name = "masterdata.entitylookupvalue",
+    query = "select new org.mifos.application.master.business.CustomValueListElement(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
+                + "from LookUpValueEntity lookup, MifosLookUpEntity entity "
+                + "where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId"
   )
- }
-)
+
+})
 public class MifosLookUpEntity extends AbstractEntity {
 
     public static final Short DEFAULT_LOCALE_ID = 1;
