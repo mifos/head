@@ -29,26 +29,33 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
 <script language="javascript">
-function goToLookupOptionPage(method){
-	method.value = "update";
+function goToLookupOptionPage(){
 	lookupoptionsactionform.action="lookupOptionsAction.do";
 	lookupoptionsactionform.method.value="update";
 	lookupoptionsactionform.submit();
   }
   
-  function goToCancelPage(method){
-    method.value = "addEditLookupOption_cancel";
+  function goToCancelPage(){
 	lookupoptionsactionform.action="lookupOptionsAction.do";
 	lookupoptionsactionform.method.value="addEditLookupOption_cancel";
 	lookupoptionsactionform.submit();
   }
+
+  function doKeyPress(event) {
+	 var keycode = (!event) ? window.event.keyCode:event.which;
+	 var RETURN_KEYCODE = 13;
+     if (keycode == RETURN_KEYCODE) {
+        goToLookupOptionPage();
+     }
+  }
+  
   </script>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="defineonelookupoption" />
 	
 
-		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >
+		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >  
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -79,24 +86,24 @@ function goToLookupOptionPage(method){
 		                     <table width="93%" border="0" cellpadding="3" cellspacing="0">
 					              <tr class="fontnormal">
 					                <td width="30%" align="right"><c:out value="${requestScope.lookupType}"></c:out>:</td>
-					                <td width="70%" valign="top"><mifos:mifosalphanumtext property="lookupValue" maxlength="300"/>
+					                <td width="70%" valign="top"><input type="text" name="lookupValue" maxlength="300" value="" onkeydown="doKeyPress(event);" />
 									</td>
 					              </tr>
 							</table>
 						   <table width="98%" border="0" cellpadding="0" cellspacing="0">
 				              <tr>
-				                <td class="blueline">&nbsp;                </td>
+				                <td class="blueline">&nbsp;</td>
 				              </tr>
 				            </table>
 				            <br>
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 			              <tr>
 			                <td align="center">&nbsp;
-			                    <html-el:button property="submitButton" styleClass="buttn" onclick="goToLookupOptionPage(this.form.method);">
+			                    <html-el:button property="submitButton" styleClass="buttn" onclick="goToLookupOptionPage();">
 													<mifos:mifoslabel name="configuration.submit" />
 								</html-el:button>
 									&nbsp;
-						      	<html-el:button property="cancelButton" onclick="goToCancelPage(this.form.method)" styleClass="cancelbuttn">
+						      	<html-el:button property="cancelButton" onclick="goToCancelPage()" styleClass="cancelbuttn">
 																<mifos:mifoslabel name="configuration.cancel" />
 								</html-el:button>
 						           </td>
