@@ -37,8 +37,15 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "ACCOUNT_TYPE")
 public class AccountTypeEntity extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ACCOUNT_TYPE_ID", nullable = false)
     private Short accountTypeId;
+
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "LOOKUP_ID", nullable = false)
     private Integer lookUpId;
 
     public AccountTypeEntity() {
@@ -57,9 +64,6 @@ public class AccountTypeEntity extends AbstractEntity {
         this.accountTypeId = accountTypeId;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ACCOUNT_TYPE_ID", nullable = false)
     public Short getAccountTypeId() {
         return this.accountTypeId;
     }
@@ -68,7 +72,6 @@ public class AccountTypeEntity extends AbstractEntity {
         this.accountTypeId = accountTypeId;
     }
 
-    @Column(name = "DESCRIPTION")
     public String getDescription() {
         return this.description;
     }
@@ -77,7 +80,6 @@ public class AccountTypeEntity extends AbstractEntity {
         this.description = description;
     }
 
-    @Column(name = "LOOKUP_ID", nullable = false)
     public Integer getLookUpId() {
         return this.lookUpId;
     }

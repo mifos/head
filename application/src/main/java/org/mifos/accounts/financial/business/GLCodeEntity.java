@@ -34,8 +34,15 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "GL_CODE")
 public class GLCodeEntity extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "GLCODE_ID", nullable = false)
     private Short glcodeId;
+
+    @Column(name = "GLCODE_VALUE")
     private String glcode;
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "associatedGlcode")
     private COABO associatedCOA;
 
     protected GLCodeEntity() {
@@ -48,18 +55,14 @@ public class GLCodeEntity extends AbstractEntity {
         associatedCOA = null;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "GLCODE_ID", nullable = false)
     public Short getGlcodeId() {
         return glcodeId;
     }
 
-    @Column(name = "GLCODE_VALUE")
     public String getGlcode() {
         return glcode;
     }
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "associatedGlcode")
+
     public COABO getAssociatedCOA() {
         return associatedCOA;
     }

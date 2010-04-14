@@ -55,11 +55,16 @@ public final class MifosCurrency extends AbstractEntity {
     public static final short FLOOR_MODE = 2;
     public static final short HALF_UP_MODE = 3;
 
+    @Id
+    @GeneratedValue
+    @Column(name = "CURRENCY_ID", nullable = false)
     private Short currencyId;
 
     /** English multiple-word descriptive name. */
+    @Column(name = "CURRENCY_NAME")
     private String currencyName;
 
+    @Column(name = "ROUNDING_AMOUNT")
     private BigDecimal roundingAmount;
 
     /** ISO 4217 currency code. */
@@ -75,9 +80,6 @@ public final class MifosCurrency extends AbstractEntity {
     protected MifosCurrency() {
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "CURRENCY_ID", nullable = false)
     public Short getCurrencyId() {
         return currencyId;
     }
@@ -87,7 +89,6 @@ public final class MifosCurrency extends AbstractEntity {
         this.currencyId = currencyId;
     }
 
-    @Column(name = "CURRENCY_NAME")
     public String getCurrencyName() {
         return currencyName;
     }

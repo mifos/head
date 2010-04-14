@@ -31,8 +31,15 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "COUNTRY")
 public class CountryEntity extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "COUNTRY_ID", nullable = false)
     private Short countryId;
+
+    @Column(name = "COUNTRY_NAME")
     private String countryName;
+
+    @Column(name = "COUNTRY_SHORT_NAME")
     private String countryShortName;
 
     public CountryEntity() {
@@ -43,9 +50,6 @@ public class CountryEntity extends AbstractEntity {
         this.countryShortName = countryShortName;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "COUNTRY_ID", nullable = false)
     public Short getCountryId() {
         return this.countryId;
     }
@@ -54,7 +58,6 @@ public class CountryEntity extends AbstractEntity {
         this.countryId = countryId;
     }
 
-    @Column(name = "COUNTRY_NAME")
     public String getCountryName() {
         return this.countryName;
     }
@@ -63,7 +66,6 @@ public class CountryEntity extends AbstractEntity {
         this.countryName = countryName;
     }
 
-    @Column(name = "COUNTRY_SHORT_NAME")
     public String getCountryShortName() {
         return this.countryShortName;
     }

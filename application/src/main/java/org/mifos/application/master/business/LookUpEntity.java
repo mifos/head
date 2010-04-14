@@ -80,21 +80,26 @@ public class LookUpEntity extends AbstractEntity {
     public static final int INTEREST_TYPES = 37;
     public static final int FINANCIAL_ACTION = 76;
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ENTITY_ID", nullable = false)
     private Short entityId;
 
+    @Column(name = "ENTITY_NAME")
     private String entityType;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ENTITY_ID", updatable = false)
     private Set<LookUpLabelEntity> lookUpLabels;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ENTITY_ID", updatable = false)
     private Set<LookUpValueEntity> lookUpValues;
 
     public LookUpEntity() {
         super();
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ENTITY_ID", nullable = false)
     public Short getEntityId() {
         return entityId;
     }
@@ -103,7 +108,6 @@ public class LookUpEntity extends AbstractEntity {
         this.entityId = entityId;
     }
 
-    @Column(name = "ENTITY_NAME")
     public String getEntityType() {
         return entityType;
     }
@@ -112,8 +116,6 @@ public class LookUpEntity extends AbstractEntity {
         this.entityType = entityType;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ENTITY_ID", updatable = false)
     public Set<LookUpLabelEntity> getLookUpLabels() {
         return lookUpLabels;
     }
@@ -122,8 +124,6 @@ public class LookUpEntity extends AbstractEntity {
         this.lookUpLabels = lookUpLabels;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ENTITY_ID", updatable = false)
     public Set<LookUpValueEntity> getLookUpValues() {
         return lookUpValues;
     }

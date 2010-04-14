@@ -42,13 +42,14 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "ENTITY_MASTER")
 public class EntityMaster extends AbstractEntity {
 
-    private Short id;
-
-    private String entityType;
-
     @Id
     @GeneratedValue
     @Column(name = "ENTITY_TYPE_ID", nullable = false)
+    private Short id;
+
+    @Column(name = "ENTITY_TYPE")
+    private String entityType;
+
     public Short getId() {
         return id;
     }
@@ -57,7 +58,6 @@ public class EntityMaster extends AbstractEntity {
         this.id = id;
     }
 
-    @Column(name = "ENTITY_TYPE")
     public String getEntityType() {
         return entityType;
     }

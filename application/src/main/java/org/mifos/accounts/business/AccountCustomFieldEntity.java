@@ -37,15 +37,22 @@ import org.mifos.framework.exceptions.ApplicationException;
 @Table(name = "ACCOUNT_CUSTOM_FIELD")
 public class AccountCustomFieldEntity extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ACCOUNT_CUSTOM_FIELD_ID", nullable = false)
     private Integer accountCustomFieldId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACCOUNT_ID", unique = true)
     private AccountBO account;
 
     /*
      * Reference to a {@link CustomFieldDefinitionEntity}
      */
+    @Column(name = "FIELD_ID")
     private Short fieldId;
 
+    @Column(name = "FIELD_VALUE")
     private String fieldValue;
 
     public AccountCustomFieldEntity() {
@@ -59,9 +66,6 @@ public class AccountCustomFieldEntity extends AbstractEntity {
 
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ACCOUNT_CUSTOM_FIELD_ID", nullable = false)
     public Integer getAccountCustomFieldId() {
         return accountCustomFieldId;
     }
@@ -70,8 +74,6 @@ public class AccountCustomFieldEntity extends AbstractEntity {
         this.accountCustomFieldId = accountCustomFieldId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ACCOUNT_ID", unique = true)
     public AccountBO getAccount() {
         return account;
     }
@@ -80,7 +82,6 @@ public class AccountCustomFieldEntity extends AbstractEntity {
         this.account = account;
     }
 
-    @Column(name = "FIELD_ID")
     public Short getFieldId() {
         return fieldId;
     }
@@ -89,7 +90,6 @@ public class AccountCustomFieldEntity extends AbstractEntity {
         this.fieldId = fieldId;
     }
 
-    @Column(name = "FIELD_VALUE")
     public String getFieldValue() {
         return fieldValue;
     }

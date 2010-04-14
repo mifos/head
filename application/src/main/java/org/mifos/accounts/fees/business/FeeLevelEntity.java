@@ -36,8 +36,17 @@ import org.mifos.framework.business.AbstractEntity;
 @Entity
 @Table(name = "FEELEVEL")
 public class FeeLevelEntity  extends AbstractEntity {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "FEELEVEL_ID", nullable = false)
     private Short feeLevelId;
+
+    @Column(name = "LEVEL_ID")
     private Short levelId;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "FEE_ID")
     private FeeBO fee;
 
     public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
@@ -49,20 +58,14 @@ public class FeeLevelEntity  extends AbstractEntity {
         fee = null;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "FEELEVEL_ID", nullable = false)
     protected Short getFeeLevelId() {
         return feeLevelId;
     }
 
-    @Column(name = "LEVEL_ID")
     public Short getLevelId() {
         return levelId;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "FEE_ID")
     public FeeBO getFee() {
         return fee;
     }

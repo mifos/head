@@ -32,8 +32,12 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "FUND_CODE")
 public class FundCodeEntity extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "FUNDCODE_ID", nullable = false)
     private Short fundCodeId;
 
+    @Column(name = "FUNDCODE_VALUE")
     private String fundCodeValue;
 
     public FundCodeEntity(String fundCode) {
@@ -42,14 +46,10 @@ public class FundCodeEntity extends AbstractEntity {
 
     protected FundCodeEntity() { }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "FUNDCODE_ID", nullable = false)
     public Short getFundCodeId() {
         return fundCodeId;
     }
 
-    @Column(name = "FUNDCODE_VALUE")
     public String getFundCodeValue() {
         return fundCodeValue;
     }

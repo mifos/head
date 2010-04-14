@@ -37,17 +37,21 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "CUSTOMER_ATTENDANCE_TYPES")
 public class CustomerAttendanceType extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "ATTENDANCE_ID", nullable = false)
     private short attendanceId;
+
+    @Column(name = "ATTENDANCE_LOOKUP_ID")
     private Integer lookUpId;
+
+    @Column(name = "DESCRIPTION")
     private String desciption;
 
     public CustomerAttendanceType() {
         super();
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "ATTENDANCE_ID", nullable = false)
     public Short getAttendanceId() {
         return attendanceId;
     }
@@ -56,7 +60,6 @@ public class CustomerAttendanceType extends AbstractEntity {
         this.attendanceId = attendanceId;
     }
 
-    @Column(name = "DESCRIPTION")
     public String getDesciption() {
         return desciption;
     }
@@ -65,7 +68,6 @@ public class CustomerAttendanceType extends AbstractEntity {
         this.desciption = desciption;
     }
 
-    @Column(name = "ATTENDANCE_LOOKUP_ID")
     public Integer getLookUpId() {
         return lookUpId;
     }

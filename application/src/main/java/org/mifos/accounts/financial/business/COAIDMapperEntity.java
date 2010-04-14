@@ -48,7 +48,13 @@ import org.mifos.framework.business.AbstractEntity;
 @Table(name = "COA_IDMAPPER")
 public class COAIDMapperEntity  extends AbstractEntity {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "CONSTANT_ID", nullable = false)
     private Short constantId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COA_ID", unique = true, insertable = false, updatable = false)
     private COABO coa;
 
     protected COAIDMapperEntity() {
@@ -59,15 +65,10 @@ public class COAIDMapperEntity  extends AbstractEntity {
         this.coa = coa;
     }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "CONSTANT_ID", nullable = false)
     public Short getConstantId() {
         return constantId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COA_ID", unique = true, insertable = false, updatable = false)
     public COABO getCoa() {
         return coa;
     }
