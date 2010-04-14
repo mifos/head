@@ -68,6 +68,8 @@ public final class MifosCurrency extends AbstractEntity {
     private BigDecimal roundingAmount;
 
     /** ISO 4217 currency code. */
+
+    @Column(name = "CURRENCY_CODE")
     private String currencyCode;
 
     public MifosCurrency(Short currencyId, String currencyName, BigDecimal roundingAmount, String currencyCode) {
@@ -98,7 +100,6 @@ public final class MifosCurrency extends AbstractEntity {
         this.currencyName = currencyName;
     }
 
-    @Column(name = "CURRENCY_CODE")
     public String getCurrencyCode() {
         return currencyCode;
     }
@@ -108,7 +109,6 @@ public final class MifosCurrency extends AbstractEntity {
         this.currencyCode = currencyCode;
     }
 
-    @Column(name = "ROUNDING_AMOUNT")
     public BigDecimal getRoundingAmount() {
         return roundingAmount;
     }
