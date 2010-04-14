@@ -49,7 +49,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"holiday","acceptance","ui"})
+@Test(sequential=true, groups={"holiday","schedules", "acceptance","ui"})
 public class AdditionalHolidayTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -176,6 +176,49 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         verifyLoanSchedule("AdditionalHolidayTest_005_result_dbunit.xml.zip");
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createWeeklyLoanScheduleNoFeesWithSecondInstallmentInAMoratorium() throws Exception {
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        // April 1st 2009 is a Wednesday
+        this.createHolidayOn("April Fools Day", CreateHolidaySubmitParameters.MORATORIUM, "01", "04", "2009");
+
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        //This client meets weekly on Wednesdays
+        searchParameters.setSearchString("Stu1233171716380 Client1233171716380");
+        //This loan product is a weekly flat-interest loan without fees that defaults to 11 installments.
+        searchParameters.setLoanProduct("MyLoanProduct1232993826860");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("2000");
+
+        this.createLoan(searchParameters, submitAccountParameters);
+
+        /*
+         * Expected result: Without moratorium, 11 installments scheduled every Wednesday from 2010-03-18 through
+         * 2010-5-27. The moratorium on the date of the third installment, 2010-04-01, causes it and all future
+         * installments to be pushed out to 2010-04-8 through 2010-6-3. Principal and interest payments should
+         * be the same as if there were no moratorium.
+         */
+        verifyLoanSchedule("CreateLoanScheduleWithMoratorium_001_result_dbunit.xml.zip");
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void createMonthlyLoanScheduleNoFeesWithFirstInstallmentOnAMoratorium() throws Exception {
+
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        this.createHolidayOn("May Day", CreateHolidaySubmitParameters.MORATORIUM, "01", "05", "2009");
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Mary Monthly");
+        searchParameters.setLoanProduct("MonthlyClientFlatLoan1stOfMonth");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1234.0");
+
+        this.createLoan(searchParameters, submitAccountParameters);
+        verifyLoanSchedule("CreateLoanScheduleWithMoratorium_002_result_dbunit.xml.zip");
+    }
+
     // TC14
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createMonthlyLoanScheduleWithMeetingOnAHolidayWithRepaymentNextMeeting() throws Exception {
@@ -207,6 +250,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     // TC19
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createWeeklyLoanScheduleWithTwoMeetingsDuringAHolidayWithRepaymentNextMeeting() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
@@ -303,6 +347,19 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateDD("1");
         params.setFromDateMM("07");
         params.setFromDateYYYY("2009");
+        params.setRepaymentRule(repaymentRule);
+
+        createHoliday(params);
+    }
+
+    private void createHolidayOn(final String name, final String repaymentRule, final String day,
+            final String month, final String year) {
+        CreateHolidaySubmitParameters params = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+
+        params.setName(name);
+        params.setFromDateDD(day);
+        params.setFromDateMM(month);
+        params.setFromDateYYYY(year);
         params.setRepaymentRule(repaymentRule);
 
         createHoliday(params);

@@ -73,7 +73,7 @@ public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTestC
     public void testGetRepaymentRuleTypes() throws Exception {
         List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes();
         Assert.assertNotNull(repaymentRules);
-       Assert.assertEquals(3, repaymentRules.size());
+       Assert.assertEquals(4, repaymentRules.size());
     }
 
     public void testGetDistinctYears() throws Exception {

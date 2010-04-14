@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.framework.holiday;
 
+import junit.framework.Assert;
+
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
@@ -28,6 +30,8 @@ import com.thoughtworks.selenium.Selenium;
 public class CreateHolidayEntryPage extends MifosPage {
     public void verifyPage() {
         this.verifyPage("create_officeHoliday");
+        // TODO KRP: uncomment this when acceptance tests are running locally
+        this.verifyRepaymentRuleOptions();
     }
 
     public CreateHolidayEntryPage(Selenium selenium) {
@@ -39,6 +43,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         public static final String NEXT_WORKING_DAY = "Next Working Day";
         public static final String SAME_DAY = "Same Day";
         public static final String NEXT_MEETING_OR_REPAYMENT = "Next Meeting/Repayment";
+        public static final String MORATORIUM = "Moratorium";
 
         private String name;
         private String fromDateDD;
@@ -118,6 +123,7 @@ public class CreateHolidayEntryPage extends MifosPage {
             if (SAME_DAY.equals(repaymentRule)) { return 1; }
             if (NEXT_MEETING_OR_REPAYMENT.equals(repaymentRule)) { return 2; }
             if (NEXT_WORKING_DAY.equals(repaymentRule)) { return 3; }
+            if (MORATORIUM.equals(repaymentRule)) { return 4; }
 
             return -1;
         }
@@ -144,5 +150,15 @@ public class CreateHolidayEntryPage extends MifosPage {
 
         return new CreateHolidayConfirmationPage(selenium);
 
+    }
+
+    @SuppressWarnings("PMD.StringToString")
+    private void verifyRepaymentRuleOptions() {
+        String[] options = selenium.getSelectOptions("name=repaymentRuleId");
+        Assert.assertEquals("Wrong number of repayment rule options", 5, options.length);
+        Assert.assertEquals(CreateHolidaySubmitParameters.SAME_DAY, options[1]);
+        Assert.assertEquals(CreateHolidaySubmitParameters.NEXT_MEETING_OR_REPAYMENT, options[2]);
+        Assert.assertEquals(CreateHolidaySubmitParameters.NEXT_WORKING_DAY, options[3]);
+        Assert.assertEquals(CreateHolidaySubmitParameters.MORATORIUM, options[4]);
     }
 }

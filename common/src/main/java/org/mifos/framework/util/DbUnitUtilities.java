@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -194,7 +193,7 @@ public class DbUnitUtilities {
     }
 
     public void loadDataFromFile(String filename, DriverManagerDataSource dataSource)
-    throws DatabaseUnitException, SQLException, IOException, URISyntaxException {
+    throws DatabaseUnitException, SQLException, IOException {
         Connection jdbcConnection = null;
         IDataSet dataSet = getDataSetFromDataSetDirectoryFile(filename);
         try {
@@ -274,7 +273,7 @@ public class DbUnitUtilities {
         return databaseDataSet;
     }
 
-    public void dumpDatabase(String fileName, DriverManagerDataSource dataSource) throws SQLException, FileNotFoundException, ClassNotFoundException, DatabaseUnitException, IOException {
+    public void dumpDatabase(String fileName, DriverManagerDataSource dataSource) throws SQLException, FileNotFoundException, DatabaseUnitException, IOException {
         Connection jdbcConnection = null;
         try {
             jdbcConnection = dataSource.getConnection();
@@ -284,13 +283,13 @@ public class DbUnitUtilities {
         }
     }
 
-    public void dumpDatabase(String fileName, Connection jdbcConnection) throws ClassNotFoundException, SQLException, DatabaseUnitException, FileNotFoundException, IOException {
+    public void dumpDatabase(String fileName, Connection jdbcConnection) throws SQLException, DatabaseUnitException, FileNotFoundException, IOException {
         IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
         IDataSet fullDataSet = connection.createDataSet();
         FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
     }
 
-    public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
+    public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, SQLException, DatabaseUnitException, IOException {
         String configurationDirectory = new ConfigurationLocator().getConfigurationDirectory();
         DateTime currentTime = new DateTimeService().getCurrentDateTime();
         String timeStamp = currentTime.toString().replace(":", "_");

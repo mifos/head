@@ -87,7 +87,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -214,7 +214,7 @@ public class CustomerServiceImpl implements CustomerService {
             DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
 
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                     thisAndNextYearsHolidays);
             List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
                     scheduledEvent);

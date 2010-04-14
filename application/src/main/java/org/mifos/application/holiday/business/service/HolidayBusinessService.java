@@ -36,9 +36,7 @@ import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 
 public class HolidayBusinessService implements BusinessService {
@@ -77,25 +75,12 @@ public class HolidayBusinessService implements BusinessService {
 
     public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws ServiceException {
         try {
-            List<RepaymentRuleEntity> rules =  new HolidayPersistence().getRepaymentRuleTypes();
-            if ( moratoriumSwitch.isOn() ) {
-                return rules;
-            }
-            // remove Repayment Moratorium rule
-            return (List<RepaymentRuleEntity>) CollectionUtils.select(rules, isNotRepaymentMoratoriumRule());
+            return new HolidayPersistence().getRepaymentRuleTypes();
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         } catch (Exception e) { //declared by Predicate.evaluate()
             throw new ServiceException(e);
         }
-    }
-
-    private Predicate<RepaymentRuleEntity> isNotRepaymentMoratoriumRule() {
-        return new Predicate<RepaymentRuleEntity>() {
-            public boolean evaluate (RepaymentRuleEntity rule) {
-                return rule.getId() < 4;
-            }
-        };
     }
 
     public List<HolidayBO> getDistinctYears() throws ServiceException {

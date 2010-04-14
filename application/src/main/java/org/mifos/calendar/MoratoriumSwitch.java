@@ -25,7 +25,7 @@ package org.mifos.calendar;
  *
  */
 public class MoratoriumSwitch {
-    private boolean isOn = false;
+    private boolean isOn = true;
 
     public boolean isOn() {
         return this.isOn;

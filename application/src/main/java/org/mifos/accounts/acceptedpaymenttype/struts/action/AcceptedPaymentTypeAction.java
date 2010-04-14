@@ -70,7 +70,7 @@ public class AcceptedPaymentTypeAction extends BaseAction {
     }
 
     private List<PaymentTypeData> getAllPaymentTypes(Short localeId) throws Exception {
-        List<PaymentTypeData> paymentTypeList = new ArrayList();
+        List<PaymentTypeData> paymentTypeList = new ArrayList<PaymentTypeData>();
         PaymentTypeData payment = null;
         Short id = 0;
         List<MasterDataEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
@@ -100,8 +100,8 @@ public class AcceptedPaymentTypeAction extends BaseAction {
         Short transactionId = transactionType.getValue();
         List<AcceptedPaymentType> paymentTypeList = paymentTypePersistence
                 .getAcceptedPaymentTypesForATransaction(transactionId);
-        List<PaymentTypeData> inList = new ArrayList(payments);
-        List<PaymentTypeData> outList = new ArrayList();
+        List<PaymentTypeData> inList = new ArrayList<PaymentTypeData>(payments);
+        List<PaymentTypeData> outList = new ArrayList<PaymentTypeData>();
 
         PaymentTypeData data = null;
         for (AcceptedPaymentType paymentType : paymentTypeList) {

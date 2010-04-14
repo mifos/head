@@ -21,11 +21,11 @@
 package org.mifos.accounts.loan.business;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
@@ -42,6 +42,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -63,6 +64,8 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
     private CenterBO center;
     private GroupBO group;
     private LoanOfferingBO loanOffering;
+    private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+    private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
 
 
     /**
@@ -74,18 +77,21 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         super();
     }
 
-    @Override
     protected void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
 
-        //new StandardTestingService().setFiscalCalendarRules("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY", "NEXT_MEETING");
+        //System.out.println("savedWorkingDays = " + weekDaysToPropertyString(savedWorkingDays));
+
+        fiscalCalendarRules.setWorkingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY");
     }
 
     @Override
     protected void tearDown() throws Exception {
         StaticHibernateUtil.rollbackTransaction();
         StaticHibernateUtil.flushAndClearSession();
+        fiscalCalendarRules.setWorkingDays(weekDaysToPropertyString(savedWorkingDays));
+        //System.out.println("Restored Working Days = " + weekDaysToPropertyString(fiscalCalendarRules.getWorkingDays()));
     }
 
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
@@ -101,8 +107,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
                             date(2010, 12, 3),  date(2010, 12, 10), date(2010, 12, 17));
     }
 
-    @Ignore
-    public void xtestNewWeeklyGroupLoanNoFeesSpansMoratorium() throws Exception {
+    public void testNewWeeklyGroupLoanNoFeesSpansMoratorium() throws Exception {
 
         // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
         buildAndPersistMoratorium(date(2010, 10, 22), date(2010, 10, 28));
@@ -123,8 +128,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
      * Generate loan schedules for monthly schedules meeting on a day of the month.
      *****************************************************/
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthNoHoliday() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfMonthNoHoliday() throws Exception {
 
         LoanBO loan = createMonthlyOnDateGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 6);
 
@@ -137,8 +141,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentSpansMoratorium() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentSpansMoratorium() throws Exception {
 
         //setup meeting 15th of every month starting 10/15/2010, with moratorium on the second meeting date.
         buildAndPersistMoratorium(date(2010, 12, 15), date(2010, 12, 15));
@@ -154,8 +157,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondAndThirdInstallmentsSpanMoratorium() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondAndThirdInstallmentsSpanMoratorium() throws Exception {
 
         //setup
         buildAndPersistMoratorium(date(2010, 12, 10), date(2011, 1, 31));
@@ -171,8 +173,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHoliday() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHoliday() throws Exception {
 
         //Setup meeting and holiday spanning third meeting date.
         buildAndPersistHoliday(date(2010, 12, 10), date(2010, 12, 20), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
@@ -190,8 +191,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHolidayAndThirdInstallmentInMoratorium()
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHolidayAndThirdInstallmentInMoratorium()
                     throws Exception {
 
         //Setup meeting and holiday spanning third meeting date and moratorium in January
@@ -211,8 +211,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextMeetingHoliday()
+    public void testNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextMeetingHoliday()
                     throws Exception {
 
         //Setup meeting and holiday spanning third meeting date and moratorium in January
@@ -233,8 +232,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextWorkingDayHoliday() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextWorkingDayHoliday() throws Exception {
 
         //Setup meeting and holiday spanning third meeting date.
         buildAndPersistHoliday(date(2010, 12, 15) /*wed*/, date(2010, 12, 15), RepaymentRuleTypes.NEXT_WORKING_DAY);
@@ -251,8 +249,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInNexWorkingDayHolidayAndNextWorkingDayIsInMoratorium()
+    public void testNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInNexWorkingDayHolidayAndNextWorkingDayIsInMoratorium()
                     throws Exception {
 
         //Setup meeting and holiday spanning third meeting date and moratorium in January
@@ -272,8 +269,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextWorkingDayHoliday()
+    public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextWorkingDayHoliday()
                     throws Exception {
 
         //Setup meeting and holiday spanning third meeting date and moratorium in January
@@ -295,8 +291,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
      * Generate loan schedules for monthly schedules meeting on a day in a week of the month.
      *****************************************************/
 
-    @Ignore
-    public void xtestNewMonthlyGroupLoanOnDayOfWeekNoHoliday() throws Exception {
+    public void testNewMonthlyGroupLoanOnDayOfWeekNoHoliday() throws Exception {
 
         /*
          * Note start date IS the third Friday in October.
@@ -309,8 +304,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentSpansMoratorium() throws Exception {
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentSpansMoratorium() throws Exception {
 
         //setup meeting third Friday of every month starting 10/15/2010, with moratorium spanning the second meeting date.
         buildAndPersistMoratorium(date(2010, 12, 10), date(2010, 12, 20));
@@ -327,8 +321,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondAndThirdInstallmentsSpanMoratorium() throws Exception {
+    public void testNewMonthlyLoanOnDayOfWeekSecondAndThirdInstallmentsSpanMoratorium() throws Exception {
 
         //setup
         DateTime startDate = date(2010, 10, 15);
@@ -349,8 +342,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextMeetingHoliday() throws Exception {
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextMeetingHoliday() throws Exception {
 
         //Setup meeting and holiday spanning December's meeting date.
         DateTime startDate = date(2010, 10, 15);
@@ -371,8 +363,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextMeetingHolidayAndThirdInstallmentInMoratorium()
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextMeetingHolidayAndThirdInstallmentInMoratorium()
                     throws Exception {
 
         //Setup meeting and holiday December's date and moratorium in January
@@ -397,8 +388,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInMoratoriumPushedIntoNextMeetingHoliday()
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInMoratoriumPushedIntoNextMeetingHoliday()
                     throws Exception {
 
         //Setup meeting and holiday. Moratorium encloses December's date and next-meeting holiday encloses January's
@@ -422,8 +412,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextWorkingDayHoliday() throws Exception {
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInNextWorkingDayHoliday() throws Exception {
 
         //Setup meeting and holiday enclosing December's meeting date.
         DateTime startDate = date(2010, 10, 15); //Friday
@@ -445,8 +434,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInNexWorkingDayHolidayAndNextWorkingDayIsInMoratorium()
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInNexWorkingDayHolidayAndNextWorkingDayIsInMoratorium()
                     throws Exception {
 
         //Setup meeting and holiday enclosing December's date and moratorium enclosing the next working day
@@ -471,8 +459,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    @Ignore
-    public void xtestNewMonthlyLoanOnDayOfWeekSecondInstallmentInMoratoriumPushedIntoNextWorkingDayHoliday()
+    public void testNewMonthlyLoanOnDayOfWeekSecondInstallmentInMoratoriumPushedIntoNextWorkingDayHoliday()
                     throws Exception {
 
         //Setup meeting, moratorium enclosing December's date, holiday enclosing January's
@@ -580,5 +567,19 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
                 loanOffering.getEligibleInstallmentSameForAllLoan().getMinNoOfInstall(),
                 false, null);
 
+    }
+
+    private String weekDaysToPropertyString(List<WeekDay> weekDays) {
+        String propertyString = "";
+        Boolean first = true;
+        for (WeekDay day : weekDays) {
+            if (!first) {
+                propertyString = propertyString + ",";
+            } else {
+                first = false;
+            }
+            propertyString = propertyString + day.getName().toUpperCase();
+        }
+        return propertyString;
     }
 }
