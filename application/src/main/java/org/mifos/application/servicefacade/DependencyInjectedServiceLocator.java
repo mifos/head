@@ -53,6 +53,8 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.security.authentication.AuthenticationDao;
+import org.mifos.security.authentication.AuthenticationDaoHibernate;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -69,6 +71,7 @@ public class DependencyInjectedServiceLocator {
     private static CenterDetailsServiceFacade centerDetailsServiceFacade;
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
+    private static LoginServiceFacade loginServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -91,8 +94,8 @@ public class DependencyInjectedServiceLocator {
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
+    private static AuthenticationDao authenticationDao = new AuthenticationDaoHibernate();
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
-
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
@@ -167,11 +170,22 @@ public class DependencyInjectedServiceLocator {
         return loanServiceFacade;
     }
 
+    public static LoginServiceFacade locationLoginServiceFacade() {
+        if (loginServiceFacade == null) {
+            loginServiceFacade = new LoginServiceFacadeWebTier(authenticationDao);
+        }
+        return loginServiceFacade;
+    }
+
     public static CustomerDao locateCustomerDao() {
         return customerDao;
     }
 
     public static HolidayDao locateHolidayDao() {
         return holidayDao;
+    }
+
+    public static GenericDao locateGenericDao() {
+        return genericDao;
     }
 }

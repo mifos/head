@@ -18,17 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.personnel.persistence;
+package org.mifos.security.authentication;
 
-import java.util.List;
-
-import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface PersonnelDao {
+/**
+ *
+ */
+public interface AuthenticationDao extends UserDetailsService {
 
-    List<PersonnelView> findActiveLoanOfficersForOffice(CenterCreation centerCreation);
+    PersonnelBO findPersonnelByUsername(String username);
 
-    PersonnelBO findPersonnelById(Short id);
 }

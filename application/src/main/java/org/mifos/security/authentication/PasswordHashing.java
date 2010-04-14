@@ -32,7 +32,6 @@ import org.mifos.framework.exceptions.SystemException;
  * This class encapsulate all the logic related to password hashing
  */
 public class PasswordHashing {
-    MessageDigest messageDigest = null;
 
     /**
      * This function will return the hashed password out of the passed string
@@ -106,9 +105,9 @@ public class PasswordHashing {
     public boolean compare(byte[] encPassword, byte[] decPassword) {
         if (Arrays.equals(encPassword, decPassword)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

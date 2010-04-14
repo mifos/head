@@ -35,6 +35,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -105,6 +106,10 @@ public class PersonnelBusinessService implements BusinessService {
         }
     }
 
+    /**
+     * @deprecated use {@link AuthenticationDao}.
+     */
+    @Deprecated
     public PersonnelBO getPersonnel(String personnelName) throws ServiceException {
         PersonnelBO personnel = null;
         try {

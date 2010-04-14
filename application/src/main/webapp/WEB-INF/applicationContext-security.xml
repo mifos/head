@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd">
+
+	<sec:global-method-security secured-annotations="disabled">
+	</sec:global-method-security>
+
+	<bean id="mifosAccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+	    <property name="decisionVoters">
+	        <list>
+	            <bean class="org.springframework.security.access.vote.RoleVoter"/>
+	            <bean class="org.mifos.security.authorization.DynamicAuthorizationVoter"/>
+	            <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+	        </list>
+	    </property>
+	</bean>
+
+	<sec:http access-decision-manager-ref="mifosAccessDecisionManager" auto-config="true">
+		<sec:intercept-url pattern="/**" access="ROLE_MIFOS_USER" />
+	</sec:http>
+
+	<sec:authentication-manager alias="authenticationManager">
+	    <sec:authentication-provider ref="mifosAuthenticationProvider"/>
+	</sec:authentication-manager>
+	
+  	<bean id="passwordHashing" class="org.mifos.security.authentication.PasswordHashing" />
+ 	
+    <bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
+        <property name="userDetailsService" ref="mifosUserService" />
+        <constructor-arg ref="passwordHashing" />
+    </bean>
+
+	<bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
+	
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userService" />
+    </bean>
+    
+	<sec:user-service id="userService">
+        <sec:user name="username" password="password" authorities="ROLE_MIFOS_USER, ROLE_USER" />
+        <sec:user name="test" password="test" authorities="ROLE_USER" />
+    </sec:user-service>
+</beans>

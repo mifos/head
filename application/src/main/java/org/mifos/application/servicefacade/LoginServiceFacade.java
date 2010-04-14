@@ -18,17 +18,15 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.personnel.persistence;
+package org.mifos.application.servicefacade;
 
-import java.util.List;
+import org.mifos.framework.exceptions.ApplicationException;
 
-import org.mifos.application.servicefacade.CenterCreation;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+/**
+ *
+ */
+public interface LoginServiceFacade {
 
-public interface PersonnelDao {
+    LoginActivityDto login(String userName, String password) throws ApplicationException;
 
-    List<PersonnelView> findActiveLoanOfficersForOffice(CenterCreation centerCreation);
-
-    PersonnelBO findPersonnelById(Short id);
 }

@@ -18,17 +18,32 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.personnel.persistence;
+package org.mifos.security.authorization;
 
-import java.util.List;
+import java.util.Collection;
 
-import org.mifos.application.servicefacade.CenterCreation;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.core.Authentication;
 
-public interface PersonnelDao {
+/**
+ *
+ */
+public class DynamicAuthorizationVoter implements AccessDecisionVoter {
 
-    List<PersonnelView> findActiveLoanOfficersForOffice(CenterCreation centerCreation);
+    @Override
+    public boolean supports(ConfigAttribute attribute) {
+        return true;
+    }
 
-    PersonnelBO findPersonnelById(Short id);
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return true;
+    }
+
+    @Override
+    public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
+        return ACCESS_GRANTED;
+    }
+
 }

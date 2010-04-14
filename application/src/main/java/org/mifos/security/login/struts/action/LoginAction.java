@@ -34,12 +34,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.LoginActivityDto;
+import org.mifos.application.servicefacade.LoginServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -47,7 +49,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -57,16 +58,16 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.struts.actionforms.LoginActionForm;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class LoginAction extends BaseAction {
 
-    private MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
+    private static final MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
+    private final LoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -83,8 +84,8 @@ public class LoginAction extends BaseAction {
         return security;
     }
 
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         loginLogger.debug("Inside load of LoginAction");
         SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null, request.getSession());
         request.getSession(false).setAttribute(Constants.FLOWMANAGER, new FlowManager());
@@ -93,7 +94,7 @@ public class LoginAction extends BaseAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         loginLogger.debug("Inside login of LoginAction");
         loginLogger.debug("Using Thread: " + Thread.currentThread().getName());
         loginLogger.debug("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
@@ -112,21 +113,33 @@ public class LoginAction extends BaseAction {
         LoginActionForm loginActionForm = (LoginActionForm) form;
         String userName = loginActionForm.getUserName();
         String password = loginActionForm.getPassword();
-        PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
-        UserContext userContext = personnelBO.login(password);
-        setAttributes(userContext, request);
-        if (personnelBO.isPasswordChanged()) {
+
+        LoginActivityDto loginActivity = loginServiceFacade.login(userName, password);
+
+        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, loginActivity.getActivityContext());
+
+        UserContext userContext = loginActivity.getUserContext();
+        if (loginActivity.isPasswordChanged()) {
             setUserContextInSession(userContext, request);
         } else {
             SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT, userContext, request);
         }
-        setFlow(userContext.getPasswordChanged(), request);
-        personnelBO = null;
-        return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
+
+        //  set flow
+        Short passwordChanged = loginActivity.getPasswordChangedFlag();
+        if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
+            FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
+            flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
+            request.setAttribute(Constants.CURRENTFLOWKEY, null);
+        }
+
+        final String loginForward = getLoginForward(loginActivity.getPasswordChangedFlag());
+
+        return mapping.findForward(loginForward);
     }
 
-    public ActionForward logout(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward logout(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         loginLogger.debug("Inside logout of LoginAction");
 
         ResourceBundle resources;
@@ -155,7 +168,7 @@ public class LoginAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         loginLogger.debug("Inside updatePassword of LoginAction");
         LoginActionForm loginActionForm = (LoginActionForm) form;
         UserContext userContext = null;
@@ -185,14 +198,14 @@ public class LoginAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(((LoginActionForm) form).getUserName());
         return mapping.findForward(getCancelForward(personnelBO.getPasswordChanged()));
     }
 
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         if (method.equalsIgnoreCase(Methods.login.toString())) {
             return mapping.findForward(ActionForwards.login_failure.toString());
@@ -204,21 +217,13 @@ public class LoginAction extends BaseAction {
     }
 
     private PersonnelBusinessService getPersonnelBizService() {
-        return (PersonnelBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Personnel);
-    }
-
-    private void setAttributes(UserContext userContext, HttpServletRequest request) {
-        ActivityContext activityContext = new ActivityContext((short) 0, userContext.getBranchId().shortValue(),
-                userContext.getId().shortValue());
-        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
+        return new PersonnelBusinessService();
     }
 
     private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {
         HttpSession hs = request.getSession(false);
         hs.setAttribute(Constants.USERCONTEXT, userContext);
         hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
-
     }
 
     private String getLoginForward(Short passwordChanged) {
@@ -231,13 +236,5 @@ public class LoginAction extends BaseAction {
         return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged)) ? ActionForwards.cancel_success
                 .toString()
                 : ActionForwards.updateSettings_success.toString();
-    }
-
-    private void setFlow(Short passwordChanged, HttpServletRequest request) {
-        if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
-            FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
-            flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
-            request.setAttribute(Constants.CURRENTFLOWKEY, null);
-        }
     }
 }
