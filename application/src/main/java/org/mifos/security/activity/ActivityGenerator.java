@@ -27,7 +27,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -100,8 +100,8 @@ public class ActivityGenerator {
 
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         MasterPersistence mp = new MasterPersistence();
-        MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) mp.getPersistentObject(MifosLookUpEntity.class, Short
-                .valueOf((short) MifosLookUpEntity.ACTIVITY));
+        LookUpEntity lookUpEntity = (LookUpEntity) mp.getPersistentObject(LookUpEntity.class, Short
+                .valueOf((short) LookUpEntity.ACTIVITY));
         String lookupName = SearchUtils.generateLookupName(type.name(), lookUpDescription);
         anLookUp.setLookUpName(lookupName);
         anLookUp.setLookUpEntity(lookUpEntity);

@@ -37,7 +37,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.business.MifosConfiguration;
@@ -141,7 +141,7 @@ public class LabelConfigurationAction extends BaseAction {
         LabelConfigurationActionForm labelConfigurationActionForm = (LabelConfigurationActionForm) form;
         UserContext userContext = getUserContext(request);
         List<LookUpValueEntity> values = new ApplicationConfigurationPersistence().getLookupValues();
-        List<MifosLookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
+        List<LookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
         updateLookupData(labelConfigurationActionForm, userContext, lookupEntities);
         updateStatusData(labelConfigurationActionForm, userContext.getLocaleId(), values);
         updateOfficeData(labelConfigurationActionForm, userContext.getLocaleId());
@@ -188,8 +188,8 @@ public class LabelConfigurationAction extends BaseAction {
     }
 
     private void setLookupDataInForm(LabelConfigurationActionForm labelConfigurationActionForm, UserContext userContext) {
-        List<MifosLookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
-        for (MifosLookUpEntity entity : lookupEntities) {
+        List<LookUpEntity> lookupEntities = new ApplicationConfigurationPersistence().getLookupEntities();
+        for (LookUpEntity entity : lookupEntities) {
             if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
                 labelConfigurationActionForm.setClient(MessageLookup.getInstance().lookupLabel(entity.getEntityType(),
                         userContext));
@@ -322,8 +322,8 @@ public class LabelConfigurationAction extends BaseAction {
     }
 
     private void updateLookupData(LabelConfigurationActionForm labelConfigurationActionForm, UserContext userContext,
-            List<MifosLookUpEntity> lookupEntities) throws Exception {
-        for (MifosLookUpEntity entity : lookupEntities) {
+            List<LookUpEntity> lookupEntities) throws Exception {
+        for (LookUpEntity entity : lookupEntities) {
             if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
                 MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),
                         labelConfigurationActionForm.getClient(), userContext);

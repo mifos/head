@@ -49,7 +49,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
     /*
      * The name of the custom field
      */
-    private final MifosLookUpEntity lookUpEntity;
+    private final LookUpEntity lookUpEntity;
 
     private final Short levelId;
 
@@ -81,7 +81,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         this.mandatoryFlag = null;
     }
 
-    public CustomFieldDefinitionEntity(MifosLookUpEntity name, Short fieldIndex, CustomFieldType fieldType,
+    public CustomFieldDefinitionEntity(LookUpEntity name, Short fieldIndex, CustomFieldType fieldType,
             EntityType entityType, String defaultValue, YesNoFlag mandatory) {
         this.fieldId = null; // this should be assigned when persisted to the
                              // database
@@ -110,7 +110,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
     private CustomFieldDefinitionEntity(String label, Short levelId, CustomFieldType fieldType, EntityType entityType,
             String defaultValue, YesNoFlag mandatory, Short localeId) {
 
-        MifosLookUpEntity lookupEntity = new MifosLookUpEntity();
+        LookUpEntity lookupEntity = new LookUpEntity();
         // add a timestamp so that we get a unique identifier
         // the label that someone enters can potentially collide with
         // the name of another unrelated entity, causing problems with
@@ -146,7 +146,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         return fieldId;
     }
 
-    public MifosLookUpEntity getLookUpEntity() {
+    public LookUpEntity getLookUpEntity() {
         return this.lookUpEntity;
     }
 

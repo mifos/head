@@ -22,14 +22,14 @@ package org.mifos.accounts.fees.business;
 
 import java.util.Set;
 
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.business.AbstractEntity;
 
 public class FeeTypeEntity extends AbstractEntity {
 
     private Short feeTypeId;
 
-    private MifosLookUpEntity lookUpEntity;
+    private LookUpEntity lookUpEntity;
 
     private Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes;
 
@@ -49,11 +49,11 @@ public class FeeTypeEntity extends AbstractEntity {
         this.feeTypeId = feeTypeId;
     }
 
-    public MifosLookUpEntity getLookUpEntity() {
+    public LookUpEntity getLookUpEntity() {
         return this.lookUpEntity;
     }
 
-    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+    public void setLookUpEntity(LookUpEntity lookUpEntity) {
         this.lookUpEntity = lookUpEntity;
     }
 

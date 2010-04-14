@@ -52,7 +52,7 @@
     	       			]]>
 	</query>
 	<query name="masterdata.customer_checklist">
-		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(cl.id,le.entityType) from org.mifos.customers.business.CustomerLevelEntity as cl,org.mifos.application.master.business.MifosLookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
+		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(cl.id,le.entityType) from org.mifos.customers.business.CustomerLevelEntity as cl,org.mifos.application.master.business.LookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
 	</query>
 	<query name="masterdata.product_checklist">
 		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lv.lookUpName) from org.mifos.accounts.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>

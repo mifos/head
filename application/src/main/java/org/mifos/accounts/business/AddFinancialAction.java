@@ -27,7 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddFinancialAction extends Upgrade {
@@ -57,7 +57,7 @@ public class AddFinancialAction extends Upgrade {
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
-        int lookupEntity = MifosLookUpEntity.FINANCIAL_ACTION;
+        int lookupEntity = LookUpEntity.FINANCIAL_ACTION;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
         insertMessage(connection, lookupId, locale, message);

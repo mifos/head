@@ -57,9 +57,9 @@ public class LookUpValueEntityIntegrationTest extends MifosIntegrationTestCase {
 
         LookUpValueEntity entity = new LookUpValueEntity();
         entity.setLookUpName("my entity");
-        MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
-        mifosLookUpEntity.setEntityId((short) 87);
-        entity.setLookUpEntity(mifosLookUpEntity);
+        LookUpEntity lookUpEntity = new LookUpEntity();
+        lookUpEntity.setEntityId((short) 87);
+        entity.setLookUpEntity(lookUpEntity);
 
         session.save(entity);
         int writtenId = entity.getLookUpId();

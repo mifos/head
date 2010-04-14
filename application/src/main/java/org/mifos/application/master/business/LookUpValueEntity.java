@@ -35,7 +35,7 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
      */
     private String lookUpName;
 
-    private MifosLookUpEntity lookUpEntity;
+    private LookUpEntity lookUpEntity;
 
     private Set<LookUpValueLocaleEntity> lookUpValueLocales;
 
@@ -55,11 +55,11 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
         this.lookUpId = lookUpId;
     }
 
-    public MifosLookUpEntity getLookUpEntity() {
+    public LookUpEntity getLookUpEntity() {
         return lookUpEntity;
     }
 
-    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+    public void setLookUpEntity(LookUpEntity lookUpEntity) {
         this.lookUpEntity = lookUpEntity;
     }
 

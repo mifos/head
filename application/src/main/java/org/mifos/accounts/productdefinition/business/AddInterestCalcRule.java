@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 /* AddInterestCalcRule adds a new type of interest calculation method
@@ -84,7 +84,7 @@ public class AddInterestCalcRule extends Upgrade {
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
-        int lookupEntity = MifosLookUpEntity.INTEREST_TYPES;
+        int lookupEntity = LookUpEntity.INTEREST_TYPES;
 
         int lookupId = insertLookupValue(connection, lookupEntity, lookupName);
         insertMessage(connection, lookupId, locale, message);

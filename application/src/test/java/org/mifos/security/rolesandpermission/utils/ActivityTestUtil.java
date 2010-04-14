@@ -21,7 +21,7 @@
 package org.mifos.security.rolesandpermission.utils;
 
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
@@ -38,8 +38,8 @@ public class ActivityTestUtil {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         MasterPersistence mp = new MasterPersistence();
-        MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) mp.getPersistentObject(MifosLookUpEntity.class, Short
-                .valueOf((short) MifosLookUpEntity.ACTIVITY));
+        LookUpEntity lookUpEntity = (LookUpEntity) mp.getPersistentObject(LookUpEntity.class, Short
+                .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
         ActivityEntity parent = (ActivityEntity) mp.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);

@@ -36,7 +36,7 @@ import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
@@ -275,7 +275,7 @@ public class MasterPersistence extends Persistence {
      */
     public LookUpValueEntity addValueListElementForLocale(final Short lookupEnityId, final String newElementText, final String lookUpName)
             throws PersistenceException {
-        MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) getPersistentObject(MifosLookUpEntity.class, lookupEnityId);
+        LookUpEntity lookUpEntity = (LookUpEntity) getPersistentObject(LookUpEntity.class, lookupEnityId);
         LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
         lookUpValueEntity.setLookUpEntity(lookUpEntity);
         lookUpValueEntity.setLookUpName(lookUpName);
@@ -316,7 +316,7 @@ public class MasterPersistence extends Persistence {
         MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
     }
 
-    public void addLookUpEntity(final MifosLookUpEntity lookUpEntity) throws PersistenceException {
+    public void addLookUpEntity(final LookUpEntity lookUpEntity) throws PersistenceException {
 
         createOrUpdate(lookUpEntity);
     }

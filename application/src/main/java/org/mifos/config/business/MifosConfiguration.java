@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
@@ -89,8 +89,8 @@ public class MifosConfiguration {
                     .getMessageText());
         }
 
-        List<MifosLookUpEntity> entities = configurationPersistence.getLookupEntities();
-        for (MifosLookUpEntity entity : entities) {
+        List<LookUpEntity> entities = configurationPersistence.getLookupEntities();
+        for (LookUpEntity entity : entities) {
             Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
             for (LookUpLabelEntity label : labels) {
                 labelCache.put(new LabelKey(entity.getEntityType(), label.getLocaleId()), label.getLabelText());

@@ -35,7 +35,7 @@ public class CustomFieldDefinitionEntityTest extends TestCase {
     }
 
     public void testMandatory() {
-        MifosLookUpEntity customFieldName = new MifosLookUpEntity();
+        LookUpEntity customFieldName = new LookUpEntity();
         customFieldName.setEntityId((short) 1);
         customFieldName.setEntityType("something");
 

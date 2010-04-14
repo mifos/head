@@ -29,7 +29,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -46,14 +46,14 @@ public class ApplicationConfigurationPersistence extends Persistence {
      * methods are called as part of another operation, the closing of the
      * session can be unexpected and interrupt an ongoing transaction
      */
-    public List<MifosLookUpEntity> getLookupEntities() {
+    public List<LookUpEntity> getLookupEntities() {
 
-        List<MifosLookUpEntity> entities = null;
+        List<LookUpEntity> entities = null;
         try {
             Session session = StaticHibernateUtil.getSessionTL();
             entities = session.getNamedQuery(NamedQueryConstants.GET_ENTITIES).list();
 
-            for (MifosLookUpEntity entity : entities) {
+            for (LookUpEntity entity : entities) {
                 Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
                 entity.getEntityType();
                 for (LookUpLabelEntity label : labels) {

@@ -33,7 +33,7 @@ public class LookUpLabelEntity extends AbstractEntity {
 
     private SupportedLocalesEntity locale;
 
-    private MifosLookUpEntity lookUpEntity;
+    private LookUpEntity lookUpEntity;
 
     public String getLabelKey() {
         return lookUpEntity.getEntityType();
@@ -85,11 +85,11 @@ public class LookUpLabelEntity extends AbstractEntity {
         LookUpLabelId = lookUpLabelId;
     }
 
-    public MifosLookUpEntity getLookUpEntity() {
+    public LookUpEntity getLookUpEntity() {
         return lookUpEntity;
     }
 
-    public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
+    public void setLookUpEntity(LookUpEntity lookUpEntity) {
         this.lookUpEntity = lookUpEntity;
     }
 

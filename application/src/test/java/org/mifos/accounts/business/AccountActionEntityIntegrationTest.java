@@ -29,7 +29,7 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -69,8 +69,8 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals("AccountAction-Payment", lookUpValue.getLookUpName());
        Assert.assertEquals(new Integer(191), lookUpValue.getLookUpId());
 
-        MifosLookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
-       Assert.assertEquals(MifosLookUpEntity.ACCOUNT_ACTION, lookUpEntity.getEntityId().shortValue());
+        LookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
+       Assert.assertEquals(LookUpEntity.ACCOUNT_ACTION, lookUpEntity.getEntityId().shortValue());
        Assert.assertEquals("AccountAction", lookUpEntity.getEntityType());
 
         Set<LookUpValueLocaleEntity> valueLocales = lookUpValue.getLookUpValueLocales();

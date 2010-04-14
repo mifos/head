@@ -26,8 +26,8 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class ApplicationConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
@@ -50,11 +50,11 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * should not have more than 1 label
      */
     public void testGetLookupEntities() {
-        List<MifosLookUpEntity> entities = configurationPersistence.getLookupEntities();
+        List<LookUpEntity> entities = configurationPersistence.getLookupEntities();
         Assert.assertNotNull(entities);
 
         // Enforce that no entity names contain whitespace
-        for (MifosLookUpEntity entity : entities) {
+        for (LookUpEntity entity : entities) {
            Assert.assertEquals(StringUtils.deleteWhitespace(entity.getEntityType()), entity.getEntityType());
 
             Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
@@ -79,16 +79,16 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * properties files.
      */
     /*
-     * public void testDump() { List<MifosLookUpEntity> entities=null; try {
+     * public void testDump() { List<LookUpEntity> entities=null; try {
      * Session session = StaticHibernateUtil.getSessionTL(); entities =
      * session.getNamedQuery( NamedQueryConstants.GET_ENTITIES).list();
      *
-     * for (MifosLookUpEntity entity : entities) { Set<LookUpLabelEntity> labels
+     * for (LookUpEntity entity : entities) { Set<LookUpLabelEntity> labels
      * = entity.getLookUpLabels(); for (LookUpLabelEntity label : labels) {
      * System.out.println(entity.getEntityType() + ".Label = " +
      * label.getLabelText()); } }
      *
-     * // for (MifosLookUpEntity entity : entities) { // Set<LookUpValueEntity>
+     * // for (LookUpEntity entity : entities) { // Set<LookUpValueEntity>
      * values = entity.getLookUpValues(); // List<LookUpValueEntity> valuesList
      * = new ArrayList<LookUpValueEntity>(); // valuesList.addAll(values); //
      * Collections.sort(valuesList, new Comparator<LookUpValueEntity>() { //

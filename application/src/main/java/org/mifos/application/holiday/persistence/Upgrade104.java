@@ -25,7 +25,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -60,7 +60,7 @@ public class Upgrade104 extends Upgrade {
                 + "  REFERENCES REPAYMENT_RULE(REPAYMENT_RULE_ID)" + "  ON DELETE NO ACTION" + "  ON UPDATE NO ACTION)"
                 + "ENGINE=InnoDB CHARACTER SET utf8");
 
-        addLookupEntity(connection, MifosLookUpEntity.REPAYMENT_RULE, "Repayment Rule", "Repayment Rule Types");
+        addLookupEntity(connection, LookUpEntity.REPAYMENT_RULE, "Repayment Rule", "Repayment Rule Types");
 
         sameDay.upgrade(connection);
         nextMeetingOrRepayment.upgrade(connection);

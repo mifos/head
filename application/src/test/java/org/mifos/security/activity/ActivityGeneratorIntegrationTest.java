@@ -25,7 +25,7 @@ import junit.framework.Assert;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -47,8 +47,8 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
 
         ActivityGenerator activityGenerator = new ActivityGenerator();
-        MifosLookUpEntity lookUpEntity = new MifosLookUpEntity();
-        lookUpEntity.setEntityId((short) MifosLookUpEntity.ACTIVITY);
+        LookUpEntity lookUpEntity = new LookUpEntity();
+        lookUpEntity.setEntityId((short) LookUpEntity.ACTIVITY);
 
         short parentId = 13;
 

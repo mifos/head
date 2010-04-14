@@ -28,7 +28,7 @@ import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
@@ -169,7 +169,7 @@ public class MessageLookup implements MessageSourceAware {
         if (lookupLabel(labelKey, userContext).compareTo(value) != 0) {
             // getLookupEntities currently closes the Hibernate session (which
             // is bad)
-            for (MifosLookUpEntity entity : configurationPersistence.getLookupEntities()) {
+            for (LookUpEntity entity : configurationPersistence.getLookupEntities()) {
                 if (entity.getEntityType().equals(labelKey)) {
                     Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
                     for (LookUpLabelEntity label : labels) {

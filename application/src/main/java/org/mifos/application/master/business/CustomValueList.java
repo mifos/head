@@ -25,7 +25,7 @@ import java.util.List;
 import org.mifos.framework.business.View;
 
 /**
- * This class represents a {@link MifosLookUpEntity} and its associated list of
+ * This class represents a {@link LookUpEntity} and its associated list of
  * {@link LookUpValueEntity} objects for a given locale.
  *
  * A better name for this class might be ValueListForLocale.
@@ -45,7 +45,7 @@ public class CustomValueList extends View {
 
     /**
      * This is only used in the HQL query "masterdata.entityvalue" in
-     * MifosLookUpEntity.hbm.xml
+     * LookUpEntity
      */
     public CustomValueList(Short entityId, Short localeId, String entityLabel) {
 

@@ -149,7 +149,7 @@
 		<mapping resource="org/mifos/application/master/business/LookUpLabelEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpValueEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/LookUpValueLocaleEntity.hbm.xml" />
-		<mapping class="org.mifos.application.master.business.MifosLookUpEntity" />
+		<mapping class="org.mifos.application.master.business.LookUpEntity" />
 		<mapping resource="org/mifos/application/master/business/SupportedLocalesEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/PaymentTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/SpouseFatherLookupEntity.hbm.xml" />

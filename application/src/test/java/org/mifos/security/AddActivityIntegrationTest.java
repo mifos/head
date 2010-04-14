@@ -30,7 +30,7 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -74,9 +74,9 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < 10; ++i) {
             LookUpValueEntity entity = new LookUpValueEntity();
             entity.setLookUpName("test look up value " + i);
-            MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
-            mifosLookUpEntity.setEntityId((short) 87);
-            entity.setLookUpEntity(mifosLookUpEntity);
+            LookUpEntity lookUpEntity = new LookUpEntity();
+            lookUpEntity.setEntityId((short) 87);
+            entity.setLookUpEntity(lookUpEntity);
             session.save(entity);
         }
         upgradeAndCheck();

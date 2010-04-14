@@ -46,29 +46,29 @@ import org.mifos.framework.business.AbstractEntity;
 @NamedQueries( {
   @NamedQuery(
     name="entities",
-    query="from MifosLookUpEntity "
+    query="from LookUpEntity "
   ),
   @NamedQuery(
     name="masterdata.mifosEntityValue",
     query="select new org.mifos.application.master.business.BusinessActivityEntity(value.lookUpId ,value.lookUpName, value.lookUpName) "+
-          "from MifosLookUpEntity entity, LookUpValueEntity value "+
+          "from LookUpEntity entity, LookUpValueEntity value "+
           "where entity.entityId = value.lookUpEntity.entityId and entity.entityType=:entityType "
   ),
   @NamedQuery(
     name = "masterdata.entityvalue",
     query = "select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) "
-         + "from MifosLookUpEntity entity, LookUpLabelEntity label "
+         + "from LookUpEntity entity, LookUpLabelEntity label "
          + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
   ),
   @NamedQuery(
     name = "masterdata.entitylookupvalue",
     query = "select new org.mifos.application.master.business.CustomValueListElement(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
-                + "from LookUpValueEntity lookup, MifosLookUpEntity entity "
+                + "from LookUpValueEntity lookup, LookUpEntity entity "
                 + "where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId"
   )
 
 })
-public class MifosLookUpEntity extends AbstractEntity {
+public class LookUpEntity extends AbstractEntity {
 
     public static final Short DEFAULT_LOCALE_ID = 1;
 
@@ -88,7 +88,7 @@ public class MifosLookUpEntity extends AbstractEntity {
 
     private Set<LookUpValueEntity> lookUpValues;
 
-    public MifosLookUpEntity() {
+    public LookUpEntity() {
         super();
     }
 

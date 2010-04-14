@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 
@@ -95,7 +95,7 @@ public class AddActivity extends Upgrade {
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
-        int lookupEntity = MifosLookUpEntity.ACTIVITY;
+        int lookupEntity = LookUpEntity.ACTIVITY;
 
         int lookupId = insertLookupValue(connection, lookupEntity, activityNameKey);
         insertMessage(connection, lookupId, locale, activityName);
