@@ -4,12 +4,12 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-webapp</artifactId>
     <packaging>war</packaging>
-    <version>1.5-SNAPSHOT</version>
+    <version>${mifos.version}</version>
     <name>Mifos - Application</name>
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>1.5-SNAPSHOT</version>
+        <version>${mifos.version}</version>
     </parent>
     <scm>
         <url>https://mifos.svn.sourceforge.net/svnroot/mifos</url>

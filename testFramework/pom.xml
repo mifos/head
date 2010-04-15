@@ -4,13 +4,13 @@
    <groupId>org.mifos</groupId>
    <artifactId>mifos-testFramework</artifactId>
    <packaging>jar</packaging>
-   <version>1.5-SNAPSHOT</version>
+   <version>${mifos.version}</version>
    <name>Mifos - Test Framework</name>
    <url>http://www.mifos.org</url>
    <parent>
       <groupId>org.mifos</groupId>
       <artifactId>mifos-parent</artifactId>
-      <version>1.5-SNAPSHOT</version>
+      <version>${mifos.version}</version>
    </parent>
 
    <dependencies>
