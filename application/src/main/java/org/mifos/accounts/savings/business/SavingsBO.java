@@ -436,12 +436,12 @@ public class SavingsBO extends AccountBO {
 
     private SavingsPerformanceEntity createSavingsPerformance() {
         SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity(this);
-        logger.info("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
+        logger.debug("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
         return savingsPerformance;
     }
 
     public void save() throws AccountException {
-        logger.info("In SavingsBO::save(), Before Saving , accountId: " + getAccountId());
+        logger.debug("In SavingsBO::save(), Before Saving , accountId: " + getAccountId());
 
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
@@ -455,7 +455,7 @@ public class SavingsBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-        logger.info("In SavingsBO::save(), Successfully saved , accountId: " + getAccountId());
+        logger.debug("In SavingsBO::save(), Successfully saved , accountId: " + getAccountId());
     }
 
     public void update(final Money recommendedAmount, final List<CustomFieldView> customFields) throws AccountException {
@@ -494,7 +494,7 @@ public class SavingsBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-        logger.info("In SavingsBO::update(), successfully updated , accountId: " + getAccountId());
+        logger.debug("In SavingsBO::update(), successfully updated , accountId: " + getAccountId());
     }
 
     public boolean isMandatory() {
@@ -546,7 +546,7 @@ public class SavingsBO extends AccountBO {
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
-            logger.info("In SavingsBO::postInterest(), accountId: " + getAccountId() + ", Interest Of Amount: "
+            logger.debug("In SavingsBO::postInterest(), accountId: " + getAccountId() + ", Interest Of Amount: "
                     + interestPosted + " successfully");
         }
     }
@@ -570,7 +570,7 @@ public class SavingsBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-        logger.info("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
+        logger.debug("In SavingsBO::updateInterestAccrued(), accountId: " + getAccountId() + ", Interest Amount: "
                 + interestCalculated + " calculated.");
     }
 
@@ -638,7 +638,7 @@ public class SavingsBO extends AccountBO {
                 interestAmount = calculateInterestForDays(principal, interestRate, fromDate, toDate);
             }
         }
-        logger.info("In SavingsBO::calculateInterest(), accountId: " + getAccountId() + ", from date:" + fromDate
+        logger.debug("In SavingsBO::calculateInterest(), accountId: " + getAccountId() + ", from date:" + fromDate
                 + ", toDate:" + toDate + "InterestAmt: " + interestAmount);
 
         return interestAmount;
