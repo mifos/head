@@ -4,7 +4,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-userInterface</artifactId>
     <packaging>jar</packaging>
-    <version>${mifos.version}</version>
+    <version>1.5-SNAPSHOT</version>
     <name>Mifos - User Interface</name>
     <url>http://www.mifos.org</url>
 
@@ -15,19 +15,19 @@
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>${mifos.version}</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
-            <version>${mifos.version}</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>      
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
-            <version>${mifos.version}</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>      
 
         <!-- from parent pom -->

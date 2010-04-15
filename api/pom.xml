@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>${mifos.version}</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
     <build>

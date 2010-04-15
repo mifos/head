@@ -4,7 +4,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
-    <version>${mifos.version}</version>
+    <version>1.5-SNAPSHOT</version>
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
     <issueManagement>
@@ -31,7 +31,6 @@
     <properties>
     	<hibernate.version>3.5.0-Final</hibernate.version>
     	<spring.version>3.0.2.RELEASE</spring.version>
-    	<mifos.version>1.6-SNAPSHOT</mifos.version>
     </properties>
     <modules>
         <module>common</module>
@@ -67,7 +66,7 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-testFramework</artifactId>
-                <version>${mifos.version}</version>
+                <version>1.5-SNAPSHOT</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -79,17 +78,17 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-common</artifactId>
-                <version>${mifos.version}</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-serviceInterfaces</artifactId>
-                <version>${mifos.version}</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-userInterface</artifactId>
-                <version>${mifos.version}</version>
+                <version>1.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

@@ -4,14 +4,14 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-common</artifactId>
     <packaging>jar</packaging>
-    <version>${mifos.version}</version>
+    <version>1.5-SNAPSHOT</version>
     <name>Mifos - Common</name>
     <url>http://www.mifos.org</url>
 
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>${mifos.version}</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
     <properties>
