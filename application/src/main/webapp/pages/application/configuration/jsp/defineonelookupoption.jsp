@@ -28,34 +28,12 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
-<script language="javascript">
-function goToLookupOptionPage(){
-	lookupoptionsactionform.action="lookupOptionsAction.do";
-	lookupoptionsactionform.method.value="update";
-	lookupoptionsactionform.submit();
-  }
-  
-  function goToCancelPage(){
-	lookupoptionsactionform.action="lookupOptionsAction.do";
-	lookupoptionsactionform.method.value="addEditLookupOption_cancel";
-	lookupoptionsactionform.submit();
-  }
 
-  function doKeyPress(event) {
-	 var keycode = (!event) ? window.event.keyCode:event.which;
-	 var RETURN_KEYCODE = 13;
-     if (keycode == RETURN_KEYCODE) {
-        goToLookupOptionPage();
-     }
-  }
-  
-  </script>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="defineonelookupoption" />
 	
-
-		<html-el:form action="lookupOptionsAction.do" onsubmit="func_disableSubmitBtn('submitButton')" >  
+		<html-el:form action="/lookupOptionsAction.do?method=update" >  
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -99,13 +77,13 @@ function goToLookupOptionPage(){
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 			              <tr>
 			                <td align="center">&nbsp;
-			                    <html-el:button property="submitButton" styleClass="buttn" onclick="goToLookupOptionPage();">
-													<mifos:mifoslabel name="configuration.submit" />
-								</html-el:button>
+                                    <html-el:submit styleId="defineLookupOption.button.submit" property="submitButton" styleClass="buttn">
+                                        <mifos:mifoslabel name="configuration.submit" />
+                                    </html-el:submit>
 									&nbsp;
-						      	<html-el:button property="cancelButton" onclick="goToCancelPage()" styleClass="cancelbuttn">
-																<mifos:mifoslabel name="configuration.cancel" />
-								</html-el:button>
+                                    <html-el:button styleId="definelabels.button.cancel" property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn">
+                                        <mifos:mifoslabel name="configuration.cancel" />
+                                    </html-el:button>
 						           </td>
 						     	</tr>
 						</table> 
