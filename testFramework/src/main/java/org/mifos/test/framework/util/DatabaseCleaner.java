@@ -86,5 +86,7 @@ public class DatabaseCleaner {
 
         template.execute("update office set parent_office_id = null where office_id > 3");
         template.execute("delete from office where office_id > 3");
+
+        template.execute("delete from holiday");
     }
 }

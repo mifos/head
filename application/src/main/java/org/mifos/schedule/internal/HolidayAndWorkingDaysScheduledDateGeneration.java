@@ -34,6 +34,14 @@ import org.mifos.schedule.ScheduledEvent;
 
 public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDateGeneration {
 
+    //TODO KRP: implement this
+    @Override
+    public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
+            ScheduledEvent scheduledEvent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     private final List<Days> workingDays;
     private final List<Holiday> upcomingHolidays;
 

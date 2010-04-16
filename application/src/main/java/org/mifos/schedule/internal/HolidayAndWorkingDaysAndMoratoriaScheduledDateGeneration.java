@@ -60,10 +60,31 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
         return adjustDatesForHolidays (unAdjustedDates, upcomingHolidays, scheduledEvent);
     }
 
+    @Override
+    public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
+            ScheduledEvent scheduledEvent) {
+
+        DateTime lastGeneratedDate = null;
+        List<DateTime> generatedDates = new ArrayList<DateTime>();
+        do {
+            generatedDates.addAll(this.generateScheduledDates(10, lastScheduledDate, scheduledEvent));
+            lastGeneratedDate = generatedDates.get(generatedDates.size()-1);
+        } while (!lastGeneratedDate.isAfter(throughDate));
+        return removeDatesAfterThroughDate(generatedDates, throughDate);
+    }
+
     private List<DateTime> adjustDatesForHolidays
                     (final List<DateTime> dates, List<Holiday> upcomingHolidays, final ScheduledEvent scheduledEvent) {
 
         ListOfDatesAdjustmentStrategy adjustmentStrategy = new MoratoriumStrategy(upcomingHolidays, workingDays, scheduledEvent);
         return adjustmentStrategy.adjust(dates);
+    }
+
+    private List<DateTime> removeDatesAfterThroughDate (List<DateTime> dates, DateTime throughDate) {
+        if (dates.isEmpty() || !dates.get(dates.size()-1).isAfter(throughDate)) {
+            return dates;
+        }
+        dates.remove(dates.get(dates.size()-1));
+        return removeDatesAfterThroughDate(dates, throughDate);
     }
 }

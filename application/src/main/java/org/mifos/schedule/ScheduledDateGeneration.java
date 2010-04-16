@@ -26,6 +26,17 @@ import org.joda.time.DateTime;
 
 public interface ScheduledDateGeneration {
 
+    /**
+     * Create a schedule for the scheduledEvent, starting with the first scheduled date after lastScheduledDate
+     * and continuing for the total number of occurrences specified.
+     */
     List<DateTime> generateScheduledDates(int occurences, DateTime lastScheduledDate, ScheduledEvent scheduledEvent);
+
+    /**
+     * Create a schedule for the scheduledEvent, starting with the first scheduled date after lastScheduledDate
+     * and continuing to the latest scheduled date up to and including throughDate.
+     * @return
+     */
+    List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate, ScheduledEvent scheduledEvent);
 
 }
