@@ -218,7 +218,7 @@ public class CustomerAccountBO extends AccountBO {
 
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
-                        .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
+                        .getPaymentTypeId()), paymentData.getTransactionDate());
 
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
 

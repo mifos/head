@@ -1049,10 +1049,10 @@ public class LoanBO extends AccountBO {
             MasterPersistence masterPersistence = new MasterPersistence();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+            Date transactionDate =  new DateTimeService().getCurrentJavaDateTime();
+            this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, totalAmount, receiptNumber,
-                    receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), new DateTimeService()
-                            .getCurrentJavaDateTime());
+                    receiptDate, getPaymentTypeEntity(Short.valueOf(paymentTypeId)), transactionDate);
             addAccountPayment(accountPaymentEntity);
 
             makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
@@ -1064,7 +1064,7 @@ public class LoanBO extends AccountBO {
                 getPerformanceHistory().setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
             }
             LoanActivityEntity loanActivity = buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
-                    AccountConstants.LOAN_REPAYMENT, DateUtils.getCurrentDateWithoutTimeStamp());
+                    AccountConstants.LOAN_REPAYMENT, transactionDate);
             addLoanActivity(loanActivity);
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -1074,7 +1074,7 @@ public class LoanBO extends AccountBO {
                     new PersonnelPersistence().getPersonnel(personnelId), this));
             setAccountState((AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
-            setClosedDate(new DateTimeService().getCurrentJavaDateTime());
+            setClosedDate(transactionDate);
 
             // Client performance entry
             updateCustomerHistoryOnRepayment(totalAmount);
@@ -1135,18 +1135,18 @@ public class LoanBO extends AccountBO {
         try {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
-
+            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             this.setUpdatedBy(personnelId);
-            this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+            this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
-                    null, getPaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
+                    null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
             makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
             makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_WRITTEN_OFF,
                     AccountActionTypes.WRITEOFF, currentUser);
             addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
-                    AccountConstants.LOAN_WRITTEN_OFF, DateUtils.getCurrentDateWithoutTimeStamp()));
+                    AccountConstants.LOAN_WRITTEN_OFF, transactionDate));
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
             // Client performance entry
             updateCustomerHistoryOnWriteOff();
@@ -1161,16 +1161,17 @@ public class LoanBO extends AccountBO {
             Short personnelId = this.getUserContext().getId();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
-            this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+            Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
+            this.setUpdatedDate(transactionDate);
             AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(this, getEarlyClosureAmount(), null,
-                    null, getPaymentTypeEntity(Short.valueOf("1")), new DateTimeService().getCurrentJavaDateTime());
+                    null, getPaymentTypeEntity(Short.valueOf("1")), transactionDate);
             this.addAccountPayment(accountPaymentEntity);
             makeEarlyRepaymentForDueInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
             makeEarlyRepaymentForFutureInstallments(accountPaymentEntity, AccountConstants.LOAN_RESCHEDULED,
                     AccountActionTypes.LOAN_RESCHEDULED, currentUser);
             addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), currentUser,
-                    AccountConstants.LOAN_RESCHEDULED, DateUtils.getCurrentDateWithoutTimeStamp()));
+                    AccountConstants.LOAN_RESCHEDULED, transactionDate));
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
             // Client performance entry using the same as write off.
             updateCustomerHistoryOnWriteOff();

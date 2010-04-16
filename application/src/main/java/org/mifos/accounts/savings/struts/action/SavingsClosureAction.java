@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,6 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsClosureActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -132,11 +132,11 @@ public class SavingsClosureAction extends BaseAction {
         } else {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null, request);
         }
-
-        Money interestAmount = savings.calculateInterestForClosure(new SavingsHelper().getCurrentDate());
+        Date transactionDate = new DateTimeService().getCurrentDateMidnight().toDate();
+        Money interestAmount = savings.calculateInterestForClosure(transactionDate);
         logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmount);
         AccountPaymentEntity payment = new AccountPaymentEntity(savings, savings.getSavingsBalance()
-                .add(interestAmount), null, null, null, new DateTimeService().getCurrentJavaDateTime());
+                .add(interestAmount), null, null, null, transactionDate);
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
         ((SavingsClosureActionForm) form).setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
         return mapping.findForward("load_success");
@@ -150,25 +150,25 @@ public class SavingsClosureAction extends BaseAction {
         AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils.getAttribute(
                 SavingsConstants.ACCOUNT_PAYMENT, request);
         AccountPaymentEntity accountPaymentEntity = null;
+        Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
         if (actionForm.getReceiptDate() != null && actionForm.getReceiptDate() != "") {
             accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm
                     .getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
                     .getTime()), new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())),
-                    new DateTimeService().getCurrentJavaDateTime());
+                    transactionDate);
         } else {
             if (actionForm.getPaymentTypeId() != null && !actionForm.getPaymentTypeId().equals("")) {
                 if (!(actionForm.getPaymentTypeId().equals(""))) {
                     accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(),
                             actionForm.getReceiptId(), null, new PaymentTypeEntity(Short.valueOf(actionForm
-                                    .getPaymentTypeId())), new DateTimeService().getCurrentJavaDateTime());
+                                    .getPaymentTypeId())), transactionDate);
                 } else {
                     accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(),
-                            actionForm.getReceiptId(), null, new PaymentTypeEntity(), new DateTimeService()
-                                    .getCurrentJavaDateTime());
+                            actionForm.getReceiptId(), null, new PaymentTypeEntity(), transactionDate);
                 }
             } else {
                 accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm
-                        .getReceiptId(), null, new PaymentTypeEntity(), new DateTimeService().getCurrentJavaDateTime());
+                        .getReceiptId(), null, new PaymentTypeEntity(), transactionDate);
             }
         }
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, accountPaymentEntity, request);

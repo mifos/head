@@ -461,12 +461,13 @@ public class SavingsBO extends AccountBO {
     public void update(final Money recommendedAmount, final List<CustomFieldView> customFields) throws AccountException {
         logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
         this.setUpdatedBy(userContext.getId());
-        this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+        Date currentDate = new DateTimeService().getCurrentJavaDateTime();
+        this.setUpdatedDate(currentDate);
         if (isDepositScheduleBeRegenerated()) {
             if (this.recommendedAmount != null && recommendedAmount != null
                     && !this.recommendedAmount.equals(recommendedAmount)) {
                 for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
-                    if (accountDate.getActionDate().compareTo(helper.getCurrentDate()) >= 0) {
+                    if (accountDate.getActionDate().compareTo(currentDate) >= 0) {
                         ((SavingsScheduleEntity) accountDate).setDeposit(recommendedAmount);
                     }
                 }
@@ -663,14 +664,14 @@ public class SavingsBO extends AccountBO {
                 makeEntriesForInterestPosting(getInterestToBePosted(), payment.getPaymentType(), customer, payment
                         .getPaymentDate(), loggedInUser);
             }
-
+            Date transactionDate = new DateTimeService().getCurrentDateMidnight().toDate();
             if (payment.getAmount().isGreaterThanZero()) {
 
                 payment.addAccountTrxn(helper.createAccountPaymentTrxn(payment, new Money(getCurrency()),
-                        AccountActionTypes.SAVINGS_WITHDRAWAL, customer, loggedInUser, getSavingsPersistence(), helper
-                                .getCurrentDate()));
+                        AccountActionTypes.SAVINGS_WITHDRAWAL, customer, loggedInUser, getSavingsPersistence(),
+                        transactionDate));
 
-                payment.setCreatedDate(helper.getCurrentDate());
+                payment.setCreatedDate(transactionDate);
                 this.addAccountPayment(payment);
                 addSavingsActivityDetails(buildSavingsActivity(payment.getAmount(), new Money(getCurrency()),
                         AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), payment.getPaymentDate(), loggedInUser));
@@ -679,8 +680,8 @@ public class SavingsBO extends AccountBO {
                 buildFinancialEntries(payment.getAccountTrxns());
             }
             this.addAccountNotes(notes);
-            this.setLastIntCalcDate(helper.getCurrentDate());
-            this.setLastIntPostDate(helper.getCurrentDate());
+            this.setLastIntCalcDate(transactionDate);
+            this.setLastIntPostDate(transactionDate);
             this.setInterIntCalcDate(null);
             this.setSavingsBalance(new Money(getCurrency()));
             this.setInterestToBePosted(new Money(getCurrency()));
@@ -698,7 +699,7 @@ public class SavingsBO extends AccountBO {
     private void makeEntriesForInterestPosting(final Money interestAmt, final PaymentTypeEntity paymentType,
             final CustomerBO customer, final Date postingDate, final PersonnelBO loggedInUser) throws AccountException {
         AccountPaymentEntity interestPayment = helper
-                .createAccountPayment(this, interestAmt, paymentType, loggedInUser);
+                .createAccountPayment(this, interestAmt, paymentType, loggedInUser, postingDate);
 
         interestPayment.addAccountTrxn(helper.createAccountPaymentTrxn(interestPayment, getSavingsBalance(),
                 AccountActionTypes.SAVINGS_INTEREST_POSTING, customer, loggedInUser, getSavingsPersistence(),
@@ -1001,8 +1002,7 @@ public class SavingsBO extends AccountBO {
 
         CustomerBO customer = paymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
-                paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()),
-                new DateTimeService().getCurrentJavaDateTime());
+                paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()), transactionDate);
         if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
             try {
                 this
@@ -1172,7 +1172,7 @@ public class SavingsBO extends AccountBO {
         CustomerBO customer = accountPaymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, accountPaymentData
                 .getReceiptNum(), accountPaymentData.getReceiptDate(), getPaymentTypeEntity(accountPaymentData
-                .getPaymentTypeId()), new DateTimeService().getCurrentJavaDateTime());
+                .getPaymentTypeId()), accountPaymentData.getTransactionDate());
 
         SavingsTrxnDetailEntity accountTrxnBO;
 
@@ -1405,9 +1405,10 @@ public class SavingsBO extends AccountBO {
             AccountPaymentEntity lastPayment = getLastPmnt();
             AccountPaymentEntity newAccountPayment = null;
             PersonnelBO personnel = getPersonnelPersistence().getPersonnel(userContext.getId());
+                        Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
             if (amountAdjustedTo.isGreaterThanZero()) {
                 newAccountPayment = helper.createAccountPayment(this, amountAdjustedTo, lastPayment.getPaymentType(),
-                        getPersonnelPersistence().getPersonnel(userContext.getId()));
+                        getPersonnelPersistence().getPersonnel(userContext.getId()), transactionDate);
             }
             if (newAccountPayment != null) {
                 newAccountPayment.setAmount(amountAdjustedTo);

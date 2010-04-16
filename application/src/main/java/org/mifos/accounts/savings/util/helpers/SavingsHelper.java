@@ -49,15 +49,14 @@ import org.mifos.framework.util.helpers.Money;
 public class SavingsHelper {
     // TODO: pick from configuration
     /**
-     * I assume the hardcoding of 1 Jan 2006 is trying to say that the default
-     * fiscal year is January 1 to December 31. Do we use the year? What does
-     * this control, versus {@link SavingsConstants#POSTING_DAY}?
+     * I assume the hardcoding of 1 Jan 2006 is trying to say that the default fiscal year is January 1 to December 31.
+     * Do we use the year? What does this control, versus {@link SavingsConstants#POSTING_DAY}?
      *
      * Force a locale that works with pattern parsing.
      */
     public Date getFiscalStartDate() {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",new Locale("en","GB"));
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", new Locale("en", "GB"));
             return format.parse("01/01/2006");
         } catch (ParseException pe) {
             throw new RuntimeException(pe);
@@ -68,9 +67,8 @@ public class SavingsHelper {
     }
 
     /**
-     * start from getting a next schedule date after fiscal start date and loop
-     * till get a meeting date after account activation date. This won't move if
-     * the date is not working date
+     * start from getting a next schedule date after fiscal start date and loop till get a meeting date after account
+     * activation date. This won't move if the date is not working date
      */
     private Date getFirstDateForSavingsCalculationAndPosting(MeetingBO meeting, Date accountActivationDate)
             throws MeetingException {
@@ -83,9 +81,8 @@ public class SavingsHelper {
     }
 
     /*
-     * set the day number as end of month for interest calculation and interest
-     * posting date and get the meeting date according to the rules set for
-     * meeting
+     * set the day number as end of month for interest calculation and interest posting date and get the meeting date
+     * according to the rules set for meeting
      */
     public Date getNextScheduleDate(Date accountActivationDate, Date currentScheduleDate, MeetingBO meeting)
             throws MeetingException {
@@ -117,8 +114,8 @@ public class SavingsHelper {
     }
 
     /**
-     * start from getting a next schedule date after fiscal start date and loop
-     * till get a meeting date after account activation date
+     * start from getting a next schedule date after fiscal start date and loop till get a meeting date after account
+     * activation date
      */
     private Date getFirstDate(MeetingBO meeting, Date accountActivationDate) throws MeetingException {
         Date date = null;
@@ -130,8 +127,7 @@ public class SavingsHelper {
     }
 
     /*
-     * from Rhino release the interest calculation date and posting are the
-     * same, which is at the end of month
+     * from Rhino release the interest calculation date and posting are the same, which is at the end of month
      */
     private void setDetailsForMeeting(MeetingBO meeting) {
         meeting.setStartDate(getFiscalStartDate());
@@ -160,10 +156,6 @@ public class SavingsHelper {
         return date.getTime() + cal1.get(Calendar.ZONE_OFFSET) + cal1.get(Calendar.DST_OFFSET);
     }
 
-    public Date getCurrentDate() {
-        return new DateTimeService().getCurrentDateMidnight().toDate();
-    }
-
     public AccountActionDateEntity createActionDateObject(AccountBO account, CustomerBO customer, Short installmentId,
             Date date, Short userId, Money amount) {
         AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
@@ -174,20 +166,23 @@ public class SavingsHelper {
     }
 
     public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance,
-            AccountActionTypes accountActionType, CustomerBO customer, PersonnelBO createdBy, Persistence persistence, Date postingDate) {
+            AccountActionTypes accountActionType, CustomerBO customer, PersonnelBO createdBy, Persistence persistence,
+            Date postingDate) {
+
         SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountActionType, payment
-                .getAmount(), balance, createdBy, null, getCurrentDate(), null, "", persistence, postingDate);
+                .getAmount(), balance, createdBy, null, new DateTimeService().getCurrentDateMidnight().toDate(), null,
+                "", persistence, postingDate);
         return savingsTrxn;
     }
 
     public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount,
-            PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy) {
+            PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy, Date transactionDate) {
         AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity,
-                new DateTimeService().getCurrentJavaDateTime());
+                transactionDate);
         if (createdBy != null) {
             payment.setCreatedBy(createdBy.getPersonnelId());
         }
-        payment.setCreatedDate(getCurrentDate());
+        payment.setCreatedDate(transactionDate);
         payment.setAmount(amount);
         return payment;
     }
