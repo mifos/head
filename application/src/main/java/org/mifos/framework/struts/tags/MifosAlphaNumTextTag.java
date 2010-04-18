@@ -40,6 +40,7 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 
     private FieldConfig fieldConfig = FieldConfig.getInstance();
 
+    /** Some kind of contraction of "key hidden/mandatory". */
     private String keyhm;
 
     // --------------------------------------------------------- Constructors
