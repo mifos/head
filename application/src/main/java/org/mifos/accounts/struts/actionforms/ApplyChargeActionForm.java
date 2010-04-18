@@ -29,7 +29,10 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
@@ -144,8 +147,8 @@ public class ApplyChargeActionForm extends BaseActionForm {
             conversionResult = validateInterest(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
                 FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         } else {
-            conversionResult = validateAmount(getCharge(), AccountConstants.ACCOUNT_AMOUNT, errors, locale,
-                FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
+            conversionResult = validateAmount(getCharge(), getChargeCurrency(), AccountConstants.ACCOUNT_AMOUNT,
+                    errors, locale, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE);
         }
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, AccountConstants.ACCOUNT_AMOUNT, AccountConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
@@ -153,4 +156,14 @@ public class ApplyChargeActionForm extends BaseActionForm {
         }
     }
 
+    private MifosCurrency getChargeCurrency() {
+        try {
+            AccountBusinessService service = new AccountBusinessService();
+            AccountBO accountBO = service.getAccount(Integer.valueOf(getAccountId()));
+            return accountBO.getCurrency();
+        }
+        catch(Exception ex) {
+            return null;
+        }
+    }
 }
