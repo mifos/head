@@ -20,7 +20,7 @@
 
 package org.mifos.schedule.builder;
 
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
@@ -31,7 +31,7 @@ import org.mifos.schedule.internal.MonthlyOnWeekAndWeekDayScheduledEvent;
  */
 public class MonthlyOnWeekAndWeekDayScheduledEventBuilder extends ScheduledEventBuilder {
 
-    private RankType weekOfMonth;
+    private RankOfDay weekOfMonth;
     private WeekDay dayOfWeek;
 
     @Override
@@ -45,7 +45,7 @@ public class MonthlyOnWeekAndWeekDayScheduledEventBuilder extends ScheduledEvent
         return null;
     }
 
-    MonthlyOnWeekAndWeekDayScheduledEventBuilder ( RankType weekOfMonth, WeekDay dayOfWeek) {
+    MonthlyOnWeekAndWeekDayScheduledEventBuilder ( RankOfDay weekOfMonth, WeekDay dayOfWeek) {
         assert weekOfMonth != null;
         assert dayOfWeek != null;
 

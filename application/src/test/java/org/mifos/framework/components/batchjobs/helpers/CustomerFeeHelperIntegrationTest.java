@@ -45,7 +45,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.business.CustomerAccountBOTestUtils;
@@ -97,8 +96,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
         meeting.setMeetingStartDate(calendar.getTime());
         meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-                new WeekDaysEntity(WeekDay
-                        .getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
+                WeekDay.getWeekDay(Short.valueOf((short) calendar.get(Calendar.DAY_OF_WEEK))));
 
         Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
         FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.ALLCUSTOMERS, "100",
@@ -146,8 +144,7 @@ public class CustomerFeeHelperIntegrationTest extends MifosIntegrationTestCase {
         calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
         meeting.setMeetingStartDate(calendar.getTime());
         meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-                new WeekDaysEntity(WeekDay
-                        .getWeekDay(Short.valueOf(String.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
+                WeekDay.getWeekDay(Short.valueOf((short) calendar.get(Calendar.DAY_OF_WEEK))));
 
         Set<AccountFeesEntity> accountFeeSet = center.getCustomerAccount().getAccountFees();
         FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100",

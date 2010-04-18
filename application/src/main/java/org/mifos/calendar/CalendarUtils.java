@@ -29,7 +29,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -124,7 +124,7 @@ public class CalendarUtils {
         // respective week.
         // if current week rank is after the weekrank on which schedule has
         // to lie, move to next month
-        if (!RankType.fromInt(calendarWeekOfMonth).equals(RankType.LAST)) {
+        if (!RankOfDay.getRankOfDay(calendarWeekOfMonth).equals(RankOfDay.LAST)) {
             if (gc.get(Calendar.DAY_OF_WEEK_IN_MONTH) > calendarWeekOfMonth) {
                 gc.add(GregorianCalendar.MONTH, 1);
                 gc.set(GregorianCalendar.DATE, 1);
@@ -193,7 +193,7 @@ public class CalendarUtils {
 
         DateTime scheduleDate;
 
-        if (!RankType.fromInt(weekOfMonth).equals(RankType.LAST)) {
+        if (!RankOfDay.getRankOfDay(weekOfMonth).equals(RankOfDay.LAST)) {
             // apply month recurrence
             gc.add(GregorianCalendar.MONTH, every);
             gc.set(Calendar.DAY_OF_WEEK, calendarDayOfWeek);

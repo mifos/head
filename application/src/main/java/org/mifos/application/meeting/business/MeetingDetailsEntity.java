@@ -22,7 +22,7 @@ package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.AbstractEntity;
@@ -63,7 +63,7 @@ public class MeetingDetailsEntity extends AbstractEntity {
         this.recurAfter = recurAfter;
     }
 
-    public MeetingDetailsEntity(final RecurrenceTypeEntity recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank,
+    public MeetingDetailsEntity(final RecurrenceTypeEntity recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankOfDay rank,
             final Short recurAfter, final MeetingBO meeting) throws MeetingException {
         this.validateFields(recurAfter);
         this.recurrenceType = recurrenceType;
@@ -72,7 +72,7 @@ public class MeetingDetailsEntity extends AbstractEntity {
         if (recurrenceType.isWeekly()) {
             this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
         } else if (recurrenceType.isMonthly()) {
-            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this, meeting.getMasterPersistence());
+            this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);
         } else {
             this.meetingRecurrence = new MeetingRecurrenceEntity(this);
         }
@@ -120,7 +120,7 @@ public class MeetingDetailsEntity extends AbstractEntity {
         return getMeetingRecurrence().getWeekDayValue();
     }
 
-    public RankType getWeekRank() {
+    public RankOfDay getWeekRank() {
         return getMeetingRecurrence().getWeekRank();
     }
 

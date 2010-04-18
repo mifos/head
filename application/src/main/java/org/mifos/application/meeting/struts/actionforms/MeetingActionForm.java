@@ -28,7 +28,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.Methods;
@@ -196,8 +196,8 @@ public class MeetingActionForm extends BaseActionForm {
         return getShortValue(getMonthDay());
     }
 
-    public RankType getMonthRankValue() {
-        return StringUtils.isNotBlank(getMonthRank()) ? RankType.getRankType(Short.valueOf(getMonthRank()))
+    public RankOfDay getMonthRankValue() {
+        return StringUtils.isNotBlank(getMonthRank()) ? RankOfDay.getRankOfDay(Short.valueOf(getMonthRank()))
                 : null;
     }
 

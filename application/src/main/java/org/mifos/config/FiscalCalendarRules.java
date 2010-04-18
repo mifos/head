@@ -173,6 +173,11 @@ public class FiscalCalendarRules {
         reloadConfigWorkingDays();
     }
 
+    public void setWorkingDays(final List<WeekDay> workingDays) {
+        String workingDaysString = workingDays.toString().replace("[", "").replace("]", "");
+        setWorkingDays(workingDaysString);
+    }
+
     public String  getWorkingDaysAsString() {
         return (String) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays);
     }

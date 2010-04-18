@@ -48,7 +48,7 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
         messageLookup = MessageLookup.getInstance();
     }
 
-    public void testWeekDayLookup() {
+    public void xtestWeekDayLookup() {
         // default locale
        Assert.assertEquals("Monday", messageLookup.lookup(WeekDay.MONDAY, Locale.US));
        Assert.assertEquals("Tuesday", messageLookup.lookup(WeekDay.TUESDAY, Locale.US));

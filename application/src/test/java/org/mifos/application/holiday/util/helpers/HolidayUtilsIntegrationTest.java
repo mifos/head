@@ -41,11 +41,9 @@ import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.config.FiscalCalendarRules;
@@ -55,7 +53,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -163,12 +160,10 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    private void toggleFirstDayOnOff(Short state) throws PersistenceException {
-
-        WeekDaysEntity weekDay = (WeekDaysEntity) new MeetingPersistence().getPersistentObject(WeekDaysEntity.class,
-                Short.valueOf("1"));
-        weekDay.setWorkDay(state);
-        weekDay.save();
+    private static void toggleFirstDayOnOff(Short state) {
+        List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
+        workingDays.remove(0);
+        new FiscalCalendarRules().setWorkingDays(workingDays);
     }
 
     public void testNonWorkingDay() throws Exception {
@@ -302,7 +297,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
             if (meetingData[0].equalsIgnoreCase("Weekly")) {
                 meeting = createWeeklyMeeting(WeekDay.THURSDAY, recurAfter, startDate);
             } else if (meetingData[0].equalsIgnoreCase("Monthly")) {
-                meeting = createMonthlyMeetingOnWeekDay(WeekDay.THURSDAY, RankType.FIRST, recurAfter, startDate);
+                meeting = createMonthlyMeetingOnWeekDay(WeekDay.THURSDAY, RankOfDay.FIRST, recurAfter, startDate);
             }
             // ///////////////////////////////////////////////////////
 
@@ -370,8 +365,7 @@ public class HolidayUtilsIntegrationTest extends MifosIntegrationTestCase {
         return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 
-    private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate)
-            throws MeetingException {
+    private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankOfDay rank, Short recurAfer, Date startDate) throws MeetingException {
         return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 

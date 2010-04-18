@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;
 
@@ -71,7 +71,7 @@ public class MeetingGetAllDatesVersusIndependentOfMeetingIntegrationTest extends
 
     public void testShouldGenerateSameDatesForMonthlyOnWeekAndWeekDayMeeting() throws Exception {
 
-        meeting = new MeetingBuilder().monthly().every(1).withStartDate(meetingStartDate).onWeek(RankType.FIRST).occuringOnA(WeekDay.WEDNESDAY).build();
+        meeting = new MeetingBuilder().monthly().every(1).withStartDate(meetingStartDate).onWeek(RankOfDay.FIRST).occuringOnA(WeekDay.WEDNESDAY).build();
 
         List<Date> meetingDates = meeting.getAllDates(10);
         List<Date> independentOfMeetingDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(10, true);

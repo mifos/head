@@ -40,7 +40,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
@@ -298,7 +298,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
          * Since start date is a meeting date, disbursal is on that day and
          * installment dates follow monthly. The dates here are successive 3rd Fridays of the month.
          */
-        validateDates(createMonthlyGroupLoanOnDayOfWeek(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY, 6),
+        validateDates(createMonthlyGroupLoanOnDayOfWeek(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY, 6),
                 date(2010, 11, 19),  date(2010, 12, 17),  date(2011, 1, 21),
                 date(2011, 2, 18),  date(2011, 3, 18),  date(2011, 4, 15));
 
@@ -315,7 +315,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
          * out one month by the moratorium.
          *
          */
-        validateDates(createMonthlyGroupLoanOnDayOfWeek(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY, 6),
+        validateDates(createMonthlyGroupLoanOnDayOfWeek(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY, 6),
                             date(2010, 11, 19),  date(2011, 1, 21), date(2011, 2, 18),
                             date(2011, 3, 18), date(2011, 4, 15), date(2011, 5, 20));
 
@@ -326,7 +326,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         //setup
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistMoratorium(date(2010, 12, 10), date(2011, 1, 31));
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
         //Make loan and schedule
         LoanBO loan = createStandardLoan(startDate, 6, group);
@@ -347,7 +347,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         //Setup meeting and holiday spanning December's meeting date.
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistHoliday(date(2010, 12, 10), date(2010, 12, 20), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -370,7 +370,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistHoliday(date(2010, 12, 17), date(2010, 12, 17), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
         buildAndPersistMoratorium(date(2011, 1, 1), date(2011, 1, 31));
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -395,7 +395,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistMoratorium(date(2010, 12, 15), date(2010, 12, 31));
         buildAndPersistHoliday(date(2011, 1, 10), date(2011, 1, 25), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -417,7 +417,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         //Setup meeting and holiday enclosing December's meeting date.
         DateTime startDate = date(2010, 10, 15); //Friday
         buildAndPersistHoliday(date(2010, 12, 15) /*wed*/, date(2010, 12, 17), RepaymentRuleTypes.NEXT_WORKING_DAY);
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -441,7 +441,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistHoliday(date(2010, 12, 17), date(2010, 12, 17), RepaymentRuleTypes.NEXT_WORKING_DAY);
         buildAndPersistMoratorium(date(2010, 12, 18), date(2010, 12, 31));
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -466,7 +466,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         DateTime startDate = date(2010, 10, 15);
         buildAndPersistMoratorium(date(2010, 12, 15), date(2010, 12, 31));
         buildAndPersistHoliday(date(2011, 1, 10), date(2011, 1, 21), RepaymentRuleTypes.NEXT_WORKING_DAY);
-        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankType.THIRD, WeekDay.FRIDAY);
+        setupMonthlyScheduleOnDayOfWeekStartingDate(date(2010, 10, 15), RankOfDay.THIRD, WeekDay.FRIDAY);
 
 
         //Make loan and schedule
@@ -508,12 +508,12 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         setupOfficeAndCenterAndGroupAndLoanOfferingForMeeting(meeting);
     }
 
-    private LoanBO createMonthlyGroupLoanOnDayOfWeek (DateTime startDate, RankType weekOfMonth, WeekDay dayOfWeek, int occurrences)
+    private LoanBO createMonthlyGroupLoanOnDayOfWeek (DateTime startDate, RankOfDay weekOfMonth, WeekDay dayOfWeek, int occurrences)
                 throws Exception {
         setupMonthlyScheduleOnDayOfWeekStartingDate(startDate, weekOfMonth, dayOfWeek);
         return createStandardLoan(startDate, occurrences, group);
     }
-    private void setupMonthlyScheduleOnDayOfWeekStartingDate(DateTime startDate, RankType weekOfMonth, WeekDay dayOfWeek)
+    private void setupMonthlyScheduleOnDayOfWeekStartingDate(DateTime startDate, RankOfDay weekOfMonth, WeekDay dayOfWeek)
                 throws Exception {
         meeting = new MeetingBuilder().monthly()
                                       .onWeek(weekOfMonth)

@@ -21,13 +21,11 @@
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * This class encapsulate the MeetingRecurrence details
@@ -36,9 +34,9 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
 
     private final Integer detailsId;
 
-    private WeekDaysEntity weekDay;
+    private WeekDay weekDay;
 
-    private RankOfDaysEntity rankOfDays;
+    private RankOfDay rankOfDay;
 
     private Short dayNumber;
 
@@ -59,7 +57,7 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
      */
     public MeetingRecurrenceEntity(final WeekDay weekDay, final MeetingDetailsEntity meetingDetails) {
         validateWeekDay(weekDay);
-        this.weekDay = new WeekDaysEntity(weekDay);
+        this.weekDay = weekDay;
         this.meetingDetails = meetingDetails;
         this.detailsId = null;
     }
@@ -67,26 +65,19 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
     public MeetingRecurrenceEntity(final MeetingDetailsEntity meetingDetails) {
         this.meetingDetails = meetingDetails;
         this.weekDay = null;
-        this.rankOfDays = null;
+        this.rankOfDay = null;
         this.dayNumber = null;
         this.detailsId = null;
     }
 
-    public MeetingRecurrenceEntity(final Short dayNumber, final WeekDay weekDay, final RankType rank, final MeetingDetailsEntity meetingDetails,
-            final MasterPersistence masterPersistence)
+    public MeetingRecurrenceEntity(final Short dayNumber, final WeekDay weekDay, final RankOfDay rank, final MeetingDetailsEntity meetingDetails)
             throws MeetingException {
         validateFields(dayNumber, weekDay, rank);
         if (dayNumber != null) {
             this.dayNumber = dayNumber;
         } else {
-            try {
-                this.weekDay = (WeekDaysEntity) masterPersistence.retrieveMasterEntity(weekDay.getValue(),
-                        WeekDaysEntity.class, null);
-                this.rankOfDays = (RankOfDaysEntity) masterPersistence.retrieveMasterEntity(rank.getValue(),
-                        RankOfDaysEntity.class, null);
-            } catch (PersistenceException pe) {
-                throw new MeetingException(pe);
-            }
+            this.weekDay = weekDay;
+            this.rankOfDay = rank;
         }
         this.meetingDetails = meetingDetails;
         this.detailsId = null;
@@ -108,12 +99,12 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
         return meetingDetails;
     }
 
-    public RankOfDaysEntity getRankOfDays() {
-        return rankOfDays;
+    public RankOfDay getRankOfDays() {
+        return rankOfDay;
     }
 
-    public void setRankOfDays(final RankOfDaysEntity rankOfDays) {
-        this.rankOfDays = rankOfDays;
+    public void setRankOfDays(final RankOfDay rankOfDay) {
+        this.rankOfDay = rankOfDay;
     }
 
     /**
@@ -122,16 +113,12 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
      * {@link MessageLookup}; if you need to look up something else, we plan to
      * make similar methods available.
      */
-    public WeekDaysEntity getWeekDay() {
+    public WeekDay getWeekDay() {
         return weekDay;
     }
 
-    public void setWeekDay(final WeekDaysEntity weekDay) {
-        this.weekDay = weekDay;
-    }
-
     public void setWeekDay(final WeekDay weekDay) {
-        this.weekDay = new WeekDaysEntity(weekDay);
+        this.weekDay = weekDay;
     }
 
     public boolean isOnDate() {
@@ -139,11 +126,11 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
     }
 
     public WeekDay getWeekDayValue() {
-        return weekDay != null ? WeekDay.getWeekDay(weekDay.getId()) : null;
+        return weekDay;
     }
 
-    public RankType getWeekRank() {
-        return rankOfDays != null ? RankType.getRankType(rankOfDays.getId()) : null;
+    public RankOfDay getWeekRank() {
+        return rankOfDay;
     }
 
     public void updateDayNumber(final Short dayNumber) throws MeetingException {
@@ -151,17 +138,17 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
         this.dayNumber = dayNumber;
     }
 
-    public void updateWeekDay(final WeekDay weekDay) throws MeetingException {
+    public void updateWeekDay(final WeekDay weekDay) {
         validateWeekDay(weekDay);
-        this.weekDay = new WeekDaysEntity(weekDay);
+        this.weekDay = weekDay;
     }
 
-    public void update(final WeekDay weekDay, final RankType rank) throws MeetingException {
+    public void update(final WeekDay weekDay, final RankOfDay rank) throws MeetingException {
         if (weekDay == null || rank == null) {
             throw new MeetingException(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK);
         }
-        this.weekDay = new WeekDaysEntity(weekDay);
-        this.rankOfDays = new RankOfDaysEntity(rank);
+        this.weekDay = weekDay;
+        this.rankOfDay = rank;
     }
 
     private void validateWeekDay(final WeekDay weekDay) {
@@ -170,7 +157,7 @@ public class MeetingRecurrenceEntity extends AbstractEntity {
         }
     }
 
-    private void validateFields(final Short dayNumber, final WeekDay weekDay, final RankType rank) throws MeetingException {
+    private void validateFields(final Short dayNumber, final WeekDay weekDay, final RankOfDay rank) throws MeetingException {
         validateDayNumber(dayNumber);
 
         if (dayNumber == null && weekDay == null && rank == null) {

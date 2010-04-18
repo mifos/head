@@ -21,7 +21,7 @@
 package org.mifos.schedule.builder;
 
 import org.joda.time.DateTime;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.schedule.ScheduledEvent;
 
@@ -74,7 +74,7 @@ public abstract class ScheduledEventBuilder {
         return new WeeklyScheduleBuilder(dayOfWeek);
     }
 
-    public ScheduledEventBuilder monthlyOnWeekAndWeekday(RankType weekOfMonth, WeekDay dayOfWeek) {
+    public ScheduledEventBuilder monthlyOnWeekAndWeekday(RankOfDay weekOfMonth, WeekDay dayOfWeek) {
         assert weekOfMonth != null;
         assert dayOfWeek != null;
         return new MonthlyOnWeekAndWeekDayScheduledEventBuilder (weekOfMonth, dayOfWeek);

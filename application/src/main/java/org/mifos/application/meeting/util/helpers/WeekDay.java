@@ -21,20 +21,21 @@
 package org.mifos.application.meeting.util.helpers;
 
 import org.joda.time.DateTimeConstants;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {
-    SUNDAY((short) 1), MONDAY((short) 2), TUESDAY((short) 3), WEDNESDAY((short) 4), THURSDAY((short) 5), FRIDAY(
-            (short) 6), SATURDAY((short) 7);
+    SUNDAY((short) 1), //
+    MONDAY((short) 2), //
+    TUESDAY((short) 3), //
+    WEDNESDAY((short) 4), //
+    THURSDAY((short) 5), //
+    FRIDAY((short) 6), //
+    SATURDAY((short) 7); //
 
-    Short value;
-    String name;
+    private Short value;
 
     WeekDay(final Short value) {
         this.value = value;
-        this.name = null;
-
     }
 
     public Short getValue() {
@@ -42,30 +43,27 @@ public enum WeekDay implements LocalizedTextLookup {
     }
 
     /*
-     * In Joda time MONDAY=1 and SUNDAY=7, so shift these
-     * to SUNDAY=1, SATURDAY=7 to match this class
+     * In Joda time MONDAY=1 and SUNDAY=7, so shift these to SUNDAY=1, SATURDAY=7 to match this class
      */
     public static WeekDay getJodaWeekDay(final int value) {
-        return getWeekDay((value%7)+1);
+        return getWeekDay((value % 7) + 1);
     }
 
     /*
-     * Shift Sunday=1 to joda time equivalent Sunday=7
-     * Shift Monday=2 to joda time equivalent Monday=1
-     * Shift Tuesday=3 to joda time equivalent Tuesday=2
-     * etc.
+     * Shift Sunday=1 to joda time equivalent Sunday=7 Shift Monday=2 to joda time equivalent Monday=1 Shift Tuesday=3
+     * to joda time equivalent Tuesday=2 etc.
      */
     public static int getJodaDayOfWeekThatMatchesMifosWeekDay(final int mifosWeekDayValue) {
 
-        if (WeekDay.SUNDAY.getValue().equals((short)mifosWeekDayValue)) {
+        if (WeekDay.SUNDAY.getValue().equals((short) mifosWeekDayValue)) {
             return DateTimeConstants.SUNDAY;
         }
 
-        if (WeekDay.SATURDAY.getValue().equals((short)mifosWeekDayValue)) {
+        if (WeekDay.SATURDAY.getValue().equals((short) mifosWeekDayValue)) {
             return DateTimeConstants.SATURDAY;
         }
 
-        return (mifosWeekDayValue%7)-1;
+        return (mifosWeekDayValue % 7) - 1;
     }
 
     public static WeekDay getWeekDay(final int value) {
@@ -84,17 +82,18 @@ public enum WeekDay implements LocalizedTextLookup {
         return getWeekDay(value + 1);
     }
 
-    /*
-     * TODO: we should be passing in a Locale or UserContext here
-     */
     public String getName() {
-        if (name == null) {
-            name = MessageLookup.getInstance().lookup(this);
-        }
-        return name;
+        return lookUp(this);
     }
 
     public String getPropertiesKey() {
         return "WeekDay." + toString();
+    }
+
+    // FIXME Broken localization,
+    // Leaving it to be worked out during localization work
+    // For now it returns "Monday" for WeekDay.MONDAY and so on
+    public static String lookUp(WeekDay weekDay) {
+        return weekDay.toString().substring(0, 1) + weekDay.toString().substring(1).toLowerCase();
     }
 }

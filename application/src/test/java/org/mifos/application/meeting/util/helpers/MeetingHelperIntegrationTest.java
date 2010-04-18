@@ -55,7 +55,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetMonthMessage() throws Exception {
         String expected = "Recur on First Monday of every 5 month(s)";
-        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, (short) 5, new Date(),
+        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankOfDay.FIRST, (short) 5, new Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
         meeting.save();
         StaticHibernateUtil.commitTransaction();
@@ -122,7 +122,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetUpdatedMeetingScheduledMonthMessage() throws Exception {
         String expected = "(Meetings will be changed to recur on First Monday of every 5 month(s) after the batch jobs run)";
-        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, (short) 5, new Date(),
+        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankOfDay.FIRST, (short) 5, new Date(),
                 MeetingType.CUSTOMER_MEETING, "Delhi");
        Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser(), true));
     }

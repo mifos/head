@@ -45,7 +45,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -1106,11 +1106,11 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testUpdateMonthlyMeeting() throws Exception {
         String meetingPlace = "Bangalore";
-        MeetingBO monthlyMeeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("2"),
+        MeetingBO monthlyMeeting = new MeetingBO(WeekDay.MONDAY, RankOfDay.FIRST, Short.valueOf("2"),
                 new java.util.Date(), MeetingType.CUSTOMER_MEETING, "delhi");
         client = TestObjectFactory.createClient("clientname", monthlyMeeting, CustomerStatus.CLIENT_PENDING);
         MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
-        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, RankType.FIRST, clientMeeting.getMeetingDetails()
+        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, RankOfDay.FIRST, clientMeeting.getMeetingDetails()
                 .getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
         client.updateMeeting(newMeeting);
         StaticHibernateUtil.commitTransaction();

@@ -5,17 +5,17 @@
 
 
 <hibernate-mapping>
-
     <class name="org.mifos.application.meeting.business.MeetingRecurrenceEntity" table="RECUR_ON_DAY">
         <id name="detailsId" column="RECUR_ON_DAY_ID" type="integer" access="field">
-             <generator class="native">
-            </generator>
-       </id>
-	<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
-	
+            <generator class="native" />
+        </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+
         <property name="dayNumber" column="DAY_NUMBER" type="short" />
-    	<many-to-one name="meetingDetails" column="DETAILS_ID"  class="org.mifos.application.meeting.business.MeetingDetailsEntity"  insert="true" update="true"  unique="true" lazy="false" access="field"/>
-  		<many-to-one name="weekDay" column="DAYS" class="org.mifos.application.meeting.business.WeekDaysEntity"/>
-  		<many-to-one name="rankOfDays" column="RANK_OF_DAYS"  class="org.mifos.application.meeting.business.RankOfDaysEntity"/>
+        <many-to-one name="meetingDetails" column="DETAILS_ID"
+            class="org.mifos.application.meeting.business.MeetingDetailsEntity" insert="true" update="true" unique="true"
+            lazy="false" access="field" />
+        <property name="weekDay" column="DAYS" type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
+        <property name="rankOfDays" column="RANK_OF_DAYS" type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
     </class>
 </hibernate-mapping>

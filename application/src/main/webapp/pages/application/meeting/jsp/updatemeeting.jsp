@@ -203,7 +203,7 @@ function goToCancelPage(){
 
 									<mifos:select	property="monthRank" >
 										<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
-												<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+												<html-el:option value="${weekRank.value}">${weekRank.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>
 									<mifos:select property="monthWeek">

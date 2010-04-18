@@ -42,7 +42,6 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -162,9 +161,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        WeekDaysEntity weekDays = new WeekDaysEntity(weekday);
-        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
+        meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekday);
         return meeting;
     }
 

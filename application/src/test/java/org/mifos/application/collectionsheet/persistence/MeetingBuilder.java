@@ -27,10 +27,9 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
-import org.mifos.application.meeting.business.RankOfDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
@@ -43,7 +42,7 @@ public class MeetingBuilder {
     private RecurrenceType recurrenceType = RecurrenceType.WEEKLY;
     private Short recurAfter = Short.valueOf("1");
     private WeekDay weekDay = WeekDay.getJodaWeekDay(new DateTime().getDayOfWeek());
-    private RankType weekRank = null;
+    private RankOfDay weekRank = null;
     private Short dayNumber = null;
     private Date startDate = new DateTime().toDate();
     private final String meetingLocation = "test-meeting-location";
@@ -67,8 +66,7 @@ public class MeetingBuilder {
         meetingRecurrenceEntity.setDayNumber(dayNumber);
 
         if (weekRank != null) {
-            RankOfDaysEntity rankOfDays = new RankOfDaysEntity(weekRank);
-            meetingRecurrenceEntity.setRankOfDays(rankOfDays);
+            meetingRecurrenceEntity.setRankOfDays(weekRank);
         }
 
         meetingDetailsEntity.setMeetingRecurrence(meetingRecurrenceEntity);
@@ -78,7 +76,7 @@ public class MeetingBuilder {
         return meeting;
     }
 
-    public MeetingBO buildMonthlyFor(final RankType rank, final WeekDay weekDay) throws MeetingException {
+    public MeetingBO buildMonthlyFor(final RankOfDay rank, final WeekDay weekDay) throws MeetingException {
         return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation, masterPersistence);
     }
 
@@ -106,7 +104,7 @@ public class MeetingBuilder {
         return this;
     }
 
-    public MeetingBuilder onWeek(final RankType withWeek) {
+    public MeetingBuilder onWeek(final RankOfDay withWeek) {
         this.weekRank = withWeek;
         return this;
     }

@@ -10,10 +10,9 @@ import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -78,12 +77,8 @@ public class MeetingBOTest {
 
 
     @Test
-    public void testMonthlyMeetingInterval() throws MeetingException, PersistenceException {
-        when(masterPersistence.retrieveMasterEntity(WeekDay.FRIDAY.getValue(),WeekDaysEntity.class, null)).thenReturn(
-                new WeekDaysEntity(WeekDay.FRIDAY));
-        when(masterPersistence.retrieveMasterEntity(RankType.THIRD.getValue(),RankOfDaysEntity.class, null)).thenReturn(
-                new RankOfDaysEntity(RankType.THIRD));
-        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(1).buildMonthlyFor(RankType.THIRD, WeekDay.FRIDAY);
+    public void testMonthlyMeetingInterval() throws MeetingException {
+        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(1).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);
@@ -94,12 +89,8 @@ public class MeetingBOTest {
     }
 
     @Test
-    public void testBiMonthlyMeetingInterval() throws MeetingException, PersistenceException {
-        when(masterPersistence.retrieveMasterEntity(WeekDay.FRIDAY.getValue(),WeekDaysEntity.class, null)).thenReturn(
-                new WeekDaysEntity(WeekDay.FRIDAY));
-        when(masterPersistence.retrieveMasterEntity(RankType.THIRD.getValue(),RankOfDaysEntity.class, null)).thenReturn(
-                new RankOfDaysEntity(RankType.THIRD));
-        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(2).buildMonthlyFor(RankType.THIRD, WeekDay.FRIDAY);
+    public void testBiMonthlyMeetingInterval() throws MeetingException {
+        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(2).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);

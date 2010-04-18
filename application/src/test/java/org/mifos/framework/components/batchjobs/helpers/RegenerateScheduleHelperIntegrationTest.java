@@ -47,9 +47,7 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -204,9 +202,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         group = TestObjectFactory.getGroup(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, accountBO.getAccountId());
 
-        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
-                (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
-                        WeekDaysEntity.class, null));
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence()
+                .setWeekDay(WeekDay.THURSDAY);
         CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         new DateTimeService().setCurrentDateTime(testDate.toDateTimeAtStartOfDay());
@@ -248,9 +245,8 @@ public class RegenerateScheduleHelperIntegrationTest extends MifosIntegrationTes
         accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);
 
         new DateTimeService().setCurrentDateTime(updateDate.toDateTimeAtStartOfDay());
-        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence().setWeekDay(
-                (WeekDaysEntity) new MasterPersistence().retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
-                        WeekDaysEntity.class, null));
+        center.getCustomerMeeting().getMeeting().getMeetingDetails().getMeetingRecurrence()
+                .setWeekDay(WeekDay.THURSDAY);
         CustomerBOTestUtils.setUpdatedFlag(center.getCustomerMeeting(), YesNoFlag.YES.getValue());
 
         TestObjectFactory.updateObject(center);

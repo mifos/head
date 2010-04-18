@@ -31,35 +31,35 @@ public interface MeetingConstants {
 
     public final String MEETING = "Meeting";
 
-    public final short WEEK = 1;
+//    public final short WEEK = 1;
 
-    public final short DAYS = 3;
+//    public final short DAYS = 3;
 
-    public final String WEEKLY = "1";
+//    public final String WEEKLY = "1";
 
-    public final String MONTHLY = "2";
+//    public final String MONTHLY = "2";
 
     public final String WEEKDAYSLIST = "WeekDayList";
 
     public final String WEEKRANKLIST = "WeekRankList";
 
-    public final String WEEKDAYSENTITY = "WeekDays";
+//    public final String WEEKDAYSENTITY = "WeekDays";
 
-    public final String WEEKDAYID = "weekDayId";
+//    public final String WEEKDAYID = "weekDayId";
 
-    public final String RANKDAYENTITY = "DayRank";
+//    public final String RANKDAYENTITY = "DayRank";
 
-    public final String RANKDAYID = "rankOfDayId";
+//    public final String RANKDAYID = "rankOfDayId";
 
-    public final String WEEKDAYCLASSPATH = "org.mifos.application.meeting.util.valueobjects.WeekDays";
+//    public final String WEEKDAYCLASSPATH = "org.mifos.application.meeting.util.valueobjects.WeekDays";
 
-    public final String RANKOFDAYCLASSPATH = "org.mifos.application.meeting.util.valueobjects.RankOfDays";
+//    public final String RANKOFDAYCLASSPATH = "org.mifos.application.meeting.util.valueobjects.RankOfDays";
 
-    public final short MONTH = 2;
+//    public final short MONTH = 2;
 
-    public final short MONTHRECURDAY = 1;
+//    public final short MONTHRECURDAY = 1;
 
-    public final short MONTHRECURRANK = 2;
+//    public final short MONTHRECURRANK = 2;
 
     public final String MONTHLY_ON_DATE = "1";
 

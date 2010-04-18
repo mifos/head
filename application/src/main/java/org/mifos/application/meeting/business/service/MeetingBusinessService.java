@@ -20,11 +20,8 @@
 
 package org.mifos.application.meeting.business.service;
 
-import java.util.List;
-
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -40,11 +37,6 @@ public class MeetingBusinessService implements BusinessService {
     @Override
     public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
-    }
-
-    public List<WeekDay> getWorkingDays() throws RuntimeException {
-        return new MeetingPersistence().getWorkingDays();
-
     }
 
     public MeetingBO getMeeting(Integer meetingId) throws ServiceException {

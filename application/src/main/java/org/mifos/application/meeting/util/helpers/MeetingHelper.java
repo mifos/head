@@ -20,7 +20,6 @@
 
 package org.mifos.application.meeting.util.helpers;
 
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -48,7 +47,6 @@ public class MeetingHelper {
     public String getMessage(MeetingBO meeting, UserContext userContext, boolean updatedMeeting) {
         String key;
         Object[] args = new Object[3];
-        initializeLocale(meeting, userContext.getLocaleId());
         if (meeting.isWeekly()) {
             if (updatedMeeting) {
                 key = MeetingConstants.WEEK_SCHEDULE_CHANGE;
@@ -57,7 +55,7 @@ public class MeetingHelper {
             }
             args[0] = meeting.getMeetingDetails().getRecurAfter();
             WeekDay weekDay = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
-            args[1] = MessageLookup.getInstance().lookup(weekDay, userContext);
+            args[1] = WeekDay.lookUp(weekDay);
         } else if (meeting.isMonthlyOnDate()) {
             if (updatedMeeting) {
                 key = MeetingConstants.MONTH_DAY_SCHEDULE_CHANGE;
@@ -106,14 +104,5 @@ public class MeetingHelper {
 
         return SearchUtils.getMessageWithSubstitution(FilePaths.MEETING_RESOURCE, userContext.getPreferredLocale(),
                 key, args);
-    }
-
-    private void initializeLocale(MeetingBO meeting, Short localeId) {
-        if (meeting.isWeekly()) {
-            meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
-        } else if (meeting.isMonthly() && !meeting.isMonthlyOnDate()) {
-            meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
-            meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().setLocaleId(localeId);
-        }
     }
 }

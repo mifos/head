@@ -75,10 +75,8 @@
 		<mapping resource="org/mifos/application/meeting/business/MeetingDetailsEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/meeting/business/MeetingRecurrenceEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/meeting/business/MeetingTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/meeting/business/RankOfDaysEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/meeting/business/RecurrenceTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/meeting/business/WeekDaysEntity.hbm.xml" />
-
+		
 		<!-- M2 style objects for Product offering-->
 
 		<mapping resource="org/mifos/accounts/productdefinition/business/GracePeriodTypeEntity.hbm.xml" />

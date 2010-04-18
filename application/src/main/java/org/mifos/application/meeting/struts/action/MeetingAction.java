@@ -29,14 +29,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.RankOfDaysEntity;
 import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -241,11 +242,9 @@ public class MeetingAction extends BaseAction {
     }
 
     private void loadMasterData(HttpServletRequest request) throws Exception {
-        Short localeId = getUserContext(request).getLocaleId();
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST,
-                getMeetingBusinessService().getWorkingDays(), request);
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, getMasterEntities(RankOfDaysEntity.class,
-                localeId), request);
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(),
+                request);
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
     }
 
     private void clearActionForm(MeetingActionForm form) {

@@ -29,7 +29,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -198,7 +198,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         Short recurAfter = Short.valueOf("2");
 
-        MeetingBO meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankType.SECOND, recurAfter, new Date());
+        MeetingBO meeting = createMonthlyMeetingOnWeekDay(WeekDay.FRIDAY, RankOfDay.SECOND, recurAfter, new Date());
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, meeting, request);
 
         setRequestPathInfo("/meetingAction.do");
@@ -219,7 +219,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
         Assert.assertEquals("2", actionForm.getMonthType());
         Assert.assertEquals(WeekDay.FRIDAY, actionForm.getMonthWeekValue());
-        Assert.assertEquals(RankType.SECOND, actionForm.getMonthRankValue());
+        Assert.assertEquals(RankOfDay.SECOND, actionForm.getMonthRankValue());
         Assert.assertEquals(recurAfter, actionForm.getRecurMonthValue());
         Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
     }
@@ -455,7 +455,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("frequency", RecurrenceType.MONTHLY.getValue().toString());
         addRequestParameter("monthType", MeetingConstants.MONTHLY_ON_WEEK_DAY);
         addRequestParameter("monthWeek", WeekDay.MONDAY.getValue().toString());
-        addRequestParameter("monthRank", RankType.FOURTH.getValue().toString());
+        addRequestParameter("monthRank", RankOfDay.FOURTH.getValue().toString());
         addRequestParameter("recurMonth", "");
         addRequestParameter("meetingPlace", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -479,7 +479,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("frequency", RecurrenceType.MONTHLY.getValue().toString());
         addRequestParameter("monthType", MeetingConstants.MONTHLY_ON_WEEK_DAY);
         addRequestParameter("monthWeek", WeekDay.MONDAY.getValue().toString());
-        addRequestParameter("monthRank", RankType.FOURTH.getValue().toString());
+        addRequestParameter("monthRank", RankOfDay.FOURTH.getValue().toString());
         addRequestParameter("recurMonth", recurAfter.toString());
         addRequestParameter("meetingPlace", meetingPlace);
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -495,7 +495,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(meetingPlace, meeting.getMeetingPlace());
         Assert.assertEquals(recurAfter, meeting.getMeetingDetails().getRecurAfter());
         Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
-        Assert.assertEquals(RankType.FOURTH, meeting.getMeetingDetails().getWeekRank());
+        Assert.assertEquals(RankOfDay.FOURTH, meeting.getMeetingDetails().getWeekRank());
     }
 
     public void testSuccessfulCancelCreate() throws Exception {
@@ -873,7 +873,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }
 
-    private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate)
+    private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankOfDay rank, Short recurAfer, Date startDate)
             throws MeetingException {
         return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
     }

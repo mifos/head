@@ -393,11 +393,7 @@
 			<entity name="office"></entity>
 		</entitiesToLog>
 
-		<propertyName name="weekDay" parentName="meetingRecurrence" displayKey="Group.meetingRecurrence.weekDay" doNotLog="No" lookUp="yes">
-			<entityName name="WeekDays">
-				<classPath  path="org.mifos.application.meeting.business.WeekDaysEntity"/>
-			</entityName>
-		</propertyName>
+		<propertyName name="weekDay" parentName="meetingRecurrence" displayKey="Group.meetingRecurrence.weekDay" doNotLog="No"/>
 
 		<propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
 

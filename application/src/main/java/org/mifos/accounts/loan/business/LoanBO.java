@@ -91,11 +91,9 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.RankOfDaysEntity;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
@@ -162,8 +160,8 @@ public class LoanBO extends AccountBO {
     private InterestTypesEntity interestType;
     private FundBO fund;
     private LoanArrearsAgingEntity loanArrearsAgingEntity;
-    private WeekDaysEntity monthWeek;
-    private RankOfDaysEntity monthRank;
+    private WeekDay monthWeek;
+    private RankOfDay monthRank;
 
     // associations
     private List<LoanActivityEntity> loanActivityDetails;
@@ -2746,19 +2744,19 @@ public class LoanBO extends AccountBO {
         return maxMinNoOfInstall;
     }
 
-    public RankOfDaysEntity getMonthRank() {
+    public RankOfDay getMonthRank() {
         return monthRank;
     }
 
-    public void setMonthRank(final RankOfDaysEntity monthRank) {
+    public void setMonthRank(final RankOfDay monthRank) {
         this.monthRank = monthRank;
     }
 
-    public WeekDaysEntity getMonthWeek() {
+    public WeekDay getMonthWeek() {
         return monthWeek;
     }
 
-    public void setMonthWeek(final WeekDaysEntity monthWeek) {
+    public void setMonthWeek(final WeekDay monthWeek) {
         this.monthWeek = monthWeek;
     }
 
@@ -2771,11 +2769,11 @@ public class LoanBO extends AccountBO {
     }
 
     public WeekDay getMonthWeekValue() {
-        return monthWeek != null ? WeekDay.getWeekDay(monthWeek.getId()) : null;
+        return monthWeek;
     }
 
-    public RankType getWeekRank() {
-        return monthRank != null ? RankType.getRankType(monthRank.getId()) : null;
+    public RankOfDay getWeekRank() {
+        return monthRank;
     }
 
     public boolean isOfProductOffering(final LoanOfferingBO loanOfferingBO) {

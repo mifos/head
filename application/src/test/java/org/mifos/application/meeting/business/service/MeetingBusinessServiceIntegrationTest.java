@@ -29,6 +29,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -47,8 +48,7 @@ public class MeetingBusinessServiceIntegrationTest extends MifosIntegrationTestC
     }
 
     public void testGetWeekDaysList() throws Exception {
-        MeetingBusinessService service = new MeetingBusinessService();
-        List<WeekDay> weekDaysList = service.getWorkingDays();
+        List<WeekDay> weekDaysList = new FiscalCalendarRules().getWeekDaysList();
         Assert.assertNotNull(weekDaysList);
        Assert.assertEquals(7, weekDaysList.size());
     }

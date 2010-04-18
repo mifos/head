@@ -35,7 +35,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.CalendarUtils;
@@ -128,12 +128,12 @@ public class MeetingBO extends AbstractBusinessObject {
                 "meetingPlace");
     }
 
-    public MeetingBO(final WeekDay weekDay, final RankType rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
+    public MeetingBO(final WeekDay weekDay, final RankOfDay rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
             final String meetingPlace) throws MeetingException {
         this(weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, new MasterPersistence());
     }
 
-    public MeetingBO(final WeekDay weekDay, final RankType rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
+    public MeetingBO(final WeekDay weekDay, final RankOfDay rank, final Short recurAfter, final Date startDate, final MeetingType meetingType,
             final String meetingPlace, final MasterPersistence masterPersistence) throws MeetingException {
         this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, masterPersistence);
     }
@@ -154,11 +154,11 @@ public class MeetingBO extends AbstractBusinessObject {
                         .getMeetingPlace());
     }
 
-    private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
+    private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankOfDay rank, final Short recurAfter,
             final Date startDate, final MeetingType meetingType, final String meetingPlace) throws MeetingException {
         this(recurrenceType, dayNumber, weekDay, rank, recurAfter, startDate, meetingType, meetingPlace, new MasterPersistence());
     }
-    private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankType rank, final Short recurAfter,
+    private MeetingBO(final RecurrenceType recurrenceType, final Short dayNumber, final WeekDay weekDay, final RankOfDay rank, final Short recurAfter,
             final Date startDate, final MeetingType meetingType, final String meetingPlace, final MasterPersistence masterPersistence) throws MeetingException {
         setMasterPersistence(masterPersistence);
         this.validateFields(recurrenceType, startDate, meetingType, meetingPlace);
@@ -176,7 +176,7 @@ public class MeetingBO extends AbstractBusinessObject {
     public MeetingBO(final Short dayNumber, final Short recurAfter, final Date startDate, final MeetingType meetingType, final String meetingPlace,
             final Short weekNumber) throws MeetingException {
 
-        this(RecurrenceType.MONTHLY, null, WeekDay.getWeekDay(dayNumber), RankType.getRankType(weekNumber), recurAfter,
+        this(RecurrenceType.MONTHLY, null, WeekDay.getWeekDay(dayNumber), RankOfDay.getRankOfDay(weekNumber), recurAfter,
                 startDate, meetingType, meetingPlace);
 
     }
@@ -259,7 +259,7 @@ public class MeetingBO extends AbstractBusinessObject {
         this.meetingPlace = meetingPlace;
     }
 
-    public void update(final WeekDay weekDay, final RankType rank, final String meetingPlace) throws MeetingException {
+    public void update(final WeekDay weekDay, final RankOfDay rank, final String meetingPlace) throws MeetingException {
         validateMeetingPlace(meetingPlace);
         getMeetingDetails().getMeetingRecurrence().update(weekDay, rank);
         this.meetingPlace = meetingPlace;
@@ -629,7 +629,7 @@ public class MeetingBO extends AbstractBusinessObject {
             // respective week.
             // if current week rank is after the weekrank on which schedule has
             // to lie, move to next month
-            if (!getMeetingDetails().getWeekRank().equals(RankType.LAST)) {
+            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
                 if (gc.get(Calendar.DAY_OF_WEEK_IN_MONTH) > getMeetingDetails().getWeekRank().getValue()) {
                     gc.add(GregorianCalendar.MONTH, 1);
                     gc.set(GregorianCalendar.DATE, 1);
@@ -682,7 +682,7 @@ public class MeetingBO extends AbstractBusinessObject {
             }
             scheduleDate = gc.getTime();
         } else {
-            if (!getMeetingDetails().getWeekRank().equals(RankType.LAST)) {
+            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
                 // apply month recurrence
                 gc.add(GregorianCalendar.MONTH, getMeetingDetails().getRecurAfter());
                 gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
@@ -745,7 +745,7 @@ public class MeetingBO extends AbstractBusinessObject {
             // respective week.
             // if current week rank is after the weekrank on which schedule has
             // to lie, move to next month
-            if (!getMeetingDetails().getWeekRank().equals(RankType.LAST)) {
+            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
                 if (gc.get(Calendar.DAY_OF_WEEK_IN_MONTH) > getMeetingDetails().getWeekRank().getValue()) {
                     gc.add(GregorianCalendar.MONTH, 1);
                     gc.set(GregorianCalendar.DATE, 1);
@@ -790,7 +790,7 @@ public class MeetingBO extends AbstractBusinessObject {
             }
             scheduleDate = gc.getTime();
         } else {
-            if (!getMeetingDetails().getWeekRank().equals(RankType.LAST)) {
+            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
                 // apply month recurrence
                 gc.add(GregorianCalendar.MONTH, getMeetingDetails().getRecurAfter());
                 gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());

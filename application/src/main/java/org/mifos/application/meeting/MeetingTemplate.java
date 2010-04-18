@@ -23,7 +23,7 @@ package org.mifos.application.meeting;
 import java.util.Date;
 
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 
@@ -34,7 +34,7 @@ public interface MeetingTemplate {
 
     public WeekDay getWeekDay();
 
-    public RankType getRankType();
+    public RankOfDay getRankType();
 
     public Short getRecurAfter();
 

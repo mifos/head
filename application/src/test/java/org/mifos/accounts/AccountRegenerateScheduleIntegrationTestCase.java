@@ -61,7 +61,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
@@ -335,9 +335,9 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
         LocalDate startDate = new LocalDate(2008,NOVEMBER,20);
         LocalDate dateWhenMeetingWillBeChanged = new LocalDate(2008, NOVEMBER, 30);
-        MeetingBO meeting = setupMonthlyMeeting(startDate, 1, RankType.THIRD, WeekDay.THURSDAY);
+        MeetingBO meeting = setupMonthlyMeeting(startDate, 1, RankOfDay.THIRD, WeekDay.THURSDAY);
         MeetingBO newMeeting = TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(1).
-                buildMonthlyFor(RankType.FIRST, WeekDay.TUESDAY));
+                buildMonthlyFor(RankOfDay.FIRST, WeekDay.TUESDAY));
 
         testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
@@ -355,9 +355,9 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
         LocalDate startDate = new LocalDate(2008,NOVEMBER,20);
         LocalDate dateWhenMeetingWillBeChanged = new LocalDate(2009, FEBRUARY, 15);
-        MeetingBO meeting = setupMonthlyMeeting(startDate, 2, RankType.THIRD, WeekDay.THURSDAY);
+        MeetingBO meeting = setupMonthlyMeeting(startDate, 2, RankOfDay.THIRD, WeekDay.THURSDAY);
         MeetingBO newMeeting = TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(2).
-                buildMonthlyFor(RankType.FIRST, WeekDay.TUESDAY));
+                buildMonthlyFor(RankOfDay.FIRST, WeekDay.TUESDAY));
 
         testChangeInMeetingScheduleForDates(meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged);
         validateSchedules(expectedMeetingDates);
@@ -376,7 +376,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
     }
 
-    private MeetingBO setupMonthlyMeeting(LocalDate startDate, int recurEvery, RankType rank, WeekDay weekDay) throws MeetingException {
+    private MeetingBO setupMonthlyMeeting(LocalDate startDate, int recurEvery, RankOfDay rank, WeekDay weekDay) throws MeetingException {
         new DateTimeService().setCurrentDateTime(startDate.toDateTimeAtStartOfDay());
         return TestObjectFactory.createMeeting(new MeetingBuilder().monthly().every(recurEvery).buildMonthlyFor(rank, weekDay));
 

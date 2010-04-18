@@ -21,7 +21,6 @@
 package org.mifos.application.meeting.persistence;
 
 import java.util.Date;
-import java.util.List;
 
 import junit.framework.Assert;
 
@@ -35,13 +34,6 @@ public class MeetingPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     public MeetingPersistenceIntegrationTest() throws Exception {
         super();
-    }
-
-    public void testGetWeekDaysList() throws Exception {
-        List<WeekDay> weekDaysList = new MeetingPersistence().getWorkingDays();
-        Assert.assertNotNull(weekDaysList);
-        //Assert.assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
-       Assert.assertEquals(Integer.valueOf("7").intValue(), weekDaysList.size());
     }
 
     public void testGetMeeting() throws Exception {

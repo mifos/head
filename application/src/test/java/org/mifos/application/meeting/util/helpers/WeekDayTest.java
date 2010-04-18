@@ -20,9 +20,11 @@
 
 package org.mifos.application.meeting.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.WeekDay.FRIDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.SATURDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.SUNDAY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.THURSDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.TUESDAY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.WEDNESDAY;
 import junit.framework.Assert;
@@ -35,8 +37,16 @@ public class WeekDayTest extends TestCase {
 
     public void testNext() throws Exception {
        Assert.assertEquals(MONDAY, SUNDAY.next());
+       Assert.assertEquals(TUESDAY, MONDAY.next());
        Assert.assertEquals(WEDNESDAY, TUESDAY.next());
+       Assert.assertEquals(THURSDAY, WEDNESDAY.next());
+       Assert.assertEquals(FRIDAY, THURSDAY.next());
+       Assert.assertEquals(SATURDAY, FRIDAY.next());
        Assert.assertEquals(SUNDAY, SATURDAY.next());
+    }
+
+    public void testLookUp() {
+        Assert.assertEquals("Monday", WeekDay.lookUp(MONDAY));
     }
 
 }
