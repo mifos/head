@@ -37,12 +37,19 @@ import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountingRulesTest {
+
+    static {
+        // Ignore MIFOS_CONF/applicationConfiguration.custom.properties. See MIFOS-2865.
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+    }
 
     @Mock
     private static ConfigurationPersistence configurationPersistence;
