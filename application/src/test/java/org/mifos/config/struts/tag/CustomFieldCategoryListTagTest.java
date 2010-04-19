@@ -22,38 +22,38 @@ package org.mifos.config.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldCategory;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.security.util.UserContext;
 
-public class CustomFieldCategoryListTagTest extends TestCase {
+public class CustomFieldCategoryListTagTest {
 
-    private UserContext userContext;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        TestUtils.initializeSpring();
-        userContext = TestUtils.makeUser();
-    }
-
+    @Test
     public void testGetCategoryRow() throws Exception {
         CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
         String categoryName = "Personnel";
         XmlBuilder link = tag.getCategoryRow(categoryName, categoryName);
-       Assert.assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">"
+        Assert.assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">"
                 + "<img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\" />" + "</td><td>"
                 + "<a href=\"action?method=method&amp;" + "category=" + categoryName + "&amp;categoryName="
                 + categoryName + "&amp;currentFlowKey=flow\">" + categoryName + "</a></td></tr>", link.getOutput());
     }
 
+    @Test
     public void testGetCustomFieldCategoryList() throws Exception {
-        CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
-        String html = tag.getCustomFieldCategoryList(userContext);
+
+        CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow") {
+
+            // to prevent using MessageLookup
+            @Override
+            protected String lookupLabel(CustomFieldCategory value) {
+                return value.name();
+            }
+        };
+
+        String html = tag.getCustomFieldCategoryList();
         assertWellFormedFragment(html);
 
         for (CustomFieldCategory category : CustomFieldCategory.values()) {

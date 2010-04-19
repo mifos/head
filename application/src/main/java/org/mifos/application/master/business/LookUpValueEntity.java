@@ -88,9 +88,9 @@ public class LookUpValueEntity extends AbstractEntity implements LocalizedTextLo
 
         if (messageText != null && messageText.length() > 0) {
             return messageText;
-        } else {
-            return MessageLookup.getInstance().lookup(this);
         }
+
+        return MessageLookup.getInstance().lookup(this);
     }
 
     /*

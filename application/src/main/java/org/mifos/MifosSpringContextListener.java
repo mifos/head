@@ -25,13 +25,14 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.mifos.accounts.financial.util.helpers.FinancialRules;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 
 /**
- *
+ * I extend {@link ContextLoaderListener} so we can cater for the approach used to customise {@link FinancialRules}.
  */
 public class MifosSpringContextListener extends ContextLoaderListener {
 

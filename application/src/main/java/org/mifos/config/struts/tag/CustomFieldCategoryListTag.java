@@ -27,8 +27,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.security.util.UserContext;
 
 public class CustomFieldCategoryListTag extends BodyTagSupport {
     private String actionName;
@@ -49,10 +47,7 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
     @Override
     public int doStartTag() throws JspException {
         try {
-            UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);
-
-            TagUtils.getInstance().write(pageContext, getCustomFieldCategoryList(userContext));
-
+            TagUtils.getInstance().write(pageContext, getCustomFieldCategoryList());
         } catch (Exception e) {
             /**
              * This turns into a (rather ugly) error 500. TODO: make it more
@@ -79,19 +74,23 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
         this.methodName = methodName;
     }
 
-    String getCustomFieldCategoryList(UserContext userContext) throws Exception {
+    String getCustomFieldCategoryList() throws Exception {
         XmlBuilder html = new XmlBuilder();
         html.startTag("table", "width", "95%", "border", "0", "cellspacing", "0", "cellpadding", "0");
 
         CustomFieldCategory[] values = CustomFieldCategory.values();
         for (CustomFieldCategory value : values) {
-            String category = MessageLookup.getInstance().lookupLabel(value.name());
+            String category = lookupLabel(value);
             html.append(getCategoryRow(value.name(), category));
         }
 
         html.endTag("table");
 
         return html.getOutput();
+    }
+
+    protected String lookupLabel(CustomFieldCategory value) {
+        return MessageLookup.getInstance().lookupLabel(value.name());
     }
 
     XmlBuilder getCategoryRow(String category, String categoryName) {

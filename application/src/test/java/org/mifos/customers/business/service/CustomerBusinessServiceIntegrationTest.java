@@ -46,6 +46,7 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
@@ -77,54 +78,50 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
+
+    static {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
+        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
+        MessageLookup.getInstance().setMessageSource(springMessageSource);
+    }
+
     public CustomerBusinessServiceIntegrationTest() throws Exception {
         super();
     }
 
     private static final Integer THREE = Integer.valueOf(3);
-
     private static final Integer ONE = Integer.valueOf(1);
 
     private CustomerBO center;
-
     private GroupBO group;
-
     private CustomerBO client;
-
     private AccountBO account;
-
     private LoanBO groupAccount;
-
     private LoanBO clientAccount;
-
     private SavingsBO clientSavingsAccount;
-
     private MeetingBO meeting;
-
     private final SavingsTestHelper helper = new SavingsTestHelper();
-
     private SavingsOfferingBO savingsOffering;
-
     private SavingsBO savingsBO;
-
     private LoanOfferingBO loanOffering = null;
-
     private CustomerBusinessService service;
-
     private CustomerPersistence customerPersistenceMock;
-
     private CustomerBusinessService customerBusinessServiceWithMock;
-
     private static final OfficeBO OFFICE = OfficecFixture.createOffice(Short.valueOf("1"));
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
         service = new CustomerBusinessService();
         customerPersistenceMock = createMock(CustomerPersistence.class);
         customerBusinessServiceWithMock = new CustomerBusinessService(customerPersistenceMock);
@@ -153,7 +150,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
 
 
 
-    public void testSearchGropAndClient() throws Exception {
+    public void testSearchGroupAndClient() throws Exception {
         createInitialCustomers();
         QueryResult queryResult = new CustomerBusinessService().searchGroupClient("cl", Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
