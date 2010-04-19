@@ -1130,6 +1130,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    @Deprecated
     private CustomerAccountBO createCustomerAccount(final List<FeeView> fees) throws CustomerException {
         try {
             return new CustomerAccountBO(userContext, this, fees);

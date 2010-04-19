@@ -831,10 +831,12 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     /**
+     * called from deprecated contructors/methods that no longer used in production code (only test code that will be refactored)
      * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installment dates.
      */
     @Deprecated
     private void generateMeetingSchedule() throws AccountException {
+
         // generate dates that adjust for holidays
         List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),
                 (short) 10, (short) 0);
@@ -903,6 +905,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     /**
+     * called from deprecated contructors/methods that no longer used in production code (only test code that will be refactored)
      * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installment dates
      */
     @Deprecated

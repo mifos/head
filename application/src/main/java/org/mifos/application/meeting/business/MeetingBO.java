@@ -438,24 +438,6 @@ public class MeetingBO extends AbstractBusinessObject {
         return meetingDates;
     }
 
-    public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(final int occurrences, final boolean adjustForHolidays)
-            throws MeetingException {
-        validateOccurences(occurrences);
-        List meetingDates = new ArrayList();
-        Date meetingDate = getFirstDateWithRepaymentIndepOfMeetingEnabled(getStartDate());
-
-        for (int dateCount = 0; dateCount < occurrences; dateCount++) {
-            if (adjustForHolidays) {
-                meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this)
-                        .getTime());
-            } else {
-                meetingDates.add(meetingDate);
-            }
-            meetingDate = getNextDateWithRepaymentIndepOfMeetingEnabled(meetingDate);
-        }
-        return meetingDates;
-    }
-
     private void validateMeetingDate(final Date meetingDate) throws MeetingException {
         if (meetingDate == null) {
             throw new MeetingException(MeetingConstants.INVALID_MEETINGDATE);
@@ -501,27 +483,6 @@ public class MeetingBO extends AbstractBusinessObject {
             return getNextDateForDay(startDate);
         }
     }
-
-    private Date getFirstDateWithRepaymentIndepOfMeetingEnabled(final Date startDate) {
-        if (isWeekly()) {
-            return getFirstDateForWeek(startDate);
-        } else if (isMonthly()) {
-            return getFirstDateForMonthWithRepaymentIndepOfMeetingEnabled(startDate);
-        } else {
-            return getFirstDateForDay(startDate);
-        }
-    }
-
-    private Date getNextDateWithRepaymentIndepOfMeetingEnabled(final Date startDate) {
-        if (isWeekly()) {
-            return getNextDateForWeek(startDate);
-        } else if (isMonthly()) {
-            return getNextDateForMonthWithRepaymentIndepOfMeetingEnabled(startDate);
-        } else {
-            return getNextDateForDay(startDate);
-        }
-    }
-
 
     /**
      * @deprecated - Please use {@link CalendarUtils#getNextDateForDay}.
@@ -665,114 +626,6 @@ public class MeetingBO extends AbstractBusinessObject {
      */
     @Deprecated
     private Date getNextDateForMonth(final Date startDate) {
-        Date scheduleDate = null;
-        gc.setTime(startDate);
-        if (isMonthlyOnDate()) {
-            // move to next month and return date.
-            gc.add(GregorianCalendar.MONTH, getMeetingDetails().getRecurAfter());
-            int M1 = gc.get(GregorianCalendar.MONTH);
-            gc.set(GregorianCalendar.DATE, getMeetingDetails().getDayNumber());
-            int M2 = gc.get(GregorianCalendar.MONTH);
-            int daynum = getMeetingDetails().getDayNumber();
-            while (M1 != M2) {
-                gc.set(GregorianCalendar.MONTH, gc.get(GregorianCalendar.MONTH) - 1);
-                gc.set(GregorianCalendar.DATE, daynum - 1);
-                M2 = gc.get(GregorianCalendar.MONTH);
-                daynum--;
-            }
-            scheduleDate = gc.getTime();
-        } else {
-            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
-                // apply month recurrence
-                gc.add(GregorianCalendar.MONTH, getMeetingDetails().getRecurAfter());
-                gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
-                gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, getMeetingDetails().getWeekRank().getValue());
-                scheduleDate = gc.getTime();
-            } else {// weekCount=-1
-                gc.set(GregorianCalendar.DATE, 15);
-                gc.add(GregorianCalendar.MONTH, getMeetingDetails().getRecurAfter());
-                gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
-                int M1 = gc.get(GregorianCalendar.MONTH);
-                // assumption: there are 5 weekdays in the month
-                gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, 5);
-                int M2 = gc.get(GregorianCalendar.MONTH);
-                // if assumption fails, it means there exists 4 weekdays in a
-                // month, return last weekday date
-                // if M1==M2, means there exists 5 weekdays otherwise 4 weekdays
-                // in a month
-                if (M1 != M2) {
-                    gc.set(GregorianCalendar.MONTH, gc.get(GregorianCalendar.MONTH) - 1);
-                    gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, 4);
-                }
-                scheduleDate = gc.getTime();
-            }
-        }
-        return scheduleDate;
-    }
-
-    private Date getFirstDateForMonthWithRepaymentIndepOfMeetingEnabled(final Date startDate) {
-        Date scheduleDate = null;
-        gc.setTime(startDate);
-
-        if (isMonthlyOnDate()) {
-            int dt = gc.get(GregorianCalendar.DATE);
-            // if date passed in, is after the date on which schedule has to
-            // lie, move to next month
-            if (dt > getMeetingDetails().getDayNumber()) {
-                gc.add(GregorianCalendar.MONTH, 1);
-            }
-            // set the date on which schedule has to lie
-            int M1 = gc.get(GregorianCalendar.MONTH);
-            gc.set(GregorianCalendar.DATE, getMeetingDetails().getDayNumber());
-            int M2 = gc.get(GregorianCalendar.MONTH);
-            int daynum = getMeetingDetails().getDayNumber();
-            while (M1 != M2) {
-                gc.set(GregorianCalendar.MONTH, gc.get(GregorianCalendar.MONTH) - 1);
-                gc.set(GregorianCalendar.DATE, daynum - 1);
-                M2 = gc.get(GregorianCalendar.MONTH);
-                daynum--;
-            }
-            scheduleDate = gc.getTime();
-        } else {
-            // if current weekday is after the weekday on which schedule has to
-            // lie, move to next week
-            if (gc.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay().getValue()) {
-                gc.add(Calendar.WEEK_OF_MONTH, 1);
-            }
-            // set the weekday on which schedule has to lie
-            gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
-            // if week rank is First, Second, Third or Fourth, Set the
-            // respective week.
-            // if current week rank is after the weekrank on which schedule has
-            // to lie, move to next month
-            if (!getMeetingDetails().getWeekRank().equals(RankOfDay.LAST)) {
-                if (gc.get(Calendar.DAY_OF_WEEK_IN_MONTH) > getMeetingDetails().getWeekRank().getValue()) {
-                    gc.add(GregorianCalendar.MONTH, 1);
-                    gc.set(GregorianCalendar.DATE, 1);
-                }
-                // set the weekrank on which schedule has to lie
-                gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, getMeetingDetails().getWeekRank().getValue());
-                scheduleDate = gc.getTime();
-            } else {// scheduleData.getWeekRank()=Last
-                int M1 = gc.get(GregorianCalendar.MONTH);
-                // assumption: there are 5 weekdays in the month
-                gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, 5);
-                int M2 = gc.get(GregorianCalendar.MONTH);
-                // if assumption fails, it means there exists 4 weekdays in a
-                // month, return last weekday date
-                // if M1==M2, means there exists 5 weekdays otherwise 4 weekdays
-                // in a month
-                if (M1 != M2) {
-                    gc.set(GregorianCalendar.MONTH, gc.get(GregorianCalendar.MONTH) - 1);
-                    gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH, 4);
-                }
-                scheduleDate = gc.getTime();
-            }
-        }
-        return scheduleDate;
-    }
-
-    private Date getNextDateForMonthWithRepaymentIndepOfMeetingEnabled(final Date startDate) {
         Date scheduleDate = null;
         gc.setTime(startDate);
         if (isMonthlyOnDate()) {

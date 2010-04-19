@@ -29,6 +29,7 @@ import java.util.StringTokenizer;
 
 import junit.framework.Assert;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -38,8 +39,19 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
+
+    static {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
+        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
+        MessageLookup.getInstance().setMessageSource(springMessageSource);
+    }
+
     public MeetingBOIntegrationTest() throws Exception {
         super();
     }
@@ -288,25 +300,6 @@ public class MeetingBOIntegrationTest extends MifosIntegrationTestCase {
         // weekDay
         MeetingBO meeting = createWeeklyMeeting(weekDay, ONE, new Date());
        Assert.assertTrue(meeting.getFirstDateForWeek(startDate).compareTo(expectedDate) == 0);
-    }
-
-    public void testGetAllDatesWeeklyWithRepaymentIndepOfMeetingEnabled() throws Exception {
-        startDate = getDate("15/11/2005");
-        endDate = getDate("01/03/2006");
-        meeting = createWeeklyMeeting(WeekDay.THURSDAY, ONE, startDate);
-        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(1, true);
-        List expectedList = createExpectedList("17/11/2005");
-        matchDateLists(expectedList, list);
-    }
-
-    public void testGetAllDatesMonthlyWithRepaymentIndepOfMeetingEnabled() throws Exception {
-        // dates that lies on second monday of every month
-        startDate = getDate("15/11/2005");
-        endDate = getDate("15/10/2006");
-        meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankOfDay.SECOND, ONE, startDate);
-        List list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(2, true);
-        List expectedList = createExpectedList("12/12/2005,09/01/2006");
-        matchDateLists(expectedList, list);
     }
 
     public void testShouldThrowMeetingExceptionIfEndDateBeforeStartDateForGeneratingAllMeetingDates() throws Exception {
