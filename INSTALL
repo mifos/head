@@ -36,16 +36,16 @@ This file describes how to install Mifos for use in a production environment.
          long_query_time=1
 
     3.2. Initializing the Mifos Database
-         To initialize the Mifos database, run the four commands below
-         from the directory that contains this INSTALL file. These commands
-         assume a database username of "root" and a password of "mysql".
+         To initialize the Mifos database, run the four commands below from the
+         directory that contains this INSTALL file. These commands assume a
+         schema named "mifos", a username of "mifos" and a password of "mifos".
          Adjust them if your database login is different. See sections 6.1.4
          and 7.1 for more information.
 
-         mysql -u root -pmysql < sql/create_mifos_db.sql
-         mysql -D mifos -u root -pmysql < sql/latest-schema.sql
-         mysql -D mifos -u root -pmysql < sql/latest-data.sql
-         mysql -D mifos -u root -pmysql < sql/init_mifos_password.sql
+         mysql -u mifos -pmifos < sql/create_mifos_db.sql
+         mysql -D mifos -u mifos -pmifos < sql/latest-schema.sql
+         mysql -D mifos -u mifos -pmifos < sql/latest-data.sql
+         mysql -D mifos -u mifos -pmifos < sql/init_mifos_password.sql
 
          If your database instance already has a "mifos" database, then
          you will need to drop the database before running the above commands.
