@@ -41,10 +41,10 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialInitializer {
-    private static MifosLogger logger;
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 
     public static void initialize() throws FinancialException {
-        logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
@@ -133,10 +133,10 @@ public class FinancialInitializer {
         if (null == account1hierarchy) {
             if (null == account2.parentGlCode) {
                 return true;
-            } else {
-                logger.error("persisted account has no parent, but new account does");
-                return false;
             }
+
+            logger.error("persisted account has no parent, but new account does");
+            return false;
         }
 
         COABO account1parent = account1hierarchy.getCoa();
@@ -153,7 +153,8 @@ public class FinancialInitializer {
     /**
      * Reads chart of accounts from the database and caches in memory.
      */
-    public static void cacheCOA() throws FinancialException {
+    @SuppressWarnings("unchecked")
+    public static void cacheCOA() {
         if (ChartOfAccountsCache.isInitialized()) {
             return;
         }
@@ -165,6 +166,7 @@ public class FinancialInitializer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static void initalizeFinancialAction() throws FinancialException {
         Session session = StaticHibernateUtil.getSessionTL();
         try {
@@ -176,17 +178,13 @@ public class FinancialInitializer {
         } catch (Exception e) {
             throw new FinancialException(FinancialExceptionConstants.FINANCIALACTION_INITFAILED, e);
         }
-
     }
 
     private static COABO hibernateInitalize(COABO coa) {
-
         Hibernate.initialize(coa);
         Hibernate.initialize(coa.getCOAHead());
         Hibernate.initialize(coa.getAssociatedGlcode());
         Hibernate.initialize(coa.getSubCategory());
-
         return coa;
     }
-
 }

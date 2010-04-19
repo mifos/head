@@ -32,8 +32,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.servicefacade.CustomerServiceFacade;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
@@ -53,7 +51,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
@@ -74,9 +71,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class GroupTransferAction extends BaseAction {
-
-    private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     private MasterDataService masterService;
 

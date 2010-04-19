@@ -22,9 +22,15 @@ package org.mifos.security.authorization;
 
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.PreviousRequestValues;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.FilterInvocation;
 
 /**
  *
@@ -43,7 +49,28 @@ public class DynamicAuthorizationVoter implements AccessDecisionVoter {
 
     @Override
     public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
+
+        Object principal = authentication.getPrincipal();
+
+        for (ConfigAttribute configAttribute : attributes) {
+            if (supports(configAttribute)) {
+
+            }
+        }
+
+        FilterInvocation filter = (FilterInvocation) object;
+        String fullUrl = filter.getFullRequestUrl();
+        HttpServletRequest request = filter.getHttpRequest();
+
+        HttpSession session = request.getSession();
+
+        PreviousRequestValues previousRequestValues = (PreviousRequestValues) session
+                .getAttribute(Constants.PREVIOUS_REQUEST);
+        if (null == previousRequestValues) {
+            previousRequestValues = new PreviousRequestValues();
+            session.setAttribute(Constants.PREVIOUS_REQUEST, previousRequestValues);
+        }
+
         return ACCESS_GRANTED;
     }
-
 }

@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
@@ -43,8 +42,7 @@ import org.mifos.application.servicefacade.ClientFormCreationDto;
 import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoDto;
 import org.mifos.application.servicefacade.ClientRulesDto;
-import org.mifos.application.servicefacade.CustomerServiceFacade;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -53,12 +51,10 @@ import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientFamilyDetailView;
 import org.mifos.customers.client.business.ClientNameDetailView;
-import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
@@ -74,12 +70,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ClientCustAction extends CustAction {
-
-    private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator
-            .locateCustomerServiceFacade();
-    private final ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator
-            .locateClientDetailsServiceFacade();
-    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("clientCustAction");

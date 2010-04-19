@@ -27,11 +27,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
-import org.mifos.application.servicefacade.CustomerServiceFacade;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.GroupCreation;
 import org.mifos.application.servicefacade.GroupFormCreationDto;
 import org.mifos.application.servicefacade.GroupUpdate;
@@ -43,12 +41,10 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupInformationDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -67,9 +63,6 @@ import org.mifos.security.util.UserContext;
 public class GroupCustAction extends CustAction {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
-    private final GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
-    private final CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("groupCustAction");

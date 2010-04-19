@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
@@ -43,9 +44,16 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.CustomerServiceFacade;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
+import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
+import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
 import org.mifos.framework.business.service.BusinessService;
@@ -78,15 +86,35 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class BaseAction extends DispatchAction {
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     protected abstract BusinessService getService() throws ServiceException;
 
+    protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+    protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
+
+    // FIXME - #00034 - keithw - wire up in spring context
+    protected CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
+    protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
+    protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
+    protected final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+
+        HttpSession session = request.getSession();
+        WebApplicationContext springAppContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
+
+        if (springAppContext != null) {
+            this.customerDao = springAppContext.getBean(CustomerDao.class);
+            this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
+        }
+
         if (MifosTask.isBatchJobRunning()) {
             return logout(mapping, request);
         }

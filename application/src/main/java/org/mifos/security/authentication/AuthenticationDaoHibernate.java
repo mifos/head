@@ -51,7 +51,7 @@ public class AuthenticationDaoHibernate implements AuthenticationDao {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = !user.isLocked();
 
-        GrantedAuthority mifosUser = new GrantedAuthorityImpl("ROLE_MIFOS_USER");
+        GrantedAuthority mifosUser = new GrantedAuthorityImpl(MifosUser.FULLY_AUTHENTICATED_USER);
         List<GrantedAuthority> authorities = Arrays.asList(mifosUser);
 
         return new MifosUser(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);

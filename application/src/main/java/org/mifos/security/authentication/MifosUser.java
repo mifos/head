@@ -30,6 +30,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class MifosUser implements UserDetails {
 
+    public static final String FULLY_AUTHENTICATED_USER = "ROLE_FULLY_AUTHENTICATED_USER";
+
     private final String username;
     private final byte[] password;
     private final boolean enabled;

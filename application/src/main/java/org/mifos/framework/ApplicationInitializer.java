@@ -57,7 +57,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
@@ -176,15 +175,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                     Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
-                    // 1/4/08 Hopefully a temporary change to force Spring
-                    // to initialize here (rather than in struts-config.xml
-                    // prior to loading label values into a
-                    // cache in MifosConfiguration. When the use of the
-                    // cache is refactored away, we should be able to move
-                    // back to the struts based Spring initialization
-                    SpringUtil.initializeSpring();
-
-                    // Spring must be initialized before FinancialInitializer
                     FinancialInitializer.initialize();
                     EntityMasterData.getInstance().init();
                     initializeEntityMaster();
@@ -370,11 +360,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         mifosScheduler.shutdown();
     }
 
-    public void requestDestroyed(ServletRequestEvent event) {
+    public void requestDestroyed(@SuppressWarnings("unused") ServletRequestEvent event) {
         StaticHibernateUtil.closeSession();
     }
 
-    public void requestInitialized(ServletRequestEvent event) {
+    public void requestInitialized(@SuppressWarnings("unused") ServletRequestEvent event) {
 
     }
 

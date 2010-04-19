@@ -6,8 +6,20 @@
       http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
       http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd">
 
-	<sec:global-method-security secured-annotations="disabled">
-	</sec:global-method-security>
+	<sec:global-method-security pre-post-annotations="enabled">
+		<sec:expression-handler ref="expressionHandler"/>
+    </sec:global-method-security>
+
+	<sec:http access-decision-manager-ref="mifosAccessDecisionManager" auto-config="false" use-expressions="true">
+		<sec:intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
+		<sec:form-login />
+	</sec:http>
+	
+	<bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="myPermissionEvaluator"/>
+  	</bean>
+
+	<bean id="myPermissionEvaluator" class="org.springframework.security.access.expression.method.DenyAllPermissionEvaluator" />
 
 	<bean id="mifosAccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
 	    <property name="decisionVoters">
@@ -18,10 +30,6 @@
 	        </list>
 	    </property>
 	</bean>
-
-	<sec:http access-decision-manager-ref="mifosAccessDecisionManager" auto-config="true">
-		<sec:intercept-url pattern="/**" access="ROLE_MIFOS_USER" />
-	</sec:http>
 
 	<sec:authentication-manager alias="authenticationManager">
 	    <sec:authentication-provider ref="mifosAuthenticationProvider"/>
@@ -34,14 +42,5 @@
         <constructor-arg ref="passwordHashing" />
     </bean>
 
-	<bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
-	
-	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="userService" />
-    </bean>
-    
-	<sec:user-service id="userService">
-        <sec:user name="username" password="password" authorities="ROLE_MIFOS_USER, ROLE_USER" />
-        <sec:user name="test" password="test" authorities="ROLE_USER" />
-    </sec:user-service>
+    <bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
 </beans>

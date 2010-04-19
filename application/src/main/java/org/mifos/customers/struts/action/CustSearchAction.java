@@ -31,7 +31,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
@@ -40,7 +39,6 @@ import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -63,8 +61,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustSearchAction extends SearchAction {
-
-    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("custSearchAction");
