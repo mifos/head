@@ -33,7 +33,9 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.domain.builders.ScheduledEventBuilder;
@@ -577,6 +579,30 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                       date(2011, 6, 13), date(2011, 7, 13), date(2011, 8, 15));
    }
 
+    @Test
+    public void shouldNotGoIntoRecursiveLoopWhenThroughDateOccursMoreThanTenPeriodsFromStartDate() {
+
+        MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).build();
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+
+        DateTime startDate = new DateTime().withYear(2010).withMonthOfYear(4).withDayOfMonth(1).toDateMidnight().toDateTime();
+        DateTime throughDate = new DateTime().withYear(2010).withMonthOfYear(6).withDayOfMonth(21).toDateMidnight().toDateTime();
+
+        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent);
+    }
+
+    @Test
+    public void shouldNotGoIntoRecursiveLoopWhenThroughDateOccursExactlyTenPeriodsFromStartDate() {
+
+        MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).build();
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+
+        DateTime startDate = new DateTime().withYear(2010).withMonthOfYear(4).withDayOfMonth(1).toDateMidnight().toDateTime();
+        DateTime throughDate = new DateTime().withYear(2010).withMonthOfYear(6).withDayOfMonth(7).toDateMidnight().toDateTime();
+
+        scheduleGeneration.generateScheduledDatesThrough(startDate, throughDate, scheduledEvent);
+    }
+
     /*******************************
      * Helper methods
      *******************************/
@@ -641,5 +667,4 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
         }
 
     }
-
 }

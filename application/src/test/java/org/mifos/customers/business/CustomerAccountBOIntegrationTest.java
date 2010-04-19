@@ -62,15 +62,18 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -78,28 +81,35 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
+
+    static {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
+        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
+        MessageLookup.getInstance().setMessageSource(springMessageSource);
+
+        AuditConfigurtion.init(Localization.getInstance().getMainLocale());
+    }
+
     public CustomerAccountBOIntegrationTest() throws Exception {
         super();
     }
 
     private static final double DELTA = 0.00000001;
-
     private CustomerAccountBO customerAccountBO;
-
     private CustomerBO center;
-
     private CustomerBO group;
-
     private CustomerBO client;
-
     private UserContext userContext;
-
     private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
 
@@ -116,7 +126,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
@@ -399,6 +408,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    // FIXME - keithw - RUN THIS TEST
     public void testApplyPeriodicFees() throws ApplicationException, SystemException {
         createInitialObjects();
         FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
@@ -810,7 +820,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws AccountException {
+    public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
         List<FeeView> feeView = new ArrayList<FeeView>();
