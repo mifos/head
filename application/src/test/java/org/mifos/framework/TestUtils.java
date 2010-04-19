@@ -39,6 +39,7 @@ import org.joda.time.DateTimeConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -129,6 +130,7 @@ public class TestUtils {
     }
 
     public static Money createMoney(int amount) {
+        // TODO Auto-generated method stub
         return new Money(RUPEE, BigDecimal.valueOf(amount));
     }
 
@@ -243,6 +245,13 @@ public class TestUtils {
         System.out.println("max: " + Runtime.getRuntime().maxMemory() / 1000000.0 + " MB");
         System.out.println("total: " + Runtime.getRuntime().totalMemory() / 1000000.0 + " MB");
         System.out.println();
+    }
+
+    /**
+     * This method initializes the Spring framework context.
+     */
+    public static void initializeSpring() {
+        SpringUtil.initializeSpring();
     }
 
     public static Date generateNearestMondayOnOrAfterToday() {

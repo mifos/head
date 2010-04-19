@@ -453,8 +453,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
          * make sure we can handle case where the number of installments is zero
          */
         account.getInstallmentDates(meeting, (short) 0, (short) 0);
-
-        // no verification?
     }
 
     @Test(dependsOnMethods = { "testGetInstalmentDates" })

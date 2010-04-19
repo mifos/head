@@ -21,7 +21,6 @@
 package org.mifos.customers.office.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,12 +29,10 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeView;
@@ -44,43 +41,52 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.Test;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OfficeListTagTest {
+@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
+public class OfficeListTagTest extends TestCase {
 
     private XmlBuilder result;
+
     private UserContext userContext;
+
     private OfficeBO head;
+
     private OfficeBO regional;
+
     private OfficeBO branch;
+
     private OfficeBO branch2;
 
-    @Mock
-    private OfficeView headOffice;
+    public OfficeListTagTest() {
+        super();
+        initialize();
+    }
 
-    @Mock
-    private OfficeView regionalOffice;
+    public OfficeListTagTest(String name) {
+        super(name);
+        initialize();
+    }
 
-    @Mock
-    private OfficeView branchOffice;
+    private void initialize() {
+        SpringUtil.initializeSpring();
+    }
 
-    @Before
-    public void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
         result = new XmlBuilder();
         userContext = TestUtils.makeUser();
     }
 
-    @Test
     public void testNoBranches() throws Exception {
         new OfficeListTag().getBranchOffices(result, null, userContext.getPreferredLocale(), null, "Branch");
         assertWellFormedFragment(result.toString());
     }
 
-    @Test
     public void testBranches() throws Exception {
         createSomeOffices();
        Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
@@ -98,13 +104,11 @@ public class OfficeListTagTest {
         StringAssert.assertNotContains("TheGambia", html);
     }
 
-    @Test
     public void testNothingAboveBranches() throws Exception {
         new OfficeListTag().getAboveBranches(result, null, null, null, null);
        Assert.assertEquals("", result.toString());
     }
 
-    @Test
     public void testAboveBranches() throws Exception {
         List<OfficeBO> offices = new ArrayList<OfficeBO>();
         offices.add(makeOffice("Trinidad&Tobago", OfficeLevel.HEADOFFICE));
@@ -121,7 +125,6 @@ public class OfficeListTagTest {
         StringAssert.assertContains("Toronto&amp;Ottawa", html);
     }
 
-    @Test
     public void testAssertWellFormed() throws Exception {
         assertWellFormedFragment("<foo />");
         assertWellFormedFragment("x y z");
@@ -134,7 +137,6 @@ public class OfficeListTagTest {
         }
     }
 
-    @Test
     public void testGetLink() throws Exception {
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
         XmlBuilder link = tag.getLink((short) 234, "My Office");
@@ -144,7 +146,6 @@ public class OfficeListTagTest {
                 .getOutput());
     }
 
-    @Test
     public void testGetOfficeListOnlyBranchs() throws Exception {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
@@ -153,25 +154,14 @@ public class OfficeListTagTest {
         List<OfficeHierarchyDto> officeHierarchy = OfficeBO
                 .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(Collections.singletonList(regional));
 
-        List<OfficeView> officeLevels = new ArrayList<OfficeView>();
-        officeLevels.add(headOffice);
-        officeLevels.add(regionalOffice);
-        officeLevels.add(branchOffice);
-
-        when(headOffice.getLevelName()).thenReturn("head");
-        when(regionalOffice.getLevelName()).thenReturn("regional");
-        when(branchOffice.getLevelName()).thenReturn("branch");
-
-        String html = tag.getOfficeList(userContext.getPreferredLocale(), officeLevels, branch.getSearchId(),
+        String html = tag.getOfficeList(userContext.getPreferredLocale(), headRegionalBranch(), branch.getSearchId(),
                 officeHierarchy, headRegional());
-
         StringAssert.assertNotContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html); // is this right?
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
         StringAssert.assertNotContains("TheGambia", html);
     }
 
-    @Test
     public void testGetOfficeListAllOffices() throws Exception {
         createSomeOffices();
         OfficeListTag tag = new OfficeListTag("action", "method", "flow");
@@ -180,22 +170,21 @@ public class OfficeListTagTest {
         List<OfficeHierarchyDto> officeHierarchy = OfficeBO
                 .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(Collections.singletonList(regional));
 
-        List<OfficeView> officeLevels = new ArrayList<OfficeView>();
-        officeLevels.add(headOffice);
-        officeLevels.add(regionalOffice);
-        officeLevels.add(branchOffice);
-
-        when(headOffice.getLevelName()).thenReturn("head");
-        when(regionalOffice.getLevelName()).thenReturn("regional");
-        when(branchOffice.getLevelName()).thenReturn("branch");
-
-        String html = tag.getOfficeList(userContext.getPreferredLocale(), officeLevels, branch.getSearchId(),
+        String html = tag.getOfficeList(userContext.getPreferredLocale(), headRegionalBranch(), branch.getSearchId(),
                 officeHierarchy,
                 headRegional());
         StringAssert.assertContains("East&amp;West Indies", html);
         StringAssert.assertContains("West Indies Only", html);
         StringAssert.assertContains("Trinidad&amp;Tobago", html);
         StringAssert.assertNotContains("TheGambia", html);
+    }
+
+    private List<OfficeView> headRegionalBranch() {
+        List<OfficeView> levels = new ArrayList<OfficeView>();
+        levels.add(new OfficeView(null, null, OfficeLevel.HEADOFFICE, "Head", 0));
+        levels.add(new OfficeView(null, null, OfficeLevel.REGIONALOFFICE, "Regional", 0));
+        levels.add(new OfficeView(null, null, OfficeLevel.BRANCHOFFICE, "Branch", 0));
+        return Collections.unmodifiableList(levels);
     }
 
     private List<OfficeBO> headRegional() {

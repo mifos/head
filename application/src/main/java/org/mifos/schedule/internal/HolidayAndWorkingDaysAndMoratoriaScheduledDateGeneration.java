@@ -66,19 +66,10 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
 
         DateTime lastGeneratedDate = null;
         List<DateTime> generatedDates = new ArrayList<DateTime>();
-
-        lastGeneratedDate = lastScheduledDate;
         do {
-            generatedDates.addAll(this.generateScheduledDates(10, lastGeneratedDate, scheduledEvent));
-
+            generatedDates.addAll(this.generateScheduledDates(10, lastScheduledDate, scheduledEvent));
             lastGeneratedDate = generatedDates.get(generatedDates.size()-1);
-            if (lastGeneratedDate.isBefore(throughDate)) {
-                // roll forward date to prevent adding same date to list incorrectly
-                // can't use set to keep unique as we use same dates to show pushed out periods etc.
-                lastGeneratedDate = lastGeneratedDate.plusDays(1);
-            }
-        } while (lastGeneratedDate.isBefore(throughDate));
-
+        } while (!lastGeneratedDate.isAfter(throughDate));
         return removeDatesAfterThroughDate(generatedDates, throughDate);
     }
 

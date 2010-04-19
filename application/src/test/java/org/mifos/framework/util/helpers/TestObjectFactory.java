@@ -937,6 +937,16 @@ public class TestObjectFactory {
         return dates;
     }
 
+    public static List<Date> getAllMeetingDates(final MeetingBO meeting) {
+        List<Date> dates = new ArrayList<Date>();
+        try {
+            dates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
+        } catch (MeetingException e) {
+            throw new RuntimeException(e);
+        }
+        return dates;
+    }
+
     /**
      * createPeriodicAmountFee.
      *

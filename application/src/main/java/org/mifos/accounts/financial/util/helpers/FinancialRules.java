@@ -23,6 +23,9 @@ package org.mifos.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mifos.accounts.financial.exceptions.FinancialException;
+import org.mifos.framework.spring.SpringUtil;
+
 /**
  * A Spring bean useful in resolving financial actions with their associated GL
  * (general ledger) codes. GL codes are unique to GL accounts.
@@ -32,7 +35,8 @@ import java.util.Map;
  * href="http://www.mifos.org/knowledge/functional-specs/accounting-in-mifos"
  * >More use cases</a>.
  * <p>
- * Spring must be initialized prior to using this class.
+ * Spring must be initialized prior to using this class. This is currently
+ * performed via {@link SpringUtil#initializeSpring()}.
  */
 public class FinancialRules {
     /** Values are general ledger account codes. */
@@ -46,12 +50,13 @@ public class FinancialRules {
         return financialRules;
     }
 
-    public String getGLAccountForAction(short financialActionId, FinancialConstants type) {
+    public String getGLAccountForAction(short financialActionId, FinancialConstants type) throws FinancialException {
         FinancialActionConstants financialAction = FinancialActionConstants.getFinancialAction(financialActionId);
         return getGLAccountForAction(financialAction, type);
     }
 
-    public String getGLAccountForAction(FinancialActionConstants financialAction, FinancialConstants type) {
+    public String getGLAccountForAction(FinancialActionConstants financialAction, FinancialConstants type)
+            throws FinancialException {
         if (type.equals(FinancialConstants.DEBIT)) {
             return actionToDebitAccount.get(financialAction);
         } else if (type.equals(FinancialConstants.CREDIT)) {

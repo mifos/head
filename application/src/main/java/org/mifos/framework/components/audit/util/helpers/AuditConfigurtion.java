@@ -33,6 +33,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -57,12 +58,14 @@ public class AuditConfigurtion {
 
     private List<Short> locales;
 
+    private ApplicationConfigurationPersistence configurationPersistence;
     private MasterPersistence masterPersistence;
 
     public static AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
 
     private AuditConfigurtion() {
         masterPersistence = new MasterPersistence();
+        configurationPersistence = new ApplicationConfigurationPersistence();
 
         locales = Localization.getInstance().getSupportedLocaleIds();
         locale = Localization.getInstance().getMainLocale();
@@ -147,9 +150,9 @@ public class AuditConfigurtion {
         value = valueMap.get(id.toString());
         if (value == null) {
             return "";
+        } else {
+            return value;
         }
-
-        return value;
     }
 
     public static boolean checkForPropertyName(String entityType, String propertyName, Short localeId) {
@@ -161,9 +164,9 @@ public class AuditConfigurtion {
         Map<String, String> valueMap = propertyMap.get(propName);
         if (valueMap == null) {
             return false;
+        } else {
+            return true;
         }
-
-        return true;
     }
 
     public static String getColumnNameForPropertyName(String entityType, String propertyName) {
@@ -175,9 +178,9 @@ public class AuditConfigurtion {
         columnName = columnPropertyMap.get(propertyName);
         if (columnName == null) {
             return "";
+        } else {
+            return columnName;
         }
-
-        return columnName;
     }
 
     private Map<String, String> createColumnNames(EntityType entityType) {

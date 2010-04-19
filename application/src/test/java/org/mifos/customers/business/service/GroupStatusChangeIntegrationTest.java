@@ -64,9 +64,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml",
-                                    "/org/mifos/config/resources/services.xml" })
+@ContextConfiguration(locations = { "/integration-test-context.xml", "/hibernate-daos.xml", "/services.xml" })
 public class GroupStatusChangeIntegrationTest {
 
     @Autowired

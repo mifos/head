@@ -58,7 +58,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -68,7 +67,6 @@ import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.client.business.AttendanceType;
@@ -85,33 +83,20 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * I test {@link CollectionSheetEntryAction}.
  */
 public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
-
-    static {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
-        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
-        MessageLookup.getInstance().setMessageSource(springMessageSource);
-
-        AuditConfigurtion.init(Localization.getInstance().getMainLocale());
-    }
 
     public BulkEntryActionStrutsTest() throws Exception {
         super();
@@ -814,6 +799,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         return paymentTypeView;
     }
 
+    @SuppressWarnings("deprecation")
     private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
         CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
                 getCurrency());

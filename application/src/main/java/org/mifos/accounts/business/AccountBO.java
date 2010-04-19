@@ -63,6 +63,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
@@ -1147,55 +1148,58 @@ public class AccountBO extends AbstractBusinessObject {
         return accountFee;
     }
 
-    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip) throws AccountException {
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
     }
 
-    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, isRepaymentIndepOfMeetingEnabled, true);
     }
 
-    public final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
+    protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
             final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled, final boolean adjustForHolidays)
             throws AccountException {
-
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating intallment dates");
-
-        List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
-
         if (noOfInstallments > 0) {
-            List<Date> dueDates;
+            try {
+                List<Date> dueDates;
+                if (isRepaymentIndepOfMeetingEnabled) {
+                    dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
+                            + installmentToSkip, adjustForHolidays);
+                } else {
 
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            List<Holiday> holidays = new ArrayList<Holiday>();
+                    List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+                    List<Holiday> holidays = new ArrayList<Holiday>();
 
-            if (adjustForHolidays) {
-                HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                holidays = holidayDao.findAllHolidaysThisYearAndNext();
+                    if (adjustForHolidays) {
+                        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+                        holidays = holidayDao.findAllHolidaysThisYearAndNext();
+                    }
+
+                    final int occurrences = noOfInstallments + installmentToSkip;
+
+                    DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+                    ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+                    ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
+                            holidays);
+
+                    List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences,
+                            startFromMeetingDate, scheduledEvent);
+                    dueDates = new ArrayList<Date>();
+                    for (DateTime installmentDate : installmentDates) {
+                        dueDates.add(installmentDate.toDate());
+                    }
+                }
+
+                return createInstallmentDates(installmentToSkip, dueDates);
+            } catch (MeetingException e) {
+                throw new AccountException(e);
             }
-
-            final int occurrences = noOfInstallments + installmentToSkip;
-
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    workingDays, holidays);
-
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate,
-                    scheduledEvent);
-            dueDates = new ArrayList<Date>();
-
-            for (DateTime installmentDate : installmentDates) {
-                dueDates.add(installmentDate.toDate());
-            }
-
-            dueInstallmentDates = createInstallmentDates(installmentToSkip, dueDates);
         }
-
-        return dueInstallmentDates;
+        return new ArrayList<InstallmentDate>();
     }
 
     private List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
@@ -1249,43 +1253,23 @@ public class AccountBO extends AbstractBusinessObject {
         return feeInstallmentList;
     }
 
-    protected final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates) throws AccountException {
+    protected final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates)
+            throws AccountException {
+        MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
+        Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
+        Date meetingStartDate = customerMeeting.getMeetingStartDate();
+        customerMeeting.getMeetingDetails().setRecurAfter(feeMeetingFrequency.getMeetingDetails().getRecurAfter());
+        customerMeeting.setMeetingStartDate(installmentDates.get(0).getInstallmentDueDate());
+        Date repaymentEndDate = installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate();
 
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> upcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
-        DateTime startDate = new DateTime(installmentDates.get(0).getInstallmentDueDate());
-        DateTime repaymentEndDate = new DateTime(installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate());
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(feeMeetingFrequency);
-
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        List<DateTime> feeDateTimes = dateGeneration.generateScheduledDatesThrough(startDate, repaymentEndDate, scheduledEvent);
-
-        List<Date> feeDates = new ArrayList<Date>();
-        for (DateTime dateTime : feeDateTimes) {
-            feeDates.add(dateTime.toDate());
+        try {
+            return customerMeeting.getAllDates(repaymentEndDate);
+        } catch (MeetingException e) {
+            throw new AccountException(e);
+        } finally {
+            customerMeeting.setMeetingStartDate(meetingStartDate);
+            customerMeeting.getMeetingDetails().setRecurAfter(recurAfter);
         }
-
-        return feeDates;
-
-//        MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
-//        Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
-//        Date meetingStartDate = customerMeeting.getMeetingStartDate();
-//        customerMeeting.getMeetingDetails().setRecurAfter(feeMeetingFrequency.getMeetingDetails().getRecurAfter());
-//
-//        customerMeeting.setMeetingStartDate(installmentDates.get(0).getInstallmentDueDate());
-//
-//        Date repaymentEndDate = installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate();
-//
-//        try {
-//            return customerMeeting.getAllDates(repaymentEndDate);
-//        } catch (MeetingException e) {
-//            throw new AccountException(e);
-//        } finally {
-//            customerMeeting.setMeetingStartDate(meetingStartDate);
-//            customerMeeting.getMeetingDetails().setRecurAfter(recurAfter);
-//        }
     }
 
     protected final FeeInstallment buildFeeInstallment(final Short installmentId, final Money accountFeeAmount,

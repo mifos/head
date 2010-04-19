@@ -29,23 +29,12 @@ import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity;
 import org.mifos.accounts.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegrationTestCase {
-
-    static {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
-        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
-        MessageLookup.getInstance().setMessageSource(springMessageSource);
-    }
 
     public AcceptedPaymentTypePersistenceIntegrationTest() throws Exception {
         super();
@@ -81,7 +70,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
             transactionAcceptedPaymentTypes.setTransactionType(transactionType);
             currentAcceptedPaymentTypes.add(transactionAcceptedPaymentTypes);
             TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes2 = new TransactionAcceptedPaymentTypes();
-            List<AcceptedPaymentType> acceptedPaymentTypes2 = new ArrayList<AcceptedPaymentType>(acceptedPaymentTypes);
+            List<AcceptedPaymentType> acceptedPaymentTypes2 = new ArrayList(acceptedPaymentTypes);
             transactionAcceptedPaymentTypes2.setAcceptedPaymentTypes(acceptedPaymentTypes2);
             transactionAcceptedPaymentTypes2.setTransactionType(transactionType);
             allAcceptedPaymentTypes.add(transactionAcceptedPaymentTypes2);

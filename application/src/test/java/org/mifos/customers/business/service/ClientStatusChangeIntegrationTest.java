@@ -56,6 +56,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -67,10 +68,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/applicationContext.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml",
-                                    "/org/mifos/config/resources/services.xml" })
+@ContextConfiguration(locations = { "/integration-test-context.xml", "/hibernate-daos.xml", "/services.xml" })
 public class ClientStatusChangeIntegrationTest {
 
     @Autowired
@@ -96,6 +94,9 @@ public class ClientStatusChangeIntegrationTest {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
         DatabaseSetup.initializeHibernate();
+
+        // so messageSource bean is available.
+        SpringUtil.initializeSpring();
     }
 
     @AfterClass

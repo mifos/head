@@ -41,7 +41,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -53,7 +52,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.config.Localization;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -81,31 +79,17 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
-
-    static {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG_CORE);
-        MessageSource springMessageSource = applicationContext.getBean(MessageSource.class);
-        MessageLookup.getInstance().setMessageSource(springMessageSource);
-
-        AuditConfigurtion.init(Localization.getInstance().getMainLocale());
-    }
-
     public ClientCustActionStrutsTest() throws Exception {
         super();
     }
@@ -1195,7 +1179,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    public void ignore_testSuccessfulUpdatePersonalInfo_AuditLog() throws Exception {
+    public void testSuccessfulUpdatePersonalInfo_AuditLog() throws Exception {
         createClientForAuditLog();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "editPersonalInfo");
