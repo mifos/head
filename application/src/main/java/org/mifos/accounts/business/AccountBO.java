@@ -1149,57 +1149,50 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
-            final Short installmentToSkip) throws AccountException {
+            final Short installmentToSkip) {
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
     }
 
     protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
-            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
+            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled) {
 
         return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, isRepaymentIndepOfMeetingEnabled, true);
     }
 
     protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
-            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled, final boolean adjustForHolidays)
-            throws AccountException {
+            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled, final boolean adjustForHolidays) {
+
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating intallment dates");
+
+        List<InstallmentDate> dueInstallmentDates = new ArrayList<InstallmentDate>();
         if (noOfInstallments > 0) {
-            try {
-                List<Date> dueDates;
-                if (isRepaymentIndepOfMeetingEnabled) {
-                    dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
-                            + installmentToSkip, adjustForHolidays);
-                } else {
+            List<Date> dueDates;
 
-                    List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                    List<Holiday> holidays = new ArrayList<Holiday>();
+            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+            List<Holiday> holidays = new ArrayList<Holiday>();
 
-                    if (adjustForHolidays) {
-                        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                        holidays = holidayDao.findAllHolidaysThisYearAndNext();
-                    }
-
-                    final int occurrences = noOfInstallments + installmentToSkip;
-
-                    DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
-                    ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-                    ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
-                            holidays);
-
-                    List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences,
-                            startFromMeetingDate, scheduledEvent);
-                    dueDates = new ArrayList<Date>();
-                    for (DateTime installmentDate : installmentDates) {
-                        dueDates.add(installmentDate.toDate());
-                    }
-                }
-
-                return createInstallmentDates(installmentToSkip, dueDates);
-            } catch (MeetingException e) {
-                throw new AccountException(e);
+            if (adjustForHolidays) {
+                HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+                holidays = holidayDao.findAllHolidaysThisYearAndNext();
             }
+
+            final int occurrences = noOfInstallments + installmentToSkip;
+
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                    workingDays, holidays);
+
+            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(occurrences, startFromMeetingDate,
+                    scheduledEvent);
+            dueDates = new ArrayList<Date>();
+            for (DateTime installmentDate : installmentDates) {
+                dueDates.add(installmentDate.toDate());
+            }
+
+            dueInstallmentDates = createInstallmentDates(installmentToSkip, dueDates);
         }
-        return new ArrayList<InstallmentDate>();
+        return dueInstallmentDates;
     }
 
     private List<InstallmentDate> createInstallmentDates(final Short installmentToSkip, final List<Date> dueDates) {
@@ -1417,11 +1410,6 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-    }
-
-    protected List<InstallmentDate> getInstallmentDates(final MeetingBO Meeting, final Integer installmentSkipToStartRepayment)
-            throws AccountException {
-        return null;
     }
 
     @Deprecated
