@@ -64,12 +64,19 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
     public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
             ScheduledEvent scheduledEvent) {
 
-        DateTime lastGeneratedDate = null;
+        DateTime lastGeneratedDate = lastScheduledDate;
         List<DateTime> generatedDates = new ArrayList<DateTime>();
         do {
-            generatedDates.addAll(this.generateScheduledDates(10, lastScheduledDate, scheduledEvent));
+            generatedDates.addAll(this.generateScheduledDates(10, lastGeneratedDate, scheduledEvent));
             lastGeneratedDate = generatedDates.get(generatedDates.size()-1);
-        } while (!lastGeneratedDate.isAfter(throughDate));
+
+            if (lastGeneratedDate.isBefore(throughDate)) {
+                // roll forward date by one
+                lastGeneratedDate = lastGeneratedDate.plusDays(1);
+            }
+
+        } while (lastGeneratedDate.isBefore(throughDate));
+
         return removeDatesAfterThroughDate(generatedDates, throughDate);
     }
 
