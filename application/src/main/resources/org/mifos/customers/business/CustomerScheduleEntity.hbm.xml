@@ -48,7 +48,7 @@
 	
 	<query name="getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate">
 		<![CDATA[
-		select customerAccount.accountId
+		select distinct customerAccount.accountId
 		from org.mifos.customers.business.CustomerAccountBO as customerAccount
 		inner join customerAccount.accountFees accountFees
 		inner join accountFees.fees fees

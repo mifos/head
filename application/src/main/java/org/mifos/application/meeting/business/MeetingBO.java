@@ -46,6 +46,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -363,11 +364,7 @@ public class MeetingBO extends AbstractBusinessObject {
      */
     public Date getNextScheduleDateAfterRecurrence(final Date meetingDate) throws MeetingException {
         Date currentScheduleDate = getNextScheduleDateAfterRecurrenceWithoutAdjustment(meetingDate);
-        // return
-        // HolidayUtils.adjustDate(HolidayUtils.getCalendar(currentScheduleDate),
-        // this).getTime();
         return HolidayUtils.adjustDate(DateUtils.getCalendarDate(currentScheduleDate.getTime()), this).getTime();
-        // return currentScheduleDate;
     }
 
     public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(final Date afterDate) throws MeetingException {
@@ -398,7 +395,12 @@ public class MeetingBO extends AbstractBusinessObject {
         return prevScheduleDate;
     }
 
-    // TODO - keithw - I think this method gets all meeting dates from (meetingStartDate) up to (endDate)
+    /**
+     * completely removed from production code usage. now only used from deprecated on constructors for test use.
+     *
+     * @deprecated - please use {@link HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration#generateScheduledDatesThrough(org.joda.time.DateTime, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
+     */
+    @SuppressWarnings("unchecked")
     @Deprecated
     public List<Date> getAllDates(final Date endDate) throws MeetingException {
         validateEndDate(endDate);
@@ -410,6 +412,8 @@ public class MeetingBO extends AbstractBusinessObject {
     }
 
     /**
+     * completely removed from production code usage. now only used from deprecated on constructors for test use.
+     *
      * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */
     @Deprecated
@@ -420,8 +424,9 @@ public class MeetingBO extends AbstractBusinessObject {
     /**
      * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
-    public List<Date> getAllDates(final int occurrences, final boolean adjustForHolidays) throws MeetingException {
+    private List<Date> getAllDates(final int occurrences, final boolean adjustForHolidays) throws MeetingException {
         validateOccurences(occurrences);
         List meetingDates = new ArrayList();
         Date meetingDate = getFirstDate(getStartDate());

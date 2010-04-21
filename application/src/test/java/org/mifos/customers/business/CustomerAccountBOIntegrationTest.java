@@ -104,6 +104,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
         workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         holidays = new ArrayList<Holiday>();
@@ -641,9 +642,13 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("2"));
         UserContext uc = TestUtils.makeUser();
         customerAccountBO.setUserContext(uc);
+
+        // exercise test
         customerAccountBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                 .getAmountDoubleValue());
         StaticHibernateUtil.commitTransaction();
+
+        // verification
         Date lastAppliedDate = null;
         Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {

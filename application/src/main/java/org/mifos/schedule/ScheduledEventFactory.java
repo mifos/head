@@ -79,4 +79,28 @@ public class ScheduledEventFactory {
         return createScheduledEvent(period, every, dayOfWeek, dayOfMonth, weekOfMonth);
     }
 
+    /**
+     * create scheduled event based on meeting details but override recurrence details of meeting with data passed in.
+     */
+    public static ScheduledEvent createScheduledEventFrom(MeetingBO customerMeeting, MeetingBO overridingDetails) {
+
+        RecurrenceType period = customerMeeting.getRecurrenceType();
+        int every = overridingDetails.getRecurAfter().intValue();
+
+        int dayOfWeek = 0;
+        if (customerMeeting.getMeetingDetails().getWeekDay() != null) {
+            dayOfWeek = WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(customerMeeting.getMeetingDetails().getWeekDay().getValue());
+        }
+
+        int dayOfMonth = 0;
+        if (customerMeeting.getMeetingDetails().getDayNumber() != null) {
+            dayOfMonth = customerMeeting.getMeetingDetails().getDayNumber();
+        }
+        int weekOfMonth = 0;
+        if (customerMeeting.getMeetingDetails().getWeekRank() != null) {
+            weekOfMonth = customerMeeting.getMeetingDetails().getWeekRank().getValue();
+        }
+
+        return createScheduledEvent(period, every, dayOfWeek, dayOfMonth, weekOfMonth);
+    }
 }
