@@ -38,7 +38,6 @@ public class HolidayAndWorkingDaysScheduledDateGeneration implements ScheduledDa
     @Override
     public List<DateTime> generateScheduledDatesThrough(DateTime lastScheduledDate, DateTime throughDate,
             ScheduledEvent scheduledEvent) {
-        // TODO Auto-generated method stub
         return null;
     }
 

@@ -357,16 +357,6 @@ public class MeetingBO extends AbstractBusinessObject {
         return true;
     }
 
-    /**
-     * start from the next schedule date after the first valid date falling
-     * after start date, and loop till current schedule date is after meeting
-     * date
-     */
-    public Date getNextScheduleDateAfterRecurrence(final Date meetingDate) throws MeetingException {
-        Date currentScheduleDate = getNextScheduleDateAfterRecurrenceWithoutAdjustment(meetingDate);
-        return HolidayUtils.adjustDate(DateUtils.getCalendarDate(currentScheduleDate.getTime()), this).getTime();
-    }
-
     public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(final Date afterDate) throws MeetingException {
         validateMeetingDate(afterDate);
         Date from = getFirstDate(getStartDate());
@@ -397,6 +387,7 @@ public class MeetingBO extends AbstractBusinessObject {
 
     /**
      * completely removed from production code usage. now only used from deprecated on constructors for test use.
+     * delete when all use of this from tests is removed.
      *
      * @deprecated - please use {@link HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration#generateScheduledDatesThrough(org.joda.time.DateTime, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */
@@ -413,6 +404,7 @@ public class MeetingBO extends AbstractBusinessObject {
 
     /**
      * completely removed from production code usage. now only used from deprecated on constructors for test use.
+     * delete when all use of this from tests is removed.
      *
      * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
      */

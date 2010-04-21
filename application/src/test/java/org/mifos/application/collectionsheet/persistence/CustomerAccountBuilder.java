@@ -41,7 +41,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 /**
  *
@@ -73,7 +73,7 @@ public class CustomerAccountBuilder {
         DateTime startFromMeetingDate = new DateTime(customer.getCustomerMeetingValue().getMeetingStartDate());
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                 thisAndNextYearsHolidays);
         List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
                 scheduledEvent);

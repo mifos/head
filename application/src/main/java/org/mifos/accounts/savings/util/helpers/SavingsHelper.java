@@ -113,19 +113,6 @@ public class SavingsHelper {
         return new Date(date.getTime());
     }
 
-    /**
-     * start from getting a next schedule date after fiscal start date and loop till get a meeting date after account
-     * activation date
-     */
-    private Date getFirstDate(MeetingBO meeting, Date accountActivationDate) throws MeetingException {
-        Date date = null;
-        for (date = meeting.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
-                .compareTo(accountActivationDate) <= 0; date = meeting.getNextScheduleDateAfterRecurrence(date)) {
-            ;
-        }
-        return date;
-    }
-
     /*
      * from Rhino release the interest calculation date and posting are the same, which is at the end of month
      */
