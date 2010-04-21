@@ -56,7 +56,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
@@ -291,7 +291,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
         List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-        dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, thisAndNextYearsHolidays);
+        dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, thisAndNextYearsHolidays);
     }
 
     private void houseKeeping() {

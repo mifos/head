@@ -36,7 +36,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class FeeInstallment {
 
@@ -95,10 +95,10 @@ public class FeeInstallment {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         List<Holiday> noHolidays = new ArrayList<Holiday>();
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                 noHolidays);
-        // FIXME - #00003 - keithw - should generate dates upto last repayment date got from non-holiday adjusted scheduledDates
-        List<DateTime> feeDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate, scheduledEvent);
+        DateTime endDate = new DateTime(installmentDates.get(installmentDates.size()-1).getInstallmentDueDate());
+        List<DateTime> feeDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate, endDate, scheduledEvent);
 
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         for (DateTime feeDate : feeDates) {

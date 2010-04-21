@@ -81,7 +81,6 @@ import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -517,7 +516,7 @@ public class CustomerAccountBO extends AccountBO {
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                     holidays);
 
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
