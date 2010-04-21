@@ -94,7 +94,7 @@ import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
 public class SavingsBO extends AccountBO {
@@ -947,7 +947,7 @@ public class SavingsBO extends AccountBO {
         DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
 
@@ -967,9 +967,8 @@ public class SavingsBO extends AccountBO {
         DateTime startFromDayAfterLastKnownInstallmentDate = new DateTime(lastInstallment.getActionDate()).plusDays(1);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays, holidays);
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10,
-                startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
 
         short installmentNumber = lastInstallment.getInstallmentId();
         for (DateTime depositDate : depositDates) {
@@ -1874,8 +1873,7 @@ public class SavingsBO extends AccountBO {
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysScheduledDateGeneration(workingDays,
-                    holidays);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
