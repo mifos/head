@@ -20,17 +20,15 @@
 
 package org.mifos.accounts.business;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.accounts.exceptions.AccountException;
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -182,46 +180,29 @@ public class AccountFeesEntity extends AbstractEntity {
         return false;
     }
 
-
     /**
      * Count the number of fee installments due after this periodic fee's last-applied date, up to and
      * including the given date. The fees' installment dates are calculated using the customer's meeting
      * schedule (weekly, monthly) but the periodic fee's recurrence rate (every, every second, etc), and
      * starting with the fee's last applied date.
-     *
-     * @param date count fee installments up to this date
-     * @throws AccountException
      */
-    public Integer getApplicableDatesCount(final Date date) throws AccountException {
-        Integer applicableDatesCount = 0;
+    public Integer getApplicableDatesCount(final List<DateTime> installmentDates) {
+
+        List<DateTime> applicableDates = new ArrayList<DateTime>();
+
         if (getLastAppliedDate() != null) {
-            MeetingBO meetingBO = getAccount().getCustomer().getCustomerMeeting().getMeeting();
-            Date customerMeetingStartDate = meetingBO.getMeetingStartDate();
-            Short recurAfter = meetingBO.getMeetingDetails().getRecurAfter();
-            meetingBO.setMeetingStartDate(getLastAppliedDate());
-            meetingBO.getMeetingDetails().setRecurAfter(
-                    getFees().getFeeFrequency().getFeeMeetingFrequency().getMeetingDetails().getRecurAfter());
-            List<Date> applDates = null;
-            try {
-                applDates = meetingBO.getAllDates(date);
-            } catch (ApplicationException e) {
-                throw new AccountException(e);
-            }
-            if (applDates != null && !applDates.isEmpty()) {
-                Iterator<Date> itr = applDates.iterator();
-                while (itr.hasNext()) {
-                    Date appliedDate = itr.next();
-                    if (DateUtils.getDateWithoutTimeStamp(appliedDate.getTime()).compareTo(
-                            DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) == 0) {
-                        itr.remove();
-                    }
+
+            for (DateTime installmentDate : installmentDates) {
+                if (DateUtils.getDateWithoutTimeStamp(installmentDate.toDate().getTime()).compareTo(
+                        DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) == 0) {
+                    // is not applicable
+                } else {
+                    applicableDates.add(installmentDate);
                 }
-                applicableDatesCount = applDates.size();
             }
-            meetingBO.setMeetingStartDate(customerMeetingStartDate);
-            meetingBO.getMeetingDetails().setRecurAfter(recurAfter);
         }
-        return applicableDatesCount;
+
+        return applicableDates.size();
     }
 
     public void setAccount(AccountBO account) {
@@ -235,5 +216,4 @@ public class AccountFeesEntity extends AbstractEntity {
     public int getVersionNo() {
         return versionNo;
     }
-
 }

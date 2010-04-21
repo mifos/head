@@ -352,4 +352,16 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
     }
+
+    public static void update(CustomerBO customer) {
+        try {
+            new CustomerPersistence().createOrUpdate(customer);
+            StaticHibernateUtil.commitTransaction();
+          } catch (Exception e) {
+              StaticHibernateUtil.rollbackTransaction();
+              throw new RuntimeException(e);
+          } finally {
+              StaticHibernateUtil.closeSession();
+          }
+    }
 }

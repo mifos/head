@@ -22,9 +22,16 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import org.joda.time.Days;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -63,19 +70,30 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
     }
 
     @Override
-    public void execute(long timeInMills) throws BatchJobException {
+    public void execute(@SuppressWarnings("unused") long timeInMills) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
-        List<Integer> accountIds;
+        Set<Integer> accountIds;
         AccountPersistence accountPersistence = getAccountPersistence();
         try {
             accountIds = accountPersistence.getAccountsWithYesterdaysInstallment();
         } catch (Exception e) {
             throw new BatchJobException(e);
         }
+
         for (Integer accountId : accountIds) {
             try {
-                CustomerAccountBO customerAccountBO = (CustomerAccountBO) accountPersistence.getAccount(accountId);
-                customerAccountBO.applyPeriodicFees();
+                CustomerAccountBO customerAccount = (CustomerAccountBO) accountPersistence.getAccount(accountId);
+
+                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+
+                HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+                List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+
+                customerAccount.applyPeriodicFees(workingDays, holidays);
+
+                StaticHibernateUtil.startTransaction();
+                CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+                customerDao.save(customerAccount);
                 StaticHibernateUtil.commitTransaction();
             } catch (Exception e) {
                 StaticHibernateUtil.rollbackTransaction();
@@ -84,6 +102,7 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
                 StaticHibernateUtil.closeSession();
             }
         }
+
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }

@@ -37,7 +37,7 @@ import org.mifos.framework.util.helpers.Money;
 public class FeeBuilder {
 
     private final GLCodeEntity feeGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
-    private final MeetingBuilder meetingPeriodicity = new MeetingBuilder().periodicFeeMeeting().weekly().every(1);
+    private MeetingBuilder meetingPeriodicity = new MeetingBuilder().periodicFeeMeeting().weekly().every(1);
     private final FeeFrequencyType feeFrequencyType = FeeFrequencyType.PERIODIC;
     private String name = "weekly-client-periodic-fee";
     private FeeCategory category = FeeCategory.CLIENT;
@@ -91,6 +91,11 @@ public class FeeBuilder {
 
     public FeeBuilder withOffice(final OfficeBO withOffice) {
         this.office = withOffice;
+        return this;
+    }
+
+    public FeeBuilder with(MeetingBuilder withMeeting) {
+        this.meetingPeriodicity = withMeeting;
         return this;
     }
 }

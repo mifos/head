@@ -26,9 +26,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -103,14 +105,15 @@ public class AccountPersistence extends Persistence {
         return (AccountFeesEntity) getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
     }
 
+    @SuppressWarnings("unchecked")
     public List<AccountStateEntity> getAccountStates(Short optionalFlag) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OPTIONAL_FLAG", optionalFlag);
         return executeNamedQuery(NamedQueryConstants.GET_ACCOUNT_STATES, queryParameters);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Integer> getAccountsWithYesterdaysInstallment() throws PersistenceException {
+    @SuppressWarnings({ "unchecked", "cast" })
+    public Set<Integer> getAccountsWithYesterdaysInstallment() throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         Calendar currentDateCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
@@ -123,9 +126,9 @@ public class AccountPersistence extends Persistence {
         queryParameters.put("ONHOLD_CLIENT_STATE", CustomerConstants.CLIENT_ONHOLD);
         queryParameters.put("ONHOLD_GROUP_STATE", GroupConstants.HOLD);
         queryParameters.put("CURRENT_DATE", currentDateCalendar.getTime());
-        return executeNamedQuery(
-                "getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate",
-                queryParameters);
+        List<Integer> matchingAccounts = (List<Integer>) executeNamedQuery("getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate", queryParameters);
+
+        return new HashSet(matchingAccounts);
     }
 
     public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException {

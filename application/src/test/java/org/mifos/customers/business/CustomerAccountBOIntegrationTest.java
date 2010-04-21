@@ -66,8 +66,10 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -84,6 +86,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
+
     public CustomerAccountBOIntegrationTest() throws Exception {
         super();
     }
@@ -91,22 +94,19 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
 
     private CustomerAccountBO customerAccountBO;
-
     private CustomerBO center;
-
     private CustomerBO group;
-
     private CustomerBO client;
-
     private UserContext userContext;
-
-    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-    private List<Holiday> holidays = new ArrayList<Holiday>();
+    private List<Days> workingDays;
+    private List<Holiday> holidays;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         userContext = TestObjectFactory.getContext();
+        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        holidays = new ArrayList<Holiday>();
     }
 
     @Override
@@ -116,7 +116,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
@@ -130,10 +129,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
         AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getAccountActionDate(
                 (short) lastInstallmentId);
-
-
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> holidays = new ArrayList<Holiday>();
 
         // exercise test
         center.getCustomerAccount().generateNextSetOfMeetingDates(workingDays, holidays);
@@ -401,19 +396,19 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testApplyPeriodicFees() throws ApplicationException, SystemException {
         createInitialObjects();
-        FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
-                RecurrenceType.WEEKLY, Short.valueOf("1"));
-        AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(), fee,
-                ((AmountFeeBO) fee).getFeeAmount().getAmountDoubleValue(), null, null, new Date(System
-                        .currentTimeMillis()));
-        AccountTestUtils.addAccountFees(accountFeesEntity, group.getCustomerAccount());
-        TestObjectFactory.updateObject(group);
-        TestObjectFactory.flushandCloseSession();
+        FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("1"));
+        AccountFeesEntity accountFeesEntity = new AccountFeesEntity(group.getCustomerAccount(), fee,((AmountFeeBO) fee).getFeeAmount().getAmountDoubleValue(), null, null, new Date(System.currentTimeMillis()));
 
-        group = TestObjectFactory.getGroup(group.getCustomerId());
+        group.getCustomerAccount().addAccountFees(accountFeesEntity);
 
-        CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group.getCustomerAccount()
-                .getAccountActionDates().toArray()[0];
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        StaticHibernateUtil.startTransaction();
+        customerDao.save(group);
+        StaticHibernateUtil.commitTransaction();
+
+        group = customerDao.findGroupBySystemId(group.getGlobalCustNum());
+
+        CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group.getCustomerAccount().getAccountActionDates().toArray()[0];
 
         Set<AccountFeesActionDetailEntity> feeDetailsSet = accountActionDateEntity.getAccountFeesActionDetails();
 
@@ -421,11 +416,20 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : feeDetailsSet) {
             feeList.add(accountFeesActionDetailEntity.getAccountFeesActionDetailId());
         }
-        group.getCustomerAccount().applyPeriodicFees();
-        TestObjectFactory.flushandCloseSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
+
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> holidays = new ArrayList<Holiday>();
+
+        // exercise test
+        group.getCustomerAccount().applyPeriodicFees(workingDays, holidays);
+
+//        TestObjectFactory.flushandCloseSession();
+
+        group = customerDao.findGroupBySystemId(group.getGlobalCustNum());
+
         CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group.getCustomerAccount()
                 .getAccountActionDates().toArray()[0];
+
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : firstInstallment
                 .getAccountFeesActionDetails()) {
             if (!feeList.contains(accountFeesActionDetailEntity.getAccountFeesActionDetailId())) {
@@ -434,7 +438,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         StaticHibernateUtil.closeSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
+        group = customerDao.findGroupBySystemId(group.getGlobalCustNum());
     }
 
     public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {
@@ -517,15 +521,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         AccountActionDateEntity nextInstallment = center.getCustomerAccount().getDetailsOfNextInstallment();
-/*        short nextInstallmentId = 0;
-        if (accountActionDateEntity != null) {
-            if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
-                nextInstallmentId = (short) (accountActionDateEntity.getInstallmentId().intValue() + 1);
-            } else {
-                nextInstallmentId = (short) accountActionDateEntity.getInstallmentId().intValue();
-            }
-        }
-*/
+
         MeetingBO meeting = center.getCustomerMeeting().getMeeting();
         meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
         meeting.setMeetingStartDate(nextInstallment.getActionDate());
