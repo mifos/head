@@ -370,6 +370,7 @@ public interface NamedQueryConstants {
     public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
     public String GET_ALL_CUSTOMERS = "Customer.getAllCustomers";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";
+    public String GET_SEARCH_IDS_FOR_OFFICE = "Customer.getSearchIdsForOffice";
     public String GET_SQL_CUSTOMER_COUNT_FOR_OFFICE = "Customer.Sql.getCustomerCountForOffice";
     public String GET_SQL_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE = "Customer.Sql.getCustomerCountBasedOnStatusForOffice";
     public String GET_SQL_VERY_POOR_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE = "Customer.Sql.getVeryPoorCustomerCountBasedOnStatusForOffice";

@@ -1238,7 +1238,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return false;
     }
 
-    private void generateSearchId() throws CustomerException {
+    protected void generateSearchId() throws CustomerException {
         int count;
         if (getParentCustomer() != null) {
             childAddedForParent(getParentCustomer());

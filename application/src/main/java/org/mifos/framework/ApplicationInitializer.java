@@ -61,6 +61,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyCompositeUserType;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
@@ -139,6 +140,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                 LOG.info(getDatabaseConnectionInfo(), false, null);
 
+                // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
+                MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+                AccountingRules.init(); // load the additional currencies
                 DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
                 try {
                     /*
@@ -191,7 +195,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                     Configuration.getInstance();
                     MifosConfiguration.getInstance().init();
                     configureAuditLogValues(Localization.getInstance().getMainLocale());
-                    AccountingRules.init();
                 }
             }
         } catch (Exception e) {

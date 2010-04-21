@@ -49,6 +49,7 @@ import org.dbunit.operation.DatabaseOperation;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.service.test.TestingService;
 
 
@@ -104,6 +105,8 @@ public class DataSetUpgradeUtil {
             File[] listOfFiles = directory.listFiles();
 
             if (listOfFiles != null ) {
+                int totalFilesToUpgrade = countFilesToUpgrade(listOfFiles);
+                int filesUpgraded = 0;
                 for (File listOfFile : listOfFiles) {
                     String currentFilename = listOfFile.getName();
                     if (listOfFile.isFile() &&
@@ -111,6 +114,8 @@ public class DataSetUpgradeUtil {
                         String dataFileName = dataSetDirectoryName + File.separator + currentFilename;
                         upgrade(dataFileName);
                         dump(dataFileName);
+                        filesUpgraded++;
+                        System.out.println("Finished " + filesUpgraded + "/" + totalFilesToUpgrade);
                     }
                 }
             } else {
@@ -120,6 +125,18 @@ public class DataSetUpgradeUtil {
             upgrade(dataSetName);
             dump(dataSetName);
         }
+    }
+
+    private int countFilesToUpgrade(File[] listOfFiles) {
+        int fileCount = 0;
+        for (File listOfFile : listOfFiles) {
+            String currentFilename = listOfFile.getName();
+            if (listOfFile.isFile() &&
+                    currentFilename.endsWith("dbunit.xml.zip")) {
+                ++fileCount;
+            }
+        }
+        return fileCount;
     }
 
     private void resetDatabase(String databaseName, Connection connection) throws SQLException {
@@ -165,6 +182,7 @@ public class DataSetUpgradeUtil {
         }
 
         System.setProperty(TestingService.TEST_MODE_SYSTEM_PROPERTY,"acceptance");
+        SpringUtil.initializeSpring();
         ApplicationInitializer applicationInitializer = new ApplicationInitializer();
         applicationInitializer.init(null);
         System.out.println(" upgrade done!");

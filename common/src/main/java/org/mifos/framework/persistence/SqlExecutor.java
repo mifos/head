@@ -57,9 +57,10 @@ public class SqlExecutor {
         statement.executeBatch();
         statement.close();
 
+        conn.commit();
+
         // Leaving: Set auto commit true if auto commit was true
         if (wasAutoCommit) {
-            conn.commit();
             conn.setAutoCommit(true);
         }
     }

@@ -56,6 +56,7 @@ import org.mifos.application.master.persistence.Upgrade223;
 import org.mifos.application.master.persistence.Upgrade225;
 import org.mifos.application.master.persistence.Upgrade237;
 import org.mifos.application.master.persistence.Upgrade238;
+import org.mifos.application.master.persistence.Upgrade240;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -66,7 +67,7 @@ import org.mifos.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 239;
+    public static final int APPLICATION_VERSION = 240;
     public static final int FIRST_NUMBERED_VERSION = 100;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
@@ -130,7 +131,8 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade225());
         register236(register);
         register(register, new Upgrade237());
-        register(register, new Upgrade238()); // will be renamed with latest version # on commit
+        register(register, new Upgrade238());
+        register(register, new Upgrade240());
         return Collections.unmodifiableMap(register);
     }
 

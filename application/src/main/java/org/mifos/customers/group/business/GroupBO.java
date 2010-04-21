@@ -36,6 +36,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
@@ -368,13 +369,14 @@ public class GroupBO extends CustomerBO {
 
         String searchId = null;
         if (getParentCustomer() != null) {
+            // for a group that is under a center
             childAddedForParent(getParentCustomer());
             searchId = getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount();
         } else {
+            // for a group that is under an office/branch
             try {
-                int customerCount = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.GROUP,
-                        getOffice().getOfficeId());
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + String.valueOf(customerCount + 1);
+                int newSearchIdSuffix = getCustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, getOffice().getOfficeId()) + 1;
+                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
             } catch (PersistenceException pe) {
                 throw new CustomerException(pe);
             }
@@ -479,6 +481,21 @@ public class GroupBO extends CustomerBO {
         if (!this.getParentCustomer().isActive()) {
             throw new CustomerException(GroupConstants.CENTER_INACTIVE, new Object[] { MessageLookup
                     .getInstance().lookupLabel(ConfigurationConstants.CENTER, this.getUserContext()) });
+        }
+    }
+
+    /*
+     * This methed is used to regenerate the searchId for a group
+     * which has a bad searchId due to previous bugs (such as MIFOS-2737)
+     */
+    public void updateSearchId() throws CustomerException {
+        generateSearchId();
+        update();
+        if (getChildren() != null) {
+            for (CustomerBO client : getChildren()) {
+                client.setUserContext(getUserContext());
+                ((ClientBO) client).handleGroupTransfer();
+            }
         }
     }
 }
