@@ -22,6 +22,8 @@ package org.mifos.application.meeting.util.helpers;
 
 import java.util.List;
 
+import org.mifos.application.master.MessageLookup;
+
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 public enum RankOfDay {
@@ -59,17 +61,16 @@ public enum RankOfDay {
         return Arrays.asList(values());
     }
 
+    /**
+     * This method will always read from Message resource bundle as
+     * see the class doc of {@link MessageLookup}
+     * @return
+     */
     public String getName() {
-        return lookUp(this);
+        return MessageLookup.getInstance().lookup(getPropertiesKey());
     }
 
     public String getPropertiesKey() {
-        return "WeekDay." + toString();
-    }
-
-    // FIXME Broken localization,
-    // Leaving it to be worked out during localization work
-    public static String lookUp(RankOfDay rank) {
-        return rank.toString().substring(0, 1) + rank.toString().substring(1).toLowerCase();
+        return RankOfDay.class.getSimpleName()+ "." + toString();
     }
 }

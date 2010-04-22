@@ -45,8 +45,8 @@ public class WeekDayTest extends TestCase {
        Assert.assertEquals(SUNDAY, SATURDAY.next());
     }
 
-    public void testLookUp() {
-        Assert.assertEquals("Monday", WeekDay.lookUp(MONDAY));
+    public void testgetPropertiesKey() {
+        Assert.assertEquals("WeekDay.MONDAY", MONDAY.getPropertiesKey());
     }
 
 }

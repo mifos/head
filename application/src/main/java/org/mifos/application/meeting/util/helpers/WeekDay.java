@@ -21,16 +21,17 @@
 package org.mifos.application.meeting.util.helpers;
 
 import org.joda.time.DateTimeConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {
-    SUNDAY((short) 1), //
-    MONDAY((short) 2), //
-    TUESDAY((short) 3), //
+    SUNDAY   ((short) 1), //
+    MONDAY   ((short) 2), //
+    TUESDAY  ((short) 3), //
     WEDNESDAY((short) 4), //
-    THURSDAY((short) 5), //
-    FRIDAY((short) 6), //
-    SATURDAY((short) 7); //
+    THURSDAY ((short) 5), //
+    FRIDAY   ((short) 6), //
+    SATURDAY ((short) 7); //
 
     private Short value;
 
@@ -82,18 +83,16 @@ public enum WeekDay implements LocalizedTextLookup {
         return getWeekDay(value + 1);
     }
 
+    /**
+     * This method will always read from Message resource bundle as
+     * see the class doc of {@link MessageLookup}
+     * @return
+     */
     public String getName() {
-        return lookUp(this);
+        return MessageLookup.getInstance().lookup(getPropertiesKey());
     }
 
     public String getPropertiesKey() {
-        return "WeekDay." + toString();
-    }
-
-    // FIXME Broken localization,
-    // Leaving it to be worked out during localization work
-    // For now it returns "Monday" for WeekDay.MONDAY and so on
-    public static String lookUp(WeekDay weekDay) {
-        return weekDay.toString().substring(0, 1) + weekDay.toString().substring(1).toLowerCase();
+        return WeekDay.class.getSimpleName()+ "." + toString();
     }
 }

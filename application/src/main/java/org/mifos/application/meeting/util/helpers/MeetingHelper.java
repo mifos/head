@@ -55,7 +55,7 @@ public class MeetingHelper {
             }
             args[0] = meeting.getMeetingDetails().getRecurAfter();
             WeekDay weekDay = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
-            args[1] = WeekDay.lookUp(weekDay);
+            args[1] = weekDay.getName();
         } else if (meeting.isMonthlyOnDate()) {
             if (updatedMeeting) {
                 key = MeetingConstants.MONTH_DAY_SCHEDULE_CHANGE;
