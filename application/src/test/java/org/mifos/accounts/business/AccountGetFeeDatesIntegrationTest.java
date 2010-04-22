@@ -16,7 +16,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -84,14 +83,14 @@ public class AccountGetFeeDatesIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void getScheduledDatesForFeesForGivenCustomerForWeeklySchedules() throws Exception {
 
         // setup
-        weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(yesterday).build();
+        DateTime firstTuesdayInstallmentDate = new DateMidnight().toDateTime().withDate(2010, 4, 20);
+        weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(firstTuesdayInstallmentDate).build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        MeetingBuilder weeklyMeetingForFees = new MeetingBuilder().periodicFeeMeeting().weekly().every(1).withStartDate(yesterday);
+        MeetingBuilder weeklyMeetingForFees = new MeetingBuilder().periodicFeeMeeting().weekly().every(1).withStartDate(firstTuesdayInstallmentDate);
 
         weeklyPeriodicFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
                                                         .withFeeAmount("100.0")
@@ -107,10 +106,9 @@ public class AccountGetFeeDatesIntegrationTest {
 
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
 
-        DateTime meetingStartDate = new DateTime().minusDays(7);
+        DateTime meetingStartDate = firstTuesdayInstallmentDate.minusDays(7);
         MeetingBO feeMeetingFrequency = new MeetingBuilder().periodicFeeMeeting().weekly().every(1).occuringOnA(WeekDay.MONDAY).startingFrom(meetingStartDate.toDate()).build();
 
-        DateTime firstTuesdayInstallmentDate = new DateMidnight().toDateTime().withDate(2010, 4, 20);
         InstallmentDate installment1 = new InstallmentDate(Short.valueOf("1"), firstTuesdayInstallmentDate.toDate());
         InstallmentDate installment2 = new InstallmentDate(Short.valueOf("2"), firstTuesdayInstallmentDate.plusWeeks(1).toDate());
         InstallmentDate installment3 = new InstallmentDate(Short.valueOf("3"), firstTuesdayInstallmentDate.plusWeeks(2).toDate());
