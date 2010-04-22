@@ -22,9 +22,8 @@ package org.mifos.schedule.internal;
 
 import org.joda.time.DateTime;
 import org.mifos.calendar.CalendarUtils;
-import org.mifos.schedule.ScheduledEvent;
 
-public class MonthlyOnDateScheduledEvent implements ScheduledEvent {
+public class MonthlyOnDateScheduledEvent extends AbstractScheduledEvent {
 
     private final int every;
     private final int dayOfMonth;
@@ -45,5 +44,11 @@ public class MonthlyOnDateScheduledEvent implements ScheduledEvent {
 
         return CalendarUtils.getFirstDateForMonthOnDate(startDate, this.dayOfMonth);
     }
+
+    @Override
+    public int getEvery() {
+        return every;
+    }
+
 
 }

@@ -22,9 +22,8 @@ package org.mifos.schedule.internal;
 
 import org.joda.time.DateTime;
 import org.mifos.calendar.CalendarUtils;
-import org.mifos.schedule.ScheduledEvent;
 
-public class DailyScheduledEvent implements ScheduledEvent {
+public class DailyScheduledEvent extends AbstractScheduledEvent {
 
     private final int every;
 
@@ -40,5 +39,12 @@ public class DailyScheduledEvent implements ScheduledEvent {
 
         return CalendarUtils.getNextDateForDay(startDate, every);
     }
+
+    @Override
+    public int getEvery() {
+        return every;
+    }
+
+
 
 }

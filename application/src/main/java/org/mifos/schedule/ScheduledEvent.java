@@ -27,4 +27,8 @@ public interface ScheduledEvent {
     DateTime nearestMatchingDateBeginningAt(DateTime lastScheduledDate);
 
     DateTime nextEventDateAfter(DateTime lastestGeneratedDate);
+
+    int getEvery();
+
+    int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int installment);
 }

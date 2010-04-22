@@ -22,9 +22,8 @@ package org.mifos.schedule.internal;
 
 import org.joda.time.DateTime;
 import org.mifos.calendar.CalendarUtils;
-import org.mifos.schedule.ScheduledEvent;
 
-public class WeeklyScheduledEvent implements ScheduledEvent {
+public class WeeklyScheduledEvent extends AbstractScheduledEvent {
 
     private final int every;
     private final int dayOfWeek;
@@ -43,5 +42,10 @@ public class WeeklyScheduledEvent implements ScheduledEvent {
     public DateTime nearestMatchingDateBeginningAt(final DateTime startDate) {
 
         return CalendarUtils.getFirstDateForWeek(startDate, this.dayOfWeek);
+    }
+
+    @Override
+    public int getEvery() {
+        return every;
     }
 }

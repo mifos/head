@@ -25,7 +25,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
-public class AccountFeesActionDetailEntity extends AbstractEntity {
+public class AccountFeesActionDetailEntity extends AbstractEntity implements Comparable<AccountFeesActionDetailEntity> {
 
     private final Integer accountFeesActionDetailId;
 
@@ -135,5 +135,9 @@ public class AccountFeesActionDetailEntity extends AbstractEntity {
      */
     public void adjustFeeAmount(Money difference) {
         setFeeAmount(getFeeAmount().add(difference));
+    }
+
+    public int compareTo(final AccountFeesActionDetailEntity obj) {
+        return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
     }
 }

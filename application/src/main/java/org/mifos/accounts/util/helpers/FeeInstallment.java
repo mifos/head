@@ -28,7 +28,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.FiscalCalendarRules;
@@ -50,7 +49,7 @@ public class FeeInstallment {
         feeInstallment.setInstallmentId(installmentId);
         feeInstallment.setAccountFee(accountFeeAmount);
         feeInstallment.setAccountFeesEntity(accountFee);
-        accountFee.setAccountFeeAmount(accountFeeAmount);
+        //accountFee.setAccountFeeAmount(accountFeeAmount);
         return feeInstallment;
     }
 
@@ -61,18 +60,56 @@ public class FeeInstallment {
 
         for (AccountFeesEntity accountFeesEntity : accountFees) {
             if (accountFeesEntity.isActive()) {
-                Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
-                if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-
+                if (accountFeesEntity.isOneTime()) {
                     feeInstallmentList.add(FeeInstallment.handleOneTime(accountFeesEntity, installmentDates));
-
-                } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
+                } else { //periodic
                     feeInstallmentList.addAll(FeeInstallment.handlePeriodic(accountFeesEntity, installmentDates));
                 }
             }
         }
 
         return feeInstallmentList;
+    }
+
+    public static List<FeeInstallment> createMergedFeeInstallments(ScheduledEvent masterEvent,
+            List<AccountFeesEntity> accountFees, int numberOfInstallments) {
+
+        List<FeeInstallment> mergedFeeInstallments = new ArrayList<FeeInstallment>();
+        for (AccountFeesEntity accountFeesEntity : accountFees) {
+            mergedFeeInstallments
+                .addAll(createMergedFeeInstallmentsForOneFee(masterEvent, accountFeesEntity, numberOfInstallments));
+            }
+        return mergedFeeInstallments;
+    }
+
+    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFee (ScheduledEvent masterEvent,
+            AccountFeesEntity accountFeesEntity, int numberOfInstallments) {
+
+        List<FeeInstallment> mergedFeeInstallments = new ArrayList<FeeInstallment>();
+        if (accountFeesEntity.getFees().isOneTime()) {
+            FeeInstallment feeInstallment
+            = buildFeeInstallment(
+                    (short) 1,  //Customer one-time fees are always up-front, due at the first meeting
+                    accountFeesEntity.getAccountFeeAmount(),
+                    accountFeesEntity);
+            mergedFeeInstallments.add(feeInstallment);
+        } else { // periodic fee
+            ScheduledEvent feesEvent
+            = ScheduledEventFactory
+            .createScheduledEventFrom(accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency());
+            for (short installmentId = 1; installmentId <= numberOfInstallments; installmentId++) {
+                int numberOfFeeInstallmentsToRollup = masterEvent.numberOfEventsRollingUpToThis(feesEvent, installmentId);
+                if (numberOfFeeInstallmentsToRollup > 0) {
+                    FeeInstallment feeInstallment
+                    = buildFeeInstallment(
+                            installmentId,
+                            accountFeesEntity.getAccountFeeAmount().multiply(numberOfFeeInstallmentsToRollup),
+                            accountFeesEntity);
+                    mergedFeeInstallments.add(feeInstallment);
+                }
+            }
+        }
+        return mergedFeeInstallments;
     }
 
     public static FeeInstallment handleOneTime(final AccountFeesEntity accountFee,

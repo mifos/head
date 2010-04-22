@@ -21,7 +21,10 @@
 package org.mifos.customers.business;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -211,6 +214,13 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 
     public int getVersionNo() {
         return versionNo;
+    }
+
+    public List<AccountFeesActionDetailEntity> getAccountFeesActionDetailsSortedByFeeId() {
+        List<AccountFeesActionDetailEntity> sortedList = new ArrayList<AccountFeesActionDetailEntity>();
+        sortedList.addAll(this.getAccountFeesActionDetails());
+        Collections.sort(sortedList);
+        return sortedList;
     }
 
 }

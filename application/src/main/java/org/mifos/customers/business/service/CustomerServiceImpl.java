@@ -84,10 +84,6 @@ import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -204,22 +200,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
+//        assertAccountFeesRecurrenceMatchesCustomerMeetingRecurrence(meeting, accountFees);
         try {
             StaticHibernateUtil.startTransaction();
             this.customerDao.save(customer);
 
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
-                    thisAndNextYearsHolidays);
-            List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
-                    scheduledEvent);
-
-            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees, installmentDates);
+            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees,
+                    meeting, workingDays, thisAndNextYearsHolidays);
             customer.addAccount(customerAccount);
             this.customerDao.save(customer);
             StaticHibernateUtil.commitTransaction();
@@ -235,6 +224,23 @@ public class CustomerServiceImpl implements CustomerService {
             StaticHibernateUtil.closeSession();
         }
     }
+
+    /* not needed -- fees can be different recurAfter from the customer
+    private void assertAccountFeesRecurrenceMatchesCustomerMeetingRecurrence(MeetingBO customerMeeting,
+            List<AccountFeesEntity> accountFees) {
+
+        for (AccountFeesEntity accountFeesEntity : accountFees) {
+            if (accountFeesEntity.isPeriodic()) {
+               if (customerMeeting.getRecurAfter() != accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency().getRecurAfter()) {
+                   throw new IllegalArgumentException("Unimplemented feature: mismatch between fee recurAfter and customer recurAfter.");
+               }
+            }
+
+
+        }
+
+    }
+    */
 
     @Override
     public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center)

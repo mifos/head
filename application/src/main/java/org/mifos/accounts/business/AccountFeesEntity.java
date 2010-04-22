@@ -173,6 +173,10 @@ public class AccountFeesEntity extends AbstractEntity {
         return getFees().isPeriodic();
     }
 
+    public boolean isOneTime() {
+        return getFees().isOneTime();
+    }
+
     public boolean isActive() {
         if (feeStatus == null || feeStatus.equals(FeeStatus.ACTIVE.getValue())) {
             return true;

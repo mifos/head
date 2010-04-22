@@ -92,6 +92,8 @@ public class CustomerAccountBO extends AccountBO {
 
     private FeePersistence feePersistence;
 
+    private static int numberOfMeetingDatesToGenerateOnCreation = 10;
+
     @Override
     public FeePersistence getFeePersistence() {
         if (feePersistence == null) {
@@ -106,44 +108,61 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     public static CustomerAccountBO createNew(CustomerBO customer, List<AccountFeesEntity> accountFees,
-            List<DateTime> installmentDates) {
+            MeetingBO customerMeeting, List<Days> workingDays, List<Holiday> thisYearsAndNextYearsHolidays) {
 
         try {
-            List<InstallmentDate> withHolidayInstallmentDates = InstallmentDate.createInstallmentDates(installmentDates);
+            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+            DateTime meetingStartDate = new DateTime(customerMeeting.getMeetingStartDate());
 
-            List<FeeInstallment> feeInstallmentList = FeeInstallment.createFeeInstallments(withHolidayInstallmentDates,
-                    accountFees);
-            List<FeeInstallment> mergedFeeInstallments = FeeInstallment.mergeFeeInstallments(feeInstallmentList);
+            List<InstallmentDate> withHolidayInstallmentDates
+                = generateMeetingDatesForNewCustomer(meetingScheduledEvent, meetingStartDate, workingDays,
+                                                     thisYearsAndNextYearsHolidays);
+            List<FeeInstallment> mergedFeeInstallments
+                = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees,
+                                                             numberOfMeetingDatesToGenerateOnCreation);
 
-            CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
-
-            for (InstallmentDate installmentDate : withHolidayInstallmentDates) {
-
-                CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(customerAccount, customer,
-                        installmentDate.getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate()
-                                .getTime()), PaymentStatus.UNPAID);
-
-                customerAccount.addAccountActionDate(customerScheduleEntity);
-
-                for (FeeInstallment feeInstallment : mergedFeeInstallments) {
-
-                    if (feeInstallment.getInstallmentId() != null) {
-                        if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())) {
-                            CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(
-                                    customerScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(),
-                                    feeInstallment.getAccountFeesEntity(), feeInstallment.getAccountFee());
-                            customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
-                        }
-                    }
-                }
-            }
-
-            return customerAccount;
+            return assembleCustomerAccountBO(customer, accountFees, withHolidayInstallmentDates, mergedFeeInstallments);
         } catch (AccountException e) {
             throw new MifosRuntimeException(e);
         }
     }
 
+    public static List<InstallmentDate> generateMeetingDatesForNewCustomer(ScheduledEvent meetingEvent, DateTime meetingStartDate,
+            List<Days> workingDays, List<Holiday> thisAndNextYearsHolidays) {
+
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
+                thisAndNextYearsHolidays);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerateOnCreation,
+                                                                            meetingStartDate,
+                                                                            meetingEvent);
+        return InstallmentDate.createInstallmentDates(meetingDates);
+    }
+
+    public static CustomerAccountBO assembleCustomerAccountBO(CustomerBO customer, List<AccountFeesEntity> accountFees,
+            List<InstallmentDate> withHolidayInstallmentDates, List<FeeInstallment> mergedFeeInstallments)
+                    throws AccountException {
+
+        CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
+
+        for (InstallmentDate installmentDate : withHolidayInstallmentDates) {
+
+            CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(customerAccount, customer,
+                    installmentDate.getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate()
+                            .getTime()), PaymentStatus.UNPAID);
+
+            customerAccount.addAccountActionDate(customerScheduleEntity);
+
+            for (FeeInstallment feeInstallment : mergedFeeInstallments) {
+                if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())) {
+                    CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(
+                            customerScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(), feeInstallment
+                                    .getAccountFeesEntity(), feeInstallment.getAccountFee());
+                    customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
+                }
+            }
+        }
+        return customerAccount;
+    }
     /**
      * default constructor for hibernate usage
      */

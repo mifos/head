@@ -40,7 +40,14 @@ public class InstallmentDate {
         }
         return installmentDates;
     }
-    
+
+    /**
+     * Find the installmentId of the first installmentDate in the list that is on or after the given feeDate. If
+     * there are none, return null.
+     * @param installmentDates the list of {@link InstallmentDate} to search, in order.
+     * @param feeDate the Date to search for
+     * @return the installmentId of the first entry in the list whose date is on or after feeDate, or null if none.
+     */
     public static Short findMatchingInstallmentId(List<InstallmentDate> installmentDates, Date feeDate) {
         for (InstallmentDate installmentDate : installmentDates) {
             if (DateUtils.getDateWithoutTimeStamp(installmentDate.getInstallmentDueDate().getTime()).compareTo(
@@ -50,7 +57,7 @@ public class InstallmentDate {
         }
         return null;
     }
-    
+
     @SuppressWarnings("unused")
     private InstallmentDate() {
     }

@@ -19,29 +19,17 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
-import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 /**
  *
@@ -63,6 +51,8 @@ public class CustomerAccountBuilder {
                 createdByUserId, false);
         return customerAccount;
     }
+
+    /* TODO KRP: Refactor to use new signature for method CustomerAccountBO.createNew()
 
     public CustomerAccountBO buildForIntegrationTests() {
 
@@ -90,6 +80,7 @@ public class CustomerAccountBuilder {
 
         return customerAccount;
     }
+    */
 
     public CustomerAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
