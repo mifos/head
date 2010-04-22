@@ -48,10 +48,10 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.ppi.business.PPISurvey;
@@ -390,7 +390,7 @@ public class SurveyInstanceAction extends BaseAction {
      */
     public static String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
         if (surveyType == SurveyType.CLIENT || surveyType == SurveyType.CENTER || surveyType == SurveyType.GROUP) {
-            CustomerBO customer = CustomerBusinessService.getInstance().findBySystemId(globalNum);
+            CustomerBO customer = new CustomerPersistence().findBySystemId(globalNum);
             return customer.getDisplayName();
         } else if (surveyType == SurveyType.LOAN) {
             LoanBusinessService service = new LoanBusinessService();
@@ -406,16 +406,13 @@ public class SurveyInstanceAction extends BaseAction {
 
     public static AbstractBusinessObject getBusinessObject(SurveyType surveyType, String globalNum) throws Exception {
         if (surveyType == SurveyType.CLIENT) {
-            ClientBO client = (ClientBO) CustomerBusinessService.getInstance().findBySystemId(globalNum,
-                    CustomerLevel.CLIENT.getValue());
+            ClientBO client = (ClientBO) new CustomerPersistence().findBySystemId(globalNum, CustomerLevel.CLIENT.getValue());
             return client;
         } else if (surveyType == SurveyType.CENTER) {
-            CenterBO center = (CenterBO) CustomerBusinessService.getInstance().findBySystemId(globalNum,
-                    CustomerLevel.CENTER.getValue());
+            CenterBO center = (CenterBO) new CustomerPersistence().findBySystemId(globalNum, CustomerLevel.CENTER.getValue());
             return center;
         } else if (surveyType == SurveyType.GROUP) {
-            GroupBO group = (GroupBO) CustomerBusinessService.getInstance().findBySystemId(globalNum,
-                    CustomerLevel.GROUP.getValue());
+            GroupBO group = (GroupBO) new CustomerPersistence().findBySystemId(globalNum, CustomerLevel.GROUP.getValue());
             return group;
         } else if (surveyType == SurveyType.LOAN) {
             LoanBusinessService service = new LoanBusinessService();

@@ -90,18 +90,17 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class BaseAction extends DispatchAction {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
     protected abstract BusinessService getService() throws ServiceException;
 
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-
-    // FIXME - #00034 - keithw - wire up in spring context
     protected CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
-    protected final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -113,6 +112,10 @@ public abstract class BaseAction extends DispatchAction {
         if (springAppContext != null) {
             this.customerDao = springAppContext.getBean(CustomerDao.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
+            this.centerDetailsServiceFacade = springAppContext.getBean(CenterDetailsServiceFacade.class);
+            this.groupDetailsServiceFacade = springAppContext.getBean(GroupDetailsServiceFacade.class);
+            this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
+            this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
         }
 
         if (MifosTask.isBatchJobRunning()) {

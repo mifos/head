@@ -21,16 +21,20 @@
 package org.mifos.customers.persistence;
 
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -40,13 +44,18 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelView;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
 import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
+import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.GroupDisplayDto;
+import org.mifos.customers.util.helpers.LoanCycleCounter;
+import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
@@ -87,6 +96,8 @@ public interface CustomerDao {
     List<FeeBO> retrieveFeesApplicableToGroupsRefinedBy(MeetingBO customerMeeting);
 
     List<FeeBO> retrieveFeesApplicableToClientsRefinedBy(MeetingBO customerMeetingValue);
+
+    List<CustomerDetailDto> findClientsThatAreNotCancelledOrClosedReturningDetailDto(String searchId, Short branchId);
 
     List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
 
@@ -142,7 +153,7 @@ public interface CustomerDao {
 
     List<CustomerDetailDto> findGroupsUnderUser(PersonnelBO personnel);
 
-    // FIXME - #000003 - keithw - below are non customer related methods to be moved out
+    // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
     List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);
@@ -150,4 +161,22 @@ public interface CustomerDao {
     List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
 
     List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
+
+    String getAvgLoanAmountForMemberInGoodOrBadStanding(String searchId, Short branchId);
+
+    String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(String searchId, Short branchId);
+
+    String getTotalSavingsAmountForGroupandClientsOfGroup(String searchId, Short branchId);
+
+    List<LoanCycleCounter> fetchLoanCycleCounter(Integer groupId, Short value);
+
+    GroupDisplayDto getGroupDisplayDto(Integer customerId, UserContext userContext);
+
+    ClientDisplayDto getClientDisplayDto(Integer customerId, UserContext userContext);
+
+    List<CustomerFlagDto> getCustomerFlagDto(Set<CustomerFlagDetailEntity> customerFlags);
+
+    List<LoanDetailDto> getLoanDetailDto(List<LoanBO> openLoanAccounts);
+
+    CustomerPerformanceHistoryView numberOfMeetings(boolean bool, Integer clientId);
 }

@@ -25,8 +25,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -34,9 +32,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -67,7 +63,6 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerSearch;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerView;
@@ -76,7 +71,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.BasicGroupInfo;
 import org.mifos.customers.group.business.GroupBO;
@@ -473,72 +467,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         account = savingsList.get(0);
         group = account.getCustomer();
         center = group.getParentCustomer();
-    }
-
-    public void testNumberOfMeetingsAttended() throws Exception {
-        center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-
-        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.ABSENT);
-
-        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.PRESENT);
-
-        Calendar currentDate = new GregorianCalendar();
-        currentDate.roll(Calendar.DATE, 1);
-
-        client.handleAttendance(new Date(currentDate.getTimeInMillis()), AttendanceType.LATE);
-
-        StaticHibernateUtil.commitTransaction();
-
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(true,
-                client.getCustomerId());
-        Assert.assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended().intValue());
-
-        StaticHibernateUtil.closeSession();
-    }
-
-    public void testNumberOfMeetingsMissed() throws Exception {
-        center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-
-        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.PRESENT);
-        client.handleAttendance(new Date(System.currentTimeMillis()), AttendanceType.ABSENT);
-
-        Calendar currentDate = new GregorianCalendar();
-        currentDate.roll(Calendar.DATE, 1);
-
-        client.handleAttendance(new Date(currentDate.getTimeInMillis()), AttendanceType.APPROVED_LEAVE);
-
-        StaticHibernateUtil.commitTransaction();
-
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.numberOfMeetings(false,
-                client.getCustomerId());
-        Assert.assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed().intValue());
-        StaticHibernateUtil.closeSession();
-    }
-
-    public void testLastLoanAmount() throws PersistenceException, AccountException {
-        Date startDate = new Date(System.currentTimeMillis());
-        center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, center.getCustomerMeeting()
-                .getMeeting());
-        LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341", client,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        account = (AccountBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loanBO.getAccountId());
-        AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.LOAN_CLOSED_OBLIGATIONS_MET);
-        account.setUserContext(TestObjectFactory.getContext());
-        account.changeStatus(accountStateEntity.getId(), null, "");
-        TestObjectFactory.updateObject(account);
-        CustomerPersistence customerPersistence = new CustomerPersistence();
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence.getLastLoanAmount(client
-                .getCustomerId());
-        Assert.assertEquals("300.0", customerPerformanceHistoryView.getLastLoanAmount());
     }
 
     public void testFindBySystemId() throws Exception {

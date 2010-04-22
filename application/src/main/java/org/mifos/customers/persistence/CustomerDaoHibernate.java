@@ -26,12 +26,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -46,11 +48,14 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerView;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -63,10 +68,13 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
 import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
+import org.mifos.customers.util.helpers.ClientDisplayDto;
+import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
@@ -74,6 +82,9 @@ import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.GroupDisplayDto;
+import org.mifos.customers.util.helpers.LoanCycleCounter;
+import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -255,6 +266,21 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public void save(CustomerAccountBO customerAccount) {
         this.genericDao.createOrUpdate(customerAccount);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CustomerDetailDto> findClientsThatAreNotCancelledOrClosedReturningDetailDto(String searchId, Short branchId) {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", branchId);
+        List<CustomerDetailDto> clients = (List<CustomerDetailDto>) genericDao.executeNamedQuery("Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled", queryParameters);
+
+        // bug #1417 - wrong client sort order. Client sort order on bulk
+        // entry screens should match ordering on group details page.
+        Collections.sort(clients, CustomerDetailDto.searchIdComparator());
+        return clients;
     }
 
     @Override
@@ -928,5 +954,298 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
         queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
         return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_groups", queryParameters, CustomerDetailDto.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public String getAvgLoanAmountForMemberInGoodOrBadStanding(String groupSearchId, Short groupOfficeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getAvgLoanAmountForMemberInGoodOrBadStanding", queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Integer numberOfLoansInGoodOrBadStanding = (Integer) queryResult.get(0)[1];
+        Money totalLoanAmountInGoodOrBadStanding = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[2]);
+        Money avgLoanAmountInGoodOrBadStanding = new Money(mifosCurrency);
+        if (numberOfLoansInGoodOrBadStanding.intValue() > 0) {
+            avgLoanAmountInGoodOrBadStanding = totalLoanAmountInGoodOrBadStanding
+                    .divide(numberOfLoansInGoodOrBadStanding);
+        }
+
+        return avgLoanAmountInGoodOrBadStanding.toString();
+    }
+
+    @Override
+    public String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(String groupSearchId, Short groupOfficeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId);
+        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups", queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Money totalOutstandingLoanAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
+        return totalOutstandingLoanAmount.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public String getTotalSavingsAmountForGroupandClientsOfGroup(String groupSearchId, Short groupOfficeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", groupSearchId);
+        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
+        queryParameters.put("OFFICE_ID", groupOfficeId);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getTotalSavingsAmountForGroupandClientsOfGroup", queryParameters);
+
+        if (queryResult.size() > 1) {
+            return localizedMessageLookup("errors.multipleCurrencies");
+        }
+        if (queryResult.size() == 0) {
+            return new Money(Money.getDefaultCurrency()).toString();
+        }
+
+        // TODO - use default currency or retrieved currency?
+        Short currency = (Short) queryResult.get(0)[0];
+        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
+
+        Money totalSavingsAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
+        return totalSavingsAmount.toString();
+    }
+
+    @Override
+    public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId, Short customerLevelId) {
+
+        List<LoanCycleCounter> loanCycles = new ArrayList<LoanCycleCounter>();
+
+        if (CustomerLevel.GROUP.getValue().equals(customerLevelId)) {
+            loanCycles = runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP, customerId);
+        } else if (CustomerLevel.CLIENT.getValue().equals(customerLevelId)) {
+            loanCycles = runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_CLIENT, customerId);
+        }
+        return loanCycles;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<LoanCycleCounter> runLoanCycleQuery(final String queryName, final Integer customerId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("customerId", customerId);
+        List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery(queryName, queryParameters);
+        if (null != queryResult && queryResult.size() > 0) {
+            for (Object[] objects : queryResult) {
+                loanCycleCounters.add(new LoanCycleCounter((String) objects[0], (Integer) objects[1]));
+            }
+        }
+        return loanCycleCounters;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public GroupDisplayDto getGroupDisplayDto(Integer groupId, UserContext userContext) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("GROUP_ID", groupId);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("getGroupDisplayDto", queryParameters);
+
+        if (queryResult.size() == 0) {
+            throw new MifosRuntimeException("Group not found: " + groupId);
+        }
+        if (queryResult.size() > 1) {
+            throw new MifosRuntimeException("Error finding Group id: " + groupId + " - Number found: "
+                    + queryResult.size());
+        }
+
+        final Integer customerId = (Integer) queryResult.get(0)[0];
+        final String globalCustNum = (String) queryResult.get(0)[1];
+        final String displayName = (String) queryResult.get(0)[2];
+        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
+        final Short branchId = (Short) queryResult.get(0)[4];
+        final String externalId = (String) queryResult.get(0)[5];
+        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
+        final Date customerActivationDate = (Date) queryResult.get(0)[7];
+        final Short customerLevelId = (Short) queryResult.get(0)[8];
+        final Short customerStatusId = (Short) queryResult.get(0)[9];
+        final String lookupName = (String) queryResult.get(0)[10];
+        final Boolean trained = (Boolean) queryResult.get(0)[11];
+        final Date trainedDate = (Date) queryResult.get(0)[12];
+        final Boolean blackListed = (Boolean) queryResult.get(0)[13];
+        final Short loanOfficerId = (Short) queryResult.get(0)[14];
+        final String loanOfficerName = (String) queryResult.get(0)[15];
+        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+
+        return new GroupDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId,
+                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
+                customerStatusName, trained, trainedDate, blackListed, loanOfficerId, loanOfficerName);
+    }
+
+    @Override
+    public List<CustomerFlagDto> getCustomerFlagDto(Set<CustomerFlagDetailEntity> customerFlagDetails) {
+        if (customerFlagDetails != null) {
+            List<CustomerFlagDto> customerFlags = new ArrayList<CustomerFlagDto>();
+            for (CustomerFlagDetailEntity customerFlag : customerFlagDetails) {
+                customerFlags.add(new CustomerFlagDto(customerFlag.getStatusFlag().getName()));
+            }
+            return customerFlags;
+        }
+        // FIXME - can i just return empty list instead of null?
+        return null;
+    }
+
+    @Override
+    public List<LoanDetailDto> getLoanDetailDto(List<LoanBO> loanAccounts) {
+        // refactor this and correct statusName
+        if (loanAccounts != null) {
+            List<LoanDetailDto> loanDetail = new ArrayList<LoanDetailDto>();
+            for (LoanBO loan : loanAccounts) {
+                loanDetail.add(new LoanDetailDto(loan.getGlobalAccountNum(), loan.getLoanOffering()
+                        .getPrdOfferingName(), loan.getAccountState().getId(), loan.getAccountState().getName(), loan
+                        .getLoanSummary().getOutstandingBalance(), loan.getTotalAmountDue()));
+            }
+            return loanDetail;
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ClientDisplayDto getClientDisplayDto(Integer clientId, UserContext userContext) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CLIENT_ID", clientId);
+        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientDisplayDto", queryParameters);
+
+        if (queryResult.size() == 0) {
+            throw new MifosRuntimeException("Client not found: " + clientId);
+        }
+        if (queryResult.size() > 1) {
+            throw new MifosRuntimeException("Error finding Client id: " + clientId + " - Number found: "
+                    + queryResult.size());
+        }
+
+        final Integer customerId = (Integer) queryResult.get(0)[0];
+        final String globalCustNum = (String) queryResult.get(0)[1];
+        final String displayName = (String) queryResult.get(0)[2];
+        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
+        final String branchName = (String) queryResult.get(0)[4];
+        final String externalId = (String) queryResult.get(0)[5];
+        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
+        final Date customerActivationDate = (Date) queryResult.get(0)[7];
+        final Short customerLevelId = (Short) queryResult.get(0)[8];
+        final Short customerStatusId = (Short) queryResult.get(0)[9];
+        final String lookupName = (String) queryResult.get(0)[10];
+        final Date trainedDate = (Date) queryResult.get(0)[11];
+        final Date dateOfBirth = (Date) queryResult.get(0)[12];
+        final String governmentId = (String) queryResult.get(0)[13];
+        final Short groupFlag = (Short) queryResult.get(0)[14];
+        final Boolean blackListed = (Boolean) queryResult.get(0)[15];
+        final Short loanOfficerId = (Short) queryResult.get(0)[16];
+        final String loanOfficerName = (String) queryResult.get(0)[17];
+        final String businessActivitiesName = (String) queryResult.get(0)[18];
+        final String handicappedName = (String) queryResult.get(0)[19];
+        final String maritalStatusName = (String) queryResult.get(0)[20];
+        final String citizenshipName = (String) queryResult.get(0)[21];
+        final String ethnicityName = (String) queryResult.get(0)[22];
+        final String educationLevelName = (String) queryResult.get(0)[23];
+        final String povertyStatusName = (String) queryResult.get(0)[24];
+        final Short numChildren = (Short) queryResult.get(0)[25];
+        final Integer pictureId = (Integer) queryResult.get(0)[26];
+
+        Boolean clientUnderGroup = false;
+        if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
+            clientUnderGroup = true;
+        }
+        Boolean isCustomerPicture = false;
+        if (pictureId != null) {
+            isCustomerPicture = true;
+        }
+        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
+        final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
+        final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
+        final String maritalStatus = MessageLookup.getInstance().lookup(maritalStatusName, userContext);
+        final String citizenship = MessageLookup.getInstance().lookup(citizenshipName, userContext);
+        final String ethnicity = MessageLookup.getInstance().lookup(ethnicityName, userContext);
+        final String educationLevel = MessageLookup.getInstance().lookup(educationLevelName, userContext);
+        final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
+
+        String spouseFatherValue = null;
+        String spouseFatherName = null;
+        List<ClientFamilyDetailDto> familyDetails = null;
+        Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+
+        if (areFamilyDetailsRequired) {
+            familyDetails = new ArrayList<ClientFamilyDetailDto>();
+
+            List<Object[]> familyDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientFamilyDetailDto", queryParameters);
+
+            for (Object[] familyDetail : familyDetailsQueryResult) {
+                final String relationshipLookup = (String) familyDetail[0];
+                final String familyDisplayName = (String) familyDetail[1];
+                final Date familyDateOfBirth = (Date) familyDetail[2];
+                final String genderLookup = (String) familyDetail[3];
+                final String livingStatusLookup = (String) familyDetail[4];
+
+                final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
+                final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
+                final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
+
+                familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
+                        livingStatus));
+            }
+        } else {
+
+            List<Object[]> clientNameDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientNameDetailDto", queryParameters);
+
+            final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
+            spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
+            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+        }
+
+        return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
+                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
+                customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
+                loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
+                educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
+                spouseFatherValue, spouseFatherName, familyDetails);
+    }
+
+    @Override
+    public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer clientId) {
+
+        CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
+
+        java.util.Date dateOneYearBefore = new DateTime().minusYears(1).toDate();
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMERID", clientId);
+        queryParameters.put("DATEONEYEARBEFORE", dateOneYearBefore);
+
+        if (isPresent) {
+            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED, queryParameters);
+            customerPerformanceHistoryView.setMeetingsAttended(result.intValue());
+        } else {
+            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED, queryParameters);
+            customerPerformanceHistoryView.setMeetingsMissed(result.intValue());
+        }
+
+        return customerPerformanceHistoryView;
     }
 }

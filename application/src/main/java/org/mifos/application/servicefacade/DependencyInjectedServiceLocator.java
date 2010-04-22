@@ -35,7 +35,6 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHiber
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
@@ -141,8 +140,7 @@ public class DependencyInjectedServiceLocator {
 
     public static ClientDetailsServiceFacade locateClientDetailsServiceFacade() {
         if (clientDetailsServiceFacade == null) {
-            CustomerBusinessService customerBusinessService = new CustomerBusinessService(customerPersistence);
-            clientDetailsServiceFacade = new WebTierClientDetailsServiceFacade(customerDao, customerBusinessService);
+            clientDetailsServiceFacade = new WebTierClientDetailsServiceFacade(customerDao);
         }
         return clientDetailsServiceFacade;
     }
@@ -150,8 +148,7 @@ public class DependencyInjectedServiceLocator {
 
     public static GroupDetailsServiceFacade locateGroupDetailsServiceFacade() {
         if (groupDetailsServiceFacade == null) {
-            CustomerBusinessService customerBusinessService = new CustomerBusinessService(customerPersistence);
-            groupDetailsServiceFacade = new WebTierGroupDetailsServiceFacade(customerDao, customerBusinessService);
+            groupDetailsServiceFacade = new WebTierGroupDetailsServiceFacade(customerDao);
         }
         return groupDetailsServiceFacade;
     }

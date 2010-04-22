@@ -26,8 +26,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +53,9 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.CurrencyMismatchException;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerPerformanceHistoryView;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.business.CustomerView;
@@ -77,21 +73,15 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.util.helpers.ClientDisplayDto;
-import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.GroupDisplayDto;
-import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -99,7 +89,6 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -207,7 +196,7 @@ public class CustomerPersistence extends Persistence {
     }
 
     /**
-     * use {@link CustomerDao#findCenterBySystemId(String)}.
+     * @deprecated use {@link CustomerDao#findCenterBySystemId(String)}.
      */
     @Deprecated
     public CustomerBO findBySystemId(final String globalCustNum, final Short levelId) throws PersistenceException {
@@ -594,48 +583,6 @@ public class CustomerPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER, queryParameters);
     }
 
-    public CustomerPerformanceHistoryView numberOfMeetings(final boolean isPresent, final Integer customerId)
-            throws PersistenceException, InvalidDateException {
-        Session session = null;
-        Query query = null;
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
-        session = getHibernateUtil().getSessionTL();
-        String systemDate = DateUtils.getCurrentDate();
-        Date localDate = DateUtils.getLocaleDate(systemDate);
-        Calendar currentDate = new GregorianCalendar();
-        currentDate.setTime(localDate);
-        currentDate.add(currentDate.YEAR, -1);
-        Date dateOneYearBefore = new Date(currentDate.getTimeInMillis());
-        if (isPresent) {
-            query = session.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED);
-            query.setInteger("CUSTOMERID", customerId);
-            query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-            customerPerformanceHistoryView.setMeetingsAttended(new Long((Long) query.uniqueResult()).intValue());
-        } else {
-            query = session.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED);
-            query.setInteger("CUSTOMERID", customerId);
-            query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-            customerPerformanceHistoryView.setMeetingsMissed(new Long((Long) query.uniqueResult()).intValue());
-        }
-        return customerPerformanceHistoryView;
-    }
-
-    public CustomerPerformanceHistoryView getLastLoanAmount(final Integer customerId) throws PersistenceException {
-        Query query = null;
-        Session session = getHibernateUtil().getSessionTL();
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = null;
-        if (null != session) {
-            query = session.getNamedQuery(NamedQueryConstants.GETLASTLOANAMOUNT);
-        }
-        query.setInteger("CUSTOMERID", customerId);
-        Object obj = query.uniqueResult();
-        if (obj != null) {
-            customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
-            customerPerformanceHistoryView.setLastLoanAmount(query.uniqueResult().toString());
-        }
-        return customerPerformanceHistoryView;
-    }
-
     public List<CustomerStatusEntity> getCustomerStates(final Short optionalFlag) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OPTIONAL_FLAG", optionalFlag);
@@ -731,30 +678,6 @@ public class CustomerPersistence extends Persistence {
         queryParameters.put("LEVEL_ID", customerLevelId);
         List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
         return queryResult;
-    }
-
-    public List<LoanCycleCounter> fetchLoanCycleCounter(final Integer customerId, final Short customerLevelId)
-            throws PersistenceException {
-        if (CustomerLevel.GROUP.getValue().equals(customerLevelId)) {
-            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP, customerId);
-        } else if (CustomerLevel.CLIENT.getValue().equals(customerLevelId)) {
-            return runLoanCycleQuery(NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_CLIENT, customerId);
-        }
-        return new ArrayList<LoanCycleCounter>();
-    }
-
-    private List<LoanCycleCounter> runLoanCycleQuery(final String queryName, final Integer customerId)
-            throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("customerId", customerId);
-        List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
-        List<Object[]> queryResult = executeNamedQuery(queryName, queryParameters);
-        if (null != queryResult && queryResult.size() > 0) {
-            for (Object[] objects : queryResult) {
-                loanCycleCounters.add(new LoanCycleCounter((String) objects[0], (Integer) objects[1]));
-            }
-        }
-        return loanCycleCounters;
     }
 
     public List<CustomerStatusEntity> retrieveAllCustomerStatusList(final Short levelId) throws PersistenceException {
@@ -1185,247 +1108,6 @@ public class CustomerPersistence extends Persistence {
         return (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
                 "findCustomerWithNoAssocationsLoaded", queryParameters, CollectionSheetCustomerDto.class);
 
-    }
-
-    @SuppressWarnings("unchecked")
-    /**
-     * @deprecated - move to customerDao
-     */
-    @Deprecated
-    public List<CustomerDetailDto> getListOfClientsUnderGroupOtherThanClosedAndCancelled(final String searchId,
-            final Short branchId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", searchId + ".%");
-        queryParameters.put("OFFICE_ID", branchId);
-        List<CustomerDetailDto> queryResult = executeNamedQuery(
-                "Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled", queryParameters);
-        return queryResult;
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getAvgLoanAmountForMemberInGoodOrBadStanding(final String groupSearchId, final Short groupOfficeId)
-            throws PersistenceException {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", groupSearchId + ".%");
-        queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = executeNamedQuery("Customer.getAvgLoanAmountForMemberInGoodOrBadStanding",
-                queryParameters);
-
-        if (queryResult.size() > 1) {
-            return localizedMessageLookup("errors.multipleCurrencies");
-        }
-        if (queryResult.size() == 0) {
-            return new Money(Money.getDefaultCurrency()).toString();
-        }
-
-        // TODO - use default currency or retrieved currency?
-        Short currency = (Short) queryResult.get(0)[0];
-        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
-
-        Integer numberOfLoansInGoodOrBadStanding = (Integer) queryResult.get(0)[1];
-        Money totalLoanAmountInGoodOrBadStanding = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[2]);
-        Money avgLoanAmountInGoodOrBadStanding = new Money(mifosCurrency);
-        if (numberOfLoansInGoodOrBadStanding.intValue() > 0) {
-            avgLoanAmountInGoodOrBadStanding = totalLoanAmountInGoodOrBadStanding
-                    .divide(numberOfLoansInGoodOrBadStanding);
-        }
-
-        return avgLoanAmountInGoodOrBadStanding.toString();
-
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getTotalOutstandingLoanAmountForGroupAndClientsOfGroups(final String groupSearchId,
-            final Short groupOfficeId) throws PersistenceException {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", groupSearchId);
-        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
-        queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = executeNamedQuery(
-                "Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups", queryParameters);
-
-        if (queryResult.size() > 1) {
-            return localizedMessageLookup("errors.multipleCurrencies");
-        }
-        if (queryResult.size() == 0) {
-            return new Money(Money.getDefaultCurrency()).toString();
-        }
-
-        // TODO - use default currency or retrieved currency?
-        Short currency = (Short) queryResult.get(0)[0];
-        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
-
-        Money totalOutstandingLoanAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
-        return totalOutstandingLoanAmount.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getTotalSavingsAmountForGroupandClientsOfGroup(final String groupSearchId, final Short groupOfficeId)
-            throws PersistenceException {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", groupSearchId);
-        queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
-        queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = executeNamedQuery("Customer.getTotalSavingsAmountForGroupandClientsOfGroup",
-                queryParameters);
-
-        if (queryResult.size() > 1) {
-            return localizedMessageLookup("errors.multipleCurrencies");
-        }
-        if (queryResult.size() == 0) {
-            return new Money(Money.getDefaultCurrency()).toString();
-        }
-
-        // TODO - use default currency or retrieved currency?
-        Short currency = (Short) queryResult.get(0)[0];
-        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
-
-        Money totalSavingsAmount = new Money(mifosCurrency, (BigDecimal) queryResult.get(0)[1]);
-        return totalSavingsAmount.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    public ClientDisplayDto getClientDisplayDto(final Integer clientId, UserContext userContext)
-            throws PersistenceException {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CLIENT_ID", clientId);
-        List<Object[]> queryResult = executeNamedQuery("getClientDisplayDto", queryParameters);
-
-        if (queryResult.size() == 0) {
-            throw new MifosRuntimeException("Client not found: " + clientId);
-        }
-        if (queryResult.size() > 1) {
-            throw new MifosRuntimeException("Error finding Client id: " + clientId + " - Number found: "
-                    + queryResult.size());
-        }
-
-        final Integer customerId = (Integer) queryResult.get(0)[0];
-        final String globalCustNum = (String) queryResult.get(0)[1];
-        final String displayName = (String) queryResult.get(0)[2];
-        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
-        final String branchName = (String) queryResult.get(0)[4];
-        final String externalId = (String) queryResult.get(0)[5];
-        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
-        final Date customerActivationDate = (Date) queryResult.get(0)[7];
-        final Short customerLevelId = (Short) queryResult.get(0)[8];
-        final Short customerStatusId = (Short) queryResult.get(0)[9];
-        final String lookupName = (String) queryResult.get(0)[10];
-        final Date trainedDate = (Date) queryResult.get(0)[11];
-        final Date dateOfBirth = (Date) queryResult.get(0)[12];
-        final String governmentId = (String) queryResult.get(0)[13];
-        final Short groupFlag = (Short) queryResult.get(0)[14];
-        final Boolean blackListed = (Boolean) queryResult.get(0)[15];
-        final Short loanOfficerId = (Short) queryResult.get(0)[16];
-        final String loanOfficerName = (String) queryResult.get(0)[17];
-        final String businessActivitiesName = (String) queryResult.get(0)[18];
-        final String handicappedName = (String) queryResult.get(0)[19];
-        final String maritalStatusName = (String) queryResult.get(0)[20];
-        final String citizenshipName = (String) queryResult.get(0)[21];
-        final String ethnicityName = (String) queryResult.get(0)[22];
-        final String educationLevelName = (String) queryResult.get(0)[23];
-        final String povertyStatusName = (String) queryResult.get(0)[24];
-        final Short numChildren = (Short) queryResult.get(0)[25];
-        final Integer pictureId = (Integer) queryResult.get(0)[26];
-
-        Boolean clientUnderGroup = false;
-        if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
-            clientUnderGroup = true;
-        }
-        Boolean isCustomerPicture = false;
-        if (pictureId != null) {
-            isCustomerPicture = true;
-        }
-        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
-        final String businessActivities = MessageLookup.getInstance().lookup(businessActivitiesName, userContext);
-        final String handicapped = MessageLookup.getInstance().lookup(handicappedName, userContext);
-        final String maritalStatus = MessageLookup.getInstance().lookup(maritalStatusName, userContext);
-        final String citizenship = MessageLookup.getInstance().lookup(citizenshipName, userContext);
-        final String ethnicity = MessageLookup.getInstance().lookup(ethnicityName, userContext);
-        final String educationLevel = MessageLookup.getInstance().lookup(educationLevelName, userContext);
-        final String povertyStatus = MessageLookup.getInstance().lookup(povertyStatusName, userContext);
-
-        String spouseFatherValue = null;
-        String spouseFatherName = null;
-        List<ClientFamilyDetailDto> familyDetails = null;
-        Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
-
-        if (areFamilyDetailsRequired) {
-            familyDetails = new ArrayList<ClientFamilyDetailDto>();
-
-            List<Object[]> familyDetailsQueryResult = executeNamedQuery("getClientFamilyDetailDto", queryParameters);
-
-            for (Object[] familyDetail : familyDetailsQueryResult) {
-                final String relationshipLookup = (String) familyDetail[0];
-                final String familyDisplayName = (String) familyDetail[1];
-                final Date familyDateOfBirth = (Date) familyDetail[2];
-                final String genderLookup = (String) familyDetail[3];
-                final String livingStatusLookup = (String) familyDetail[4];
-
-                final String relationship = MessageLookup.getInstance().lookup(relationshipLookup, userContext);
-                final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
-                final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
-
-                familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
-                        livingStatus));
-            }
-        } else {
-
-            List<Object[]> clientNameDetailsQueryResult = executeNamedQuery("getClientNameDetailDto", queryParameters);
-
-            final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
-            spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
-            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
-        }
-
-        return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
-                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
-                customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
-                loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
-                educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
-                spouseFatherValue, spouseFatherName, familyDetails);
-    }
-
-    @SuppressWarnings("unchecked")
-    public GroupDisplayDto getGroupDisplayDto(final Integer groupId, UserContext userContext)
-            throws PersistenceException {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("GROUP_ID", groupId);
-        List<Object[]> queryResult = executeNamedQuery("getGroupDisplayDto", queryParameters);
-
-        if (queryResult.size() == 0) {
-            throw new MifosRuntimeException("Group not found: " + groupId);
-        }
-        if (queryResult.size() > 1) {
-            throw new MifosRuntimeException("Error finding Group id: " + groupId + " - Number found: "
-                    + queryResult.size());
-        }
-
-        final Integer customerId = (Integer) queryResult.get(0)[0];
-        final String globalCustNum = (String) queryResult.get(0)[1];
-        final String displayName = (String) queryResult.get(0)[2];
-        final String parentCustomerDisplayName = (String) queryResult.get(0)[3];
-        final Short branchId = (Short) queryResult.get(0)[4];
-        final String externalId = (String) queryResult.get(0)[5];
-        final String customerFormedByDisplayName = (String) queryResult.get(0)[6];
-        final Date customerActivationDate = (Date) queryResult.get(0)[7];
-        final Short customerLevelId = (Short) queryResult.get(0)[8];
-        final Short customerStatusId = (Short) queryResult.get(0)[9];
-        final String lookupName = (String) queryResult.get(0)[10];
-        final Boolean trained = (Boolean) queryResult.get(0)[11];
-        final Date trainedDate = (Date) queryResult.get(0)[12];
-        final Boolean blackListed = (Boolean) queryResult.get(0)[13];
-        final Short loanOfficerId = (Short) queryResult.get(0)[14];
-        final String loanOfficerName = (String) queryResult.get(0)[15];
-        final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);
-
-        return new GroupDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId,
-                externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
-                customerStatusName, trained, trainedDate, blackListed, loanOfficerId, loanOfficerName);
     }
 
     @SuppressWarnings("unchecked")

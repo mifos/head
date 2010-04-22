@@ -2,15 +2,30 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans 
-    classpath:xsd/spring-beans-3.0.xsd
-    http://www.springframework.org/schema/aop 
-    classpath:xsd/spring-aop-3.0.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+    					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
+    <bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" >
+    	<constructor-arg ref="customerDao" />
+    	<constructor-arg ref="loanProductDao" />
+    </bean>
+    
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" >
     	<constructor-arg ref="customerService" />
     	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="customerDao" />
+    </bean>
+    
+    <bean id="centerDetailsServiceFacade" class="org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade" >
+    	<constructor-arg ref="customerDao" />
+    </bean>
+    
+    <bean id="groupDetailsServiceFacade" class="org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade" >
+    	<constructor-arg ref="customerDao" />
+    </bean>
+    
+    <bean id="clientDetailsServiceFacade" class="org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade" >
     	<constructor-arg ref="customerDao" />
     </bean>
     

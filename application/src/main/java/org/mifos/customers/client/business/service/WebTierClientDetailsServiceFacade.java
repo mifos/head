@@ -27,7 +27,6 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.persistence.CustomerDao;
@@ -45,8 +44,6 @@ import org.mifos.customers.util.helpers.CustomerSurveyDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -55,43 +52,36 @@ import org.mifos.security.util.UserContext;
  */
 public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFacade {
 
-    private final CustomerBusinessService customerBusinessService;
     private final CustomerDao customerDao;
 
-    public WebTierClientDetailsServiceFacade(CustomerDao customerDao, CustomerBusinessService customerBusinessService) {
-        this.customerBusinessService = customerBusinessService;
+    public WebTierClientDetailsServiceFacade(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
     @Override
-    public ClientInformationDto getClientInformationDto(String globalCustNum, UserContext userContext)
-            throws ServiceException {
+    public ClientInformationDto getClientInformationDto(String globalCustNum, UserContext userContext) {
 
         ClientBO client = customerDao.findClientBySystemId(globalCustNum);
         if (client == null) {
             throw new MifosRuntimeException("Client not found for globalCustNum, levelId: " + globalCustNum);
         }
 
-        ClientDisplayDto clientDisplay = customerBusinessService.getClientDisplayDto(client.getCustomerId(),
-                userContext);
+        ClientDisplayDto clientDisplay = this.customerDao.getClientDisplayDto(client.getCustomerId(), userContext);
 
         Integer clientId = client.getCustomerId();
-        String searchId = client.getSearchId();
-        Short branchId = client.getOffice().getOfficeId();
 
         CustomerAccountSummaryDto customerAccountSummary = this.customerDao.getCustomerAccountSummaryDto(
                 clientId);
 
-        ClientPerformanceHistoryDto clientPerformanceHistory = assembleClientPerformanceHistoryDto(client
-                .getClientPerformanceHistory(), clientId, searchId, branchId);
+        ClientPerformanceHistoryDto clientPerformanceHistory = assembleClientPerformanceHistoryDto(client.getClientPerformanceHistory(), clientId);
 
         CustomerAddressDto clientAddress = this.customerDao.getCustomerAddressDto(client);
 
         List<CustomerNoteDto> recentCustomerNotes = customerDao.getRecentCustomerNoteDto(clientId);
 
-        List<CustomerFlagDto> customerFlags = customerBusinessService.getCustomerFlagDto(client.getCustomerFlags());
+        List<CustomerFlagDto> customerFlags = customerDao.getCustomerFlagDto(client.getCustomerFlags());
 
-        List<LoanDetailDto> loanDetail = customerBusinessService.getLoanDetailDto(client.getOpenLoanAccounts());
+        List<LoanDetailDto> loanDetail = customerDao.getLoanDetailDto(client.getOpenLoanAccounts());
 
         List<SavingsDetailDto> savingsDetail = customerDao.getSavingsDetailDto(clientId, userContext);
 
@@ -109,8 +99,7 @@ public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFa
     }
 
     private ClientPerformanceHistoryDto assembleClientPerformanceHistoryDto(
-            ClientPerformanceHistoryEntity clientPerformanceHistory, Integer clientId, String searchId, Short officeId)
-            throws ServiceException {
+            ClientPerformanceHistoryEntity clientPerformanceHistory, Integer clientId) {
 
         Integer loanCycleNumber = clientPerformanceHistory.getLoanCycleNumber();
 
@@ -129,22 +118,10 @@ public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFa
         // TODO currency mismatch check
         Money totalSavingsAmount = clientPerformanceHistory.getTotalSavingsAmount();
 
-        Integer meetingsAttended;
-        try {
-            meetingsAttended = customerBusinessService.numberOfMeetings(true, clientId).getMeetingsAttended();
-        } catch (InvalidDateException e) {
-            throw new ServiceException(e);
-        }
+        Integer meetingsAttended = this.customerDao.numberOfMeetings(true, clientId).getMeetingsAttended();
+        Integer meetingsMissed = customerDao.numberOfMeetings(false, clientId).getMeetingsMissed();
 
-        Integer meetingsMissed;
-        try {
-            meetingsMissed = customerBusinessService.numberOfMeetings(false, clientId).getMeetingsMissed();
-        } catch (InvalidDateException e) {
-            throw new ServiceException(e);
-        }
-
-        List<LoanCycleCounter> loanCycleCounters = customerBusinessService.fetchLoanCycleCounter(clientId,
-                CustomerLevel.CLIENT.getValue());
+        List<LoanCycleCounter> loanCycleCounters = this.customerDao.fetchLoanCycleCounter(clientId,CustomerLevel.CLIENT.getValue());
 
         return new ClientPerformanceHistoryDto(loanCycleNumber, lastLoanAmount, noOfActiveLoans,
                 delinquentPortfolioAmountString, totalSavingsAmount, meetingsAttended, meetingsMissed,
@@ -154,5 +131,4 @@ public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFa
     protected String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
     }
-
 }

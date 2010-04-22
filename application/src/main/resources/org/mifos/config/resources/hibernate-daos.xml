@@ -24,4 +24,8 @@
     <bean id="holidayDao" class="org.mifos.application.holiday.persistence.HolidayDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>
+    
+    <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
 </beans>
