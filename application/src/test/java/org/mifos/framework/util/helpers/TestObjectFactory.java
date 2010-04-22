@@ -35,6 +35,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -109,6 +110,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustom
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -123,8 +125,10 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBOIntegrationTest;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -175,6 +179,10 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -928,12 +936,40 @@ public class TestObjectFactory {
     }
 
     public static List<Date> getMeetingDates(final MeetingBO meeting, final int occurrences) {
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
+
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+        DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());
+
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
+        List<DateTime> allDates = dateGeneration.generateScheduledDates(occurrences, meetingStartDate, scheduledEvent);
+
         List<Date> dates = new ArrayList<Date>();
-        try {
-            dates = meeting.getAllDates(occurrences);
-        } catch (MeetingException e) {
-            throw new RuntimeException(e);
+        for (DateTime dateTime : allDates) {
+            dates.add(dateTime.toDate());
         }
+
+        return dates;
+    }
+
+    public static List<Date> getMeetingDatesThroughTo(final MeetingBO meeting, Date endDate) {
+
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
+
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+        DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());
+        DateTime endDateTime = new DateTime(endDate);
+
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
+        List<DateTime> allDates = dateGeneration.generateScheduledDatesThrough(meetingStartDate, endDateTime, scheduledEvent);
+
+        List<Date> dates = new ArrayList<Date>();
+        for (DateTime dateTime : allDates) {
+            dates.add(dateTime.toDate());
+        }
+
         return dates;
     }
 

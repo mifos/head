@@ -136,7 +136,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
         meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
-        List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
+
+        Date endDate = new Date(DateUtils.getLastDayOfYearAfterNextYear().getTime().getTime());
+        List<java.util.Date> meetingDates = TestObjectFactory.getMeetingDatesThroughTo(meetingBO, endDate);
+
         meetingDates.remove(0);
         Date date = center.getCustomerAccount().getAccountActionDate((short) (lastInstallmentId + 1)).getActionDate();
         Calendar calendar = Calendar.getInstance();
@@ -518,7 +521,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testRegenerateFutureInstallments() throws Exception {
         createCenter();
-        java.util.Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         AccountActionDateEntity nextInstallment = center.getCustomerAccount().getDetailsOfNextInstallment();
@@ -528,7 +530,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         meeting.setMeetingStartDate(nextInstallment.getActionDate());
         List<java.util.Date> meetingDates = null;
 
-        meetingDates = meeting.getAllDates((short) 10);
+        meetingDates = TestObjectFactory.getMeetingDates(meeting, 10);
         meetingDates.remove(0);
         center.getCustomerAccount().regenerateFutureInstallments(nextInstallment, workingDays, holidays);
         TestObjectFactory.updateObject(center);

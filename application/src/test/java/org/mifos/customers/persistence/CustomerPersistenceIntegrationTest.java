@@ -24,7 +24,6 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -50,7 +49,6 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
@@ -1189,12 +1187,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     }
 
     private static java.util.Date getMeetingDates(final MeetingBO meeting) {
-        List<java.util.Date> dates = new ArrayList<java.util.Date>();
-        try {
-            dates = meeting.getAllDates(new java.util.Date(System.currentTimeMillis()));
-        } catch (MeetingException e) {
-            e.printStackTrace();
-        }
+
+        java.util.Date endDate = new java.util.Date();
+        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(meeting, endDate);
         return dates.get(dates.size() - 1);
     }
 

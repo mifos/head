@@ -20,11 +20,9 @@
 
 package org.mifos.application.meeting.business;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
@@ -46,7 +44,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -60,24 +57,13 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 public class MeetingBO extends AbstractBusinessObject {
 
     private final Integer meetingId;
-
     private MeetingDetailsEntity meetingDetails;
-
-    // TODO: make it final while migrating create meeting
     private MeetingTypeEntity meetingType;
-
     private Date meetingStartDate;
-
     private String meetingPlace;
-
-    /*
-     * TODO: This looks like it should be a local variable in each of the places
-     * which uses it. I don't see it being used outside a single method.
-     */
     private final GregorianCalendar gc = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
 
     private FiscalCalendarRules fiscalCalendarRules = null;
-
     private MasterPersistence masterPersistence = null;
 
     public FiscalCalendarRules getFiscalCalendarRules() {
@@ -165,7 +151,6 @@ public class MeetingBO extends AbstractBusinessObject {
         this.validateFields(recurrenceType, startDate, meetingType, meetingPlace);
         this.meetingDetails = new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay,
                 rank, recurAfter, this);
-        // TODO: remove this check after meeting create is migrated.
         if (meetingType != null) {
             this.meetingType = new MeetingTypeEntity(meetingType);
         }
@@ -361,7 +346,6 @@ public class MeetingBO extends AbstractBusinessObject {
         validateMeetingDate(afterDate);
         Date from = getFirstDate(getStartDate());
         Date currentScheduleDate = getNextDate(from);
-        // Date currentScheduleDate=getNextDate(getStartDate());
         while (currentScheduleDate.compareTo(afterDate) <= 0) {
             currentScheduleDate = getNextDate(currentScheduleDate);
         }
@@ -383,56 +367,6 @@ public class MeetingBO extends AbstractBusinessObject {
             currentScheduleDate = getNextDate(currentScheduleDate);
         }
         return prevScheduleDate;
-    }
-
-    /**
-     * completely removed from production code usage. now only used from deprecated on constructors for test use.
-     * delete when all use of this from tests is removed.
-     *
-     * @deprecated - please use {@link HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration#generateScheduledDatesThrough(org.joda.time.DateTime, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public List<Date> getAllDates(final Date endDate) throws MeetingException {
-        validateEndDate(endDate);
-        List meetingDates = new ArrayList();
-        for (Date meetingDate = getFirstDate(getStartDate()); meetingDate.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate)) {
-            meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
-        }
-        return meetingDates;
-    }
-
-    /**
-     * completely removed from production code usage. now only used from deprecated on constructors for test use.
-     * delete when all use of this from tests is removed.
-     *
-     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
-     */
-    @Deprecated
-    public List<Date> getAllDates(final int occurrences) throws MeetingException {
-        return getAllDates(occurrences, true);
-    }
-
-    /**
-     * @deprecated - please use {@link ScheduledDateGeneration#generateScheduledDates(int, org.joda.time.DateTime, org.mifos.schedule.ScheduledEvent)}
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    private List<Date> getAllDates(final int occurrences, final boolean adjustForHolidays) throws MeetingException {
-        validateOccurences(occurrences);
-        List meetingDates = new ArrayList();
-        Date meetingDate = getFirstDate(getStartDate());
-
-        for (int dateCount = 0; dateCount < occurrences; dateCount++) {
-            if (adjustForHolidays) {
-                meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this)
-                        .getTime());
-            } else {
-                meetingDates.add(meetingDate);
-            }
-            meetingDate = getNextDate(meetingDate);
-        }
-        return meetingDates;
     }
 
     private void validateMeetingDate(final Date meetingDate) throws MeetingException {

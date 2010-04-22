@@ -3968,7 +3968,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
         meetingBO.setMeetingStartDate(lastYearLastInstallment.getActionDate());
-        List<Date> meetingDates = meetingBO.getAllDates((short) 10);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meetingBO, 10);
         meetingDates.remove(0);
         Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(installmetId.shortValue()).getActionDate();
         Calendar calendar2 = Calendar.getInstance();

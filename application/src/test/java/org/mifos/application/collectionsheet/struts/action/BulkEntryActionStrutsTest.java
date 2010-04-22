@@ -60,7 +60,6 @@ import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionF
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
@@ -799,7 +798,6 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         return paymentTypeView;
     }
 
-    @SuppressWarnings("deprecation")
     private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
         CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
                 getCurrency());
@@ -819,9 +817,9 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
-    private static java.util.Date getMeetingDates(final MeetingBO meeting) throws MeetingException {
+    private static java.util.Date getMeetingDates(final MeetingBO meeting) {
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-        List<java.util.Date> dates = meeting.getAllDates(currentDate);
+        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(meeting, currentDate);
         return dates.get(dates.size() - 1);
     }
 
