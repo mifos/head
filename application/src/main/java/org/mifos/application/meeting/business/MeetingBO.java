@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -44,6 +45,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
 
 /**
  * A better name for MeetingBO would be along the lines of "ScheduledEvent". To
@@ -344,12 +347,18 @@ public class MeetingBO extends AbstractBusinessObject {
 
     public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(final Date afterDate) throws MeetingException {
         validateMeetingDate(afterDate);
-        Date from = getFirstDate(getStartDate());
-        Date currentScheduleDate = getNextDate(from);
+//        Date from = getFirstDate(getStartDate());
+        DateTime from = findNearestMatchingDate(new DateTime(getStartDate()));
+        Date currentScheduleDate = getNextDate(from.toDate());
         while (currentScheduleDate.compareTo(afterDate) <= 0) {
             currentScheduleDate = getNextDate(currentScheduleDate);
         }
         return currentScheduleDate;
+    }
+
+    private DateTime findNearestMatchingDate(DateTime startingFrom) {
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this);
+        return scheduledEvent.nearestMatchingDateBeginningAt(startingFrom);
     }
 
     public Date getPrevScheduleDateAfterRecurrence(final Date meetingDate) throws MeetingException {

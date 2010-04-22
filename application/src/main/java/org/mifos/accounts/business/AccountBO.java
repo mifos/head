@@ -848,9 +848,11 @@ public class AccountBO extends AbstractBusinessObject {
         // calculate the next date based on the customer's meeting object
         CustomerMeetingEntity customerMeeting = customer.getCustomerMeeting();
         if (customerMeeting != null) {
-            Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(
-                    getDateTimeService().getCurrentJavaDateTime());
-            return new java.sql.Date(nextMeetingDate.getTime());
+
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting.getMeeting());
+            DateTime nextMeetingDate = scheduledEvent.nearestMatchingDateBeginningAt(new LocalDate().toDateTimeAtStartOfDay());
+//            Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(getDateTimeService().getCurrentJavaDateTime());
+            return new java.sql.Date(nextMeetingDate.toDate().getTime());
         }
         return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());
     }
