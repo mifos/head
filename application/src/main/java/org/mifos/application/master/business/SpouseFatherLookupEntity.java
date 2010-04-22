@@ -42,6 +42,7 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -50,14 +51,17 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
 
+    @Override
     public String getName() {
         return MessageLookup.getInstance().lookup(getLookUpValue());
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -74,6 +78,7 @@ public class SpouseFatherLookupEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }

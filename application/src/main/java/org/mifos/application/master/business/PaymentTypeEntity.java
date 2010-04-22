@@ -54,6 +54,7 @@ public class PaymentTypeEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -62,16 +63,19 @@ public class PaymentTypeEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
 
+    @Override
     public String getName() {
         String name = MessageLookup.getInstance().lookup(getLookUpValue());
         return name;
 
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -80,6 +84,7 @@ public class PaymentTypeEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }

@@ -53,6 +53,7 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -61,6 +62,7 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
@@ -73,14 +75,17 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }
 
+    @Override
     public String getName() {
         return MessageLookup.getInstance().lookup(getLookUpValue());
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }

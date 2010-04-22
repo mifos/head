@@ -111,42 +111,52 @@ public class RoleBO extends AbstractBusinessObject {
         return ids;
     }
     
+        @Override
         public Short getCreatedBy() {
         return createdBy;
     }
 
+    @Override
     public void setCreatedBy(Short createdBy) {
         this.createdBy = createdBy;
     }
 
+    @Override
     public Date getCreatedDate() {
         return createdDate;
     }
 
+    @Override
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
+    @Override
     public Short getUpdatedBy() {
         return updatedBy;
     }
 
+    @Override
     public void setUpdatedBy(Short updatedBy) {
         this.updatedBy = updatedBy;
     }
 
+    @Override
     public Date getUpdatedDate() {
         return updatedDate;
     }
 
+    @Override
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
 
+    @Override
     public Integer getVersionNo() {
         return versionNo;
     }
 
+    @Override
     public void setVersionNo(Integer versionNo) {
         this.versionNo = versionNo;
     }

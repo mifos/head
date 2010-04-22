@@ -59,6 +59,7 @@ public class FeePaymentEntity extends MasterDataEntity {
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -67,6 +68,7 @@ public class FeePaymentEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
@@ -79,16 +81,19 @@ public class FeePaymentEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }
 
+    @Override
     public String getName() {
         String name = MessageLookup.getInstance().lookup(getLookUpValue());
         return name;
 
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }

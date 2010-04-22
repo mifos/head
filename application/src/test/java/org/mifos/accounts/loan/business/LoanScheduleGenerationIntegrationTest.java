@@ -77,6 +77,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         super();
     }
 
+    @Override
     protected void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();

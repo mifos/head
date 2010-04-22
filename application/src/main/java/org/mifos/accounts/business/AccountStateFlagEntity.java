@@ -49,6 +49,7 @@ public class AccountStateFlagEntity extends MasterDataEntity {
         return flagDescription;
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -57,15 +58,18 @@ public class AccountStateFlagEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
+    @Override
     public String getName() {
         String name = MessageLookup.getInstance().lookup(getLookUpValue());
         return name;
 
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -90,6 +94,7 @@ public class AccountStateFlagEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }

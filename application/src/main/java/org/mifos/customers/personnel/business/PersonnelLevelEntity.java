@@ -56,6 +56,7 @@ public class PersonnelLevelEntity extends MasterDataEntity {
         this.parent = null;
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -64,14 +65,17 @@ public class PersonnelLevelEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
 
+    @Override
     public String getName() {
         return MessageLookup.getInstance().lookup(getLookUpValue());
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -88,6 +92,7 @@ public class PersonnelLevelEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }

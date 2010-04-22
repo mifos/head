@@ -44,6 +44,7 @@ public class LanguageEntity extends MasterDataEntity {
         languageShortName = null;
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -64,16 +65,19 @@ public class LanguageEntity extends MasterDataEntity {
         return this.getName();
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
 
+    @Override
     public String getName() {
         String name = MessageLookup.getInstance().lookup(getLookUpValue());
         return name;
 
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -82,6 +86,7 @@ public class LanguageEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }

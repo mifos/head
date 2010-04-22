@@ -835,6 +835,7 @@ public class ClientBO extends CustomerBO {
 
     }
 
+    @Override
     public void generateSearchId() throws CustomerException {
         int count;
         if (getParentCustomer() != null) {

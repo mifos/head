@@ -45,6 +45,7 @@ public class RecommendedAmntUnitEntity extends MasterDataEntity {
         this.id = recommendedAmountUnit.getValue();
     }
 
+    @Override
     public Short getId() {
         return id;
     }
@@ -53,14 +54,17 @@ public class RecommendedAmntUnitEntity extends MasterDataEntity {
         return localeId;
     }
 
+    @Override
     public LookUpValueEntity getLookUpValue() {
         return lookUpValue;
     }
 
+    @Override
     public String getName() {
         return MessageLookup.getInstance().lookup(getLookUpValue());
     }
 
+    @Override
     public Set<LookUpValueLocaleEntity> getNames() {
         return getLookUpValue().getLookUpValueLocales();
     }
@@ -69,6 +73,7 @@ public class RecommendedAmntUnitEntity extends MasterDataEntity {
         this.id = id;
     }
 
+    @Override
     public void setLocaleId(Short localeId) {
         this.localeId = localeId;
     }
