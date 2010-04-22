@@ -23,13 +23,20 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.CategoryTypeEntity;
+import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 
 /**
  *
@@ -38,19 +45,29 @@ public class FeeBuilder {
 
     private final GLCodeEntity feeGLCode = new GLCodeEntity(Short.valueOf("1"), "10000");
     private MeetingBuilder meetingPeriodicity = new MeetingBuilder().periodicFeeMeeting().weekly().every(1);
-    private final FeeFrequencyType feeFrequencyType = FeeFrequencyType.PERIODIC;
+    private FeeFrequencyType feeFrequencyType = FeeFrequencyType.PERIODIC;
     private String name = "weekly-client-periodic-fee";
     private FeeCategory category = FeeCategory.CLIENT;
     private Money feeAmount = new Money(TestUtils.RUPEE, "12.5");
-
+    private FeePayment feePayment = FeePayment.UPFRONT;
     private final Date createdDate = new DateTime().minusDays(14).toDate();
-    private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
+    private final UserContext createdByUser = TestUtils.makeUserWithLocales();
     private OfficeBO office;
 
     public AmountFeeBO build() {
-
-        final AmountFeeBO fee = new AmountFeeBO(feeAmount, name, category, feeFrequencyType, feeGLCode,
-                meetingPeriodicity.build(), office, createdDate, createdByUserId);
+        AmountFeeBO fee = null;
+        try {
+        if (feeFrequencyType == FeeFrequencyType.PERIODIC) {
+            fee = new AmountFeeBO(feeAmount, name, category, feeFrequencyType, feeGLCode,
+                meetingPeriodicity.build(), office, createdDate, createdByUser.getId());
+        } else { //one-time defaults to up-front payment
+            fee = new AmountFeeBO(TestUtils.makeUserWithLocales(), name, new CategoryTypeEntity(category),
+                    new FeeFrequencyTypeEntity(feeFrequencyType), feeGLCode, feeAmount, false,
+                    new FeePaymentEntity(feePayment));
+        }
+        } catch (FeeException e) {
+            throw new MifosRuntimeException("Error building AmountFeeBO", e);
+        }
         return fee;
     }
 
@@ -96,6 +113,11 @@ public class FeeBuilder {
 
     public FeeBuilder with(MeetingBuilder withMeeting) {
         this.meetingPeriodicity = withMeeting;
+        return this;
+    }
+
+    public FeeBuilder withFeeFrequency(FeeFrequencyType withFeeFrequency) {
+        this.feeFrequencyType = withFeeFrequency;
         return this;
     }
 }

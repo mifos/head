@@ -30,8 +30,11 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
@@ -71,6 +74,7 @@ public class IntegrationTestObjectMother {
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
     private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+    private static final GenericDao genericDao = DependencyInjectedServiceLocator.locateGenericDao();
 
     public static OfficeBO sampleBranchOffice() {
         if (sampleBranchOffice == null) {
@@ -249,6 +253,19 @@ public class IntegrationTestObjectMother {
         customerService.createCenter(center, meeting, accountFees);
     }
 
+    public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO...fees) {
+
+        UserContext userContext = TestUtils.makeUser();
+        center.setUserContext(userContext);
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        for (AmountFeeBO fee : fees) {
+            AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue());
+            accountFees.add(accountFee);
+        }
+        customerService.createCenter(center, meeting, accountFees);
+    }
+
     public static void createGroup(GroupBO group, MeetingBO meeting) {
 
         UserContext userContext = TestUtils.makeUser();
@@ -364,4 +381,19 @@ public class IntegrationTestObjectMother {
               StaticHibernateUtil.closeSession();
           }
     }
+
+
+    public static void saveHoliday (Holiday holiday) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            genericDao.createOrUpdate(holiday);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
 }
