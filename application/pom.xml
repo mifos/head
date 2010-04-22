@@ -602,12 +602,12 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-api</artifactId>
-            <version>0.1a-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-spi</artifactId>
-            <version>0.1a-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
