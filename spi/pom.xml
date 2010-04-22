@@ -50,7 +50,7 @@
     	<dependency>
     		<groupId>org.mifos</groupId>
     		<artifactId>mifos-api</artifactId>
-    		<version>0.1a-SNAPSHOT</version>
+    		<version>0.2-SNAPSHOT</version>
     	</dependency>
     </dependencies>
 </project>
