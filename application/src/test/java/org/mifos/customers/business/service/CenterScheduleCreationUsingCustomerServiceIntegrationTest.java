@@ -50,7 +50,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/integration-test-context.xml", "/hibernate-daos.xml", "/services.xml"})
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
 public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
     @Autowired
