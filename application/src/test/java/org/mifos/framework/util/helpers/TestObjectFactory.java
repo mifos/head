@@ -433,7 +433,7 @@ public class TestObjectFactory {
         return createClient(customerName, status, parentCustomer, getFees(), (String) null, new Date(1222333444000L));
     }
 
-    private static ClientBO createClient(final String customerName, final CustomerStatus status,
+    public static ClientBO createClient(final String customerName, final CustomerStatus status,
             final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
 
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
