@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
@@ -46,13 +45,8 @@ public class MeetingBuilder {
     private Short dayNumber = null;
     private Date startDate = new DateTime().toDate();
     private final String meetingLocation = "test-meeting-location";
-    private MasterPersistence masterPersistence = null;
 
     public MeetingBuilder() {
-    }
-
-    public MeetingBuilder(MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
     }
 
     public MeetingBO build() {
@@ -77,7 +71,7 @@ public class MeetingBuilder {
     }
 
     public MeetingBO buildMonthlyFor(final RankOfDay rank, final WeekDay weekDay) throws MeetingException {
-        return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation, masterPersistence);
+        return new MeetingBO(weekDay, rank, recurAfter, startDate, meetingType, meetingLocation, null);
     }
 
     public MeetingBO buildMonthlyForDayNumber(final int dayNumber) throws MeetingException {

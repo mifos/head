@@ -78,7 +78,7 @@ public class MeetingBOTest {
 
     @Test
     public void testMonthlyMeetingInterval() throws MeetingException {
-        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(1).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
+        MeetingBO meeting = new MeetingBuilder().monthly().every(1).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);
@@ -90,7 +90,7 @@ public class MeetingBOTest {
 
     @Test
     public void testBiMonthlyMeetingInterval() throws MeetingException {
-        MeetingBO meeting = new MeetingBuilder(masterPersistence).monthly().every(2).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
+        MeetingBO meeting = new MeetingBuilder().monthly().every(2).buildMonthlyFor(RankOfDay.THIRD, WeekDay.FRIDAY);
         meeting.setFiscalCalendarRules(fiscalCalendarRules);
         when(fiscalCalendarRules.getStartOfWeekWeekDay()).thenReturn(WeekDay.MONDAY);
         LocalDate paymentDate = new LocalDate(2010, 2, 19);

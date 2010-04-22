@@ -851,7 +851,6 @@ public class AccountBO extends AbstractBusinessObject {
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting.getMeeting());
             DateTime nextMeetingDate = scheduledEvent.nearestMatchingDateBeginningAt(new LocalDate().toDateTimeAtStartOfDay());
-//            Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(getDateTimeService().getCurrentJavaDateTime());
             return new java.sql.Date(nextMeetingDate.toDate().getTime());
         }
         return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());

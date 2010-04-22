@@ -26,13 +26,13 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MeetingBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -56,23 +56,21 @@ public class MeetingBusinessServiceIntegrationTest extends MifosIntegrationTestC
     public void testGetMeeting() throws Exception {
         MeetingBusinessService service = new MeetingBusinessService();
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-        meeting.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        IntegrationTestObjectMother.saveMeeting(meeting);
+
         meeting = service.getMeeting(meeting.getMeetingId());
         Assert.assertNotNull(meeting);
-       Assert.assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
-       Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+        Assert.assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
+        Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
     }
 
     public void testGetMeetingForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {
-            MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING,
-                    "Delhi");
-            meeting.save();
+            MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
+            IntegrationTestObjectMother.saveMeeting(meeting);
             Assert.fail();
-        } catch (MeetingException e) {
+        } catch (Exception e) {
            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -82,9 +80,8 @@ public class MeetingBusinessServiceIntegrationTest extends MifosIntegrationTestC
     public void testFailureGetMeeting() throws Exception {
         MeetingBusinessService service = new MeetingBusinessService();
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-        meeting.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        IntegrationTestObjectMother.saveMeeting(meeting);
+
         TestObjectFactory.simulateInvalidConnection();
         try {
             meeting = service.getMeeting(meeting.getMeetingId());
