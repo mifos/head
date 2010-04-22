@@ -3,7 +3,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-spi</artifactId>
     <name>Mifos - Service Provider Interface</name>
-    <version>0.1a-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <description>Interfaces to implement for creating plugins which run inside Mifos.</description>
 
     <parent>

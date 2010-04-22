@@ -30,6 +30,7 @@ import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -59,16 +60,16 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 defaultPaymentType,"");
         standardAccountService.makePayment(accountPaymentParametersDto);
 
-        TestObjectFactory.updateObject(accountBO);
+        TestObjectFactory.updateObject(groupLoan);
         Assert.assertEquals("The amount returned for the payment should have been " + paymentAmount,
-                Double.parseDouble(paymentAmount), accountBO.getLastPmntAmnt());
+                Double.parseDouble(paymentAmount), groupLoan.getLastPmntAmnt());
     }
 
     public void testValidateValidPayment() throws Exception {
@@ -76,8 +77,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 defaultPaymentType,"");
@@ -91,8 +92,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(1980, 1, 1),
                 defaultPaymentType,"");
@@ -107,23 +108,23 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 defaultPaymentType,
                 comment);
         standardAccountService.makePayment(accountPaymentParametersDto);
 
-        TestObjectFactory.updateObject(accountBO);
+        TestObjectFactory.updateObject(groupLoan);
         Assert.assertEquals("We should get the comment back",
-                comment, accountBO.getLastPmnt().getComment());
+                comment, groupLoan.getLastPmnt().getComment());
     }
 
     public void testLookupLoanIdFromExternalId() throws Exception {
         String externalId = "ABC";
-        accountBO.setExternalId(externalId);
-        accountBO.save();
+        groupLoan.setExternalId(externalId);
+        groupLoan.save();
         StaticHibernateUtil.commitTransaction();
 
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -131,7 +132,43 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
         AccountReferenceDto accountReferenceDto = standardAccountService.lookupLoanAccountReferenceFromExternalId(externalId);
 
-        Assert.assertEquals(accountBO.getAccountId().intValue(), accountReferenceDto.getAccountId());
+        Assert.assertEquals(groupLoan.getAccountId().intValue(), accountReferenceDto.getAccountId());
+    }
+
+    public void testLookupLoanFromClientGovernmentIdAndLoanProductShortName() throws Exception {
+        String clientGovernmentId = client.getGovernmentId();
+        String loanProductShortName = clientLoan.getLoanOffering().getPrdOfferingShortName();
+        AccountReferenceDto account = standardAccountService
+                .lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(clientGovernmentId,
+                        loanProductShortName);
+        Assert.assertEquals(clientLoan.getAccountId().intValue(), account.getAccountId());
+    }
+
+    public void testFailureOfLookupLoanFromClientGovernmentIdAndLoanProductShortName() throws Exception {
+        try {
+            standardAccountService.lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(client
+                    .getGovernmentId(), "W");
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("loan not found for client government id 1034556 and loan product short name W", e
+                    .getMessage());
+        }
+        try {
+            standardAccountService.lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName("1000556",
+                    clientLoan.getLoanOffering().getPrdOfferingShortName());
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("loan not found for client government id 1000556 and loan product short name C", e
+                    .getMessage());
+        }
+        try {
+            standardAccountService.lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName("1000556",
+                    "W");
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("loan not found for client government id 1000556 and loan product short name W", e
+                    .getMessage());
+        }
     }
 
     public void testValidatePaymentWithInvalidPaymentType() throws Exception {
@@ -140,8 +177,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         PaymentTypeDto invalidPaymentType = new PaymentTypeDto((short)-1, "pseudo payment type! Not cash, check, etc.");
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 invalidPaymentType,"");
@@ -155,8 +192,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 defaultPaymentType,"");
@@ -170,8 +207,8 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                new UserReferenceDto(accountBO.getPersonnel().getPersonnelId()),
-                new AccountReferenceDto(accountBO.getAccountId()),
+                new UserReferenceDto(groupLoan.getPersonnel().getPersonnelId()),
+                new AccountReferenceDto(groupLoan.getAccountId()),
                 new BigDecimal(paymentAmount),
                 new LocalDate(),
                 defaultPaymentType,"");

@@ -3,7 +3,7 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-api</artifactId>
     <name>Mifos - Application Programming Interface</name>
-    <version>0.1a-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <description>Provides an external API for communicating with and controlling Mifos.</description>
 
     <parent>

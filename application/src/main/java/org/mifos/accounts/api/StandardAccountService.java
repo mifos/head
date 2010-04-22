@@ -192,4 +192,14 @@ public class StandardAccountService implements AccountService {
         return new AccountReferenceDto(accountBo.getAccountId());
     }
 
+    @Override
+    public AccountReferenceDto lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(
+            String clientGovernmentId, String loanProductShortName) throws Exception {
+        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(clientGovernmentId, loanProductShortName);
+        if (null == accountBo) {
+            throw new PersistenceException("loan not found for client government id " + clientGovernmentId + " and loan product short name " + loanProductShortName);
+        }
+        return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
 }

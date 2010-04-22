@@ -101,6 +101,17 @@ public class AccountPersistence extends Persistence {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
+    public AccountBO findLoanByClientGovernmentIdAndProductShortName(String clientGovernmentId,
+            String productShortName) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("clientGovernmentId", clientGovernmentId);
+        queryParameters.put("loanAccountTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
+        queryParameters.put("productShortName", productShortName);
+        Object queryResult = execUniqueResultNamedQuery(
+                NamedQueryConstants.FIND_LOAN_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME, queryParameters);
+        return queryResult == null ? null : (AccountBO) queryResult;
+    }
+
     public AccountFeesEntity getAccountFeeEntity(Integer accountFeesEntityId) throws PersistenceException {
         return (AccountFeesEntity) getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
     }

@@ -50,19 +50,19 @@ public interface AccountService {
      *
      * @return a reference to the account found
      *
-     * @throws Exception if no loan is found with a matching id
+     * @throws Exception if no loan is found
      */
     AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws Exception;
 
     /**
      * Lookup a loan account reference for a loan with a matching external id. External id is a field on a
      * loan account created specifically for external lookups.
-     * 
+     *
      * @param externalId the external id to find.
      *
      * @return a reference to the account found
      *
-     * @throws Exception if no loan is found with a matching external id
+     * @throws Exception if no loan is found
      */
     AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws Exception;
 
@@ -73,9 +73,21 @@ public interface AccountService {
      *
      * @return a reference to the account found
      *
-     * @throws Exception If no loan is found with a matching global account numbe
+     * @throws Exception If no loan is found
      */
     AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber) throws Exception;
+
+    /**
+     * Lookup a loan account reference for a loan based on the borrower's government id and the loan product short name.
+     *
+     * @param clientGovernmentId government ID
+     *
+     * @return a reference to the account found
+     *
+     * @throws Exception If no loan is found
+     */
+    AccountReferenceDto lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(
+            String clientGovernmentId, String loanProductShortName) throws Exception;
 
     /**
      * Validate a payment by checking for any errors that would result from making a

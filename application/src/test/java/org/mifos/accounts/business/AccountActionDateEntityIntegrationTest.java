@@ -49,7 +49,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
     private static final double DELTA = 0.00000001;
 
     public void testGetPrincipal() {
-        Set<AccountActionDateEntity> accountActionDates = accountBO.getAccountActionDates();
+        Set<AccountActionDateEntity> accountActionDates = groupLoan.getAccountActionDates();
         for (AccountActionDateEntity accountActionDate : accountActionDates) {
             Money principal = ((LoanScheduleEntity) accountActionDate).getPrincipal();
            Assert.assertEquals(100.0, principal.getAmount().doubleValue(), DELTA);
@@ -73,7 +73,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
         StaticHibernateUtil.closeSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
+        groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
     }
 
     public void testApplyPeriodicFees() {
@@ -119,7 +119,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
             }
         }
         StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
+        groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 

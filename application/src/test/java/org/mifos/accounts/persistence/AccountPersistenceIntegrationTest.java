@@ -208,12 +208,12 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     }
 
     public void testSuccessGetNextInstallmentList() {
-        List<AccountActionDateEntity> installmentIdList = accountBO.getApplicableIdsForFutureInstallments();
+        List<AccountActionDateEntity> installmentIdList = groupLoan.getApplicableIdsForFutureInstallments();
         Assert.assertEquals(5, installmentIdList.size());
     }
 
     public void testSuccessLoadBusinessObject() throws Exception {
-        AccountBO readAccount = accountPersistence.getAccount(accountBO.getAccountId());
+        AccountBO readAccount = accountPersistence.getAccount(groupLoan.getAccountId());
         Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, readAccount.getState());
     }
 

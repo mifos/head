@@ -615,4 +615,11 @@
 		]]>
 	</query>
 	
+    <query name="accounts.findLoanByClientGovernmentIdAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+        where account.customer.governmentId = :clientGovernmentId
+        and account.accountType.accountTypeId = :loanAccountTypeId
+        and account.loanOffering.prdOfferingShortName = :productShortName
+        and account.accountState.id in (5,9)]]>
+    </query>
 </hibernate-mapping>
