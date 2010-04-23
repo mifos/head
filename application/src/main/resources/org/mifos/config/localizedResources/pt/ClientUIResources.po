@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-23 09:24-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1602,6 +1602,10 @@ msgstr ""
 
 #: errors.Customer.ClientCannotBeAddedToInactiveGroup
 msgid "Customer cannot be added to an inactive group"
+msgstr ""
+
+#: errors.Customer.TargetGroupStatusLowerThanClient
+msgid "Target group status is lower than client"
 msgstr ""
 
 #: errors.InvalidTrainedDate

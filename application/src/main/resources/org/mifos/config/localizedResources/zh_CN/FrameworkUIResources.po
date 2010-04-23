@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-23 09:23-0700\n"
 "PO-Revision-Date: 2010-01-07 18:26-0800\n"
 "Last-Translator: dimitri tang <dimitri_tdj@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,12 +37,14 @@ msgid "Create new accounts"
 msgstr "新建账户"
 
 #: framework.createNewCenter
+#, fuzzy
 msgid "Create new center"
-msgstr ""
+msgstr "新建账户"
 
 #: framework.createNewClient
+#, fuzzy
 msgid "Create new client"
-msgstr ""
+msgstr "新建账户"
 
 #: framework.createNewClients
 #, fuzzy

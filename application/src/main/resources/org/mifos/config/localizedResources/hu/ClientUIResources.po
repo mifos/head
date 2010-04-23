@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"POT-Creation-Date: 2010-04-23 09:24-0700\n"
 "PO-Revision-Date: 2009-11-12 15:50+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1762,6 +1762,10 @@ msgstr "<li>Adja meg a díj összegét.</li>"
 #: errors.Customer.ClientCannotBeAddedToInactiveGroup
 msgid "Customer cannot be added to an inactive group"
 msgstr "Az ügyfél nem adható hozzá inaktív csoporthoz"
+
+#: errors.Customer.TargetGroupStatusLowerThanClient
+msgid "Target group status is lower than client"
+msgstr ""
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"

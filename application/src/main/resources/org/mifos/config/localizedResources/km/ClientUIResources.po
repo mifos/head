@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-23 09:23-0700\n"
 "PO-Revision-Date: 2009-08-16 21:53-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1727,6 +1727,10 @@ msgstr "សូមបញ្ជាក់ពីតំលៃសេវា"
 #: errors.Customer.ClientCannotBeAddedToInactiveGroup
 msgid "Customer cannot be added to an inactive group"
 msgstr "អតិថិជនមិនអាចបន្ថែមទៅក្រុមដែលអសកម្មភាពនោះទេ"
+
+#: errors.Customer.TargetGroupStatusLowerThanClient
+msgid "Target group status is lower than client"
+msgstr ""
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"
