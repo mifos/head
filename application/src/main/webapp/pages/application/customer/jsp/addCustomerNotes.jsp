@@ -96,7 +96,7 @@ function goToCancelPage(){
 
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
-							<span id="addCustomerNotes.label.note"
+							<span id="addCustomerNotes.label.note">
 							<mifos:mifoslabel name="Customer.Note" mandatory="yes"></mifos:mifoslabel></span></td>
 							<td width="93%" align="left" valign="top"><html-el:textarea styleId="addCustomerNotes.input.note"
 								property="comment" cols="37" style="width:320px; height:110px;">
