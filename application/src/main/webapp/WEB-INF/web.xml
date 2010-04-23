@@ -39,7 +39,7 @@
         <url-pattern>/reportTemplateDownload</url-pattern>
     </servlet-mapping>
 
-    <!-- DatabaseVersionFilter should aways be on top -->
+    <!-- DatabaseVersionFilter should always be on top -->
     <filter-mapping>
         <filter-name>DatabaseVersionFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -96,7 +96,15 @@
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
         <init-param>
             <param-name>config</param-name>
-            <param-value>/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml,/WEB-INF/customer-struts-config.xml,/WEB-INF/reports-struts-config.xml,/WEB-INF/accounts-struts-config.xml,/WEB-INF/productdefinition-struts-config.xml,/WEB-INF/admindocument-struts-config.xml,/WEB-INF/import-export-struts-config.xml</param-value>
+            <param-value>/WEB-INF/struts-config.xml,
+                         /WEB-INF/other-struts-config.xml,
+                         /WEB-INF/customer-struts-config.xml,
+                         /WEB-INF/reports-struts-config.xml,
+                         /WEB-INF/accounts-struts-config.xml,
+                         /WEB-INF/productdefinition-struts-config.xml,
+                         /WEB-INF/admindocument-struts-config.xml,
+                         /WEB-INF/import-export-struts-config.xml
+             </param-value>
         </init-param>
         <init-param>
             <param-name>convertNull</param-name>
@@ -149,88 +157,72 @@
     <!-- Struts Tag Library Descriptors -->
 
     <jsp-config>
-    <taglib>
-        <taglib-uri>/tags/struts-bean</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-bean</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-html</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-html</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-logic</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/struts-logic.tld
-		</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-logic</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-logic.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-nested</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/struts-nested.tld
-		</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-nested</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-nested.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-tiles</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/struts-tiles.tld
-		</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-tiles</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-tiles.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-html-el</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/struts-html-el.tld
-		</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-html-el</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-html-el.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/custom-menu</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/custom-menu.tld</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/custom-menu</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/custom-menu.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/mifos-html</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/mifos-html.tld</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/mifos-html</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/mifos-html.tld</taglib-location>
+        </taglib>
 
-    <taglib>
-        <taglib-uri>/tags/struts-bean-el</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/struts-bean-el.tld
-		</taglib-location>
-    </taglib>
-    <taglib>
-        <taglib-uri>/tags/c</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
-    </taglib>
-    <taglib>
-        <taglib-uri>/tags/date</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/my-customtags.tld
-		</taglib-location>
-    </taglib>
-    <taglib>
-        <taglib-uri>/mifos/customtags</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/mifos-customtags.tld
-		</taglib-location>
-    </taglib>
-    <taglib>
-        <taglib-uri>/mifos/officetags</taglib-uri>
-        <taglib-location>
-            /WEB-INF/tlds/application/office/officetags.tld
-		</taglib-location>
-    </taglib>
+        <taglib>
+            <taglib-uri>/tags/struts-bean-el</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-bean-el.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/c</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/tags/date</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/my-customtags.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/mifos/customtags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/mifos-customtags.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/mifos/officetags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/application/office/officetags.tld</taglib-location>
+        </taglib>
 
-    <!-- For M2 -->
-    <taglib>
-        <taglib-uri>/mifos/custom-tags</taglib-uri>
-        <taglib-location>/WEB-INF/tlds/customtags.tld</taglib-location>
-    </taglib>      
+        <!-- For M2 -->
+        <taglib>
+            <taglib-uri>/mifos/custom-tags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/customtags.tld</taglib-location>
+        </taglib>
     </jsp-config>
 
     <!-- Cheetah integration -->
