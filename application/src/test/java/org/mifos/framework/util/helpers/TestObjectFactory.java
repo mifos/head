@@ -119,6 +119,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -981,14 +982,18 @@ public class TestObjectFactory {
      */
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter) {
-        FeeBO fee;
+        return createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, "Test Category");
+    }
+
+    public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter, String categoryTypeName) {
         try {
-            fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter,
-                    TestObjectFactory.getUserContext());
+            FeeBO fee = createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter,
+                    TestObjectFactory.getUserContext(), categoryTypeName);
+            return fee;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return fee;
     }
 
     public static FeeBO createPeriodicAmountFeeWithMakeUser(final String feeName, final FeeCategory feeCategory,
@@ -1006,11 +1011,19 @@ public class TestObjectFactory {
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter,
             final UserContext userContext) {
+        return createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, userContext, "Test Category");
+    }
+
+    private static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
+            final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter,
+            final UserContext userContext, String categoryLookupValue) {
         try {
             GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
             MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter, new DateTimeService()
                     .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
-            FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
+            LookUpValueEntity lookUpValue = new LookUpValueEntity();
+            lookUpValue.setLookUpName(categoryLookupValue);
+            FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory, lookUpValue),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
                     false, meeting);
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));

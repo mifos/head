@@ -27,6 +27,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -108,18 +109,14 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
 
-        Assert.assertEquals("The size of master data for categories", ((List<MasterDataEntity>) SessionUtils
-                .getAttribute(FeeConstants.CATEGORYLIST, request)).size(), 5);
+        FeeParameters feeParameters = (FeeParameters)request.getAttribute(FeeParameters.class.getSimpleName());
+        Assert.assertEquals("The size of master data for categories", feeParameters.getCategories().size(), 5);
         Assert.assertEquals("The size of master data for loan time of charges for one time fees  : ",
-                ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.TIMEOFCHARGES, request)).size(), 3);
+                feeParameters.getTimesOfCharging().size(), 3);
         Assert.assertEquals("The size of master data for customer  time of charges for one time fees master : ",
-                ((List<MasterDataEntity>) SessionUtils.getAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES, request))
-                        .size(), 1);
-        Assert.assertEquals("The size of master data for loan formula : ", ((List<MasterDataEntity>) SessionUtils
-                .getAttribute(FeeConstants.FORMULALIST, request)).size(), 3);
-        Assert.assertEquals("The size of master data for GLCodes of fees : ", ((List<MasterDataEntity>) SessionUtils
-                .getAttribute(FeeConstants.GLCODE_LIST, request)).size(), 7);
-
+                feeParameters.getTimesOfChargingCustomers().size(), 1);
+        Assert.assertEquals("The size of master data for loan formula : ", feeParameters.getFormulas().size(), 3);
+        Assert.assertEquals("The size of master data for GLCodes of fees : ", feeParameters.getGlCodes().size(), 7);
     }
 
     public void testFailurePreviewWithAllValuesNull() throws Exception {
@@ -646,6 +643,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
                 FeePayment.UPFRONT);
         fee3 = TestObjectFactory.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT);
+        fee3.updateStatus(FeeStatus.INACTIVE);
+
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/feeaction.do");
@@ -656,16 +655,20 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.viewAll_success.toString());
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        List<FeeBO> customerFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.CUSTOMER_FEES, request);
-        List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(FeeConstants.PRODUCT_FEES, request);
+        List<FeeDto> customerFees = (List<FeeDto>) SessionUtils.getAttribute(FeeConstants.CUSTOMER_FEES, request);
+        List<FeeDto> productFees = (List<FeeDto>) SessionUtils.getAttribute(FeeConstants.PRODUCT_FEES, request);
         Assert.assertEquals(3, customerFees.size());
         Assert.assertEquals(1, productFees.size());
 
-        Assert.assertEquals("Center_Fee", customerFees.get(0).getFeeName());
-        Assert.assertEquals("Customer_Fee", customerFees.get(1).getFeeName());
-        Assert.assertEquals("Group_Fee", customerFees.get(2).getFeeName());
+        Assert.assertEquals("Center_Fee", customerFees.get(0).getName());
+        Assert.assertFalse(customerFees.get(0).isActive());
+        Assert.assertEquals("Customer_Fee", customerFees.get(1).getName());
+        Assert.assertTrue(customerFees.get(1).isActive());
+        Assert.assertEquals("Group_Fee", customerFees.get(2).getName());
+        Assert.assertTrue(customerFees.get(2).isActive());
 
-        Assert.assertEquals("Loan_Fee1", productFees.get(0).getFeeName());
+        Assert.assertEquals("Loan_Fee1", productFees.get(0).getName());
+        Assert.assertTrue(productFees.get(0).isActive());
 
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
         fee1 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee1.getFeeId());

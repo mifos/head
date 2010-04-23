@@ -33,10 +33,10 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
@@ -140,10 +140,24 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
-    public List<MasterDataEntity> retrieveMasterEntities(final Class clazz, final Short localeId) throws PersistenceException {
+//    public List<MasterDataEntity> retrieveMasterEntities(final Class clazz, final Short localeId) throws PersistenceException {
+//        try {
+//            Session session = getSession();
+//            List<MasterDataEntity> masterEntities = session.createQuery("from " + clazz.getName()).list();
+//            for (MasterDataEntity masterData : masterEntities) {
+//                initialize(masterData.getNames());
+//                masterData.setLocaleId(localeId);
+//            }
+//            return masterEntities;
+//        } catch (Exception e) {
+//            throw new PersistenceException(e);
+//        }
+//    }
+
+    public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) throws PersistenceException {
         try {
             Session session = getSession();
-            List<MasterDataEntity> masterEntities = session.createQuery("from " + clazz.getName()).list();
+            List<T> masterEntities = session.createQuery("from " + type.getName()).list();
             for (MasterDataEntity masterData : masterEntities) {
                 initialize(masterData.getNames());
                 masterData.setLocaleId(localeId);
@@ -153,6 +167,8 @@ public class MasterPersistence extends Persistence {
             throw new PersistenceException(e);
         }
     }
+
+
 
     public MasterDataEntity retrieveMasterEntity(final Short entityId, final Class clazz, final Short localeId)
             throws PersistenceException {

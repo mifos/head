@@ -86,7 +86,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final Short backDatedTransactionAllowed = Constants.NO;
 
         try {
-            final List<MasterDataEntity> paymentTypesList = masterPersistence.retrieveMasterEntities(
+            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.retrieveMasterEntities(
                     PaymentTypeEntity.class, Short.valueOf("1"));
             paymentTypesDtoList = convertToPaymentTypesListItemDto(paymentTypesList);
 
@@ -240,7 +240,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         return collectionSheetErrorsView;
     }
 
-    private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<MasterDataEntity> paymentTypesList) {
+    private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<? extends MasterDataEntity> paymentTypesList) {
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
         for (MasterDataEntity paymentType : paymentTypesList) {
             paymentTypesDtoList.add(new ListItem<Short>(paymentType.getId(), paymentType.getName()));

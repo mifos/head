@@ -62,12 +62,12 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
-    public List<MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
+    public List<? extends MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
         try {
-            List<MasterDataEntity> applList = new MasterPersistence().retrieveMasterEntities(
+            List<PrdApplicableMasterEntity> applList = new MasterPersistence().retrieveMasterEntities(
                     PrdApplicableMasterEntity.class, localeId);
             if (applList != null) {
-                for (Iterator<MasterDataEntity> iter = applList.iterator(); iter.hasNext();) {
+                for (Iterator<PrdApplicableMasterEntity> iter = applList.iterator(); iter.hasNext();) {
                     MasterDataEntity masterData = iter.next();
                     if (masterData.getId().equals(ApplicableTo.CENTERS.getValue())) {
                         iter.remove();

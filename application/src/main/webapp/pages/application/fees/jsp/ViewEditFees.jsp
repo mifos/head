@@ -68,13 +68,13 @@ explanation of the license and how it is applied.
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="feeaction.do?method=get&feeId=${productFee.feeId}&randomNUm=${sessionScope.randomNUm}">
-														<c:out value="${productFee.feeName}" />
+													<html-el:link href="feeaction.do?method=get&feeId=${productFee.id}&randomNUm=${sessionScope.randomNUm}">
+														<c:out value="${productFee.name}" />
 													</html-el:link>
 													(
-													<c:out value="${productFee.categoryType.name}" />
+													<c:out value="${productFee.categoryType}" />
 													)
-													<c:if test="${productFee.feeStatus.id == FeeStatus.INACTIVE.value}">
+													<c:if test="${!productFee.active}">
 														<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;
 															<%--<mifos:mifoslabel name="Fees.inactive" bundle="FeesUIResources" />--%>
 														<c:out value="${productFee.feeStatus.name}" />
@@ -95,13 +95,13 @@ explanation of the license and how it is applied.
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="feeaction.do?method=get&feeId=${clientFee.feeId}&randomNUm=${sessionScope.randomNUm}">
-														<c:out value="${clientFee.feeName}" />
+													<html-el:link href="feeaction.do?method=get&feeId=${clientFee.id}&randomNUm=${sessionScope.randomNUm}">
+														<c:out value="${clientFee.name}" />
 													</html-el:link>
 													(
-													<c:out value="${clientFee.categoryType.name}" />
+													<c:out value="${clientFee.categoryType}" />
 													)
-													<c:if test="${clientFee.feeStatus.id == FeeStatus.INACTIVE.value}">
+													<c:if test="${!clientFee.active}">
 														<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;
 														<c:out value="${clientFee.feeStatus.name}" />
 													</c:if>

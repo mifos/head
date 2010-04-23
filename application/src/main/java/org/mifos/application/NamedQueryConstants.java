@@ -40,6 +40,7 @@ public interface NamedQueryConstants {
     public String MASTERDATA_FEES_WITHOUT_LEVEL = "masterdata.feeswithoutlevel";
     public String MASTERDATA_FEES_WITH_LEVEL = "masterdata.feelevel";
     public String MASTERDATA_GL_CODES = "masterdata.GlCodes";
+    public String GL_CODE_BY_ID = "GLCode.findById";
     // fund related
     public String DOES_FUND_NAME_EXIST = "fund.doesFundNameExist";
     public String CHECK_FUND_NAME_EXIST = "fund.checkFundNameExist";

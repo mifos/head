@@ -35,7 +35,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -81,7 +80,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private CollectionSheetService collectionSheetService;
 
     @Mock
-    private MasterDataEntity masterDataEntity;
+    private PaymentTypeEntity masterDataEntity;
 
     @Mock
     private CollectionSheetDtoTranslator collectionSheetTranslator;
@@ -123,7 +122,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         final String paymentTypeName = "type1";
         final ListItem<Short> paymentType1 = new ListItem<Short>(paymentTypeId, paymentTypeName);
 
-        final List<MasterDataEntity> paymentTypeEntities = new ArrayList<MasterDataEntity>();
+        final List<PaymentTypeEntity> paymentTypeEntities = new ArrayList<PaymentTypeEntity>();
         paymentTypeEntities.add(masterDataEntity);
 
         // stubbing

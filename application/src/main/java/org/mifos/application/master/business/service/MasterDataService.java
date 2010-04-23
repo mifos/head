@@ -80,13 +80,21 @@ public class MasterDataService implements BusinessService {
 
     }
 
-    @SuppressWarnings("unchecked")
-    public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws ServiceException {
+//    @SuppressWarnings("unchecked")
+//    public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws ServiceException {
+//        try {
+//            return masterPersistence.retrieveMasterEntities(entityName, localeId);
+//        } catch (PersistenceException e) {
+//            throw new ServiceException(e);
+//        }
+//    }
+
+    public <T extends MasterDataEntity>  List<T> retrieveMasterEntities(Class<T> entityType, Short localeId) throws ServiceException {
         try {
-            return masterPersistence.retrieveMasterEntities(entityName, localeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
+          return masterPersistence.retrieveMasterEntities(entityType, localeId);
+      } catch (PersistenceException e) {
+          throw new ServiceException(e);
+      }
     }
 
     /**

@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,6 +34,8 @@ import org.mifos.framework.business.AbstractEntity;
 
 @Entity
 @Table(name = "GL_CODE")
+@NamedQueries( { @NamedQuery(name = "GLCode.findById", query = "from GLCodeEntity glCode where glCode.glcodeId = :glcodeId")})
+
 public class GLCodeEntity extends AbstractEntity {
 
     @Id

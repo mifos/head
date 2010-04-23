@@ -269,7 +269,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     private ClientDropdownsDto retrieveClientDropdownData(UserContext userContext) throws PersistenceException {
-        List<MasterDataEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
+        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
                 SpouseFatherLookupEntity.class, userContext.getLocaleId());
 
         List<ValueListElement> salutations = this.customerDao.retrieveSalutations();
@@ -739,7 +739,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     private List<CustomerPositionView> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
 
         try {
-            List<MasterDataEntity> customerPositions = new MasterPersistence().retrieveMasterEntities(
+            List<PositionEntity> customerPositions = new MasterPersistence().retrieveMasterEntities(
                     PositionEntity.class, localeId);
 
             List<CustomerPositionView> customerPositionViews = new ArrayList<CustomerPositionView>();

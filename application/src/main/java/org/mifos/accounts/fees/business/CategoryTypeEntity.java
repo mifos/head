@@ -46,6 +46,11 @@ public class CategoryTypeEntity extends MasterDataEntity {
         this.id = feeCategory.getValue();
     }
 
+    public CategoryTypeEntity(FeeCategory feeCategory, LookUpValueEntity lookUpValue) {
+        this.id = feeCategory.getValue();
+        this.lookUpValue = lookUpValue;
+    }
+
     public FeeCategory getFeeCategory() throws PropertyNotFoundException {
         return FeeCategory.getFeeCategory(getId());
     }
