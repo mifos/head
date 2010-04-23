@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-  version="2.0">
-    
-  <description>JSTL 1.1 functions library</description>
-  <display-name>JSTL functions</display-name>
-  <tlib-version>1.1</tlib-version>
-  <short-name>loanfn</short-name>
-  <uri>/userlocaledate</uri>
-  
-   <function>
-    <description>
+    <description>JSTL 1.2 library</description>
+    <display-name>Date helper</display-name>
+    <tlib-version>1.2</tlib-version>
+    <short-name>loanfn</short-name>
+    <uri>/userlocaledate</uri>
+
+    <function>
+        <description>
      This takes a Locale Object and Date object and returns date in the locale format
     </description>
-    <name>getUserLocaleDateObject</name>
-    <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>
-    <function-signature>java.lang.String getUserLocaleDateObject(java.util.Locale,java.util.Date)</function-signature>
-    <example>
+        <name>getUserLocaleDateObject</name>
+        <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>
+        <function-signature>java.lang.String getUserLocaleDateObject(java.util.Locale,java.util.Date)</function-signature>
+        <example>
       &lt;c:out value="${fn:getUserLocaleDateObject(locale,date)}">
     </example>
-  </function>
-  
-  <function>
-    <description>
+    </function>
+
+    <function>
+        <description>
      This takes a Locale Object and string date in db format and returns date in the locale format
     </description>
-    <name>getUserLocaleDate</name>
-    <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>
-    <function-signature>java.lang.String getUserLocaleDate(java.util.Locale,java.lang.String)</function-signature>
-    <example>
+        <name>getUserLocaleDate</name>
+        <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>
+        <function-signature>java.lang.String getUserLocaleDate(java.util.Locale,java.lang.String)</function-signature>
+        <example>
       &lt;c:out value="${fn:getUserLocaleDate(locale,string)}">
     </example>
-  </function>
-  
-  <function>
-    <description>
+    </function>
+
+    <function>
+        <description>
      This takes a UserContext and returns the User Preferred Locale, if any. Otherwise it returns default Mifos Locale
     </description>
-    <name>getUserPreferredLocaleHelper</name>
-    <function-class>org.mifos.framework.util.helpers.LabelTagUtils</function-class>
-    <function-signature>java.lang.String getUserPreferredLocaleHelper(org.mifos.security.util.UserContext)</function-signature>
-    
-  </function>
-  
-  </taglib>
+        <name>getUserPreferredLocaleHelper</name>
+        <function-class>org.mifos.framework.util.helpers.LabelTagUtils</function-class>
+        <function-signature>java.lang.String getUserPreferredLocaleHelper(org.mifos.security.util.UserContext)</function-signature>
+
+    </function>
+
+</taglib>

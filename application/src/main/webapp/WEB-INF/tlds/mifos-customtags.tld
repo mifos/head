@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation=
-        "http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
-    version="2.0">
-
-    <tlib-version>1.0</tlib-version>
+    <description>JSTL 1.2 library</description>
+    <display-name>Mifos Custom Tags</display-name>
+    <tlib-version>1.2</tlib-version>
     <short-name>mifoscustom</short-name>
     <uri>/mifos/customtags</uri>
 	
 	<!-- Mifos custom table tag -->
 	<tag>
 		<name>mifostabletag</name>
-		<tagclass>org.mifos.framework.components.customTableTag.TableTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>A Tag for creating a an HTML Table depending on the data passed in.</info>
+		<tag-class>org.mifos.framework.components.customTableTag.TableTag</tag-class>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>source</name>
 			<required>true</required>
@@ -57,8 +55,8 @@
 	in mifos-html.tld because it would support jstl expressions -->
 	<tag>
 		<name>MifosImage</name>
-		<tagclass>org.mifos.framework.struts.tags.MifosImageTag</tagclass>
-		<bodycontent>JSP</bodycontent>
+		<tag-class>org.mifos.framework.struts.tags.MifosImageTag</tag-class>
+		<body-content>JSP</body-content>
 		
 		<attribute>
 			<name>id</name>
@@ -76,10 +74,8 @@
 	
 	<tag>
 		<name>surveyquestion</name>
-		<tagclass>org.mifos.customers.surveys.struts.tag.QuestionTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>A tag for rendering survey questions</info>
-		
+		<tag-class>org.mifos.customers.surveys.struts.tag.QuestionTag</tag-class>
+		<body-content>empty</body-content>
 		<attribute>
 			<name>questionId</name>
 			<required>true</required>

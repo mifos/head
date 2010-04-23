@@ -1,35 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
 
-<taglib>
-<tlibversion>1.2</tlibversion>
-<jspversion>1.1</jspversion>
-<shortname>office</shortname>
-<uri>/office/officetags</uri>
-<tag>
-<name>OfficeListTag</name>
-<tagclass>org.mifos.customers.office.struts.tag.OfficeListTag</tagclass>
-<bodycontent>empty</bodycontent>
-<attribute>
-<name>actionName</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-</attribute>
-<attribute>
-<name>methodName</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-</attribute>
-<attribute>
-<name>onlyBranchOffices</name>
-<required>false</required>
-<rtexprvalue>true</rtexprvalue>
-</attribute>
-<attribute>
-<name>flowKey</name>
-<required>false</required>
-<rtexprvalue>true</rtexprvalue>
-</attribute>
-</tag>
+    <description>JSTL 1.2 library</description>
+    <display-name>Mifos Office Tags</display-name>
+    <tlib-version>1.2</tlib-version>
+    <short-name>office</short-name>
+    <uri>/office/officetags</uri>
+    <tag>
+        <name>OfficeListTag</name>
+        <tag-class>org.mifos.customers.office.struts.tag.OfficeListTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>actionName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>methodName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>onlyBranchOffices</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>flowKey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>
 
