@@ -1,4 +1,4 @@
-#Fri Apr 23 12:12:21 GMT+05:30 2010
+#Sat Apr 24 14:02:37 GMT+05:30 2010
 eclipse.preferences.version=1
 validateFragments=true
 validation.actions-missing-required-attribute=1
@@ -13,11 +13,11 @@ validation.directive-taglib-missing-uri-or-tagdir=1
 validation.directive-taglib-unresolvable-uri-or-tagdir=1
 validation.el-general-syntax=1
 validation.el-lexical-failure=2
-validation.java-=2
-validation.java-local-variable-is-never-used=2
-validation.java-null-local-variable-reference=2
-validation.java-potential-null-local-variable-reference=2
-validation.java-unused-import=2
+validation.java-=-1
+validation.java-local-variable-is-never-used=-1
+validation.java-null-local-variable-reference=-1
+validation.java-potential-null-local-variable-reference=-1
+validation.java-unused-import=-1
 validation.translation-tag-class-not-found=2
 validation.translation-tei-class-not-found=2
 validation.translation-tei-class-not-instantiated=2
