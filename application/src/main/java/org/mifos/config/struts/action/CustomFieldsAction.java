@@ -215,6 +215,9 @@ public class CustomFieldsAction extends BaseAction {
     }
 
     private String changeDefaultValueDateToDBFormat(String defaultValue, Locale locale) throws InvalidDateException {
+        if (StringUtils.isBlank(defaultValue)) {
+            return "";
+        }
         SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String userfmt = DateUtils.convertToCurrentDateFormat(shortFormat.toPattern());
         return DateUtils.convertUserToDbFmt(defaultValue, userfmt);

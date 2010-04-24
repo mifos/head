@@ -64,6 +64,17 @@ public class DefineAdditionalFieldsTest extends UiTestCaseBase {
         createAndVerifyNewAdditonalField(adminPage, defineAdditionalFieldsPage, category, label, dataType);
     }
 
+    public void defineClientAdditionalDateFieldTest() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        DefineAdditionalFieldsPage defineAdditionalFieldsPage = adminPage.navigateToDefineAdditionalFieldsPage();
+        defineAdditionalFieldsPage.verifyPage();
+        String category = "Client";
+        String label =  "clientLabel " + StringUtil.getRandomString(12);
+        String dataType =  "Date";
+
+        createAndVerifyNewAdditonalField(adminPage, defineAdditionalFieldsPage, category, label, dataType);
+    }
+
     private void createAndVerifyNewAdditonalField(AdminPage adminPage,
             DefineAdditionalFieldsPage defineAdditionalFieldsPage, String category, String label, String dataType) {
         DefineAdditionalFieldPreviewPage defineAdditionalFieldPreviewPage = defineAdditionalFieldsPage.defineAdditionalField(adminPage, category, label, dataType);

@@ -49,6 +49,8 @@ public class DefineAdditionalFieldsPage extends MifosPage {
                 selenium.select("dataType", "value=2");
             } else if ("Numeric".equals(dataType)) {
                 selenium.select("dataType", "value=1");
+            } else if ("Date".equals(dataType)) {
+                selenium.select("dataType", "value=3");
             }
         }
 
