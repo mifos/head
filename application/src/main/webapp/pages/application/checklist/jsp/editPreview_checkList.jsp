@@ -20,7 +20,6 @@ explanation of the license and how it is applied.
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 
-<%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>

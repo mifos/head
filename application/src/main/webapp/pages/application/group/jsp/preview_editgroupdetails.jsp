@@ -21,15 +21,13 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
-
-<tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
  <span id="page.id" title="PreviewEditGroupDetails" />
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
