@@ -149,11 +149,7 @@ public class DateUtils {
 
                 String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
                 SimpleDateFormat format = new SimpleDateFormat(formatStr, dateLocale);
-                // Enable this once we've taken a bit more of a look
-                // at where this gets called, run the tests, etc.
-                // But when the user types "13" for the month, for example,
-                // that should be an error not January of the next year.
-                // format.setLenient(false);
+                format.setLenient(false);
                 return format.parse(value);
             } catch (Exception e) {
                 throw new FrameworkRuntimeException(e);

@@ -21,6 +21,7 @@
 package org.mifos.framework.util.helpers;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -35,6 +36,7 @@ import org.junit.Ignore;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.testng.annotations.Test;
 
@@ -238,6 +240,15 @@ public class DateUtilsTest extends TestCase {
         Assert.assertEquals(0, dateTime.getHourOfDay());
         Assert.assertEquals(0, dateTime.getMinuteOfHour());
         Assert.assertEquals(0, dateTime.getSecondOfMinute());
+    }
+
+    public void testInvalidDate() throws Exception {
+        try {
+            DateUtils.getDate("20/20/2000");
+            fail("Invalid date '20/20/2000' passed");
+        } catch (FrameworkRuntimeException e) {
+            Assert.assertTrue(e.getCause() instanceof ParseException);
+        }
     }
 
     private Date getDate(int year, int month, int day) {
