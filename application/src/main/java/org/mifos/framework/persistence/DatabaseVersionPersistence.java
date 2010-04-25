@@ -68,7 +68,6 @@ import org.mifos.security.util.SecurityConstants;
 public class DatabaseVersionPersistence {
 
     public static final int APPLICATION_VERSION = 240;
-    public static final int FIRST_NUMBERED_VERSION = 100;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
