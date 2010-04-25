@@ -20,9 +20,9 @@
 
 package org.mifos.security.util;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.framework.business.AbstractEntity;
 
-public class OfficeSearchDto implements DataTransferObject {
+public class OfficeSearch extends AbstractEntity {
     /***************************** Fields **********************/
     /**
      * This would hold the officeid
@@ -38,7 +38,7 @@ public class OfficeSearchDto implements DataTransferObject {
     /**
      * Default constructor
      */
-    public OfficeSearchDto() {
+    public OfficeSearch() {
 
     }
 
@@ -55,12 +55,12 @@ public class OfficeSearchDto implements DataTransferObject {
      * @param officeId
      * @param searchId
      */
-    public OfficeSearchDto(Short officeId, String searchId) {
+    public OfficeSearch(Short officeId, String searchId) {
         this.officeId = officeId;
         this.searchId = searchId;
     }
 
-    public OfficeSearchDto(Short officeId, String searchId, Short parentOfficeId) {
+    public OfficeSearch(Short officeId, String searchId, Short parentOfficeId) {
         this.officeId = officeId;
         this.searchId = searchId;
         this.parentOfficeId = parentOfficeId;

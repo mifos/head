@@ -22,6 +22,10 @@ package org.mifos.customers.client.business.service;
 
 import org.mifos.framework.business.service.DataTransferObject;
 
+/*
+ * TODO : Work in progress on moving more data for client details display into Data Transfer Objects
+ * so that business objects are not accessed directly from jsp pages.
+ */
 public class ClientLoanInformationDto implements DataTransferObject {
     private final String totalAmountDue;
     private final String globalAccountNum;

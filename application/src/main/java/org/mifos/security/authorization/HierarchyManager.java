@@ -37,7 +37,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.Observer;
 import org.mifos.security.util.OfficeCacheDto;
-import org.mifos.security.util.OfficeSearchDto;
+import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityEvent;
 import org.mifos.security.util.UserContext;
 
@@ -58,7 +58,7 @@ public class HierarchyManager implements Observer {
 
     public void handleEvent(SecurityEvent e) {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map before" + hierarchyMap);
-        List<OfficeCacheDto> officeList = convertToOfficeCacheList((List<OfficeSearchDto>) e.getObject());
+        List<OfficeCacheDto> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
         if (e.getEventType().equals(Constants.CREATE)) {
             updateMapForCreateEvent(officeList);
         } else if (e.getEventType().equals(Constants.UPDATE)) {
@@ -85,7 +85,7 @@ public class HierarchyManager implements Observer {
         hierarchyMap.put(cacheView.getOfficeId(), cacheView);
     }
 
-    private List<OfficeCacheDto> convertToOfficeCacheList(List<OfficeSearchDto> officeList) {
+    private List<OfficeCacheDto> convertToOfficeCacheList(List<OfficeSearch> officeList) {
         List<OfficeCacheDto> officeCacheList = new ArrayList<OfficeCacheDto>();
         for (int i = 0; i < officeList.size(); i++) {
             OfficeCacheDto cacheView = new OfficeCacheDto(officeList.get(i).getOfficeId(), officeList.get(i)

@@ -4,7 +4,7 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
- <class name="org.mifos.security.util.OfficeSearchDto" table="OFFICE">
+ <class name="org.mifos.security.util.OfficeSearch" table="OFFICE">
      <id name="officeId" type="short" column="OFFICE_ID">
       <generator class="native"/>
     </id>

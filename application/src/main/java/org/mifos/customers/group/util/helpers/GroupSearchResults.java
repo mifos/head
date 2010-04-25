@@ -23,10 +23,10 @@ package org.mifos.customers.group.util.helpers;
 import java.io.Serializable;
 
 /**
- * This class holds tha data related to Group Search
+ * This class holds the data related to Group Search
  */
 public class GroupSearchResults implements Serializable {
-    /** Denotes the office name to whicht he center belongs */
+    /** Denotes the office name to which the center belongs */
     private String officeName;
     /** Denotes the center name on which the search is conducted */
     private String centerName;

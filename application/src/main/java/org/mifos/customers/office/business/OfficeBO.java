@@ -47,7 +47,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.EventManger;
-import org.mifos.security.util.OfficeSearchDto;
+import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -419,8 +419,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
         // if we are here it means office created sucessfully
         // we need to update hierarchy manager cache
-        OfficeSearchDto os = new OfficeSearchDto(getOfficeId(), getSearchId(), getParentOffice().getOfficeId());
-        List<OfficeSearchDto> osList = new ArrayList<OfficeSearchDto>();
+        OfficeSearch os = new OfficeSearch(getOfficeId(), getSearchId(), getParentOffice().getOfficeId());
+        List<OfficeSearch> osList = new ArrayList<OfficeSearch>();
         osList.add(os);
         EventManger.postEvent(Constants.CREATE, osList, SecurityConstants.OFFICECHANGEEVENT);
 
