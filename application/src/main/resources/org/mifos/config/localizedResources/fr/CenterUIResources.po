@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-04-25 11:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1064,6 +1064,12 @@ msgctxt "errors.Customer.specifyCustomFieldValue"
 msgid "<li>Please specify required additional information.</li>"
 msgstr "<li>Veuiller indiquer l'information supplémentaire requise.</li>"
 
+#: errors.Customer.customdatefield
+msgid ""
+"<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field.</li>"
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgctxt "errors.Customer.specifyFeeAmount"
 msgid "<li>Please specify fee amount.</li>"
@@ -1151,8 +1157,3 @@ msgstr "Cette action n'est pas autorisée."
 #: exception.framework.fieldConfiguration.mandatory
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Veuiilez indiquer une valeur pour {0}.</li>"
-
-
-
-
-

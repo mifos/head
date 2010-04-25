@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -641,32 +642,32 @@ public class PersonActionForm extends BaseActionForm {
     }
 
     protected void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-        List<CustomFieldDefinitionEntity> customFieldDefs = null;
-
         try {
-            customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(
+            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(
                     CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        } catch (PageExpiredException e) {
-
-            // ignore it
-        }
-        // if (customFieldDefs != null)
-        for (CustomFieldView customField : customFields) {
-            boolean isErrorFound = false;
-            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                    if (StringUtils.isBlank(customField.getFieldValue())) {
-                        errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
-                                PersonnelConstants.ERROR_CUSTOMfIELD));
-                        isErrorFound = true;
+            for (CustomFieldView customField : customFields) {
+                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
+                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
+                            errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
+                                    PersonnelConstants.ERROR_CUSTOMfIELD, customFieldDef.getLabel()));
+                        }
+                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                            try {
+                                DateUtils.getDate(customField.getFieldValue());
+                            } catch (Exception e) {
+                                errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
+                                        PersonnelConstants.ERROR_CUSTOMDATEFIELD, customFieldDef.getLabel()));
+                            }
+                        }
                         break;
                     }
                 }
-
             }
-            if (isErrorFound) {
-                break;
-            }
+        } catch (PageExpiredException pee) {
+            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
+                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
         }
     }
 

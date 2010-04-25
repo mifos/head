@@ -226,6 +226,7 @@ public interface CustomerConstants {
     public static final String ERRORS_SELECT_LOAN_OFFICER = "errors.Customer.specifyLoanOfficer";
     public static final String ERRORS_SPECIFY_MEETING = "errors.Customer.specifyMeeting";
     public static final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE = "errors.Customer.specifyCustomFieldValue";
+    public static final String ERRORS_CUSTOM_DATE_FIELD = "errors.Customer.customdatefield";
     public static final String ERRORS_DUPLICATE_PERIODIC_FEE = "errors.Customer.duplicatePeriodicFee";
     public static final String ERRORS_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
     public static final String ERRORS_SPECIFY_FEE_AMOUNT = "errors.Customer.specifyFeeAmount";

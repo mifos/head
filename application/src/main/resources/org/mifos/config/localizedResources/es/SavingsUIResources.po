@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:22-0700\n"
+"POT-Creation-Date: 2010-04-25 11:11+0200\n"
 "PO-Revision-Date: 2009-08-08 20:23-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -673,8 +673,12 @@ msgstr ""
 "página de detalles y empiece la actividad de nuevo."
 
 #: errors.Account.specifyCustomFieldValue
-msgid "Please specify required additional information."
-msgstr "Por favor, especifique la información adicional necesaria."
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: errors.Account.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
+msgstr ""
 
 #: errors.createfailed
 msgid ""
@@ -890,4 +894,5 @@ msgstr "Nota\\:"
 msgid "Status:"
 msgstr "Estado\\:"
 
-
+#~ msgid "Please specify required additional information."
+#~ msgstr "Por favor, especifique la información adicional necesaria."

@@ -175,6 +175,7 @@ public interface PersonnelConstants {
     public static final String ERROR_MFIDATE = "error.mfidate";
     public static final String ERROR_PASSWORD_LENGTH = "error.passwordLength";
     public static final String ERROR_CUSTOMfIELD = "error.customfield";
+    public static final String ERROR_CUSTOMDATEFIELD = "error.customdatefield";
     public static final String ERROR_STATUS = "errors.status";
 
     /**

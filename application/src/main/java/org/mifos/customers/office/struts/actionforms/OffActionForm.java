@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -47,6 +48,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
 public class OffActionForm extends BaseActionForm {
@@ -210,19 +212,23 @@ public class OffActionForm extends BaseActionForm {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
             for (CustomFieldView customField : customFields) {
-                boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isBlank(customField.getFieldValue())) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
+                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
-                                    OfficeConstants.ENTERADDTIONALINFO));
-                            isErrorFound = true;
-                            break;
+                                    OfficeConstants.ENTERADDTIONALINFO, customFieldDef.getLabel()));
                         }
+                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                            try {
+                                DateUtils.getDate(customField.getFieldValue());
+                            } catch (Exception e) {
+                                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
+                                        OfficeConstants.ERROR_CUSTOMDATEFIELD, customFieldDef.getLabel()));
+                            }
+                        }
+                        break;
                     }
-                }
-                if (isErrorFound) {
-                    break;
                 }
             }
         } catch (PageExpiredException pee) {

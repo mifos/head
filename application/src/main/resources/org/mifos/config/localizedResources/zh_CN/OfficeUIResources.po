@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-25 11:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -478,7 +478,11 @@ msgid "max mumber of offices allowed are 9999"
 msgstr ""
 
 #: error.office.provideadditionalInformation
-msgid "Please specify required additional information."
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: error.office.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
 msgstr ""
 
 #: error.versionnodonotmatch

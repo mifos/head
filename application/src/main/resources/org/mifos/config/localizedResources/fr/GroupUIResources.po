@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1230,6 +1230,12 @@ msgstr ""
 msgid "Please specify required additional information."
 msgstr "Veuiller indiquer l'information supplémentaire requise ."
 
+#: errors.Customer.customdatefield
+msgid ""
+"Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field."
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."
 msgstr "Veuiller spécifier le montant de frais ."
@@ -1551,6 +1557,3 @@ msgstr "n'a pas"
 #: warning.noclientsassigned3
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "s assigné à lui. Cliquer sur Valider pour approuver le vide"
-
-
-

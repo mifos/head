@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-11-09 22:31+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1227,6 +1227,12 @@ msgstr ""
 msgid "Please specify required additional information."
 msgstr "Adja meg a szükséges kiegészítő információkat."
 
+#: errors.Customer.customdatefield
+msgid ""
+"Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field."
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."
 msgstr "Adja meg a díj összegét."
@@ -1529,6 +1535,3 @@ msgstr "nem rendelkezik számára kijelölt"
 #: warning.noclientsassigned3
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "vel. Kattintson a Mégsem gombra, ha jóvá akarja hagyni az üres"
-
-
-

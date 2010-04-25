@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
@@ -405,21 +406,24 @@ public abstract class CustomerActionForm extends BaseActionForm {
         try {
             List<CustomFieldView> customFieldDefs = (List<CustomFieldView>) SessionUtils.getAttribute(
                     CustomerConstants.CUSTOM_FIELDS_LIST, request);
-
             for (CustomFieldView customField : customFields) {
-                boolean isErrorFound = false;
                 for (CustomFieldView customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isBlank(customField.getFieldValue())) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
+                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-                            isErrorFound = true;
-                            break;
                         }
+                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                            try {
+                                DateUtils.getDate(customField.getFieldValue());
+                            } catch (Exception e) {
+                                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
+                                        CustomerConstants.ERRORS_CUSTOM_DATE_FIELD));
+                            }
+                        }
+                        break;
                     }
-                }
-                if (isErrorFound) {
-                    break;
                 }
             }
         } catch (PageExpiredException pee) {

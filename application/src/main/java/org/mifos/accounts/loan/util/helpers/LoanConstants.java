@@ -159,6 +159,7 @@ public interface LoanConstants {
     public final String PENALTY_WAIVED = "Penalty waived";
     public final String CUSTOM_FIELDS = "customFields";
     public final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE = "errors.Account.specifyCustomFieldValue";
+    public final String ERRORS_CUSTOM_DATE_FIELD = "errors.Account.customdatefield";
 
     public final String MULTIPLE_LOANS_ACTION_FORM = "multipleloansactionform";
     public final String MULTIPLE_LOANS_OFFICES_LIST = "multipleloansofficeslist";

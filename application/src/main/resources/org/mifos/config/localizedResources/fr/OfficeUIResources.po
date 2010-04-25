@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -543,8 +543,12 @@ msgid "max mumber of offices allowed are 9999"
 msgstr "nombre max permis de bureau est 9999"
 
 #: error.office.provideadditionalInformation
-msgid "Please specify required additional information."
-msgstr "Veuiller indiquer l'information supplémentaire requises."
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: error.office.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
+msgstr ""
 
 #: error.versionnodonotmatch
 msgid ""
@@ -605,4 +609,5 @@ msgctxt "exception.framework.fieldConfiguration.mandatory"
 msgid "Please specify {0}."
 msgstr "Veuiller indiquer {0}."
 
-
+#~ msgid "Please specify required additional information."
+#~ msgstr "Veuiller indiquer l'information supplémentaire requises."

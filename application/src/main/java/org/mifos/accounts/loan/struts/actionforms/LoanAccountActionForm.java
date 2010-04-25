@@ -56,6 +56,7 @@ import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
@@ -1050,19 +1051,23 @@ public class LoanAccountActionForm extends BaseActionForm {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
             for (CustomFieldView customField : customFields) {
-                boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isBlank(customField.getFieldValue())) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
+                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-                            isErrorFound = true;
-                            break;
+                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
                         }
+                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                            try {
+                                DateUtils.getDate(customField.getFieldValue());
+                            } catch (Exception e) {
+                                errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
+                                        LoanConstants.ERRORS_CUSTOM_DATE_FIELD, customFieldDef.getLabel()));
+                            }
+                        }
+                        break;
                     }
-                }
-                if (isErrorFound) {
-                    break;
                 }
             }
         } catch (PageExpiredException pee) {

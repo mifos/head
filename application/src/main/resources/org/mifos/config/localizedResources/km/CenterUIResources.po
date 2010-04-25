@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-08-04 19:34-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1046,6 +1046,12 @@ msgctxt "errors.Customer.specifyCustomFieldValue"
 msgid "<li>Please specify required additional information.</li>"
 msgstr "សូមកំនត់ការទាមទារនៃព័ត៌មានបន្ថែម"
 
+#: errors.Customer.customdatefield
+msgid ""
+"<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field.</li>"
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgctxt "errors.Customer.specifyFeeAmount"
 msgid "<li>Please specify fee amount.</li>"
@@ -1130,8 +1136,3 @@ msgstr "សកម្មភាពនេះគឺមិនអនុញ្ញាត
 #: exception.framework.fieldConfiguration.mandatory
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "សូមកំនត់តម្លៃសម្រាប់ {0}"
-
-
-
-
-

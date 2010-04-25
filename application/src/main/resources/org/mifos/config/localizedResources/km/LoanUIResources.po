@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-25 11:13+0200\n"
 "PO-Revision-Date: 2009-08-25 21:02-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -151,8 +151,12 @@ msgid ""
 msgstr "ការកត់ត្រាត្រូវកែប្រែរួចរាលដោយអ្នកប្រើប្រាស់។ "
 
 #: errors.Account.specifyCustomFieldValue
-msgid "Please specify required additional information."
-msgstr "សូមបញ្ជាក់ព៍តមានបន្ថែមដែលត្រូវការ"
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: errors.Account.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
+msgstr ""
 
 #: errors.alleastonerecord
 msgid "Please select at least one {0}."
@@ -2226,7 +2230,5 @@ msgstr "ជាមួយនិងលេខកូដទាំងនេះដែល
 msgid "Yes"
 msgstr "បាទ​ឬចាស"
 
-
-
-
-
+#~ msgid "Please specify required additional information."
+#~ msgstr "សូមបញ្ជាក់ព៍តមានបន្ថែមដែលត្រូវការ"

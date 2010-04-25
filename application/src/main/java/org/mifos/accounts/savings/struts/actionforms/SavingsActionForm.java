@@ -39,6 +39,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -49,6 +50,7 @@ import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
@@ -174,19 +176,23 @@ public class SavingsActionForm extends AccountAppActionForm {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
             for (CustomFieldView customField : getAccountCustomFieldSet()) {
-                boolean isErrorFound = false;
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId()) && customFieldDef.isMandatory()) {
-                        if (StringUtils.isBlank(customField.getFieldValue())) {
+                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
+                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-                            isErrorFound = true;
-                            break;
+                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
                         }
+                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                            try {
+                                DateUtils.getDate(customField.getFieldValue());
+                            } catch (Exception e) {
+                                errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
+                                        LoanConstants.ERRORS_CUSTOM_DATE_FIELD, customFieldDef.getLabel()));
+                            }
+                        }
+                        break;
                     }
-                }
-                if (isErrorFound) {
-                    break;
                 }
             }
         } catch (PageExpiredException pee) {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:21-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-08-16 21:53-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1720,6 +1720,12 @@ msgstr ""
 msgid "<li>Please specify required additional information.</li>"
 msgstr "សូមបញ្ជាក់ពីព័តមានបន្ថែមដែលត្រូវការចាំបាច់"
 
+#: errors.Customer.customdatefield
+msgid ""
+"<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field.</li>"
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
 msgstr "សូមបញ្ជាក់ពីតំលៃសេវា"
@@ -1727,6 +1733,10 @@ msgstr "សូមបញ្ជាក់ពីតំលៃសេវា"
 #: errors.Customer.ClientCannotBeAddedToInactiveGroup
 msgid "Customer cannot be added to an inactive group"
 msgstr "អតិថិជនមិនអាចបន្ថែមទៅក្រុមដែលអសកម្មភាពនោះទេ"
+
+#: errors.Customer.TargetGroupStatusLowerThanClient
+msgid "Target group status is lower than client"
+msgstr ""
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-11-12 10:38+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -637,8 +637,12 @@ msgstr ""
 "alkalmazásban. Próbálja újra később, vagy forduljon a rendszergazdához."
 
 #: error.customfield
-msgid "Please specify required additional information"
-msgstr "Adja meg a szükséges kiegészítő információ(ka)t"
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: error.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
+msgstr ""
 
 #: error.dob
 msgid "Please specify date of birth."
@@ -872,3 +876,6 @@ msgstr "Ez a művelet nem megengedett."
 msgctxt "exception.framework.fieldConfiguration.mandatory"
 msgid "Please specify {0}."
 msgstr "Adja meg a(z) {0}t."
+
+#~ msgid "Please specify required additional information"
+#~ msgstr "Adja meg a szükséges kiegészítő információ(ka)t"

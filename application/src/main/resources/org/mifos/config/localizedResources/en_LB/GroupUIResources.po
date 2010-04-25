@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-04-25 11:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1131,6 +1131,12 @@ msgstr ""
 
 #: errors.Customer.specifyCustomFieldValue
 msgid "Please specify required additional information."
+msgstr ""
+
+#: errors.Customer.customdatefield
+msgid ""
+"Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field."
 msgstr ""
 
 #: errors.Customer.specifyFeeAmount

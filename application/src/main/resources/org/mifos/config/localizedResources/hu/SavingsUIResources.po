@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-11-12 15:08+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -668,8 +668,12 @@ msgstr ""
 "lapra, és kezdje újra a műveletet."
 
 #: errors.Account.specifyCustomFieldValue
-msgid "Please specify required additional information."
-msgstr "Adja meg a szükséges kiegészítő információ(ka)t."
+msgid "Please specify required additional information for '{0}' field."
+msgstr ""
+
+#: errors.Account.customdatefield
+msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
+msgstr ""
 
 #: errors.createfailed
 msgid ""
@@ -884,3 +888,5 @@ msgstr "Megjegyzés\\:"
 msgid "Status:"
 msgstr "Státusz\\:"
 
+#~ msgid "Please specify required additional information."
+#~ msgstr "Adja meg a szükséges kiegészítő információ(ka)t."

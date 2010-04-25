@@ -134,6 +134,7 @@ public interface OfficeConstants {
     public static final String OFFICESHORTNAMEEXIST = "error.office.duplicateShortName";
 
     public static final String ENTERADDTIONALINFO = "error.office.provideadditionalInformation";
+    public static final String ERROR_CUSTOMDATEFIELD = "error.office.customdatefield";
     public static final String OFFICE_LEVELS = "officelevels";
     public static final String GET_HEADOFFICE = "headOfficeList";
     public static final String GET_REGIONALOFFICE = "regionalOfficeList";

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:19-0700\n"
+"POT-Creation-Date: 2010-04-25 11:12+0200\n"
 "PO-Revision-Date: 2009-11-09 13:41+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1058,6 +1058,12 @@ msgctxt "errors.Customer.specifyCustomFieldValue"
 msgid "<li>Please specify required additional information.</li>"
 msgstr "<li>Adja meg a szükséges kiegészítő információkat.</li>"
 
+#: errors.Customer.customdatefield
+msgid ""
+"<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field.</li>"
+msgstr ""
+
 #: errors.Customer.specifyFeeAmount
 msgctxt "errors.Customer.specifyFeeAmount"
 msgid "<li>Please specify fee amount.</li>"
@@ -1144,8 +1150,3 @@ msgstr "Ez a művelet nem megengedett."
 #: exception.framework.fieldConfiguration.mandatory
 msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Adja meg a(z) {0} értékét.</li>"
-
-
-
-
-
