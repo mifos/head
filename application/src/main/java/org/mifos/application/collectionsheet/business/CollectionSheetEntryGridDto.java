@@ -36,7 +36,7 @@ import org.mifos.customers.personnel.business.PersonnelView;
  */
 public class CollectionSheetEntryGridDto implements Serializable {
 
-    private final CollectionSheetEntryView bulkEntryParent;
+    private final CollectionSheetEntryDto bulkEntryParent;
     private final PersonnelView loanOfficer;
     private final OfficeView office;
     private final ListItem<Short> paymentType;
@@ -52,7 +52,7 @@ public class CollectionSheetEntryGridDto implements Serializable {
      */
     private final int totalCustomers;
 
-    public CollectionSheetEntryGridDto(final CollectionSheetEntryView collectionSheetParent, final PersonnelView loanOfficer,
+    public CollectionSheetEntryGridDto(final CollectionSheetEntryDto collectionSheetParent, final PersonnelView loanOfficer,
             final OfficeView office, final ListItem<Short> paymentType, final Date meetingDate, final String receiptId, final Date receiptDate,
             final List<ProductDto> loanProductDtos, final List<ProductDto> savingProductDtos,
             final List<CustomValueListElement> attendanceTypesList) {
@@ -69,7 +69,7 @@ public class CollectionSheetEntryGridDto implements Serializable {
         this.totalCustomers = collectionSheetParent.getCountOfCustomers();
     }
 
-    public CollectionSheetEntryView getBulkEntryParent() {
+    public CollectionSheetEntryDto getBulkEntryParent() {
         return bulkEntryParent;
     }
 

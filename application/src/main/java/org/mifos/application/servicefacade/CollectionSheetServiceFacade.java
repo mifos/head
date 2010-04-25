@@ -20,7 +20,7 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.security.util.UserContext;
 
@@ -44,7 +44,7 @@ public interface CollectionSheetServiceFacade {
             CollectionSheetFormEnteredDataDto formEnteredDataDto, MifosCurrency currency);
 
     CollectionSheetEntryGridDto previewCollectionSheetEntry(CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            CollectionSheetDataView dataView);
+            CollectionSheetDataDto dataView);
 
     CollectionSheetErrorsView saveCollectionSheet(CollectionSheetEntryGridDto previousCollectionSheetEntryDto, Short userId);
 

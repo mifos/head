@@ -20,13 +20,13 @@
 
 package org.mifos.accounts.savings.business;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class SavingsRecentActivityView implements Serializable {
+public class SavingsRecentActivityDto implements DataTransferObject {
 
     private Integer accountTrxnId;
     private Date actionDate;

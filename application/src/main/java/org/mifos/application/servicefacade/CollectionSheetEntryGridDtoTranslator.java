@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 
 /**
  *
@@ -32,19 +32,19 @@ public class CollectionSheetEntryGridDtoTranslator {
 
     public CollectionSheetEntryGridDto translateAsCenter(
             final CollectionSheetEntryGridDto collectionSheetEntryGridDto,
-            final CollectionSheetDataView dataView) {
+            final CollectionSheetDataDto dataView) {
 
-        final CollectionSheetEntryView collectionSheetParent = collectionSheetEntryGridDto.getBulkEntryParent();
-        final List<CollectionSheetEntryView> collectionSheetChildViews = collectionSheetParent
+        final CollectionSheetEntryDto collectionSheetParent = collectionSheetEntryGridDto.getBulkEntryParent();
+        final List<CollectionSheetEntryDto> collectionSheetChildViews = collectionSheetParent
                 .getCollectionSheetEntryChildren();
 
         int rowIndex = 0;
-        for (CollectionSheetEntryView collectionSheetChild : collectionSheetChildViews) {
+        for (CollectionSheetEntryDto collectionSheetChild : collectionSheetChildViews) {
 
-            final List<CollectionSheetEntryView> bulkEntrySubChildrenViews = collectionSheetChild
+            final List<CollectionSheetEntryDto> bulkEntrySubChildrenViews = collectionSheetChild
                     .getCollectionSheetEntryChildren();
 
-            for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrenViews) {
+            for (CollectionSheetEntryDto bulkEntrySubChildView : bulkEntrySubChildrenViews) {
 
                 setLoanAmountEntered(bulkEntrySubChildView, rowIndex, dataView.getLoanAmountEntered(), dataView
                         .getDisbursementAmountEntered(), collectionSheetEntryGridDto.getLoanProducts());
@@ -78,12 +78,12 @@ public class CollectionSheetEntryGridDtoTranslator {
 
     public CollectionSheetEntryGridDto translateAsGroup(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto,
-            final CollectionSheetDataView bulkEntryDataView) {
+            final CollectionSheetDataDto bulkEntryDataView) {
 
-        final CollectionSheetEntryView bulkEntryParent = previousCollectionSheetEntryDto.getBulkEntryParent();
+        final CollectionSheetEntryDto bulkEntryParent = previousCollectionSheetEntryDto.getBulkEntryParent();
         int rowIndex = 0;
-        List<CollectionSheetEntryView> bulkEntrySubChildrens = bulkEntryParent.getCollectionSheetEntryChildren();
-        for (CollectionSheetEntryView bulkEntrySubChildView : bulkEntrySubChildrens) {
+        List<CollectionSheetEntryDto> bulkEntrySubChildrens = bulkEntryParent.getCollectionSheetEntryChildren();
+        for (CollectionSheetEntryDto bulkEntrySubChildView : bulkEntrySubChildrens) {
             setLoanAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getLoanAmountEntered(),
                     bulkEntryDataView.getDisbursementAmountEntered(), previousCollectionSheetEntryDto.getLoanProducts());
             setSavingsAmountEntered(bulkEntrySubChildView, rowIndex, bulkEntryDataView.getDepositAmountEntered(),
@@ -103,20 +103,20 @@ public class CollectionSheetEntryGridDtoTranslator {
         return previousCollectionSheetEntryDto;
     }
 
-    private void setLoanAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+    private void setLoanAmountEntered(CollectionSheetEntryDto collectionSheetEntryDto, int rowIndex,
             String[][] loanAmountsEntered, String[][] disBursementAmountEntered, List<ProductDto> loanProducts) {
         int columnIndex = 0;
 
         for (ProductDto prdOffering : loanProducts) {
             String enteredAmountValue = loanAmountsEntered[rowIndex][columnIndex];
             String disbursementAmountEntered = disBursementAmountEntered[rowIndex][columnIndex];
-            collectionSheetEntryView.setLoanAmountsEntered(prdOffering.getId(), enteredAmountValue,
+            collectionSheetEntryDto.setLoanAmountsEntered(prdOffering.getId(), enteredAmountValue,
                     disbursementAmountEntered);
             columnIndex++;
         }
     }
 
-    private void setSavingsAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+    private void setSavingsAmountEntered(CollectionSheetEntryDto collectionSheetEntryDto, int rowIndex,
             String[][] depositAmountsEntered, String[][] withDrawalsAmountEntered, List<ProductDto> savingProducts) {
 
         int columnIndex = 0;
@@ -126,24 +126,24 @@ public class CollectionSheetEntryGridDtoTranslator {
             String withDrawalAmountEnteredValue = withDrawalsAmountEntered[rowIndex][columnIndex];
 
             if (depositAmountEnteredValue != null || withDrawalAmountEnteredValue != null) {
-                collectionSheetEntryView.setSavinsgAmountsEntered(prdOffering.getId(), depositAmountEnteredValue,
+                collectionSheetEntryDto.setSavinsgAmountsEntered(prdOffering.getId(), depositAmountEnteredValue,
                         withDrawalAmountEnteredValue);
             }
             columnIndex++;
         }
     }
 
-    private void setCustomerAccountAmountEntered(CollectionSheetEntryView collectionSheetEntryView, int rowIndex,
+    private void setCustomerAccountAmountEntered(CollectionSheetEntryDto collectionSheetEntryDto, int rowIndex,
             String[] customerAccountAmountEntered) {
         String customerAccountAmountEnteredValue = customerAccountAmountEntered[rowIndex];
         if (customerAccountAmountEnteredValue != null) {
-            collectionSheetEntryView.setCustomerAccountAmountEntered(customerAccountAmountEnteredValue);
+            collectionSheetEntryDto.setCustomerAccountAmountEntered(customerAccountAmountEnteredValue);
         }
     }
 
-    private void setClientAttendance(CollectionSheetEntryView collectionSheetEntryView, String attendance) {
+    private void setClientAttendance(CollectionSheetEntryDto collectionSheetEntryDto, String attendance) {
         if (null != attendance && attendance.length() > 0) {
-            collectionSheetEntryView.setAttendence(Short.valueOf(attendance));
+            collectionSheetEntryDto.setAttendence(Short.valueOf(attendance));
         }
     }
 }

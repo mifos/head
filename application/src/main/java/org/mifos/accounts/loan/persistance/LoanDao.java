@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -54,7 +54,7 @@ public class LoanDao implements DataAccessObject {
     public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
             AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
             boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeView> feeViews, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
+            List<FeeDto> feeDtos, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
             Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
@@ -83,7 +83,7 @@ public class LoanDao implements DataAccessObject {
         }
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
                 isRepaymentIndepOfMeetingEnabled, null);
     }

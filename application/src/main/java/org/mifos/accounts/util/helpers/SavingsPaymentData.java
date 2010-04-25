@@ -22,8 +22,8 @@ package org.mifos.accounts.util.helpers;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPaymentData extends AccountPaymentData {
@@ -44,10 +44,10 @@ public class SavingsPaymentData extends AccountPaymentData {
         }
     }
 
-    public SavingsPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+    public SavingsPaymentData(CollectionSheetEntryInstallmentDto bulkEntryAccountAction) {
         super(bulkEntryAccountAction);
         if (bulkEntryAccountAction != null) {
-            setDepositPaid(((CollectionSheetEntrySavingsInstallmentView) bulkEntryAccountAction).getTotalDepositDue());
+            setDepositPaid(((CollectionSheetEntrySavingsInstallmentDto) bulkEntryAccountAction).getTotalDepositDue());
         }
     }
 }

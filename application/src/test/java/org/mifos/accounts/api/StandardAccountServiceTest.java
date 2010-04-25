@@ -220,7 +220,7 @@ public class StandardAccountServiceTest {
         final Double interestRate,
         final Short gracePeriodDuration,
         final FundBO fund,
-        final List<FeeView> feeViews,
+        final List<FeeDto> feeViews,
         final List<CustomFieldView> customFields,
         final Boolean isRedone,
         final Double maxLoanAmount,

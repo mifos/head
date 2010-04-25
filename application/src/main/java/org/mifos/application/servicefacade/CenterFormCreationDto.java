@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.personnel.business.PersonnelView;
 
@@ -30,11 +30,11 @@ public class CenterFormCreationDto {
 
     private final List<PersonnelView> activeLoanOfficersForBranch;
     private final List<CustomFieldView> customFieldViews;
-    private final List<FeeView> additionalFees;
-    private final List<FeeView> defaultFees;
+    private final List<FeeDto> additionalFees;
+    private final List<FeeDto> defaultFees;
 
     public CenterFormCreationDto(List<PersonnelView> activeLoanOfficersForBranch,
-            List<CustomFieldView> customFieldViews, List<FeeView> additionalFees, List<FeeView> defaultFees) {
+            List<CustomFieldView> customFieldViews, List<FeeDto> additionalFees, List<FeeDto> defaultFees) {
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
         this.customFieldViews = customFieldViews;
         this.additionalFees = additionalFees;
@@ -49,11 +49,11 @@ public class CenterFormCreationDto {
         return this.customFieldViews;
     }
 
-    public List<FeeView> getAdditionalFees() {
+    public List<FeeDto> getAdditionalFees() {
         return this.additionalFees;
     }
 
-    public List<FeeView> getDefaultFees() {
+    public List<FeeDto> getDefaultFees() {
         return this.defaultFees;
     }
 }

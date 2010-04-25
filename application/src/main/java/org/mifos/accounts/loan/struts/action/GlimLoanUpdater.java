@@ -24,11 +24,11 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -38,13 +38,13 @@ import org.mifos.framework.util.helpers.Money;
 public class GlimLoanUpdater {
 
     public void createIndividualLoan(LoanAccountActionForm loanAccountActionForm, LoanBO loan,
-            boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsViewHelper loanAccountDetail)
+            boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsDto loanAccountDetail)
             throws AccountException, ServiceException {
         LoanBO individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
                 new CustomerBusinessService().getCustomer(Integer.valueOf(loanAccountDetail.getClientId())),
                 loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount()), loan
                         .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
-                loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
                 new ArrayList<CustomFieldView>(), true);
 
         individualLoan.setParentAccount(loan);
@@ -56,7 +56,7 @@ public class GlimLoanUpdater {
         individualLoan.save();
     }
 
-    void updateIndividualLoan(final LoanAccountDetailsViewHelper loanAccountDetail, LoanBO individualLoan)
+    void updateIndividualLoan(final LoanAccountDetailsDto loanAccountDetail, LoanBO individualLoan)
             throws AccountException {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
@@ -64,7 +64,7 @@ public class GlimLoanUpdater {
                 .valueOf(loanAccountDetail.getBusinessActivity()) : 0);
     }
 
-    private boolean businessActivityIsEmpty(LoanAccountDetailsViewHelper loanAccountDetail) {
+    private boolean businessActivityIsEmpty(LoanAccountDetailsDto loanAccountDetail) {
         String businessActivity = loanAccountDetail.getBusinessActivity();
         return StringUtils.isBlank(businessActivity) || businessActivity.equals("-");
     }

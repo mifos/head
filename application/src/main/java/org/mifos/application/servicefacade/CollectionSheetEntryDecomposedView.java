@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 import java.io.Serializable;
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 
 /**
@@ -31,19 +31,19 @@ import org.mifos.customers.util.helpers.CustomerAccountView;
  */
 public class CollectionSheetEntryDecomposedView implements Serializable {
 
-    private final List<LoanAccountsProductView> loanAccountViews;
+    private final List<LoanAccountsProductDto> loanAccountViews;
     private final List<CustomerAccountView> customerAccountViews;
-    private final List<CollectionSheetEntryView> parentCollectionSheetEntryViews;
+    private final List<CollectionSheetEntryDto> parentCollectionSheetEntryViews;
 
-    public CollectionSheetEntryDecomposedView(List<LoanAccountsProductView> loanAccountViews,
+    public CollectionSheetEntryDecomposedView(List<LoanAccountsProductDto> loanAccountViews,
             List<CustomerAccountView> customerAccountViews,
-            List<CollectionSheetEntryView> parentCollectionSheetEntryViews) {
+            List<CollectionSheetEntryDto> parentCollectionSheetEntryViews) {
                 this.loanAccountViews = loanAccountViews;
         this.customerAccountViews = customerAccountViews;
         this.parentCollectionSheetEntryViews = parentCollectionSheetEntryViews;
     }
 
-    public List<LoanAccountsProductView> getLoanAccountViews() {
+    public List<LoanAccountsProductDto> getLoanAccountViews() {
         return this.loanAccountViews;
     }
 
@@ -51,7 +51,7 @@ public class CollectionSheetEntryDecomposedView implements Serializable {
         return this.customerAccountViews;
     }
 
-    public List<CollectionSheetEntryView> getParentCollectionSheetEntryViews() {
+    public List<CollectionSheetEntryDto> getParentCollectionSheetEntryViews() {
         return this.parentCollectionSheetEntryViews;
     }
 }

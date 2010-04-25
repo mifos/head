@@ -27,14 +27,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerView;
@@ -51,7 +51,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             final CollectionSheetFormEnteredDataDto formEnteredDataDto, final List<CustomValueListElement> attendanceTypesList,
             final MifosCurrency currency) {
 
-        final CollectionSheetEntryView collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(
+        final CollectionSheetEntryDto collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(
                 collectionSheet.getCollectionSheetCustomer(), currency);
 
         final PersonnelView loanOfficer = formEnteredDataDto.getLoanOfficer();
@@ -111,18 +111,18 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
         return loanProductsOrderedByName;
     }
 
-    private CollectionSheetEntryView createEntryViewHierarchyFromCollectionSheetData(
+    private CollectionSheetEntryDto createEntryViewHierarchyFromCollectionSheetData(
             final List<CollectionSheetCustomerDto> collectionSheetCustomerHierarchy, final MifosCurrency currency) {
 
         final int countOfCustomers = collectionSheetCustomerHierarchy.size();
-        CollectionSheetEntryView parentView = null;
+        CollectionSheetEntryDto parentView = null;
 
         for (CollectionSheetCustomerDto customer : collectionSheetCustomerHierarchy) {
 
             final CustomerView parentCustomerDetail = new CustomerView(customer.getCustomerId(), customer.getName(),
                     customer.getParentCustomerId(), customer.getLevelId());
 
-            CollectionSheetEntryView childView = new CollectionSheetEntryView(parentCustomerDetail, currency);
+            CollectionSheetEntryDto childView = new CollectionSheetEntryDto(parentCustomerDetail, currency);
             childView.setAttendence(customer.getAttendanceId());
             childView.setCountOfCustomers(countOfCustomers);
 
@@ -144,10 +144,10 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
 
             // we only create one installment fee and set the total amount due
             // in the miscFee column for now
-            final CollectionSheetEntryInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
+            final CollectionSheetEntryInstallmentDto installmentView = new CollectionSheetEntryCustomerAccountInstallmentDto(
                     accountId, customerId, installmentId, actionDateId, actionDate, miscFee, miscFeePaid, miscPenalty,
                     miscPenaltyPaid, currency);
-            final List<CollectionSheetEntryInstallmentView> installmentViewList = java.util.Arrays
+            final List<CollectionSheetEntryInstallmentDto> installmentViewList = java.util.Arrays
                     .asList(installmentView);
             customerAccountDetails.setAccountActionDates(installmentViewList);
 
@@ -163,7 +163,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Short savingsTypeId = Short.valueOf("1");
                 final Short recommendedAmntUnitId = customerSavingDto.getRecommendedAmountUnitId();
 
-                final SavingsAccountView savingsAccount = new SavingsAccountView(savAccountId, savCustomerId,
+                final SavingsAccountDto savingsAccount = new SavingsAccountDto(savAccountId, savCustomerId,
                         savingProductShortName, savOfferingId, savingsTypeId, recommendedAmntUnitId);
 
                 final Short savInstallmentId = null;
@@ -173,7 +173,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Money savDeposit = new Money(currency, customerSavingDto.getTotalDepositAmount().toString());
                 final Money savDepositPaid = new Money(currency, "0.0");
 
-                final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
+                final CollectionSheetEntryInstallmentDto accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentDto(
                         savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
                         savDepositPaid);
                 savingsAccount.addAccountTrxnDetail(accountTrxnDetail);
@@ -192,7 +192,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Short savingsTypeId = Short.valueOf("1");
                 final Short recommendedAmntUnitId = Short.valueOf("1");
 
-                final SavingsAccountView savingsAccount = new SavingsAccountView(savAccountId, savCustomerId,
+                final SavingsAccountDto savingsAccount = new SavingsAccountDto(savAccountId, savCustomerId,
                         savingProductShortName, savOfferingId, savingsTypeId, recommendedAmntUnitId);
 
                 final Short savInstallmentId = null;
@@ -202,7 +202,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
                 final Money savDeposit = new Money(currency, clientIndividualSavingsAccount.getDepositDue().toString());
                 final Money savDepositPaid = new Money(currency, clientIndividualSavingsAccount.getDepositPaid().toString());
 
-                final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentView(
+                final CollectionSheetEntryInstallmentDto accountTrxnDetail = new CollectionSheetEntrySavingsInstallmentDto(
                         savAccountId, savCustomerId, savInstallmentId, savActionDateId, savActionDate, savDeposit,
                         savDepositPaid);
                 savingsAccount.addAccountTrxnDetail(accountTrxnDetail);
@@ -226,12 +226,12 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
 
                 final Money principal = new Money(currency, customerLoanDto.getTotalRepaymentDue().toString());
 
-                final LoanAccountView loanAccount = new LoanAccountView(loanAccountId, loanCustomerId,
+                final LoanAccountDto loanAccount = new LoanAccountDto(loanAccountId, loanCustomerId,
                         loanOfferingShortName, loanOfferingId, loanAccountState, interestDeductedAtDisbursement,
                         loanAmount);
                 loanAccount.setAmountPaidAtDisbursement(customerLoanDto.getAmountDueAtDisbursement());
 
-                final CollectionSheetEntryInstallmentView accountTrxnDetail = new CollectionSheetEntryLoanInstallmentView(
+                final CollectionSheetEntryInstallmentDto accountTrxnDetail = new CollectionSheetEntryLoanInstallmentDto(
                         loanAccountId, loanCustomerId, loanInstallmentId, loanActionDateId, loanActionDate, principal,
                         new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency), new Money(currency),
                         new Money(currency), new Money(currency), currency);
@@ -251,8 +251,8 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
         return parentView;
     }
 
-    private boolean addChildToAppropriateParent(final CollectionSheetEntryView rootNode,
-            final CollectionSheetEntryView childNodeToBeAdded) {
+    private boolean addChildToAppropriateParent(final CollectionSheetEntryDto rootNode,
+            final CollectionSheetEntryDto childNodeToBeAdded) {
 
         if (childNodeToBeAdded.getCustomerDetail().getParentCustomerId().equals(
                 rootNode.getCustomerDetail().getCustomerId())) {
@@ -260,7 +260,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             return true;
         }
 
-        for (CollectionSheetEntryView child : rootNode.getCollectionSheetEntryChildren()) {
+        for (CollectionSheetEntryDto child : rootNode.getCollectionSheetEntryChildren()) {
             if (addChildToAppropriateParent(child, childNodeToBeAdded)) {
                 return true;
             }

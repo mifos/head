@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.business;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class ViewInstallmentDetails extends View {
+public class InstallmentDetailsDto implements DataTransferObject {
 
     private final Money principal;
 
@@ -33,7 +33,7 @@ public class ViewInstallmentDetails extends View {
 
     private final Money penalty;
 
-    public ViewInstallmentDetails(Money principal, Money interest, Money fees, Money penalty) {
+    public InstallmentDetailsDto(Money principal, Money interest, Money fees, Money penalty) {
         if (principal == null || interest == null || fees == null || penalty == null) {
             throw new IllegalArgumentException("Illegal null argument passed");
         }

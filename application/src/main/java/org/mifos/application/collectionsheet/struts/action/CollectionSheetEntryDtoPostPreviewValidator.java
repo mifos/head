@@ -26,9 +26,9 @@ import java.util.ResourceBundle;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.framework.util.LocalizationConverter;
@@ -37,25 +37,25 @@ import org.mifos.framework.util.helpers.FilePaths;
 /**
  *
  */
-public class CollectionSheetEntryViewPostPreviewValidator {
+public class CollectionSheetEntryDtoPostPreviewValidator {
 
-    public ActionErrors validate(final CollectionSheetEntryView collectionSheetEntry, final ActionErrors errors,
+    public ActionErrors validate(final CollectionSheetEntryDto collectionSheetEntry, final ActionErrors errors,
             final Locale locale) {
 
         return validatePopulatedData(collectionSheetEntry, errors, locale);
     }
 
-    private ActionErrors validatePopulatedData(final CollectionSheetEntryView parent, final ActionErrors errors, final Locale locale) {
-        List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
+    private ActionErrors validatePopulatedData(final CollectionSheetEntryDto parent, final ActionErrors errors, final Locale locale) {
+        List<CollectionSheetEntryDto> children = parent.getCollectionSheetEntryChildren();
 
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
         String acCollections = resources.getString(CollectionSheetEntryConstants.AC_COLLECTION);
         if (null != children) {
-            for (CollectionSheetEntryView collectionSheetEntryView : children) {
-                validatePopulatedData(collectionSheetEntryView, errors, locale);
+            for (CollectionSheetEntryDto collectionSheetEntryDto : children) {
+                validatePopulatedData(collectionSheetEntryDto, errors, locale);
             }
         }
-        for (LoanAccountsProductView accountView : parent.getLoanAccountDetails()) {
+        for (LoanAccountsProductDto accountView : parent.getLoanAccountDetails()) {
             if (accountView.isDisburseLoanAccountPresent() || accountView.getLoanAccountViews().size() > 1) {
                 Double enteredAmount = 0.0;
                 if (null != accountView.getEnteredAmount() && accountView.isValidAmountEntered()) {
@@ -113,11 +113,11 @@ public class CollectionSheetEntryViewPostPreviewValidator {
                 }
             }
         }
-        for (SavingsAccountView savingsAccountView : parent.getSavingsAccountDetails()) {
-            if (!savingsAccountView.isValidDepositAmountEntered()
-                    || !savingsAccountView.isValidWithDrawalAmountEntered()) {
+        for (SavingsAccountDto savingsAccountDto : parent.getSavingsAccountDetails()) {
+            if (!savingsAccountDto.isValidDepositAmountEntered()
+                    || !savingsAccountDto.isValidWithDrawalAmountEntered()) {
                 errors.add(CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
-                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountView
+                        CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountDto
                                 .getSavingsOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
             }
         }

@@ -22,27 +22,27 @@ package org.mifos.accounts.loan.util.helpers;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.mifos.framework.business.AbstractBusinessObject;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 
-public class LoanAccountDetailsViewHelper extends AbstractBusinessObject {
+public class LoanAccountDetailsDto implements DataTransferObject {
 
-    public LoanAccountDetailsViewHelper(Integer individualAccountId) {
+    public LoanAccountDetailsDto(Integer individualAccountId) {
         this.individualAccountId = individualAccountId;
     }
 
-    public LoanAccountDetailsViewHelper() {
+    public LoanAccountDetailsDto() {
         this(null);
     }
 
-    LoanAccountDetailsViewHelper(String clientId, String businessActivity, String loanAmount) {
+    LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
     }
 
-    LoanAccountDetailsViewHelper(String clientId, String businessActivity, String loanAmount, String accountId) {
+    LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount, String accountId) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
@@ -173,7 +173,7 @@ public class LoanAccountDetailsViewHelper extends AbstractBusinessObject {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final LoanAccountDetailsViewHelper other = (LoanAccountDetailsViewHelper) obj;
+        final LoanAccountDetailsDto other = (LoanAccountDetailsDto) obj;
         if (accountId == null) {
             if (other.accountId != null) {
                 return false;
@@ -240,8 +240,8 @@ public class LoanAccountDetailsViewHelper extends AbstractBusinessObject {
         return true;
     }
 
-    public static LoanAccountDetailsViewHelper createInstanceForTest(String clientId, String businessActivity,
+    public static LoanAccountDetailsDto createInstanceForTest(String clientId, String businessActivity,
             String loanAmount, String accountId) {
-        return new LoanAccountDetailsViewHelper(clientId, businessActivity, loanAmount, accountId);
+        return new LoanAccountDetailsDto(clientId, businessActivity, loanAmount, accountId);
     }
 }

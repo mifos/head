@@ -20,10 +20,12 @@
 
 package org.mifos.application.collectionsheet.util.helpers;
 
+import org.mifos.framework.business.service.DataTransferObject;
+
 /**
  *
  */
-public class CollectionSheetDataView {
+public class CollectionSheetDataDto implements DataTransferObject {
 
     private final String[][] loanAmountEntered;
 
@@ -37,7 +39,7 @@ public class CollectionSheetDataView {
 
     private final String[] attendance;
 
-    public CollectionSheetDataView(String[][] loanAmountEntered, String[][] disbursementAmountEntered,
+    public CollectionSheetDataDto(String[][] loanAmountEntered, String[][] disbursementAmountEntered,
             String[][] depositAmountEntered, String[][] withDrawalAmountEntered, String[] customerAccountAmountEntered,
             String[] attendance) {
                 this.loanAmountEntered = loanAmountEntered;

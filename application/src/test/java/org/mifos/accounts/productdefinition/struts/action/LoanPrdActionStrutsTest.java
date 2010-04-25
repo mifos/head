@@ -37,7 +37,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
@@ -140,13 +140,13 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 ProductDefinitionConstants.LOANINTERESTGLCODELIST, request)).size());
         List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
         Assert.assertNotNull(funds);
-        List<FeeView> loanFees = (List<FeeView>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANFEESLIST,
+        List<FeeDto> loanFees = (List<FeeDto>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANFEESLIST,
                 request);
         Assert.assertNull(loanFees);
         List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
                 request);
         Assert.assertNotNull(productFees);
-        List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
+        List<FeeDto> selectedFees = (List<FeeDto>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
         Assert.assertNotNull(selectedFees);
         List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(
@@ -692,13 +692,13 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 ProductDefinitionConstants.LOANINTERESTGLCODELIST, request)).size());
         List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(ProductDefinitionConstants.SRCFUNDSLIST, request);
         Assert.assertNotNull(funds);
-        List<FeeView> fees = (List<FeeView>) SessionUtils
+        List<FeeDto> fees = (List<FeeDto>) SessionUtils
                 .getAttribute(ProductDefinitionConstants.LOANFEESLIST, request);
         Assert.assertNull(fees);
         List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
                 request);
         Assert.assertNotNull(productFees);
-        List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
+        List<FeeDto> selectedFees = (List<FeeDto>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
         Assert.assertNotNull(selectedFees);
         List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(

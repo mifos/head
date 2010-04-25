@@ -49,7 +49,7 @@ import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
@@ -776,14 +776,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGenerateMeetingSchedule() throws AccountException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
-        List<FeeView> feeView = new ArrayList<FeeView>();
+        List<FeeDto> feeDto = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeView.add(new FeeView(userContext, periodicFee));
+        feeDto.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
                 FeePayment.UPFRONT);
-        feeView.add(new FeeView(userContext, upfrontFee));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
+        feeDto.add(new FeeDto(userContext, upfrontFee));
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeDto);
         Date startDate = new Date(System.currentTimeMillis());
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -816,14 +816,14 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks() throws AccountException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
                 EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-        List<FeeView> feeView = new ArrayList<FeeView>();
+        List<FeeDto> feeDto = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeView.add(new FeeView(userContext, periodicFee));
+        feeDto.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee("Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
                 FeePayment.UPFRONT);
-        feeView.add(new FeeView(userContext, upfrontFee));
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
+        feeDto.add(new FeeDto(userContext, upfrontFee));
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeDto);
         Date startDate = new Date(System.currentTimeMillis());
         for (AccountActionDateEntity accountActionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {

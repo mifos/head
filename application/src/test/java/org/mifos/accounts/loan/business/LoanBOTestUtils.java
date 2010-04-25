@@ -39,7 +39,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -101,7 +101,7 @@ public class LoanBOTestUtils {
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
                     Short.valueOf("6"), meetingDates.get(0), false, 0.0, (short) 0, null,
-                    new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+                    new ArrayList<FeeDto>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
                             .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
@@ -147,7 +147,7 @@ public class LoanBOTestUtils {
         try {
             loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer, state, TestUtils.createMoney(
                     "300.0"), Short.valueOf("6"), meetingDates.get(0), false, false, 0.0, (short) 0, null,
-                    new ArrayList<FeeView>(), null, false);
+                    new ArrayList<FeeDto>(), null, false);
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
         }
@@ -201,7 +201,7 @@ public class LoanBOTestUtils {
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(currency, "300.0"),
                     noOfInstallments, meetingDates.get(0), false, 10.0, (short) 0, null,
-                    new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+                    new ArrayList<FeeDto>(), null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
                             .getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
@@ -330,10 +330,10 @@ public class LoanBOTestUtils {
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee("Mainatnence Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, maintanenceFee));
+        feeViewList.add(new FeeDto(userContext, maintanenceFee));
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
 

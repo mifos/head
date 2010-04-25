@@ -52,7 +52,7 @@
             <![CDATA[select office.searchId from org.mifos.customers.office.business.OfficeBO office where office.officeId = :OFFICE_ID]]>
     </query>
     <query name="office.getAllOffices">
-            <![CDATA[select new org.mifos.security.util.OfficeCacheView(office.officeId, office.parentOffice.officeId, office.searchId) from org.mifos.customers.office.business.OfficeBO office]]>
+            <![CDATA[select new org.mifos.security.util.OfficeCacheDto(office.officeId, office.parentOffice.officeId, office.searchId) from org.mifos.customers.office.business.OfficeBO office]]>
     </query>
     
      <query name="office.getHeadOffice">

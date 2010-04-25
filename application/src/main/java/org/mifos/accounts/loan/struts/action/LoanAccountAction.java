@@ -79,10 +79,10 @@ import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.ViewInstallmentDetails;
+import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundPersistence;
@@ -91,7 +91,7 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
@@ -386,9 +386,9 @@ public class LoanAccountAction extends AccountAppAction {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         // loan fees
-        loanActionForm.setAdditionalFees(new ArrayList<FeeView>()); // clear cached additional fees (MIFOS-2547)
-        List<FeeView> additionalFees = new ArrayList<FeeView>();
-        List<FeeView> defaultFees = new ArrayList<FeeView>();
+        loanActionForm.setAdditionalFees(new ArrayList<FeeDto>()); // clear cached additional fees (MIFOS-2547)
+        List<FeeDto> additionalFees = new ArrayList<FeeDto>();
+        List<FeeDto> defaultFees = new ArrayList<FeeDto>();
         getDefaultAndAdditionalFees(loanActionForm.getPrdOfferingIdValue(), getUserContext(request), defaultFees,
                 additionalFees);
 
@@ -475,11 +475,11 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
 
-    private List<FeeView> getFilteredFeesByCurrency(List<FeeView> defaultFees, Short currencyId) {
-        List<FeeView> filteredFees = new ArrayList<FeeView>();
-        for (FeeView feeView : defaultFees) {
-            if (feeView.isValidForCurrency(currencyId)) {
-                filteredFees.add(feeView);
+    private List<FeeDto> getFilteredFeesByCurrency(List<FeeDto> defaultFees, Short currencyId) {
+        List<FeeDto> filteredFees = new ArrayList<FeeDto>();
+        for (FeeDto feeDto : defaultFees) {
+            if (feeDto.isValidForCurrency(currencyId)) {
+                filteredFees.add(feeDto);
             }
         }
         return filteredFees;
@@ -569,14 +569,14 @@ public class LoanAccountAction extends AccountAppAction {
 
                 List<String> ids_clients_selected = loanAccountForm.getClients();
 
-                List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
-                List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm.getClientDetails();
+                List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
+                List<LoanAccountDetailsDto> listdetail = loanAccountForm.getClientDetails();
                 for (String index : ids_clients_selected) {
                     if (isNotEmpty(index)) {
-                        LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
+                        LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
                         ClientBO clt = clientBusinessService.getClient(getIntegerValue(index));
-                        LoanAccountDetailsViewHelper account = null;
-                        for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+                        LoanAccountDetailsDto account = null;
+                        for (LoanAccountDetailsDto tempAccount : listdetail) {
                             if (tempAccount.getClientId().equals(index)) {
                                 account = tempAccount;
                             }
@@ -620,9 +620,9 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         LoanBO loanBO = loanBusinessService.getAccount(accountId);
-        ViewInstallmentDetails viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
+        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
                 .getDetailsOfNextInstallment(), loanBO.getCurrency());
-        ViewInstallmentDetails viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
+        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
                 .getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
         Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(
                 viewOverDueInstallmentDetails.getSubTotal());
@@ -685,10 +685,10 @@ public class LoanAccountAction extends AccountAppAction {
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                     loanBO.getAccountId()).toString());
 
-            List<LoanAccountDetailsViewHelper> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsViewHelper>();
+            List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
 
             for (LoanBO individualLoan : individualLoans) {
-                LoanAccountDetailsViewHelper loandetails = new LoanAccountDetailsViewHelper();
+                LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
                 loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
                 loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
                 loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
@@ -834,9 +834,9 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     private double calculateTotalAmountForGlim(final List<String> ids_clients_selected,
-            final List<LoanAccountDetailsViewHelper> clientDetails) {
+            final List<LoanAccountDetailsDto> clientDetails) {
         double totalAmount = new Double(0);
-        for (LoanAccountDetailsViewHelper loanAccount : clientDetails) {
+        for (LoanAccountDetailsDto loanAccount : clientDetails) {
             if (ids_clients_selected.contains(loanAccount.getClientId())) {
                 if (loanAccount.getLoanAmount() != null) {
                     totalAmount = totalAmount
@@ -1038,9 +1038,9 @@ public class LoanAccountAction extends AccountAppAction {
         }
         boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
         if (configService.isGlimEnabled() && customer.isGroup()) {
-            List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
+            List<LoanAccountDetailsDto> loanAccountDetailsList = (List<LoanAccountDetailsDto>) SessionUtils
                     .getAttribute("loanAccountDetailsView", request);
-            for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
+            for (LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
                 createIndividualLoanAccount(loanActionForm, loan, isRepaymentIndepOfMeetingEnabled, loanAccountDetail,
                         isRedoOperation(perspective));
             }
@@ -1068,7 +1068,7 @@ public class LoanAccountAction extends AccountAppAction {
     // client id becomes globalcustnum
     // somewhere during the Create Account flow
     private void createIndividualLoanAccount(final LoanAccountActionForm loanActionForm, final LoanBO loan,
-            final boolean isRepaymentIndepOfMeetingEnabled, final LoanAccountDetailsViewHelper loanAccountDetail,
+            final boolean isRepaymentIndepOfMeetingEnabled, final LoanAccountDetailsDto loanAccountDetail,
             final boolean isRedoOperation) throws AccountException, ServiceException, PropertyNotFoundException {
         LoanBO individualLoan;
         if (isRedoOperation) {
@@ -1076,7 +1076,7 @@ public class LoanAccountAction extends AccountAppAction {
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
-                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
                     new ArrayList<CustomFieldView>());
 
         } else {
@@ -1084,7 +1084,7 @@ public class LoanAccountAction extends AccountAppAction {
                     getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
-                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeView>(),
+                    loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
                     new ArrayList<CustomFieldView>(), false);
         }
 
@@ -1179,7 +1179,7 @@ public class LoanAccountAction extends AccountAppAction {
                     .getAllChildrenForParentGlobalAccountNum(globalAccountNum);
             List<ClientBO> activeClientsUnderGroup = clientBusinessService.getActiveClientsUnderGroup(customer
                     .getCustomerId());
-            List<LoanAccountDetailsViewHelper> clientDetails = populateClientDetailsFromLoan(activeClientsUnderGroup,
+            List<LoanAccountDetailsDto> clientDetails = populateClientDetailsFromLoan(activeClientsUnderGroup,
                     individualLoans, businessActivities);
             loanActionForm.setClientDetails(clientDetails);
             loanActionForm.setClients(fetchClientIdsWithMatchingLoans(individualLoans, clientDetails));
@@ -1191,9 +1191,9 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     private List<String> fetchClientIdsWithMatchingLoans(final List<LoanBO> individualLoans,
-            final List<LoanAccountDetailsViewHelper> clientDetails) {
+            final List<LoanAccountDetailsDto> clientDetails) {
         List<String> clientIds = new ArrayList<String>();
-        for (final LoanAccountDetailsViewHelper clientDetail : clientDetails) {
+        for (final LoanAccountDetailsDto clientDetail : clientDetails) {
             LoanBO loanMatchingClientDetail = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
                 public boolean evaluate(final Object object) {
                     return ((LoanBO) object).getCustomer().getCustomerId().toString()
@@ -1209,12 +1209,12 @@ public class LoanAccountAction extends AccountAppAction {
         return clientIds;
     }
 
-    List<LoanAccountDetailsViewHelper> populateClientDetailsFromLoan(final List<ClientBO> activeClientsUnderGroup,
+    List<LoanAccountDetailsDto> populateClientDetailsFromLoan(final List<ClientBO> activeClientsUnderGroup,
             final List<LoanBO> individualLoans, final List<ValueListElement> businessActivities)
             throws ServiceException {
-        List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
         for (final ClientBO client : activeClientsUnderGroup) {
-            LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
+            LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
             clientDetail.setClientId(getStringValue(client.getCustomerId()));
             clientDetail.setClientName(client.getDisplayName());
             LoanBO loanAccount = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
@@ -1289,22 +1289,22 @@ public class LoanAccountAction extends AccountAppAction {
         CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
         setGlimEnabledSessionAttributes(request, customer);
         if (customer.isGroup()) {
-            List<LoanAccountDetailsViewHelper> loanAccountDetailsView = populateDetailsForSelectedClients(localeId,
+            List<LoanAccountDetailsDto> loanAccountDetailsView = populateDetailsForSelectedClients(localeId,
                     loanAccountForm.getClientDetails(), loanAccountForm.getClients());
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
         }
     }
 
-    private List<LoanAccountDetailsViewHelper> populateDetailsForSelectedClients(final Short localeId,
-            final List<LoanAccountDetailsViewHelper> clientDetails, final List<String> selectedClients)
+    private List<LoanAccountDetailsDto> populateDetailsForSelectedClients(final Short localeId,
+            final List<LoanAccountDetailsDto> clientDetails, final List<String> selectedClients)
             throws ServiceException {
-        List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
+        List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
         for (final String clientId : selectedClients) {
             if (StringUtils.isNotEmpty(clientId)) {
-                LoanAccountDetailsViewHelper matchingClientDetail = (LoanAccountDetailsViewHelper) CollectionUtils
+                LoanAccountDetailsDto matchingClientDetail = (LoanAccountDetailsDto) CollectionUtils
                         .find(clientDetails, new Predicate() {
                             public boolean evaluate(final Object object) {
-                                return ((LoanAccountDetailsViewHelper) object).getClientId().equals(clientId);
+                                return ((LoanAccountDetailsDto) object).getClientId().equals(clientId);
                             }
                         });
 
@@ -1321,7 +1321,7 @@ public class LoanAccountAction extends AccountAppAction {
         return loanAccountDetailsView;
     }
 
-    private void setGovernmentIdAndPurpose(final LoanAccountDetailsViewHelper clientDetail, final Short localeId)
+    private void setGovernmentIdAndPurpose(final LoanAccountDetailsDto clientDetail, final Short localeId)
             throws ServiceException {
         clientDetail.setBusinessActivityName(findBusinessActivityName(clientDetail.getBusinessActivity(), localeId));
         clientDetail.setGovermentId(findGovernmentId(getIntegerValue(clientDetail.getClientId())));
@@ -1396,7 +1396,7 @@ public class LoanAccountAction extends AccountAppAction {
                 getFund(loanAccountActionForm));
 
         if (configService.isGlimEnabled() && customer.isGroup()) {
-            List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
+            List<LoanAccountDetailsDto> loanAccountDetailsList = (List<LoanAccountDetailsDto>) SessionUtils
                     .getAttribute("loanAccountDetailsView", request);
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                     loanBO.getAccountId()).toString());
@@ -1422,10 +1422,10 @@ public class LoanAccountAction extends AccountAppAction {
 
     void handleIndividualLoans(final LoanBO loanBO, final LoanAccountActionForm loanAccountActionForm,
             final boolean isRepaymentIndepOfMeetingEnabled,
-            final List<LoanAccountDetailsViewHelper> loanAccountDetailsList, final List<LoanBO> individualLoans)
+            final List<LoanAccountDetailsDto> loanAccountDetailsList, final List<LoanBO> individualLoans)
             throws AccountException, ServiceException, PropertyNotFoundException {
         List<Integer> foundLoans = new ArrayList<Integer>();
-        for (final LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
+        for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
 
                 public boolean evaluate(final Object object) {
@@ -1538,7 +1538,7 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     protected void getDefaultAndAdditionalFees(final Short loanOfferingId, final UserContext userContext,
-            final List<FeeView> defaultFees, final List<FeeView> additionalFees) throws ServiceException {
+            final List<FeeDto> defaultFees, final List<FeeDto> additionalFees) throws ServiceException {
         loanProductService.getDefaultAndAdditionalFees(loanOfferingId, userContext, defaultFees, additionalFees);
     }
 
@@ -1614,19 +1614,19 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
     }
 
-    private ViewInstallmentDetails getUpcomingInstallmentDetails(
+    private InstallmentDetailsDto getUpcomingInstallmentDetails(
             final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
         if (upcomingAccountActionDate != null) {
             LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
-            return new ViewInstallmentDetails(upcomingInstallment.getPrincipalDue(), upcomingInstallment
+            return new InstallmentDetailsDto(upcomingInstallment.getPrincipalDue(), upcomingInstallment
                     .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
                     .getPenaltyDue());
         }
-        return new ViewInstallmentDetails(new Money(currency), new Money(currency), new Money(currency), new Money(
+        return new InstallmentDetailsDto(new Money(currency), new Money(currency), new Money(currency), new Money(
                 currency));
     }
 
-    private ViewInstallmentDetails getOverDueInstallmentDetails(
+    private InstallmentDetailsDto getOverDueInstallmentDetails(
             final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
         Money principalDue = new Money(currency);
         Money interestDue = new Money(currency);
@@ -1639,7 +1639,7 @@ public class LoanAccountAction extends AccountAppAction {
             feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
             penaltyDue = penaltyDue.add(installment.getPenaltyDue());
         }
-        return new ViewInstallmentDetails(principalDue, interestDue, feesDue, penaltyDue);
+        return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
 
     protected void checkPermissionForCreate(final Short newState, final UserContext userContext,
@@ -1805,9 +1805,9 @@ public class LoanAccountAction extends AccountAppAction {
 
     private void updateLoanCreationFormWithActiveClientsOfGroupToSupportGlim(
             final LoanAccountActionForm loanActionForm, final List<ClientBO> activeClientsOfGroup) {
-        List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
         for (ClientBO client : activeClientsOfGroup) {
-            LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
+            LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
             clientDetail.setClientId(getStringValue(client.getCustomerId()));
             clientDetail.setClientName(client.getDisplayName());
 

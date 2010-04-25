@@ -34,7 +34,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
@@ -241,7 +241,7 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final CustomerBO parentCustomer, final Date dateOfBirth, final String governmentId, final Short trained,
             final Date trainedDate, final Short groupFlag, final ClientNameDetailView clientNameDetailView,
@@ -258,7 +258,7 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final MeetingBO meeting, final PersonnelBO loanOfficer, final Date dateOfBirth, final String governmentId,
             final Short trained, final Date trainedDate, final Short groupFlag,
@@ -275,7 +275,7 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer,
             final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,

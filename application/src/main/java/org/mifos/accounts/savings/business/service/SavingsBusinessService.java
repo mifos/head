@@ -22,7 +22,7 @@ package org.mifos.accounts.savings.business.service;
 
 import java.util.List;
 
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -48,7 +48,7 @@ public class SavingsBusinessService implements BusinessService {
         return null;
     }
 
-    public List<PrdOfferingView> getSavingProducts(OfficeBO branch, CustomerLevelEntity customerLevel, short accountType)
+    public List<PrdOfferingDto> getSavingProducts(OfficeBO branch, CustomerLevelEntity customerLevel, short accountType)
             throws ServiceException {
         logger.debug("In SavingsBusinessService::getSavingProducts()");
         try {

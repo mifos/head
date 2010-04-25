@@ -32,7 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -191,7 +191,7 @@ public class TestSaveCollectionSheetUtils {
         try {
             loan = LoanBO.createIndividualLoan(userContext, loanOffering, client, AccountState.LOAN_APPROVED,
                     new Money(currency, "1200.0"), Short.valueOf("12"), date, false, false, 10.0, (short) 0, null,
-                    new ArrayList<FeeView>(), null, false);
+                    new ArrayList<FeeDto>(), null, false);
 
         } catch (AccountException e) {
             throw new Exception(e);

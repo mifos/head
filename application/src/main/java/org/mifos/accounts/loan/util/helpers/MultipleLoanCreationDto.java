@@ -28,9 +28,10 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class MultipleLoanCreationViewHelper {
+public class MultipleLoanCreationDto implements DataTransferObject {
 
     private String loanAmount;
 
@@ -46,7 +47,7 @@ public class MultipleLoanCreationViewHelper {
 
     private MifosCurrency currency;
 
-    public MultipleLoanCreationViewHelper(ClientBO client, LoanAmountOption loanAmountOption,
+    public MultipleLoanCreationDto(ClientBO client, LoanAmountOption loanAmountOption,
             LoanOfferingInstallmentRange installmentOption, MifosCurrency currency) {
         super();
         this.client = client;
@@ -56,7 +57,7 @@ public class MultipleLoanCreationViewHelper {
         this.loanAmount = getDefaultLoanAmount().toString();
     }
 
-    public MultipleLoanCreationViewHelper() {
+    public MultipleLoanCreationDto() {
         this(null, null, null, null);
     }
 

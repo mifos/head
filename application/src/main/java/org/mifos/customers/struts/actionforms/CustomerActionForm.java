@@ -33,7 +33,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -92,9 +92,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     private String trainedDate;
 
-    private List<FeeView> defaultFees;
+    private List<FeeDto> defaultFees;
 
-    private List<FeeView> additionalFees;
+    private List<FeeDto> additionalFees;
 
     private String selectedFeeAmntList;
 
@@ -104,16 +104,16 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     public CustomerActionForm() {
         address = new Address();
-        defaultFees = new ArrayList<FeeView>();
-        additionalFees = new ArrayList<FeeView>();
+        defaultFees = new ArrayList<FeeDto>();
+        additionalFees = new ArrayList<FeeDto>();
         customFields = new ArrayList<CustomFieldView>();
     }
 
-    public List<FeeView> getAdditionalFees() {
+    public List<FeeDto> getAdditionalFees() {
         return additionalFees;
     }
 
-    public void setAdditionalFees(List<FeeView> additionalFees) {
+    public void setAdditionalFees(List<FeeDto> additionalFees) {
         this.additionalFees = additionalFees;
     }
 
@@ -156,11 +156,11 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.customFields = customFields;
     }
 
-    public List<FeeView> getDefaultFees() {
+    public List<FeeDto> getDefaultFees() {
         return defaultFees;
     }
 
-    public void setDefaultFees(List<FeeView> defaultFees) {
+    public void setDefaultFees(List<FeeDto> defaultFees) {
         this.defaultFees = defaultFees;
     }
 
@@ -287,21 +287,21 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.formedByPersonnel = formedByPersonnel;
     }
 
-    public FeeView getDefaultFee(int i) {
+    public FeeDto getDefaultFee(int i) {
         while (i >= defaultFees.size()) {
-            defaultFees.add(new FeeView());
+            defaultFees.add(new FeeDto());
         }
         return defaultFees.get(i);
     }
 
-    public List<FeeView> getFeesToApply() {
-        List<FeeView> feesToApply = new ArrayList<FeeView>();
-        for (FeeView fee : getAdditionalFees()) {
+    public List<FeeDto> getFeesToApply() {
+        List<FeeDto> feesToApply = new ArrayList<FeeDto>();
+        for (FeeDto fee : getAdditionalFees()) {
             if (fee.getFeeIdValue() != null) {
                 feesToApply.add(fee);
             }
         }
-        for (FeeView fee : getDefaultFees()) {
+        for (FeeDto fee : getDefaultFees()) {
             if (!fee.isRemoved()) {
                 feesToApply.add(fee);
             }
@@ -309,9 +309,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
         return feesToApply;
     }
 
-    public FeeView getSelectedFee(int index) {
+    public FeeDto getSelectedFee(int index) {
         while (index >= additionalFees.size()) {
-            additionalFees.add(new FeeView());
+            additionalFees.add(new FeeDto());
         }
         return additionalFees.get(index);
     }
@@ -447,17 +447,17 @@ public abstract class CustomerActionForm extends BaseActionForm {
             throws ApplicationException {
         MeetingBO meeting = getCustomerMeeting(request);
         if (meeting != null) {
-            List<FeeView> feeList = getDefaultFees();
-            for (FeeView fee : feeList) {
+            List<FeeDto> feeList = getDefaultFees();
+            for (FeeDto fee : feeList) {
                 if (!fee.isRemoved() && fee.isPeriodic() && !isFrequencyMatches(fee, meeting)) {
                     errors.add(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH, new ActionMessage(
                             CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
                     return;
                 }
             }
-            List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
-            for (FeeView selectedFee : getAdditionalFees()) {
-                for (FeeView fee : additionalFeeList) {
+            List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+            for (FeeDto selectedFee : getAdditionalFees()) {
+                for (FeeDto fee : additionalFeeList) {
                     if (selectedFee.getFeeIdValue() != null && selectedFee.getFeeId().equals(fee.getFeeId())) {
                         if (fee.isPeriodic() && !isFrequencyMatches(fee, meeting)) {
                             errors.add(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH, new ActionMessage(
@@ -470,7 +470,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
         }
     }
 
-    private boolean isFrequencyMatches(FeeView fee, MeetingBO meeting) {
+    private boolean isFrequencyMatches(FeeDto fee, MeetingBO meeting) {
         return (fee.getFrequencyType().equals(RecurrenceType.MONTHLY) && meeting.isMonthly())
                 || (fee.getFrequencyType().equals(RecurrenceType.WEEKLY) && meeting.isWeekly());
 
@@ -492,8 +492,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
     }
 
     protected void validateForFeeAmount(ActionErrors errors, Locale locale) {
-        List<FeeView> feeList = getFeesToApply();
-        for (FeeView fee : feeList) {
+        List<FeeDto> feeList = getFeesToApply();
+        for (FeeDto fee : feeList) {
             if (StringUtils.isBlank(fee.getAmount())) {
                 errors.add(CustomerConstants.FEE, new ActionMessage(CustomerConstants.ERRORS_SPECIFY_FEE_AMOUNT));
             } else {
@@ -506,10 +506,10 @@ public abstract class CustomerActionForm extends BaseActionForm {
     @SuppressWarnings("unchecked")
     protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
-        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
-        for (FeeView selectedFee : getAdditionalFees()) {
+        List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        for (FeeDto selectedFee : getAdditionalFees()) {
             int count = 0;
-            for (FeeView duplicateSelectedfee : getAdditionalFees()) {
+            for (FeeDto duplicateSelectedfee : getAdditionalFees()) {
                 if (selectedFee.getFeeIdValue() != null
                         && selectedFee.getFeeId().equals(duplicateSelectedfee.getFeeId())) {
                     if (isSelectedFeePeriodic(selectedFee, additionalFeeList)) {
@@ -549,8 +549,8 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     }
 
-    private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList) {
-        for (FeeView fee : additionalFeeList) {
+    private boolean isSelectedFeePeriodic(FeeDto selectedFee, List<FeeDto> additionalFeeList) {
+        for (FeeDto fee : additionalFeeList) {
             if (fee.getFeeId().equals(selectedFee.getFeeId())) {
                 return fee.isPeriodic();
             }

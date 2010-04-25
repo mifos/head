@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
@@ -148,8 +148,8 @@ public class CenterCustActionForm extends CustomerActionForm {
     }
 
     public void clearActionFormFields() {
-        setDefaultFees(new ArrayList<FeeView>());
-        setAdditionalFees(new ArrayList<FeeView>());
+        setDefaultFees(new ArrayList<FeeDto>());
+        setAdditionalFees(new ArrayList<FeeDto>());
         setCustomerPositions(new ArrayList<CustomerPositionView>());
         setCustomFields(new ArrayList<CustomFieldView>());
         setAddress(new Address());

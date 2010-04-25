@@ -38,7 +38,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.security.authorization.HierarchyManager;
-import org.mifos.security.util.OfficeCacheView;
+import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.UserContext;
 
 public class OfficePersistence extends Persistence {
@@ -78,7 +78,7 @@ public class OfficePersistence extends Persistence {
 
     }
 
-    public List<OfficeCacheView> getAllOffices() throws PersistenceException {
+    public List<OfficeCacheDto> getAllOffices() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES, null);
     }
 

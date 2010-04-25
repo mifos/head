@@ -23,11 +23,11 @@ package org.mifos.accounts.loan.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class LoanAccountsProductView extends View {
+public class LoanAccountsProductDto implements DataTransferObject {
 
-    private List<LoanAccountView> loanAccountViews;
+    private List<LoanAccountDto> loanAccountDtos;
 
     private String prdOfferingShortName;
 
@@ -41,22 +41,22 @@ public class LoanAccountsProductView extends View {
 
     private boolean isValidAmountEntered;
 
-    public LoanAccountsProductView(Short prdOfferingId, String prdOfferingShortName) {
+    public LoanAccountsProductDto(Short prdOfferingId, String prdOfferingShortName) {
         this.prdOfferingId = prdOfferingId;
         this.prdOfferingShortName = prdOfferingShortName;
-        loanAccountViews = new ArrayList<LoanAccountView>();
+        loanAccountDtos = new ArrayList<LoanAccountDto>();
         isValidAmountEntered = true;
         enteredAmount = "0.0";
         validDisbursementAmount = true;
         disBursementAmountEntered = "0.0";
     }
 
-    public List<LoanAccountView> getLoanAccountViews() {
-        return loanAccountViews;
+    public List<LoanAccountDto> getLoanAccountViews() {
+        return loanAccountDtos;
     }
 
-    public void addLoanAccountView(LoanAccountView loanAccountView) {
-        loanAccountViews.add(loanAccountView);
+    public void addLoanAccountView(LoanAccountDto loanAccountDto) {
+        loanAccountDtos.add(loanAccountDto);
     }
 
     public Short getPrdOfferingId() {
@@ -115,23 +115,23 @@ public class LoanAccountsProductView extends View {
 
     public Double getTotalAmountDue() {
         Double totalAmount = 0.0;
-        for (LoanAccountView loanAccountView : loanAccountViews) {
-            totalAmount = totalAmount + loanAccountView.getTotalAmountDue();
+        for (LoanAccountDto loanAccountDto : loanAccountDtos) {
+            totalAmount = totalAmount + loanAccountDto.getTotalAmountDue();
         }
         return totalAmount;
     }
 
     public Double getTotalDisburseAmount() {
         Double totalAmount = 0.0;
-        for (LoanAccountView loanAccountView : loanAccountViews) {
-            totalAmount = totalAmount + loanAccountView.getTotalDisburseAmount();
+        for (LoanAccountDto loanAccountDto : loanAccountDtos) {
+            totalAmount = totalAmount + loanAccountDto.getTotalDisburseAmount();
         }
         return totalAmount;
     }
 
     public boolean isDisburseLoanAccountPresent() {
-        for (LoanAccountView loanAccountView : loanAccountViews) {
-            if (loanAccountView.isDisbursalAccount()) {
+        for (LoanAccountDto loanAccountDto : loanAccountDtos) {
+            if (loanAccountDto.isDisbursalAccount()) {
                 return true;
             }
         }
@@ -140,9 +140,9 @@ public class LoanAccountsProductView extends View {
 
     public Double getTotalDisbursalAmountDue() {
         Double totalAmount = 0.0;
-        for (LoanAccountView loanAccountView : loanAccountViews) {
-            if (loanAccountView.isDisbursalAccount()) {
-                totalAmount = totalAmount + loanAccountView.getTotalAmountDue();
+        for (LoanAccountDto loanAccountDto : loanAccountDtos) {
+            if (loanAccountDto.isDisbursalAccount()) {
+                totalAmount = totalAmount + loanAccountDto.getTotalAmountDue();
             }
         }
         return totalAmount;

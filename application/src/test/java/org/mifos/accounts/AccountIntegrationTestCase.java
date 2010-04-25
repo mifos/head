@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -109,7 +109,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        List<FeeView> fees = new ArrayList<FeeView>();
+        List<FeeDto> fees = new ArrayList<FeeDto>();
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group, fees, "1034556", new DateTime(
                 1986, 04, 02, 0, 0, 0, 0).toDate());
     }

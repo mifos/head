@@ -264,7 +264,7 @@
 	</query>
 
 	<query name="accounts.getApplicableSavingsProductOfferings">
-		<![CDATA[select new org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView(
+		<![CDATA[select new org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto(
 			prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
 			from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
 			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus

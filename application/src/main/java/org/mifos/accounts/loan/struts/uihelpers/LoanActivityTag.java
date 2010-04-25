@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -102,13 +102,13 @@ public class LoanActivityTag extends BodyTagSupport {
                 xmlBuilder.endTag("td");
                 xmlBuilder.endTag("tr");
 
-                List<LoanActivityView> loanRecentActivityViewSet = (List<LoanActivityView>) object;
-                Iterator<LoanActivityView> it = loanRecentActivityViewSet.iterator();
+                List<LoanActivityDto> loanRecentActivityViewSet = (List<LoanActivityDto>) object;
+                Iterator<LoanActivityDto> it = loanRecentActivityViewSet.iterator();
                 while (it.hasNext()) {
-                    LoanActivityView loanActivityView = it.next();
+                    LoanActivityDto loanActivityDto = it.next();
                     xmlBuilder.startTag("tr", "valign", "top");
-                    xmlBuilder.append(buildLeftHeaderRows(loanActivityView));
-                    xmlBuilder.append(buildRightHeaderRows(loanActivityView));
+                    xmlBuilder.append(buildLeftHeaderRows(loanActivityDto));
+                    xmlBuilder.append(buildRightHeaderRows(loanActivityDto));
                     xmlBuilder.endTag("tr");
                 }
                 xmlBuilder.endTag("table");
@@ -121,7 +121,7 @@ public class LoanActivityTag extends BodyTagSupport {
         return SKIP_BODY;
     }
 
-    XmlBuilder buildLeftHeaderRows(LoanActivityView loanRecentActivityView) {
+    XmlBuilder buildLeftHeaderRows(LoanActivityDto loanRecentActivityView) {
         XmlBuilder xmlBuilder = new XmlBuilder();
         xmlBuilder.startTag("td", "class", "drawtablerow");
         xmlBuilder.text(DateUtils.getUserLocaleDate(locale, loanRecentActivityView.getActionDate().toString()));
@@ -150,7 +150,7 @@ public class LoanActivityTag extends BodyTagSupport {
         return xmlBuilder;
     }
 
-    XmlBuilder buildRightHeaderRows(LoanActivityView loanRecentActivityView) {
+    XmlBuilder buildRightHeaderRows(LoanActivityDto loanRecentActivityView) {
         XmlBuilder xmlBuilder = new XmlBuilder();
         xmlBuilder.startTag("td", "align", "right", "class", "drawtablerow");
         xmlBuilder.text(loanRecentActivityView.getRunningBalancePrinciple().toString());

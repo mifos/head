@@ -53,7 +53,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -68,7 +68,7 @@ import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -105,11 +105,11 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
@@ -286,17 +286,17 @@ public class TestObjectFactory {
         return createCenter(customerName, meeting, officeId, personnelId, getFees());
     }
 
-    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final List<FeeView> fees) {
+    public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final List<FeeDto> fees) {
         return createCenter(customerName, meeting, SAMPLE_BRANCH_OFFICE, PersonnelConstants.SYSTEM_USER, fees);
     }
 
     public static CenterBO createCenterForTestGetLoanAccounts(final String customerName, final MeetingBO meeting,
-            final List<FeeView> fees) {
+            final List<FeeDto> fees) {
         return createCenter(customerName, meeting, SAMPLE_BRANCH_OFFICE, PersonnelConstants.TEST_USER, fees);
     }
 
     public static CenterBO createCenter(final String customerName, final MeetingBO meeting, final Short officeId,
-            final Short personnelId, final List<FeeView> fees) {
+            final Short personnelId, final List<FeeDto> fees) {
         CenterBO center;
         try {
             center = new CenterBO(TestUtils.makeUserWithLocales(), customerName, null, null, fees, null, null,
@@ -325,20 +325,20 @@ public class TestObjectFactory {
         return prdmix;
     }
 
-    public static List<FeeView> getFees() {
-        List<FeeView> fees = new ArrayList<FeeView>();
+    public static List<FeeDto> getFees() {
+        List<FeeDto> fees = new ArrayList<FeeDto>();
         AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFee("Maintenance Fee", FeeCategory.ALLCUSTOMERS,
                 "100", RecurrenceType.WEEKLY, Short.valueOf("1"));
-        FeeView fee = new FeeView(getContext(), maintenanceFee);
+        FeeDto fee = new FeeDto(getContext(), maintenanceFee);
         fees.add(fee);
         return fees;
     }
 
-    public static List<FeeView> getFeesWithMakeUser() {
-        List<FeeView> fees = new ArrayList<FeeView>();
+    public static List<FeeDto> getFeesWithMakeUser() {
+        List<FeeDto> fees = new ArrayList<FeeDto>();
         AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFeeWithMakeUser("Maintenance Fee",
                 FeeCategory.ALLCUSTOMERS, "100", RecurrenceType.WEEKLY, Short.valueOf("1"));
-        FeeView fee = new FeeView(getContext(), maintenanceFee);
+        FeeDto fee = new FeeDto(getContext(), maintenanceFee);
         fees.add(fee);
         return fees;
     }
@@ -384,7 +384,7 @@ public class TestObjectFactory {
 
     public static GroupBO createGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final Short formedById,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees, final Short formedById,
             final CustomerBO parentCustomer) {
         GroupBO group;
         try {
@@ -417,7 +417,7 @@ public class TestObjectFactory {
 
     public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final Short formedById,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees, final Short formedById,
             final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
         GroupBO group;
         PersonnelBO loanOfficer = null;
@@ -443,7 +443,7 @@ public class TestObjectFactory {
     }
 
     public static ClientBO createClient(final String customerName, final CustomerStatus status,
-            final CustomerBO parentCustomer, final List<FeeView> fees, final String governmentId, final Date dateOfBirth) {
+            final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth) {
 
         ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
@@ -520,7 +520,7 @@ public class TestObjectFactory {
                         null, // Date mfiJoiningDate
                         null, // Address
                         null, // List<CustomFieldView> customFields
-                        getFees(), // List<FeeView> fees
+                        getFees(), // List<FeeDto> fees
                         null, // List<SavingsOfferingBO> offeringsSelected
                         new PersonnelPersistence().getPersonnel(personnel), // Short
                         // formedById
@@ -1919,19 +1919,19 @@ public class TestObjectFactory {
         return paymentData;
     }
 
-    public static LoanAccountView getLoanAccountView(final LoanBO loan) {
+    public static LoanAccountDto getLoanAccountView(final LoanBO loan) {
         final Integer customerId = null;
-        return new LoanAccountView(loan.getAccountId(), customerId, loan.getLoanOffering().getPrdOfferingName(), loan
+        return new LoanAccountDto(loan.getAccountId(), customerId, loan.getLoanOffering().getPrdOfferingName(), loan
                 .getLoanOffering().getPrdOfferingId(), loan.getState().getValue(), loan.getIntrestAtDisbursement(),
                 loan.getLoanBalance());
     }
 
-    public static CollectionSheetEntryInstallmentView getBulkEntryAccountActionView(
+    public static CollectionSheetEntryInstallmentDto getBulkEntryAccountActionView(
             final AccountActionDateEntity accountActionDateEntity) {
-        CollectionSheetEntryInstallmentView bulkEntryAccountActionView = null;
+        CollectionSheetEntryInstallmentDto bulkEntryAccountActionView = null;
         if (accountActionDateEntity instanceof LoanScheduleEntity) {
             LoanScheduleEntity actionDate = (LoanScheduleEntity) accountActionDateEntity;
-            CollectionSheetEntryLoanInstallmentView installmentView = new CollectionSheetEntryLoanInstallmentView(
+            CollectionSheetEntryLoanInstallmentDto installmentView = new CollectionSheetEntryLoanInstallmentDto(
                     actionDate.getAccount().getAccountId(), actionDate.getCustomer().getCustomerId(), actionDate
                             .getInstallmentId(), actionDate.getActionDateId(), actionDate.getActionDate(), actionDate
                             .getPrincipal(), actionDate.getPrincipalPaid(), actionDate.getInterest(), actionDate
@@ -1943,7 +1943,7 @@ public class TestObjectFactory {
             bulkEntryAccountActionView = installmentView;
         } else if (accountActionDateEntity instanceof SavingsScheduleEntity) {
             SavingsScheduleEntity actionDate = (SavingsScheduleEntity) accountActionDateEntity;
-            CollectionSheetEntrySavingsInstallmentView installmentView = new CollectionSheetEntrySavingsInstallmentView(
+            CollectionSheetEntrySavingsInstallmentDto installmentView = new CollectionSheetEntrySavingsInstallmentDto(
                     actionDate.getAccount().getAccountId(), actionDate.getCustomer().getCustomerId(), actionDate
                             .getInstallmentId(), actionDate.getActionDateId(), actionDate.getActionDate(), actionDate
                             .getDeposit(), actionDate.getDepositPaid());
@@ -1951,7 +1951,7 @@ public class TestObjectFactory {
 
         } else if (accountActionDateEntity instanceof CustomerScheduleEntity) {
             CustomerScheduleEntity actionDate = (CustomerScheduleEntity) accountActionDateEntity;
-            CollectionSheetEntryCustomerAccountInstallmentView installmentView = new CollectionSheetEntryCustomerAccountInstallmentView(
+            CollectionSheetEntryCustomerAccountInstallmentDto installmentView = new CollectionSheetEntryCustomerAccountInstallmentDto(
                     actionDate.getAccount().getAccountId(), actionDate.getCustomer().getCustomerId(), actionDate
                             .getInstallmentId(), actionDate.getActionDateId(), actionDate.getActionDate(), actionDate
                             .getMiscFee(), actionDate.getMiscFeePaid(), actionDate.getMiscPenalty(), actionDate
@@ -1963,15 +1963,15 @@ public class TestObjectFactory {
         return bulkEntryAccountActionView;
     }
 
-    public static CollectionSheetEntryAccountFeeActionView getBulkEntryAccountFeeActionView(
+    public static CollectionSheetEntryAccountFeeActionDto getBulkEntryAccountFeeActionView(
             final AccountFeesActionDetailEntity feeAction) {
-        return new CollectionSheetEntryAccountFeeActionView(feeAction.getAccountActionDate().getActionDateId(),
+        return new CollectionSheetEntryAccountFeeActionDto(feeAction.getAccountActionDate().getActionDateId(),
                 feeAction.getFee().getFeeId(), feeAction.getFeeAmount(), feeAction.getFeeAmountPaid());
     }
 
-    public static List<CollectionSheetEntryAccountFeeActionView> getBulkEntryAccountFeeActionViews(
+    public static List<CollectionSheetEntryAccountFeeActionDto> getBulkEntryAccountFeeActionViews(
             final AccountActionDateEntity accountActionDateEntity) {
-        List<CollectionSheetEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<CollectionSheetEntryAccountFeeActionView>();
+        List<CollectionSheetEntryAccountFeeActionDto> bulkEntryFeeViews = new ArrayList<CollectionSheetEntryAccountFeeActionDto>();
         Set<AccountFeesActionDetailEntity> feeActions = null;
         if (accountActionDateEntity instanceof LoanScheduleEntity) {
             feeActions = ((LoanScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails();
@@ -1987,9 +1987,9 @@ public class TestObjectFactory {
 
     }
 
-    public static List<CollectionSheetEntryInstallmentView> getBulkEntryAccountActionViews(
+    public static List<CollectionSheetEntryInstallmentDto> getBulkEntryAccountActionViews(
             final List<AccountActionDateEntity> actionDates) {
-        List<CollectionSheetEntryInstallmentView> bulkEntryActionViews = new ArrayList<CollectionSheetEntryInstallmentView>();
+        List<CollectionSheetEntryInstallmentDto> bulkEntryActionViews = new ArrayList<CollectionSheetEntryInstallmentDto>();
         if (actionDates != null && actionDates.size() > 0) {
             for (AccountActionDateEntity actionDate : actionDates) {
                 bulkEntryActionViews.add(getBulkEntryAccountActionView(actionDate));

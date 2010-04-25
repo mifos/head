@@ -29,11 +29,11 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsRecentActivityView;
-import org.mifos.accounts.savings.business.SavingsTransactionHistoryView;
+import org.mifos.accounts.savings.business.SavingsRecentActivityDto;
+import org.mifos.accounts.savings.business.SavingsTransactionHistoryDto;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
@@ -236,7 +236,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "getPrdOfferings");
         actionPerform();
         verifyForward("getPrdOfferings_success");
-        List<PrdOfferingView> savingPrds = (List<PrdOfferingView>) SessionUtils.getAttribute(
+        List<PrdOfferingDto> savingPrds = (List<PrdOfferingDto>) SessionUtils.getAttribute(
                 SavingsConstants.SAVINGS_PRD_OFFERINGS, request);
        Assert.assertEquals(Integer.valueOf("2").intValue(), savingPrds.size());
         CustomerBO client = (CustomerBO) SessionUtils.getAttribute(SavingsConstants.CLIENT, request);
@@ -515,7 +515,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("getRecentActivity_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-       Assert.assertEquals(0, ((List<SavingsRecentActivityView>) SessionUtils.getAttribute(
+       Assert.assertEquals(0, ((List<SavingsRecentActivityDto>) SessionUtils.getAttribute(
                 SavingsConstants.RECENTY_ACTIVITY_LIST, request)).size());
     }
 
@@ -556,12 +556,12 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
      * "getTransactionHistory"); addRequestParameter("globalAccountNum",
      * savings.getGlobalAccountNum()); actionPerform();
      * verifyForward("getTransactionHistory_success"); verifyNoActionErrors();
-     * verifyNoActionMessages(); List<SavingsTransactionHistoryView>
+     * verifyNoActionMessages(); List<SavingsTransactionHistoryDto>
      * trxnHistlist =
-     * (List<SavingsTransactionHistoryView>)SessionUtils.getAttribute
+     * (List<SavingsTransactionHistoryDto>)SessionUtils.getAttribute
      * (SavingsConstants.TRXN_HISTORY_LIST,request);
      * Collections.sort(trxnHistlist);Assert.assertEquals(2, trxnHistlist.size());
-     * for(SavingsTransactionHistoryView view : trxnHistlist) {
+     * for(SavingsTransactionHistoryDto view : trxnHistlist) {
      *Assert.assertEquals("100.0",view.getCredit());
      *Assert.assertEquals("-",view.getDebit());
      *Assert.assertEquals("100.0",view.getBalance());
@@ -667,7 +667,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("getStatusHistory_success");
         verifyNoActionErrors();
         verifyNoActionMessages();
-       Assert.assertEquals(2, ((List<SavingsTransactionHistoryView>) SessionUtils.getAttribute(
+       Assert.assertEquals(2, ((List<SavingsTransactionHistoryDto>) SessionUtils.getAttribute(
                 SavingsConstants.STATUS_CHANGE_HISTORY_LIST, request)).size());
     }
 

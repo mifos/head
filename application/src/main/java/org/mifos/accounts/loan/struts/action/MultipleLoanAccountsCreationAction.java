@@ -40,7 +40,7 @@ import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
+import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
@@ -238,12 +238,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         AccountState accountState = AccountState.fromShort(accountStateId);
         UserContext userContext = getUserContext(request);
 
-        List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm.getApplicableClientDetails();
+        List<MultipleLoanCreationDto> applicableClientDetails = loanActionForm.getApplicableClientDetails();
 
         List<String> accountNumbers = new ArrayList<String>();
 
         if (applicableClientDetails != null) {
-            for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+            for (MultipleLoanCreationDto clientDetail : applicableClientDetails) {
                 LoanDto loanDto = loanService.createLoan(userContext, centerId, loanProductId, clientDetail
                         .getClientId(), accountState, clientDetail.getLoanAmount(), clientDetail
                         //FIXME: Loan are created using double, the better way to do this would be to
@@ -307,12 +307,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         return valueToBeChecked % valueToBeCheckedWith == 0;
     }
 
-    private List<MultipleLoanCreationViewHelper> buildClientViewHelper(final LoanOfferingBO loanOffering,
+    private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
             List<ClientBO> clients) {
-        return (List<MultipleLoanCreationViewHelper>) collect(clients,
-                new Transformer<ClientBO, MultipleLoanCreationViewHelper>() {
-                    public MultipleLoanCreationViewHelper transform(ClientBO client) {
-                        return new MultipleLoanCreationViewHelper(client, loanOffering.eligibleLoanAmount(client
+        return (List<MultipleLoanCreationDto>) collect(clients,
+                new Transformer<ClientBO, MultipleLoanCreationDto>() {
+                    public MultipleLoanCreationDto transform(ClientBO client) {
+                        return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
                                 .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
                                 loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client
                                         .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());

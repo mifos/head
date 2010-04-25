@@ -32,7 +32,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
@@ -131,7 +131,7 @@ public class LoanPrdAction extends BaseAction {
         loadMasterData(request);
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
                 new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
-        loadSelectedFeesAndFunds(new ArrayList<FeeView>(), new ArrayList<FundBO>(), request);
+        loadSelectedFeesAndFunds(new ArrayList<FeeDto>(), new ArrayList<FundBO>(), request);
         prdDefLogger.debug("Load method of loan Product Action called");
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
@@ -227,11 +227,11 @@ public class LoanPrdAction extends BaseAction {
         for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
             fundsSelected.add(loanOfferingFund.getFund());
         }
-        List<FeeView> feeSelected = new ArrayList<FeeView>();
+        List<FeeDto> feeSelected = new ArrayList<FeeDto>();
         for (LoanOfferingFeesEntity prdOfferingFees : loanOffering.getLoanOfferingFees()) {
             FeeBO fee = prdOfferingFees.getFees();
             fee = new LoanPrdBusinessService().getfee(fee.getFeeId(), fee.getFeeType());
-            feeSelected.add(new FeeView(getUserContext(request), fee));
+            feeSelected.add(new FeeDto(getUserContext(request), fee));
         }
         loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
         loadStatusList(request);
@@ -361,7 +361,7 @@ public class LoanPrdAction extends BaseAction {
         prdDefLogger.debug("Load master data method of Loan Product Action called");
     }
 
-    private void loadSelectedFeesAndFunds(List<FeeView> feesSelected, List<FundBO> fundsSelected,
+    private void loadSelectedFeesAndFunds(List<FeeDto> feesSelected, List<FundBO> fundsSelected,
             HttpServletRequest request) throws Exception {
         prdDefLogger.debug("start loadSelectedFeesAndFunds method of Loan Product Action ");
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feesSelected, request);
@@ -447,16 +447,16 @@ public class LoanPrdAction extends BaseAction {
         return null;
     }
 
-    private List<FeeView> getFeeViewList(UserContext userContext, List<FeeBO> fees) {
+    private List<FeeDto> getFeeViewList(UserContext userContext, List<FeeBO> fees) {
         prdDefLogger.debug("start getFeeViewList method of Loan Product Action ");
-        List<FeeView> feeViews = new ArrayList<FeeView>();
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
         if (fees != null && fees.size() > 0) {
             for (FeeBO fee : fees) {
-                feeViews.add(new FeeView(userContext, fee));
+                feeDtos.add(new FeeDto(userContext, fee));
             }
         }
         prdDefLogger.debug("getFeeViewList method of Loan Product Action called");
-        return feeViews.size() > 0 ? feeViews : null;
+        return feeDtos.size() > 0 ? feeDtos : null;
     }
 
     private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {

@@ -66,7 +66,7 @@ import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -167,7 +167,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private MeetingBO meeting;
     private UserContext userContext = null;
 
-    private final List<FeeView> feeViews = new ArrayList<FeeView>();
+    private final List<FeeDto> feeDtos = new ArrayList<FeeDto>();
     private BigDecimal savedInitialRoundOffMultiple = null;
     private BigDecimal savedFinalRoundOffMultiple = null;
     private RoundingMode savedCurrencyRoundingMode = null;
@@ -303,7 +303,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                  new DateTimeService().getCurrentJavaDateTime(), PrdStatus.LOAN_ACTIVE, 300.0, 12.0,
                  (short) 3, InterestType.DECLINING, center.getCustomerMeeting().getMeeting());
 
-         List<FeeView> feeViewList = new ArrayList<FeeView>();
+         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
          boolean loanScheduleIndependentOfMeeting = true;
          accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, client,
@@ -341,7 +341,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System
                     .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, center
                     .getCustomerMeeting().getMeeting());
-            List<FeeView> feeViewList = new ArrayList<FeeView>();
+            List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
             boolean loanScheduleIndependentOfMeeting = true;
             accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -559,14 +559,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             double interestRate, int numInstallments, DateMidnight startDate) throws AccountException, MeetingException {
 
         MeetingBO meeting = new MeetingBuilder().customerMeeting().every(1).buildMonthlyForDayNumber(startDate.getDayOfMonth());
-        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting, (List<FeeView>)null);
+        center = TestObjectFactory.createCenter(this.getClass().getSimpleName() + " Center", meeting, (List<FeeDto>)null);
         group = TestObjectFactory.createNoFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS,
                 startDate.toDate(),
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1",currency);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), (short)numInstallments,
@@ -588,7 +588,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 startDate.toDate(),
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1",currency);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(currency, loanAmount), (short)numInstallments,
@@ -819,7 +819,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createIndividualLoan(userContext, loanOffering, group, AccountState.LOAN_PARTIAL_APPLICATION,
                     TestUtils.createMoney("300.0"), Short.valueOf("1"), meetingDates.get(0), true, false, 10.0,
-                    (short) 0, null, new ArrayList<FeeView>(), null, false);
+                    (short) 0, null, new ArrayList<FeeDto>(), null, false);
 
             Assert.fail();
         } catch (AccountException e) {
@@ -830,10 +830,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testWaiveMiscFeeAfterPayment() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        List<FeeView> feeViews = new ArrayList<FeeView>();
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
         boolean isInterestDedAtDisb = false;
         Short noOfinstallments = (short) 6;
-        LoanBO loan = createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeViews, noOfinstallments);
+        LoanBO loan = createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeDtos, noOfinstallments);
         loan.setUserContext(TestUtils.makeUser());
         loan.applyCharge(Short.valueOf("-1"), Double.valueOf("200"));
         for (AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()) {
@@ -1051,7 +1051,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_PARTIAL_APPLICATION, new Money(getCurrency(), currency,
      * "300.0"), Short.valueOf("1"), meetingDates.get(0), true, 10.0, (short) 0,
-     * null, new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT,
+     * null, new ArrayList<FeeDto>(), null, DEFAULT_LOAN_AMOUNT,
      * DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
      * eligibleInstallmentRange.getMinNoOfInstall(), false, null);
      *
@@ -1359,13 +1359,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -1456,16 +1456,16 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "33",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
 
         // 20% of 300 = 60.0, applied to first installment
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
 
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
@@ -1591,13 +1591,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .getMeeting());
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -2648,7 +2648,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             loanDao.createLoan(TestUtils.makeUser(), null, group, AccountState.LOAN_APPROVED, new Money(getCurrency(),
                     "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 0,
-                    null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO,
                     SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for null loan offering", true);
         } catch (AccountException ae) {
@@ -2664,7 +2664,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(),
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
             Assert.fail("The Loan object is created for inactive loan offering");
@@ -2682,7 +2682,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(),
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for null customer", true);
@@ -2702,7 +2702,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             loanDao.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO,
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO,
                     DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for inactive customer", true);
         } catch (AccountException ae) {
@@ -2723,7 +2723,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), startDate, false, 10.0, (short) 0, null,
-                    new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created even if meetings do not match", true);
@@ -2745,7 +2745,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO
                 .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                         getCurrency(), "300.0"), Short.valueOf("6"), startDate, false, 10.0, (short) 0, null,
-                        new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                        new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                         DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                                 .getMinNoOfInstall(), false, null);
         Assert.assertTrue(
@@ -2761,7 +2761,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, null, Short
                     .valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 0, null,
-                    new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for null customer", true);
@@ -2779,7 +2779,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, null, Short
                     .valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 5, null,
-                    new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for grace period greather than max installments", true);
@@ -2797,7 +2797,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), product, group, AccountState.LOAN_APPROVED, new Money(
                 getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                (short) 1, null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(),
+                (short) 1, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
                 DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                 eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         Assert.assertEquals(product.getGraceType(), loan.getGraceType());
@@ -2822,7 +2822,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_APPROVED, new Money(getCurrency(), "300.0"), Short
      * .valueOf("6"), new Date(System.currentTimeMillis()), true, 10.0, (short)
-     * 5, null, new ArrayList<FeeView>(), new
+     * 5, null, new ArrayList<FeeDto>(), new
      * ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
      * eligibleInstallmentRange .getMaxNoOfInstall(), eligibleInstallmentRange
      * .getMinNoOfInstall(), false, null);Assert.assertEquals(
@@ -2844,7 +2844,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), disbursementDate, false, 10.0, (short) 0,
-                    null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertTrue("The Loan object is created for valid disbursement date", true);
@@ -2868,7 +2868,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * try { new LoanBO(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOANACC_APPROVED, new Money(getCurrency(), "300.0"), Short
      * .valueOf("6"), disbursementDate, false, 10.0, (short) 0, null,
-     * new ArrayList<FeeView>(), new ArrayList<CustomFieldView>());
+     * new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>());
      * Assert.assertFalse(
      * "The Loan object is created for invalid disbursement date", true); }
      * catch (AccountException ae) {Assert.assertTrue(
@@ -2886,7 +2886,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), disbursementDate, false, 10.0, (short) 0,
-                    null, new ArrayList<FeeView>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for invalid disbursement date", true);
@@ -2899,13 +2899,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testBuildLoanWithFee() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        List<FeeView> feeViews = getFeeViews();
+        List<FeeDto> feeDtos = getFeeViews();
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         LoanBO loan = LoanBO
                 .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                         getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                        (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
+                        (short) 0, null, feeDtos, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
                         eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(),
                         false, null);
 
@@ -2938,20 +2938,20 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         checkFees(fees2, "10.0", paymentsArray[4]);
         checkFees(fees2, "10.0", paymentsArray[5]);
 
-        deleteFee(feeViews);
+        deleteFee(feeDtos);
         TestObjectFactory.removeObject(loanOffering);
     }
 
     public void testBuildLoan() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        List<FeeView> feeViews = getFeeViews();
+        List<FeeDto> feeDtos = getFeeViews();
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         LoanBO loan = LoanBO
                 .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                         getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                        (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
+                        (short) 0, null, feeDtos, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
                         eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(),
                         false, null);
 
@@ -2964,17 +2964,17 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(6, loan.getAccountActionDates().size());
         Assert.assertEquals(loan.getNoOfInstallments().intValue(), loan.getAccountActionDates().size());
 
-        deleteFee(feeViews);
+        deleteFee(feeDtos);
         TestObjectFactory.removeObject(loanOffering);
     }
 
     public void testCreateLoan() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        List<FeeView> feeViews = getFeeViews();
+        List<FeeDto> feeDtos = getFeeViews();
         boolean isInterestDedAtDisb = false;
         Short noOfinstallments = (short) 6;
-        LoanBO loan = createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeViews, noOfinstallments);
+        LoanBO loan = createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeDtos, noOfinstallments);
 
         Assert.assertEquals(2, loan.getAccountFees().size());
         for (AccountFeesEntity accountFees : loan.getAccountFees()) {
@@ -3011,11 +3011,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * public void testCreateLoanForInterestDedAtDisb() throws
      * NumberFormatException, AccountException, Exception {
      * createInitialCustomers(); LoanOfferingBO loanOffering =
-     * createLoanOffering(false, true); List<FeeView> feeViews = getFeeViews();
+     * createLoanOffering(false, true); List<FeeDto> feeDtos = getFeeViews();
      * boolean isInterestDedAtDisb = true; Short noOfinstallments = (short) 6;
      *
      * LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
-     * isInterestDedAtDisb, feeViews, noOfinstallments);
+     * isInterestDedAtDisb, feeDtos, noOfinstallments);
      *
      * Assert.assertEquals(2, loan.getAccountFees().size()); for
      * (AccountFeesEntity accountFees : loan.getAccountFees()) { if
@@ -3052,11 +3052,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * public void testCreateLoanForPrincipalAtLastInst() throws
      * NumberFormatException, AccountException, Exception {
      * createInitialCustomers(); LoanOfferingBO loanOffering =
-     * createLoanOffering(true); List<FeeView> feeViews = getFeeViews(); boolean
+     * createLoanOffering(true); List<FeeDto> feeDtos = getFeeViews(); boolean
      * isInterestDedAtDisb = false; Short noOfinstallments = (short) 6;
      *
      * LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
-     * isInterestDedAtDisb, feeViews, noOfinstallments);
+     * isInterestDedAtDisb, feeDtos, noOfinstallments);
      *
      * Assert.assertEquals(2, loan.getAccountFees().size()); for
      * (AccountFeesEntity accountFees : loan.getAccountFees()) { if
@@ -3095,11 +3095,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * public void testCreateLoanForPrincipalAtLastInstAndIntDedAtDisb() throws
      * NumberFormatException, AccountException, Exception {
      * createInitialCustomers(); LoanOfferingBO loanOffering =
-     * createLoanOffering(true, true); List<FeeView> feeViews = getFeeViews();
+     * createLoanOffering(true, true); List<FeeDto> feeDtos = getFeeViews();
      * boolean isInterestDedAtDisb = true; Short noOfinstallments = (short) 6;
      *
      * LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
-     * isInterestDedAtDisb, feeViews, noOfinstallments);
+     * isInterestDedAtDisb, feeDtos, noOfinstallments);
      *
      * Assert.assertEquals(2, loan.getAccountFees().size()); for
      * (AccountFeesEntity accountFees : loan.getAccountFees()) { if
@@ -3375,18 +3375,18 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * CustomerStatus.GROUP_ACTIVE, center); LoanOfferingBO loanOffering =
      * TestObjectFactory.createLoanOffering( startDate,
      * center.getCustomerMeeting().getMeeting()); UserContext userContext =
-     * TestUtils.makeUser(); userContext.setLocaleId(null); List<FeeView>
-     * feeViewList = new ArrayList<FeeView>(); FeeBO periodicFee =
+     * TestUtils.makeUser(); userContext.setLocaleId(null); List<FeeDto>
+     * feeViewList = new ArrayList<FeeDto>(); FeeBO periodicFee =
      * TestObjectFactory.createPeriodicAmountFee( "Periodic Fee",
      * FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("3"));
-     * feeViewList.add(new FeeView(userContext, periodicFee)); FeeBO upfrontFee
+     * feeViewList.add(new FeeDto(userContext, periodicFee)); FeeBO upfrontFee
      * = TestObjectFactory.createOneTimeRateFee( "Upfront Fee",
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
-     * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
+     * FeePayment.UPFRONT); feeViewList.add(new FeeDto(userContext,
      * upfrontFee)); FeeBO disbursementFee =
      * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
      * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
-     * feeViewList.add(new FeeView(userContext, disbursementFee));
+     * feeViewList.add(new FeeDto(userContext, disbursementFee));
      *
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -3450,17 +3450,17 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, true,
      * false, center .getCustomerMeeting().getMeeting()); UserContext
      * userContext = TestUtils.makeUser(); userContext.setLocaleId(null);
-     * List<FeeView> feeViewList = new ArrayList<FeeView>(); FeeBO periodicFee =
+     * List<FeeDto> feeViewList = new ArrayList<FeeDto>(); FeeBO periodicFee =
      * TestObjectFactory.createPeriodicAmountFee( "Periodic Fee",
      * FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("3"));
-     * feeViewList.add(new FeeView(userContext, periodicFee)); FeeBO upfrontFee
+     * feeViewList.add(new FeeDto(userContext, periodicFee)); FeeBO upfrontFee
      * = TestObjectFactory.createOneTimeRateFee( "Upfront Fee",
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
-     * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
+     * FeePayment.UPFRONT); feeViewList.add(new FeeDto(userContext,
      * upfrontFee)); FeeBO disbursementFee =
      * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
      * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
-     * feeViewList.add(new FeeView(userContext, disbursementFee));
+     * feeViewList.add(new FeeDto(userContext, disbursementFee));
      *
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -3523,18 +3523,18 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * CustomerStatus.GROUP_ACTIVE, center); LoanOfferingBO loanOffering =
      * TestObjectFactory.createLoanOffering( startDate,
      * center.getCustomerMeeting().getMeeting()); UserContext userContext =
-     * TestUtils.makeUser(); userContext.setLocaleId(null); List<FeeView>
-     * feeViewList = new ArrayList<FeeView>(); FeeBO periodicFee =
+     * TestUtils.makeUser(); userContext.setLocaleId(null); List<FeeDto>
+     * feeViewList = new ArrayList<FeeDto>(); FeeBO periodicFee =
      * TestObjectFactory.createPeriodicAmountFee( "Periodic Fee",
      * FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("3"));
-     * feeViewList.add(new FeeView(userContext, periodicFee)); FeeBO upfrontFee
+     * feeViewList.add(new FeeDto(userContext, periodicFee)); FeeBO upfrontFee
      * = TestObjectFactory.createOneTimeRateFee( "Upfront Fee",
      * FeeCategory.LOAN, Double.valueOf("20"), FeeFormula.AMOUNT,
-     * FeePayment.UPFRONT); feeViewList.add(new FeeView(userContext,
+     * FeePayment.UPFRONT); feeViewList.add(new FeeDto(userContext,
      * upfrontFee)); FeeBO disbursementFee =
      * TestObjectFactory.createOneTimeAmountFee( "Disbursement Fee",
      * FeeCategory.LOAN, "30", FeePayment.TIME_OF_DISBURSEMENT);
-     * feeViewList.add(new FeeView(userContext, disbursementFee));
+     * feeViewList.add(new FeeDto(userContext, disbursementFee));
      *
      * accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -3597,16 +3597,16 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("3"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
                 FeePayment.TIME_OF_DISBURSEMENT);
-        feeViewList.add(new FeeView(userContext, disbursementFee));
+        feeViewList.add(new FeeDto(userContext, disbursementFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -3665,16 +3665,16 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 GraceType.PRINCIPALONLYGRACE, "1", "1");
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("3"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
                 FeePayment.TIME_OF_DISBURSEMENT);
-        feeViewList.add(new FeeView(userContext, disbursementFee));
+        feeViewList.add(new FeeDto(userContext, disbursementFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -3760,19 +3760,19 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
                 .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
-        feeViewList.add(new FeeView(userContext, disbursementFee));
+        feeViewList.add(new FeeDto(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
                 Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-        feeViewList.add(new FeeView(userContext, firstRepaymentFee));
+        feeViewList.add(new FeeDto(userContext, firstRepaymentFee));
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.MONTHLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 disbursementDate.getTime(), false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO,
@@ -3852,19 +3852,19 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
                 Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
-        feeViewList.add(new FeeView(userContext, upfrontFee));
+        feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
                 .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
-        feeViewList.add(new FeeView(userContext, disbursementFee));
+        feeViewList.add(new FeeDto(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
                 Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-        feeViewList.add(new FeeView(userContext, firstRepaymentFee));
+        feeViewList.add(new FeeDto(userContext, firstRepaymentFee));
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.MONTHLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(userContext, periodicFee));
+        feeViewList.add(new FeeDto(userContext, periodicFee));
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 disbursementDate.getTime(), false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO,
@@ -4142,10 +4142,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting()
                 .getMeeting());
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(TestObjectFactory.getContext(), periodicFee));
+        feeViewList.add(new FeeDto(TestObjectFactory.getContext(), periodicFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4212,10 +4212,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, center.getCustomerMeeting().getMeeting());
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
-        feeViewList.add(new FeeView(TestObjectFactory.getContext(), periodicFee));
+        feeViewList.add(new FeeDto(TestObjectFactory.getContext(), periodicFee));
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4509,11 +4509,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testSaveLoanForInvalidConnection() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering = createLoanOffering(false);
-        List<FeeView> feeViews = getFeeViews();
+        List<FeeDto> feeDtos = getFeeViews();
 
         LoanBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED,
                 new Money(getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false,
-                10.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
+                10.0, (short) 0, null, feeDtos, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         TestObjectFactory.simulateInvalidConnection();
         try {
             loan.save();
@@ -4523,7 +4523,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-        deleteFee(feeViews);
+        deleteFee(feeDtos);
         TestObjectFactory.removeObject(loanOffering);
     }
 
@@ -4561,7 +4561,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4630,14 +4630,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         FeeBO fee = TestObjectFactory.createPeriodicRateFee("Periodic Rate Fee", FeeCategory.LOAN, new Double("9.0"),
                 FeeFormula.INTEREST, RecurrenceType.WEEKLY, new Short("1"), userContext, meeting);
-        feeViews.add(new FeeView(userContext, fee));
+        feeDtos.add(new FeeDto(userContext, fee));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 startDate, false, // 6
-                12.0, (short) 0, null, feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
+                12.0, (short) 0, null, feeDtos, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);
         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -4705,7 +4705,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4748,7 +4748,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.DECLINING, false, false, center
                         .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4791,7 +4791,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, new Date(System
                 .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, center
                 .getCustomerMeeting().getMeeting());
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4840,7 +4840,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3,
                     InterestType.DECLINING, false, false, center.getCustomerMeeting().getMeeting(),
                     GraceType.PRINCIPALONLYGRACE, "1", "1");
-            List<FeeView> feeViewList = new ArrayList<FeeView>();
+            List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
             accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                     AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
@@ -4896,7 +4896,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
      * (short) 3, InterestType.DECLINING, false, true, center
      * .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-     * List<FeeView> feeViewList = new ArrayList<FeeView>();
+     * List<FeeDto> feeViewList = new ArrayList<FeeDto>();
      *
      * accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -4955,7 +4955,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3,
      * InterestType.DECLINING_EPI, false, false, center
      * .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-     * List<FeeView> feeViewList = new ArrayList<FeeView>();
+     * List<FeeDto> feeViewList = new ArrayList<FeeDto>();
      *
      * accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -5011,8 +5011,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * TestObjectFactory.createLoanOffering( "Loan", ApplicableTo.GROUPS, new
      * Date(System .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
      * (short) 3, InterestType.DECLINING_EPI,
-     * center.getCustomerMeeting().getMeeting()); List<FeeView> feeViewList =
-     * new ArrayList<FeeView>();
+     * center.getCustomerMeeting().getMeeting()); List<FeeDto> feeViewList =
+     * new ArrayList<FeeDto>();
      *
      * accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -5065,7 +5065,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * new Date(System .currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
      * (short) 3, InterestType.DECLINING_EPI, false, false,
      * center.getCustomerMeeting().getMeeting(), GraceType.PRINCIPALONLYGRACE,
-     * "1", "1"); List<FeeView> feeViewList = new ArrayList<FeeView>();
+     * "1", "1"); List<FeeDto> feeViewList = new ArrayList<FeeDto>();
      *
      * accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -5122,7 +5122,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
      * (short) 3, InterestType.DECLINING_EPI, false, true, center
      * .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
-     * List<FeeView> feeViewList = new ArrayList<FeeView>();
+     * List<FeeDto> feeViewList = new ArrayList<FeeDto>();
      *
      * accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(),
@@ -5178,14 +5178,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         CenterBO center = new CenterBuilder().withMeeting(meeting).with(office).build();
         GroupBO group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         LoanOfferingBO loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
-        List<FeeView> feeViews = new ArrayList<FeeView>();
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
         //Make loan and schedule
         LoanBO loan = LoanBO
                 .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                         getCurrency(), "300.0"), Short.valueOf("6"), startDate.toDate(), false, loanOffering.getDefInterestRate(),
-                        (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
+                        (short) 0, null, feeDtos, null, DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
                         eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(),
                         false, null);
 
@@ -5222,7 +5222,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * repayments not disbursals and you can't repay until you disburse - jpw
      */
     private LoanBO createAndRetrieveLoanAccount(final LoanOfferingBO loanOffering, final boolean isInterestDedAtDisb,
-            final List<FeeView> feeViews, final Short noOfinstallments, final Double interestRate,
+            final List<FeeDto> feeDtos, final Short noOfinstallments, final Double interestRate,
             final Money loanAmount) throws NumberFormatException, AccountException, SystemException,
             ApplicationException {
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
@@ -5230,7 +5230,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         // LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
         LoanBO loan = LoanBO.createLoan(userContext, loanOffering, group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 new Money(getCurrency(), "300.0"), noOfinstallments, new Date(System.currentTimeMillis()),
-                isInterestDedAtDisb, interestRate, (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT,
+                isInterestDedAtDisb, interestRate, (short) 0, null, feeDtos, null, DEFAULT_LOAN_AMOUNT,
                 DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                         .getMinNoOfInstall(), false, null);
         loan.save();
@@ -5250,7 +5250,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * loan but does not replace it with the retrieved one before returning it.
      */
     private LoanBO createButDontRetrieveLoanAccount(final LoanOfferingBO loanOffering,
-            final boolean isInterestDedAtDisb, final List<FeeView> feeViews, final Short noOfinstallments,
+            final boolean isInterestDedAtDisb, final List<FeeDto> feeDtos, final Short noOfinstallments,
             final Double interestRate, final Money loanAmount) throws Exception {
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
@@ -5258,7 +5258,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO loan = LoanBO
                 .createLoan(userContext, loanOffering, group, AccountState.LOAN_APPROVED, new Money(getCurrency(),
                         "300.0"), noOfinstallments, new Date(System.currentTimeMillis()), isInterestDedAtDisb,
-                        interestRate, (short) 0, null, feeViews, null, DEFAULT_LOAN_AMOUNT,
+                        interestRate, (short) 0, null, feeDtos, null, DEFAULT_LOAN_AMOUNT,
                         DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                                 .getMinNoOfInstall(), false, null);
         loan.save();
@@ -5269,9 +5269,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private LoanBO createAndRetrieveLoanAccount(final LoanOfferingBO loanOffering, final boolean isInterestDedAtDisb,
-            final List<FeeView> feeViews, final Short noOfinstallments) throws NumberFormatException, AccountException,
+            final List<FeeDto> feeDtos, final Short noOfinstallments) throws NumberFormatException, AccountException,
             SystemException, ApplicationException {
-        return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeViews, noOfinstallments, 10.0,
+        return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb, feeDtos, noOfinstallments, 10.0,
                 new Money(getCurrency(), "300.0"));
     }
 
@@ -5289,24 +5289,24 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 status, 300.0, 1.2, 3, InterestType.FLAT, interestDeductedAtDisbursement, principalAtLastInst, meeting);
     }
 
-    private List<FeeView> getFeeViews() {
+    private List<FeeDto> getFeeViews() {
         FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee("One Time Amount Fee", FeeCategory.LOAN, "120.0",
                 FeePayment.TIME_OF_DISBURSEMENT);
         FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "10.0",
                 RecurrenceType.WEEKLY, (short) 1);
-        List<FeeView> feeViews = new ArrayList<FeeView>();
-        FeeView feeView1 = new FeeView(userContext, fee1);
-        FeeView feeView2 = new FeeView(userContext, fee3);
-        feeViews.add(feeView1);
-        feeViews.add(feeView2);
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+        FeeDto feeView1 = new FeeDto(userContext, fee1);
+        FeeDto feeView2 = new FeeDto(userContext, fee3);
+        feeDtos.add(feeView1);
+        feeDtos.add(feeView2);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        return feeViews;
+        return feeDtos;
     }
 
-    private void deleteFee(final List<FeeView> feeViews) {
-        for (FeeView feeView : feeViews) {
-            TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, feeView.getFeeIdValue()));
+    private void deleteFee(final List<FeeDto> feeDtos) {
+        for (FeeDto feeDto : feeDtos) {
+            TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, feeDto.getFeeIdValue()));
         }
 
     }

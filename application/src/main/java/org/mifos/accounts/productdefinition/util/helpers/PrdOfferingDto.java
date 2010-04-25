@@ -21,13 +21,14 @@
 package org.mifos.accounts.productdefinition.util.helpers;
 
 import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * This is a helper class which would be used when we need only certain details
  * of a product offering hence instead of loading the entire product offering
  * object we can load only this object using a query.
  */
-public class PrdOfferingView extends View {
+public class PrdOfferingDto implements DataTransferObject {
 
     private Short prdOfferingId;
 
@@ -35,12 +36,12 @@ public class PrdOfferingView extends View {
 
     private String globalPrdOfferingNum;
 
-    public PrdOfferingView() {
+    public PrdOfferingDto() {
         super();
 
     }
 
-    public PrdOfferingView(Short prdOfferingId, String prdOfferingName, String globalPrdOfferingNum) {
+    public PrdOfferingDto(Short prdOfferingId, String prdOfferingName, String globalPrdOfferingNum) {
         this.globalPrdOfferingNum = globalPrdOfferingNum;
         this.prdOfferingName = prdOfferingName;
         this.prdOfferingId = prdOfferingId;

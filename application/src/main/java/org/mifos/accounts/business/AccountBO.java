@@ -824,12 +824,12 @@ public class AccountBO extends AbstractBusinessObject {
         return actionDateList;
     }
 
-    public List<TransactionHistoryView> getTransactionHistoryView() {
-        List<TransactionHistoryView> trxnHistory = new ArrayList<TransactionHistoryView>();
+    public List<TransactionHistoryDto> getTransactionHistoryView() {
+        List<TransactionHistoryDto> trxnHistory = new ArrayList<TransactionHistoryDto>();
         for (AccountPaymentEntity accountPayment : getAccountPayments()) {
             for (AccountTrxnEntity accountTrxn : accountPayment.getAccountTrxns()) {
                 for (FinancialTransactionBO financialTrxn : accountTrxn.getFinancialTransactions()) {
-                    TransactionHistoryView transactionHistory = new TransactionHistoryView();
+                    TransactionHistoryDto transactionHistory = new TransactionHistoryDto();
                     setFinancialEntries(financialTrxn, transactionHistory);
                     setAccountingEntries(accountTrxn, transactionHistory);
                     trxnHistory.add(transactionHistory);
@@ -1479,7 +1479,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     }
 
-    private void setFinancialEntries(final FinancialTransactionBO financialTrxn, final TransactionHistoryView transactionHistory) {
+    private void setFinancialEntries(final FinancialTransactionBO financialTrxn, final TransactionHistoryDto transactionHistory) {
         String debit = "-";
         String credit = "-";
         String notes = "-";
@@ -1501,7 +1501,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     }
 
-    private void setAccountingEntries(final AccountTrxnEntity accountTrxn, final TransactionHistoryView transactionHistory) {
+    private void setAccountingEntries(final AccountTrxnEntity accountTrxn, final TransactionHistoryDto transactionHistory) {
 
         transactionHistory.setAccountingEnteries(accountTrxn.getAccountPayment().getPaymentId(), String
                 .valueOf(removeSign(accountTrxn.getAmount())), accountTrxn.getCustomer().getDisplayName(), accountTrxn

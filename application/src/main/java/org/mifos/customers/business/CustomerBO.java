@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -203,7 +203,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     @Deprecated
     protected CustomerBO(final UserContext userContext, final String displayName, final CustomerLevel customerLevel,
             final CustomerStatus customerStatus, final String externalId, final Date mfiJoiningDate,
-            final Address address, final List<CustomFieldView> customFields, final List<FeeView> fees,
+            final Address address, final List<CustomFieldView> customFields, final List<FeeDto> fees,
             final PersonnelBO formedBy, final OfficeBO office, final CustomerBO parentCustomer,
             final MeetingBO meeting, final PersonnelBO loanOfficer) throws CustomerException {
 
@@ -1130,7 +1130,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    private CustomerAccountBO createCustomerAccount(final List<FeeView> fees) throws CustomerException {
+    private CustomerAccountBO createCustomerAccount(final List<FeeDto> fees) throws CustomerException {
         try {
             return new CustomerAccountBO(userContext, this, fees);
         } catch (AccountException ae) {

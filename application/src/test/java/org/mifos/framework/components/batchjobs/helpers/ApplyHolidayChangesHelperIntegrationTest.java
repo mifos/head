@@ -33,7 +33,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -150,9 +150,9 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     public void testRecurringFeeScheduleIsAdjustedForNewHoliday() throws Exception {
         // create center (includes recurring fee)
         StaticHibernateUtil.startTransaction();
-        final List<FeeView> feeView = new ArrayList<FeeView>();
+        final List<FeeDto> feeDto = new ArrayList<FeeDto>();
         final MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeDto);
         center.update();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();

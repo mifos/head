@@ -30,7 +30,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.TransactionHistoryView;
+import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -141,10 +141,10 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("getTransactionHistory_success");
         TestObjectFactory.flushandCloseSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
-        List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils.getAttribute(
+        List<TransactionHistoryDto> trxnHistoryList = (List<TransactionHistoryDto>) SessionUtils.getAttribute(
                 SavingsConstants.TRXN_HISTORY_LIST, request);
-        for (TransactionHistoryView transactionHistoryView : trxnHistoryList) {
-            Assert.assertEquals(accountBO.getUserContext().getName(), transactionHistoryView.getPostedBy());
+        for (TransactionHistoryDto transactionHistoryDto : trxnHistoryList) {
+            Assert.assertEquals(accountBO.getUserContext().getName(), transactionHistoryDto.getPostedBy());
         }
     }
 }

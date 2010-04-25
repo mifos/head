@@ -26,9 +26,9 @@ import java.util.Map;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -84,16 +84,16 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
         setPaymentStatus(PaymentStatus.PAID.getValue());
     }
 
-    public CustomerAccountPaymentData(final CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+    public CustomerAccountPaymentData(final CollectionSheetEntryInstallmentDto bulkEntryAccountAction) {
         super(bulkEntryAccountAction);
-        CollectionSheetEntryCustomerAccountInstallmentView installmentView = (CollectionSheetEntryCustomerAccountInstallmentView) bulkEntryAccountAction;
+        CollectionSheetEntryCustomerAccountInstallmentDto installmentView = (CollectionSheetEntryCustomerAccountInstallmentDto) bulkEntryAccountAction;
         Map<Short, Money> feesPaid = new HashMap<Short, Money>();
         setMiscFeePaid(installmentView.getMiscFee());
         setMiscPenaltyPaid(installmentView.getMiscPenalty());
-        List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActionViews = installmentView
+        List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActionDtos = installmentView
                 .getCollectionSheetEntryAccountFeeActions();
-        if (collectionSheetEntryAccountFeeActionViews != null && collectionSheetEntryAccountFeeActionViews.size() > 0) {
-            for (CollectionSheetEntryAccountFeeActionView accountFeesActionDetailEntity : collectionSheetEntryAccountFeeActionViews) {
+        if (collectionSheetEntryAccountFeeActionDtos != null && collectionSheetEntryAccountFeeActionDtos.size() > 0) {
+            for (CollectionSheetEntryAccountFeeActionDto accountFeesActionDetailEntity : collectionSheetEntryAccountFeeActionDtos) {
 
                 if (accountFeesActionDetailEntity.getFeeAmount() != null
                         && accountFeesActionDetailEntity.getFeeAmount().isNonZero()) {

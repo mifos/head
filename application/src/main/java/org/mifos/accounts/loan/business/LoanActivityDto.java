@@ -25,10 +25,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanActivityView implements Serializable {
+public class LoanActivityDto implements DataTransferObject {
 
     private Integer id;
     private Date actionDate;
@@ -45,7 +46,7 @@ public class LoanActivityView implements Serializable {
     private Locale locale = null;
     private java.sql.Timestamp timeStamp;
 
-    public LoanActivityView(MifosCurrency currency) {
+    public LoanActivityDto(MifosCurrency currency) {
         this.principal = new Money(currency);
         this.interest = new Money(currency);
         this.fees = new Money(currency);

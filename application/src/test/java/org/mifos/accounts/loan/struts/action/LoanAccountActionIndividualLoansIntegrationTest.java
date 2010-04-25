@@ -32,7 +32,7 @@ import java.util.List;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -49,8 +49,8 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO parentLoanMock = createMock(LoanBO.class);
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
-        List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
-        LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsViewHelper
+        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
+        LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsDto
                 .createInstanceForTest("3", "2", "300.0", "2");
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
@@ -73,8 +73,8 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         expect(loanMock.getCustomer()).andReturn(customerMock).anyTimes();
         expect(customerMock.getCustomerId()).andReturn(3).anyTimes();
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
-        List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
-        LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsViewHelper
+        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
+        LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300 = LoanAccountDetailsDto
                 .createInstanceForTest("3", "2", "300.0", "2");
         clientDetails.add(LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_300);
         List<LoanBO> loans = new ArrayList<LoanBO>();
@@ -96,7 +96,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
         expect(loanMock.getCustomer()).andReturn(customerMock).anyTimes();
         expect(customerMock.getGlobalCustNum()).andReturn("3").anyTimes();
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
-        List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
         List<LoanBO> loans = new ArrayList<LoanBO>();
         loans.add(loanMock);
         glimLoanUpdaterMock.delete(loanMock);

@@ -1716,8 +1716,8 @@ public class SavingsBO extends AccountBO {
         return overdueAmount;
     }
 
-    public List<SavingsRecentActivityView> getRecentAccountActivity(final Integer count) {
-        List<SavingsRecentActivityView> accountActivityList = new ArrayList<SavingsRecentActivityView>();
+    public List<SavingsRecentActivityDto> getRecentAccountActivity(final Integer count) {
+        List<SavingsRecentActivityDto> accountActivityList = new ArrayList<SavingsRecentActivityDto>();
         int activitiesAdded = 0;
         for (SavingsActivityEntity activity : getSavingsActivityDetails()) {
             if (count == null || activitiesAdded < count.intValue()) {
@@ -1728,14 +1728,14 @@ public class SavingsBO extends AccountBO {
         return accountActivityList;
     }
 
-    private SavingsRecentActivityView createSavingsRecentActivityView(final SavingsActivityEntity savingActivity) {
-        SavingsRecentActivityView savingsRecentActivityView = new SavingsRecentActivityView();
-        savingsRecentActivityView.setAccountTrxnId(savingActivity.getId());
-        savingsRecentActivityView.setActionDate(savingActivity.getTrxnCreatedDate());
-        savingsRecentActivityView.setAmount(removeSign(savingActivity.getAmount()).toString());
-        savingsRecentActivityView.setActivity(savingActivity.getActivity().getName());
-        savingsRecentActivityView.setRunningBalance(savingActivity.getBalanceAmount().toString());
-        return savingsRecentActivityView;
+    private SavingsRecentActivityDto createSavingsRecentActivityView(final SavingsActivityEntity savingActivity) {
+        SavingsRecentActivityDto savingsRecentActivityDto = new SavingsRecentActivityDto();
+        savingsRecentActivityDto.setAccountTrxnId(savingActivity.getId());
+        savingsRecentActivityDto.setActionDate(savingActivity.getTrxnCreatedDate());
+        savingsRecentActivityDto.setAmount(removeSign(savingActivity.getAmount()).toString());
+        savingsRecentActivityDto.setActivity(savingActivity.getActivity().getName());
+        savingsRecentActivityDto.setRunningBalance(savingActivity.getBalanceAmount().toString());
+        return savingsRecentActivityDto;
     }
 
     @Override

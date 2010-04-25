@@ -27,7 +27,7 @@ import java.util.List;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -113,11 +113,11 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
-    public List<LoanActivityView> getRecentActivityView(final String globalAccountNumber)
+    public List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber)
             throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        List<LoanActivityView> recentActivityView = new ArrayList<LoanActivityView>();
+        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
 
         int count = 0;
         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
@@ -129,35 +129,35 @@ public class LoanBusinessService implements BusinessService {
         return recentActivityView;
     }
 
-    public List<LoanActivityView> getAllActivityView(final String globalAccountNumber)
+    public List<LoanActivityDto> getAllActivityView(final String globalAccountNumber)
             throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        List<LoanActivityView> loanActivityViewSet = new ArrayList<LoanActivityView>();
+        List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
         for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
             loanActivityViewSet.add(getLoanActivityView(loanActivity));
         }
         return loanActivityViewSet;
     }
 
-    private LoanActivityView getLoanActivityView(final LoanActivityEntity loanActivity) {
-        LoanActivityView loanActivityView = new LoanActivityView(loanActivity.getAccount().getCurrency());
-        loanActivityView.setId(loanActivity.getAccount().getAccountId());
-        loanActivityView.setActionDate(loanActivity.getTrxnCreatedDate());
-        loanActivityView.setActivity(loanActivity.getComments());
-        loanActivityView.setPrincipal(removeSign(loanActivity.getPrincipal()));
-        loanActivityView.setInterest(removeSign(loanActivity.getInterest()));
-        loanActivityView.setPenalty(removeSign(loanActivity.getPenalty()));
-        loanActivityView.setFees(removeSign(loanActivity.getFee()));
-        loanActivityView.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
+    private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
+        LoanActivityDto loanActivityDto = new LoanActivityDto(loanActivity.getAccount().getCurrency());
+        loanActivityDto.setId(loanActivity.getAccount().getAccountId());
+        loanActivityDto.setActionDate(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setActivity(loanActivity.getComments());
+        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()));
+        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()));
+        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()));
+        loanActivityDto.setFees(removeSign(loanActivity.getFee()));
+        loanActivityDto.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
                 removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest())));
-        loanActivityView.setTimeStamp(loanActivity.getTrxnCreatedDate());
-        loanActivityView.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
-        loanActivityView.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
-        loanActivityView.setRunningBalanceFees(loanActivity.getFeeOutstanding());
-        loanActivityView.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
+        loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
+        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
+        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding());
+        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
 
-        return loanActivityView;
+        return loanActivityDto;
     }
 
     private Money removeSign(final Money amount) {

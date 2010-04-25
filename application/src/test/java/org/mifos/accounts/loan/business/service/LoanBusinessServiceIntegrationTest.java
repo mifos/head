@@ -38,7 +38,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -141,7 +141,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         applyPayments();
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-        List<LoanActivityView> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
+        List<LoanActivityDto> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
                 .getGlobalAccountNum());
 
         Assert.assertEquals(3, loanRecentActivityView.size());
@@ -176,14 +176,14 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-        List<LoanActivityView> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
+        List<LoanActivityDto> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
                 .getGlobalAccountNum());
         Assert.assertNotNull(loanAllActivityView);
         Assert.assertEquals(6, loanAllActivityView.size());
 
         // get first loan activity created which is last in the list because
         // hibernate is configured order-by "ID desc"
-        LoanActivityView view = loanAllActivityView.get(5);
+        LoanActivityDto view = loanAllActivityView.get(5);
         Assert.assertNotNull(view.getActivity());
         Assert.assertNotNull(view.getUserPrefferedDate());
         Assert.assertNotNull(view.getActionDate().getTime());

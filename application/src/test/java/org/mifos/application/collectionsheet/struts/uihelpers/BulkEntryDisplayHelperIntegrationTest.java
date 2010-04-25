@@ -37,7 +37,7 @@ import junitx.framework.StringAssert;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -45,10 +45,10 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -222,26 +222,26 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         clientSavingsAccount = TestObjectFactory.createSavingsAccount("43245434", client, Short.valueOf("16"),
                 startDate, savingsOffering3);
 
-        CollectionSheetEntryView bulkEntryParent = new CollectionSheetEntryView(getCusomerView(center), TestUtils.RUPEE);
-        SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
+        CollectionSheetEntryDto bulkEntryParent = new CollectionSheetEntryDto(getCusomerView(center), TestUtils.RUPEE);
+        SavingsAccountDto centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
         centerSavingsAccountView.setDepositAmountEntered("100");
         centerSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
         bulkEntryParent.setCustomerAccountDetails(getCustomerAccountView(center));
 
-        CollectionSheetEntryView bulkEntryChild = new CollectionSheetEntryView(getCusomerView(group), TestUtils.RUPEE);
-        LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
-        SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
+        CollectionSheetEntryDto bulkEntryChild = new CollectionSheetEntryDto(getCusomerView(group), TestUtils.RUPEE);
+        LoanAccountDto groupLoanAccountView = getLoanAccountView(groupAccount);
+        SavingsAccountDto groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
         groupSavingsAccountView.setDepositAmountEntered("100");
         groupSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
         bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
         bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-        CollectionSheetEntryView bulkEntrySubChild = new CollectionSheetEntryView(getCusomerView(client), TestUtils.RUPEE);
-        LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
+        CollectionSheetEntryDto bulkEntrySubChild = new CollectionSheetEntryDto(getCusomerView(client), TestUtils.RUPEE);
+        LoanAccountDto clientLoanAccountView = getLoanAccountView(clientAccount);
         clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
-        SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
+        SavingsAccountDto clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
         clientSavingsAccountView.setDepositAmountEntered("100");
         clientSavingsAccountView.setWithDrawalAmountEntered("10");
         bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
@@ -293,8 +293,8 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
     }
 
-    private LoanAccountView getLoanAccountView(final LoanBO account) {
-        LoanAccountView accountView = TestObjectFactory.getLoanAccountView(account);
+    private LoanAccountDto getLoanAccountView(final LoanBO account) {
+        LoanAccountDto accountView = TestObjectFactory.getLoanAccountView(account);
         List<AccountActionDateEntity> actionDates = new ArrayList<AccountActionDateEntity>();
         actionDates.add(account.getAccountActionDate((short) 1));
         accountView.addTrxnDetails(TestObjectFactory.getBulkEntryAccountActionViews(actionDates));
@@ -302,7 +302,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return accountView;
     }
 
-    private SavingsAccountView getSavingsAccountView(final SavingsBO account) {
+    private SavingsAccountDto getSavingsAccountView(final SavingsBO account) {
         final Integer customerId = null;
         final String savingOfferingShortName = account.getSavingsOffering().getPrdOfferingShortName();
         final Short savingOfferingId = account.getSavingsOffering().getPrdOfferingId();
@@ -312,7 +312,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
             reccomendedAmountUnitId = account.getSavingsOffering().getRecommendedAmntUnit().getId();
         }
 
-        SavingsAccountView accountView = new SavingsAccountView(account.getAccountId(), customerId,
+        SavingsAccountDto accountView = new SavingsAccountDto(account.getAccountId(), customerId,
                 savingOfferingShortName, savingOfferingId, savingsTypeId, reccomendedAmountUnitId);
 
         accountView.addAccountTrxnDetail(TestObjectFactory.getBulkEntryAccountActionView(account

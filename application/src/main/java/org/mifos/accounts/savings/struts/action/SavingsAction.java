@@ -43,9 +43,9 @@ import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsTransactionHistoryView;
+import org.mifos.accounts.savings.business.SavingsTransactionHistoryDto;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
@@ -145,7 +145,7 @@ public class SavingsAction extends AccountAppAction {
         doCleanUp(savingsActionForm, request);
         CustomerBO customer = getCustomer(getIntegerValue(savingsActionForm.getCustomerId()));
         SessionUtils.setAttribute(SavingsConstants.CLIENT, customer, request);
-        List<PrdOfferingView> savingPrds = savingsService.getSavingProducts(customer.getOffice(), customer
+        List<PrdOfferingDto> savingPrds = savingsService.getSavingProducts(customer.getOffice(), customer
                 .getCustomerLevel(), SavingsConstants.SAVINGS_ALL);
         SessionUtils.setCollectionAttribute(SavingsConstants.SAVINGS_PRD_OFFERINGS, savingPrds, request);
         logger.info(" Retrieved " + savingPrds.size() + " Products for customerId: " + customer.getCustomerId());
@@ -390,7 +390,7 @@ public class SavingsAction extends AccountAppAction {
         logger.debug("In SavingsAction::getRecentActivity()");
         String globalAccountNum = request.getParameter("globalAccountNum");
         SavingsBO savings = savingsService.findBySystemId(globalAccountNum);
-        List<SavingsTransactionHistoryView> savingsTransactionHistoryViewList = new ArrayList<SavingsTransactionHistoryView>();
+        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = new ArrayList<SavingsTransactionHistoryDto>();
         // Check for order-by clause in AccountBO.hbm.xml,
         // AccountPayment.hbm.xml and AccountTrxnEntity.hbm.xml for
         // accountPaymentSet ,
@@ -403,30 +403,30 @@ public class SavingsAction extends AccountAppAction {
             for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntitySet) {
                 Set<FinancialTransactionBO> financialTransactionBOSet = accountTrxnEntity.getFinancialTransactions();
                 for (FinancialTransactionBO financialTransactionBO : financialTransactionBOSet) {
-                    SavingsTransactionHistoryView savingsTransactionHistoryView = new SavingsTransactionHistoryView();
-                    savingsTransactionHistoryView.setTransactionDate(financialTransactionBO.getActionDate());
-                    savingsTransactionHistoryView.setPaymentId(accountTrxnEntity.getAccountPayment().getPaymentId());
-                    savingsTransactionHistoryView.setAccountTrxnId(accountTrxnEntity.getAccountTrxnId());
-                    savingsTransactionHistoryView.setType(financialTransactionBO.getFinancialAction().getName());
-                    savingsTransactionHistoryView.setGlcode(financialTransactionBO.getGlcode().getGlcode());
+                    SavingsTransactionHistoryDto savingsTransactionHistoryDto = new SavingsTransactionHistoryDto();
+                    savingsTransactionHistoryDto.setTransactionDate(financialTransactionBO.getActionDate());
+                    savingsTransactionHistoryDto.setPaymentId(accountTrxnEntity.getAccountPayment().getPaymentId());
+                    savingsTransactionHistoryDto.setAccountTrxnId(accountTrxnEntity.getAccountTrxnId());
+                    savingsTransactionHistoryDto.setType(financialTransactionBO.getFinancialAction().getName());
+                    savingsTransactionHistoryDto.setGlcode(financialTransactionBO.getGlcode().getGlcode());
                     if (financialTransactionBO.isDebitEntry()) {
-                        savingsTransactionHistoryView.setDebit(String.valueOf(removeSign(financialTransactionBO
+                        savingsTransactionHistoryDto.setDebit(String.valueOf(removeSign(financialTransactionBO
                                 .getPostedAmount())));
                     } else if (financialTransactionBO.isCreditEntry()) {
-                        savingsTransactionHistoryView.setCredit(String.valueOf(removeSign(financialTransactionBO
+                        savingsTransactionHistoryDto.setCredit(String.valueOf(removeSign(financialTransactionBO
                                 .getPostedAmount())));
                     }
-                    savingsTransactionHistoryView.setBalance(String
+                    savingsTransactionHistoryDto.setBalance(String
                             .valueOf(removeSign(((SavingsTrxnDetailEntity) accountTrxnEntity).getBalance())));
-                    savingsTransactionHistoryView.setClientName(accountTrxnEntity.getCustomer().getDisplayName());
-                    savingsTransactionHistoryView.setPostedDate(financialTransactionBO.getPostedDate());
+                    savingsTransactionHistoryDto.setClientName(accountTrxnEntity.getCustomer().getDisplayName());
+                    savingsTransactionHistoryDto.setPostedDate(financialTransactionBO.getPostedDate());
                     if (accountTrxnEntity.getPersonnel() != null) {
-                        savingsTransactionHistoryView.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
+                        savingsTransactionHistoryDto.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
                     }
                     if (financialTransactionBO.getNotes() != null && !financialTransactionBO.getNotes().equals("")) {
-                        savingsTransactionHistoryView.setNotes(financialTransactionBO.getNotes());
+                        savingsTransactionHistoryDto.setNotes(financialTransactionBO.getNotes());
                     }
-                    savingsTransactionHistoryViewList.add(savingsTransactionHistoryView);
+                    savingsTransactionHistoryViewList.add(savingsTransactionHistoryDto);
                 }
             }
         }

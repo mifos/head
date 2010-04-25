@@ -41,7 +41,7 @@ import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
@@ -211,15 +211,15 @@ public class CustomerAccountBO extends AccountBO {
      * @deprecated - use static factory methods for creating {@link CustomerAccountBO}.
      */
     @Deprecated
-    public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeView> fees)
+    public CustomerAccountBO(final UserContext userContext, final CustomerBO customer, final List<FeeDto> fees)
             throws AccountException {
         super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
         if (fees != null) {
-            for (FeeView feeView : fees) {
-                FeeBO fee = getFeePersistence().getFee(feeView.getFeeIdValue());
+            for (FeeDto feeDto : fees) {
+                FeeBO fee = getFeePersistence().getFee(feeDto.getFeeIdValue());
 
                 this.addAccountFees(new AccountFeesEntity(this, fee, new LocalizationConverter()
-                        .getDoubleValueForCurrentLocale(feeView.getAmount())));
+                        .getDoubleValueForCurrentLocale(feeDto.getAmount())));
 
             }
             generateCustomerFeeSchedule(customer);

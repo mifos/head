@@ -26,7 +26,7 @@ import java.util.List;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
-public class CollectionSheetEntryCustomerAccountInstallmentView extends CollectionSheetEntryInstallmentView {
+public class CollectionSheetEntryCustomerAccountInstallmentDto extends CollectionSheetEntryInstallmentDto {
 
     private final Money miscFee;
 
@@ -36,11 +36,11 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
 
     private final Money miscPenaltyPaid;
 
-    private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
+    private List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActions;
 
     private final MifosCurrency currency;
 
-    public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId,
+    public CollectionSheetEntryCustomerAccountInstallmentDto(Integer accountId, Integer customerId,
             Short installmentId, Integer actionDateId, Date actionDate, Money miscFee, Money miscFeePaid,
             Money miscPenalty, Money miscPenaltyPaid, MifosCurrency currency) {
         super(accountId, customerId, installmentId, actionDateId, actionDate);
@@ -51,7 +51,7 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
         this.currency = currency;
     }
 
-    public CollectionSheetEntryCustomerAccountInstallmentView(Integer accountId, Integer customerId, MifosCurrency currency) {
+    public CollectionSheetEntryCustomerAccountInstallmentDto(Integer accountId, Integer customerId, MifosCurrency currency) {
         super(accountId, customerId, null, null, null);
         this.miscFee = null;
         this.miscFeePaid = null;
@@ -76,12 +76,12 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
         return miscPenaltyPaid;
     }
 
-    public List<CollectionSheetEntryAccountFeeActionView> getCollectionSheetEntryAccountFeeActions() {
+    public List<CollectionSheetEntryAccountFeeActionDto> getCollectionSheetEntryAccountFeeActions() {
         return collectionSheetEntryAccountFeeActions;
     }
 
     public void setCollectionSheetEntryAccountFeeActions(
-            List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions) {
+            List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActions) {
         this.collectionSheetEntryAccountFeeActions = collectionSheetEntryAccountFeeActions;
     }
 
@@ -96,7 +96,7 @@ public class CollectionSheetEntryCustomerAccountInstallmentView extends Collecti
     public Money getTotalFeeDue() {
         Money totalFees = new Money(currency);
         if (collectionSheetEntryAccountFeeActions != null) {
-            for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
+            for (CollectionSheetEntryAccountFeeActionDto obj : collectionSheetEntryAccountFeeActions) {
                 totalFees = totalFees.add(obj.getFeeDue());
             }
         }

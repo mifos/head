@@ -34,10 +34,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetDataViewAssembler;
@@ -232,7 +232,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 
         final CollectionSheetEntryGridDto previousCollectionSheetEntryDto = retrieveFromRequestCollectionSheetEntryDto(request);
-        final CollectionSheetDataView dataView = new CollectionSheetDataViewAssembler().toDto(request,
+        final CollectionSheetDataDto dataView = new CollectionSheetDataViewAssembler().toDto(request,
                 previousCollectionSheetEntryDto);
 
         final CollectionSheetEntryGridDto collectionSheetEntry = collectionSheetServiceFacade
@@ -241,7 +241,7 @@ public class CollectionSheetEntryAction extends BaseAction {
         storeOnRequestCollectionSheetEntryDto(request, collectionSheetEntry);
 
         final ActionErrors errors = new ActionErrors();
-        final ActionErrors errorsFromValidation = new CollectionSheetEntryViewPostPreviewValidator().validate(
+        final ActionErrors errorsFromValidation = new CollectionSheetEntryDtoPostPreviewValidator().validate(
                 collectionSheetEntry.getBulkEntryParent(), errors, getUserContext(request).getPreferredLocale());
 
         if (errorsFromValidation.size() > 0) {
@@ -398,17 +398,17 @@ public class CollectionSheetEntryAction extends BaseAction {
             totalCustomerAccountAmountDue += customerAccountView.getTotalAmountDue().getAmount().doubleValue();
         }
 
-        for (LoanAccountsProductView loanAccountsProductView : decomposedViews.getLoanAccountViews()) {
-            if (loanAccountsProductView.getDisBursementAmountEntered() != null) {
-                totalLoanDisBursementAmountEntered += Double.parseDouble(loanAccountsProductView
+        for (LoanAccountsProductDto loanAccountsProductDto : decomposedViews.getLoanAccountViews()) {
+            if (loanAccountsProductDto.getDisBursementAmountEntered() != null) {
+                totalLoanDisBursementAmountEntered += Double.parseDouble(loanAccountsProductDto
                         .getDisBursementAmountEntered());
             }
-            if (loanAccountsProductView.getEnteredAmount() != null) {
-                totalLoanEnteredAmount += Double.parseDouble(loanAccountsProductView.getEnteredAmount());
+            if (loanAccountsProductDto.getEnteredAmount() != null) {
+                totalLoanEnteredAmount += Double.parseDouble(loanAccountsProductDto.getEnteredAmount());
             }
-            totalLoanAmountDue += loanAccountsProductView.getTotalAmountDue();
-            totalLoanDisbursalAmountDue += loanAccountsProductView.getTotalDisbursalAmountDue();
-            totalLoanDisbursalAmount += loanAccountsProductView.getTotalDisburseAmount();
+            totalLoanAmountDue += loanAccountsProductDto.getTotalAmountDue();
+            totalLoanDisbursalAmountDue += loanAccountsProductDto.getTotalDisbursalAmountDue();
+            totalLoanDisbursalAmount += loanAccountsProductDto.getTotalDisburseAmount();
         }
         logMsg += ", totalDisBursementAmountEntered:" + totalLoanDisBursementAmountEntered;
         logMsg += ", totalDisbursalAmount:" + totalLoanDisbursalAmount;

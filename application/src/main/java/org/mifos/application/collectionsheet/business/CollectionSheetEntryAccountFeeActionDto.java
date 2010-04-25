@@ -21,19 +21,20 @@
 package org.mifos.application.collectionsheet.business;
 
 import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 /**
  *
  */
-public class CollectionSheetEntryAccountFeeActionView extends View {
+public class CollectionSheetEntryAccountFeeActionDto implements DataTransferObject {
 
     private final Integer actionDateId;
     private final Short feeId;
     private final Money feeAmount;
     private final Money feeAmountPaid;
 
-    public CollectionSheetEntryAccountFeeActionView(final Integer actionDateId, final Short feeId,
+    public CollectionSheetEntryAccountFeeActionDto(final Integer actionDateId, final Short feeId,
             final Money feeAmount, final Money feeAmountPaid) {
         this.actionDateId = actionDateId;
         this.feeId = feeId;
@@ -41,7 +42,7 @@ public class CollectionSheetEntryAccountFeeActionView extends View {
         this.feeAmountPaid = feeAmountPaid;
     }
 
-    public CollectionSheetEntryAccountFeeActionView(final Integer actionDateId) {
+    public CollectionSheetEntryAccountFeeActionDto(final Integer actionDateId) {
         this(actionDateId, null, null, null);
     }
 
@@ -67,8 +68,8 @@ public class CollectionSheetEntryAccountFeeActionView extends View {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionView) {
-            CollectionSheetEntryAccountFeeActionView otherView = (CollectionSheetEntryAccountFeeActionView) obj;
+        if (obj != null && obj instanceof CollectionSheetEntryAccountFeeActionDto) {
+            CollectionSheetEntryAccountFeeActionDto otherView = (CollectionSheetEntryAccountFeeActionDto) obj;
             if (otherView.getActionDateId().equals(getActionDateId())) {
                 return true;
             }

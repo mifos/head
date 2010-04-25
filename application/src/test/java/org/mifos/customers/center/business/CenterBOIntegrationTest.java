@@ -27,7 +27,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
@@ -161,7 +161,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         String externalId = "12345";
         Date mfiJoiningDate = getDate("11/12/2005");
         meeting = getMeeting();
-        List<FeeView> fees = getFees();
+        List<FeeDto> fees = getFees();
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), fees, externalId, mfiJoiningDate,
                 new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
                         .getPersonnel(personnelId), new CustomerPersistence());
@@ -304,20 +304,20 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         return fields;
     }
 
-    private List<FeeView> getFees() {
-        List<FeeView> fees = new ArrayList<FeeView>();
+    private List<FeeDto> getFees() {
+        List<FeeDto> fees = new ArrayList<FeeDto>();
         AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
                 FeeCategory.CENTER, "200", RecurrenceType.WEEKLY, Short.valueOf("2"));
         AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory.createOneTimeAmountFee("OneTimeAmountFee",
                 FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-        fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
-        fees.add(new FeeView(TestObjectFactory.getContext(), fee2));
+        fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
+        fees.add(new FeeDto(TestObjectFactory.getContext(), fee2));
         StaticHibernateUtil.commitTransaction();
         return fees;
     }
 
-    private void removeFees(List<FeeView> feesToRemove) {
-        for (FeeView fee : feesToRemove) {
+    private void removeFees(List<FeeDto> feesToRemove) {
+        for (FeeDto fee : feesToRemove) {
             TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
         }
     }

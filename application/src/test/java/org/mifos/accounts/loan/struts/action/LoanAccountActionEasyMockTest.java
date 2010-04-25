@@ -36,7 +36,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -84,8 +84,8 @@ public class LoanAccountActionEasyMockTest extends TestCase {
                 mockClientBusinessService, mockMasterDataService, mockConfigurationPersistence,
                 new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService), mockAccountBusinessService);
 
-        List<FeeView> defaultFees = new ArrayList<FeeView>();
-        List<FeeView> additionalFees = new ArrayList<FeeView>();
+        List<FeeDto> defaultFees = new ArrayList<FeeDto>();
+        List<FeeDto> additionalFees = new ArrayList<FeeDto>();
 
         MeetingBO mockMeetingBO = createMockMeeting();
 

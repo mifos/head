@@ -29,7 +29,7 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -55,7 +55,7 @@ public class SavingsPersistence extends Persistence {
 
     private final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-    public List<PrdOfferingView> getSavingsProducts(OfficeBO branch, CustomerLevelEntity customerLevel,
+    public List<PrdOfferingDto> getSavingsProducts(OfficeBO branch, CustomerLevelEntity customerLevel,
             short savingsTypeId) throws PersistenceException {
         logger.debug("In SavingsPersistence::getSavingsProducts(), customerLevelId: " + customerLevel.getId());
         Map<String, Object> queryParameters = new HashMap<String, Object>();

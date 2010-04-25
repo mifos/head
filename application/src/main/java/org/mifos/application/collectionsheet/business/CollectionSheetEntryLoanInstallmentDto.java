@@ -26,7 +26,7 @@ import java.util.List;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
-public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntryInstallmentView {
+public class CollectionSheetEntryLoanInstallmentDto extends CollectionSheetEntryInstallmentDto {
 
     private final Money principal;
 
@@ -48,11 +48,11 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
 
     private final Money miscPenaltyPaid;
 
-    private List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions;
+    private List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActions;
 
     private final MifosCurrency currency;
 
-    public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId, Short installmentId,
+    public CollectionSheetEntryLoanInstallmentDto(Integer accountId, Integer customerId, Short installmentId,
             Integer actionDateId, Date actionDate, Money principal, Money principalPaid, Money interest,
             Money interestPaid, Money miscFee, Money miscFeePaid, Money penalty, Money penaltyPaid, Money miscPenalty,
             Money miscPenaltyPaid, MifosCurrency currency) {
@@ -70,7 +70,7 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
         this.currency = currency;
     }
 
-    public CollectionSheetEntryLoanInstallmentView(Integer accountId, Integer customerId, MifosCurrency currency) {
+    public CollectionSheetEntryLoanInstallmentDto(Integer accountId, Integer customerId, MifosCurrency currency) {
         super(accountId, customerId, null, null, null);
         this.principal = null;
         this.interest = null;
@@ -125,12 +125,12 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
         return principalPaid;
     }
 
-    public List<CollectionSheetEntryAccountFeeActionView> getCollectionSheetEntryAccountFeeActions() {
+    public List<CollectionSheetEntryAccountFeeActionDto> getCollectionSheetEntryAccountFeeActions() {
         return collectionSheetEntryAccountFeeActions;
     }
 
     public void setCollectionSheetEntryAccountFeeActions(
-            List<CollectionSheetEntryAccountFeeActionView> collectionSheetEntryAccountFeeActions) {
+            List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActions) {
         this.collectionSheetEntryAccountFeeActions = collectionSheetEntryAccountFeeActions;
     }
 
@@ -153,7 +153,7 @@ public class CollectionSheetEntryLoanInstallmentView extends CollectionSheetEntr
     public Money getTotalFeeDue() {
         Money totalFees = new Money(currency);
         if (collectionSheetEntryAccountFeeActions != null) {
-            for (CollectionSheetEntryAccountFeeActionView obj : collectionSheetEntryAccountFeeActions) {
+            for (CollectionSheetEntryAccountFeeActionDto obj : collectionSheetEntryAccountFeeActions) {
                 totalFees = totalFees.add(obj.getFeeDue());
             }
         }

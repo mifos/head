@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
@@ -90,8 +90,8 @@ public class LoanService implements Service {
                 .getPersonnel().getPersonnelId());
         LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(loanProductId);
 
-        List<FeeView> additionalFees = new ArrayList<FeeView>();
-        List<FeeView> defaultFees = new ArrayList<FeeView>();
+        List<FeeDto> additionalFees = new ArrayList<FeeDto>();
+        List<FeeDto> defaultFees = new ArrayList<FeeDto>();
         loanProductService.getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
 
         CustomerBO client = new CustomerBusinessService().getCustomer(clientId);

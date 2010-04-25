@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -98,7 +98,7 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         String displayName = "centerCascade";
         Address address = null;
         final List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        final List<FeeView> fees = new ArrayList<FeeView>();
+        final List<FeeDto> fees = new ArrayList<FeeDto>();
         final String externalId = null;
         final Date mfiJoiningDate = new DateTime().minusDays(1).toDate();
         final OfficeBO existingOffice = IntegrationTestObjectMother.sampleBranchOffice();

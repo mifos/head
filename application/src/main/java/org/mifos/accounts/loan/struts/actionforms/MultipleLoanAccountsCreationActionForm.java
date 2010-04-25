@@ -38,7 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
+import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -71,32 +71,32 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 
     private String prdOfferingId;
 
-    private List<MultipleLoanCreationViewHelper> clientDetails;
+    private List<MultipleLoanCreationDto> clientDetails;
 
     private String stateSelected;
 
     public MultipleLoanAccountsCreationActionForm() {
-        clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
+        clientDetails = new ArrayList<MultipleLoanCreationDto>();
     }
 
-    public List<MultipleLoanCreationViewHelper> getClientDetails() {
+    public List<MultipleLoanCreationDto> getClientDetails() {
         return clientDetails;
     }
 
-    public void setClientDetails(List<MultipleLoanCreationViewHelper> clientDetails) {
+    public void setClientDetails(List<MultipleLoanCreationDto> clientDetails) {
         this.clientDetails = clientDetails;
     }
 
-    public List<MultipleLoanCreationViewHelper> getApplicableClientDetails() {
+    public List<MultipleLoanCreationDto> getApplicableClientDetails() {
         try {
-            return (List<MultipleLoanCreationViewHelper>) select(clientDetails,
-                    new Predicate<MultipleLoanCreationViewHelper>() {
-                        public boolean evaluate(MultipleLoanCreationViewHelper clientDetail) throws Exception {
+            return (List<MultipleLoanCreationDto>) select(clientDetails,
+                    new Predicate<MultipleLoanCreationDto>() {
+                        public boolean evaluate(MultipleLoanCreationDto clientDetail) throws Exception {
                             return clientDetail.isApplicable();
                         }
                     });
         } catch (Exception e) {
-            return new ArrayList<MultipleLoanCreationViewHelper>();
+            return new ArrayList<MultipleLoanCreationDto>();
         }
     }
 
@@ -187,8 +187,8 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         return errors;
     }
 
-    protected void validateLoanAmounts(ActionErrors errors, Locale locale, List<MultipleLoanCreationViewHelper> clientDetails) {
-        for (MultipleLoanCreationViewHelper clientDetail : clientDetails) {
+    protected void validateLoanAmounts(ActionErrors errors, Locale locale, List<MultipleLoanCreationDto> clientDetails) {
+        for (MultipleLoanCreationDto clientDetail : clientDetails) {
             DoubleConversionResult conversionResult = validateAmount(clientDetail.getLoanAmount(),
                     LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
             if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
@@ -202,7 +202,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
     private void checkValidationForCreate(ActionErrors errors, HttpServletRequest request) throws PageExpiredException,
             ServiceException {
         logger.debug("inside checkValidationForCreate method");
-        List<MultipleLoanCreationViewHelper> applicableClientDetails = getApplicableClientDetails();
+        List<MultipleLoanCreationDto> applicableClientDetails = getApplicableClientDetails();
         if (CollectionUtils.isEmpty(applicableClientDetails)) {
             addError(errors, LoanConstants.APPL_RECORDS, LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
                     ConfigurationConstants.CLIENT, getUserContext(request)));
@@ -210,7 +210,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         }
         Locale locale = getUserContext(request).getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
-        for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+        for (MultipleLoanCreationDto clientDetail : applicableClientDetails) {
             try {
                 if (!clientDetail.isLoanAmountInRange()) {
                     addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.INVALIDMINMAX, resources
@@ -274,7 +274,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
         super.reset(mapping, request);
         CollectionUtils.forAllDo(clientDetails, new Closure() {
             public void execute(Object arg0) {
-                ((MultipleLoanCreationViewHelper) arg0).resetSelected();
+                ((MultipleLoanCreationDto) arg0).resetSelected();
             }
         });
     }

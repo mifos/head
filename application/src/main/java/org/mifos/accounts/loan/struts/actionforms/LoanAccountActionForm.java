@@ -40,11 +40,11 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -89,11 +89,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     public LoanAccountActionForm() {
         super();
-        defaultFees = new ArrayList<FeeView>();
-        additionalFees = new ArrayList<FeeView>();
+        defaultFees = new ArrayList<FeeDto>();
+        additionalFees = new ArrayList<FeeDto>();
         customFields = new ArrayList<CustomFieldView>();
         clients = new ArrayList<String>();
-        clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+        clientDetails = new ArrayList<LoanAccountDetailsDto>();
         configService = new ConfigurationBusinessService();
     }
 
@@ -101,7 +101,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private List<String> clients;
 
-    private List<LoanAccountDetailsViewHelper> clientDetails;
+    private List<LoanAccountDetailsDto> clientDetails;
 
     private String perspective;
 
@@ -141,9 +141,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private String collateralNote;
 
-    private List<FeeView> defaultFees;
+    private List<FeeDto> defaultFees;
 
-    private List<FeeView> additionalFees;
+    private List<FeeDto> additionalFees;
 
     private String stateSelected;
 
@@ -464,19 +464,19 @@ public class LoanAccountActionForm extends BaseActionForm {
         return customFields.get(i);
     }
 
-    public List<FeeView> getAdditionalFees() {
+    public List<FeeDto> getAdditionalFees() {
         return additionalFees;
     }
 
-    public void setAdditionalFees(List<FeeView> additionalFees) {
+    public void setAdditionalFees(List<FeeDto> additionalFees) {
         this.additionalFees = additionalFees;
     }
 
-    public List<FeeView> getDefaultFees() {
+    public List<FeeDto> getDefaultFees() {
         return defaultFees;
     }
 
-    public void setDefaultFees(List<FeeView> defaultFees) {
+    public void setDefaultFees(List<FeeDto> defaultFees) {
         this.defaultFees = defaultFees;
     }
 
@@ -540,9 +540,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         return getDoubleValue(interestRate);
     }
 
-    public FeeView getDefaultFee(int i) {
+    public FeeDto getDefaultFee(int i) {
         while (i >= defaultFees.size()) {
-            defaultFees.add(new FeeView());
+            defaultFees.add(new FeeDto());
         }
         return defaultFees.get(i);
     }
@@ -569,14 +569,14 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    public List<FeeView> getFeesToApply() {
-        List<FeeView> feesToApply = new ArrayList<FeeView>();
-        for (FeeView fee : getAdditionalFees()) {
+    public List<FeeDto> getFeesToApply() {
+        List<FeeDto> feesToApply = new ArrayList<FeeDto>();
+        for (FeeDto fee : getAdditionalFees()) {
             if (fee.getFeeIdValue() != null) {
                 feesToApply.add(fee);
             }
         }
-        for (FeeView fee : getDefaultFees()) {
+        for (FeeDto fee : getDefaultFees()) {
             if (!fee.isRemoved()) {
                 feesToApply.add(fee);
             }
@@ -584,9 +584,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         return feesToApply;
     }
 
-    public FeeView getSelectedFee(int index) {
+    public FeeDto getSelectedFee(int index) {
         while (index >= additionalFees.size()) {
-            additionalFees.add(new FeeView());
+            additionalFees.add(new FeeDto());
         }
         return additionalFees.get(index);
     }
@@ -667,7 +667,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     protected void validateDefaultFee(ActionErrors errors, Locale locale, MifosCurrency currency) {
-        for (FeeView defaultFee : defaultFees) {
+        for (FeeDto defaultFee : defaultFees) {
             if (defaultFee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
                 DoubleConversionResult conversionResult = validateAmount(defaultFee.getAmount(), currency,
                         LoanConstants.LOAN_DEFAULT_FEE_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
@@ -692,9 +692,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     protected void validateAdditionalFee(ActionErrors errors, Locale locale, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException {
-        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
                 request);
-        for (FeeView additionalFee : additionalFees) {
+        for (FeeDto additionalFee : additionalFees) {
             if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
                 if (getAdditionalFeeType(additionalFeeList, additionalFee.getFeeId()).equals(RateAmountFlag.AMOUNT)) {
 
@@ -722,8 +722,8 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private  RateAmountFlag getAdditionalFeeType(List<FeeView> additionalFeeList, String feeId) {
-        for (FeeView fee : additionalFeeList) {
+    private  RateAmountFlag getAdditionalFeeType(List<FeeDto> additionalFeeList, String feeId) {
+        for (FeeDto fee : additionalFeeList) {
             if (fee.getFeeId().equals(feeId)) {
                 return fee.getFeeType();
             }
@@ -785,7 +785,7 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private void validateClientDetails(ActionErrors errors, Locale locale) {
-        for (LoanAccountDetailsViewHelper clientDetail : clientDetails) {
+        for (LoanAccountDetailsDto clientDetail : clientDetails) {
 
         }
     }
@@ -855,9 +855,9 @@ public class LoanAccountActionForm extends BaseActionForm {
             return;
         }
         List<String> ids_clients_selected = getClients();
-        List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+        List<LoanAccountDetailsDto> listdetail = getClientDetails();
 
-        for (LoanAccountDetailsViewHelper loanAccount : listdetail) {
+        for (LoanAccountDetailsDto loanAccount : listdetail) {
             if (ids_clients_selected.contains(loanAccount.getClientId())) {
                 if (StringUtils.isBlank(loanAccount.getBusinessActivity())) {
                     addErrorInvalidPurpose(errors);
@@ -1008,8 +1008,8 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     protected void validateForFeeAmount(ActionErrors errors) {
-        List<FeeView> feeList = getFeesToApply();
-        for (FeeView fee : feeList) {
+        List<FeeDto> feeList = getFeesToApply();
+        for (FeeDto fee : feeList) {
             if (StringUtils.isBlank(fee.getAmount())) {
                 errors.add(LoanConstants.FEE, new ActionMessage(LoanConstants.ERRORS_SPECIFY_FEE_AMOUNT));
             }
@@ -1018,11 +1018,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     protected void validateForDuplicatePeriodicFee(HttpServletRequest request, ActionErrors errors)
             throws ApplicationException {
-        List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
                 request);
-        for (FeeView selectedFee : getAdditionalFees()) {
+        for (FeeDto selectedFee : getAdditionalFees()) {
             int count = 0;
-            for (FeeView duplicateSelectedfee : getAdditionalFees()) {
+            for (FeeDto duplicateSelectedfee : getAdditionalFees()) {
                 if (selectedFee.getFeeIdValue() != null
                         && selectedFee.getFeeId().equals(duplicateSelectedfee.getFeeId())) {
                     if (isSelectedFeePeriodic(selectedFee, additionalFeeList)) {
@@ -1037,8 +1037,8 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList) {
-        for (FeeView fee : additionalFeeList) {
+    private boolean isSelectedFeePeriodic(FeeDto selectedFee, List<FeeDto> additionalFeeList) {
+        for (FeeDto fee : additionalFeeList) {
             if (fee.getFeeId().equals(selectedFee.getFeeId())) {
                 return fee.isPeriodic();
             }
@@ -1093,7 +1093,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         List<String> ids_clients_selected = getClients();
         double totalAmount = new Double(0);
         boolean foundInvalidAmount = false;
-        for (LoanAccountDetailsViewHelper loanDetail : getClientDetails()) {
+        for (LoanAccountDetailsDto loanDetail : getClientDetails()) {
             if (!foundInvalidAmount) {
                 if (ids_clients_selected.contains(loanDetail.getClientId())) {
                     if (loanDetail.isAmountZeroOrNull()) {
@@ -1156,7 +1156,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale, MifosCurrency currency) {
         int errorsBeforeLoanAmountsValidation = errors.size();
-        for (LoanAccountDetailsViewHelper listDetail : clientDetails) {
+        for (LoanAccountDetailsDto listDetail : clientDetails) {
             if (getClients().contains(listDetail.getClientId())) {
                 DoubleConversionResult conversionResult = validateAmount(listDetail.getLoanAmount(), currency,
                         LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
@@ -1338,11 +1338,11 @@ public class LoanAccountActionForm extends BaseActionForm {
         this.clients.set(i, string);
     }
 
-    public List<LoanAccountDetailsViewHelper> getClientDetails() {
+    public List<LoanAccountDetailsDto> getClientDetails() {
         return clientDetails;
     }
 
-    public void setClientDetails(List<LoanAccountDetailsViewHelper> clientDetails) {
+    public void setClientDetails(List<LoanAccountDetailsDto> clientDetails) {
         this.clientDetails = clientDetails;
     }
 
@@ -1395,10 +1395,10 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     public void removeClientDetailsWithNoMatchingClients() {
-        List<LoanAccountDetailsViewHelper> clientDetailsCopy = new ArrayList<LoanAccountDetailsViewHelper>(
+        List<LoanAccountDetailsDto> clientDetailsCopy = new ArrayList<LoanAccountDetailsDto>(
                 clientDetails);
         CollectionUtils.filter(clientDetailsCopy, new RemoveEmptyClientDetailsForUncheckedClients(getClients()));
-        clientDetails = new ArrayList<LoanAccountDetailsViewHelper>(clientDetailsCopy);
+        clientDetails = new ArrayList<LoanAccountDetailsDto>(clientDetailsCopy);
     }
 
     private static class RemoveEmptyClientDetailsForUncheckedClients implements Predicate {
@@ -1410,7 +1410,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
 
         public boolean evaluate(Object object) {
-            LoanAccountDetailsViewHelper loanDetail = ((LoanAccountDetailsViewHelper) object);
+            LoanAccountDetailsDto loanDetail = ((LoanAccountDetailsDto) object);
             return !(!clients2.contains(loanDetail.getClientId()) && (loanDetail.isEmpty()));
         }
     }

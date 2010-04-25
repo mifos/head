@@ -49,7 +49,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -325,7 +325,7 @@ public class LoanAccountActionFormTest extends TestCase {
         AccountingRules.setDigitsAfterDecimal(saveDigitsAfterDecimal);
     }
 
-    private ArrayList <FeeView> createDefaultFees() {
+    private ArrayList <FeeDto> createDefaultFees() {
         AmountFeeBO amountFee = createMock(AmountFeeBO.class);
         expect(amountFee.getFeeId()).andReturn(Short.valueOf("1"));
         expect(amountFee.getFeeType()).andReturn(RateAmountFlag.AMOUNT).times(2);
@@ -346,9 +346,9 @@ public class LoanAccountActionFormTest extends TestCase {
         UserContext userContext = createMock(UserContext.class);
         expect(userContext.getLocaleId()).andReturn(Short.valueOf("1")).times(2);
         replay(userContext);
-        ArrayList <FeeView> defaultFees = new ArrayList<FeeView>();
-        defaultFees.add(new FeeView(userContext, amountFee));
-        defaultFees.add(new FeeView(userContext, rateFee));
+        ArrayList <FeeDto> defaultFees = new ArrayList<FeeDto>();
+        defaultFees.add(new FeeDto(userContext, amountFee));
+        defaultFees.add(new FeeDto(userContext, rateFee));
         return defaultFees;
     }
 

@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -204,11 +204,11 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetEntryGridDto previewCollectionSheetEntry(
-            final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final CollectionSheetDataView dataView) {
+            final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final CollectionSheetDataDto dataView) {
 
         CollectionSheetEntryGridDto newCollectionSheetEntryGridDto = null;
 
-        final CollectionSheetEntryView bulkEntryParent = previousCollectionSheetEntryDto.getBulkEntryParent();
+        final CollectionSheetEntryDto bulkEntryParent = previousCollectionSheetEntryDto.getBulkEntryParent();
         switch (CustomerLevel.getLevel(bulkEntryParent.getCustomerDetail().getCustomerLevelId())) {
         case CENTER:
             newCollectionSheetEntryGridDto = new CollectionSheetEntryGridDtoTranslator().translateAsCenter(

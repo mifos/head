@@ -28,7 +28,7 @@ import junit.framework.Assert;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -91,7 +91,7 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "a1lt", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
-        List<PrdOfferingView> products = service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP
+        List<PrdOfferingDto> products = service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP
                 .getValue());
         Assert.assertEquals(Integer.valueOf("2").intValue(), products.size());
         Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),

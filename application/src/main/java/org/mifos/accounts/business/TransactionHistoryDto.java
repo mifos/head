@@ -23,10 +23,10 @@ package org.mifos.accounts.business;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class TransactionHistoryView extends View implements Comparable<TransactionHistoryView> {
+public class TransactionHistoryDto implements DataTransferObject, Comparable<TransactionHistoryDto> {
     private Date transactionDate;
 
     private Integer paymentId;
@@ -193,7 +193,7 @@ public class TransactionHistoryView extends View implements Comparable<Transacti
      * one exists. The tests that rely on this ordering include:
      * <b>SavingsActionStrutsTest#testSuccessfullGetTransactionHistory()</b>
      */
-    public int compareTo(TransactionHistoryView o) {
+    public int compareTo(TransactionHistoryDto o) {
         int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());
         if (dateCompare != 0) {
             return dateCompare;

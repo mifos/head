@@ -53,7 +53,7 @@ import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -1027,13 +1027,13 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testPrdOfferingView() {
-        PrdOfferingView prdOfferingView = new PrdOfferingView();
-        prdOfferingView.setGlobalPrdOfferingNum("1234");
-       Assert.assertEquals("1234", prdOfferingView.getGlobalPrdOfferingNum());
-        prdOfferingView.setPrdOfferingId(Short.valueOf("1"));
-       Assert.assertEquals(Short.valueOf("1"), prdOfferingView.getPrdOfferingId());
-        prdOfferingView.setPrdOfferingName("name");
-       Assert.assertEquals("name", prdOfferingView.getPrdOfferingName());
+        PrdOfferingDto prdOfferingDto = new PrdOfferingDto();
+        prdOfferingDto.setGlobalPrdOfferingNum("1234");
+       Assert.assertEquals("1234", prdOfferingDto.getGlobalPrdOfferingNum());
+        prdOfferingDto.setPrdOfferingId(Short.valueOf("1"));
+       Assert.assertEquals(Short.valueOf("1"), prdOfferingDto.getPrdOfferingId());
+        prdOfferingDto.setPrdOfferingName("name");
+       Assert.assertEquals("name", prdOfferingDto.getPrdOfferingName());
     }
 
     private MeetingBO getMeeting() {

@@ -39,7 +39,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class MultipleLoanCreationViewHelperTest {
 
     // system under test (SUT)
-    private MultipleLoanCreationViewHelper multipleLoanCreationViewHelper;
+    private MultipleLoanCreationDto multipleLoanCreationDto;
 
     @Mock
     private ClientBO client;
@@ -52,12 +52,12 @@ public class MultipleLoanCreationViewHelperTest {
 
     @Before
     public void setUp(){
-        multipleLoanCreationViewHelper = new MultipleLoanCreationViewHelper(client,loanAmountOption,installmentOption,TestUtils.RUPEE);
+        multipleLoanCreationDto = new MultipleLoanCreationDto(client,loanAmountOption,installmentOption,TestUtils.RUPEE);
     }
 
     @After
     public void tearDownUp(){
-        multipleLoanCreationViewHelper = null;
+        multipleLoanCreationDto = null;
     }
 
     @Test
@@ -68,9 +68,9 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
 
-        Assert.assertEquals("5000", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
-        Assert.assertEquals("10000", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
-        Assert.assertEquals("1000", multipleLoanCreationViewHelper.getMinLoanAmount().toString());
+        Assert.assertEquals("5000", multipleLoanCreationDto.getDefaultLoanAmount().toString());
+        Assert.assertEquals("10000", multipleLoanCreationDto.getMaxLoanAmount().toString());
+        Assert.assertEquals("1000", multipleLoanCreationDto.getMinLoanAmount().toString());
         AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
     }
 
@@ -82,9 +82,9 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
 
-        Assert.assertEquals("5000.0", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
-        Assert.assertEquals("10000.0", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
-        Assert.assertEquals("1000.0", multipleLoanCreationViewHelper.getMinLoanAmount().toString());
+        Assert.assertEquals("5000.0", multipleLoanCreationDto.getDefaultLoanAmount().toString());
+        Assert.assertEquals("10000.0", multipleLoanCreationDto.getMaxLoanAmount().toString());
+        Assert.assertEquals("1000.0", multipleLoanCreationDto.getMinLoanAmount().toString());
         AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
     }
 
@@ -96,9 +96,9 @@ public class MultipleLoanCreationViewHelperTest {
         when(loanAmountOption.getMaxLoanAmount()).thenReturn(10000.0);
         when(loanAmountOption.getMinLoanAmount()).thenReturn(1000.0);
 
-        Assert.assertEquals("5000.00", multipleLoanCreationViewHelper.getDefaultLoanAmount().toString());
-        Assert.assertEquals("10000.00", multipleLoanCreationViewHelper.getMaxLoanAmount().toString());
-        Assert.assertEquals("1000.00", multipleLoanCreationViewHelper.getMinLoanAmount().toString());
+        Assert.assertEquals("5000.00", multipleLoanCreationDto.getDefaultLoanAmount().toString());
+        Assert.assertEquals("10000.00", multipleLoanCreationDto.getMaxLoanAmount().toString());
+        Assert.assertEquals("1000.00", multipleLoanCreationDto.getMinLoanAmount().toString());
         AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
     }
 

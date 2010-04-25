@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -1936,7 +1936,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         logger.debug("start setSelectedFeesAndFundsAndValidateForFrequency method "
                 + "of Loan Product Action form method :");
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
-        List<FeeView> feeViews = new ArrayList<FeeView>();
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
         try {
             if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
 
@@ -1949,11 +1949,11 @@ public class LoanPrdActionForm extends BaseActionForm {
                         if (AccountingRules.isMultiCurrencyEnabled()) {
                             isValidForCurrency(fee, errors, request);
                         }
-                        feeViews.add(new FeeView(getUserContext(request), fee));
+                        feeDtos.add(new FeeDto(getUserContext(request), fee));
                     }
                 }
             }
-            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feeViews, request);
+            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feeDtos, request);
         } catch (PageExpiredException e) {
         }
         List<FundBO> selectedFunds = new ArrayList<FundBO>();

@@ -31,7 +31,7 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -234,7 +234,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testLoadClientUnderGroup_FeeDifferentFrequecny() throws Exception {
         createGroupWithoutFee();
-        List<FeeView> fees = getFees(RecurrenceType.MONTHLY);
+        List<FeeDto> fees = getFees(RecurrenceType.MONTHLY);
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -251,7 +251,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel()
                 .getPersonnelId());
 
-        List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
+        List<FeeDto> additionalFees = (List<FeeDto>) SessionUtils.getAttribute(
                 CustomerConstants.ADDITIONAL_FEES_LIST, request);
         Assert.assertEquals(0, additionalFees.size());
 
@@ -261,7 +261,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testLoadClientUnderGroup_FeeSameFrequecny() throws Exception {
         createGroupWithoutFee();
-        List<FeeView> fees = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> fees = getFees(RecurrenceType.WEEKLY);
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -278,7 +278,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(actionForm.getFormedByPersonnelValue(), group.getCustomerFormedByPersonnel()
                 .getPersonnelId());
 
-        List<FeeView> additionalFees = (List<FeeView>) SessionUtils.getAttribute(
+        List<FeeDto> additionalFees = (List<FeeDto>) SessionUtils.getAttribute(
                 CustomerConstants.ADDITIONAL_FEES_LIST, request);
         Assert.assertNotNull(additionalFees);
         Assert.assertEquals(1, additionalFees.size());
@@ -472,7 +472,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreview_WithDuplicateFee() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -493,9 +493,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        FeeView fee = feeList.get(0);
+        FeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
@@ -510,7 +510,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testPreviewFaillure_FeesWithoutMeeting() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -539,9 +539,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        FeeView fee = feeList.get(0);
+        FeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
@@ -558,7 +558,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -579,9 +579,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        FeeView fee = feeList.get(0);
+        FeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("input", "mfiInfo");
         addRequestParameter("method", "preview");
@@ -646,7 +646,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailurePreview_FeeFrequencyMismatch() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
 
         StaticHibernateUtil.closeSession();
         setRequestPathInfo("/clientCustAction.do");
@@ -660,10 +660,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
         Assert.assertEquals(1, feeList.size());
-        FeeView fee = feeList.get(0);
+        FeeDto fee = feeList.get(0);
 
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
@@ -703,7 +703,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testPreviewSuccess() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -736,9 +736,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        FeeView fee = feeList.get(0);
+        FeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
@@ -830,7 +830,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsPrd1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -906,7 +906,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreateSuccessWithoutGroup() throws Exception {
-        List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -1682,17 +1682,17 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    private void removeFees(List<FeeView> feesToRemove) {
-        for (FeeView fee : feesToRemove) {
+    private void removeFees(List<FeeDto> feesToRemove) {
+        for (FeeDto fee : feesToRemove) {
             TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
         }
     }
 
-    private List<FeeView> getFees(RecurrenceType frequency) {
-        List<FeeView> fees = new ArrayList<FeeView>();
+    private List<FeeDto> getFees(RecurrenceType frequency) {
+        List<FeeDto> fees = new ArrayList<FeeDto>();
         AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
                 FeeCategory.CLIENT, "200", frequency, Short.valueOf("2"));
-        fees.add(new FeeView(TestObjectFactory.getContext(), fee1));
+        fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         return fees;

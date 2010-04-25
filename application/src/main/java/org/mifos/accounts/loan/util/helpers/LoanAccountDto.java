@@ -24,13 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanAccountView extends View {
+public class LoanAccountDto implements DataTransferObject {
 
     private final Integer accountId;
     private final Integer customerId;
@@ -41,12 +41,12 @@ public class LoanAccountView extends View {
     private final Money loanAmount;
     private Double amountPaidAtDisbursement;
 
-    private final List<CollectionSheetEntryInstallmentView> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentView>();
+    private final List<CollectionSheetEntryInstallmentDto> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentDto>();
 
-    public LoanAccountView(Integer accountId, Integer customerId, String prdOfferingShortName,
+    public LoanAccountDto(Integer accountId, Integer customerId, String prdOfferingShortName,
             Short prdOfferingId, Short loanAccountState, Short interestDeductedAtDisbursement, Money loanAmount) {
         if (loanAmount == null) {
-            throw new MifosRuntimeException("Null loanAmount is not allowed for LoanAccountView");
+            throw new MifosRuntimeException("Null loanAmount is not allowed for LoanAccountDto");
         }
         this.accountId = accountId;
         this.customerId = customerId;
@@ -77,11 +77,11 @@ public class LoanAccountView extends View {
         return accountState;
     }
 
-    public List<CollectionSheetEntryInstallmentView> getAccountTrxnDetails() {
+    public List<CollectionSheetEntryInstallmentDto> getAccountTrxnDetails() {
         return accountTrxnDetails;
     }
 
-    public void addTrxnDetails(List<CollectionSheetEntryInstallmentView> accountTrxnDetails) {
+    public void addTrxnDetails(List<CollectionSheetEntryInstallmentDto> accountTrxnDetails) {
         if (null != accountTrxnDetails && accountTrxnDetails.size() > 0) {
             this.accountTrxnDetails.addAll(accountTrxnDetails);
         }
@@ -94,8 +94,8 @@ public class LoanAccountView extends View {
         }
 
         if (accountTrxnDetails != null && accountTrxnDetails.size() > 0) {
-            for (CollectionSheetEntryInstallmentView accountAction : accountTrxnDetails) {
-                totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentView) accountAction)
+            for (CollectionSheetEntryInstallmentDto accountAction : accountTrxnDetails) {
+                totalAmount = totalAmount.add(((CollectionSheetEntryLoanInstallmentDto) accountAction)
                         .getTotalDueWithFees());
             }
         }

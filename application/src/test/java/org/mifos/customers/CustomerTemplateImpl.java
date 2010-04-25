@@ -22,7 +22,7 @@ package org.mifos.customers;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -33,7 +33,7 @@ public class CustomerTemplateImpl implements CustomerTemplate {
     private String displayName;
     private Address address;
     private List<CustomFieldView> customFieldViews;
-    private List<FeeView> feeViews;
+    private List<FeeDto> feeDtos;
     private String externalId;
     private Short loanOfficerId;
 
@@ -59,8 +59,8 @@ public class CustomerTemplateImpl implements CustomerTemplate {
         return this.customFieldViews;
     }
 
-    public List<FeeView> getFees() {
-        return this.feeViews;
+    public List<FeeDto> getFees() {
+        return this.feeDtos;
     }
 
     public String getExternalId() {

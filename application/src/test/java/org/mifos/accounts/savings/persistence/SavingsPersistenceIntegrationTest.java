@@ -33,7 +33,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -134,7 +134,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "1asq", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
-        List<PrdOfferingView> products = savingsPersistence.getSavingsProducts(null, group.getCustomerLevel(),
+        List<PrdOfferingDto> products = savingsPersistence.getSavingsProducts(null, group.getCustomerLevel(),
                 new Short("2"));
         Assert.assertEquals(2, products.size());
         Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),

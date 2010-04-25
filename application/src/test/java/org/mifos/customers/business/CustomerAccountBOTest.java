@@ -20,7 +20,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
@@ -64,7 +64,7 @@ public class CustomerAccountBOTest {
     private MeetingBO feeMeetingEveryWeek;
     private MeetingBO biWeeklyFeeMeeting;
 
-    private final List<FeeView> fees = new ArrayList<FeeView>();
+    private final List<FeeDto> fees = new ArrayList<FeeDto>();
     private List<Days> workingDays;
     private List<Holiday> holidays;
     private List<AccountFeesEntity> accountFees;

@@ -33,11 +33,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
+import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeView;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -186,7 +186,7 @@ public class CollectionSheetDtoTranslatorImplTest {
         assertThat(formDto.getTotalCustomers(), is(collectionSheetCustomer.size()));
 
         // assert that the parent entry view exists with correctly populated
-        final CollectionSheetEntryView collectionSheetEntryParent = formDto.getBulkEntryParent();
+        final CollectionSheetEntryDto collectionSheetEntryParent = formDto.getBulkEntryParent();
         assertThat(collectionSheetEntryParent, is(notNullValue()));
 
         assertThat(collectionSheetEntryParent.getAttendence(), is(Short.valueOf("0")));
@@ -199,14 +199,14 @@ public class CollectionSheetDtoTranslatorImplTest {
                 is(totalCustomerAccountCollectionFee));
 
         // savings account
-        List<SavingsAccountView> savingAccounts = collectionSheetEntryParent.getSavingsAccountDetails();
+        List<SavingsAccountDto> savingAccounts = collectionSheetEntryParent.getSavingsAccountDetails();
         assertThat(savingAccounts.size(), is(1));
         assertThat(savingAccounts.get(0).getAccountId(), is(savingsAccountId));
         assertThat(savingAccounts.get(0).getCustomerId(), is(customerId));
         assertThat(savingAccounts.get(0).getTotalDepositDue(), is(savingsDepositDue));
 
         // loan accounts
-        List<LoanAccountsProductView> loanAccountProductViews = collectionSheetEntryParent.getLoanAccountDetails();
+        List<LoanAccountsProductDto> loanAccountProductViews = collectionSheetEntryParent.getLoanAccountDetails();
         assertThat(loanAccountProductViews.size(), is(1));
         assertThat(loanAccountProductViews.get(0).getPrdOfferingShortName(), is(loanProductShortName));
         assertThat(loanAccountProductViews.get(0).getTotalAmountDue(), is(totalRepaymentDue));

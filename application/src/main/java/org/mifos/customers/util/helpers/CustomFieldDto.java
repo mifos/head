@@ -24,7 +24,7 @@ import org.mifos.framework.business.service.DataTransferObject;
 /**
  *
  */
-public class CustomFieldDto implements DataTransferObject{
+public class CustomFieldDto implements DataTransferObject {
     private final Short fieldId;
     private final String fieldValue;
 

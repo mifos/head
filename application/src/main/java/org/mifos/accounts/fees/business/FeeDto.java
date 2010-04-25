@@ -27,10 +27,11 @@ import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.UserContext;
 
-public class FeeView extends View {
+public class FeeDto implements DataTransferObject {
     private String feeId;
 
     private String feeName;
@@ -53,10 +54,10 @@ public class FeeView extends View {
 
     private RecurrenceType frequencyType;
 
-    public FeeView() {
+    public FeeDto() {
     }
 
-    public FeeView(UserContext userContext, FeeBO fee) {
+    public FeeDto(UserContext userContext, FeeBO fee) {
         if (userContext != null) {
             localeId = userContext.getLocaleId();
         }

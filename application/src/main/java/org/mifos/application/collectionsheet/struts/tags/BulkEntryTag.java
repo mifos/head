@@ -29,7 +29,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -98,7 +98,7 @@ public class BulkEntryTag extends BodyTagSupport {
 
         builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts, savingsProducts, userContext
                 .getPreferredLocale()));
-        CollectionSheetEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
+        CollectionSheetEntryDto bulkEntryParentView = bulkEntry.getBulkEntryParent();
         Double[] totals = null;
 
         boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();

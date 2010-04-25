@@ -255,14 +255,14 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
             }
         }
         loan.setUserContext(TestUtils.makeUser());
-        List<TransactionHistoryView> trxnHistlist = loan.getTransactionHistoryView();
+        List<TransactionHistoryDto> trxnHistlist = loan.getTransactionHistoryView();
         Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
         Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero",
                 trxnHistlist.size() > 0);
         Assert.assertEquals(ids.size(), trxnHistlist.size());
         int i = 0;
-        for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
-            Assert.assertEquals(ids.get(i), transactionHistoryView.getAccountTrxnId());
+        for (TransactionHistoryDto transactionHistoryDto : trxnHistlist) {
+            Assert.assertEquals(ids.get(i), transactionHistoryDto.getAccountTrxnId());
             i++;
         }
         TestObjectFactory.flushandCloseSession();
@@ -283,12 +283,12 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
-        List<TransactionHistoryView> trxnHistlist = loan.getTransactionHistoryView();
+        List<TransactionHistoryDto> trxnHistlist = loan.getTransactionHistoryView();
         Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
         Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero",
                 trxnHistlist.size() > 0);
-        for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
-            Assert.assertEquals(transactionHistoryView.getPostedBy(), personnel.getDisplayName());
+        for (TransactionHistoryDto transactionHistoryDto : trxnHistlist) {
+            Assert.assertEquals(transactionHistoryDto.getPostedBy(), personnel.getDisplayName());
         }
         TestObjectFactory.flushandCloseSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());

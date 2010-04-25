@@ -23,8 +23,9 @@ package org.mifos.application.collectionsheet.business;
 import java.util.Date;
 
 import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public abstract class CollectionSheetEntryInstallmentView extends View {
+public abstract class CollectionSheetEntryInstallmentDto implements DataTransferObject {
 
     private final Integer actionDateId;
 
@@ -36,7 +37,7 @@ public abstract class CollectionSheetEntryInstallmentView extends View {
 
     private final Short installmentId;
 
-    public CollectionSheetEntryInstallmentView(final Integer accountId, final Integer customerId, final Short installmentId,
+    public CollectionSheetEntryInstallmentDto(final Integer accountId, final Integer customerId, final Short installmentId,
             final Integer actionDateId, final Date actionDate) {
         this.actionDateId = actionDateId;
         this.accountId = accountId;
@@ -67,8 +68,8 @@ public abstract class CollectionSheetEntryInstallmentView extends View {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && obj instanceof CollectionSheetEntryInstallmentView) {
-            CollectionSheetEntryInstallmentView collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentView) obj;
+        if (obj != null && obj instanceof CollectionSheetEntryInstallmentDto) {
+            CollectionSheetEntryInstallmentDto collectionSheetEntryAccountActionView = (CollectionSheetEntryInstallmentDto) obj;
             if (collectionSheetEntryAccountActionView.getAccountId().equals(getAccountId())
                     && collectionSheetEntryAccountActionView.getCustomerId().equals(getCustomerId())) {
                 return true;

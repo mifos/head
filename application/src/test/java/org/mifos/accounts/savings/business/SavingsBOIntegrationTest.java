@@ -78,7 +78,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -2287,7 +2287,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
     }
 
-    private SavingsPaymentData getSavingsPaymentdata(final CollectionSheetEntryInstallmentView bulkEntryAccountActionView) {
+    private SavingsPaymentData getSavingsPaymentdata(final CollectionSheetEntryInstallmentDto bulkEntryAccountActionView) {
         return new SavingsPaymentData(bulkEntryAccountActionView);
     }
 
@@ -3123,7 +3123,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
        Assert.assertEquals(1, savings.getRecentAccountActivity(3).size());
-        for (SavingsRecentActivityView view : savings.getRecentAccountActivity(3)) {
+        for (SavingsRecentActivityDto view : savings.getRecentAccountActivity(3)) {
             Assert.assertNotNull(view.getActivity());
             // * TODO: financial_calculation_rounding getAmount returns too much
             // precision

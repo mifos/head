@@ -27,7 +27,7 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.TransactionHistoryView;
+import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -127,9 +127,9 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.loan_detail_page.toString());
         AccountBO closedAccount = group.getCustomerAccount();
         session.refresh(loanBO);
-        List<TransactionHistoryView> history = loanBO.getTransactionHistoryView();
+        List<TransactionHistoryDto> history = loanBO.getTransactionHistoryView();
 
-        for (TransactionHistoryView entry : history) {
+        for (TransactionHistoryDto entry : history) {
            Assert.assertEquals(AccountConstants.LOAN_RESCHEDULED, entry.getType());
         }
         StaticHibernateUtil.closeSession(session);

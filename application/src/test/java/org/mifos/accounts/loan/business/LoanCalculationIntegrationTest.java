@@ -49,7 +49,7 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -492,7 +492,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
 
-        List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+        List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
@@ -867,7 +867,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
 
-        List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+        List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
@@ -933,7 +933,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
 
         // loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-        List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+        List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
@@ -1569,7 +1569,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
 
-        List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+        List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
         AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()), loanParams
@@ -1581,19 +1581,19 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         return accountBO;
     }
 
-    private List<FeeView> createFeeViews(InternalConfiguration config, LoanParameters loanParams, MeetingBO meeting) {
+    private List<FeeDto> createFeeViews(InternalConfiguration config, LoanParameters loanParams, MeetingBO meeting) {
 
-        List<FeeView> feeViews = new ArrayList<FeeView>();
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
 
         // Only periodic fees get merged into loan installments
         if (!(config.getFeeFrequency() == null) && config.getFeeFrequency() == FeeFrequencyType.PERIODIC) {
-            feeViews.add(createPeriodicFeeView(config, loanParams, meeting));
+            feeDtos.add(createPeriodicFeeView(config, loanParams, meeting));
         }
 
-        return feeViews;
+        return feeDtos;
     }
 
-    private FeeView createPeriodicFeeView(InternalConfiguration config, LoanParameters loanParams, MeetingBO meeting) {
+    private FeeDto createPeriodicFeeView(InternalConfiguration config, LoanParameters loanParams, MeetingBO meeting) {
         FeeBO fee = null;
         if (config.isFeeRateBased()) {
             fee = TestObjectFactory.createPeriodicRateFee("testLoanFee", FeeCategory.LOAN, new Double(config
@@ -1604,8 +1604,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                     loanParams.getPaymentFrequency(), Short.valueOf("1"));
         }
 
-        FeeView feeView = new FeeView(userContext, fee);
-        return feeView;
+        FeeDto feeDto = new FeeDto(userContext, fee);
+        return feeDto;
     }
 
     private Results calculatePayments(InternalConfiguration config, AccountBO accountBO, LoanParameters loanParams) {

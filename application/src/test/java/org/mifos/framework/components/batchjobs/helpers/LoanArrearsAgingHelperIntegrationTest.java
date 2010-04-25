@@ -32,7 +32,7 @@ import junit.framework.Assert;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -132,7 +132,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
-        List<FeeView> feeViewList = new ArrayList<FeeView>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numInstallments);
 

@@ -27,7 +27,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -208,9 +208,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     }
 
     private void createCenter() throws CustomerException {
-        List<FeeView> feeView = new ArrayList<FeeView>();
+        List<FeeDto> feeDto = new ArrayList<FeeDto>();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeView);
+        center = TestObjectFactory.createCenter("Center_Active_test", meeting, feeDto);
         // give batch jobs something useful to do
         // TODO: move this method to a shared util class?
         AccountTestUtils.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());

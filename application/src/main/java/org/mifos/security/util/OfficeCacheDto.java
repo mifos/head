@@ -20,13 +20,15 @@
 
 package org.mifos.security.util;
 
-public class OfficeCacheView {
+import org.mifos.framework.business.service.DataTransferObject;
+
+public class OfficeCacheDto implements DataTransferObject {
 
     private short officeId;
     private Short parentOfficeId;
     private String searchId;
 
-    public OfficeCacheView(Short officeId, Short parentOfficeId, String searchId) {
+    public OfficeCacheDto(Short officeId, Short parentOfficeId, String searchId) {
         this.officeId = officeId;
         this.parentOfficeId = parentOfficeId;
         this.searchId = searchId;

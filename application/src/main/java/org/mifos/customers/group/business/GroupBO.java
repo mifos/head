@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
@@ -163,7 +163,7 @@ public class GroupBO extends CustomerBO {
     @Deprecated
     public GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final PersonnelBO formedBy,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees, final PersonnelBO formedBy,
             final CustomerBO parentCustomer) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
                 formedBy, null, parentCustomer, null, null);
@@ -178,7 +178,7 @@ public class GroupBO extends CustomerBO {
     @Deprecated
     public GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final PersonnelBO formedBy,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees, final PersonnelBO formedBy,
             final OfficeBO office, final MeetingBO meeting, final PersonnelBO loanOfficer)
             throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, trained, trainedDate, address, customFields, fees,
@@ -194,7 +194,7 @@ public class GroupBO extends CustomerBO {
     @Deprecated
     private GroupBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeView> fees, final PersonnelBO formedBy,
+            final List<CustomFieldView> customFields, final List<FeeDto> fees, final PersonnelBO formedBy,
             final OfficeBO office, final CustomerBO parentCustomer, final MeetingBO meeting,
             final PersonnelBO loanOfficer) throws CustomerException {
         super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, null, address, customFields,

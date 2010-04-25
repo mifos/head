@@ -50,7 +50,7 @@ import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -225,25 +225,25 @@ public class LoanBO extends AccountBO {
     private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews,
+            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
             final List<CustomFieldView> customFields, final Boolean isRedone,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
-                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews, customFields,
+                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos, customFields,
                 isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
     public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews,
+            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
             final List<CustomFieldView> customFields, final Boolean isRedone, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
-                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews, customFields,
+                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos, customFields,
                 isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount, minLoanAmount, this);
         this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall, minNoOfInstall, this);
@@ -252,7 +252,7 @@ public class LoanBO extends AccountBO {
     private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeView> feeViews,
+            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
             final List<CustomFieldView> customFields, final Boolean isRedone, final AccountTypes accountType,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -271,7 +271,7 @@ public class LoanBO extends AccountBO {
         this.fund = fund;
         this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), loanOffering
                 .getLoanOfferingMeeting().getMeeting(), disbursementDate);
-        buildAccountFee(feeViews);
+        buildAccountFee(feeDtos);
         this.disbursementDate = disbursementDate;
         this.performanceHistory = new LoanPerformanceHistoryEntity(this);
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
@@ -286,7 +286,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
-            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Double maxLoanAmount,
+            final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -321,7 +321,7 @@ public class LoanBO extends AccountBO {
             }
         }
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, true, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
@@ -335,7 +335,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeView> feeViews, final List<CustomFieldView> customFields, boolean isUpdate)
+            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, boolean isUpdate)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
@@ -346,7 +346,7 @@ public class LoanBO extends AccountBO {
         }
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, false, AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
     }
 
@@ -354,7 +354,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeView> feeViews, final List<CustomFieldView> customFields)
+            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldView> customFields)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
@@ -365,7 +365,7 @@ public class LoanBO extends AccountBO {
         }
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, false, AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
     }
 
@@ -402,7 +402,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
-            final List<FeeView> feeViews, final List<CustomFieldView> customFields, final Double maxLoanAmount,
+            final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -434,7 +434,7 @@ public class LoanBO extends AccountBO {
         }
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeViews,
+                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
@@ -2249,11 +2249,11 @@ public class LoanBO extends AccountBO {
         return fees;
     }
 
-    private void buildAccountFee(final List<FeeView> feeViews) {
-        if (feeViews != null && feeViews.size() > 0) {
-            for (FeeView feeView : feeViews) {
-                FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-                this.addAccountFees(new AccountFeesEntity(this, fee, feeView.getAmountMoney()));
+    private void buildAccountFee(final List<FeeDto> feeDtos) {
+        if (feeDtos != null && feeDtos.size() > 0) {
+            for (FeeDto feeDto : feeDtos) {
+                FeeBO fee = new FeePersistence().getFee(feeDto.getFeeIdValue());
+                this.addAccountFees(new AccountFeesEntity(this, fee, feeDto.getAmountMoney()));
             }
         }
     }

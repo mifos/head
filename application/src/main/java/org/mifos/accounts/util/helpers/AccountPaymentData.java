@@ -21,7 +21,7 @@
 package org.mifos.accounts.util.helpers;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 
 public abstract class AccountPaymentData {
 
@@ -62,7 +62,7 @@ public abstract class AccountPaymentData {
         this.accountActionDateEntity = accountActionDate;
     }
 
-    public AccountPaymentData(CollectionSheetEntryInstallmentView bulkEntryAccountAction) {
+    public AccountPaymentData(CollectionSheetEntryInstallmentDto bulkEntryAccountAction) {
         if (bulkEntryAccountAction != null) {
             setInstallmentId(bulkEntryAccountAction.getInstallmentId());
         }

@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -72,7 +72,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
     public void testBuildLeftHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-        List<LoanActivityView> activityViews = new LoanBusinessService().getAllActivityView(accountBO
+        List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO
                 .getGlobalAccountNum());
         assertContains("100", new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)).toString());
 
@@ -81,7 +81,7 @@ public class LoanActivityTagIntegrationTest extends MifosIntegrationTestCase {
     public void testBuildRightHeaderRows() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-        List<LoanActivityView> activityViews = new LoanBusinessService().getAllActivityView(accountBO
+        List<LoanActivityDto> activityViews = new LoanBusinessService().getAllActivityView(accountBO
                 .getGlobalAccountNum());
         assertContains("100", new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)).toString());
 

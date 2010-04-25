@@ -26,7 +26,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -563,7 +563,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         return LoanBO
         .createLoan(TestUtils.makeUser(), loanOffering, customer, AccountState.LOAN_APPROVED, new Money(
                 getCurrency(), "300.0"), (short) numberOfInstallments, startDate.toDate(), false,
-                loanOffering.getDefInterestRate(), (short) 0, null, new ArrayList<FeeView>(), null, 300.0, 300.0,
+                loanOffering.getDefInterestRate(), (short) 0, null, new ArrayList<FeeDto>(), null, 300.0, 300.0,
                 loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall(),
                 loanOffering.getEligibleInstallmentSameForAllLoan().getMinNoOfInstall(),
                 false, null);

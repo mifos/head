@@ -22,14 +22,14 @@ package org.mifos.application.servicefacade;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataView;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 
 /**
  *
  */
 public class CollectionSheetDataViewAssembler {
 
-    public CollectionSheetDataView toDto(final HttpServletRequest request,
+    public CollectionSheetDataDto toDto(final HttpServletRequest request,
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto) {
 
         final int customers = previousCollectionSheetEntryDto.getTotalCustomers();
@@ -64,7 +64,7 @@ public class CollectionSheetDataViewAssembler {
                     + "][" + (2 * (loanProductsSize + savingsProductSize)) + "]");
         }
 
-        return new CollectionSheetDataView(enteredAmount, disbursalAmount,
+        return new CollectionSheetDataDto(enteredAmount, disbursalAmount,
                 depositAmountEntered, withdrawalAmountEntered, customerAccountAmountEntered, attendance);
     }
 

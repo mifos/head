@@ -23,8 +23,8 @@ package org.mifos.customers.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentView;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.Money;
@@ -35,7 +35,7 @@ public class CustomerAccountView extends View {
 
     private String customerAccountAmountEntered;
 
-    private List<CollectionSheetEntryInstallmentView> accountActionDates;
+    private List<CollectionSheetEntryInstallmentDto> accountActionDates;
 
     private boolean isValidCustomerAccountAmountEntered;
 
@@ -47,7 +47,7 @@ public class CustomerAccountView extends View {
         this.accountId = accountId;
         this.customerId = null;
         customerAccountAmountEntered = "0.0";
-        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
+        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentDto>();
         isValidCustomerAccountAmountEntered = true;
         this.currency = currency;
     }
@@ -56,16 +56,16 @@ public class CustomerAccountView extends View {
         this.accountId = accountId;
         this.customerId = customerId;
         customerAccountAmountEntered = "0.0";
-        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentView>();
+        accountActionDates = new ArrayList<CollectionSheetEntryInstallmentDto>();
         isValidCustomerAccountAmountEntered = true;
         this.currency = currency;
     }
 
-    public List<CollectionSheetEntryInstallmentView> getAccountActionDates() {
+    public List<CollectionSheetEntryInstallmentDto> getAccountActionDates() {
         return accountActionDates;
     }
 
-    public void setAccountActionDates(List<CollectionSheetEntryInstallmentView> accountActionDates) {
+    public void setAccountActionDates(List<CollectionSheetEntryInstallmentDto> accountActionDates) {
         this.accountActionDates = accountActionDates;
     }
 
@@ -96,8 +96,8 @@ public class CustomerAccountView extends View {
     public Money getTotalAmountDue() {
         Money totalAmount = new Money(currency);
         if (accountActionDates != null && accountActionDates.size() > 0) {
-            for (CollectionSheetEntryInstallmentView accountAction : accountActionDates) {
-                totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentView) accountAction)
+            for (CollectionSheetEntryInstallmentDto accountAction : accountActionDates) {
+                totalAmount = totalAmount.add(((CollectionSheetEntryCustomerAccountInstallmentDto) accountAction)
                         .getTotalDueWithFees());
             }
         }

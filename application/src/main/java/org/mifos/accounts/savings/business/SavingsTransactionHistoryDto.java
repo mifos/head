@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.savings.business;
 
-import org.mifos.accounts.business.TransactionHistoryView;
+import org.mifos.accounts.business.TransactionHistoryDto;
 
-public class SavingsTransactionHistoryView extends TransactionHistoryView {
+public class SavingsTransactionHistoryDto extends TransactionHistoryDto {
 }

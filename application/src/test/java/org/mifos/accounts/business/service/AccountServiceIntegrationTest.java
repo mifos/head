@@ -41,7 +41,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.business.TransactionHistoryView;
+import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -139,11 +139,11 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(uc);
 
-        List<TransactionHistoryView> trxnHistlist = accountBusinessService.getTrxnHistory(loan, uc);
+        List<TransactionHistoryDto> trxnHistlist = accountBusinessService.getTrxnHistory(loan, uc);
         Collections.sort(trxnHistlist);
         Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
        Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
-        for (TransactionHistoryView view : trxnHistlist) {
+        for (TransactionHistoryDto view : trxnHistlist) {
            Assert.assertEquals("100.0", view.getBalance());
             Assert.assertNotNull(view.getClientName());
            Assert.assertEquals("-", view.getDebit());

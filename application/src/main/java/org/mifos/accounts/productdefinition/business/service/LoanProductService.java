@@ -23,7 +23,7 @@ package org.mifos.accounts.productdefinition.business.service;
 import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -37,7 +37,7 @@ import org.mifos.security.util.UserContext;
  * LoanPrdBusinessService class which returns business objects,
  * LoanProductService is intended not to expose business objects in any of its
  * return values. It can return primitives and Data Transfer Objects (DTOs). It
- * appears that existing "View" classes (such as FeeView) serve as a kind of
+ * appears that existing "View" classes (such as FeeDto) serve as a kind of
  * DTO.
  */
 public class LoanProductService implements Service {
@@ -85,19 +85,19 @@ public class LoanProductService implements Service {
      *
      * @throws ServiceException the service exception
      */
-    public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeView> defaultFees,
-            List<FeeView> additionalFees) throws ServiceException {
+    public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeDto> defaultFees,
+            List<FeeDto> additionalFees) throws ServiceException {
         LoanOfferingBO loanOffering = loanProductBusinessService.getLoanOffering(loanProductId);
         List<FeeBO> fees = feeBusinessService.getAllApplicableFeesForLoanCreation();
         for (FeeBO fee : fees) {
             if (!fee.isPeriodic()
                     || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanOffering
                             .getLoanOfferingMeeting().getMeeting()))) {
-                FeeView feeView = new FeeView(userContext, fee);
+                FeeDto feeDto = new FeeDto(userContext, fee);
                 if (loanOffering.isFeePresent(fee)) {
-                    defaultFees.add(feeView);
+                    defaultFees.add(feeDto);
                 } else {
-                    additionalFees.add(feeView);
+                    additionalFees.add(feeDto);
                 }
             }
         }

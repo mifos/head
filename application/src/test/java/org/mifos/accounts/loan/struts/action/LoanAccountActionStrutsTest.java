@@ -55,18 +55,18 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.business.ViewInstallmentDetails;
+import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -627,7 +627,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward("getAllActivity_success");
-        Assert.assertEquals(1, ((List<LoanActivityView>) SessionUtils.getAttribute(
+        Assert.assertEquals(1, ((List<LoanActivityDto>) SessionUtils.getAttribute(
                 LoanConstants.LOAN_ALL_ACTIVITY_VIEW, request)).size());
     }
 
@@ -655,7 +655,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         verifyForward("viewInstmentDetails_success");
 
-        ViewInstallmentDetails view = (ViewInstallmentDetails) SessionUtils.getAttribute(
+        InstallmentDetailsDto view = (InstallmentDetailsDto) SessionUtils.getAttribute(
                 LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS, request);
         Assert.assertEquals(new Money(getCurrency(), "12.0"), view.getInterest());
         Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getFees());
@@ -1576,19 +1576,19 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         expect(loanMock.getBusinessActivityId()).andReturn(3);
         expect(loanMock.getLoanAmount()).andReturn(new Money(getCurrency(), "100")).anyTimes();
 
-        LoanAccountDetailsViewHelper clientDetails1 = new LoanAccountDetailsViewHelper();
+        LoanAccountDetailsDto clientDetails1 = new LoanAccountDetailsDto();
         clientDetails1.setClientId("1");
         clientDetails1.setClientName("client 1");
         clientDetails1.setBusinessActivity("3");
         clientDetails1.setLoanAmount("100.0");
 
-        LoanAccountDetailsViewHelper clientDetails2 = new LoanAccountDetailsViewHelper();
+        LoanAccountDetailsDto clientDetails2 = new LoanAccountDetailsDto();
         clientDetails2.setClientId("2");
         clientDetails2.setClientName("client 2");
 
         replay(clientMock1, clientMock2, loanMock);
 
-        List<LoanAccountDetailsViewHelper> clientDetails = new LoanAccountAction().populateClientDetailsFromLoan(Arrays
+        List<LoanAccountDetailsDto> clientDetails = new LoanAccountAction().populateClientDetailsFromLoan(Arrays
                 .asList(clientMock1, clientMock2), Arrays.asList(loanMock), new ArrayList<ValueListElement>());
         Assert.assertEquals(Arrays.asList(clientDetails1, clientDetails2), clientDetails);
         verify(clientMock1, clientMock2, loanMock);

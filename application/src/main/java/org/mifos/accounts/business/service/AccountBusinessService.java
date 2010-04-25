@@ -28,7 +28,7 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
-import org.mifos.accounts.business.TransactionHistoryView;
+import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
@@ -85,7 +85,7 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
-    public List<TransactionHistoryView> getTrxnHistory(AccountBO accountBO, UserContext uc) {
+    public List<TransactionHistoryDto> getTrxnHistory(AccountBO accountBO, UserContext uc) {
         accountBO.setUserContext(uc);
         return accountBO.getTransactionHistoryView();
     }

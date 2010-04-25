@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.loan.business.LoanActivityView;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm;
@@ -110,7 +110,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
                 .getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()))) {
             throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
         }
-        List<LoanActivityView> payments = getApplicablePayments(loan);
+        List<LoanActivityDto> payments = getApplicablePayments(loan);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setCollectionAttribute(LoanConstants.PAYMENTS_LIST, payments, request);
         SessionUtils.setAttribute(LoanConstants.PAYMENTS_SIZE, payments.size(), request);
@@ -188,8 +188,8 @@ public class ReverseLoanDisbursalAction extends BaseAction {
         }
     }
 
-    private List<LoanActivityView> getApplicablePayments(LoanBO loan) {
-        List<LoanActivityView> payments = new ArrayList<LoanActivityView>();
+    private List<LoanActivityDto> getApplicablePayments(LoanBO loan) {
+        List<LoanActivityDto> payments = new ArrayList<LoanActivityDto>();
         List<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
         int i = accountPayments.size() - 1;
         if (accountPayments.size() > 0) {
@@ -210,10 +210,10 @@ public class ReverseLoanDisbursalAction extends BaseAction {
                         amount = accountPayment.getAmount();
                     }
                     if (amount.isGreaterThanZero()) {
-                        LoanActivityView loanActivityView = new LoanActivityView(amount.getCurrency());
-                        loanActivityView.setActionDate(accountPayment.getPaymentDate());
-                        loanActivityView.setTotal(amount);
-                        payments.add(0, loanActivityView);
+                        LoanActivityDto loanActivityDto = new LoanActivityDto(amount.getCurrency());
+                        loanActivityDto.setActionDate(accountPayment.getPaymentDate());
+                        loanActivityDto.setTotal(amount);
+                        payments.add(0, loanActivityDto);
                     }
                 }
                 i--;

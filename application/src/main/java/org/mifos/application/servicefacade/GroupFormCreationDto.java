@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelView;
@@ -67,11 +67,11 @@ public class GroupFormCreationDto {
         return this.parentCustomer;
     }
 
-    public List<FeeView> getDefaultFees() {
+    public List<FeeDto> getDefaultFees() {
         return this.applicableFees.getDefaultFees();
     }
 
-    public List<FeeView> getAdditionalFees() {
+    public List<FeeDto> getAdditionalFees() {
         return this.applicableFees.getAdditionalFees();
     }
 

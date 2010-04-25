@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryView;
+import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.customers.util.helpers.CustomerAccountView;
 import org.mifos.customers.util.helpers.CustomerLevel;
 
@@ -32,28 +32,28 @@ import org.mifos.customers.util.helpers.CustomerLevel;
  */
 public class CollectionSheetEntryViewTranslator {
 
-    public CollectionSheetEntryDecomposedView toDecomposedView(final CollectionSheetEntryView collectionSheetEntryView) {
+    public CollectionSheetEntryDecomposedView toDecomposedView(final CollectionSheetEntryDto collectionSheetEntryDto) {
 
-        final List<LoanAccountsProductView> loanAccountViews = new ArrayList<LoanAccountsProductView>();
+        final List<LoanAccountsProductDto> loanAccountViews = new ArrayList<LoanAccountsProductDto>();
         final List<CustomerAccountView> customerAccountViews = new ArrayList<CustomerAccountView>();
-        final List<CollectionSheetEntryView> parentCollectionSheetEntryViews = new ArrayList<CollectionSheetEntryView>();
+        final List<CollectionSheetEntryDto> parentCollectionSheetEntryViews = new ArrayList<CollectionSheetEntryDto>();
 
-        recursivelyCreateListOfViews(collectionSheetEntryView, loanAccountViews, customerAccountViews,
+        recursivelyCreateListOfViews(collectionSheetEntryDto, loanAccountViews, customerAccountViews,
                 parentCollectionSheetEntryViews);
 
         return new CollectionSheetEntryDecomposedView(loanAccountViews, customerAccountViews,
                 parentCollectionSheetEntryViews);
     }
 
-    private void recursivelyCreateListOfViews(CollectionSheetEntryView parent,
-            List<LoanAccountsProductView> loanAccountViewsForCenter,
-            List<CustomerAccountView> customerAccountViews, List<CollectionSheetEntryView> parentCollectionSheetEntryViews) {
+    private void recursivelyCreateListOfViews(CollectionSheetEntryDto parent,
+            List<LoanAccountsProductDto> loanAccountViewsForCenter,
+            List<CustomerAccountView> customerAccountViews, List<CollectionSheetEntryDto> parentCollectionSheetEntryViews) {
 
-        final List<CollectionSheetEntryView> children = parent.getCollectionSheetEntryChildren();
+        final List<CollectionSheetEntryDto> children = parent.getCollectionSheetEntryChildren();
         final Short levelId = parent.getCustomerDetail().getCustomerLevelId();
 
         if (null != children) {
-            for (CollectionSheetEntryView child : children) {
+            for (CollectionSheetEntryDto child : children) {
                 recursivelyCreateListOfViews(child, loanAccountViewsForCenter, customerAccountViews, parentCollectionSheetEntryViews);
             }
         }

@@ -24,19 +24,19 @@ import java.util.Date;
 
 import org.mifos.framework.util.helpers.Money;
 
-public class CollectionSheetEntrySavingsInstallmentView extends CollectionSheetEntryInstallmentView {
+public class CollectionSheetEntrySavingsInstallmentDto extends CollectionSheetEntryInstallmentDto {
 
     private final Money deposit;
     private final Money depositPaid;
 
-    public CollectionSheetEntrySavingsInstallmentView(final Integer accountId, final Integer customerId, final Short installmentId,
+    public CollectionSheetEntrySavingsInstallmentDto(final Integer accountId, final Integer customerId, final Short installmentId,
             final Integer actionDateId, final Date actionDate, final Money deposit, final Money depositPaid) {
         super(accountId, customerId, installmentId, actionDateId, actionDate);
         this.deposit = deposit;
         this.depositPaid = depositPaid;
     }
 
-    public CollectionSheetEntrySavingsInstallmentView(final Integer accountId, final Integer customerId) {
+    public CollectionSheetEntrySavingsInstallmentDto(final Integer accountId, final Integer customerId) {
         super(accountId, customerId, null, null, null);
         this.deposit = null;
         this.depositPaid = null;

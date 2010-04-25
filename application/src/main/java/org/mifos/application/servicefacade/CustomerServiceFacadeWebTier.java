@@ -34,7 +34,7 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeView;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
@@ -351,11 +351,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
     }
 
-    private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<FeeView> feesToApply) {
+    private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<FeeDto> feesToApply) {
         List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
-        for (FeeView feeView : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeView.getFeeIdValue());
-            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeView.getAmount());
+        for (FeeDto feeDto : feesToApply) {
+            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeIdValue());
+            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
 
             AccountBO nullReferenceForNow = null;
             AccountFeesEntity accountFee = new AccountFeesEntity(nullReferenceForNow, fee, feeAmount);
@@ -623,7 +623,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         return new PersonnelPersistence().getPersonnel(actionForm.getFormedByPersonnelValue());
     }
 
-    private List<FeeView> clientFees(ClientCustActionForm actionForm) {
+    private List<FeeDto> clientFees(ClientCustActionForm actionForm) {
         return actionForm.getFeesToApply();
     }
 

@@ -36,17 +36,17 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.Observer;
-import org.mifos.security.util.OfficeCacheView;
+import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityEvent;
 import org.mifos.security.util.UserContext;
 
 public class HierarchyManager implements Observer {
-    private static Map<Short, OfficeCacheView> hierarchyMap;
+    private static Map<Short, OfficeCacheDto> hierarchyMap;
     private static HierarchyManager hierarchyManager;
 
     private HierarchyManager() {
-        hierarchyMap = new HashMap<Short, OfficeCacheView>();
+        hierarchyMap = new HashMap<Short, OfficeCacheDto>();
     }
 
     public static HierarchyManager getInstance() {
@@ -58,7 +58,7 @@ public class HierarchyManager implements Observer {
 
     public void handleEvent(SecurityEvent e) {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map before" + hierarchyMap);
-        List<OfficeCacheView> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
+        List<OfficeCacheDto> officeList = convertToOfficeCacheList((List<OfficeSearch>) e.getObject());
         if (e.getEventType().equals(Constants.CREATE)) {
             updateMapForCreateEvent(officeList);
         } else if (e.getEventType().equals(Constants.UPDATE)) {
@@ -68,11 +68,11 @@ public class HierarchyManager implements Observer {
         MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Map after " + hierarchyMap);
     }
 
-    private void updateMapForCreateEvent(List<OfficeCacheView> officeList) {
+    private void updateMapForCreateEvent(List<OfficeCacheDto> officeList) {
         addToMap(officeList.get(0));
     }
 
-    private void updateMapForUpdateEvent(List<OfficeCacheView> officeList) {
+    private void updateMapForUpdateEvent(List<OfficeCacheDto> officeList) {
         for (int i = 0; i < officeList.size(); i++) {
             synchronized (hierarchyMap) {
                 hierarchyMap.remove(officeList.get(i));
@@ -81,14 +81,14 @@ public class HierarchyManager implements Observer {
         }
     }
 
-    private void addToMap(OfficeCacheView cacheView) {
+    private void addToMap(OfficeCacheDto cacheView) {
         hierarchyMap.put(cacheView.getOfficeId(), cacheView);
     }
 
-    private List<OfficeCacheView> convertToOfficeCacheList(List<OfficeSearch> officeList) {
-        List<OfficeCacheView> officeCacheList = new ArrayList<OfficeCacheView>();
+    private List<OfficeCacheDto> convertToOfficeCacheList(List<OfficeSearch> officeList) {
+        List<OfficeCacheDto> officeCacheList = new ArrayList<OfficeCacheDto>();
         for (int i = 0; i < officeList.size(); i++) {
-            OfficeCacheView cacheView = new OfficeCacheView(officeList.get(i).getOfficeId(), officeList.get(i)
+            OfficeCacheDto cacheView = new OfficeCacheDto(officeList.get(i).getOfficeId(), officeList.get(i)
                     .getParentOfficeId(), officeList.get(i).getSearchId());
             officeCacheList.add(cacheView);
         }
@@ -96,7 +96,7 @@ public class HierarchyManager implements Observer {
     }
 
     public void init() throws SystemException, OfficeException {
-        List<OfficeCacheView> officeList;
+        List<OfficeCacheDto> officeList;
         try {
             officeList = new OfficePersistence().getAllOffices();
         } catch (PersistenceException e) {
