@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
 
 /**
@@ -31,7 +31,7 @@ import org.mifos.application.master.business.MifosCurrency;
 public interface CollectionSheetDtoTranslator {
 
     CollectionSheetEntryGridDto toLegacyDto(CollectionSheetDto collectionSheet,
-            CollectionSheetFormEnteredDataDto formEnteredDataDto, List<CustomValueListElement> attendanceTypesList,
+            CollectionSheetFormEnteredDataDto formEnteredDataDto, List<CustomValueListElementDto> attendanceTypesList,
             MifosCurrency currency);
 
 }

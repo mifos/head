@@ -67,7 +67,7 @@ import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerRecentActivityView;
+import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -185,7 +185,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerRecentActivityView> customerActivityViewList = service.getAllActivityView(center
+        List<CustomerRecentActivityDto> customerActivityViewList = service.getAllActivityView(center
                 .getGlobalCustNum());
         Assert.assertEquals(0, customerActivityViewList.size());
         center.getCustomerAccount().setUserContext(TestUtils.makeUser());
@@ -197,9 +197,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
             Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
         }
-        List<CustomerRecentActivityView> customerActivityView = service.getAllActivityView(center.getGlobalCustNum());
+        List<CustomerRecentActivityDto> customerActivityView = service.getAllActivityView(center.getGlobalCustNum());
         Assert.assertEquals(1, customerActivityView.size());
-        for (CustomerRecentActivityView view : customerActivityView) {
+        for (CustomerRecentActivityDto view : customerActivityView) {
             Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
             Assert.assertEquals("Amnt waived", view.getDescription());
             Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
@@ -226,7 +226,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         StaticHibernateUtil.closeSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerRecentActivityView> customerActivityViewList = service.getAllActivityView(center
+        List<CustomerRecentActivityDto> customerActivityViewList = service.getAllActivityView(center
                 .getGlobalCustNum());
         Assert.assertEquals(0, customerActivityViewList.size());
         UserContext uc = TestUtils.makeUser();
@@ -292,9 +292,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
             Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
         }
 
-        List<CustomerRecentActivityView> customerActivityView = service.getRecentActivityView(center.getCustomerId());
+        List<CustomerRecentActivityDto> customerActivityView = service.getRecentActivityView(center.getCustomerId());
         Assert.assertEquals(3, customerActivityView.size());
-        for (CustomerRecentActivityView view : customerActivityView) {
+        for (CustomerRecentActivityDto view : customerActivityView) {
             Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
             Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
         }

@@ -109,7 +109,7 @@ import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -420,15 +420,15 @@ public class LoanAccountAction extends AccountAppAction {
         loadCustomFieldDefinitions(request);
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CUSTOM_FIELDS, request);
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
             } else {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
                         .getFieldType()));
             }
         }
@@ -1077,7 +1077,7 @@ public class LoanAccountAction extends AccountAppAction {
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                     loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
-                    new ArrayList<CustomFieldView>());
+                    new ArrayList<CustomFieldDto>());
 
         } else {
             individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
@@ -1085,7 +1085,7 @@ public class LoanAccountAction extends AccountAppAction {
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                     loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
-                    new ArrayList<CustomFieldView>(), false);
+                    new ArrayList<CustomFieldDto>(), false);
         }
 
         individualLoan.setParentAccount(loan);
@@ -1662,9 +1662,9 @@ public class LoanAccountAction extends AccountAppAction {
                 EntityType.LOAN), request);
     }
 
-    private List<CustomFieldView> createCustomFieldViews(final Set<AccountCustomFieldEntity> customFieldEntities,
+    private List<CustomFieldDto> createCustomFieldViews(final Set<AccountCustomFieldEntity> customFieldEntities,
             final HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CUSTOM_FIELDS, request);
@@ -1673,11 +1673,11 @@ public class LoanAccountAction extends AccountAppAction {
             for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
                 if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
                     if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType()));
                     } else {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
                                 .getFieldValue(), customFieldDef.getFieldType()));
                     }
                 }

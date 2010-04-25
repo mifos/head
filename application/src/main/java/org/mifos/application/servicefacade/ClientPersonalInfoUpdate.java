@@ -24,24 +24,24 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdate {
 
     private final List<CustomerCustomFieldEntity> clientCustomFields;
     private final Address address;
-    private final ClientDetailView clientDetail;
-    private final ClientNameDetailView clientNameDetails;
-    private final ClientNameDetailView spouseFather;
+    private final ClientPersonalDetailDto clientDetail;
+    private final ClientNameDetailDto clientNameDetails;
+    private final ClientNameDetailDto spouseFather;
     private final InputStream picture;
     private final String governmentId;
     private final String clientDisplayName;
     private final String dateOfBirth;
 
     public ClientPersonalInfoUpdate(List<CustomerCustomFieldEntity> clientCustomFields, Address address,
-            ClientDetailView clientDetail, ClientNameDetailView clientNameDetails, ClientNameDetailView spouseFather,
+            ClientPersonalDetailDto clientDetail, ClientNameDetailDto clientNameDetails, ClientNameDetailDto spouseFather,
             InputStream picture, String governmentId, String clientDisplayName, String dateOfBirth) {
         this.clientCustomFields = clientCustomFields;
         this.address = address;
@@ -62,15 +62,15 @@ public class ClientPersonalInfoUpdate {
         return this.address;
     }
 
-    public ClientDetailView getClientDetail() {
+    public ClientPersonalDetailDto getClientDetail() {
         return this.clientDetail;
     }
 
-    public ClientNameDetailView getClientNameDetails() {
+    public ClientNameDetailDto getClientNameDetails() {
         return this.clientNameDetails;
     }
 
-    public ClientNameDetailView getSpouseFather() {
+    public ClientNameDetailDto getSpouseFather() {
         return this.spouseFather;
     }
 

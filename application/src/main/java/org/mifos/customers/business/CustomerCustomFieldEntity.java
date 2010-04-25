@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
@@ -80,9 +80,9 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
         this.fieldValue = fieldValue;
     }
 
-    public static List<CustomerCustomFieldEntity> fromDto(List<CustomFieldView> customFields, CustomerBO customer) {
+    public static List<CustomerCustomFieldEntity> fromDto(List<CustomFieldDto> customFields, CustomerBO customer) {
         List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-        for (CustomFieldView customField : customFields) {
+        for (CustomFieldDto customField : customFields) {
             customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField
                     .getFieldValue(), customer));
         }
@@ -97,33 +97,33 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
         return customerCustomFields;
     }
 
-    public static List<CustomFieldView> toDto(Set<CustomerCustomFieldEntity> customFieldEntities,
+    public static List<CustomFieldDto> toDto(Set<CustomerCustomFieldEntity> customFieldEntities,
             List<CustomFieldDefinitionEntity> customFieldDefs, UserContext userContext) {
 
         Locale locale = userContext.getPreferredLocale();
 
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 
             for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
 
                 if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                    CustomFieldView customFieldView;
+                    CustomFieldDto customFieldDto;
                     if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
 
-                        customFieldView = new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                        customFieldDto = new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType());
                     } else {
-                        customFieldView = new CustomFieldView(customFieldEntity.getFieldId(),
+                        customFieldDto = new CustomFieldDto(customFieldEntity.getFieldId(),
                                 customFieldEntity.getFieldValue(), customFieldDef.getFieldType());
                     }
-                    customFieldView.setMandatory(customFieldDef.isMandatory());
-                    customFieldView.setMandatoryString(customFieldDef.getMandatoryStringValue());
-                    customFieldView.setLookUpEntityType(customFieldDef.getEntityName());
+                    customFieldDto.setMandatory(customFieldDef.isMandatory());
+                    customFieldDto.setMandatoryString(customFieldDef.getMandatoryStringValue());
+                    customFieldDto.setLookUpEntityType(customFieldDef.getEntityName());
 
-                    customFields.add(customFieldView);
+                    customFields.add(customFieldDto);
                 }
             }
         }

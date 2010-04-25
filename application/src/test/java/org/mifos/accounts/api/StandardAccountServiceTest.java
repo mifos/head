@@ -221,7 +221,7 @@ public class StandardAccountServiceTest {
         final Short gracePeriodDuration,
         final FundBO fund,
         final List<FeeDto> feeViews,
-        final List<CustomFieldView> customFields,
+        final List<CustomFieldDto> customFields,
         final Boolean isRedone,
         final Double maxLoanAmount,
         final Double minLoanAmount,

@@ -32,7 +32,7 @@ import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -54,7 +54,7 @@ public class LoanDao implements DataAccessObject {
     public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
             AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
             boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeDto> feeDtos, List<CustomFieldView> customFields, Double maxLoanAmount, Double minLoanAmount,
+            List<FeeDto> feeDtos, List<CustomFieldDto> customFields, Double maxLoanAmount, Double minLoanAmount,
             Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
 
         if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {

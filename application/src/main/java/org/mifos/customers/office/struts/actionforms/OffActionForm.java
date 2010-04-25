@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -73,19 +73,19 @@ public class OffActionForm extends BaseActionForm {
 
     private Address address;
 
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
 
     public OffActionForm() {
-        this.customFields = new ArrayList<CustomFieldView>();
+        this.customFields = new ArrayList<CustomFieldDto>();
         this.address = new Address();
 
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(List<CustomFieldView> customFields) {
+    public void setCustomFields(List<CustomFieldDto> customFields) {
         this.customFields = customFields;
     }
 
@@ -145,7 +145,7 @@ public class OffActionForm extends BaseActionForm {
         this.shortName = shortName;
     }
 
-    public CustomFieldView getCustomField(int i) {
+    public CustomFieldDto getCustomField(int i) {
         return getCustomField(customFields, i);
     }
 
@@ -211,7 +211,7 @@ public class OffActionForm extends BaseActionForm {
         try {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldView customField : customFields) {
+            for (CustomFieldDto customField : customFields) {
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
                         if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {

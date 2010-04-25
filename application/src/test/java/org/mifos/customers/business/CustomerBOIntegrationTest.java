@@ -41,7 +41,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -344,7 +344,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testCustomerPerformanceView() throws Exception {
-        CustomerPerformanceHistoryView customerPerformanceView = new CustomerPerformanceHistoryView(Integer
+        CustomerPerformanceHistoryDto customerPerformanceView = new CustomerPerformanceHistoryDto(Integer
                 .valueOf("1"), Integer.valueOf("1"), "10");
 
         Assert.assertEquals(1, customerPerformanceView.getMeetingsAttended().intValue());
@@ -354,10 +354,10 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testCustomerPositionView() throws Exception {
-        CustomerPositionView customerPositionView = new CustomerPositionView(Integer.valueOf("1"), Short.valueOf("2"));
+        CustomerPositionDto customerPositionDto = new CustomerPositionDto(Integer.valueOf("1"), Short.valueOf("2"));
 
-        Assert.assertEquals(1, customerPositionView.getCustomerId().intValue());
-        Assert.assertEquals(2, customerPositionView.getPositionId().shortValue());
+        Assert.assertEquals(1, customerPositionDto.getCustomerId().intValue());
+        Assert.assertEquals(2, customerPositionDto.getPositionId().shortValue());
 
     }
 
@@ -416,13 +416,13 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void createPersonnel(PersonnelLevel personnelLevel) throws Exception {
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Name name = new Name("XYZ", null, null, "Last Name");
         java.util.Date date = new java.util.Date();
         loanOfficer = new PersonnelBO(personnelLevel, getBranchOffice(), Integer.valueOf("1"), Short.valueOf("1"),
-                "ABCD", "XYZ", "xyz@yahoo.com", null, customFieldView, name, "111111", date, Integer.valueOf("1"),
+                "ABCD", "XYZ", "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
                 Integer.valueOf("1"), date, date, address, Short.valueOf("1"));
         loanOfficer.save();
         StaticHibernateUtil.commitTransaction();

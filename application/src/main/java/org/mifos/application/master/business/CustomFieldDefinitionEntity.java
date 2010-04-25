@@ -234,21 +234,21 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         return entityType.hashCode() * levelId.hashCode() * fieldType.hashCode();
     }
 
-    public static List<CustomFieldView> toDto(List<CustomFieldDefinitionEntity> customFieldDefinitions,
+    public static List<CustomFieldDto> toDto(List<CustomFieldDefinitionEntity> customFieldDefinitions,
             Locale preferredUserLocale) {
 
-        List<CustomFieldView> customFieldDtos = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefinitions) {
 
-            CustomFieldView fieldView;
+            CustomFieldDto fieldView;
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
 
-                fieldView = new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(
+                fieldView = new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(
                         preferredUserLocale, fieldDef.getDefaultValue()), fieldDef.getFieldType());
             } else {
-                fieldView = new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(),
+                fieldView = new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(),
                         fieldDef.getFieldType());
             }
             

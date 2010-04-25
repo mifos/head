@@ -32,7 +32,7 @@ import junit.framework.Assert;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.Localization;
@@ -660,9 +660,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testPersonnelView() throws Exception {
-        PersonnelView personnelView = new PersonnelView(Short.valueOf("1"), "Raj");
-       Assert.assertEquals(Short.valueOf("1"), personnelView.getPersonnelId());
-       Assert.assertEquals("Raj", personnelView.getDisplayName());
+        PersonnelDto personnelDto = new PersonnelDto(Short.valueOf("1"), "Raj");
+       Assert.assertEquals(Short.valueOf("1"), personnelDto.getPersonnelId());
+       Assert.assertEquals("Raj", personnelDto.getDisplayName());
     }
 
     public void testGetLocaleId() throws Exception {
@@ -734,9 +734,9 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         return personnel;
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        customFields.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         return customFields;
     }
 

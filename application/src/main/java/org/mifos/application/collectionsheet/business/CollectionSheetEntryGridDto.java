@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 /**
  *
@@ -37,25 +37,25 @@ import org.mifos.customers.personnel.business.PersonnelView;
 public class CollectionSheetEntryGridDto implements Serializable {
 
     private final CollectionSheetEntryDto bulkEntryParent;
-    private final PersonnelView loanOfficer;
-    private final OfficeView office;
+    private final PersonnelDto loanOfficer;
+    private final OfficeDetailsDto office;
     private final ListItem<Short> paymentType;
     private final Date transactionDate;
     private final String receiptId;
     private final Date receiptDate;
     private List<ProductDto> loanProducts = new ArrayList<ProductDto>();
     private List<ProductDto> savingProducts = new ArrayList<ProductDto>();
-    private List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+    private List<CustomValueListElementDto> attendanceTypesList = new ArrayList<CustomValueListElementDto>();
 
     /**
      * used when previewing
      */
     private final int totalCustomers;
 
-    public CollectionSheetEntryGridDto(final CollectionSheetEntryDto collectionSheetParent, final PersonnelView loanOfficer,
-            final OfficeView office, final ListItem<Short> paymentType, final Date meetingDate, final String receiptId, final Date receiptDate,
+    public CollectionSheetEntryGridDto(final CollectionSheetEntryDto collectionSheetParent, final PersonnelDto loanOfficer,
+            final OfficeDetailsDto office, final ListItem<Short> paymentType, final Date meetingDate, final String receiptId, final Date receiptDate,
             final List<ProductDto> loanProductDtos, final List<ProductDto> savingProductDtos,
-            final List<CustomValueListElement> attendanceTypesList) {
+            final List<CustomValueListElementDto> attendanceTypesList) {
         this.bulkEntryParent = collectionSheetParent;
         this.loanOfficer = loanOfficer;
         this.office = office;
@@ -73,11 +73,11 @@ public class CollectionSheetEntryGridDto implements Serializable {
         return bulkEntryParent;
     }
 
-    public PersonnelView getLoanOfficer() {
+    public PersonnelDto getLoanOfficer() {
         return loanOfficer;
     }
 
-    public OfficeView getOffice() {
+    public OfficeDetailsDto getOffice() {
         return office;
     }
 
@@ -109,7 +109,7 @@ public class CollectionSheetEntryGridDto implements Serializable {
         return this.savingProducts;
     }
 
-    public List<CustomValueListElement> getAttendanceTypesList() {
+    public List<CustomValueListElementDto> getAttendanceTypesList() {
         return this.attendanceTypesList;
     }
 

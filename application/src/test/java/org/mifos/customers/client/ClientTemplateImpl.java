@@ -27,8 +27,8 @@ import java.util.List;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.CustomerTemplateImpl;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -45,9 +45,9 @@ public class ClientTemplateImpl extends CustomerTemplateImpl implements ClientTe
     private Short trained;
     private Date trainedDate;
     private Short groupFlag;
-    private ClientNameDetailView clientNameDetail;
-    private ClientNameDetailView spouseNameDetail;
-    private ClientDetailView clientDetail;
+    private ClientNameDetailDto clientNameDetail;
+    private ClientNameDetailDto spouseNameDetail;
+    private ClientPersonalDetailDto clientDetail;
     private InputStream picture;
 
     private ClientTemplateImpl(Short officeId, Integer parentCustomerId) {
@@ -55,11 +55,11 @@ public class ClientTemplateImpl extends CustomerTemplateImpl implements ClientTe
         this.officeId = officeId;
         this.parentCustomerId = parentCustomerId;
         this.formedById = PersonnelConstants.SYSTEM_USER;
-        this.clientDetail = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+        this.clientDetail = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
                 .valueOf("41"));
-        this.clientNameDetail = new ClientNameDetailView(NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION,
+        this.clientNameDetail = new ClientNameDetailDto(NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION,
                 getDisplayName(), "middle", getDisplayName(), "secondLast");
-        this.spouseNameDetail = new ClientNameDetailView(NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION,
+        this.spouseNameDetail = new ClientNameDetailDto(NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION,
                 "TestMaybeClient", "middle", getDisplayName(), "secondLast");
         // TODO: this should be fixed - I mean really...
         this.dateOfBirth = new Date(1222333444000L);
@@ -106,15 +106,15 @@ public class ClientTemplateImpl extends CustomerTemplateImpl implements ClientTe
         return this.groupFlag;
     }
 
-    public ClientNameDetailView getClientNameDetailView() {
+    public ClientNameDetailDto getClientNameDetailView() {
         return this.clientNameDetail;
     }
 
-    public ClientNameDetailView getSpouseNameDetailView() {
+    public ClientNameDetailDto getSpouseNameDetailView() {
         return this.spouseNameDetail;
     }
 
-    public ClientDetailView getClientDetailView() {
+    public ClientPersonalDetailDto getClientDetailView() {
         return this.clientDetail;
     }
 

@@ -40,7 +40,7 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -55,15 +55,15 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
-import org.mifos.customers.business.CustomerPerformanceHistoryView;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerPerformanceHistoryDto;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
@@ -166,7 +166,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<CustomFieldView> retrieveCustomFieldsForCenter(UserContext userContext) {
+    public List<CustomFieldDto> retrieveCustomFieldsForCenter(UserContext userContext) {
         List<CustomFieldDefinitionEntity> customFieldsForCenter = retrieveCustomFieldEntitiesForCenter();
 
         return CustomFieldDefinitionEntity.toDto(customFieldsForCenter, userContext.getPreferredLocale());
@@ -284,7 +284,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
+    public List<CustomerDto> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
         queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -294,7 +294,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public List<CustomerView> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
+    public List<CustomerDto> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
         queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -304,18 +304,18 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @SuppressWarnings("unchecked")
-    private List<CustomerView> findCustomersThatAreNotClosedOrCanceled(Map<String, Object> queryParameters) {
+    private List<CustomerDto> findCustomersThatAreNotClosedOrCanceled(Map<String, Object> queryParameters) {
         List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
 
-        List<CustomerView> customerViews = new ArrayList<CustomerView>();
+        List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
         for (CustomerBO customerBO : queryResult) {
-            CustomerView customerView = new CustomerView(customerBO.getCustomerId(), customerBO.getDisplayName(),
+            CustomerDto customerDto = new CustomerDto(customerBO.getCustomerId(), customerBO.getDisplayName(),
                     customerBO.getCustomerLevel().getId(), customerBO.getSearchId());
 
-            customerViews.add(customerView);
+            customerDtos.add(customerDto);
         }
 
-        return customerViews;
+        return customerDtos;
     }
 
     @Override
@@ -342,7 +342,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         String[] aliasNames = { "parentOfficeId", "parentOfficeName", "centerSystemId", "centerName" };
 
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResults");
+        queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {
@@ -709,7 +709,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomFieldView> getCustomFieldViewForCustomers(Integer customerId, Short entityTypeId,
+    public List<CustomFieldDto> getCustomFieldViewForCustomers(Integer customerId, Short entityTypeId,
             UserContext userContext) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -722,7 +722,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             return null;
         }
 
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         Short fieldId;
         String fieldValue;
@@ -747,12 +747,12 @@ public class CustomerDaoHibernate implements CustomerDao {
             mandatoryString = MessageLookup.getInstance().lookup(YesNoFlag.fromInt(mandatoryFlag),
                     userContext.getCurrentLocale());
 
-            CustomFieldView customFieldView = new CustomFieldView(fieldId, fieldValue, fieldType);
-            customFieldView.setMandatory(mandatory);
-            customFieldView.setLookUpEntityType(entityName);
-            customFieldView.setMandatoryString(mandatoryString);
+            CustomFieldDto customFieldDto = new CustomFieldDto(fieldId, fieldValue, fieldType);
+            customFieldDto.setMandatory(mandatory);
+            customFieldDto.setLookUpEntityType(entityName);
+            customFieldDto.setMandatoryString(mandatoryString);
 
-            customFields.add(customFieldView);
+            customFields.add(customFieldDto);
         }
         return customFields;
     }
@@ -842,12 +842,12 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId) {
+    public List<PersonnelDto> findLoanOfficerThatFormedOffice(Short officeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", ClientConstants.LOAN_OFFICER_LEVEL);
         queryParameters.put("officeId", officeId);
         queryParameters.put("statusId", PersonnelConstants.ACTIVE);
-        List<PersonnelView> queryResult = (List<PersonnelView>) this.genericDao.executeNamedQuery(
+        List<PersonnelDto> queryResult = (List<PersonnelDto>) this.genericDao.executeNamedQuery(
                 NamedQueryConstants.FORMEDBY_LOANOFFICERS_LIST, queryParameters);
         return queryResult;
     }
@@ -1228,9 +1228,9 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public CustomerPerformanceHistoryView numberOfMeetings(boolean isPresent, Integer clientId) {
+    public CustomerPerformanceHistoryDto numberOfMeetings(boolean isPresent, Integer clientId) {
 
-        CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
+        CustomerPerformanceHistoryDto customerPerformanceHistoryDto = new CustomerPerformanceHistoryDto();
 
         java.util.Date dateOneYearBefore = new DateTime().minusYears(1).toDate();
 
@@ -1240,12 +1240,12 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         if (isPresent) {
             Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED, queryParameters);
-            customerPerformanceHistoryView.setMeetingsAttended(result.intValue());
+            customerPerformanceHistoryDto.setMeetingsAttended(result.intValue());
         } else {
             Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED, queryParameters);
-            customerPerformanceHistoryView.setMeetingsMissed(result.intValue());
+            customerPerformanceHistoryDto.setMeetingsMissed(result.intValue());
         }
 
-        return customerPerformanceHistoryView;
+        return customerPerformanceHistoryDto;
     }
 }

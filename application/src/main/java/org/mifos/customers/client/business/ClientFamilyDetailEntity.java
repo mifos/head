@@ -14,7 +14,7 @@ public class ClientFamilyDetailEntity extends AbstractEntity {
     private Short livingStatus;
     private Date dateOfBirth;
 
-    public ClientFamilyDetailEntity(ClientBO client,ClientNameDetailEntity clientName, ClientFamilyDetailView clientFamily){
+    public ClientFamilyDetailEntity(ClientBO client,ClientNameDetailEntity clientName, ClientFamilyDetailDto clientFamily){
         this.customerFamilyId=null;
         this.client=client;
         this.clientName=clientName;
@@ -79,14 +79,14 @@ public class ClientFamilyDetailEntity extends AbstractEntity {
         return this.clientName;
     }
 
-    public void updateClientFamilyDetails(ClientFamilyDetailView familyDetails){
+    public void updateClientFamilyDetails(ClientFamilyDetailDto familyDetails){
         this.setRelationship(familyDetails.getRelationship());
         this.setGender(familyDetails.getGender());
         this.setLivingStatus(familyDetails.getLivingStatus());
         this.setDateOfBirth(familyDetails.getDateOfBirth());
     }
 
-    public ClientFamilyDetailView toDto() {
-        return new ClientFamilyDetailView(relationship, gender, livingStatus, dateOfBirth);
+    public ClientFamilyDetailDto toDto() {
+        return new ClientFamilyDetailDto(relationship, gender, livingStatus, dateOfBirth);
     }
 }

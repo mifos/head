@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -243,7 +243,7 @@ public class LookupOptionsAction extends BaseAction {
     private void PopulateConfigurationListBox(String configurationEntity, MasterPersistence masterPersistence,
             Short localeId, HttpServletRequest request, LookupOptionsActionForm lookupOptionsActionForm,
             String configurationEntityConst) throws Exception {
-        CustomValueList valueList = masterPersistence.getLookUpEntity(configurationEntity, localeId);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(configurationEntity, localeId);
         Short valueListId = valueList.getEntityId();
         // save this value and will be retrieved when update the data to db
         SessionUtils.setAttribute(configurationEntityConst, valueListId, request);

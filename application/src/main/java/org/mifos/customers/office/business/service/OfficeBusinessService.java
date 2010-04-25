@@ -23,7 +23,7 @@ package org.mifos.customers.office.business.service;
 import java.util.List;
 
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -42,7 +42,7 @@ public class OfficeBusinessService implements BusinessService {
         return null;
     }
 
-    public List<OfficeView> getActiveParents(OfficeLevel level, Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws ServiceException {
         try {
             return officePersistence.getActiveParents(level, localeId);
         } catch (PersistenceException e) {
@@ -50,7 +50,7 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeView> getConfiguredLevels(Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getConfiguredLevels(Short localeId) throws ServiceException {
         try {
             return officePersistence.getActiveLevels(localeId);
         } catch (PersistenceException e) {
@@ -67,7 +67,7 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeView> getStatusList(Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getStatusList(Short localeId) throws ServiceException {
         try {
             return officePersistence.getStatusList(localeId);
         } catch (PersistenceException e) {
@@ -91,7 +91,7 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeView> getChildOffices(String searchId) throws ServiceException {
+    public List<OfficeDetailsDto> getChildOffices(String searchId) throws ServiceException {
         try {
             return officePersistence.getChildOffices(searchId);
         } catch (PersistenceException e) {

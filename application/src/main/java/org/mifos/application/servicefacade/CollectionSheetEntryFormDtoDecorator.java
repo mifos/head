@@ -21,9 +21,9 @@ package org.mifos.application.servicefacade;
 
 import java.sql.Date;
 
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 /**
  * I am a decorator for {@link CollectionSheetEntryFormDto}.
@@ -36,9 +36,9 @@ public class CollectionSheetEntryFormDtoDecorator {
         this.collectionSheetEntryFormDto = CollectionSheetEntryFormDto;
     }
 
-    public CustomerView findSelectedCustomerById(final Integer selectedCustomerId) {
+    public CustomerDto findSelectedCustomerById(final Integer selectedCustomerId) {
 
-        for (CustomerView customer : collectionSheetEntryFormDto.getCustomerList()) {
+        for (CustomerDto customer : collectionSheetEntryFormDto.getCustomerList()) {
             if (selectedCustomerId.intValue() == customer.getCustomerId().intValue()) {
                 return customer;
             }
@@ -46,9 +46,9 @@ public class CollectionSheetEntryFormDtoDecorator {
         return null;
     }
 
-    public PersonnelView findSelectedLoanOfficerById(final Short loanOfficerId) {
+    public PersonnelDto findSelectedLoanOfficerById(final Short loanOfficerId) {
 
-        for (PersonnelView loanOfficer : collectionSheetEntryFormDto.getLoanOfficerList()) {
+        for (PersonnelDto loanOfficer : collectionSheetEntryFormDto.getLoanOfficerList()) {
             if (loanOfficerId.shortValue() == loanOfficer.getPersonnelId().shortValue()) {
                 return loanOfficer;
             }
@@ -56,8 +56,8 @@ public class CollectionSheetEntryFormDtoDecorator {
         return null;
     }
 
-    public OfficeView findSelectedBranchOfficeById(final Short branchId) {
-        for (OfficeView branch : collectionSheetEntryFormDto.getActiveBranchesList()) {
+    public OfficeDetailsDto findSelectedBranchOfficeById(final Short branchId) {
+        for (OfficeDetailsDto branch : collectionSheetEntryFormDto.getActiveBranchesList()) {
             if (branchId.shortValue() == branch.getOfficeId().shortValue()) {
                 return branch;
             }

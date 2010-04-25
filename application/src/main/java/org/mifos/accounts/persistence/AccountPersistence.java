@@ -243,7 +243,7 @@ public class AccountPersistence extends Persistence {
         String[] aliasNames = { "customerId", "centerName", "centerGlobalCustNum", "customerType", "branchGlobalNum",
                 "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
                 "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
-        queryInputs.setPath("org.mifos.customers.business.CustomerSearch");
+        queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
         queryInputs.setAliasNames(aliasNames);
         if (officeId != null) {
             if (officeId.shortValue() == 0) {

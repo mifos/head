@@ -27,7 +27,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -380,12 +380,12 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel) throws Exception {
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-                "xyz@yahoo.com", getRoles(), customFieldView, new Name("XYZ", null, null, "ABC"), "111111", date,
+                "xyz@yahoo.com", getRoles(), customFieldDto, new Name("XYZ", null, null, "ABC"), "111111", date,
                 Integer.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
         StaticHibernateUtil.commitTransaction();

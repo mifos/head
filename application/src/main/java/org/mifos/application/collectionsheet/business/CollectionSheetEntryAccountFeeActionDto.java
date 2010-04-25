@@ -20,7 +20,6 @@
 
 package org.mifos.application.collectionsheet.business;
 
-import org.mifos.framework.business.View;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -91,7 +91,7 @@ public class CenterBO extends CustomerBO {
      * @deprecated - use static factory {@link CenterBO#createNew(UserContext, String, DateTime, MeetingBO, PersonnelBO, OfficeBO, int, List, Address, String)}.
      */
     @Deprecated
-    public CenterBO(final UserContext userContext, final String displayName, final Address address, final List<CustomFieldView> customFields,
+    public CenterBO(final UserContext userContext, final String displayName, final Address address, final List<CustomFieldDto> customFields,
             final List<FeeDto> fees, final String externalId, final Date mfiJoiningDate, final OfficeBO office, final MeetingBO meeting,
             final PersonnelBO loanOfficer, final CustomerPersistence customerPersistence) throws CustomerException {
         super(userContext, displayName, CustomerLevel.CENTER, CustomerStatus.CENTER_ACTIVE, externalId, mfiJoiningDate,

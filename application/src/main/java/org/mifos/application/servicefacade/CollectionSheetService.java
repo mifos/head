@@ -30,7 +30,7 @@ public interface CollectionSheetService {
      * Saves a Collection Sheet
      * @throws SaveCollectionSheetException
      */
-    CollectionSheetErrorsView saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
+    CollectionSheetErrorsDto saveCollectionSheet(SaveCollectionSheetDto saveCollectionSheetDto) throws SaveCollectionSheetException;
 
     /**
      * Retrieves a Collection Sheet

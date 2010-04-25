@@ -25,7 +25,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
@@ -88,14 +88,14 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         // name
 
         OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
 
-        CustomFieldView customFieldView2 = new CustomFieldView();
+        CustomFieldDto customFieldView2 = new CustomFieldDto();
         customFieldView2.setFieldId(Short.valueOf("1"));
         customFieldView2.setFieldValue("123456");
-        customFieldView.add(customFieldView2);
+        customFieldDto.add(customFieldView2);
 
-        OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE, parent, customFieldView, "abcd", "abcd",
+        OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE, parent, customFieldDto, "abcd", "abcd",
                 null, OperationMode.REMOTE_SERVER);
         officeBO.save();
         StaticHibernateUtil.commitTransaction();
@@ -113,12 +113,12 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
         try {
             OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-            List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-            CustomFieldView customFieldView2 = new CustomFieldView();
+            List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+            CustomFieldDto customFieldView2 = new CustomFieldDto();
             customFieldView2.setFieldId(Short.valueOf("1"));
             customFieldView2.setFieldValue("123456");
-            customFieldView.add(customFieldView2);
-            OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE, parent, customFieldView, "abcd",
+            customFieldDto.add(customFieldView2);
+            OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE, parent, customFieldDto, "abcd",
                     "abcd", null, OperationMode.REMOTE_SERVER);
             TestObjectFactory.simulateInvalidConnection();
             officeBO.save();
@@ -375,9 +375,9 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testUpdateCustomFields() throws Exception {
         OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        List<CustomFieldView> customFieldView1 = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldView1 = new ArrayList<CustomFieldDto>();
 
-        CustomFieldView customFieldView3 = new CustomFieldView();
+        CustomFieldDto customFieldView3 = new CustomFieldDto();
         customFieldView3.setFieldId(Short.valueOf("1"));
         customFieldView3.setFieldValue("3434");
         customFieldView1.add(customFieldView3);
@@ -390,14 +390,14 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
         savbedOffice.setUserContext(userContext);
 
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
 
-        CustomFieldView customFieldView2 = new CustomFieldView();
+        CustomFieldDto customFieldView2 = new CustomFieldDto();
         customFieldView2.setFieldId(Short.valueOf("1"));
         customFieldView2.setFieldValue("123456");
-        customFieldView.add(customFieldView2);
+        customFieldDto.add(customFieldView2);
         savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(), savbedOffice.getOfficeLevel(), null, null,
-                customFieldView);
+                customFieldDto);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO.getOfficeId());
@@ -418,15 +418,15 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO savbedOffice = TestObjectFactory.getOffice(officeBO.getOfficeId());
         savbedOffice.setUserContext(userContext);
 
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
 
-        CustomFieldView customFieldView2 = new CustomFieldView();
+        CustomFieldDto customFieldView2 = new CustomFieldDto();
         customFieldView2.setFieldId(Short.valueOf("1"));
         customFieldView2.setFieldValue("123456");
-        customFieldView.add(customFieldView2);
+        customFieldDto.add(customFieldView2);
         savbedOffice.setCustomFields(null);
         savbedOffice.update("abcd", "abcd", savbedOffice.getOfficeStatus(), savbedOffice.getOfficeLevel(), null, null,
-                customFieldView);
+                customFieldDto);
         StaticHibernateUtil.commitTransaction();
         TestObjectFactory.flushandCloseSession();
         OfficeBO savbedOffice2 = TestObjectFactory.getOffice(officeBO.getOfficeId());
@@ -633,13 +633,13 @@ public class OfficeBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCreateOfficeView() {
 
-        final OfficeView officeView = new OfficeView(Short.valueOf("1"), "headOffice", OfficeLevel.BRANCHOFFICE,
+        final OfficeDetailsDto officeDetailsDto = new OfficeDetailsDto(Short.valueOf("1"), "headOffice", OfficeLevel.BRANCHOFFICE,
                 "levelNameKey", Integer.valueOf("1"));
-        Assert.assertEquals("headOffice", officeView.getOfficeName());
-        Assert.assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
-        Assert.assertEquals(Short.valueOf("1"), officeView.getOfficeId());
+        Assert.assertEquals("headOffice", officeDetailsDto.getOfficeName());
+        Assert.assertEquals(Integer.valueOf("1"), officeDetailsDto.getVersionNo());
+        Assert.assertEquals(Short.valueOf("1"), officeDetailsDto.getOfficeId());
 
-        OfficeView officeView2 = new OfficeView(Short.valueOf("1"), "headOffice", Short.valueOf("1"), "Hifos HO",
+        OfficeDetailsDto officeView2 = new OfficeDetailsDto(Short.valueOf("1"), "headOffice", Short.valueOf("1"), "Hifos HO",
                 Integer.valueOf("1"));
 
         Assert.assertEquals("Hifos HO", officeView2.getLevelName());

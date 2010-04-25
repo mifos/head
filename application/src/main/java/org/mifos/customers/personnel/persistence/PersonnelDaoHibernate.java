@@ -7,7 +7,7 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 
@@ -21,7 +21,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<PersonnelView> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto) {
+    public List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", PersonnelLevel.LOAN_OFFICER.getValue());
@@ -30,7 +30,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         queryParameters.put("officeId", centerCreationDto.getOfficeId());
         queryParameters.put("statusId", PersonnelStatus.ACTIVE.getValue());
 
-        List<PersonnelView> queryResult = (List<PersonnelView>) genericDao.executeNamedQuery(
+        List<PersonnelDto> queryResult = (List<PersonnelDto>) genericDao.executeNamedQuery(
                 NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH, queryParameters);
 
         return queryResult;

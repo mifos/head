@@ -20,9 +20,9 @@
 
 package org.mifos.customers.center.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CenterSearchResults extends View {
+public class CenterSearchResultsDto implements DataTransferObject {
 
     private short parentOfficeId;
 

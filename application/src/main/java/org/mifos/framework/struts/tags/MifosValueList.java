@@ -27,7 +27,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
@@ -152,7 +152,7 @@ public class MifosValueList extends BodyTagSupport {
     public int doEndTag() throws JspException {
 
         StringBuffer results = new StringBuffer();
-        List<CustomValueListElement> inputList = null;
+        List<CustomValueListElementDto> inputList = null;
         Object obj = null;
         try {
             MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Inside doEndTag of MifosValueList Tag");
@@ -172,7 +172,7 @@ public class MifosValueList extends BodyTagSupport {
                 getList = obj.getClass().getDeclaredMethod("get" + getProperty2(), (Class[]) null);
                 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
 
-                inputList = (List<CustomValueListElement>) getList.invoke(obj, (Object[]) null);
+                inputList = (List<CustomValueListElementDto>) getList.invoke(obj, (Object[]) null);
 
                 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
             } else {
@@ -182,7 +182,7 @@ public class MifosValueList extends BodyTagSupport {
 
                 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method called is " + getList);
 
-                inputList = (List<CustomValueListElement>) getList.invoke(obj, new Object[] { new Object() });
+                inputList = (List<CustomValueListElementDto>) getList.invoke(obj, new Object[] { new Object() });
 
                 MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("List got is " + inputList);
             }
@@ -206,7 +206,7 @@ public class MifosValueList extends BodyTagSupport {
         }
     }
 
-    public StringBuffer render(List<CustomValueListElement> inputList) {
+    public StringBuffer render(List<CustomValueListElementDto> inputList) {
         super.toString();
         StringBuffer results = new StringBuffer();
         results.append("<SELECT ");
@@ -216,7 +216,7 @@ public class MifosValueList extends BodyTagSupport {
 
         results.append(">");
         if (inputList != null) {
-            for (CustomValueListElement element : inputList) {
+            for (CustomValueListElementDto element : inputList) {
                 results.append("<OPTION value=\"" + mapOriginalCustomValueListElementToString(element) + "\">"
                         + element.getLookUpValue() + "</OPTION>");
             }
@@ -228,11 +228,11 @@ public class MifosValueList extends BodyTagSupport {
     }
 
     /**
-     * Map a CustomValueListElement to a String of the form:
+     * Map a CustomValueListElementDto to a String of the form:
      * "CustomValueListId;CustomValueListValue;original"
      *
      */
-    private static String mapCustomValueListElementToString(CustomValueListElement element) {
+    private static String mapCustomValueListElementToString(CustomValueListElementDto element) {
         Integer id = element.getLookUpId();
         if (id == null) {
             id = 0;
@@ -240,15 +240,15 @@ public class MifosValueList extends BodyTagSupport {
         return "" + id + ";" + element.getLookUpValue();
     }
 
-    public static String mapAddedCustomValueListElementToString(CustomValueListElement element) {
+    public static String mapAddedCustomValueListElementToString(CustomValueListElementDto element) {
         return mapCustomValueListElementToString(element);
     }
 
-    public static String mapUpdatedCustomValueListElementToString(CustomValueListElement element) {
+    public static String mapUpdatedCustomValueListElementToString(CustomValueListElementDto element) {
         return mapCustomValueListElementToString(element);
     }
 
-    public static String mapOriginalCustomValueListElementToString(CustomValueListElement element) {
+    public static String mapOriginalCustomValueListElementToString(CustomValueListElementDto element) {
         return mapCustomValueListElementToString(element);
     }
 

@@ -39,9 +39,9 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -88,8 +88,8 @@ public class CollectionSheetDtoTranslatorImplTest {
         // setup
         final List<CollectionSheetCustomerDto> collectionSheetCustomer = Arrays.asList(centerCustomer);
 
-        final PersonnelView loanOfficer = new PersonnelView(Short.valueOf("1"), "loanOfficer");
-        final OfficeView office = new OfficeView(Short.valueOf("1"), "office", OfficeLevel.BRANCHOFFICE,
+        final PersonnelDto loanOfficer = new PersonnelDto(Short.valueOf("1"), "loanOfficer");
+        final OfficeDetailsDto office = new OfficeDetailsDto(Short.valueOf("1"), "office", OfficeLevel.BRANCHOFFICE,
                 "levelNameKey", Integer.valueOf(1));
         final Short paymentTypeId = Short.valueOf("99");
         final ListItem<Short> paymentType = new ListItem<Short>(paymentTypeId, "item1");

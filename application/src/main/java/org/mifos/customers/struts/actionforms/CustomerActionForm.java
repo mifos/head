@@ -34,13 +34,13 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.customers.business.CustomerPositionView;
+import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -98,15 +98,15 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     private String selectedFeeAmntList;
 
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
 
-    private List<CustomerPositionView> customerPositions;
+    private List<CustomerPositionDto> customerPositions;
 
     public CustomerActionForm() {
         address = new Address();
         defaultFees = new ArrayList<FeeDto>();
         additionalFees = new ArrayList<FeeDto>();
-        customFields = new ArrayList<CustomFieldView>();
+        customFields = new ArrayList<CustomFieldDto>();
     }
 
     public List<FeeDto> getAdditionalFees() {
@@ -148,11 +148,11 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.globalCustNum = globalCustNum;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(List<CustomFieldView> customFields) {
+    public void setCustomFields(List<CustomFieldDto> customFields) {
         this.customFields = customFields;
     }
 
@@ -272,9 +272,9 @@ public abstract class CustomerActionForm extends BaseActionForm {
         this.trainedDate = trainedDate;
     }
 
-    public CustomFieldView getCustomField(int i) {
+    public CustomFieldDto getCustomField(int i) {
         while (i >= customFields.size()) {
-            customFields.add(new CustomFieldView());
+            customFields.add(new CustomFieldDto());
         }
         return customFields.get(i);
     }
@@ -330,17 +330,17 @@ public abstract class CustomerActionForm extends BaseActionForm {
         super.reset(mapping, request);
     }
 
-    public List<CustomerPositionView> getCustomerPositions() {
+    public List<CustomerPositionDto> getCustomerPositions() {
         return customerPositions;
     }
 
-    public void setCustomerPositions(List<CustomerPositionView> customerPositions) {
+    public void setCustomerPositions(List<CustomerPositionDto> customerPositions) {
         this.customerPositions = customerPositions;
     }
 
-    public CustomerPositionView getCustomerPosition(int index) {
+    public CustomerPositionDto getCustomerPosition(int index) {
         while (index >= customerPositions.size()) {
-            customerPositions.add(new CustomerPositionView());
+            customerPositions.add(new CustomerPositionDto());
         }
         return customerPositions.get(index);
     }
@@ -404,10 +404,10 @@ public abstract class CustomerActionForm extends BaseActionForm {
     @SuppressWarnings("unchecked")
     protected void validateCustomFieldsForCustomers(HttpServletRequest request, ActionErrors errors) {
         try {
-            List<CustomFieldView> customFieldDefs = (List<CustomFieldView>) SessionUtils.getAttribute(
+            List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(
                     CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldView customField : customFields) {
-                for (CustomFieldView customFieldDef : customFieldDefs) {
+            for (CustomFieldDto customField : customFields) {
+                for (CustomFieldDto customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
                         if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(

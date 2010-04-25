@@ -22,16 +22,16 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.customers.client.business.ClientFamilyDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientFamilyDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 
 public class ClientFamilyInfoUpdate {
 
     private final List<Integer> familyPrimaryKey;
-    private final List<ClientNameDetailView> familyNames;
-    private final List<ClientFamilyDetailView> familyDetails;
+    private final List<ClientNameDetailDto> familyNames;
+    private final List<ClientFamilyDetailDto> familyDetails;
 
-    public ClientFamilyInfoUpdate(List<Integer> familyPrimaryKey, List<ClientNameDetailView> familyNames, List<ClientFamilyDetailView> familyDetails) {
+    public ClientFamilyInfoUpdate(List<Integer> familyPrimaryKey, List<ClientNameDetailDto> familyNames, List<ClientFamilyDetailDto> familyDetails) {
         this.familyPrimaryKey = familyPrimaryKey;
         this.familyNames = familyNames;
         this.familyDetails = familyDetails;
@@ -41,11 +41,11 @@ public class ClientFamilyInfoUpdate {
         return this.familyPrimaryKey;
     }
 
-    public List<ClientNameDetailView> getFamilyNames() {
+    public List<ClientNameDetailDto> getFamilyNames() {
         return this.familyNames;
     }
 
-    public List<ClientFamilyDetailView> getFamilyDetails() {
+    public List<ClientFamilyDetailDto> getFamilyDetails() {
         return this.familyDetails;
     }
 }

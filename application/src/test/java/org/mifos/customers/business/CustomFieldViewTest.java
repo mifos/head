@@ -23,7 +23,7 @@ package org.mifos.customers.business;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
@@ -33,11 +33,11 @@ public class CustomFieldViewTest extends TestCase {
         // The main point here is that we shouldn't get
         // NullPointerException for these operations.
 
-        CustomFieldView view = new CustomFieldView();
-       Assert.assertEquals("org.mifos.application.master.business.CustomFieldView@0", view.toString());
+        CustomFieldDto view = new CustomFieldDto();
+       Assert.assertEquals("org.mifos.application.master.business.CustomFieldDto@0", view.toString());
         view.hashCode();
 
-        CustomFieldView view2 = new CustomFieldView();
+        CustomFieldDto view2 = new CustomFieldDto();
        Assert.assertTrue(view.equals(view2));
     }
 

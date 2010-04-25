@@ -25,7 +25,7 @@ import org.mifos.config.LocalizedTextLookup;
 
 /**
  * An individual item from a database based list (aka lookup values). This class
- * serves the same role as the {@link CustomValueListElement} class, but it is
+ * serves the same role as the {@link CustomValueListElementDto} class, but it is
  * used for both fixed an custom lists.
  */
 public class BusinessActivityEntity implements ValueListElement, LocalizedTextLookup {

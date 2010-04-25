@@ -32,10 +32,10 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
-import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -98,13 +98,13 @@ public class ClientBuilder {
 
     public ClientBO buildForUnitTests() {
 
-        ClientDetailView clientDetailView = new ClientDetailView(Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1),
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1),
                 Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1).shortValue(), Integer.valueOf(1).shortValue(), Integer.valueOf(1).shortValue());
         this.clientDetailEntity = new ClientDetailEntity();
-        this.clientDetailEntity.updateClientDetails(clientDetailView);
+        this.clientDetailEntity.updateClientDetails(clientPersonalDetailDto);
 
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView();
-        this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailView);
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto();
+        this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailDto);
 
         CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).withMeeting(meeting).with(office)
                 .build();

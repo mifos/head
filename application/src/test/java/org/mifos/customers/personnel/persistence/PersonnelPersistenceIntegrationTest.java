@@ -10,7 +10,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
@@ -29,7 +29,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.business.PersonnelTemplate;
 import org.mifos.customers.personnel.business.PersonnelTemplateImpl;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -122,14 +122,14 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     }
 
     public void testActiveLoanOfficersInBranch() throws Exception {
-        List<PersonnelView> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
+        List<PersonnelDto> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
                 PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short.valueOf("3"),
                 PersonnelConstants.LOAN_OFFICER);
         Assert.assertEquals(1, personnels.size());
     }
 
     public void testNonLoanOfficerInBranch() throws Exception {
-        List<PersonnelView> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
+        List<PersonnelDto> personnels = personnelPersistence.getActiveLoanOfficersInBranch(
                 PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), OFFICE_WITH_BRANCH_MANAGER,
                 PersonnelConstants.NON_LOAN_OFFICER);
         Assert.assertEquals(1, personnels.size());
@@ -287,12 +287,12 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     private PersonnelBO create(final PersonnelLevel personnelLevel, final Name name, final Short createdBy,
             final OfficeBO office) throws Exception {
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-                "xyz@yahoo.com", null, customFieldView, name, "111111", date, Integer.valueOf("1"), Integer
+                "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, createdBy);
         personnel.save();
         StaticHibernateUtil.commitTransaction();

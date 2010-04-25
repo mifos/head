@@ -11,7 +11,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -63,13 +63,13 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<OfficeView> findActiveOfficeLevels() {
+    public List<OfficeDetailsDto> findActiveOfficeLevels() {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        List<OfficeView> queryResult = (List<OfficeView>) genericDao.executeNamedQuery(
+        List<OfficeDetailsDto> queryResult = (List<OfficeDetailsDto>) genericDao.executeNamedQuery(
                 NamedQueryConstants.GETACTIVELEVELS, queryParameters);
         if (queryResult == null) {
-            queryResult = new ArrayList<OfficeView>();
+            queryResult = new ArrayList<OfficeDetailsDto>();
         }
 
         return queryResult;

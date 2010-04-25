@@ -38,12 +38,12 @@ import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionF
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -149,9 +149,9 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         // we typcially don't try to mock/stub value objects (DTO) as they have
         // no behaviour so just use as you would in production code.
-        OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        OfficeView officeStub2 = new OfficeView(branchId2, "branchName2", levelId, Integer.valueOf(1));
-        List<OfficeView> activeOffices = Arrays.asList(officeStub1, officeStub2);
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        OfficeDetailsDto officeStub2 = new OfficeDetailsDto(branchId2, "branchName2", levelId, Integer.valueOf(1));
+        List<OfficeDetailsDto> activeOffices = Arrays.asList(officeStub1, officeStub2);
 
         // stub interaction with DAO/Persistence layer.
         when(officePersistence.getActiveOffices(branchId)).thenReturn(activeOffices);
@@ -170,12 +170,12 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // setup
         final Short branchId = userContext.getBranchId();
         final Short levelId = OfficeLevel.BRANCHOFFICE.getValue();
-        OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        List<OfficeView> onlyOneActiveBranch = Arrays.asList(officeStub1);
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        List<OfficeDetailsDto> onlyOneActiveBranch = Arrays.asList(officeStub1);
 
-        final PersonnelView loanOfficer1 = new PersonnelView(Short.valueOf("1"), "LoanOfficer1");
-        final PersonnelView loanOfficer2 = new PersonnelView(Short.valueOf("2"), "LoanOfficer2");
-        List<PersonnelView> loanOfficers = Arrays.asList(loanOfficer1, loanOfficer2);
+        final PersonnelDto loanOfficer1 = new PersonnelDto(Short.valueOf("1"), "LoanOfficer1");
+        final PersonnelDto loanOfficer2 = new PersonnelDto(Short.valueOf("2"), "LoanOfficer2");
+        List<PersonnelDto> loanOfficers = Arrays.asList(loanOfficer1, loanOfficer2);
 
         // stub interaction with DAO/Persistence layer.
         when(officePersistence.getActiveOffices(branchId)).thenReturn(onlyOneActiveBranch);
@@ -197,14 +197,14 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // setup
         final Short branchId = userContext.getBranchId();
         final Short levelId = OfficeLevel.BRANCHOFFICE.getValue();
-        OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        List<OfficeView> onlyOneActiveBranch = Arrays.asList(officeStub1);
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        List<OfficeDetailsDto> onlyOneActiveBranch = Arrays.asList(officeStub1);
 
-        final PersonnelView loanOfficer1 = new PersonnelView(Short.valueOf("1"), "LoanOfficer1");
-        List<PersonnelView> onlyOneActiveLoanOfficer = Arrays.asList(loanOfficer1);
+        final PersonnelDto loanOfficer1 = new PersonnelDto(Short.valueOf("1"), "LoanOfficer1");
+        List<PersonnelDto> onlyOneActiveLoanOfficer = Arrays.asList(loanOfficer1);
 
-        final CustomerView customer1 = new CustomerView();
-        List<CustomerView> customers = Arrays.asList(customer1);
+        final CustomerDto customer1 = new CustomerDto();
+        List<CustomerDto> customers = Arrays.asList(customer1);
 
         // stub interaction with DAO/Persistence layer.
         when(officePersistence.getActiveOffices(branchId)).thenReturn(onlyOneActiveBranch);
@@ -230,14 +230,14 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // setup
         final Short branchId = userContext.getBranchId();
         final Short levelId = OfficeLevel.BRANCHOFFICE.getValue();
-        OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        List<OfficeView> onlyOneActiveBranch = Arrays.asList(officeStub1);
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        List<OfficeDetailsDto> onlyOneActiveBranch = Arrays.asList(officeStub1);
 
-        final PersonnelView loanOfficer1 = new PersonnelView(Short.valueOf("1"), "LoanOfficer1");
-        List<PersonnelView> onlyOneActiveLoanOfficer = Arrays.asList(loanOfficer1);
+        final PersonnelDto loanOfficer1 = new PersonnelDto(Short.valueOf("1"), "LoanOfficer1");
+        List<PersonnelDto> onlyOneActiveLoanOfficer = Arrays.asList(loanOfficer1);
 
-        final CustomerView customer1 = new CustomerView();
-        List<CustomerView> customers = Arrays.asList(customer1);
+        final CustomerDto customer1 = new CustomerDto();
+        List<CustomerDto> customers = Arrays.asList(customer1);
 
         // stub interaction with DAO/Persistence layer.
         when(officePersistence.getActiveOffices(branchId)).thenReturn(onlyOneActiveBranch);
@@ -264,9 +264,9 @@ public class CollectionSheetServiceFacadeWebTierTest {
         final Short branchId2 = Short.valueOf("2");
         final Short levelId = OfficeLevel.BRANCHOFFICE.getValue();
 
-        OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        OfficeView officeStub2 = new OfficeView(branchId2, "branchName2", levelId, Integer.valueOf(1));
-        List<OfficeView> activeOffices = Arrays.asList(officeStub1, officeStub2);
+        OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        OfficeDetailsDto officeStub2 = new OfficeDetailsDto(branchId2, "branchName2", levelId, Integer.valueOf(1));
+        List<OfficeDetailsDto> activeOffices = Arrays.asList(officeStub1, officeStub2);
 
         // stub interaction with DAO/Persistence layer.
         when(officePersistence.getActiveOffices(branchId)).thenReturn(activeOffices);
@@ -298,18 +298,18 @@ public class CollectionSheetServiceFacadeWebTierTest {
         final Short branchId = userContext.getBranchId();
         final Short levelId = OfficeLevel.BRANCHOFFICE.getValue();
 
-        final OfficeView officeStub1 = new OfficeView(branchId, "branchName1", levelId, Integer.valueOf(1));
-        final List<OfficeView> onlyOneActiveBranch = Arrays.asList(officeStub1);
+        final OfficeDetailsDto officeStub1 = new OfficeDetailsDto(branchId, "branchName1", levelId, Integer.valueOf(1));
+        final List<OfficeDetailsDto> onlyOneActiveBranch = Arrays.asList(officeStub1);
 
         final ListItem<Short> paymentType1 = new ListItem<Short>(Short.valueOf("1"), "paymentType1");
 
         final CollectionSheetEntryFormDto previousCollectionSheetFormDto = new CollectionSheetEntryFormDto(
-                onlyOneActiveBranch, Arrays.<ListItem<Short>> asList(paymentType1), new ArrayList<PersonnelView>(),
-                new ArrayList<CustomerView>(), Constants.YES, Constants.YES, Constants.YES);
+                onlyOneActiveBranch, Arrays.<ListItem<Short>> asList(paymentType1), new ArrayList<PersonnelDto>(),
+                new ArrayList<CustomerDto>(), Constants.YES, Constants.YES, Constants.YES);
 
-        final PersonnelView loanOfficer1 = new PersonnelView(Short.valueOf("1"), "LoanOfficer1");
-        final PersonnelView loanOfficer2 = new PersonnelView(Short.valueOf("2"), "LoanOfficer2");
-        final List<PersonnelView> loanOfficers = Arrays.asList(loanOfficer1, loanOfficer2);
+        final PersonnelDto loanOfficer1 = new PersonnelDto(Short.valueOf("1"), "LoanOfficer1");
+        final PersonnelDto loanOfficer2 = new PersonnelDto(Short.valueOf("2"), "LoanOfficer2");
+        final List<PersonnelDto> loanOfficers = Arrays.asList(loanOfficer1, loanOfficer2);
 
         // stub interaction with DAO/Persistence layer.
         when(
@@ -332,15 +332,15 @@ public class CollectionSheetServiceFacadeWebTierTest {
 
         // setup
         final Integer customerId = Integer.valueOf(3);
-        final CustomerView customer1 = new CustomerView();
+        final CustomerDto customer1 = new CustomerDto();
         customer1.setCustomerId(customerId);
-        final List<CustomerView> customers = Arrays.asList(customer1);
+        final List<CustomerDto> customers = Arrays.asList(customer1);
 
         final Date expectedMeetingDateAsJavaDate = new DateTime().plusDays(2).toDate();
         final java.sql.Date expectedMeetingDateAsSqlDate = new java.sql.Date(expectedMeetingDateAsJavaDate.getTime());
 
         final CollectionSheetEntryFormDto previousCollectionSheetFormDto = new CollectionSheetEntryFormDto(
-                new ArrayList<OfficeView>(), new ArrayList<ListItem<Short>>(), new ArrayList<PersonnelView>(),
+                new ArrayList<OfficeDetailsDto>(), new ArrayList<ListItem<Short>>(), new ArrayList<PersonnelDto>(),
                 customers, Constants.YES, Constants.YES, Constants.YES);
 
         when(customerPersistence.getLastMeetingDateForCustomer(customerId)).thenReturn(expectedMeetingDateAsSqlDate);

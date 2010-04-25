@@ -58,7 +58,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
@@ -133,12 +133,12 @@ public class CustomerPersistence extends Persistence {
     public CustomerPersistence() {
     }
 
-    public List<CustomerView> getChildrenForParent(final Integer customerId, final String searchId, final Short officeId)
+    public List<CustomerDto> getChildrenForParent(final Integer customerId, final String searchId, final Short officeId)
             throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
         queryParameters.put("OFFICE_ID", officeId);
-        List<CustomerView> queryResult = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CHILDREN_FORPARENT,
+        List<CustomerDto> queryResult = executeNamedQuery(NamedQueryConstants.GET_ACTIVE_CHILDREN_FORPARENT,
                 queryParameters);
         return queryResult;
     }
@@ -151,14 +151,14 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<CustomerView> getActiveParentList(final Short personnelId, final Short customerLevelId,
+    public List<CustomerDto> getActiveParentList(final Short personnelId, final Short customerLevelId,
             final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("personnelId", personnelId);
         queryParameters.put("customerLevelId", customerLevelId);
         queryParameters.put("officeId", officeId);
 
-        List<CustomerView> queryResult = executeNamedQuery(NamedQueryConstants.GET_PARENTCUSTOMERS_FOR_LOANOFFICER,
+        List<CustomerDto> queryResult = executeNamedQuery(NamedQueryConstants.GET_PARENTCUSTOMERS_FOR_LOANOFFICER,
                 queryParameters);
         return queryResult;
 
@@ -277,7 +277,7 @@ public class CustomerPersistence extends Persistence {
 
         String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResults");
+        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {
@@ -309,7 +309,7 @@ public class CustomerPersistence extends Persistence {
 
         String[] aliasNames = { "clientName", "clientId", "groupName", "centerName", "officeName", "globelNo" };
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResults");
+        queryInputs.setPath("org.mifos.accounts.util.helpers.AccountSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {
@@ -377,7 +377,7 @@ public class CustomerPersistence extends Persistence {
         QueryInputs queryInputs = new QueryInputs();
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setParamList(paramList);
-        queryInputs.setPath("org.mifos.customers.business.CustomerSearch");
+        queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
         queryInputs.setAliasNames(getAliasNames());
         return queryInputs;
 
@@ -395,7 +395,7 @@ public class CustomerPersistence extends Persistence {
                 "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
                 "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-        queryInputs.setPath("org.mifos.customers.business.CustomerSearch");
+        queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
         queryInputs.setAliasNames(Names);
         queryResult.setQueryInputs(queryInputs);
         queryInputs.setQueryStrings(namedQuery);
@@ -442,7 +442,7 @@ public class CustomerPersistence extends Persistence {
                 "branchName", "loanOfficerName", "loanOffcerGlobalNum", "customerStatus", "groupName",
                 "groupGlobalCustNum", "clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
         QueryResult queryResult = QueryFactory.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-        queryInputs.setPath("org.mifos.customers.business.CustomerSearch");
+        queryInputs.setPath("org.mifos.customers.business.CustomerSearchDto");
         queryInputs.setAliasNames(Names);
         queryResult.setQueryInputs(queryInputs);
         queryInputs.setQueryStrings(namedQuery);

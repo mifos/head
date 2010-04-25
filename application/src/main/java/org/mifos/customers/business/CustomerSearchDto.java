@@ -24,14 +24,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
- * This class acts a valueobject for searching customers.
+ * This class acts a value object for searching customers.
  */
-public class CustomerSearch extends View {
+public class CustomerSearchDto implements DataTransferObject {
 
-    public CustomerSearch() {
+    public CustomerSearchDto() {
         super();
     }
 

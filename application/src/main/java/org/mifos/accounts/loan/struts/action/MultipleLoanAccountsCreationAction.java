@@ -54,12 +54,12 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -122,7 +122,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         logger.debug("Inside load method");
-        List<OfficeView> activeBranches = new MasterDataService().getActiveBranches(getUserContext(request)
+        List<OfficeDetailsDto> activeBranches = new MasterDataService().getActiveBranches(getUserContext(request)
                 .getBranchId());
         SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches, request);
 
@@ -139,7 +139,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("Inside getLoanOfficers method");
         UserContext userContext = getUserContext(request);
-        List<PersonnelView> loanOfficers = ((MasterDataService) ServiceFactory.getInstance().getBusinessService(
+        List<PersonnelDto> loanOfficers = ((MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService)).getListOfActiveLoanOfficers(PersonnelLevel.LOAN_OFFICER
                 .getValue(), getShortValue(((MultipleLoanAccountsCreationActionForm) form).getBranchOfficeId()),
                 userContext.getId(), userContext.getLevelId());
@@ -155,7 +155,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
         Short loanOfficerId = getShortValue(loanActionForm.getLoanOfficerId());
         Short officeId = getShortValue(loanActionForm.getBranchOfficeId());
-        List<CustomerView> parentCustomerList = loadCustomers(loanOfficerId, officeId);
+        List<CustomerDto> parentCustomerList = loadCustomers(loanOfficerId, officeId);
 
         boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 
@@ -268,13 +268,13 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
 
-    private List<CustomerView> loadCustomers(Short loanOfficerId, Short officeId) throws Exception {
+    private List<CustomerDto> loadCustomers(Short loanOfficerId, Short officeId) throws Exception {
         logger.debug("Inside loadCustomers method");
         CustomerLevel customerLevel = CustomerLevel.CENTER;
         if (!ClientRules.getCenterHierarchyExists()) {
             customerLevel = CustomerLevel.GROUP;
         }
-        List<CustomerView> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory.getInstance()
+        List<CustomerDto> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory.getInstance()
                 .getBusinessService(BusinessServiceName.MasterDataService)).getListOfActiveParentsUnderLoanOfficer(
                 loanOfficerId, customerLevel.getValue(), officeId);
         logger.debug("oouside loadCustomers method");

@@ -23,23 +23,23 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.customers.client.business.ClientFamilyDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.customers.client.business.ClientFamilyDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 
 public class ClientFamilyInfoDto {
 
     private final ClientDropdownsDto clientDropdowns;
-    private final List<CustomFieldView> customFieldViews;
+    private final List<CustomFieldDto> customFieldDtos;
     private final CustomerDetailDto customerDetail;
     private final ClientDetailDto clientDetail;
-    private final List<ClientNameDetailView> familyMembers;
-    private final Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetails;
+    private final List<ClientNameDetailDto> familyMembers;
+    private final Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails;
 
-    public ClientFamilyInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, CustomerDetailDto customerDetail, ClientDetailDto clientDetail, List<ClientNameDetailView> familyMembers, Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetails) {
+    public ClientFamilyInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, CustomerDetailDto customerDetail, ClientDetailDto clientDetail, List<ClientNameDetailDto> familyMembers, Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails) {
         this.clientDropdowns = clientDropdowns;
-        this.customFieldViews = customFieldViews;
+        this.customFieldDtos = customFieldDtos;
         this.customerDetail = customerDetail;
         this.clientDetail = clientDetail;
         this.familyMembers = familyMembers;
@@ -50,8 +50,8 @@ public class ClientFamilyInfoDto {
         return this.clientDropdowns;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
     public CustomerDetailDto getCustomerDetail() {
@@ -62,11 +62,11 @@ public class ClientFamilyInfoDto {
         return this.clientDetail;
     }
 
-    public List<ClientNameDetailView> getFamilyMembers() {
+    public List<ClientNameDetailDto> getFamilyMembers() {
         return this.familyMembers;
     }
 
-    public Map<Integer, List<ClientFamilyDetailView>> getClientFamilyDetails() {
+    public Map<Integer, List<ClientFamilyDetailDto>> getClientFamilyDetails() {
         return this.clientFamilyDetails;
     }
 }

@@ -20,12 +20,12 @@
 
 package org.mifos.customers.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * This class is helper class and provides input for center search
  */
-public class CustomerSearchInputView extends View {
+public class CustomerSearchInputDto implements DataTransferObject {
 
     private String customerInputPage;
 

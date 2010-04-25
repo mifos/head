@@ -22,7 +22,7 @@ package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
@@ -50,7 +50,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
                 for (int i = 0; i < list.size(); i++) {
                     if (buildDTO) {
                         Object record = buildDTO((Object[]) list.get(i));
-                        CustomerSearch cs = ((CustomerSearch) record);
+                        CustomerSearchDto cs = ((CustomerSearchDto) record);
                         query1.setInteger("customerId", cs.getCustomerId()).setShort("accountTypeId", (short) 1);
                         cs.setLoanGlobalAccountNum(query1.list());
                         query1.setShort("accountTypeId", (short) 2);

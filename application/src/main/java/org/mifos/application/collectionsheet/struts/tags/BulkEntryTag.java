@@ -32,7 +32,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -68,7 +68,7 @@ public class BulkEntryTag extends BodyTagSupport {
             List<ProductDto> loanProducts = bulkEntry.getLoanProducts();
             List<ProductDto> savingsProducts = bulkEntry.getSavingProducts();
             try {
-                final List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils
+                final List<CustomValueListElementDto> custAttTypes = (List<CustomValueListElementDto>) SessionUtils
                         .getAttribute(
                         CollectionSheetEntryConstants.CUSTOMERATTENDANCETYPES, request);
 
@@ -90,7 +90,7 @@ public class BulkEntryTag extends BodyTagSupport {
     }
 
     private void generateTagData(final CollectionSheetEntryGridDto bulkEntry, final List<ProductDto> loanProducts,
-            final List<ProductDto> savingsProducts, final List<CustomValueListElement> custAttTypes,
+            final List<ProductDto> savingsProducts, final List<CustomValueListElementDto> custAttTypes,
             final String method, final StringBuilder builder)
             throws SystemException {
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USERCONTEXT);

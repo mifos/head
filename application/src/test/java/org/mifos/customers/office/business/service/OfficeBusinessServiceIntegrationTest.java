@@ -25,7 +25,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
@@ -51,9 +51,9 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetActiveParents() throws NumberFormatException, ServiceException {
-        List<OfficeView> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
+        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
        Assert.assertEquals(2, parents.size());
-        for (OfficeView view : parents) {
+        for (OfficeDetailsDto view : parents) {
             if (view.getLevelId().equals(OfficeLevel.HEADOFFICE)) {
                 Assert.assertEquals("Head Office", view.getLevelName());
             } else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE)) {
@@ -162,7 +162,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     public void testGetChildOffices() throws ServiceException {
         OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        List<OfficeView> officeList = officeBusinessService.getChildOffices(headOffice.getSearchId());
+        List<OfficeDetailsDto> officeList = officeBusinessService.getChildOffices(headOffice.getSearchId());
        Assert.assertEquals(3, officeList.size());
         officeList = null;
         headOffice = null;

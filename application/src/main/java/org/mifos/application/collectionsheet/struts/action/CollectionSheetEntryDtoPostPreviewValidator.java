@@ -30,7 +30,7 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 
@@ -121,14 +121,14 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                                 .getSavingsOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
             }
         }
-        CustomerAccountView customerAccountView = parent.getCustomerAccountDetails();
+        CustomerAccountDto customerAccountDto = parent.getCustomerAccountDetails();
         Double customerAccountAmountEntered = 0.0;
-        if (null != customerAccountView.getCustomerAccountAmountEntered()
-                && customerAccountView.isValidCustomerAccountAmountEntered()) {
-            customerAccountAmountEntered = getDoubleValue(customerAccountView.getCustomerAccountAmountEntered());
+        if (null != customerAccountDto.getCustomerAccountAmountEntered()
+                && customerAccountDto.isValidCustomerAccountAmountEntered()) {
+            customerAccountAmountEntered = getDoubleValue(customerAccountDto.getCustomerAccountAmountEntered());
         }
-        if (!customerAccountView.isValidCustomerAccountAmountEntered()
-                || !customerAccountAmountEntered.equals(customerAccountView.getTotalAmountDue()
+        if (!customerAccountDto.isValidCustomerAccountAmountEntered()
+                || !customerAccountAmountEntered.equals(customerAccountDto.getTotalAmountDue()
                         .getAmountDoubleValue()) && !customerAccountAmountEntered.equals(0.0)) {
             errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                     CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, acCollections, parent.getCustomerDetail()

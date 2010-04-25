@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
@@ -112,7 +112,7 @@ public class CenterPersistence extends Persistence {
         String[] aliasNames = { "parentOfficeId", "parentOfficeName", "centerSystemId", "centerName" };
 
         queryInputs.setQueryStrings(namedQuery);
-        queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResults");
+        queryInputs.setPath("org.mifos.customers.center.util.helpers.CenterSearchResultsDto");
         queryInputs.setAliasNames(aliasNames);
         queryInputs.setParamList(paramList);
         try {
@@ -135,12 +135,12 @@ public class CenterPersistence extends Persistence {
         int numberOfCustomersInOfficeAlready = 1;
         MeetingBO meeting = template.getMeeting();
 
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
         if (template.getCustomFieldViews() != null) {
-            customFieldView = template.getCustomFieldViews();
+            customFieldDto = template.getCustomFieldViews();
         }
 
-        List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldView, null);
+        List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldDto, null);
 
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
                 centerOffice, numberOfCustomersInOfficeAlready, customFields, template.getAddress(), template.getExternalId());

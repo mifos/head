@@ -22,21 +22,21 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 
 public class ClientFormCreationDto {
 
-    private final List<CustomFieldView> customFieldViews;
+    private final List<CustomFieldDto> customFieldDtos;
     private final Short officeId;
     private final Short formedByPersonnelId;
-    private final List<PersonnelView> personnelList;
+    private final List<PersonnelDto> personnelList;
     private final CustomerApplicableFeesDto applicableFees;
     private final ClientRulesDto clientRules;
     private final List<SavingsDetailDto> savingsOfferings;
-    private final List<PersonnelView> formedByPersonnelList;
+    private final List<PersonnelDto> formedByPersonnelList;
     private final MeetingBO parentCustomerMeeting;
     private final String centerDisplayName;
     private final ClientDropdownsDto clientDropdowns;
@@ -44,13 +44,13 @@ public class ClientFormCreationDto {
     private final String groupDisplayName;
     private final String officeName;
 
-    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, Short officeId, String officeName,
-            Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelView> personnelList, CustomerApplicableFeesDto applicableFees,
-            List<PersonnelView> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
+    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, Short officeId, String officeName,
+            Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelDto> personnelList, CustomerApplicableFeesDto applicableFees,
+            List<PersonnelDto> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
             MeetingBO parentCustomerMeeting, String centerDisplayName, String groupDisplayName) {
 
         this.clientDropdowns = clientDropdowns;
-        this.customFieldViews = customFieldViews;
+        this.customFieldDtos = customFieldDtos;
         this.clientRules = clientRules;
         this.officeId = officeId;
         this.officeName = officeName;
@@ -65,8 +65,8 @@ public class ClientFormCreationDto {
         this.groupDisplayName = groupDisplayName;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
     public Short getOfficeId() {
@@ -77,7 +77,7 @@ public class ClientFormCreationDto {
         return this.formedByPersonnelId;
     }
 
-    public List<PersonnelView> getPersonnelList() {
+    public List<PersonnelDto> getPersonnelList() {
         return this.personnelList;
     }
 
@@ -93,7 +93,7 @@ public class ClientFormCreationDto {
         return this.savingsOfferings;
     }
 
-    public List<PersonnelView> getFormedByPersonnelList() {
+    public List<PersonnelDto> getFormedByPersonnelList() {
         return this.formedByPersonnelList;
     }
 

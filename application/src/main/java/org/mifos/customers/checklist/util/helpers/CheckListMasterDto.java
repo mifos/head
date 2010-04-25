@@ -20,11 +20,10 @@
 
 package org.mifos.customers.checklist.util.helpers;
 
-import java.io.Serializable;
-
 import org.mifos.application.master.MessageLookup;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CheckListMasterView implements Serializable {
+public class CheckListMasterDto implements DataTransferObject {
 
     private boolean isCustomer;
 
@@ -32,7 +31,7 @@ public class CheckListMasterView implements Serializable {
 
     private Short masterTypeId;
 
-    public CheckListMasterView(Short id, String lookupKey) {
+    public CheckListMasterDto(Short id, String lookupKey) {
         this.masterTypeId = id;
         this.lookupKey = lookupKey;
     }

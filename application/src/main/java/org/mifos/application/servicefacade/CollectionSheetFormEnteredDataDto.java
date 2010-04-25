@@ -22,24 +22,24 @@ package org.mifos.application.servicefacade;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 /**
  * DTO for data entered on collection sheet form.
  */
 public class CollectionSheetFormEnteredDataDto implements Serializable {
 
-    private final OfficeView office;
-    private final PersonnelView loanOfficer;
-    private final CustomerView customer;
+    private final OfficeDetailsDto office;
+    private final PersonnelDto loanOfficer;
+    private final CustomerDto customer;
     private final ListItem<Short> paymentType;
     private final Date meetingDate;
     private final Date receiptDate;
     private final String receiptId;
 
-    public CollectionSheetFormEnteredDataDto(OfficeView office, PersonnelView loanOfficer, CustomerView customer,
+    public CollectionSheetFormEnteredDataDto(OfficeDetailsDto office, PersonnelDto loanOfficer, CustomerDto customer,
             ListItem<Short> paymentType, Date meetingDate, Date receiptDate, String receiptId) {
         this.office = office;
         this.loanOfficer = loanOfficer;
@@ -50,15 +50,15 @@ public class CollectionSheetFormEnteredDataDto implements Serializable {
         this.receiptId = receiptId;
     }
 
-    public OfficeView getOffice() {
+    public OfficeDetailsDto getOffice() {
         return this.office;
     }
 
-    public PersonnelView getLoanOfficer() {
+    public PersonnelDto getLoanOfficer() {
         return this.loanOfficer;
     }
 
-    public CustomerView getCustomer() {
+    public CustomerDto getCustomer() {
         return this.customer;
     }
 

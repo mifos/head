@@ -20,13 +20,13 @@
 
 package org.mifos.customers.personnel.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
- * This obect denotes instance of search result, that will be obtained after
+ * This object denotes instance of search result, that will be obtained after
  * user search.
  */
-public class UserSearchResultsView extends View {
+public class UserSearchResultsDto implements DataTransferObject {
 
     short officeId;
 

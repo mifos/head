@@ -30,7 +30,7 @@ import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
+import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -57,11 +57,11 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
     }
 
     public void testGetCheckListMasterData() throws Exception {
-        List<CheckListMasterView> checkListMasterDataView = new CheckListBusinessService()
+        List<CheckListMasterDto> checkListMasterDataView = new CheckListBusinessService()
                 .getCheckListMasterData(TestObjectFactory.getContext());
         Assert.assertNotNull(checkListMasterDataView);
        Assert.assertEquals(checkListMasterDataView.size(), 5);
-        for (CheckListMasterView view : checkListMasterDataView) {
+        for (CheckListMasterDto view : checkListMasterDataView) {
             if (view.getMasterTypeId().equals(CustomerLevel.CENTER)) {
                 Assert.assertEquals(true, view.getIsCustomer());
             }

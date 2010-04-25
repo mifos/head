@@ -32,12 +32,12 @@ import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -124,7 +124,7 @@ public class BulkEntryDisplayHelper {
     }
 
     public Double[] buildForGroup(final CollectionSheetEntryDto parent, final List<ProductDto> loanProducts,
-            final List<ProductDto> savingsProducts, final List<CustomValueListElement> custAttTypes,
+            final List<ProductDto> savingsProducts, final List<CustomValueListElementDto> custAttTypes,
             final StringBuilder builder, final String method, final UserContext userContext) {
         int rowIndex = 0;
         int totalProductsSize = 2 * (loanProducts.size() + savingsProducts.size());
@@ -157,7 +157,7 @@ public class BulkEntryDisplayHelper {
     }
 
     public Double[] buildForCenter(final CollectionSheetEntryDto centerEntry, final List<ProductDto> loanProducts,
-            final List<ProductDto> savingsProducts, final List<CustomValueListElement> custAttTypes,
+            final List<ProductDto> savingsProducts, final List<CustomValueListElementDto> custAttTypes,
             final StringBuilder builder, final String method, final UserContext userContext) {
 
         int rowIndex = 0;
@@ -354,14 +354,14 @@ public class BulkEntryDisplayHelper {
     }
 
     private void generateAttendance(final StringBuilder builder,
-            final List<CustomValueListElement> custAttTypes, final int row, final CollectionSheetEntryDto collectionSheetEntryDto,
+            final List<CustomValueListElementDto> custAttTypes, final int row, final CollectionSheetEntryDto collectionSheetEntryDto,
             final String method) {
         Short collectionSheetEntryViewAttendence = collectionSheetEntryDto.getAttendence();
         if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
             builder.append("<td class=\"drawtablerow\">");
             builder.append("<select name=\"attendanceSelected[" + row
                     + "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
-            for (CustomValueListElement attendance : custAttTypes) {
+            for (CustomValueListElementDto attendance : custAttTypes) {
                 builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
                 if (attendancesAreEqual(collectionSheetEntryViewAttendence, attendance)) {
                     builder.append(" selected=\"selected\"");
@@ -372,7 +372,7 @@ public class BulkEntryDisplayHelper {
             builder.append("</td>");
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             builder.append("<td class=\"drawtablerow\">");
-            for (CustomValueListElement attendance : custAttTypes) {
+            for (CustomValueListElementDto attendance : custAttTypes) {
                 if (attendancesAreEqual(collectionSheetEntryViewAttendence, attendance)) {
                     if (!collectionSheetEntryViewAttendence.toString().equals("1")) {
                         builder.append("<font color=\"#FF0000\">" + attendance.getLookUpValue() + "</font>");
@@ -388,7 +388,7 @@ public class BulkEntryDisplayHelper {
             builder.append("<td class=\"drawtablerow\">");
             builder.append("<select name=\"attendanceSelected[" + row
                     + "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
-            for (CustomValueListElement attendance : custAttTypes) {
+            for (CustomValueListElementDto attendance : custAttTypes) {
                 builder.append("<option value=\"" + attendance.getAssociatedId() + "\"");
                 if (null != collectionSheetEntryViewAttendence
                         && attendance.getAssociatedId().equals(Integer.valueOf(collectionSheetEntryViewAttendence))) {
@@ -401,7 +401,7 @@ public class BulkEntryDisplayHelper {
         }
     }
 
-    private boolean attendancesAreEqual(final Short collectionSheetEntryViewAttendence, final CustomValueListElement attendance) {
+    private boolean attendancesAreEqual(final Short collectionSheetEntryViewAttendence, final CustomValueListElementDto attendance) {
         return null != collectionSheetEntryViewAttendence
                 && attendance.getAssociatedId().intValue() == collectionSheetEntryViewAttendence;
     }
@@ -582,18 +582,18 @@ public class BulkEntryDisplayHelper {
                 : centerTotals[totalsColumn] + totalAmount;
     }
 
-    private void buildCustomerAccount(final CustomerAccountView customerAccountView, final StringBuilder builder, final String method,
+    private void buildCustomerAccount(final CustomerAccountDto customerAccountDto, final StringBuilder builder, final String method,
             final MifosCurrency currency, final int rows, final Double[] groupTotals, final Double[] centerTotals, final int size, final int initialAccNo,
             final int loanProductSize,
             final int savingsProductSize, final int levelId) {
         builder.append("<td class=\"drawtablerow\">");
-        generateCustomerAccountVaues(customerAccountView, method, builder, currency, rows, groupTotals, centerTotals,
+        generateCustomerAccountVaues(customerAccountDto, method, builder, currency, rows, groupTotals, centerTotals,
                 size, initialAccNo, loanProductSize, savingsProductSize, levelId);
         builder.append("</td>");
         columnIndex++;
     }
 
-    private void generateCustomerAccountVaues(final CustomerAccountView customerAccountView, final String method,
+    private void generateCustomerAccountVaues(final CustomerAccountDto customerAccountDto, final String method,
             final StringBuilder builder, final MifosCurrency currency, final int rows, final Double[] groupTotals, final Double[] centerTotals,
             final int size, final int initialAccNo, final int loanProductSize,
             final int savingsProductSize, final int levelId) {
@@ -601,18 +601,18 @@ public class BulkEntryDisplayHelper {
         String amount = "";
         Double totalAmount = 0.0;
         if (method.equals(CollectionSheetEntryConstants.GETMETHOD)) {
-            totalAmount = customerAccountView.getTotalAmountDue().getAmountDoubleValue();
+            totalAmount = customerAccountDto.getTotalAmountDue().getAmountDoubleValue();
             amount = new Money(currency, totalAmount.toString()).toString();
         } else if (method.equals(CollectionSheetEntryConstants.PREVIOUSMETHOD)
                 || method.equals(CollectionSheetEntryConstants.VALIDATEMETHOD)
                 || method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            if (customerAccountView.getCustomerAccountAmountEntered() != null) {
-                amount = customerAccountView.getCustomerAccountAmountEntered();
-                if (!"".equals(amount.trim()) && customerAccountView.isValidCustomerAccountAmountEntered()) {
+            if (customerAccountDto.getCustomerAccountAmountEntered() != null) {
+                amount = customerAccountDto.getCustomerAccountAmountEntered();
+                if (!"".equals(amount.trim()) && customerAccountDto.isValidCustomerAccountAmountEntered()) {
                     Money total = new Money(currency, amount);
                     totalAmount = total.getAmountDoubleValue();
                     amount = total.toString();
-                    customerAccountView.setCustomerAccountAmountEntered(amount);
+                    customerAccountDto.setCustomerAccountAmountEntered(amount);
                 }
             }
         }
@@ -631,7 +631,7 @@ public class BulkEntryDisplayHelper {
             }
 
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            if (! totalAmount.equals(customerAccountView.getTotalAmountDue())) {
+            if (! totalAmount.equals(customerAccountDto.getTotalAmountDue())) {
                 builder.append("<font color=\"#FF0000\">" + amount + "</font>");
             } else {
                 builder.append(amount);

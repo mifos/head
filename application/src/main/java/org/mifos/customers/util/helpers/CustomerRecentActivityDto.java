@@ -23,19 +23,19 @@ package org.mifos.customers.util.helpers;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class CustomerRecentActivityView extends View {
+public class CustomerRecentActivityDto implements DataTransferObject {
 
-    public CustomerRecentActivityView(java.util.Date activityDate, String description, String amount, String postedBy) {
+    public CustomerRecentActivityDto(java.util.Date activityDate, String description, String amount, String postedBy) {
         this.activityDate = new java.sql.Date(activityDate.getTime());
         this.description = description;
         this.amount = amount;
         this.postedBy = postedBy;
     }
 
-    public CustomerRecentActivityView() {
+    public CustomerRecentActivityDto() {
     }
 
     private Date activityDate;

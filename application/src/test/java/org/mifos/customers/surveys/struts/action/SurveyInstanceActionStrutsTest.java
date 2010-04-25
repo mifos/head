@@ -41,7 +41,7 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerBO;
@@ -112,11 +112,11 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
     // try {
     // OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
     // PersonnelBO formedBy = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-    // ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.MAYBE_CLIENT,
+    // ClientNameDetailDto clientNameDetailView = new ClientNameDetailDto(NameType.MAYBE_CLIENT,
     // TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
-    // ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+    // ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
     // TestObjectFactory.SAMPLE_SALUTATION, "Test Client ", "middle", "Test Client ", "secondLast");
-    // ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+    // ClientPersonalDetailDto clientDetailView = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
     // .valueOf("1"), Short.valueOf("41"));
     //
     // client = new ClientBuilder().withOffice(office).buildForIntegrationTests();
@@ -721,13 +721,13 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
     private PersonnelBO createPersonnel(OfficeBO office, PersonnelLevel personnelLevel, UserContext userContext)
             throws Exception {
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Name name = new Name("Test", null, null, "User");
         Date date = new Date();
         PersonnelBO personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"),
-                "ABCD", "testusername", "xyz@yahoo.com", null, customFieldView, name, "111111", date, Integer
+                "ABCD", "testusername", "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
         return personnel;

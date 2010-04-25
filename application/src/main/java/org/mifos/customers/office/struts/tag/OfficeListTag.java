@@ -33,7 +33,7 @@ import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -77,7 +77,7 @@ public class OfficeListTag extends BodyTagSupport {
                 OfficePersistence officePersistence = new OfficePersistence();
                 OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());
 
-                List<OfficeView> levels = officePersistence.getActiveLevels(userContext.getLocaleId());
+                List<OfficeDetailsDto> levels = officePersistence.getActiveLevels(userContext.getLocaleId());
                 OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId());
 
                 List<OfficeBO> branchParents = officePersistence.getBranchParents(officeBO.getSearchId());
@@ -132,13 +132,13 @@ public class OfficeListTag extends BodyTagSupport {
                 .getLoggedInOfficeSearchId(), officeHierarchy.getBranchOnlyOfficeHierarchy(), null);
     }
 
-    String getOfficeList(Locale preferredUserLocale, List<OfficeView> levels, String loggedInOfficeSearchId,
+    String getOfficeList(Locale preferredUserLocale, List<OfficeDetailsDto> levels, String loggedInOfficeSearchId,
             List<OfficeHierarchyDto> officeHierarchy, List<OfficeBO> officesTillBranchOffice) {
         String termForBranch = "";
         String regional = "";
         String subregional = "";
         String area = "";
-        for (OfficeView level : levels) {
+        for (OfficeDetailsDto level : levels) {
             if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
                 termForBranch = level.getLevelName();
             } else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue())) {

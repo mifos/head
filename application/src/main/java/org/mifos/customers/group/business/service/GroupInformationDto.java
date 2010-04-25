@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
- * 
+ *
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
@@ -22,8 +22,7 @@ package org.mifos.customers.group.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.customers.util.helpers.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
@@ -60,7 +59,7 @@ public class GroupInformationDto implements DataTransferObject {
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
     private final List<CustomerSurveyDto> customerSurveys;
-    private final List<CustomFieldView> customFields;
+    private final List<CustomFieldDto> customFields;
 
     public GroupInformationDto(final GroupDisplayDto groupDisplay,
             final CustomerAccountSummaryDto customerAccountSummary, GroupPerformanceHistoryDto groupPerformanceHistory,
@@ -69,7 +68,7 @@ public class GroupInformationDto implements DataTransferObject {
             final List<CustomerFlagDto> customerFlags, final List<LoanDetailDto> loanAccountsInUse,
             final List<SavingsDetailDto> savingsAccountsInUse, final CustomerMeetingDto customerMeeting,
             final Boolean activeSurveys, final List<CustomerSurveyDto> customerSurveys,
-            final List<CustomFieldView> customFields) {
+            final List<CustomFieldDto> customFields) {
 
         this.groupDisplay = groupDisplay;
         this.customerAccountSummary = customerAccountSummary;
@@ -139,7 +138,7 @@ public class GroupInformationDto implements DataTransferObject {
         return this.customerSurveys;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 

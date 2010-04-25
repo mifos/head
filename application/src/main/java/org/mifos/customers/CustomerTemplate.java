@@ -23,7 +23,7 @@ package org.mifos.customers;
 import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
 
@@ -34,7 +34,7 @@ public interface CustomerTemplate {
 
     public Address getAddress();
 
-    public List<CustomFieldView> getCustomFieldViews();
+    public List<CustomFieldDto> getCustomFieldViews();
 
     public List<FeeDto> getFees();
 

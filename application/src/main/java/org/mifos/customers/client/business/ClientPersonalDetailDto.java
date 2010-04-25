@@ -20,7 +20,9 @@
 
 package org.mifos.customers.client.business;
 
-public class ClientDetailView {
+import org.mifos.framework.business.service.DataTransferObject;
+
+public class ClientPersonalDetailDto implements DataTransferObject {
 
     private Integer ethinicity;
     private Integer citizenship;
@@ -34,11 +36,11 @@ public class ClientDetailView {
 
     public static final int MARRIED = 66;
 
-    public ClientDetailView() {
+    public ClientPersonalDetailDto() {
         super();
     }
 
-    public ClientDetailView(Integer ethinicity, Integer citizenship, Integer handicapped, Integer businessActivities,
+    public ClientPersonalDetailDto(Integer ethinicity, Integer citizenship, Integer handicapped, Integer businessActivities,
             Integer maritalStatus, Integer educationLevel, Short numChildren, Short gender, Short povertyStatus) {
         this.ethinicity = ethinicity;
         this.citizenship = citizenship;

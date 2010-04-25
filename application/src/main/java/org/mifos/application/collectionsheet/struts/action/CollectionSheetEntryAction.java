@@ -41,20 +41,20 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetDataViewAssembler;
-import org.mifos.application.servicefacade.CollectionSheetEntryDecomposedView;
+import org.mifos.application.servicefacade.CollectionSheetEntryDecomposedDto;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDtoDecorator;
 import org.mifos.application.servicefacade.CollectionSheetEntryViewTranslator;
-import org.mifos.application.servicefacade.CollectionSheetErrorsView;
+import org.mifos.application.servicefacade.CollectionSheetErrorsDto;
 import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacade;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.FormEnteredDataAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.business.Configuration;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -262,13 +262,13 @@ public class CollectionSheetEntryAction extends BaseAction {
 
         final CollectionSheetEntryGridDto previousCollectionSheetEntryDto = retrieveFromRequestCollectionSheetEntryDto(request);
 
-        final CollectionSheetEntryDecomposedView decomposedViews = new CollectionSheetEntryViewTranslator()
+        final CollectionSheetEntryDecomposedDto decomposedViews = new CollectionSheetEntryViewTranslator()
                 .toDecomposedView(previousCollectionSheetEntryDto.getBulkEntryParent());
 
         logBeforeSave(request, collectionSheetActionForm, previousCollectionSheetEntryDto);
         final long beforeSaveData = System.currentTimeMillis();
 
-        final CollectionSheetErrorsView collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheet(
+        final CollectionSheetErrorsDto collectionSheetErrors = this.collectionSheetServiceFacade.saveCollectionSheet(
                 previousCollectionSheetEntryDto, getUserContext(request).getId());
 
         logAfterSave(request, decomposedViews, System.currentTimeMillis() - beforeSaveData, collectionSheetErrors
@@ -331,7 +331,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     private void setErrorMessagesIfErrorsExist(final HttpServletRequest request,
-            final CollectionSheetErrorsView collectionSheetErrors) {
+            final CollectionSheetErrorsDto collectionSheetErrors) {
         final UserContext userContext = getUserContext(request);
         final ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext
                 .getPreferredLocale());
@@ -371,7 +371,7 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     private void logAfterSave(final HttpServletRequest request,
-            final CollectionSheetEntryDecomposedView decomposedViews, final long elapsedTimeInMillis,
+            final CollectionSheetEntryDecomposedDto decomposedViews, final long elapsedTimeInMillis,
             final boolean isDatabaseError) {
         logger.info("after saveData(). session id:" + request.getSession().getId() + ". "
                 + getUpdateTotalsString(decomposedViews) + ". Saving bulk entry data ran for approximately "
@@ -380,7 +380,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     }
 
-    private String getAmountTotalLogs(CollectionSheetEntryDecomposedView decomposedViews) {
+    private String getAmountTotalLogs(CollectionSheetEntryDecomposedDto decomposedViews) {
         String logMsg = "";
         Double totalCustomerAccountAmountDue = 0.0;
         Double totalCustomerAccountAmountEntered = 0.0;
@@ -390,12 +390,12 @@ public class CollectionSheetEntryAction extends BaseAction {
         Double totalLoanDisbursalAmountDue = 0.0;
         Double totalLoanDisbursalAmount = 0.0;
 
-        for (CustomerAccountView customerAccountView : decomposedViews.getCustomerAccountViews()) {
-            if (customerAccountView.getCustomerAccountAmountEntered() != null) {
-                totalCustomerAccountAmountEntered += Double.parseDouble(customerAccountView
+        for (CustomerAccountDto customerAccountDto : decomposedViews.getCustomerAccountViews()) {
+            if (customerAccountDto.getCustomerAccountAmountEntered() != null) {
+                totalCustomerAccountAmountEntered += Double.parseDouble(customerAccountDto
                         .getCustomerAccountAmountEntered());
             }
-            totalCustomerAccountAmountDue += customerAccountView.getTotalAmountDue().getAmount().doubleValue();
+            totalCustomerAccountAmountDue += customerAccountDto.getTotalAmountDue().getAmount().doubleValue();
         }
 
         for (LoanAccountsProductDto loanAccountsProductDto : decomposedViews.getLoanAccountViews()) {
@@ -428,9 +428,9 @@ public class CollectionSheetEntryAction extends BaseAction {
         logMsg += ", date:" + bulkEntry.getTransactionDate();
         logMsg += ", office id:" + bulkEntryActionForm.getOfficeId();
 
-        final OfficeView officeView = bulkEntry.getOffice();
-        if (null != officeView) {
-            logMsg += ", office name:" + officeView.getOfficeName();
+        final OfficeDetailsDto officeDetailsDto = bulkEntry.getOffice();
+        if (null != officeDetailsDto) {
+            logMsg += ", office name:" + officeDetailsDto.getOfficeName();
         }
         logMsg += ", center id:" + bulkEntryActionForm.getCustomerId();
         logMsg += ".";
@@ -438,8 +438,8 @@ public class CollectionSheetEntryAction extends BaseAction {
     }
 
     private void storeOnRequestErrorAndCollectionSheetData(final HttpServletRequest request,
-            final CollectionSheetEntryDecomposedView decomposedViews,
-            final CollectionSheetErrorsView collectionSheetErrors) throws PageExpiredException {
+            final CollectionSheetEntryDecomposedDto decomposedViews,
+            final CollectionSheetErrorsDto collectionSheetErrors) throws PageExpiredException {
 
         // support old way for now.
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY, decomposedViews
@@ -501,7 +501,7 @@ public class CollectionSheetEntryAction extends BaseAction {
                 .getAttendanceTypesList(), request);
     }
 
-    private String getUpdateTotalsString(final CollectionSheetEntryDecomposedView decomposedViews) {
+    private String getUpdateTotalsString(final CollectionSheetEntryDecomposedDto decomposedViews) {
         String totals = "";
         totals += ", loans:" + decomposedViews.getLoanAccountViews().size();
         totals += ", collections:" + decomposedViews.getCustomerAccountViews().size();

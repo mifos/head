@@ -85,10 +85,10 @@
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->
 	<query name="masterdata.activeloanofficers">
-		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.id = :levelId)) and personnel.office.officeId =:officeId and personnel.status.id =:statusId order by personnel.displayName]]>
+		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelDto(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where ((personnel.personnelId=:userId and :userLevelId=:levelId) or (:userLevelId!=:levelId and personnel.level.id = :levelId)) and personnel.office.officeId =:officeId and personnel.status.id =:statusId order by personnel.displayName]]>
 	</query>
 	<query name="personnel.formedByLoanOfficers">
-		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelView(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where personnel.level.id = :levelId and personnel.office.officeId =:officeId and personnel.status.id =:statusId]]>
+		<![CDATA[select new org.mifos.customers.personnel.business.PersonnelDto(personnel.personnelId,personnel.displayName) from org.mifos.customers.personnel.business.PersonnelBO as personnel where personnel.level.id = :levelId and personnel.office.officeId =:officeId and personnel.status.id =:statusId]]>
 	</query>
 	<query name="getCountActivePersonnel">
 		<![CDATA[select count(*)  from org.mifos.customers.personnel.business.PersonnelBO as personnel where  personnel.office.officeId =:OFFICE_ID and personnel.status.id =:STATUS_ID]]>

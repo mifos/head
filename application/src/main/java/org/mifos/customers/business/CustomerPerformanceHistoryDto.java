@@ -20,9 +20,9 @@
 
 package org.mifos.customers.business;
 
-import java.io.Serializable;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CustomerPerformanceHistoryView implements Serializable {
+public class CustomerPerformanceHistoryDto implements DataTransferObject {
 
     private Integer meetingsAttended;
 
@@ -31,10 +31,10 @@ public class CustomerPerformanceHistoryView implements Serializable {
     private String lastLoanAmount;
 
     // TODO: remove this constructor and change references
-    public CustomerPerformanceHistoryView() {
+    public CustomerPerformanceHistoryDto() {
     };
 
-    public CustomerPerformanceHistoryView(Integer meetingAttended, Integer meetingsMissed, String lastLoanAmount) {
+    public CustomerPerformanceHistoryDto(Integer meetingAttended, Integer meetingsMissed, String lastLoanAmount) {
         this.meetingsAttended = meetingAttended;
         this.meetingsMissed = meetingsMissed;
         this.lastLoanAmount = lastLoanAmount;

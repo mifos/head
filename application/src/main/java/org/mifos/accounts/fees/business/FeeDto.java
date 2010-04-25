@@ -26,7 +26,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.business.View;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.UserContext;

@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -39,7 +39,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
     private String userName;
     private String emailId;
     private List<Short> roleIds;
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
     private Name name;
     private String governmentIdNumber;
     private Date dateOfBirth;
@@ -59,8 +59,8 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
         this.emailId = "foo@mifos.org";
         this.roleIds = new ArrayList<Short>();
         this.roleIds.add(new Short((short) 1));
-        this.customFields = new ArrayList<CustomFieldView>();
-        customFields.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        this.customFields = new ArrayList<CustomFieldDto>();
+        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         this.name = new Name("TestFirstName", null, null, null);
         this.governmentIdNumber = "111111";
         this.dateOfBirth = new Date();
@@ -103,7 +103,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
         return this.roleIds;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 

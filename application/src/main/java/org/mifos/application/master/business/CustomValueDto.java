@@ -22,7 +22,7 @@ package org.mifos.application.master.business;
 
 import java.util.List;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * This class represents a {@link LookUpEntity} and its associated list of
@@ -30,7 +30,7 @@ import org.mifos.framework.business.View;
  *
  * A better name for this class might be ValueListForLocale.
  */
-public class CustomValueList extends View {
+public class CustomValueDto implements DataTransferObject {
 
     private Short entityId;
 
@@ -38,16 +38,16 @@ public class CustomValueList extends View {
 
     private String entityLabel;
 
-    private List<CustomValueListElement> customValueListElements;
+    private List<CustomValueListElementDto> customValueListElementDtos;
 
-    public CustomValueList() {
+    public CustomValueDto() {
     }
 
     /**
      * This is only used in the HQL query "masterdata.entityvalue" in
      * LookUpEntity
      */
-    public CustomValueList(Short entityId, Short localeId, String entityLabel) {
+    public CustomValueDto(Short entityId, Short localeId, String entityLabel) {
 
         this.entityId = entityId;
         this.localeId = localeId;
@@ -67,21 +67,21 @@ public class CustomValueList extends View {
     }
 
     /**
-     * Method which returns the customValueListElements
+     * Method which returns the customValueListElementDtos
      *
-     * @return Returns the customValueListElements.
+     * @return Returns the customValueListElementDtos.
      */
-    public List<CustomValueListElement> getCustomValueListElements() {
-        return customValueListElements;
+    public List<CustomValueListElementDto> getCustomValueListElements() {
+        return customValueListElementDtos;
     }
 
     /**
      * Method which returns an array of the customValueListElement Strings
      */
     public String[] getCustomValueListElementsAsStrings() {
-        String stringArray[] = new String[customValueListElements.size()];
+        String stringArray[] = new String[customValueListElementDtos.size()];
         int elementIndex = 0;
-        for (CustomValueListElement element : customValueListElements) {
+        for (CustomValueListElementDto element : customValueListElementDtos) {
             stringArray[elementIndex++] = element.getLookUpValue();
         }
         ;
@@ -89,13 +89,13 @@ public class CustomValueList extends View {
     }
 
     /**
-     * Method which sets the customValueListElements
+     * Method which sets the customValueListElementDtos
      *
-     * @param customValueListElements
-     *            The customValueListElements to set.
+     * @param customValueListElementDtos
+     *            The customValueListElementDtos to set.
      */
-    public void setCustomValueListElements(List<CustomValueListElement> customValueListElements) {
-        this.customValueListElements = customValueListElements;
+    public void setCustomValueListElements(List<CustomValueListElementDto> customValueListElementDtos) {
+        this.customValueListElementDtos = customValueListElementDtos;
     }
 
     /**
@@ -105,8 +105,8 @@ public class CustomValueList extends View {
      */
     public String getLookUpValueForId(int lookUpId) {
         String lookUpValue = "";
-        for (int i = 0; i < customValueListElements.size(); i++) {
-            CustomValueListElement lookUpEntityValue = customValueListElements.get(i);
+        for (int i = 0; i < customValueListElementDtos.size(); i++) {
+            CustomValueListElementDto lookUpEntityValue = customValueListElementDtos.get(i);
             if (lookUpId == lookUpEntityValue.getLookUpId().intValue()) {
                 lookUpValue = lookUpEntityValue.getLookUpValue();
                 break;

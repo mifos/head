@@ -22,7 +22,6 @@ package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.View;
 import org.mifos.framework.business.service.DataTransferObject;
 
 public abstract class CollectionSheetEntryInstallmentDto implements DataTransferObject {

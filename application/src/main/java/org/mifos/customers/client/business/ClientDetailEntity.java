@@ -47,7 +47,7 @@ public class ClientDetailEntity extends AbstractEntity {
      *
      */
     @Deprecated
-    public ClientDetailEntity(ClientBO client, ClientDetailView view) {
+    public ClientDetailEntity(ClientBO client, ClientPersonalDetailDto view) {
         super();
         this.customerId = null;
         this.client = client;
@@ -190,7 +190,7 @@ public class ClientDetailEntity extends AbstractEntity {
         this.client = client;
     }
 
-    public void updateClientDetails(ClientDetailView view) {
+    public void updateClientDetails(ClientPersonalDetailDto view) {
         this.ethinicity = view.getEthinicity();
         this.citizenship = view.getCitizenship();
         this.handicapped = view.getHandicapped();
@@ -204,8 +204,8 @@ public class ClientDetailEntity extends AbstractEntity {
         this.handicappedDetails = null;
     }
 
-    public ClientDetailView toDto() {
-        return new ClientDetailView(this.ethinicity, this.citizenship, this.handicapped, this.businessActivities,
+    public ClientPersonalDetailDto toDto() {
+        return new ClientPersonalDetailDto(this.ethinicity, this.citizenship, this.handicapped, this.businessActivities,
                 this.maritalStatus, this.educationLevel, this.numChildren, this.gender, this.povertyStatus);
     }
 }

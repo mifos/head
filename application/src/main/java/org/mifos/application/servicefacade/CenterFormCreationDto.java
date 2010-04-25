@@ -23,30 +23,30 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 public class CenterFormCreationDto {
 
-    private final List<PersonnelView> activeLoanOfficersForBranch;
-    private final List<CustomFieldView> customFieldViews;
+    private final List<PersonnelDto> activeLoanOfficersForBranch;
+    private final List<CustomFieldDto> customFieldDtos;
     private final List<FeeDto> additionalFees;
     private final List<FeeDto> defaultFees;
 
-    public CenterFormCreationDto(List<PersonnelView> activeLoanOfficersForBranch,
-            List<CustomFieldView> customFieldViews, List<FeeDto> additionalFees, List<FeeDto> defaultFees) {
+    public CenterFormCreationDto(List<PersonnelDto> activeLoanOfficersForBranch,
+            List<CustomFieldDto> customFieldDtos, List<FeeDto> additionalFees, List<FeeDto> defaultFees) {
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
-        this.customFieldViews = customFieldViews;
+        this.customFieldDtos = customFieldDtos;
         this.additionalFees = additionalFees;
         this.defaultFees = defaultFees;
     }
 
-    public List<PersonnelView> getActiveLoanOfficersForBranch() {
+    public List<PersonnelDto> getActiveLoanOfficersForBranch() {
         return this.activeLoanOfficersForBranch;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
     public List<FeeDto> getAdditionalFees() {

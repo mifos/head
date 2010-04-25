@@ -39,7 +39,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelTemplate;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
@@ -67,7 +67,7 @@ public class PersonnelPersistence extends Persistence {
 
     @SuppressWarnings("unchecked")
     @Deprecated
-    public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,
+    public List<PersonnelDto> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,
             Short userLevelId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", levelId);
@@ -75,7 +75,7 @@ public class PersonnelPersistence extends Persistence {
         queryParameters.put("userLevelId", userLevelId);
         queryParameters.put("officeId", officeId);
         queryParameters.put("statusId", PersonnelStatus.ACTIVE.getValue());
-        List<PersonnelView> queryResult = executeNamedQuery(
+        List<PersonnelDto> queryResult = executeNamedQuery(
                 NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH, queryParameters);
         return queryResult;
     }
@@ -327,7 +327,7 @@ public class PersonnelPersistence extends Persistence {
         QueryInputs queryInputs = new QueryInputs();
         queryInputs.setQueryStrings(namedQuery);
         queryInputs.setParamList(paramList);
-        queryInputs.setPath("org.mifos.customers.personnel.util.helpers.UserSearchResultsView");
+        queryInputs.setPath("org.mifos.customers.personnel.util.helpers.UserSearchResultsDto");
         queryInputs.setAliasNames(getAliasNames());
         try {
             queryResult.setQueryInputs(queryInputs);

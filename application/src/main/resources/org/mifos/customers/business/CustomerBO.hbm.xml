@@ -177,11 +177,11 @@
 		id,officeid,customerlevelid
 	-->
 	<query name="Customer.getParentCustomersForLoanOfficer">
-		<![CDATA[select new org.mifos.customers.business.CustomerView(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
+		<![CDATA[select new org.mifos.customers.business.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
 	        	   		customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
 	</query>
 	<query name="Customer.getActiveChildrenForParent"><![CDATA[
-		select new org.mifos.customers.business.CustomerView(
+		select new org.mifos.customers.business.CustomerDto(
 			customer.customerId,customer.displayName,
 			customer.parentCustomer.customerId,customer.customerLevel.id) 
 		from org.mifos.customers.business.CustomerBO as customer 

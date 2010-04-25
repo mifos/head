@@ -237,7 +237,7 @@ public class ClientRules {
      */
     public static boolean isValidNameSequence(String[] nameSequence) {
         // a null or empty part would cause errors when a name format when, for
-        // instance, ClientNameDetailView.getDisplayName() is called
+        // instance, ClientNameDetailDto.getDisplayName() is called
         if (null == nameSequence) {
             logger.error("nameSequence must not be null");
             return false;
@@ -248,7 +248,7 @@ public class ClientRules {
         }
 
         // disallowed parts would cause errors when a name format when, for
-        // instance, ClientNameDetailView.getDisplayName() is called
+        // instance, ClientNameDetailDto.getDisplayName() is called
         for (String s : nameSequence) {
             if (!allowedNameParts.contains(s)) {
                 String allowed = StringUtils.join(allowedNameParts, ",");

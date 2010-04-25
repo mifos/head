@@ -42,7 +42,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -251,7 +251,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -262,7 +262,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -274,8 +274,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
-    private List<CustomFieldView> getCustomFieldsFromSession() throws PageExpiredException {
-        return (List<CustomFieldView>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+    private List<CustomFieldDto> getCustomFieldsFromSession() throws PageExpiredException {
+        return (List<CustomFieldDto>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
     }
 
     public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception {
@@ -286,9 +286,9 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         boolean isCustomFieldMandatory = false;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             if (customFieldDef.isMandatory()) {
                 isCustomFieldMandatory = true;
                 break;
@@ -301,7 +301,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "");
             i++;
@@ -379,7 +379,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         List<FeeDto> feeList = getFeesFromSession();
         FeeDto fee = feeList.get(0);
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -388,7 +388,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -430,7 +430,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -439,7 +439,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -471,7 +471,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -480,7 +480,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -510,7 +510,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "preview");
@@ -519,7 +519,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("status", CustomerStatus.GROUP_PENDING.getValue().toString());
         addRequestParameter("formedByPersonnel", center.getPersonnel().getPersonnelId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -628,14 +628,14 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -656,13 +656,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", "group");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -685,13 +685,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", "group");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -712,13 +712,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", "group");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -752,13 +752,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", "group123"); // editing group name
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -783,13 +783,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", newDisplayName);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldType", customFieldDef.getFieldType().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
@@ -822,13 +822,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", newDisplayName);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldType", customFieldDef.getFieldType().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
@@ -864,13 +864,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldsFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldsFromSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previewManage");
         addRequestParameter("officeId", "3");
         addRequestParameter("displayName", newDisplayName);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldType", customFieldDef.getFieldType().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");

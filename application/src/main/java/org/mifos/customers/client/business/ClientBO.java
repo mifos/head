@@ -44,7 +44,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -241,15 +241,15 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeDto> fees,
+            final List<CustomFieldDto> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final CustomerBO parentCustomer, final Date dateOfBirth, final String governmentId, final Short trained,
-            final Date trainedDate, final Short groupFlag, final ClientNameDetailView clientNameDetailView,
-            final ClientNameDetailView spouseNameDetailView, final ClientDetailView clientDetailView,
+            final Date trainedDate, final Short groupFlag, final ClientNameDetailDto clientNameDetailDto,
+            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto,
             final InputStream picture) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, parentCustomer, null, null, dateOfBirth, governmentId, trained,
-                trainedDate, groupFlag, clientNameDetailView, spouseNameDetailView, clientDetailView, picture);
+                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, picture);
     }
 
     /**
@@ -258,15 +258,15 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     public ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeDto> fees,
+            final List<CustomFieldDto> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final MeetingBO meeting, final PersonnelBO loanOfficer, final Date dateOfBirth, final String governmentId,
             final Short trained, final Date trainedDate, final Short groupFlag,
-            final ClientNameDetailView clientNameDetailView, final ClientNameDetailView spouseNameDetailView,
-            final ClientDetailView clientDetailView, final InputStream picture) throws CustomerException {
+            final ClientNameDetailDto clientNameDetailDto, final ClientNameDetailDto spouseNameDetailView,
+            final ClientPersonalDetailDto clientPersonalDetailDto, final InputStream picture) throws CustomerException {
         this(userContext, displayName, customerStatus, externalId, mfiJoiningDate, address, customFields, fees,
                 offeringsSelected, formedBy, office, null, meeting, loanOfficer, dateOfBirth, governmentId, trained,
-                trainedDate, groupFlag, clientNameDetailView, spouseNameDetailView, clientDetailView, picture);
+                trainedDate, groupFlag, clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, picture);
     }
 
     /**
@@ -275,12 +275,12 @@ public class ClientBO extends CustomerBO {
     @Deprecated
     private ClientBO(final UserContext userContext, final String displayName, final CustomerStatus customerStatus,
             final String externalId, final Date mfiJoiningDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeDto> fees,
+            final List<CustomFieldDto> customFields, final List<FeeDto> fees,
             final List<SavingsOfferingBO> offeringsSelected, final PersonnelBO formedBy, final OfficeBO office,
             final CustomerBO parentCustomer, final MeetingBO meeting, final PersonnelBO loanOfficer,
             final Date dateOfBirth, final String governmentId, final Short trained, final Date trainedDate,
-            final Short groupFlag, final ClientNameDetailView clientNameDetailView,
-            final ClientNameDetailView spouseNameDetailView, final ClientDetailView clientDetailView,
+            final Short groupFlag, final ClientNameDetailDto clientNameDetailDto,
+            final ClientNameDetailDto spouseNameDetailView, final ClientPersonalDetailDto clientPersonalDetailDto,
             final InputStream picture) throws CustomerException {
         super(userContext, displayName, CustomerLevel.CLIENT, customerStatus, externalId, mfiJoiningDate, address,
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
@@ -302,15 +302,15 @@ public class ClientBO extends CustomerBO {
         setTrainedDate(trainedDate);
 
         this.groupFlag = groupFlag;
-        this.firstName = clientNameDetailView.getFirstName();
-        this.lastName = clientNameDetailView.getLastName();
-        this.secondLastName = clientNameDetailView.getSecondLastName();
+        this.firstName = clientNameDetailDto.getFirstName();
+        this.lastName = clientNameDetailDto.getLastName();
+        this.secondLastName = clientNameDetailDto.getSecondLastName();
 
-        this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailView));
+        this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailDto));
         if (spouseNameDetailView != null) {
             this.addNameDetailSet(new ClientNameDetailEntity(this, null, spouseNameDetailView));
         }
-        this.customerDetail = new ClientDetailEntity(this, clientDetailView);
+        this.customerDetail = new ClientDetailEntity(this, clientPersonalDetailDto);
         createPicture(picture);
         createAssociatedOfferings(offeringsSelected);
 //        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
@@ -337,13 +337,13 @@ public class ClientBO extends CustomerBO {
         this.offeringsAssociatedInCreate.add(clientInitialSavingsOfferingEntity);
     }
 
-    public void setFamilyAndNameDetailSets(final List<ClientNameDetailView> familyNameDetailView,
-            final List<ClientFamilyDetailView> familyDetailView) {
-        Iterator<ClientFamilyDetailView> iterator2 = familyDetailView.iterator();
+    public void setFamilyAndNameDetailSets(final List<ClientNameDetailDto> familyNameDetailView,
+            final List<ClientFamilyDetailDto> familyDetailView) {
+        Iterator<ClientFamilyDetailDto> iterator2 = familyDetailView.iterator();
         familyDetailSet = new HashSet<ClientFamilyDetailEntity>();
         for (Object element : familyNameDetailView) {
-            ClientNameDetailView clientNameDetailView2 = (ClientNameDetailView) element;
-            ClientFamilyDetailView clientFamilyDetailView2 = iterator2.next();
+            ClientNameDetailDto clientNameDetailView2 = (ClientNameDetailDto) element;
+            ClientFamilyDetailDto clientFamilyDetailView2 = iterator2.next();
             ClientNameDetailEntity nameEntity = new ClientNameDetailEntity(this, null, clientNameDetailView2);
             this.addNameDetailSet(nameEntity);
             this.addFamilyDetailSet(new ClientFamilyDetailEntity(this, nameEntity, clientFamilyDetailView2));
@@ -544,7 +544,7 @@ public class ClientBO extends CustomerBO {
 
         this.governmentId = personalInfo.getGovernmentId();
         this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
-        ClientNameDetailView clientName = personalInfo.getClientNameDetails();
+        ClientNameDetailDto clientName = personalInfo.getClientNameDetails();
         this.getClientName().updateNameDetails(clientName);
         this.firstName = clientName.getFirstName();
         this.lastName = clientName.getLastName();
@@ -594,18 +594,18 @@ public class ClientBO extends CustomerBO {
 
         for (int key = 0; key < primaryKeys.size(); key++) {
             if (primaryKeys.get(key) != null) {
-                List<ClientNameDetailView> clientNameDetailView = clientFamilyInfoUpdate.getFamilyNames();
+                List<ClientNameDetailDto> clientNameDetailDto = clientFamilyInfoUpdate.getFamilyNames();
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
-                        clientNameDetailEntity.updateNameDetails(clientNameDetailView.get(key));
+                        clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
                     }
                 }
 
-                List<ClientFamilyDetailView> clientFamilyDetailView = clientFamilyInfoUpdate.getFamilyDetails();
+                List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
                 for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
                     if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key)
                             .intValue()) {
-                        clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailView.get(key));
+                        clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailDto.get(key));
                     }
                 }
             }
@@ -752,8 +752,8 @@ public class ClientBO extends CustomerBO {
      * @deprecated -
      */
     @Deprecated
-    public void updateClientDetails(final ClientDetailView clientDetailView) {
-        customerDetail.updateClientDetails(clientDetailView);
+    public void updateClientDetails(final ClientPersonalDetailDto clientPersonalDetailDto) {
+        customerDetail.updateClientDetails(clientPersonalDetailDto);
     }
 
     @Deprecated
@@ -957,11 +957,11 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private List<CustomFieldView> createCustomFieldViewsForClientSavingsAccount(
+    private List<CustomFieldDto> createCustomFieldViewsForClientSavingsAccount(
             final List<CustomFieldDefinitionEntity> customFieldDefs) {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
+            customFields.add(new CustomFieldDto(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
                     customFieldDef.getFieldType()));
         }
         return customFields;
@@ -1137,31 +1137,31 @@ public class ClientBO extends CustomerBO {
         return this.getStatus().isClientPending();
     }
 
-    public final List<ClientNameDetailView> toClientNameDetailViews() {
+    public final List<ClientNameDetailDto> toClientNameDetailViews() {
 
-        List<ClientNameDetailView> clientNameDetailViews = new ArrayList<ClientNameDetailView>();
+        List<ClientNameDetailDto> clientNameDetailDtos = new ArrayList<ClientNameDetailDto>();
         for (ClientNameDetailEntity clientNameDetail : this.nameDetailSet) {
 
-            ClientNameDetailView clientNameDetailView = clientNameDetail.toDto();
-            clientNameDetailViews.add(clientNameDetailView);
+            ClientNameDetailDto clientNameDetailDto = clientNameDetail.toDto();
+            clientNameDetailDtos.add(clientNameDetailDto);
         }
-        return clientNameDetailViews;
+        return clientNameDetailDtos;
     }
 
     public ClientDetailDto toClientDetailDto(boolean isFamilyDetailsRequired) {
 
-        ClientDetailView customerDetailView = this.customerDetail.toDto();
+        ClientPersonalDetailDto customerDetailView = this.customerDetail.toDto();
 
         String dateOfBirthAsString = "";
         if (this.dateOfBirth != null) {
             dateOfBirthAsString = DateUtils.makeDateAsSentFromBrowser(this.dateOfBirth);
         }
 
-        List<ClientNameDetailView> clientNameViews = toClientNameDetailViews();
+        List<ClientNameDetailDto> clientNameViews = toClientNameDetailViews();
 
-        ClientNameDetailView clientName = null;
-        ClientNameDetailView spouseName = null;
-        for (ClientNameDetailView nameView : clientNameViews) {
+        ClientNameDetailDto clientName = null;
+        ClientNameDetailDto spouseName = null;
+        for (ClientNameDetailDto nameView : clientNameViews) {
             if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
                 clientName = nameView;
             } else if (!isFamilyDetailsRequired) {

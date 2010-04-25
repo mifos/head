@@ -116,7 +116,7 @@ import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -146,9 +146,9 @@ import org.mifos.customers.checklist.business.CheckListDetailEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
@@ -164,7 +164,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -343,9 +343,9 @@ public class TestObjectFactory {
         return fees;
     }
 
-    public static List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        CustomFieldView fee = new CustomFieldView(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC);
+    public static List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        CustomFieldDto fee = new CustomFieldDto(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC);
         customFields.add(fee);
         return customFields;
     }
@@ -384,7 +384,7 @@ public class TestObjectFactory {
 
     public static GroupBO createGroupUnderCenter(final String customerName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeDto> fees, final Short formedById,
+            final List<CustomFieldDto> customFields, final List<FeeDto> fees, final Short formedById,
             final CustomerBO parentCustomer) {
         GroupBO group;
         try {
@@ -417,7 +417,7 @@ public class TestObjectFactory {
 
     public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
             final String externalId, final boolean trained, final Date trainedDate, final Address address,
-            final List<CustomFieldView> customFields, final List<FeeDto> fees, final Short formedById,
+            final List<CustomFieldDto> customFields, final List<FeeDto> fees, final Short formedById,
             final Short officeId, final MeetingBO meeting, final Short loanOfficerId) {
         GroupBO group;
         PersonnelBO loanOfficer = null;
@@ -445,17 +445,17 @@ public class TestObjectFactory {
     public static ClientBO createClient(final String customerName, final CustomerStatus status,
             final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth) {
 
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        ClientNameDetailView clientNameDetailView = clientNameView(NameType.CLIENT, customerName);
-        ClientNameDetailView spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
+        ClientNameDetailDto clientNameDetailDto = clientNameView(NameType.CLIENT, customerName);
+        ClientNameDetailDto spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
 
         ClientBO client;
         try {
             client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, null, null, fees,
                     null, new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
-                    null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView,
+                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
                     null);
             new ClientPersistence().saveClient(client);
         } catch (CustomerException e) {
@@ -468,8 +468,8 @@ public class TestObjectFactory {
         return client;
     }
 
-    public static ClientNameDetailView clientNameView(final NameType nameType, final String customerName) {
-        return new ClientNameDetailView(nameType, SAMPLE_SALUTATION, customerName, "middle", customerName, "secondLast");
+    public static ClientNameDetailDto clientNameView(final NameType nameType, final String customerName) {
+        return new ClientNameDetailDto(nameType, SAMPLE_SALUTATION, customerName, "middle", customerName, "secondLast");
     }
 
     public static ClientBO createClient(final String customerName, final MeetingBO meeting, final CustomerStatus status) {
@@ -477,17 +477,17 @@ public class TestObjectFactory {
 
         try {
             PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT, SAMPLE_SALUTATION,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE, SAMPLE_SALUTATION,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
-            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(), status, null,
+            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status, null,
                     null, null, null, getFees(), null, systemUser, new OfficePersistence()
                             .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
-                            .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-                    spouseNameDetailView, clientDetailView, null);
+                            .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
+                    spouseNameDetailView, clientPersonalDetailDto, null);
             new ClientPersistence().saveClient(client);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
@@ -502,24 +502,24 @@ public class TestObjectFactory {
         ClientBO client;
         Short personnel = PersonnelConstants.SYSTEM_USER;
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.MAYBE_CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.MAYBE_CLIENT,
                     SAMPLE_SALUTATION, customerName, "", customerName, "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE, SAMPLE_SALUTATION,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
 
             // Add a way to create parentless clients; like clients outside
             // groups
             if (null == parentCustomer) {
                 client = new ClientBO(TestUtils.makeUserWithLocales(), // UserContext
-                        clientNameDetailView.getDisplayName(), // String
+                        clientNameDetailDto.getDisplayName(), // String
                         // displayName
                         status, // CustomerStatus
                         null, // String externalId
                         null, // Date mfiJoiningDate
                         null, // Address
-                        null, // List<CustomFieldView> customFields
+                        null, // List<CustomFieldDto> customFields
                         getFees(), // List<FeeDto> fees
                         null, // List<SavingsOfferingBO> offeringsSelected
                         new PersonnelPersistence().getPersonnel(personnel), // Short
@@ -533,15 +533,15 @@ public class TestObjectFactory {
                         null, // Short trained
                         null, // Date trainedDate
                         YesNoFlag.NO.getValue(), // Short groupFlag
-                        clientNameDetailView, // ClientNameDetailView
-                        spouseNameDetailView, // ClientNameDetailView
-                        clientDetailView, // ClientDetailView
+                        clientNameDetailDto, // ClientNameDetailDto
+                        spouseNameDetailView, // ClientNameDetailDto
+                        clientPersonalDetailDto, // ClientPersonalDetailDto
                         null); // InputStream picture
             } else {
-                client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(), status,
+                client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status,
                         null, null, null, null, getFees(), null, new PersonnelPersistence().getPersonnel(personnel),
                         parentCustomer.getOffice(), parentCustomer, null, null, null, null, YesNoFlag.YES.getValue(),
-                        clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                        clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             }
 
             new ClientPersistence().saveClient(client);
@@ -880,9 +880,9 @@ public class TestObjectFactory {
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
     }
 
-    private static List<CustomFieldView> getCustomFieldView() {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        customFields.add(new CustomFieldView(new Short("8"), "custom field value", CustomFieldType.NONE));
+    private static List<CustomFieldDto> getCustomFieldView() {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        customFields.add(new CustomFieldDto(new Short("8"), "custom field value", CustomFieldType.NONE));
         return customFields;
     }
 
@@ -1824,13 +1824,13 @@ public class TestObjectFactory {
         return paymentData;
     }
 
-    public static CustomerAccountView getCustomerAccountView(final CustomerBO customer) throws Exception {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
+    public static CustomerAccountDto getCustomerAccountView(final CustomerBO customer) throws Exception {
+        CustomerAccountDto customerAccountDto = new CustomerAccountDto(customer.getCustomerAccount().getAccountId(),
                 TestUtils.RUPEE);
         List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(customer.getCustomerAccount()
                 .getAccountId(), new java.sql.Date(System.currentTimeMillis()));
-        customerAccountView.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
-        return customerAccountView;
+        customerAccountDto.setAccountActionDates(getBulkEntryAccountActionViews(accountAction));
+        return customerAccountDto;
     }
 
     public static List<AccountActionDateEntity> getDueActionDatesForAccount(final Integer accountId,
@@ -2046,7 +2046,7 @@ public class TestObjectFactory {
 
     public static PersonnelBO createPersonnel(final PersonnelLevel level, final OfficeBO office, final Integer title,
             final Short preferredLocale, final String password, final String userName, final String emailId,
-            final List<RoleBO> personnelRoles, final List<CustomFieldView> customFields, final Name name,
+            final List<RoleBO> personnelRoles, final List<CustomFieldDto> customFields, final Name name,
             final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender,
             final Date dateOfJoiningMFI, final Date dateOfJoiningBranch, final Address address) throws Exception {
         PersonnelBO personnelBO = new PersonnelBO(level, office, title, preferredLocale, password, userName, emailId,
@@ -2099,7 +2099,7 @@ public class TestObjectFactory {
 
     public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
             final Short officeId, final MeetingBO meeting, final Short loanOfficerId,
-            final List<CustomFieldView> customFields) {
+            final List<CustomFieldDto> customFields) {
         Short formedBy = new Short("1");
         return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, customFields, getFees(),
                 formedBy, officeId, meeting, loanOfficerId);
@@ -2254,7 +2254,7 @@ public class TestObjectFactory {
     public static GroupBO createInstanceForTest(final UserContext userContext, final GroupTemplate template,
             final CenterBO center, final Date customerActivationDate) {
 
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         if (template.getCustomFieldViews() != null) {
             customFields = template.getCustomFieldViews();
         }

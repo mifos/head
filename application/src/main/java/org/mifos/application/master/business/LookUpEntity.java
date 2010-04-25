@@ -56,13 +56,13 @@ import org.mifos.framework.business.AbstractEntity;
   ),
   @NamedQuery(
     name = "masterdata.entityvalue",
-    query = "select new org.mifos.application.master.business.CustomValueList(entity.entityId ,label.localeId,label.labelName) "
+    query = "select new org.mifos.application.master.business.CustomValueDto(entity.entityId ,label.localeId,label.labelName) "
          + "from LookUpEntity entity, LookUpLabelEntity label "
          + "where entity.entityId = label.lookUpEntity.entityId and entity.entityType=:entityType"
   ),
   @NamedQuery(
     name = "masterdata.entitylookupvalue",
-    query = "select new org.mifos.application.master.business.CustomValueListElement(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
+    query = "select new org.mifos.application.master.business.CustomValueListElementDto(lookup.lookUpId,lookup.lookUpName, lookup.lookUpName) "
                 + "from LookUpValueEntity lookup, LookUpEntity entity "
                 + "where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId"
   )

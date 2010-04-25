@@ -46,7 +46,7 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.business.service.CheckListBusinessService;
 import org.mifos.customers.checklist.struts.actionforms.ChkListActionForm;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
+import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -100,7 +100,7 @@ public class ChkListAction extends BaseAction {
         List<CustomerStatusEntity> statesData = null;
         List<String> details = null;
         request.getSession().setAttribute("ChkListActionForm", null);
-        List<CheckListMasterView> masterData = ((CheckListBusinessService) getService())
+        List<CheckListMasterDto> masterData = ((CheckListBusinessService) getService())
                 .getCheckListMasterData(getUserContext(request));
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, statesData, request);
@@ -245,7 +245,7 @@ public class ChkListAction extends BaseAction {
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.ACCOUNT_CHECKLIST.getValue(), request);
         }
 
-        List<CheckListMasterView> masterData = ((CheckListBusinessService) getService())
+        List<CheckListMasterDto> masterData = ((CheckListBusinessService) getService())
                 .getCheckListMasterData(getUserContext(request));
         SessionUtils.setCollectionAttribute(CheckListConstants.CHECKLIST_MASTERDATA, masterData, request);
         List<CheckListStatesView> states = getStates(chkListActionForm, request);

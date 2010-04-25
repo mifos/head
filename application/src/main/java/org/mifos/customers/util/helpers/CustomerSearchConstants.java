@@ -57,7 +57,7 @@ public interface CustomerSearchConstants {
 
     public String CENTERSEARCH = "centerSearch";
     public String GROUPLIST = "GroupList";
-    public String ACCOUNTSEARCHRESULTS = "AccountSearchResults";
+    public String ACCOUNTSEARCHRESULTS = "AccountSearchResultsDto";
     public String CUSTOMERSFORSAVINGSACCOUNT = "customersForSavingsAccount";
     public String LOANACCOUNTIDSEARCH = "loanAccountIdSearch";
     public String IDSEARCH = "IdSearch";

@@ -24,9 +24,10 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.business.util.Name;
 
-public class ClientNameDetailView {
+public class ClientNameDetailDto implements DataTransferObject {
 
     private Short nameType;
     private Integer salutation;
@@ -37,16 +38,16 @@ public class ClientNameDetailView {
     private String secondLastName;
     private Integer customerNameId;
 
-    public ClientNameDetailView() {
+    public ClientNameDetailDto() {
         super();
     }
 
-    public ClientNameDetailView(NameType nameType, Integer salutation, String firstName, String middleName,
+    public ClientNameDetailDto(NameType nameType, Integer salutation, String firstName, String middleName,
             String lastName, String secondLastName) {
         this(nameType.getValue(), salutation, new StringBuilder(), firstName, middleName, lastName, secondLastName, null);
     }
 
-    public ClientNameDetailView(Short nameType, Integer salutation, StringBuilder displayName, String firstName,
+    public ClientNameDetailDto(Short nameType, Integer salutation, StringBuilder displayName, String firstName,
             String middleName, String lastName, String secondLastName, Integer customerNameId) {
         this.nameType = nameType;
         this.salutation = salutation;

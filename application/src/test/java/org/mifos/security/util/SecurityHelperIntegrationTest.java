@@ -40,12 +40,12 @@ public class SecurityHelperIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetPersonnelOffices() throws Exception {
-        List<OfficeSearch> officeSearchList = SecurityHelper.getPersonnelOffices(Short.valueOf("1"));
+        List<OfficeSearchDto> officeSearchList = SecurityHelper.getPersonnelOffices(Short.valueOf("1"));
        Assert.assertEquals(3, officeSearchList.size());
     }
 
     public void testGetOffices() throws Exception {
-        List<OfficeSearch> officeSearchList = SecurityHelper.getOffices();
+        List<OfficeSearchDto> officeSearchList = SecurityHelper.getOffices();
        Assert.assertEquals(3, officeSearchList.size());
     }
 

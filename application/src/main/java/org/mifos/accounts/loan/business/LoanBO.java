@@ -85,7 +85,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -226,7 +226,7 @@ public class LoanBO extends AccountBO {
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
             final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldView> customFields, final Boolean isRedone,
+            final List<CustomFieldDto> customFields, final Boolean isRedone,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
@@ -238,7 +238,7 @@ public class LoanBO extends AccountBO {
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
             final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldView> customFields, final Boolean isRedone, final Double maxLoanAmount,
+            final List<CustomFieldDto> customFields, final Boolean isRedone, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -253,7 +253,7 @@ public class LoanBO extends AccountBO {
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
             final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldView> customFields, final Boolean isRedone, final AccountTypes accountType,
+            final List<CustomFieldDto> customFields, final Boolean isRedone, final AccountTypes accountType,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         super(userContext, customer, accountType, accountState);
@@ -286,7 +286,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
-            final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, final Double maxLoanAmount,
+            final List<FeeDto> feeDtos, final List<CustomFieldDto> customFields, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -335,7 +335,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, boolean isUpdate)
+            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldDto> customFields, boolean isUpdate)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
@@ -354,7 +354,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final boolean isRepaymentIndepOfMeetingEnabled, final Double interestRate, final Short gracePeriodDuration,
-            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldView> customFields)
+            final FundBO fund, final List<FeeDto> feeDtos, final List<CustomFieldDto> customFields)
             throws AccountException {
 
         commonValidationsForCreateAndRedoIndividualLoans(loanOffering, customer, loanAmount, noOfinstallments,
@@ -402,7 +402,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final Double interestRate, final Short gracePeriodDuration, final FundBO fund,
-            final List<FeeDto> feeDtos, final List<CustomFieldView> customFields, final Double maxLoanAmount,
+            final List<FeeDto> feeDtos, final List<CustomFieldDto> customFields, final Double maxLoanAmount,
             final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
@@ -1323,7 +1323,7 @@ public class LoanBO extends AccountBO {
     public void updateLoan(final Boolean interestDeductedAtDisbursement, final Money loanAmount,
             final Double interestRate, final Short noOfInstallments, final Date disbursementDate,
             final Short gracePeriodDuration, final Integer businessActivityId, final String collateralNote,
-            final Integer collateralTypeId, final List<CustomFieldView> customFields,
+            final Integer collateralTypeId, final List<CustomFieldDto> customFields,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay, final FundBO fund)
             throws AccountException {
         if (interestDeductedAtDisbursement) {

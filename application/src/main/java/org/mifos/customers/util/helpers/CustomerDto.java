@@ -20,9 +20,9 @@
 
 package org.mifos.customers.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CustomerView extends View {
+public class CustomerDto implements DataTransferObject {
 
     private Integer customerId;
 
@@ -40,11 +40,11 @@ public class CustomerView extends View {
 
     private Short personnelId;
 
-    public CustomerView() {
+    public CustomerDto() {
 
     }
 
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
             java.lang.Short statusId) {
         this.customerId = customerId;
         this.displayName = displayName;
@@ -52,7 +52,7 @@ public class CustomerView extends View {
         this.statusId = statusId;
     }
 
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
             java.lang.Short statusId, Short customerLevelId, Integer versionNo, Short officeId, Short personnelId) {
         this.customerId = customerId;
         this.displayName = displayName;

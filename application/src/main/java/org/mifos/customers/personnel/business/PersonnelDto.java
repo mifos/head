@@ -18,29 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.business;
+package org.mifos.customers.personnel.business;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class PaymentTypeView extends View {
+/**
+ * I am an immutable DTO for PersonnelBO
+ */
+public class PersonnelDto implements DataTransferObject {
 
-    private Short paymentTypeId;
-    private String paymentTypeValue;
+    private final Short personnelId;
 
-    public Short getPaymentTypeId() {
-        return paymentTypeId;
+    private final String displayName;
+
+    public PersonnelDto(final Short personnelId, final String displayName) {
+        this.personnelId = personnelId;
+        this.displayName = displayName;
     }
 
-    public void setPaymentTypeId(Short paymentTypeId) {
-        this.paymentTypeId = paymentTypeId;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getPaymentTypeValue() {
-        return paymentTypeValue;
+    public Short getPersonnelId() {
+        return personnelId;
     }
-
-    public void setPaymentTypeValue(String paymentTypeValue) {
-        this.paymentTypeValue = paymentTypeValue;
-    }
-
 }

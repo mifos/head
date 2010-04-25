@@ -39,16 +39,16 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientFamilyDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientFamilyDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
@@ -75,9 +75,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 
     private String groupFlag;
     private List<FamilyDetailDTO> familyDetailBean = new ArrayList<FamilyDetailDTO>();
-    private ClientDetailView clientDetailView;
-    private ClientNameDetailView clientName;
-    private ClientNameDetailView spouseName;
+    private ClientPersonalDetailDto clientPersonalDetailDto;
+    private ClientNameDetailDto clientName;
+    private ClientNameDetailDto spouseName;
 
     private String parentGroupId;
     private String centerDisplayName;
@@ -94,8 +94,8 @@ public class ClientCustActionForm extends CustomerActionForm {
     private InputStream customerPicture;
     private int age;
     private final List<Short> selectedOfferings;
-    private List<ClientNameDetailView> familyNames;
-    private List<ClientFamilyDetailView> familyDetails;
+    private List<ClientNameDetailDto> familyNames;
+    private List<ClientFamilyDetailDto> familyDetails;
     private int[] relativePrimaryKey = new int[ClientRules.getMaximumNumberOfFamilyMembers()];
 
     // family details
@@ -124,15 +124,15 @@ public class ClientCustActionForm extends CustomerActionForm {
         addFamilyMember();
     }
 
-    public List<ClientFamilyDetailView> getFamilyDetails() {
+    public List<ClientFamilyDetailDto> getFamilyDetails() {
         return this.familyDetails;
     }
 
-    public void setFamilyDetails(List<ClientFamilyDetailView> familyDetails) {
+    public void setFamilyDetails(List<ClientFamilyDetailDto> familyDetails) {
         this.familyDetails = familyDetails;
     }
 
-    public void setFamilyNames(List<ClientNameDetailView> familyNames) {
+    public void setFamilyNames(List<ClientNameDetailDto> familyNames) {
         this.familyNames = familyNames;
     }
 
@@ -182,24 +182,24 @@ public class ClientCustActionForm extends CustomerActionForm {
      * this page.
      */
     public void constructFamilyDetails() {
-        this.familyDetails = new ArrayList<ClientFamilyDetailView>();
-        this.familyNames = new ArrayList<ClientNameDetailView>();
+        this.familyDetails = new ArrayList<ClientFamilyDetailDto>();
+        this.familyNames = new ArrayList<ClientNameDetailDto>();
         for (int row = 0; row < familyFirstName.size(); row++) {
-            ClientNameDetailView familyNames = new ClientNameDetailView();
+            ClientNameDetailDto familyNames = new ClientNameDetailDto();
             familyNames.setFirstName(getFamilyFirstName(row));
             familyNames.setMiddleName(getFamilyMiddleName(row));
             familyNames.setLastName(getFamilyLastName(row));
             familyNames.setNameType(getFamilyRelationship(row));
             familyNames.setDisplayName(new StringBuilder(getFamilyFirstName(row) + getFamilyLastName(row)));
-            ClientFamilyDetailView familyDetails = null;
+            ClientFamilyDetailDto familyDetails = null;
 
             try {
                 if (getFamilyDateOfBirth(row) != null) {
-                    familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row), getFamilyGender(row),
+                    familyDetails = new ClientFamilyDetailDto(getFamilyRelationship(row), getFamilyGender(row),
                             getFamilyLivingStatus(row), DateUtils.getDateAsSentFromBrowser(getFamilyDateOfBirth(row)));
                     familyDetails.setDisplayName(familyNames.getDisplayName());
                 } else {
-                    familyDetails = new ClientFamilyDetailView(getFamilyRelationship(row), getFamilyGender(row),
+                    familyDetails = new ClientFamilyDetailDto(getFamilyRelationship(row), getFamilyGender(row),
                             getFamilyLivingStatus(row), null);
                     familyDetails.setDisplayName(familyNames.getDisplayName());
                 }
@@ -221,7 +221,7 @@ public class ClientCustActionForm extends CustomerActionForm {
         return t;
     }
 
-    public List<ClientNameDetailView> getFamilyNames() {
+    public List<ClientNameDetailDto> getFamilyNames() {
         return this.familyNames;
     }
 
@@ -237,27 +237,27 @@ public class ClientCustActionForm extends CustomerActionForm {
         this.groupFlag = groupFlag;
     }
 
-    public ClientDetailView getClientDetailView() {
-        return clientDetailView;
+    public ClientPersonalDetailDto getClientDetailView() {
+        return clientPersonalDetailDto;
     }
 
-    public void setClientDetailView(ClientDetailView clientDetailView) {
-        this.clientDetailView = clientDetailView;
+    public void setClientDetailView(ClientPersonalDetailDto clientPersonalDetailDto) {
+        this.clientPersonalDetailDto = clientPersonalDetailDto;
     }
 
-    public ClientNameDetailView getClientName() {
+    public ClientNameDetailDto getClientName() {
         return clientName;
     }
 
-    public void setClientName(ClientNameDetailView clientName) {
+    public void setClientName(ClientNameDetailDto clientName) {
         this.clientName = clientName;
     }
 
-    public ClientNameDetailView getSpouseName() {
+    public ClientNameDetailDto getSpouseName() {
         return spouseName;
     }
 
-    public void setSpouseName(ClientNameDetailView spouseName) {
+    public void setSpouseName(ClientNameDetailDto spouseName) {
         this.spouseName = spouseName;
     }
 
@@ -417,7 +417,7 @@ public class ClientCustActionForm extends CustomerActionForm {
     }
 
     private void validateGender(ActionErrors errors, ResourceBundle resources) {
-        if (clientDetailView.getGender() == null) {
+        if (clientPersonalDetailDto.getGender() == null) {
             errors.add(CustomerConstants.GENDER, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.Gender")));
         }
@@ -1035,9 +1035,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 
         setDefaultFees(new ArrayList<FeeDto>());
         setAdditionalFees(new ArrayList<FeeDto>());
-        setCustomFields(new ArrayList<CustomFieldView>());
-        setFamilyNames(new ArrayList<ClientNameDetailView>());
-        setFamilyDetails(new ArrayList<ClientFamilyDetailView>());
+        setCustomFields(new ArrayList<CustomFieldDto>());
+        setFamilyNames(new ArrayList<ClientNameDetailDto>());
+        setFamilyDetails(new ArrayList<ClientFamilyDetailDto>());
         setFamilyRelationship(new ArrayList<Short>());
         setFamilyFirstName(new ArrayList<String>());
         setFamilyMiddleName(new ArrayList<String>());
@@ -1064,9 +1064,9 @@ public class ClientCustActionForm extends CustomerActionForm {
         setFormedByPersonnel(null);
         setTrained(null);
         setTrainedDate(null);
-        setClientName(new ClientNameDetailView());
-        setSpouseName(new ClientNameDetailView());
-        setClientDetailView(new ClientDetailView());
+        setClientName(new ClientNameDetailDto());
+        setSpouseName(new ClientNameDetailDto());
+        setClientDetailView(new ClientPersonalDetailDto());
         setNextOrPreview("next");
 
         for (int i = 0; i < getSelectedOfferings().size(); i++) {

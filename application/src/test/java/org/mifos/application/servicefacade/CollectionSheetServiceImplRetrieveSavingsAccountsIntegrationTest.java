@@ -333,7 +333,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     }
 
     private void saveAndVerifyCollectionSheetSave(SaveCollectionSheetDto saveCollectionSheet) {
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {

@@ -117,7 +117,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
 
         // disburse loan
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -151,7 +151,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         saveCollectionSheetUtils.setOverpayFirstClientAccountCollectionFee();
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
 
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -171,7 +171,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         saveCollectionSheetUtils.setUnderpayFirstClientAccountCollectionFee();
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -191,7 +191,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
         // disburse loan
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -220,7 +220,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         saveCollectionSheetUtils.setInvalidDisbursalAmountFirstClient();
         SaveCollectionSheetDto saveCollectionSheet = saveCollectionSheetUtils.createSampleSaveCollectionSheet();
 
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
@@ -247,7 +247,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         saveCollectionSheet = saveCollectionSheetUtils.assembleSaveCollectionSheetFromCreatedCenterHierarchy(DateUtils
                 .getLocalDateFromDate(repaymentDate));
 
-        CollectionSheetErrorsView errors = null;
+        CollectionSheetErrorsDto errors = null;
         try {
             errors = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {

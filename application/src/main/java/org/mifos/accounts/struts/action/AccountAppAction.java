@@ -40,7 +40,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.util.helpers.CenterConstants;
@@ -198,8 +198,8 @@ public class AccountAppAction extends BaseAction {
         return accountBusinessService;
     }
 
-    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldView> customFields, Locale locale) throws InvalidDateException {
-        for (CustomFieldView customField : customFields) {
+    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldDto> customFields, Locale locale) throws InvalidDateException {
+        for (CustomFieldDto customField : customFields) {
             if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
                     && StringUtils.isNotBlank(customField.getFieldValue())) {
                 customField.convertDateToUniformPattern(locale);
@@ -207,9 +207,9 @@ public class AccountAppAction extends BaseAction {
         }
     }
 
-    protected List<CustomFieldView> createCustomFieldViewsForEdit(Set<AccountCustomFieldEntity> customFieldEntities,
+    protected List<CustomFieldDto> createCustomFieldViewsForEdit(Set<AccountCustomFieldEntity> customFieldEntities,
             HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
@@ -220,17 +220,17 @@ public class AccountAppAction extends BaseAction {
                 customFieldPresent = true;
                 if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
                     if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType()));
                     } else {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
                                 .getFieldValue(), customFieldDef.getFieldType()));
                     }
                 }
             }
             if (!customFieldPresent) {
-                customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
+                customFields.add(new CustomFieldDto(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
                         customFieldDef.getFieldType()));
             }
         }

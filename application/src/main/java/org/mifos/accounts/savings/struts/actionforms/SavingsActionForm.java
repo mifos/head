@@ -38,7 +38,7 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -168,14 +168,14 @@ public class SavingsActionForm extends AccountAppActionForm {
     public void clear() {
         this.setAccountId(null);
         this.setSelectedPrdOfferingId(null);
-        this.setAccountCustomFieldSet(new ArrayList<CustomFieldView>());
+        this.setAccountCustomFieldSet(new ArrayList<CustomFieldDto>());
     }
 
     private void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
         try {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldView customField : getAccountCustomFieldSet()) {
+            for (CustomFieldDto customField : getAccountCustomFieldSet()) {
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
                         if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {

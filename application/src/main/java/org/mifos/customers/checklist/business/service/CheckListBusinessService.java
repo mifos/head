@@ -27,7 +27,7 @@ import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
+import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -42,7 +42,7 @@ public class CheckListBusinessService implements BusinessService {
         return null;
     }
 
-    public List<CheckListMasterView> getCheckListMasterData(UserContext userContext) throws ServiceException {
+    public List<CheckListMasterDto> getCheckListMasterData(UserContext userContext) throws ServiceException {
         try {
             return new CheckListPersistence().getCheckListMasterData(userContext.getLocaleId());
         } catch (PersistenceException e) {

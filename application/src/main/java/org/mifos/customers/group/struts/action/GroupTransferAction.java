@@ -48,12 +48,12 @@ import org.mifos.customers.group.struts.actionforms.GroupTransferActionForm;
 import org.mifos.customers.group.util.helpers.CenterSearchInput;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -196,7 +196,7 @@ public class GroupTransferAction extends BaseAction {
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
 
-        List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
+        List<OfficeDetailsDto> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
         boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
@@ -205,7 +205,7 @@ public class GroupTransferAction extends BaseAction {
 
         actionForm.setAssignedLoanOfficerId(clientInSession.getPersonnel().getPersonnelId().toString());
 
-        List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, customerBO.getOffice().getOfficeId());
+        List<PersonnelDto> loanOfficers = loadLoanOfficersForBranch(userContext, customerBO.getOffice().getOfficeId());
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientInSession, request);
 
@@ -281,7 +281,7 @@ public class GroupTransferAction extends BaseAction {
         return new PersonnelBusinessService();
     }
 
-    private List<PersonnelView> loadLoanOfficersForBranch(UserContext userContext, Short branchId) throws Exception {
+    private List<PersonnelDto> loadLoanOfficersForBranch(UserContext userContext, Short branchId) throws Exception {
         return masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER, branchId,
                 userContext.getId(), userContext.getLevelId());
     }

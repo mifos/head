@@ -26,14 +26,14 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.group.business.GroupBO;
@@ -172,15 +172,15 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT, 1, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE, 1, "first", "middle",
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, 1, "Client", "", "1", "");
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, 1, "first", "middle",
                 "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
-                clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -194,10 +194,10 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         return meeting;
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
         return fields;
     }
 

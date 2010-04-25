@@ -19,27 +19,27 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  *
  */
-public class CollectionSheetEntryDecomposedView implements Serializable {
+public class CollectionSheetEntryDecomposedDto implements DataTransferObject  {
 
     private final List<LoanAccountsProductDto> loanAccountViews;
-    private final List<CustomerAccountView> customerAccountViews;
+    private final List<CustomerAccountDto> customerAccountDtos;
     private final List<CollectionSheetEntryDto> parentCollectionSheetEntryViews;
 
-    public CollectionSheetEntryDecomposedView(List<LoanAccountsProductDto> loanAccountViews,
-            List<CustomerAccountView> customerAccountViews,
+    public CollectionSheetEntryDecomposedDto(List<LoanAccountsProductDto> loanAccountViews,
+            List<CustomerAccountDto> customerAccountDtos,
             List<CollectionSheetEntryDto> parentCollectionSheetEntryViews) {
                 this.loanAccountViews = loanAccountViews;
-        this.customerAccountViews = customerAccountViews;
+        this.customerAccountDtos = customerAccountDtos;
         this.parentCollectionSheetEntryViews = parentCollectionSheetEntryViews;
     }
 
@@ -47,8 +47,8 @@ public class CollectionSheetEntryDecomposedView implements Serializable {
         return this.loanAccountViews;
     }
 
-    public List<CustomerAccountView> getCustomerAccountViews() {
-        return this.customerAccountViews;
+    public List<CustomerAccountDto> getCustomerAccountViews() {
+        return this.customerAccountDtos;
     }
 
     public List<CollectionSheetEntryDto> getParentCollectionSheetEntryViews() {

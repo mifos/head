@@ -26,14 +26,14 @@ import junit.framework.TestCase;
 public class CustomerViewTest extends TestCase {
 
     public void testCustomerView() throws Exception {
-        CustomerView customerView = new CustomerView(Integer.valueOf("1"), "Customer", "001global", Short.valueOf("2"));
+        CustomerDto customerDto = new CustomerDto(Integer.valueOf("1"), "Customer", "001global", Short.valueOf("2"));
 
-       Assert.assertEquals(1, customerView.getCustomerId().intValue());
-       Assert.assertEquals("Customer", customerView.getDisplayName());
-       Assert.assertEquals("001global", customerView.getGlobalCustNum());
-       Assert.assertEquals(2, customerView.getStatusId().shortValue());
+       Assert.assertEquals(1, customerDto.getCustomerId().intValue());
+       Assert.assertEquals("Customer", customerDto.getDisplayName());
+       Assert.assertEquals("001global", customerDto.getGlobalCustNum());
+       Assert.assertEquals(2, customerDto.getStatusId().shortValue());
 
-        CustomerView customerView1 = new CustomerView(Integer.valueOf("1"), "Customer", "001global",
+        CustomerDto customerView1 = new CustomerDto(Integer.valueOf("1"), "Customer", "001global",
                 Short.valueOf("2"), Short.valueOf("2"), Integer.valueOf("1"), Short.valueOf("2"), Short.valueOf("3"));
        Assert.assertEquals(2, customerView1.getCustomerLevelId().shortValue());
        Assert.assertEquals(2, customerView1.getOfficeId().shortValue());

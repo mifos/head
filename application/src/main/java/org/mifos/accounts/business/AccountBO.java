@@ -59,7 +59,7 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -431,9 +431,9 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    protected void addcustomFields(final List<CustomFieldView> customFields) {
+    protected void addcustomFields(final List<CustomFieldDto> customFields) {
         if (customFields != null) {
-            for (CustomFieldView view : customFields) {
+            for (CustomFieldDto view : customFields) {
                 this.getAccountCustomFields().add(
                         new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
             }
@@ -1572,11 +1572,11 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    protected void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
+    protected void updateCustomFields(final List<CustomFieldDto> customFields) throws InvalidDateException {
         if (customFields == null) {
             return;
         }
-        for (CustomFieldView fieldView : customFields) {
+        for (CustomFieldDto fieldView : customFields) {
             if (fieldView.getFieldType().equals(CustomFieldType.DATE.getValue())
                     && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
                 fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
@@ -1588,7 +1588,7 @@ public class AccountBO extends AbstractBusinessObject {
                     }
                 }
             } else {
-                for (CustomFieldView view : customFields) {
+                for (CustomFieldDto view : customFields) {
                     this.getAccountCustomFields().add(
                             new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
                 }

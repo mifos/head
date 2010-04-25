@@ -23,26 +23,26 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 /**
  * I am a DTO for data that is needed to display collection sheet form.
  */
 public class CollectionSheetEntryFormDto implements Serializable {
 
-    private final List<OfficeView> activeBranchesList;
+    private final List<OfficeDetailsDto> activeBranchesList;
     private final List<ListItem<Short>> paymentTypesList;
-    private final List<PersonnelView> loanOfficerList;
-    private final List<CustomerView> customerList;
+    private final List<PersonnelDto> loanOfficerList;
+    private final List<CustomerDto> customerList;
     private final Short reloadFormAutomatically;
     private final Short centerHierarchyExists;
     private final Short backDatedTransactionAllowed;
     private final Date meetingDate;
 
-    public CollectionSheetEntryFormDto(List<OfficeView> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
-            List<PersonnelView> loanOfficerList, List<CustomerView> customerList, Short reloadFormAutomatically,
+    public CollectionSheetEntryFormDto(List<OfficeDetailsDto> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
+            List<PersonnelDto> loanOfficerList, List<CustomerDto> customerList, Short reloadFormAutomatically,
             Short centerHierarchyExists, Short backDatedTransactionAllowed) {
         this.activeBranchesList = activeBranches;
         this.paymentTypesList = paymentTypesDtoList;
@@ -54,8 +54,8 @@ public class CollectionSheetEntryFormDto implements Serializable {
         this.meetingDate = null;
     }
 
-    public CollectionSheetEntryFormDto(List<OfficeView> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
-            List<PersonnelView> loanOfficerList, List<CustomerView> customerList, Short reloadFormAutomatically,
+    public CollectionSheetEntryFormDto(List<OfficeDetailsDto> activeBranches, List<ListItem<Short>> paymentTypesDtoList,
+            List<PersonnelDto> loanOfficerList, List<CustomerDto> customerList, Short reloadFormAutomatically,
             Short centerHierarchyExists, Short backDatedTransactionAllowed, Date meetingDate) {
         this.activeBranchesList = activeBranches;
         this.paymentTypesList = paymentTypesDtoList;
@@ -67,7 +67,7 @@ public class CollectionSheetEntryFormDto implements Serializable {
         this.meetingDate = meetingDate;
     }
 
-    public List<OfficeView> getActiveBranchesList() {
+    public List<OfficeDetailsDto> getActiveBranchesList() {
         return this.activeBranchesList;
     }
 
@@ -75,11 +75,11 @@ public class CollectionSheetEntryFormDto implements Serializable {
         return this.paymentTypesList;
     }
 
-    public List<PersonnelView> getLoanOfficerList() {
+    public List<PersonnelDto> getLoanOfficerList() {
         return this.loanOfficerList;
     }
 
-    public List<CustomerView> getCustomerList() {
+    public List<CustomerDto> getCustomerList() {
         return this.customerList;
     }
 

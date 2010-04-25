@@ -30,7 +30,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeTemplateImpl;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -97,12 +97,12 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetActiveBranchesForHO() throws Exception {
-        List<OfficeView> officeList = getOfficePersistence().getActiveOffices(Short.valueOf("1"));
+        List<OfficeDetailsDto> officeList = getOfficePersistence().getActiveOffices(Short.valueOf("1"));
        Assert.assertEquals(1, officeList.size());
     }
 
     public void testGetActiveBranchs() throws Exception {
-        List<OfficeView> officeList = getOfficePersistence().getActiveOffices(Short.valueOf("3"));
+        List<OfficeDetailsDto> officeList = getOfficePersistence().getActiveOffices(Short.valueOf("3"));
        Assert.assertEquals(1, officeList.size());
     }
 
@@ -136,10 +136,10 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testGetActiveParents() throws Exception {
-        List<OfficeView> parents = getOfficePersistence()
+        List<OfficeDetailsDto> parents = getOfficePersistence()
                 .getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
        Assert.assertEquals(2, parents.size());
-        for (OfficeView view : parents) {
+        for (OfficeDetailsDto view : parents) {
 
             if (view.getLevelId().equals(OfficeLevel.HEADOFFICE.getValue())) {
                 Assert.assertEquals("Head Office", view.getLevelName());
@@ -155,7 +155,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
      */
     public void testGetActiveLevels() throws Exception {
 
-        List<OfficeView> officeLevels = getOfficePersistence()
+        List<OfficeDetailsDto> officeLevels = getOfficePersistence()
                 .getActiveLevels(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
        Assert.assertEquals(4, officeLevels.size());
 
@@ -165,20 +165,20 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
         levels.add("Area Office");
         levels.add("Branch Office");
 
-        for (OfficeView level : officeLevels) {
+        for (OfficeDetailsDto level : officeLevels) {
            Assert.assertTrue(levels.contains(level.getLevelName()));
         }
     }
 
     public void testGetStatusList() throws Exception {
-        List<OfficeView> officeLevels = getOfficePersistence().getStatusList(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
+        List<OfficeDetailsDto> officeLevels = getOfficePersistence().getStatusList(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
        Assert.assertEquals(2, officeLevels.size());
 
         Set<String> levels = new HashSet();
         levels.add("Active");
         levels.add("Inactive");
 
-        for (OfficeView level : officeLevels) {
+        for (OfficeDetailsDto level : officeLevels) {
            Assert.assertTrue(levels.contains(level.getLevelName()));
         }
     }
@@ -220,7 +220,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetChildOffices() throws Exception {
         OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        List<OfficeView> officeList = getOfficePersistence().getChildOffices(headOffice.getSearchId());
+        List<OfficeDetailsDto> officeList = getOfficePersistence().getChildOffices(headOffice.getSearchId());
        Assert.assertEquals(3, officeList.size());
         officeList = null;
         headOffice = null;

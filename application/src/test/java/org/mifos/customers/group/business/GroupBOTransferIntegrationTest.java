@@ -46,7 +46,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -223,10 +223,10 @@ public class GroupBOTransferIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private GroupBO createGroupUnderBranch(String name, CustomerStatus customerStatus,
-            List<CustomFieldView> customFieldView) {
+            List<CustomFieldDto> customFieldDto) {
         meeting = getMeeting();
         return TestObjectFactory.createGroupUnderBranch(name, customerStatus, officeId1, meeting, personnelId,
-                customFieldView);
+                customFieldDto);
     }
 
     private GroupBO createGroupUnderBranch(String name, CustomerStatus groupStatus, Short officeId) throws Exception {
@@ -246,17 +246,17 @@ public class GroupBOTransferIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("4"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("3"), "value2", CustomFieldType.NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("4"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("3"), "value2", CustomFieldType.NUMERIC));
         return fields;
     }
 
-    private List<CustomFieldView> getNewCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("4"), "value3", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("3"), "value4", CustomFieldType.NUMERIC));
+    private List<CustomFieldDto> getNewCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("4"), "value3", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("3"), "value4", CustomFieldType.NUMERIC));
         return fields;
     }
 

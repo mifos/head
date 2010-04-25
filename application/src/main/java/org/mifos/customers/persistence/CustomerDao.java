@@ -27,21 +27,21 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
-import org.mifos.customers.business.CustomerPerformanceHistoryView;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerPerformanceHistoryDto;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.CenterDisplayDto;
 import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
@@ -79,7 +79,7 @@ public interface CustomerDao {
 
     List<ClientBO> findActiveClientsUnderGroup(CustomerBO customer);
 
-    List<CustomFieldView> retrieveCustomFieldsForCenter(UserContext userContext);
+    List<CustomFieldDto> retrieveCustomFieldsForCenter(UserContext userContext);
 
     List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenter();
 
@@ -99,9 +99,9 @@ public interface CustomerDao {
 
     List<CustomerDetailDto> findClientsThatAreNotCancelledOrClosedReturningDetailDto(String searchId, Short branchId);
 
-    List<CustomerView> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
+    List<CustomerDto> findClientsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
 
-    List<CustomerView> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
+    List<CustomerDto> findGroupsThatAreNotCancelledOrClosed(String parentSearchId, Short parentOfficeId);
 
     QueryResult search(String normalisedSearchString, PersonnelBO user);
 
@@ -141,7 +141,7 @@ public interface CustomerDao {
 
     List<CustomerSurveyDto> getCustomerSurveyDto(Integer centerId);
 
-    List<CustomFieldView> getCustomFieldViewForCustomers(Integer centerId, Short value, UserContext userContext);
+    List<CustomFieldDto> getCustomFieldViewForCustomers(Integer centerId, Short value, UserContext userContext);
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
@@ -160,7 +160,7 @@ public interface CustomerDao {
 
     List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
 
-    List<PersonnelView> findLoanOfficerThatFormedOffice(Short officeId);
+    List<PersonnelDto> findLoanOfficerThatFormedOffice(Short officeId);
 
     String getAvgLoanAmountForMemberInGoodOrBadStanding(String searchId, Short branchId);
 
@@ -178,5 +178,5 @@ public interface CustomerDao {
 
     List<LoanDetailDto> getLoanDetailDto(List<LoanBO> openLoanAccounts);
 
-    CustomerPerformanceHistoryView numberOfMeetings(boolean bool, Integer clientId);
+    CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 }

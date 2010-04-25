@@ -40,7 +40,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerRecentActivityView;
+import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -113,7 +113,7 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public List<CustomerRecentActivityView> getRecentActivityView(Integer customerId) throws ServiceException {
+    public List<CustomerRecentActivityDto> getRecentActivityView(Integer customerId) throws ServiceException {
         CustomerBO customerBO;
         try {
             customerBO = new CustomerPersistence().getCustomer(customerId);
@@ -122,7 +122,7 @@ public class CustomerBusinessService implements BusinessService {
         }
         List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
                 .getCustomerActivitDetails();
-        List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
+        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
 
         int count = 0;
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
@@ -134,11 +134,11 @@ public class CustomerBusinessService implements BusinessService {
         return customerActivityViewList;
     }
 
-    public List<CustomerRecentActivityView> getAllActivityView(String globalCustNum) throws ServiceException {
+    public List<CustomerRecentActivityDto> getAllActivityView(String globalCustNum) throws ServiceException {
         CustomerBO customerBO = findBySystemId(globalCustNum);
         List<CustomerActivityEntity> customerAtivityDetails = customerBO.getCustomerAccount()
                 .getCustomerActivitDetails();
-        List<CustomerRecentActivityView> customerActivityViewList = new ArrayList<CustomerRecentActivityView>();
+        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
         for (CustomerActivityEntity customerActivityEntity : customerAtivityDetails) {
             customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
         }
@@ -432,20 +432,20 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    private CustomerRecentActivityView getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
-        CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView();
-        customerRecentActivityView.setActivityDate(customerActivityEntity.getCreatedDate());
-        customerRecentActivityView.setDescription(customerActivityEntity.getDescription());
+    private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
+        CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
+        customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
+        customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());
         Money amount = removeSign(customerActivityEntity.getAmount());
         if (amount.isZero()) {
-            customerRecentActivityView.setAmount("-");
+            customerRecentActivityDto.setAmount("-");
         } else {
-            customerRecentActivityView.setAmount(amount.toString());
+            customerRecentActivityDto.setAmount(amount.toString());
         }
         if (customerActivityEntity.getPersonnel() != null) {
-            customerRecentActivityView.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+            customerRecentActivityDto.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
         }
-        return customerRecentActivityView;
+        return customerRecentActivityDto;
     }
 
     private Money removeSign(Money amount) {

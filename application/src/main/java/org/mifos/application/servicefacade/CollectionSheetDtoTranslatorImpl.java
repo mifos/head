@@ -35,12 +35,12 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.util.helpers.Money;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -48,14 +48,14 @@ import edu.emory.mathcs.backport.java.util.Collections;
 public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTranslator {
 
     public CollectionSheetEntryGridDto toLegacyDto(final CollectionSheetDto collectionSheet,
-            final CollectionSheetFormEnteredDataDto formEnteredDataDto, final List<CustomValueListElement> attendanceTypesList,
+            final CollectionSheetFormEnteredDataDto formEnteredDataDto, final List<CustomValueListElementDto> attendanceTypesList,
             final MifosCurrency currency) {
 
         final CollectionSheetEntryDto collectionSheetEntryViewHierarchy = createEntryViewHierarchyFromCollectionSheetData(
                 collectionSheet.getCollectionSheetCustomer(), currency);
 
-        final PersonnelView loanOfficer = formEnteredDataDto.getLoanOfficer();
-        final OfficeView office = formEnteredDataDto.getOffice();
+        final PersonnelDto loanOfficer = formEnteredDataDto.getLoanOfficer();
+        final OfficeDetailsDto office = formEnteredDataDto.getOffice();
         final ListItem<Short> paymentType = formEnteredDataDto.getPaymentType();
         final Date meetingDate = formEnteredDataDto.getMeetingDate();
         final String receiptId = formEnteredDataDto.getReceiptId();
@@ -119,7 +119,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
 
         for (CollectionSheetCustomerDto customer : collectionSheetCustomerHierarchy) {
 
-            final CustomerView parentCustomerDetail = new CustomerView(customer.getCustomerId(), customer.getName(),
+            final CustomerDto parentCustomerDetail = new CustomerDto(customer.getCustomerId(), customer.getName(),
                     customer.getParentCustomerId(), customer.getLevelId());
 
             CollectionSheetEntryDto childView = new CollectionSheetEntryDto(parentCustomerDetail, currency);
@@ -138,7 +138,7 @@ public class CollectionSheetDtoTranslatorImpl implements CollectionSheetDtoTrans
             final Money miscPenalty = new Money(currency, "0.0");
             final Money miscPenaltyPaid = new Money(currency, "0.0");
 
-            final CustomerAccountView customerAccountDetails = new CustomerAccountView(customer
+            final CustomerAccountDto customerAccountDetails = new CustomerAccountDto(customer
                     .getCollectionSheetCustomerAccount().getAccountId(), customer.getCustomerId(), currency);
             customerAccountDetails.setAccountId(customer.getCollectionSheetCustomerAccount().getAccountId());
 

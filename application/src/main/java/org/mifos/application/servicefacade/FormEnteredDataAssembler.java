@@ -22,9 +22,9 @@ package org.mifos.application.servicefacade;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 /**
  * An Assembler for building {@link CollectionSheetFormEnteredDataDto} from
@@ -42,13 +42,13 @@ public class FormEnteredDataAssembler {
     }
 
     public CollectionSheetFormEnteredDataDto toDto() {
-        final OfficeView office = collectionSheetFormDtoDecorator.findSelectedBranchOfficeById(Short
+        final OfficeDetailsDto office = collectionSheetFormDtoDecorator.findSelectedBranchOfficeById(Short
                 .valueOf(collectionSheetForm
                 .getOfficeId()));
-        final PersonnelView loanOfficer = collectionSheetFormDtoDecorator.findSelectedLoanOfficerById(Short
+        final PersonnelDto loanOfficer = collectionSheetFormDtoDecorator.findSelectedLoanOfficerById(Short
                 .valueOf(collectionSheetForm
                 .getLoanOfficerId()));
-        final CustomerView selectedCustomer = collectionSheetFormDtoDecorator.findSelectedCustomerById(Integer
+        final CustomerDto selectedCustomer = collectionSheetFormDtoDecorator.findSelectedCustomerById(Integer
                 .valueOf(collectionSheetForm
                 .getCustomerId()));
         final ListItem<Short> selectedPaymentType = collectionSheetFormDtoDecorator.findSelectedPaymentTypeById(Short

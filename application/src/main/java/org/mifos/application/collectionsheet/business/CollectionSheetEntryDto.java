@@ -30,10 +30,9 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
-import org.mifos.customers.util.helpers.CustomerAccountView;
-import org.mifos.framework.business.View;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -49,13 +48,13 @@ public class CollectionSheetEntryDto implements DataTransferObject {
 
     private final List<CollectionSheetEntryDto> collectionSheetEntryChildren;
 
-    private final CustomerView customerDetail;
+    private final CustomerDto customerDetail;
 
     private final List<LoanAccountsProductDto> loanAccountDetails;
 
     private final List<SavingsAccountDto> savingsAccountDetails;
 
-    private CustomerAccountView customerAccountDetails;
+    private CustomerAccountDto customerAccountDetails;
 
     private Short attendence;
 
@@ -63,7 +62,7 @@ public class CollectionSheetEntryDto implements DataTransferObject {
 
     private int countOfCustomers;
 
-    public CollectionSheetEntryDto(final CustomerView customerDetail, final MifosCurrency currency) {
+    public CollectionSheetEntryDto(final CustomerDto customerDetail, final MifosCurrency currency) {
         this.customerDetail = customerDetail;
         loanAccountDetails = new ArrayList<LoanAccountsProductDto>();
         savingsAccountDetails = new ArrayList<SavingsAccountDto>();
@@ -113,7 +112,7 @@ public class CollectionSheetEntryDto implements DataTransferObject {
         return collectionSheetEntryChildren;
     }
 
-    public CustomerView getCustomerDetail() {
+    public CustomerDto getCustomerDetail() {
         return customerDetail;
     }
 
@@ -130,11 +129,11 @@ public class CollectionSheetEntryDto implements DataTransferObject {
         return currency;
     }
 
-    public CustomerAccountView getCustomerAccountDetails() {
+    public CustomerAccountDto getCustomerAccountDetails() {
         return customerAccountDetails;
     }
 
-    public void setCustomerAccountDetails(final CustomerAccountView customerAccountDetails) {
+    public void setCustomerAccountDetails(final CustomerAccountDto customerAccountDetails) {
         this.customerAccountDetails = customerAccountDetails;
     }
 
@@ -163,19 +162,19 @@ public class CollectionSheetEntryDto implements DataTransferObject {
         }
     }
 
-    public void populateCustomerAccountInformation(final List<CustomerAccountView> customerAccountList,
+    public void populateCustomerAccountInformation(final List<CustomerAccountDto> customerAccountList,
             final List<CollectionSheetEntryInstallmentDto> collectionSheetEntryAccountActionViews,
             final List<CollectionSheetEntryAccountFeeActionDto> collectionSheetEntryAccountFeeActionDtos) {
 
         Integer accountId = Integer.valueOf(0);
-        for (CustomerAccountView customerAccountView : customerAccountList) {
-            if (customerDetail.getCustomerId().equals(customerAccountView.getCustomerId())) {
+        for (CustomerAccountDto customerAccountDto : customerAccountList) {
+            if (customerDetail.getCustomerId().equals(customerAccountDto.getCustomerId())) {
 
-                accountId = customerAccountView.getAccountId();
-                customerAccountView.setAccountActionDates(retrieveCustomerSchedule(accountId, customerAccountView
+                accountId = customerAccountDto.getAccountId();
+                customerAccountDto.setAccountActionDates(retrieveCustomerSchedule(accountId, customerAccountDto
                         .getCustomerId(), collectionSheetEntryAccountActionViews,
                         collectionSheetEntryAccountFeeActionDtos));
-                setCustomerAccountDetails(customerAccountView);
+                setCustomerAccountDetails(customerAccountDto);
 
             }
         }

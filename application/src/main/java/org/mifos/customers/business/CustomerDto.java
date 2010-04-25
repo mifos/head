@@ -21,9 +21,9 @@
 package org.mifos.customers.business;
 
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CustomerView extends View {
+public class CustomerDto implements DataTransferObject {
 
     private Integer customerId;
 
@@ -45,11 +45,11 @@ public class CustomerView extends View {
 
     private Integer parentCustomerId;
 
-    public CustomerView() {
+    public CustomerDto() {
 
     }
 
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, Integer parentCustomerId,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Integer parentCustomerId,
             Short levelId) {
         this.customerId = customerId;
         this.displayName = displayName;
@@ -58,7 +58,7 @@ public class CustomerView extends View {
 
     }
 
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, Short levelId,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Short levelId,
             String customerSearchId) {
         this.customerId = customerId;
         this.displayName = displayName;
@@ -67,7 +67,7 @@ public class CustomerView extends View {
 
     }
 
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
             java.lang.Short statusId) {
         this.customerId = customerId;
         this.displayName = displayName;
@@ -85,7 +85,7 @@ public class CustomerView extends View {
      * @param statusId
      * @param customerLevelId
      */
-    public CustomerView(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
+    public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, java.lang.String globalCustNum,
             java.lang.Short statusId, Short customerLevelId, Integer versionNo, Short officeId, Short personnelId) {
         this.customerId = customerId;
         this.displayName = displayName;

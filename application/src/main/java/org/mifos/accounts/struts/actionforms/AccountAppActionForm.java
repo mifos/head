@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 
 public class AccountAppActionForm extends ValidatorActionForm {
     private String accountId;
@@ -39,7 +39,7 @@ public class AccountAppActionForm extends ValidatorActionForm {
 
     private String input;
 
-    private List<CustomFieldView> accountCustomFieldSet;
+    private List<CustomFieldDto> accountCustomFieldSet;
 
     // values for moving back
     private String searchInput;
@@ -73,7 +73,7 @@ public class AccountAppActionForm extends ValidatorActionForm {
     }
 
     public AccountAppActionForm() {
-        accountCustomFieldSet = new ArrayList<CustomFieldView>();
+        accountCustomFieldSet = new ArrayList<CustomFieldDto>();
     }
 
     public String getStateSelected() {
@@ -100,11 +100,11 @@ public class AccountAppActionForm extends ValidatorActionForm {
         this.customerId = customerId;
     }
 
-    public List<CustomFieldView> getAccountCustomFieldSet() {
+    public List<CustomFieldDto> getAccountCustomFieldSet() {
         return this.accountCustomFieldSet;
     }
 
-    public void setAccountCustomFieldSet(List<CustomFieldView> accountCustomFieldSet) {
+    public void setAccountCustomFieldSet(List<CustomFieldDto> accountCustomFieldSet) {
         this.accountCustomFieldSet = accountCustomFieldSet;
     }
 
@@ -136,9 +136,9 @@ public class AccountAppActionForm extends ValidatorActionForm {
      * Return the value of the one of the custom field at index i in
      * accountCustomFields List.
      */
-    public CustomFieldView getCustomField(int i) {
+    public CustomFieldDto getCustomField(int i) {
         while (i >= accountCustomFieldSet.size()) {
-            accountCustomFieldSet.add(new CustomFieldView());
+            accountCustomFieldSet.add(new CustomFieldDto());
         }
         return (accountCustomFieldSet.get(i));
     }

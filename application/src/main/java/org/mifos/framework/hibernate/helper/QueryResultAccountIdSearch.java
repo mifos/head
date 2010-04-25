@@ -26,7 +26,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -49,7 +49,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
                 for (int i = 0; i < list.size(); i++) {
                     if (buildDTO) {
                         Object record = buildDTO((Object[]) list.get(i));
-                        CustomerSearch search = (CustomerSearch) record;
+                        CustomerSearchDto search = (CustomerSearchDto) record;
                         Integer customerId = search.getCustomerId();
                         short customerLevel = search.getCustomerType();
                         query = session.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);

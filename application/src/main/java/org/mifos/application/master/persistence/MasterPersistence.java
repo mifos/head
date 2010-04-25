@@ -31,8 +31,8 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomValueList;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueDto;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -63,7 +63,7 @@ public class MasterPersistence extends Persistence {
      * Only two non-test usages, one that may never be called and one for
      * getting labels.
      */
-    public CustomValueList getLookUpEntity(final String entityName, final Short localeId) throws ApplicationException,
+    public CustomValueDto getLookUpEntity(final String entityName, final Short localeId) throws ApplicationException,
             SystemException {
         try {
             Session session = getSession();
@@ -71,7 +71,7 @@ public class MasterPersistence extends Persistence {
             Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
             queryEntity.setString("entityType", entityName);
 
-            CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
+            CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
 
             entity.setCustomValueListElements(lookUpValue(entityName, localeId, session));
 
@@ -81,11 +81,11 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    private List<CustomValueListElement> lookUpValue(final String entityName, final Short localeId, final Session session)
+    private List<CustomValueListElementDto> lookUpValue(final String entityName, final Short localeId, final Session session)
             throws PersistenceException {
         Query queryEntity = session.getNamedQuery("masterdata.entitylookupvalue");
         queryEntity.setString("entityType", entityName);
-        List<CustomValueListElement> entityList = queryEntity.list();
+        List<CustomValueListElementDto> entityList = queryEntity.list();
 
         return entityList;
     }
@@ -99,7 +99,7 @@ public class MasterPersistence extends Persistence {
      * MifosPropertyMessageResources.getCustomValueListElements (and that method
      * may never be called)
      */
-    public CustomValueList getCustomValueList(final String entityName, final String classPath, final String column)
+    public CustomValueDto getCustomValueList(final String entityName, final String classPath, final String column)
             throws ApplicationException, SystemException {
         Session session = null;
         try {
@@ -108,9 +108,9 @@ public class MasterPersistence extends Persistence {
             Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
             queryEntity.setString("entityType", entityName);
 
-            CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
+            CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
 
-            List<CustomValueListElement> listElements = getCustomValueListElements(entityName, classPath, column,
+            List<CustomValueListElementDto> listElements = getCustomValueListElements(entityName, classPath, column,
                     session);
             entity.setCustomValueListElements(listElements);
             return entity;
@@ -119,10 +119,10 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    private List<CustomValueListElement> getCustomValueListElements(final String entityName,
+    private List<CustomValueListElementDto> getCustomValueListElements(final String entityName,
             final String entityClass, final String column, final Session session) {
         Query queryEntity = session
-                .createQuery("select new org.mifos.application.master.business.CustomValueListElement(" + "mainTable."
+                .createQuery("select new org.mifos.application.master.business.CustomValueListElementDto(" + "mainTable."
                         + column + " ,lookup.lookUpId,lookupvalue.lookUpValue,lookup.lookUpName) "
                         + "from org.mifos.application.master.business.LookUpValueEntity lookup,"
                         + "org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue," + entityClass
@@ -135,7 +135,7 @@ public class MasterPersistence extends Persistence {
         // all override or custom values are now stored in locale 1
         // queryEntity.setShort(1, localeId);
         queryEntity.setShort(1, (short) 1);
-        List<CustomValueListElement> entityList = queryEntity.list();
+        List<CustomValueListElementDto> entityList = queryEntity.list();
 
         return entityList;
     }

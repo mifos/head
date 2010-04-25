@@ -27,12 +27,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionView;
+import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -110,8 +110,8 @@ public class GroupCustActionForm extends CustomerActionForm {
     public void cleanForm() {
         setDefaultFees(new ArrayList<FeeDto>());
         setAdditionalFees(new ArrayList<FeeDto>());
-        setCustomerPositions(new ArrayList<CustomerPositionView>());
-        setCustomFields(new ArrayList<CustomFieldView>());
+        setCustomerPositions(new ArrayList<CustomerPositionDto>());
+        setCustomFields(new ArrayList<CustomFieldDto>());
         setAddress(new Address());
         setDisplayName(null);
         setMfiJoiningDate(null);

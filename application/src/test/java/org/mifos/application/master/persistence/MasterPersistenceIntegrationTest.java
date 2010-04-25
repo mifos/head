@@ -24,8 +24,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.mifos.application.master.business.CustomValueList;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueDto;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -58,9 +58,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testEntityMasterRetrieval() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueList paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
+        CustomValueDto paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
-        List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
+        List<CustomValueListElementDto> paymentValues = paymentTypes.getCustomValueListElements();
        Assert.assertEquals(4, paymentValues.size());
 
     }
@@ -81,8 +81,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     public void testGetLookUpEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueList gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
-        List<CustomValueListElement> genderValues = gender.getCustomValueListElements();
+        CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
+        List<CustomValueListElementDto> genderValues = gender.getCustomValueListElements();
        Assert.assertEquals(2, genderValues.size());
 
     }
@@ -177,12 +177,12 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testAddAndDeleteValueListElement() throws Exception {
-        // get the CustomValueList that we want to add to
+        // get the CustomValueDto that we want to add to
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueList salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION,
+        CustomValueDto salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION,
                 DEFAULT_LOCALE);
 
-        // add a CustomValueListElement to the list
+        // add a CustomValueListElementDto to the list
         final String NEW_SALUTATION_STRING = "Sir";
         LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(
                 DynamicLookUpValueCreationTypes.LookUpOption, salutationValueList.getEntityId(), NEW_SALUTATION_STRING);
@@ -205,7 +205,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testUpdateValueListElement() throws Exception {
-        // get a CustomValueListElement (as a BusinessActivityEntity)
+        // get a CustomValueListElementDto (as a BusinessActivityEntity)
         MasterPersistence masterPersistence = new MasterPersistence();
         List<ValueListElement> salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION,
                 DEFAULT_LOCALE);

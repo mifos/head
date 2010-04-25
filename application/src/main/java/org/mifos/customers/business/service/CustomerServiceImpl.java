@@ -40,7 +40,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
@@ -61,7 +61,7 @@ import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
@@ -142,7 +142,7 @@ public class CustomerServiceImpl implements CustomerService {
                     if (clientSavingsProduct.isActive()) {
                         List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
                                 .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-                        List<CustomFieldView> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
+                        List<CustomFieldDto> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
                                 customFieldDefs, userContext.getPreferredLocale());
 
                         SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
@@ -532,10 +532,10 @@ public class CustomerServiceImpl implements CustomerService {
 
             center.validateChangeToInActive();
 
-            List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
+            List<CustomerDto> clientsThatAreNotClosedOrCanceled = this.customerDao
                     .findClientsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
-            List<CustomerView> groupsThatAreNotClosedOrCancelled = this.customerDao
+            List<CustomerDto> groupsThatAreNotClosedOrCancelled = this.customerDao
                     .findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0 || groupsThatAreNotClosedOrCancelled.size() > 0) {
@@ -650,7 +650,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (newStatus.isGroupClosed()) {
             group.validateNoActiveAccountExist();
 
-            List<CustomerView> clientsThatAreNotClosedOrCanceled = this.customerDao
+            List<CustomerDto> clientsThatAreNotClosedOrCanceled = this.customerDao
                     .findClientsThatAreNotCancelledOrClosed(group.getSearchId(), group.getOffice().getOfficeId());
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0) {
@@ -774,7 +774,7 @@ public class CustomerServiceImpl implements CustomerService {
                                 List<CustomFieldDefinitionEntity> customFieldDefs = client.getSavingsPersistence()
                                         .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
 
-                                List<CustomFieldView> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
+                                List<CustomFieldDto> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
                                         customFieldDefs, customer.getUserContext().getPreferredLocale());
 
                                 client.addAccount(new SavingsBO(client.getUserContext(), savingsOffering, client,

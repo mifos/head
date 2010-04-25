@@ -22,7 +22,7 @@ package org.mifos.application.collectionsheet.persistence;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
@@ -44,7 +44,7 @@ public class PersonnelBuilder {
     private String userName;
     private String emailId;
     private List<RoleBO> roles;
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
     private String governmentIdNumber;
     private Date dob;
     private Integer maritalStatus;

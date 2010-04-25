@@ -56,7 +56,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.config.ProcessFlowRules;
@@ -185,15 +185,15 @@ public class SavingsAction extends AccountAppAction {
         // Set Default values for custom fields
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
             } else {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
                         .getFieldType()));
             }
         }
@@ -260,7 +260,7 @@ public class SavingsAction extends AccountAppAction {
         checkPermissionForCreate(getShortValue(savingsActionForm.getStateSelected()), uc, null, customer.getOffice()
                 .getOfficeId(), customer.getPersonnel().getPersonnelId());
 
-        List<CustomFieldView> customFields = savingsActionForm.getAccountCustomFieldSet();
+        List<CustomFieldDto> customFields = savingsActionForm.getAccountCustomFieldSet();
         UserContext userContext = getUserContext(request);
         convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 

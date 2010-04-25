@@ -36,7 +36,7 @@ import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustomerAccountActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerRecentActivityView;
+import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -69,7 +69,7 @@ public class CustomerAccountAction extends AccountAppAction {
                 .getBusinessService(BusinessServiceName.Customer);
         CustomerBO customerBO = customerService.findBySystemId(globalCustNum);
         CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
-        List<CustomerRecentActivityView> recentActivities = customerService.getRecentActivityView(customerBO
+        List<CustomerRecentActivityDto> recentActivities = customerService.getRecentActivityView(customerBO
                 .getCustomerId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
         // SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount,

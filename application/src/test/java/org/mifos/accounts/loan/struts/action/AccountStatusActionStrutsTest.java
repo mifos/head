@@ -37,7 +37,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -119,7 +119,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         performNoErrors();
         verifyForward(ActionForwards.changeAccountStatusSearch_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
-       Assert.assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
+       Assert.assertEquals(1, ((List<PersonnelDto>) SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
     }
 
     public void testSearchResults_noresults_forvalidate() throws Exception {
@@ -169,7 +169,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward(ActionForwards.changeAccountStatus_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request));
-       Assert.assertEquals(1, ((List<PersonnelView>) SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
+       Assert.assertEquals(1, ((List<PersonnelDto>) SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
     }
 
     public void testUpdate() throws Exception {

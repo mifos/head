@@ -23,7 +23,7 @@ package org.mifos.customers.center.business.service;
 import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
@@ -90,7 +90,7 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
 
         List<CustomerSurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
 
-        List<CustomFieldView> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
+        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
 
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,

@@ -23,11 +23,11 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerPositionDto;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 
@@ -42,18 +42,18 @@ public class CenterDto extends AbstractBusinessObject {
     private final DateTime mfiJoiningDate;
     private final String mfiJoiningDateAsString;
     private final Address address;
-    private final List<CustomerPositionView> customerPositionViews;
-    private final List<CustomFieldView> customFieldViews;
-    private final List<CustomerView> clientList;
+    private final List<CustomerPositionDto> customerPositionDtos;
+    private final List<CustomFieldDto> customFieldDtos;
+    private final List<CustomerDto> clientList;
     private final String externalId;
-    private final List<PersonnelView> activeLoanOfficersForBranch;
+    private final List<PersonnelDto> activeLoanOfficersForBranch;
     private final CustomerBO center;
     private final boolean centerHierarchyExists;
 
     public CenterDto(Short loanOfficerId, Integer customerId, String globalCustNum, DateTime mfiJoiningDate,
             String mfiJoiningDateAsString, String externalId, Address address,
-            List<CustomerPositionView> customerPositionViews, List<CustomFieldView> customFieldViews,
-            List<CustomerView> customerList, CustomerBO center, List<PersonnelView> activeLoanOfficersForBranch, boolean centerHierarchyExists) {
+            List<CustomerPositionDto> customerPositionDtos, List<CustomFieldDto> customFieldDtos,
+            List<CustomerDto> customerList, CustomerBO center, List<PersonnelDto> activeLoanOfficersForBranch, boolean centerHierarchyExists) {
         this.loanOfficerId = loanOfficerId;
         this.customerId = customerId;
         this.globalCustNum = globalCustNum;
@@ -61,8 +61,8 @@ public class CenterDto extends AbstractBusinessObject {
         this.mfiJoiningDateAsString = mfiJoiningDateAsString;
         this.externalId = externalId;
         this.address = address;
-        this.customerPositionViews = customerPositionViews;
-        this.customFieldViews = customFieldViews;
+        this.customerPositionDtos = customerPositionDtos;
+        this.customFieldDtos = customFieldDtos;
         this.clientList = customerList;
         this.center = center;
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
@@ -97,15 +97,15 @@ public class CenterDto extends AbstractBusinessObject {
         return this.address;
     }
 
-    public List<CustomerPositionView> getCustomerPositionViews() {
-        return this.customerPositionViews;
+    public List<CustomerPositionDto> getCustomerPositionViews() {
+        return this.customerPositionDtos;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
-    public List<CustomerView> getClientList() {
+    public List<CustomerDto> getClientList() {
         return this.clientList;
     }
 
@@ -129,7 +129,7 @@ public class CenterDto extends AbstractBusinessObject {
         return this.externalId;
     }
 
-    public List<PersonnelView> getActiveLoanOfficersForBranch() {
+    public List<PersonnelDto> getActiveLoanOfficersForBranch() {
         return this.activeLoanOfficersForBranch;
     }
 

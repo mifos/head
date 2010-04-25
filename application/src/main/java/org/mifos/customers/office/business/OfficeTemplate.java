@@ -22,7 +22,7 @@ package org.mifos.customers.office.business;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.business.util.Address;
@@ -38,7 +38,7 @@ public interface OfficeTemplate {
 
     public Address getOfficeAddress();
 
-    public List<CustomFieldView> getCustomFieldViews();
+    public List<CustomFieldDto> getCustomFieldViews();
 
     public OperationMode getOperationMode();
 }

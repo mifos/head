@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -209,9 +209,9 @@ public class BaseActionForm extends ValidatorActionForm {
         SessionUtils.removeAttribute(Constants.SEARCH_RESULTS, request);
     }
 
-    public CustomFieldView getCustomField(List<CustomFieldView> customFields, int i) {
+    public CustomFieldDto getCustomField(List<CustomFieldDto> customFields, int i) {
         while (i >= customFields.size()) {
-            customFields.add(new CustomFieldView());
+            customFields.add(new CustomFieldDto());
         }
         return customFields.get(i);
     }

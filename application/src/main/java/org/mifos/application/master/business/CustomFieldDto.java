@@ -18,18 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business;
+package org.mifos.application.master.business;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.framework.business.View;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class CustomFieldView extends View {
+public class CustomFieldDto implements DataTransferObject {
 
     private Short fieldId;
 
@@ -37,17 +38,21 @@ public class CustomFieldView extends View {
 
     private Short fieldType;
 
-    public CustomFieldView() {
+    private boolean mandatory;
+    private String lookUpEntityType;
+    private String mandatoryString;
+
+    public CustomFieldDto() {
         super();
     }
 
-    public CustomFieldView(Short fieldId, String fieldValue, Short fieldType) {
+    public CustomFieldDto(Short fieldId, String fieldValue, Short fieldType) {
         this.fieldId = fieldId;
         this.fieldValue = fieldValue;
         this.fieldType = fieldType;
     }
 
-    public CustomFieldView(Short fieldId, String value, CustomFieldType type) {
+    public CustomFieldDto(Short fieldId, String value, CustomFieldType type) {
         this(fieldId, value, type == null ? null : type.getValue());
     }
 
@@ -99,7 +104,7 @@ public class CustomFieldView extends View {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CustomFieldView other = (CustomFieldView) obj;
+        final CustomFieldDto other = (CustomFieldDto) obj;
         if (fieldId == null) {
             if (other.fieldId != null) {
                 return false;
@@ -116,4 +121,37 @@ public class CustomFieldView extends View {
         setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
     }
 
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public boolean isMandatory() {
+        return this.mandatory;
+    }
+
+    public String getLookUpEntityType() {
+        return this.lookUpEntityType;
+    }
+
+    public void setLookUpEntityType(String lookUpEntityType) {
+        this.lookUpEntityType = lookUpEntityType;
+    }
+
+    public String getMandatoryString() {
+        return this.mandatoryString;
+    }
+
+    public void setMandatoryString(String mandatoryString) {
+        this.mandatoryString = mandatoryString;
+    }
+
+    public static void convertCustomFieldDateToUniformPattern(List<CustomFieldDto> customFields, Locale locale)
+            throws InvalidDateException {
+        for (CustomFieldDto customField : customFields) {
+            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
+                    && StringUtils.isNotBlank(customField.getFieldValue())) {
+                customField.convertDateToUniformPattern(locale);
+            }
+        }
+    }
 }

@@ -23,40 +23,40 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 
 public class GroupFormCreationDto {
 
     private final CustomerBO parentCustomer;
     private final boolean centerHierarchyExists;
-    private final List<CustomFieldView> customFieldViews;
-    private final List<PersonnelView> personnelList;
-    private final List<PersonnelView> formedByPersonnel;
+    private final List<CustomFieldDto> customFieldDtos;
+    private final List<PersonnelDto> personnelList;
+    private final List<PersonnelDto> formedByPersonnel;
     private final CustomerApplicableFeesDto applicableFees;
 
     public GroupFormCreationDto(boolean centerHierarchyExists, CustomerBO parentCustomer,
-            List<CustomFieldView> customFieldViews, List<PersonnelView> personnelList,
-            List<PersonnelView> formedByPersonnel, CustomerApplicableFeesDto applicableFees) {
+            List<CustomFieldDto> customFieldDtos, List<PersonnelDto> personnelList,
+            List<PersonnelDto> formedByPersonnel, CustomerApplicableFeesDto applicableFees) {
         this.centerHierarchyExists = centerHierarchyExists;
         this.parentCustomer = parentCustomer;
-        this.customFieldViews = customFieldViews;
+        this.customFieldDtos = customFieldDtos;
         this.personnelList = personnelList;
         this.formedByPersonnel = formedByPersonnel;
         this.applicableFees = applicableFees;
     }
 
-    public List<PersonnelView> getFormedByPersonnel() {
+    public List<PersonnelDto> getFormedByPersonnel() {
         return this.formedByPersonnel;
     }
 
-    public List<PersonnelView> getPersonnelList() {
+    public List<PersonnelDto> getPersonnelList() {
         return this.personnelList;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
     public boolean isCenterHierarchyExists() {

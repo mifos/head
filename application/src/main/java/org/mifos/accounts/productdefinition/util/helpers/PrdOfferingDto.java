@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.productdefinition.util.helpers;
 
-import org.mifos.framework.business.View;
 import org.mifos.framework.business.service.DataTransferObject;
 
 /**

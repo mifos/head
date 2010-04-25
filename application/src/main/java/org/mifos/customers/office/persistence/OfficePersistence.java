@@ -26,7 +26,7 @@ import java.util.List;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -65,14 +65,14 @@ public class OfficePersistence extends Persistence {
         return officeBO;
     }
 
-    public List<OfficeView> getActiveOffices(Short officeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getActiveOffices(Short officeId) throws PersistenceException {
         String searchId = HierarchyManager.getInstance().getSearchId(officeId);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", OfficeConstants.BRANCHOFFICE);
         queryParameters.put("OFFICESEARCHID", searchId);
         queryParameters.put("OFFICE_LIKE_SEARCHID", searchId + "%.");
         queryParameters.put("statusId", OfficeConstants.ACTIVE);
-        List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_ACTIVE_BRANCHES,
+        List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_ACTIVE_BRANCHES,
                 queryParameters);
         return queryResult;
 
@@ -193,18 +193,18 @@ public class OfficePersistence extends Persistence {
         return false;
     }
 
-    public List<OfficeView> getActiveParents(OfficeLevel level, Short localeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", level.getValue());
         queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
-        List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVEPARENTS, queryParameters);
+        List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVEPARENTS, queryParameters);
         return queryResult;
 
     }
 
-    public List<OfficeView> getActiveLevels(Short localeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getActiveLevels(Short localeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVELEVELS, queryParameters);
+        List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVELEVELS, queryParameters);
         if (queryResult != null && queryResult.size() != 0) {
             return queryResult;
         }
@@ -212,9 +212,9 @@ public class OfficePersistence extends Persistence {
 
     }
 
-    public List<OfficeView> getStatusList(Short localeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getStatusList(Short localeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICESTATUS, queryParameters);
+        List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICESTATUS, queryParameters);
         if (queryResult != null && queryResult.size() != 0) {
             return queryResult;
         }
@@ -276,11 +276,11 @@ public class OfficePersistence extends Persistence {
         return null;
     }
 
-    public List<OfficeView> getChildOffices(String searchId) throws PersistenceException {
+    public List<OfficeDetailsDto> getChildOffices(String searchId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
         queryParameters.put("OFFICE_LIKE_SEARCHID", searchId + "%");
-        List<OfficeView> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICE_CHILDREN, queryParameters);
+        List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICE_CHILDREN, queryParameters);
         if (queryResult != null && queryResult.size() != 0) {
             return queryResult;
         }

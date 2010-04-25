@@ -52,10 +52,10 @@
     	       			]]>
 	</query>
 	<query name="masterdata.customer_checklist">
-		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(cl.id,le.entityType) from org.mifos.customers.business.CustomerLevelEntity as cl,org.mifos.application.master.business.LookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
+		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterDto(cl.id,le.entityType) from org.mifos.customers.business.CustomerLevelEntity as cl,org.mifos.application.master.business.LookUpEntity as le where cl.lookUpValue.lookUpId=le.entityId ]]>
 	</query>
 	<query name="masterdata.product_checklist">
-		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lv.lookUpName) from org.mifos.accounts.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>
+		<![CDATA[select new org.mifos.customers.checklist.util.helpers.CheckListMasterDto(pt.productTypeID,lv.lookUpName) from org.mifos.accounts.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueEntity as lv where pt.lookUpValue.lookUpId=lv.lookUpId ]]>
 	</query>
     <query name="customer.validateState">
     	<![CDATA[select count(*) from org.mifos.customers.checklist.business.CustomerCheckListBO as ccl where ccl.customerLevel.id=:levelId and ccl.customerStatus.id=:stateId ]]>

@@ -39,7 +39,7 @@ import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -55,8 +55,8 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.CustomerPositionView;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerPositionDto;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.business.service.CustomerService;
@@ -66,12 +66,12 @@ import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
-import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientFamilyDetailEntity;
-import org.mifos.customers.client.business.ClientFamilyDetailView;
+import org.mifos.customers.client.business.ClientFamilyDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
@@ -83,13 +83,13 @@ import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.CenterSearchInput;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
@@ -132,7 +132,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         OfficeDto office = officeDao.findOfficeDtoById(userContext.getBranchId());
         List<OfficeBO> branchParents = officeDao.findBranchsOnlyWithParentsMatching(office.getSearchId());
-        List<OfficeView> levels = officeDao.findActiveOfficeLevels();
+        List<OfficeDetailsDto> levels = officeDao.findActiveOfficeLevels();
 
         List<OfficeHierarchyDto> branchOnlyOfficeHierarchy = OfficeBO
                 .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(branchParents);
@@ -144,16 +144,16 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     @Override
     public CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation, UserContext userContext) {
 
-        List<PersonnelView> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+        List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
+        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
                 .getPreferredLocale());
 
         List<FeeBO> fees = customerDao.retrieveFeesApplicableToCenters();
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
 
-        return new CenterFormCreationDto(activeLoanOfficersForBranch, customFieldViews, applicableFees
+        return new CenterFormCreationDto(activeLoanOfficersForBranch, customFieldDtos, applicableFees
                 .getAdditionalFees(), applicableFees.getDefaultFees());
     }
 
@@ -162,7 +162,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         CustomerBO parentCustomer = null;
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.empty();
-        List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
+        List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
 
         CenterCreation centerCreation;
 
@@ -188,12 +188,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
+        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
                 groupCreation.getPreferredLocale());
-        List<PersonnelView> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation
+        List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation
                 .getOfficeId());
 
-        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, customFieldViews, personnelList,
+        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, customFieldDtos, personnelList,
                 formedByPersonnel, applicableFees);
     }
 
@@ -201,7 +201,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag,
             Short officeId, String parentGroupId) {
 
-        List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
+        List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
         MeetingBO parentCustomerMeeting = null;
         Short formedByPersonnelId = null;
         String formedByPersonnelName = "";
@@ -248,7 +248,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
+        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
                 .getPreferredLocale());
 
         List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
@@ -258,9 +258,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
 
-            List<PersonnelView> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
+            List<PersonnelDto> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
 
-            return new ClientFormCreationDto(clientDropdowns, customFieldViews, clientRules, officeId, officeName,
+            return new ClientFormCreationDto(clientDropdowns, customFieldDtos, clientRules, officeId, officeName,
                     formedByPersonnelId, formedByPersonnelName, personnelList, applicableFees, formedByPersonnel,
                     savingsOfferings, parentCustomerMeeting, centerDisplayName, groupDisplayName);
         } catch (PersistenceException e) {
@@ -294,7 +294,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         try {
             List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
                     .retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldView> customFieldViews = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
+            List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
                     userContext.getPreferredLocale());
 
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
@@ -306,7 +306,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
             ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
 
-            return new ClientPersonalInfoDto(clientDropdowns, customFieldViews, clientRules, customerDetailDto,
+            return new ClientPersonalInfoDto(clientDropdowns, customFieldDtos, clientRules, customerDetailDto,
                     clientDetailDto);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -318,8 +318,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             UserContext userContext) {
 
         try {
-            List<CustomFieldView> customFields = actionForm.getCustomFields();
-            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            List<CustomFieldDto> customFields = actionForm.getCustomFields();
+            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
             DateTime mfiJoiningDate = CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), userContext
                     .getPreferredLocale());
 
@@ -374,8 +374,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm
                     .getFeesToApply());
 
-            List<CustomFieldView> customFields = actionForm.getCustomFields();
-            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            List<CustomFieldDto> customFields = actionForm.getCustomFields();
+            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
                     .fromDto(customFields, null);
@@ -453,13 +453,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             Short trained = trainedValue(actionForm);
             java.sql.Date trainedDate = trainedDate(actionForm);
             Short groupFlagValue = groupFlagValue(actionForm);
-            ClientNameDetailView clientNameDetailView = clientNameDetailName(actionForm);
-            ClientDetailView clientDetailView = clientDetailView(actionForm);
+            ClientNameDetailDto clientNameDetailDto = clientNameDetailName(actionForm);
+            ClientPersonalDetailDto clientPersonalDetailDto = clientPersonalDetailDto(actionForm);
             InputStream picture = picture(actionForm);
 
             ClientBO client = null;
-            List<CustomFieldView> customFields = actionForm.getCustomFields();
-            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            List<CustomFieldDto> customFields = actionForm.getCustomFields();
+            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(clientFees(actionForm));
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
@@ -486,7 +486,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             Short personnelId = null;
             Short officeId = null;
 
-            ClientNameDetailView spouseNameDetailView = null;
+            ClientNameDetailDto spouseNameDetailView = null;
             if (ClientRules.isFamilyDetailsRequired()) {
                 actionForm.setFamilyDateOfBirth();
                 actionForm.constructFamilyDetails();
@@ -496,7 +496,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             String secondMiddleName = null;
             ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName,
-                    clientNameDetailView);
+                    clientNameDetailDto);
 
             ClientNameDetailEntity spouseFatherNameDetailEntity = null;
             if (spouseNameDetailView != null) {
@@ -504,14 +504,14 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             }
 
             ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
-            clientDetailEntity.updateClientDetails(clientDetailView);
+            clientDetailEntity.updateClientDetails(clientPersonalDetailDto);
 
             DateTime dob = new DateTime(dateOfBirth);
             boolean trainedBool = isTrained(trained);
             DateTime trainedDateTime = new DateTime(trainedDate);
-            String clientFirstName = clientNameDetailView.getFirstName();
-            String clientLastName = clientNameDetailView.getLastName();
-            String secondLastName = clientNameDetailView.getSecondLastName();
+            String clientFirstName = clientNameDetailDto.getFirstName();
+            String clientLastName = clientNameDetailDto.getLastName();
+            String secondLastName = clientNameDetailDto.getSecondLastName();
 
             Blob pictureAsBlob = null;
             if (picture != null) {
@@ -583,7 +583,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         return Short.valueOf("1").equals(trainedValue);
     }
 
-    private ClientNameDetailView spouseFatherName(ClientCustActionForm actionForm) {
+    private ClientNameDetailDto spouseFatherName(ClientCustActionForm actionForm) {
         return actionForm.getSpouseName();
     }
 
@@ -591,11 +591,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         return actionForm.getCustomerPicture();
     }
 
-    private ClientDetailView clientDetailView(ClientCustActionForm actionForm) {
+    private ClientPersonalDetailDto clientPersonalDetailDto(ClientCustActionForm actionForm) {
         return actionForm.getClientDetailView();
     }
 
-    private ClientNameDetailView clientNameDetailName(ClientCustActionForm actionForm) {
+    private ClientNameDetailDto clientNameDetailName(ClientCustActionForm actionForm) {
         return actionForm.getClientName();
     }
 
@@ -671,15 +671,15 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(),
                 userContext.getPreferredLocale());
-        List<PersonnelView> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+        List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
-        List<CustomerView> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
+        List<CustomerDto> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
 
-        List<CustomerPositionView> customerPositionViews = generateCustomerPositionViews(center, userContext
+        List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(center, userContext
                 .getLocaleId());
 
         List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldView> customFieldViews = CustomerCustomFieldEntity.toDto(center.getCustomFields(),
+        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(center.getCustomFields(),
                 fieldDefinitions, userContext);
 
         DateTime mfiJoiningDate = new DateTime();
@@ -691,14 +691,14 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         return new CenterDto(loanOfficerId, center.getCustomerId(), center.getGlobalCustNum(), mfiJoiningDate,
-                mfiJoiningDateAsString, center.getExternalId(), center.getAddress(), customerPositionViews,
-                customFieldViews, customerList, center, activeLoanOfficersForBranch, true);
+                mfiJoiningDateAsString, center.getExternalId(), center.getAddress(), customerPositionDtos,
+                customFieldDtos, customerList, center, activeLoanOfficersForBranch, true);
     }
 
     @Override
     public CenterDto retrieveGroupDetailsForUpdate(String globalCustNum, UserContext userContext) {
 
-        List<PersonnelView> activeLoanOfficersForBranch = new ArrayList<PersonnelView>();
+        List<PersonnelDto> activeLoanOfficersForBranch = new ArrayList<PersonnelDto>();
 
         GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
 
@@ -714,13 +714,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
         }
 
-        List<CustomerView> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
+        List<CustomerDto> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
 
-        List<CustomerPositionView> customerPositionViews = generateCustomerPositionViews(group, userContext
+        List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(group, userContext
                 .getLocaleId());
 
         List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldView> customFieldViews = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
+        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
                 fieldDefinitions, userContext);
 
         DateTime mfiJoiningDate = new DateTime();
@@ -732,31 +732,31 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         }
 
         return new CenterDto(loanOfficerId, group.getCustomerId(), group.getGlobalCustNum(), mfiJoiningDate,
-                mfiJoiningDateAsString, group.getExternalId(), group.getAddress(), customerPositionViews,
-                customFieldViews, customerList, group, activeLoanOfficersForBranch, isCenterHierarchyExists);
+                mfiJoiningDateAsString, group.getExternalId(), group.getAddress(), customerPositionDtos,
+                customFieldDtos, customerList, group, activeLoanOfficersForBranch, isCenterHierarchyExists);
     }
 
-    private List<CustomerPositionView> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
+    private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
 
         try {
             List<PositionEntity> customerPositions = new MasterPersistence().retrieveMasterEntities(
                     PositionEntity.class, localeId);
 
-            List<CustomerPositionView> customerPositionViews = new ArrayList<CustomerPositionView>();
+            List<CustomerPositionDto> customerPositionDtos = new ArrayList<CustomerPositionDto>();
             for (MasterDataEntity position : customerPositions) {
                 for (CustomerPositionEntity entity : customer.getCustomerPositions()) {
                     if (position.getId().equals(entity.getPosition().getId())) {
                         if (entity.getCustomer() != null) {
-                            customerPositionViews.add(new CustomerPositionView(entity.getCustomer().getCustomerId(),
+                            customerPositionDtos.add(new CustomerPositionDto(entity.getCustomer().getCustomerId(),
                                     entity.getPosition().getId()));
                         } else {
-                            customerPositionViews.add(new CustomerPositionView(null, entity.getPosition().getId()));
+                            customerPositionDtos.add(new CustomerPositionDto(null, entity.getPosition().getId()));
                         }
                     }
                 }
             }
 
-            return customerPositionViews;
+            return customerPositionDtos;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -1072,13 +1072,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             checkVersionMismatch(oldClientVersionNumber, client.getVersionNo());
             client.setUserContext(userContext);
 
-            List<CustomFieldView> customFields = actionForm.getCustomFields();
-            CustomFieldView.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            List<CustomFieldDto> customFields = actionForm.getCustomFields();
+            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
             List<CustomerCustomFieldEntity> clientCustomFields = CustomerCustomFieldEntity
                     .fromDto(customFields, client);
 
-            ClientNameDetailView spouseFather = null;
+            ClientNameDetailDto spouseFather = null;
             if (!ClientRules.isFamilyDetailsRequired()) {
                 spouseFather = spouseFatherName(actionForm);
             }
@@ -1089,8 +1089,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             }
 
             Address address = address(actionForm);
-            ClientNameDetailView clientNameDetails = clientNameDetailName(actionForm);
-            ClientDetailView clientDetail = clientDetailView(actionForm);
+            ClientNameDetailDto clientNameDetails = clientNameDetailName(actionForm);
+            ClientPersonalDetailDto clientDetail = clientPersonalDetailDto(actionForm);
 
             String governmentId = governmentId(actionForm);
             String clientDisplayName = clientName(actionForm);
@@ -1115,7 +1115,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
             List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldView> customFieldViews = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
+            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
                     fieldDefinitions, userContext);
 
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
@@ -1125,27 +1125,27 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             CustomerDetailDto customerDetail = client.toCustomerDetailDto();
             ClientDetailDto clientDetail = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
 
-            List<ClientNameDetailView> familyMembers = new ArrayList<ClientNameDetailView>();
-            Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailView>>();
+            List<ClientNameDetailDto> familyMembers = new ArrayList<ClientNameDetailDto>();
+            Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailDto>>();
             int familyMemberCount = 0;
             for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
 
                 if (clientNameDetailEntity.isNotClientNameType()) {
 
-                    ClientNameDetailView nameView1 = clientNameDetailEntity.toDto();
+                    ClientNameDetailDto nameView1 = clientNameDetailEntity.toDto();
                     familyMembers.add(nameView1);
 
                     for (ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()) {
 
                         if (clientNameDetailEntity.matchesCustomerId(clientFamilyDetailEntity.getClientName()
                                 .getCustomerNameId())) {
-                            ClientFamilyDetailView clientFamilyDetail = clientFamilyDetailEntity.toDto();
+                            ClientFamilyDetailDto clientFamilyDetail = clientFamilyDetailEntity.toDto();
 
                             final Integer mapKey = Integer.valueOf(familyMemberCount);
                             if (clientFamilyDetails.containsKey(mapKey)) {
                                 clientFamilyDetails.get(mapKey).add(clientFamilyDetail);
                             } else {
-                                List<ClientFamilyDetailView> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailView>();
+                                List<ClientFamilyDetailDto> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailDto>();
                                 clientFamilyDetailsList.add(clientFamilyDetail);
                                 clientFamilyDetails.put(mapKey, clientFamilyDetailsList);
                             }
@@ -1155,7 +1155,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 }
             }
 
-            return new ClientFamilyInfoDto(clientDropdowns, customFieldViews, customerDetail, clientDetail,
+            return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail,
                     familyMembers, clientFamilyDetails);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -1193,7 +1193,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             }
         }
 
-        List<PersonnelView> loanOfficersList = new ArrayList<PersonnelView>();
+        List<PersonnelDto> loanOfficersList = new ArrayList<PersonnelDto>();
         if (!client.isClientUnderGroup()) {
             CenterCreation centerCreation = new CenterCreation(client.getOffice().getOfficeId(), userContext.getId(),
                     userContext.getLevelId(), userContext.getPreferredLocale());

@@ -104,7 +104,7 @@ import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -2648,7 +2648,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             loanDao.createLoan(TestUtils.makeUser(), null, group, AccountState.LOAN_APPROVED, new Money(getCurrency(),
                     "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 0,
-                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DOUBLE_ZERO, DOUBLE_ZERO,
                     SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for null loan offering", true);
         } catch (AccountException ae) {
@@ -2664,7 +2664,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(),
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
             Assert.fail("The Loan object is created for inactive loan offering");
@@ -2682,7 +2682,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(),
                     DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                     eligibleInstallmentRange.getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for null customer", true);
@@ -2702,7 +2702,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             loanDao.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DOUBLE_ZERO,
+                    (short) 0, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DOUBLE_ZERO,
                     DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
             Assert.assertFalse("The Loan object is created for inactive customer", true);
         } catch (AccountException ae) {
@@ -2723,7 +2723,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), startDate, false, 10.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created even if meetings do not match", true);
@@ -2745,7 +2745,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanBO
                 .createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                         getCurrency(), "300.0"), Short.valueOf("6"), startDate, false, 10.0, (short) 0, null,
-                        new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                        new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                         DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                                 .getMinNoOfInstall(), false, null);
         Assert.assertTrue(
@@ -2761,7 +2761,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, null, Short
                     .valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 0, null,
-                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for null customer", true);
@@ -2779,7 +2779,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         try {
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, null, Short
                     .valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0, (short) 5, null,
-                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for grace period greather than max installments", true);
@@ -2797,7 +2797,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), product, group, AccountState.LOAN_APPROVED, new Money(
                 getCurrency(), "300.0"), Short.valueOf("6"), new Date(System.currentTimeMillis()), false, 10.0,
-                (short) 1, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(),
+                (short) 1, null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(),
                 DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(),
                 eligibleInstallmentRange.getMinNoOfInstall(), false, null);
         Assert.assertEquals(product.getGraceType(), loan.getGraceType());
@@ -2823,7 +2823,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * AccountState.LOAN_APPROVED, new Money(getCurrency(), "300.0"), Short
      * .valueOf("6"), new Date(System.currentTimeMillis()), true, 10.0, (short)
      * 5, null, new ArrayList<FeeDto>(), new
-     * ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
+     * ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT,
      * eligibleInstallmentRange .getMaxNoOfInstall(), eligibleInstallmentRange
      * .getMinNoOfInstall(), false, null);Assert.assertEquals(
      * "For interest ded at disb, grace period type should be none",
@@ -2844,7 +2844,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), disbursementDate, false, 10.0, (short) 0,
-                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertTrue("The Loan object is created for valid disbursement date", true);
@@ -2868,7 +2868,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      * try { new LoanBO(TestUtils.makeUser(), loanOffering, group,
      * AccountState.LOANACC_APPROVED, new Money(getCurrency(), "300.0"), Short
      * .valueOf("6"), disbursementDate, false, 10.0, (short) 0, null,
-     * new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>());
+     * new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>());
      * Assert.assertFalse(
      * "The Loan object is created for invalid disbursement date", true); }
      * catch (AccountException ae) {Assert.assertTrue(
@@ -2886,7 +2886,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
             LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, new Money(
                     getCurrency(), "300.0"), Short.valueOf("6"), disbursementDate, false, 10.0, (short) 0,
-                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+                    null, new ArrayList<FeeDto>(), new ArrayList<CustomFieldDto>(), DEFAULT_LOAN_AMOUNT,
                     DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange
                             .getMinNoOfInstall(), false, null);
             Assert.assertFalse("The Loan object is created for invalid disbursement date", true);
@@ -5673,9 +5673,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return accountBO;
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
         return fields;
     }
 

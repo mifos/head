@@ -21,11 +21,13 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import org.mifos.framework.business.service.DataTransferObject;
+
 /**
  * I am a DTO for tracking problems with loan/savings/customer accounts and
  * persisting to the database during a collection sheet save/create.
  */
-public class CollectionSheetErrorsView {
+public class CollectionSheetErrorsDto implements DataTransferObject {
 
     private final List<String> savingsDepNames;
     private final List<String> savingsWithNames;
@@ -35,7 +37,7 @@ public class CollectionSheetErrorsView {
     private final boolean isDatabaseError;
     private final Throwable databaseError;
 
-    public CollectionSheetErrorsView(final List<String> savingsDepNames, final List<String> savingsWithNames,
+    public CollectionSheetErrorsDto(final List<String> savingsDepNames, final List<String> savingsWithNames,
             final List<String> loanDisbursementAccountNumbers, final List<String> loanRepaymentAccountNumbers,
             final List<String> customerAccountNumbers,
             final boolean databaseErrorOccurred, final Throwable databaseError) {

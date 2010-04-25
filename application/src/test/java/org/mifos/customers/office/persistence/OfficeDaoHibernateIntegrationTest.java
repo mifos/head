@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
@@ -42,7 +42,7 @@ public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase 
 
     public void testGivenActiveLevelsExistsShouldReturnThemAsOfficeViews() {
 
-        List<OfficeView> offices = officeDao.findActiveOfficeLevels();
+        List<OfficeDetailsDto> offices = officeDao.findActiveOfficeLevels();
 
         assertThat(offices.isEmpty(), is(false));
     }

@@ -49,8 +49,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientFamilyDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientFamilyDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -584,7 +584,7 @@ public class ClientCustAction extends CustAction {
 
         // client family specific
         int familyMemberCount = 0;
-        for (ClientNameDetailView familyMember : clientFamilyInfo.getFamilyMembers()) {
+        for (ClientNameDetailDto familyMember : clientFamilyInfo.getFamilyMembers()) {
             actionForm.addFamilyMember();
             actionForm.setFamilyPrimaryKey(familyMemberCount, familyMember.getCustomerNameId());
             actionForm.setFamilyFirstName(familyMemberCount, familyMember.getFirstName());
@@ -592,16 +592,16 @@ public class ClientCustAction extends CustAction {
             actionForm.setFamilyLastName(familyMemberCount, familyMember.getLastName());
             actionForm.setFamilyRelationship(familyMemberCount, familyMember.getNameType());
 
-            Map<Integer, List<ClientFamilyDetailView>> clientFamilyDetailsMap = clientFamilyInfo.getClientFamilyDetails();
+            Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetailsMap = clientFamilyInfo.getClientFamilyDetails();
 
             Integer key = Integer.valueOf(familyMemberCount);
-            List<ClientFamilyDetailView> clientFamilyDetails = clientFamilyDetailsMap.get(key);
+            List<ClientFamilyDetailDto> clientFamilyDetails = clientFamilyDetailsMap.get(key);
             if (clientFamilyDetails != null) {
-                for (ClientFamilyDetailView clientFamilyDetailView : clientFamilyDetails) {
+                for (ClientFamilyDetailDto clientFamilyDetailDto : clientFamilyDetails) {
                     Calendar cal = Calendar.getInstance();
 
-                    if (clientFamilyDetailView.getDateOfBirth() != null) {
-                        String date1 = DateUtils.makeDateAsSentFromBrowser(clientFamilyDetailView.getDateOfBirth());
+                    if (clientFamilyDetailDto.getDateOfBirth() != null) {
+                        String date1 = DateUtils.makeDateAsSentFromBrowser(clientFamilyDetailDto.getDateOfBirth());
                         java.util.Date date = DateUtils.getDate(date1);
                         cal.setTime(date);
                         actionForm.setFamilyDateOfBirthDD(familyMemberCount, String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
@@ -609,8 +609,8 @@ public class ClientCustAction extends CustAction {
                         actionForm.setFamilyDateOfBirthYY(familyMemberCount, String.valueOf(cal.get(Calendar.YEAR)));
                     }
 
-                    actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailView.getGender());
-                    actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailView.getLivingStatus());
+                    actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailDto.getGender());
+                    actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailDto.getLivingStatus());
                 }
             }
         }

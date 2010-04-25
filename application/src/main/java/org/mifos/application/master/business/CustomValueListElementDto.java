@@ -21,19 +21,19 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * It is unclear why this class extends View. Note that the class
  * {@link BusinessActivityEntity} serves the same purpose but doesn't include
- * the additional id. A CustomValueListElement represents a
- * {@link CustomValueList} element for a given locale. This corresponds to a
+ * the additional id. A CustomValueListElementDto represents a
+ * {@link CustomValueDto} element for a given locale. This corresponds to a
  * {@link LookUpValueEntity} with the text pulled in from a
  * {@link LookUpValueLocaleEntity} for a given locale.
  *
  * A better name for this class might be ValueListElementForLocale.
  */
-public class CustomValueListElement extends View {
+public class CustomValueListElementDto implements DataTransferObject {
 
     /**
      * The id of an associated object linked to this list element. This only
@@ -60,10 +60,10 @@ public class CustomValueListElement extends View {
      */
     private String lookUpValueKey;
 
-    public CustomValueListElement() {
+    public CustomValueListElementDto() {
     }
 
-    public CustomValueListElement(java.lang.Integer lookUpId, String lookUpValue, String lookUpValueKey) {
+    public CustomValueListElementDto(java.lang.Integer lookUpId, String lookUpValue, String lookUpValueKey) {
 
         this.lookUpId = lookUpId;
         this.lookUpValue = lookUpValue;
@@ -73,7 +73,7 @@ public class CustomValueListElement extends View {
     /**
      * Possibly used in MasterPersistence.getCustomValueListElements
      */
-    public CustomValueListElement(java.lang.Short id, java.lang.Integer lookUpId, String lookUpValue,
+    public CustomValueListElementDto(java.lang.Short id, java.lang.Integer lookUpId, String lookUpValue,
             String lookUpValueKey) {
 
         this.lookUpId = lookUpId;
@@ -85,7 +85,7 @@ public class CustomValueListElement extends View {
     /**
      * Possibly used in MasterPersistence.getCustomValueListElements
      */
-    public CustomValueListElement(java.lang.Integer id, java.lang.Integer lookUpId, String lookUpValue) {
+    public CustomValueListElementDto(java.lang.Integer id, java.lang.Integer lookUpId, String lookUpValue) {
 
         this.lookUpId = lookUpId;
         this.lookUpValue = lookUpValue;

@@ -44,7 +44,7 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
@@ -153,9 +153,9 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    private List<CustomFieldView> getCustomFieldView() {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-        customFields.add(new CustomFieldView(new Short("8"), "13", CustomFieldType.NONE));
+    private List<CustomFieldDto> getCustomFieldView() {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        customFields.add(new CustomFieldDto(new Short("8"), "13", CustomFieldType.NONE));
         return customFields;
 
     }

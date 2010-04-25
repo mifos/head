@@ -22,14 +22,14 @@ package org.mifos.customers.office.business;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /*
  * Feb 2008 i18n work in progress.
  * looks like we need to make officeName, officeNameKey and
  * levelName, levelNameKey and then go through MessageLookup to resolve them
  */
-public class OfficeView extends View {
+public class OfficeDetailsDto implements DataTransferObject {
 
     private final Short officeId;
     private final String officeName;
@@ -40,7 +40,7 @@ public class OfficeView extends View {
     /**
      * used by hibernate queries
      */
-    public OfficeView(final Short levelId, final String levelNameKey) {
+    public OfficeDetailsDto(final Short levelId, final String levelNameKey) {
         this.levelId = levelId;
         this.levelNameKey = levelNameKey;
         this.officeId = null;
@@ -51,7 +51,7 @@ public class OfficeView extends View {
     /**
      * used by hibernate queries
      */
-    public OfficeView(final Short officeId, final String officeName, final Integer versionNo) {
+    public OfficeDetailsDto(final Short officeId, final String officeName, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.levelId = null;
@@ -59,7 +59,7 @@ public class OfficeView extends View {
         this.versionNo = versionNo;
     }
 
-    public OfficeView(final Short officeId, final String officeName, final Short levelId, final Integer versionNo) {
+    public OfficeDetailsDto(final Short officeId, final String officeName, final Short levelId, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.levelId = levelId;
@@ -67,11 +67,11 @@ public class OfficeView extends View {
         this.versionNo = versionNo;
     }
 
-    public OfficeView(final Short officeId, final String officeName, final OfficeLevel level, final String levelNameKey, final Integer versionNo) {
+    public OfficeDetailsDto(final Short officeId, final String officeName, final OfficeLevel level, final String levelNameKey, final Integer versionNo) {
         this(officeId, officeName, level.getValue(), levelNameKey, versionNo);
     }
 
-    public OfficeView(final Short officeId, final String officeName, final Short levelId, final String levelNameKey, final Integer versionNo) {
+    public OfficeDetailsDto(final Short officeId, final String officeName, final Short levelId, final String levelNameKey, final Integer versionNo) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.levelId = levelId;

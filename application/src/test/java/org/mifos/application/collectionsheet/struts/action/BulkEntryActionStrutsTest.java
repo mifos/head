@@ -58,7 +58,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
 import org.mifos.application.servicefacade.ListItem;
@@ -67,16 +67,16 @@ import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAcc
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -289,7 +289,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         verifyForward("load_success");
-        List<PersonnelView> loanOfficerList = (List<PersonnelView>) SessionUtils.getAttribute(
+        List<PersonnelDto> loanOfficerList = (List<PersonnelDto>) SessionUtils.getAttribute(
                 CustomerConstants.LOAN_OFFICER_LIST, request);
         Assert.assertEquals(1, loanOfficerList.size());
     }
@@ -312,7 +312,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         verifyForward("load_success");
-        List<CustomerView> parentCustomerList = (List<CustomerView>) SessionUtils.getAttribute(
+        List<CustomerDto> parentCustomerList = (List<CustomerDto>) SessionUtils.getAttribute(
                 CollectionSheetEntryConstants.CUSTOMERSLIST, request);
 
         Assert.assertEquals(1, parentCustomerList.size());
@@ -383,17 +383,17 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 "222.00", false, false);
 
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        CustomerView customerView = new CustomerView();
-        customerView.setCustomerId(center.getCustomerId());
-        customerView.setCustomerSearchId(center.getSearchId());
-        customerView.setCustomerLevelId(center.getCustomerLevel().getId());
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCustomerId(center.getCustomerId());
+        customerDto.setCustomerSearchId(center.getSearchId());
+        customerDto.setCustomerLevelId(center.getCustomerLevel().getId());
 
-        final OfficeView officeView = new OfficeView(Short.valueOf("3"), "", OfficeLevel.BRANCHOFFICE, "levelNameKey",
+        final OfficeDetailsDto officeDetailsDto = new OfficeDetailsDto(Short.valueOf("3"), "", OfficeLevel.BRANCHOFFICE, "levelNameKey",
                 Integer.valueOf(-1));
-        final PersonnelView personnelView = new PersonnelView(Short.valueOf("3"), "");
+        final PersonnelDto personnelDto = new PersonnelDto(Short.valueOf("3"), "");
 
         SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
-                createCollectionSheetDto(customerView, officeView, personnelView), request);
+                createCollectionSheetDto(customerDto, officeDetailsDto, personnelDto), request);
 
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.PAYMENT_TYPES_LIST, Arrays
                 .asList(getPaymentTypeView()), request);
@@ -626,13 +626,13 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 .getPrdOfferingShortName());
         List<ProductDto> savingsProducts = Arrays.asList(savingsOfferingDto, savingsOfferingDto2, savingsOfferingDto3);
 
-        final PersonnelView loanOfficer = getPersonnelView(center.getPersonnel());
-        final OfficeView officeView = null;
-        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+        final PersonnelDto loanOfficer = getPersonnelView(center.getPersonnel());
+        final OfficeDetailsDto officeDetailsDto = null;
+        final List<CustomValueListElementDto> attendanceTypesList = new ArrayList<CustomValueListElementDto>();
 
         bulkEntryParent.setCountOfCustomers(3);
         final CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto(bulkEntryParent, loanOfficer,
-                officeView, getPaymentTypeView(), startDate, "324343242", startDate, loanProducts, savingsProducts,
+                officeDetailsDto, getPaymentTypeView(), startDate, "324343242", startDate, loanProducts, savingsProducts,
                 attendanceTypesList);
 
         return bulkEntry;
@@ -701,26 +701,26 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 .getPrdOfferingShortName());
         List<ProductDto> savingsProducts = Arrays.asList(savingsOfferingDto);
 
-        final PersonnelView loanOfficer = getPersonnelView(center.getPersonnel());
-        final OfficeView officeView = null;
-        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+        final PersonnelDto loanOfficer = getPersonnelView(center.getPersonnel());
+        final OfficeDetailsDto officeDetailsDto = null;
+        final List<CustomValueListElementDto> attendanceTypesList = new ArrayList<CustomValueListElementDto>();
 
         bulkEntryParent.setCountOfCustomers(3);
         final CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto(bulkEntryParent, loanOfficer,
-                officeView, getPaymentTypeView(), startDate, "324343242", startDate, loanProducts, savingsProducts,
+                officeDetailsDto, getPaymentTypeView(), startDate, "324343242", startDate, loanProducts, savingsProducts,
                 attendanceTypesList);
 
         return bulkEntry;
     }
 
-    private CollectionSheetEntryFormDto createCollectionSheetDto(final CustomerView customerView,
-            final OfficeView officeView, final PersonnelView personnelView) {
+    private CollectionSheetEntryFormDto createCollectionSheetDto(final CustomerDto customerDto,
+            final OfficeDetailsDto officeDetailsDto, final PersonnelDto personnelDto) {
 
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
 
-        List<OfficeView> activeBranches = Arrays.asList(officeView);
-        List<CustomerView> customerList = Arrays.asList(customerView);
-        List<PersonnelView> loanOfficerList = Arrays.asList(personnelView);
+        List<OfficeDetailsDto> activeBranches = Arrays.asList(officeDetailsDto);
+        List<CustomerDto> customerList = Arrays.asList(customerDto);
+        List<PersonnelDto> loanOfficerList = Arrays.asList(personnelDto);
         final Short reloadFormAutomatically = Constants.YES;
         final Short backDatedTransactionAllowed = Constants.NO;
         final Short centerHierarchyExists = Constants.YES;
@@ -732,10 +732,10 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     private CollectionSheetEntryFormDto createDefaultCollectionSheetDto() {
 
-        List<OfficeView> activeBranches = new ArrayList<OfficeView>();
+        List<OfficeDetailsDto> activeBranches = new ArrayList<OfficeDetailsDto>();
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
-        List<CustomerView> customerList = new ArrayList<CustomerView>();
-        List<PersonnelView> loanOfficerList = new ArrayList<PersonnelView>();
+        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
+        List<PersonnelDto> loanOfficerList = new ArrayList<PersonnelDto>();
         final Short reloadFormAutomatically = Constants.YES;
         final Short backDatedTransactionAllowed = Constants.NO;
         final Short centerHierarchyExists = Constants.YES;
@@ -772,25 +772,25 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         return accountView;
     }
 
-    private CustomerView getCusomerView(final CustomerBO customer) {
-        CustomerView customerView = new CustomerView();
-        customerView.setCustomerId(customer.getCustomerId());
-        customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
-        customerView.setCustomerSearchId(customer.getSearchId());
-        customerView.setDisplayName(customer.getDisplayName());
-        customerView.setGlobalCustNum(customer.getGlobalCustNum());
-        customerView.setOfficeId(customer.getOffice().getOfficeId());
+    private CustomerDto getCusomerView(final CustomerBO customer) {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCustomerId(customer.getCustomerId());
+        customerDto.setCustomerLevelId(customer.getCustomerLevel().getId());
+        customerDto.setCustomerSearchId(customer.getSearchId());
+        customerDto.setDisplayName(customer.getDisplayName());
+        customerDto.setGlobalCustNum(customer.getGlobalCustNum());
+        customerDto.setOfficeId(customer.getOffice().getOfficeId());
         if (null != customer.getParentCustomer()) {
-            customerView.setParentCustomerId(customer.getParentCustomer().getCustomerId());
+            customerDto.setParentCustomerId(customer.getParentCustomer().getCustomerId());
         }
-        customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
-        customerView.setStatusId(customer.getCustomerStatus().getId());
-        return customerView;
+        customerDto.setPersonnelId(customer.getPersonnel().getPersonnelId());
+        customerDto.setStatusId(customer.getCustomerStatus().getId());
+        return customerDto;
     }
 
-    private PersonnelView getPersonnelView(final PersonnelBO personnel) {
-        PersonnelView personnelView = new PersonnelView(personnel.getPersonnelId(), personnel.getDisplayName());
-        return personnelView;
+    private PersonnelDto getPersonnelView(final PersonnelBO personnel) {
+        PersonnelDto personnelDto = new PersonnelDto(personnel.getPersonnelId(), personnel.getDisplayName());
+        return personnelDto;
     }
 
     private ListItem<Short> getPaymentTypeView() {
@@ -798,16 +798,16 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         return paymentTypeView;
     }
 
-    private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(),
+    private CustomerAccountDto getCustomerAccountView(final CustomerBO customer) {
+        CustomerAccountDto customerAccountDto = new CustomerAccountDto(customer.getCustomerAccount().getAccountId(),
                 getCurrency());
 
         List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
         accountAction.add(customer.getCustomerAccount().getAccountActionDate(Short.valueOf("1")));
-        customerAccountView.setAccountActionDates(TestObjectFactory.getBulkEntryAccountActionViews(accountAction));
-        customerAccountView.setCustomerAccountAmountEntered("100.0");
-        customerAccountView.setValidCustomerAccountAmountEntered(true);
-        return customerAccountView;
+        customerAccountDto.setAccountActionDates(TestObjectFactory.getBulkEntryAccountActionViews(accountAction));
+        customerAccountDto.setCustomerAccountAmountEntered("100.0");
+        customerAccountDto.setValidCustomerAccountAmountEntered(true);
+        return customerAccountDto;
     }
 
     private AccountBO getLoanAccount(final CustomerBO group, final MeetingBO meeting) {
@@ -824,20 +824,20 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void setMasterListInSession(final Integer customerId) throws PageExpiredException {
-        OfficeView office = new OfficeView(Short.valueOf("3"), "Branch", OfficeConstants.BRANCHOFFICE, Integer
+        OfficeDetailsDto office = new OfficeDetailsDto(Short.valueOf("3"), "Branch", OfficeConstants.BRANCHOFFICE, Integer
                 .valueOf("0"));
-        List<OfficeView> branchOfficesList = new ArrayList<OfficeView>();
+        List<OfficeDetailsDto> branchOfficesList = new ArrayList<OfficeDetailsDto>();
         branchOfficesList.add(office);
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, branchOfficesList, request);
 
-        PersonnelView personnel = new PersonnelView(Short.valueOf("3"), "John");
-        List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
+        PersonnelDto personnel = new PersonnelDto(Short.valueOf("3"), "John");
+        List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
         personnelList.add(personnel);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, personnelList, request);
 
-        CustomerView parentCustomer = new CustomerView(customerId, "Center_Active", Short.valueOf(CustomerLevel.CENTER
+        CustomerDto parentCustomer = new CustomerDto(customerId, "Center_Active", Short.valueOf(CustomerLevel.CENTER
                 .getValue()), "1.1");
-        List<CustomerView> customerList = new ArrayList<CustomerView>();
+        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
         customerList.add(parentCustomer);
         SessionUtils.setCollectionAttribute(CollectionSheetEntryConstants.CUSTOMERSLIST, customerList, request);
     }

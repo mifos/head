@@ -18,10 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.business;
+package org.mifos.application.master.business;
 
-import java.io.Serializable;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class View implements Serializable {
+public class PaymentTypeDto implements DataTransferObject {
+
+    private Short paymentTypeId;
+    private String paymentTypeValue;
+
+    public Short getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public void setPaymentTypeId(Short paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
+    }
+
+    public String getPaymentTypeValue() {
+        return paymentTypeValue;
+    }
+
+    public void setPaymentTypeValue(String paymentTypeValue) {
+        this.paymentTypeValue = paymentTypeValue;
+    }
 
 }

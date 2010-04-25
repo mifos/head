@@ -37,7 +37,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -122,26 +122,26 @@ public class PersonActionForm extends BaseActionForm {
 
     private String[] personnelRoles;
 
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
 
     public PersonActionForm() {
         super();
 
         address = new Address();
-        customFields = new ArrayList<CustomFieldView>();
+        customFields = new ArrayList<CustomFieldDto>();
         personnelRoles = null;
 
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(List<CustomFieldView> customFields) {
+    public void setCustomFields(List<CustomFieldDto> customFields) {
         this.customFields = customFields;
     }
 
-    public CustomFieldView getCustomField(int i) {
+    public CustomFieldDto getCustomField(int i) {
         return getCustomField(customFields, i);
     }
 
@@ -325,7 +325,7 @@ public class PersonActionForm extends BaseActionForm {
         this.input = null;
         this.searchString = null;
         address = new Address();
-        customFields = new ArrayList<CustomFieldView>();
+        customFields = new ArrayList<CustomFieldDto>();
     }
 
     public Address getAddress() {
@@ -645,7 +645,7 @@ public class PersonActionForm extends BaseActionForm {
         try {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(
                     CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldView customField : customFields) {
+            for (CustomFieldDto customField : customFields) {
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
                         if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {

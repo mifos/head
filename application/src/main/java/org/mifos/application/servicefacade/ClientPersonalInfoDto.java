@@ -22,20 +22,20 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 
 public class ClientPersonalInfoDto {
 
     private final ClientDropdownsDto clientDropdowns;
-    private final List<CustomFieldView> customFieldViews;
+    private final List<CustomFieldDto> customFieldDtos;
     private final ClientRulesDto clientRules;
     private final CustomerDetailDto customerDetail;
     private final ClientDetailDto clientDetail;
 
-    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldView> customFieldViews, ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
+    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
         this.clientDropdowns = clientDropdowns;
-        this.customFieldViews = customFieldViews;
+        this.customFieldDtos = customFieldDtos;
         this.clientRules = clientRules;
         this.customerDetail = customerDetailDto;
         this.clientDetail = clientDetailDto;
@@ -45,8 +45,8 @@ public class ClientPersonalInfoDto {
         return this.clientDropdowns;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return this.customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return this.customFieldDtos;
     }
 
     public ClientRulesDto getClientRules() {

@@ -49,7 +49,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -57,12 +57,12 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelView;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -159,13 +159,13 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
         // Assert that the extracted attendance types are the ones expected
         final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
-        List<CustomValueListElement> attendanceTypesCustomValueList = new MasterPersistence().getCustomValueList(
+        List<CustomValueListElementDto> attendanceTypesCustomValueList = new MasterPersistence().getCustomValueList(
                 MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements();
 
         List<String> attendanceTypesLookupValueList = new ArrayList<String>();
-        for (CustomValueListElement attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
+        for (CustomValueListElementDto attendanceTypeCustomValueListElement : attendanceTypesCustomValueList) {
             attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
         }
         Assert.assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
@@ -274,12 +274,12 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
         List<ProductDto> savingsProducts = Arrays.asList(savingOfferingDto, savingOfferingDto2, savingOfferingDto3);
 
-        final PersonnelView loanOfficer = getPersonnelView(center.getPersonnel());
-        final OfficeView officeView = null;
-        final List<CustomValueListElement> attendanceTypesList = new ArrayList<CustomValueListElement>();
+        final PersonnelDto loanOfficer = getPersonnelView(center.getPersonnel());
+        final OfficeDetailsDto officeDetailsDto = null;
+        final List<CustomValueListElementDto> attendanceTypesList = new ArrayList<CustomValueListElementDto>();
 
         CollectionSheetEntryGridDto bulkEntry = new CollectionSheetEntryGridDto(bulkEntryParent, loanOfficer,
-                officeView, getPaymentTypeView(), new java.util.Date(), "324343242", new java.util.Date(),
+                officeDetailsDto, getPaymentTypeView(), new java.util.Date(), "324343242", new java.util.Date(),
                 loanProducts, savingsProducts, attendanceTypesList);
 
         return bulkEntry;
@@ -321,25 +321,25 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return accountView;
     }
 
-    private CustomerView getCusomerView(final CustomerBO customer) {
-        CustomerView customerView = new CustomerView();
-        customerView.setCustomerId(customer.getCustomerId());
-        customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
-        customerView.setCustomerSearchId(customer.getSearchId());
-        customerView.setDisplayName(customer.getDisplayName());
-        customerView.setGlobalCustNum(customer.getGlobalCustNum());
-        customerView.setOfficeId(customer.getOffice().getOfficeId());
+    private CustomerDto getCusomerView(final CustomerBO customer) {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCustomerId(customer.getCustomerId());
+        customerDto.setCustomerLevelId(customer.getCustomerLevel().getId());
+        customerDto.setCustomerSearchId(customer.getSearchId());
+        customerDto.setDisplayName(customer.getDisplayName());
+        customerDto.setGlobalCustNum(customer.getGlobalCustNum());
+        customerDto.setOfficeId(customer.getOffice().getOfficeId());
         if (null != customer.getParentCustomer()) {
-            customerView.setParentCustomerId(customer.getParentCustomer().getCustomerId());
+            customerDto.setParentCustomerId(customer.getParentCustomer().getCustomerId());
         }
-        customerView.setPersonnelId(customer.getPersonnel().getPersonnelId());
-        customerView.setStatusId(customer.getCustomerStatus().getId());
-        return customerView;
+        customerDto.setPersonnelId(customer.getPersonnel().getPersonnelId());
+        customerDto.setStatusId(customer.getCustomerStatus().getId());
+        return customerDto;
     }
 
-    private PersonnelView getPersonnelView(final PersonnelBO personnel) {
-        PersonnelView personnelView = new PersonnelView(personnel.getPersonnelId(), personnel.getDisplayName());
-        return personnelView;
+    private PersonnelDto getPersonnelView(final PersonnelBO personnel) {
+        PersonnelDto personnelDto = new PersonnelDto(personnel.getPersonnelId(), personnel.getDisplayName());
+        return personnelDto;
     }
 
     private ListItem<Short> getPaymentTypeView() {
@@ -347,15 +347,15 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         return paymentTypeView;
     }
 
-    private CustomerAccountView getCustomerAccountView(final CustomerBO customer) {
-        CustomerAccountView customerAccountView = new CustomerAccountView(customer.getCustomerAccount().getAccountId(), getCurrency());
+    private CustomerAccountDto getCustomerAccountView(final CustomerBO customer) {
+        CustomerAccountDto customerAccountDto = new CustomerAccountDto(customer.getCustomerAccount().getAccountId(), getCurrency());
 
         List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
         accountAction.add(customer.getCustomerAccount().getAccountActionDate(Short.valueOf("1")));
-        customerAccountView.setAccountActionDates(TestObjectFactory.getBulkEntryAccountActionViews(accountAction));
-        customerAccountView.setCustomerAccountAmountEntered("100.0");
-        customerAccountView.setValidCustomerAccountAmountEntered(true);
-        return customerAccountView;
+        customerAccountDto.setAccountActionDates(TestObjectFactory.getBulkEntryAccountActionViews(accountAction));
+        customerAccountDto.setCustomerAccountAmountEntered("100.0");
+        customerAccountDto.setValidCustomerAccountAmountEntered(true);
+        return customerAccountDto;
     }
 
 }

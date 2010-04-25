@@ -33,7 +33,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -97,7 +97,7 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
         
         String displayName = "centerCascade";
         Address address = null;
-        final List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        final List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         final List<FeeDto> fees = new ArrayList<FeeDto>();
         final String externalId = null;
         final Date mfiJoiningDate = new DateTime().minusDays(1).toDate();

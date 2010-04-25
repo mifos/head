@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
 import org.mifos.core.ClasspathResource;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.testng.annotations.Test;
 
@@ -71,14 +71,14 @@ public class TableTagParserTest extends TestCase {
                Assert.assertEquals("method", columns[i].getValueType());
                 StringBuilder builder2 = new StringBuilder();
                 Locale locale = new Locale("en", "GB");
-                OfficeView officeView = new OfficeView(Short.valueOf("1"), "abcd", Short.valueOf("1"), "branch",
+                OfficeDetailsDto officeDetailsDto = new OfficeDetailsDto(Short.valueOf("1"), "abcd", Short.valueOf("1"), "branch",
                         Integer.valueOf("1"));
 
                 ColumnDetails columnDetails = new ColumnDetails();
                 columnDetails.setRowStyle("drawtablerowbold");
                 columnDetails.setAlign("Down");
                 columns[i].setColumnDetials(columnDetails);
-                columns[i].generateTableColumn(builder2, officeView, locale, locale, locale);
+                columns[i].generateTableColumn(builder2, officeDetailsDto, locale, locale, locale);
                Assert.assertEquals("<td class=\"drawtablerowbold\"   align=\"Down\" > </td>", builder2.toString());
 
             }
@@ -131,7 +131,7 @@ public class TableTagParserTest extends TestCase {
 
     }
 
-    private OfficeView createOfficeView() {
-        return new OfficeView(Short.valueOf("1"), "abcd", Short.valueOf("1"), "branch", Integer.valueOf("1"));
+    private OfficeDetailsDto createOfficeView() {
+        return new OfficeDetailsDto(Short.valueOf("1"), "abcd", Short.valueOf("1"), "branch", Integer.valueOf("1"));
     }
 }

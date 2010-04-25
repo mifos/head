@@ -35,7 +35,7 @@ import junitx.framework.StringAssert;
 import org.dom4j.DocumentException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
@@ -179,11 +179,11 @@ public class OfficeListTagTest extends TestCase {
         StringAssert.assertNotContains("TheGambia", html);
     }
 
-    private List<OfficeView> headRegionalBranch() {
-        List<OfficeView> levels = new ArrayList<OfficeView>();
-        levels.add(new OfficeView(null, null, OfficeLevel.HEADOFFICE, "Head", 0));
-        levels.add(new OfficeView(null, null, OfficeLevel.REGIONALOFFICE, "Regional", 0));
-        levels.add(new OfficeView(null, null, OfficeLevel.BRANCHOFFICE, "Branch", 0));
+    private List<OfficeDetailsDto> headRegionalBranch() {
+        List<OfficeDetailsDto> levels = new ArrayList<OfficeDetailsDto>();
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.HEADOFFICE, "Head", 0));
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.REGIONALOFFICE, "Regional", 0));
+        levels.add(new OfficeDetailsDto(null, null, OfficeLevel.BRANCHOFFICE, "Branch", 0));
         return Collections.unmodifiableList(levels);
     }
 

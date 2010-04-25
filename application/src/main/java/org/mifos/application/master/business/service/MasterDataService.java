@@ -27,12 +27,12 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -52,7 +52,7 @@ public class MasterDataService implements BusinessService {
         return null;
     }
 
-    public List<PersonnelView> getListOfActiveLoanOfficers(Short levelId, Short officeId, Short userId,
+    public List<PersonnelDto> getListOfActiveLoanOfficers(Short levelId, Short officeId, Short userId,
             Short userLevelId) throws ServiceException {
         try {
             return personnelPersistence.getActiveLoanOfficersInBranch(levelId, officeId, userId, userLevelId);
@@ -61,7 +61,7 @@ public class MasterDataService implements BusinessService {
         }
     }
 
-    public List<OfficeView> getActiveBranches(Short branchId) throws ServiceException {
+    public List<OfficeDetailsDto> getActiveBranches(Short branchId) throws ServiceException {
         try {
             return officePersistence.getActiveOffices(branchId);
         } catch (PersistenceException e) {
@@ -70,7 +70,7 @@ public class MasterDataService implements BusinessService {
 
     }
 
-    public List<CustomerView> getListOfActiveParentsUnderLoanOfficer(Short personnelId, Short customerLevel,
+    public List<CustomerDto> getListOfActiveParentsUnderLoanOfficer(Short personnelId, Short customerLevel,
             Short officeId) throws ServiceException {
         try {
             return customerPersistence.getActiveParentList(personnelId, customerLevel, officeId);

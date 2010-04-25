@@ -41,7 +41,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -318,11 +318,11 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testFailure_InitialSavingsOfferingAtCreate() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        ClientNameDetailView clientView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientView = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         List<SavingsOfferingBO> offerings = new ArrayList<SavingsOfferingBO>();
         offerings.add(savingsOffering1);
@@ -330,7 +330,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         try {
             client = new ClientBO(TestObjectFactory.getContext(), clientView.getDisplayName(),
                     CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
-                    null, null, null, null, YesNoFlag.NO.getValue(), clientView, spouseView, clientDetailView, null);
+                    null, null, null, null, YesNoFlag.NO.getValue(), clientView, spouseView, clientPersonalDetailDto, null);
         } catch (CustomerException ce) {
             Assert.assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
             Assert.assertTrue(true);
@@ -344,19 +344,19 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
         savingsOffering2 = TestObjectFactory.createSavingsProduct("Offering2", "s2", SavingsType.VOLUNTARY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         List<SavingsOfferingBO> offerings = new ArrayList<SavingsOfferingBO>();
         offerings.add(savingsOffering1);
         offerings.add(savingsOffering2);
-        client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(),
+        client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailDto.getDisplayName(),
                 CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeBo, null,
-                null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView,
-                clientDetailView, null);
+                null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
+                clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -379,15 +379,15 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCreateClientWithoutName() throws Exception {
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "", "", "", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUser(), "", CustomerStatus.fromInt(new Short("1")), null, null, null,
                     null, null, null, personnel, officeBo, null, null, null, null, null, YesNoFlag.YES.getValue(),
-                    clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                    clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             Assert.fail("Client Created");
         } catch (CustomerException ce) {
             Assert.assertNull(client);
@@ -397,15 +397,15 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCreateClientWithoutOffice() throws Exception {
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "", "last", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
-            client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+            client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                     .fromInt(new Short("1")), null, null, null, null, null, null, personnel, null, null, null, null,
-                    null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView,
+                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
                     null);
             Assert.fail("Client Created");
         } catch (CustomerException ce) {
@@ -417,15 +417,15 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
         String name = "Client 1";
         Short povertyStatus = Short.valueOf("41");
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), povertyStatus);
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, null, null,
-                null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView,
+                null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
                 null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
@@ -445,17 +445,17 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
         String name = "Client 1";
         Short povertyStatus = Short.valueOf("41");
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), povertyStatus);
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(),
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(),
                 CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel,
                 new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE), getMeeting(), personnel,
-                null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView,
-                clientDetailView, null);
+                null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView,
+                clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -487,16 +487,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         selectedOfferings.add(savingsOffering2);
 
         Short povertyStatus = Short.valueOf("41");
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), povertyStatus);
-        client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(),
+        client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailDto.getDisplayName(),
                 CustomerStatus.CLIENT_PENDING, null, null, null, null, null, selectedOfferings, personnel,
                 getBranchOffice(), getMeeting(), personnel, null, null, null, null, YesNoFlag.YES.getValue(),
-                clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -527,17 +527,17 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSuccessfulCreateWithParentGroup() throws Exception {
         String name = "Client 1";
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         createParentObjects(CustomerStatus.GROUP_PARTIAL);
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice(), group,
-                null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView,
-                clientDetailView, null);
+                null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
+                clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -548,17 +548,17 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testFailureCreatePendingClientWithParentGroupInLowerStatus() throws Exception {
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
             createParentObjects(CustomerStatus.GROUP_PARTIAL);
-            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(),
+            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
                     CustomerStatus.CLIENT_PENDING, null, null, null, null, null, null, personnel, group.getOffice(),
-                    group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
-                    spouseNameDetailView, clientDetailView, null);
+                    group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
+                    spouseNameDetailView, clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertNull(client);
@@ -568,17 +568,17 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testFailureCreateActiveClientWithParentGroupInLowerStatus() throws Exception {
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
             createParentObjects(CustomerStatus.GROUP_PARTIAL);
-            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(),
+            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
                     CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, null, personnel, group.getOffice(),
-                    group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
-                    spouseNameDetailView, clientDetailView, null);
+                    group, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
+                    spouseNameDetailView, clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertNull(client);
@@ -590,16 +590,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         List<FeeDto> fees = getFees();
         try {
             meeting = getMeeting();
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "", "last", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
-            client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+            client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                     .fromInt(new Short("3")), null, null, null, null, fees, null, personnel, officeBo, meeting, null,
-                    null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView,
-                    clientDetailView, null);
+                    null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView,
+                    clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertNull(client);
@@ -610,16 +610,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testFailureCreateActiveClientWithoutMeeting() throws Exception {
         try {
-            ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "", "last", "");
-            ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                     TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-            ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                     .valueOf("1"), Short.valueOf("41"));
-            client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+            client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                     .fromInt(new Short("3")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
-                    null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView,
-                    clientDetailView, null);
+                    null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView,
+                    clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException ce) {
             Assert.assertNull(client);
@@ -630,25 +630,25 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     // FIXME - #000010 - keithw - put back on after client creation is complete!
     public void ignore_testFailureCreateClientWithDuplicateNameAndDOB() throws Exception {
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
-                date, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView, spouseNameDetailView,
-                clientDetailView, null);
+                date, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
+                clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         try {
-            new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short(
+            new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus.fromInt(new Short(
                     "1")), null, null, null, null, null, null, personnel, officeBo, null, personnel, date, null, null,
-                    null, YesNoFlag.NO.getValue(), clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                    null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertEquals(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, e.getKey());
@@ -658,25 +658,25 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     // FIXME - #000010 - keithw - put back on after client creation is complete!
     public void ignore_testFailureCreateClientWithDuplicateGovtId() throws Exception {
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
-                new java.util.Date(), "1", null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
-                spouseNameDetailView, clientDetailView, null);
+                new java.util.Date(), "1", null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
+                spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
         try {
-            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailView.getDisplayName(),
+            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
                     CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, null, personnel, officeBo, null,
-                    personnel, new java.util.Date(), "1", null, null, YesNoFlag.NO.getValue(), clientNameDetailView,
-                    spouseNameDetailView, clientDetailView, null);
+                    personnel, new java.util.Date(), "1", null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
+                    spouseNameDetailView, clientPersonalDetailDto, null);
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
@@ -689,16 +689,16 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         String firstName = "Client";
         String lastName = "Last";
         String displayName = "Client Last";
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
                 TestObjectFactory.SAMPLE_SALUTATION, firstName, "", lastName, "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, null, getCustomFields(), null, null, personnel, office, meeting,
-                personnel, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailView,
-                spouseNameDetailView, clientDetailView, null);
+                personnel, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
+                spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1055,9 +1055,9 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
         Assert.assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
         Assert.assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
-        ClientDetailView clientDetailView = new ClientDetailView(2, 2, 2, 2, 2, 2, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(2, 2, 2, 2, 2, 2, Short.valueOf("1"), Short
                 .valueOf("1"), povertyStatus);
-        client.updateClientDetails(clientDetailView);
+        client.updateClientDetails(clientPersonalDetailDto);
         Assert.assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
         Assert.assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
         Assert.assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
@@ -1248,10 +1248,10 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
         return fields;
     }
 

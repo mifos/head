@@ -29,7 +29,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.util.helpers.CustomerAccountView;
+import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -239,7 +239,7 @@ public class SaveCollectionSheetFromLegacyAssembler {
         return null;
     }
 
-    private SaveCollectionSheetCustomerAccountDto assembleCustomerAccount(CustomerAccountView customerAccountDetails,
+    private SaveCollectionSheetCustomerAccountDto assembleCustomerAccount(CustomerAccountDto customerAccountDetails,
             Short currencyId) {
 
         // Account Id is set to -1 if no outstanding customer account

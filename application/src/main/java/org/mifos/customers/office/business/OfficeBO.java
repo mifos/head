@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -47,7 +47,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.EventManger;
-import org.mifos.security.util.OfficeSearch;
+import org.mifos.security.util.OfficeSearchDto;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -121,7 +121,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
      * For tests. Does not require that the names in question actually exist in the database.
      */
     public static OfficeBO makeForTest(final UserContext userContext, final OfficeLevel level,
-            final OfficeBO parentOffice, final String searchId, final List<CustomFieldView> customFields,
+            final OfficeBO parentOffice, final String searchId, final List<CustomFieldDto> customFields,
             final String officeName, final String shortName, final Address address, final OperationMode operationMode,
             final OfficeStatus status) throws OfficeException {
         return new OfficeBO(userContext, null, level, parentOffice, searchId, customFields, officeName, shortName,
@@ -138,7 +138,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
      * Construct an object without validating it against the database.
      */
     private OfficeBO(final UserContext userContext, final Short officeId, final OfficeLevel level,
-            final OfficeBO parentOffice, final String searchId, final List<CustomFieldView> customFields,
+            final OfficeBO parentOffice, final String searchId, final List<CustomFieldDto> customFields,
             final String officeName, final String shortName, final Address address, final OperationMode operationMode,
             final OfficeStatus status) throws OfficeValidationException {
         super(userContext);
@@ -161,7 +161,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
         this.customFields = new HashSet<OfficeCustomFieldEntity>();
         if (customFields != null) {
-            for (CustomFieldView view : customFields) {
+            for (CustomFieldDto view : customFields) {
                 this.customFields.add(new OfficeCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
         }
@@ -174,7 +174,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
      *             Thrown when there's a problem with the persistence layer
      */
     public OfficeBO(final UserContext userContext, final OfficeLevel level, final OfficeBO parentOffice,
-            final List<CustomFieldView> customFields, final String officeName, final String shortName,
+            final List<CustomFieldDto> customFields, final String officeName, final String shortName,
             final Address address, final OperationMode operationMode) throws OfficeValidationException,
             PersistenceException {
         this(userContext, null, level, parentOffice, null, customFields, officeName, shortName, address, operationMode,
@@ -419,8 +419,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
         // if we are here it means office created sucessfully
         // we need to update hierarchy manager cache
-        OfficeSearch os = new OfficeSearch(getOfficeId(), getSearchId(), getParentOffice().getOfficeId());
-        List<OfficeSearch> osList = new ArrayList<OfficeSearch>();
+        OfficeSearchDto os = new OfficeSearchDto(getOfficeId(), getSearchId(), getParentOffice().getOfficeId());
+        List<OfficeSearchDto> osList = new ArrayList<OfficeSearchDto>();
         osList.add(os);
         EventManger.postEvent(Constants.CREATE, osList, SecurityConstants.OFFICECHANGEEVENT);
 
@@ -474,7 +474,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public void update(final String newName, final String newShortName, final OfficeStatus newStatus,
             final OfficeLevel newLevel, final OfficeBO newParent, final Address address,
-            final List<CustomFieldView> customFileds) throws OfficeException {
+            final List<CustomFieldDto> customFileds) throws OfficeException {
         changeOfficeName(newName);
         changeOfficeShortName(newShortName);
 
@@ -602,9 +602,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
     }
 
-    private void updateCustomFields(final List<CustomFieldView> customfields) {
+    private void updateCustomFields(final List<CustomFieldDto> customfields) {
         if (this.customFields != null && customfields != null) {
-            for (CustomFieldView fieldView : customfields) {
+            for (CustomFieldDto fieldView : customfields) {
                 for (OfficeCustomFieldEntity fieldEntity : this.customFields) {
                     if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
@@ -613,7 +613,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
             }
         } else if (this.customFields == null && customfields != null) {
             this.customFields = new HashSet<OfficeCustomFieldEntity>();
-            for (CustomFieldView view : customfields) {
+            for (CustomFieldDto view : customfields) {
                 this.customFields.add(new OfficeCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
         }

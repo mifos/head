@@ -22,18 +22,18 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 
 public class ClientMfiInfoDto {
 
     private final String groupDisplayName;
     private final String centerDisplayName;
-    private final List<PersonnelView> loanOfficersList;
+    private final List<PersonnelDto> loanOfficersList;
     private final CustomerDetailDto customerDetail;
     private final ClientDetailDto clientDetail;
 
-    public ClientMfiInfoDto(String groupDisplayName, String centerDisplayName, List<PersonnelView> loanOfficersList,
+    public ClientMfiInfoDto(String groupDisplayName, String centerDisplayName, List<PersonnelDto> loanOfficersList,
             CustomerDetailDto customerDetail, ClientDetailDto clientDetail) {
         this.groupDisplayName = groupDisplayName;
         this.centerDisplayName = centerDisplayName;
@@ -50,7 +50,7 @@ public class ClientMfiInfoDto {
         return this.centerDisplayName;
     }
 
-    public List<PersonnelView> getLoanOfficersList() {
+    public List<PersonnelDto> getLoanOfficersList() {
         return this.loanOfficersList;
     }
 

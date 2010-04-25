@@ -36,7 +36,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerSearchInputView;
+import org.mifos.customers.util.helpers.CustomerSearchInputDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
@@ -113,7 +113,7 @@ public class ClientTransferAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadParents(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        CustomerSearchInputView clientSearchInput = new CustomerSearchInputView();
+        CustomerSearchInputDto clientSearchInput = new CustomerSearchInputDto();
         clientSearchInput.setOfficeId(getUserContext(request).getBranchId());
         clientSearchInput.setCustomerInputPage(ClientConstants.INPUT_GROUP_TRANSFER);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT, clientSearchInput, request.getSession());

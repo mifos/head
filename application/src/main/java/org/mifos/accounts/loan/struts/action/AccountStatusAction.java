@@ -39,11 +39,11 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -93,16 +93,16 @@ public class AccountStatusAction extends BaseAction {
                 BusinessServiceName.MasterDataService);
 
         UserContext userContext = getUserContext(request);
-        List<OfficeView> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
+        List<OfficeDetailsDto> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
 
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
 
         if (activeBranches.size() == 1) {
-            List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(userContext, activeBranches.get(0)
+            List<PersonnelDto> loanOfficers = loadLoanOfficersForBranch(userContext, activeBranches.get(0)
                     .getOfficeId());
             SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
         } else {
-            SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, new ArrayList<PersonnelView>(), request);
+            SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, new ArrayList<PersonnelDto>(), request);
         }
 
         return mapping.findForward(ActionForwards.changeAccountStatus_success.toString());
@@ -147,7 +147,7 @@ public class AccountStatusAction extends BaseAction {
             final HttpServletResponse httpservletresponse) throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
         Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
-        List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(getUserContext(request), officeId);
+        List<PersonnelDto> loanOfficers = loadLoanOfficersForBranch(getUserContext(request), officeId);
         SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
 
         if (officeId != null) {
@@ -182,7 +182,7 @@ public class AccountStatusAction extends BaseAction {
         return null;
     }
 
-    private List<PersonnelView> loadLoanOfficersForBranch(final UserContext userContext, final Short officeId) throws Exception {
+    private List<PersonnelDto> loadLoanOfficersForBranch(final UserContext userContext, final Short officeId) throws Exception {
         masterService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.MasterDataService);
 

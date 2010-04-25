@@ -30,7 +30,7 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -340,14 +340,14 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
         Name name = new Name("XYZ", null, null, null);
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView((short) 9, "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd" + surveyName, "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = DateUtils.getCurrentDateWithoutTimeStamp();
         String officerName = "Test Officer " + surveyName;
         PersonnelBO officer = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"),
                 TestObjectFactory.TEST_LOCALE, "PASSWORD", officerName + System.currentTimeMillis(), "xyz@yahoo.com",
-                null, customFieldView, name, "govId" + surveyName, date, Integer.valueOf("1"), Integer.valueOf("1"),
+                null, customFieldDto, name, "govId" + surveyName, date, Integer.valueOf("1"), Integer.valueOf("1"),
                 date, date, address, PersonnelConstants.SYSTEM_USER);
 
         SurveyInstance instance = new SurveyInstance();

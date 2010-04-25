@@ -43,7 +43,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -55,9 +55,9 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.ClientTestUtils;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.business.service.ClientInformationDto;
@@ -319,10 +319,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
 
         boolean isCustomFieldMandatory = false;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             if (customFieldDef.isMandatory()) {
                 isCustomFieldMandatory = true;
                 break;
@@ -342,7 +342,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "");
             i++;
@@ -365,7 +365,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -380,7 +380,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -399,7 +399,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -414,7 +414,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -440,7 +440,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -454,7 +454,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("clientDetailView.gender", "1");
         addRequestParameter("input", "personalInfo");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -518,7 +518,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -532,7 +532,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("clientDetailView.gender", "1");
         addRequestParameter("input", "personalInfo");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -603,7 +603,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
 
@@ -621,7 +621,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -657,7 +657,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
 
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
         List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
@@ -679,7 +679,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -711,7 +711,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
 
@@ -729,7 +729,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -766,7 +766,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
 
@@ -784,7 +784,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -840,7 +840,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -855,7 +855,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -915,7 +915,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -930,7 +930,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -980,7 +980,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
         addRequestParameter("officeId", "3");
@@ -995,7 +995,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "Req");
             i++;
@@ -1127,12 +1127,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "previewEditPersonalInfo");
         addRequestParameter("clientName.firstName", "Client2");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             i++;
@@ -1151,13 +1151,13 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
 
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "previewEditPersonalInfo");
         addRequestParameter("clientDetailView.ethinicity", "1");
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             addRequestParameter("customField[" + i + "].fieldType", "1");
@@ -1186,7 +1186,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
         setRequestPathInfo("/clientCustAction.do");
@@ -1212,7 +1212,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("clientDetailView.numChildren", Integer.valueOf("2").toString());
 
         int i = 0;
-        for (CustomFieldView customFieldDef : customFieldDefs) {
+        for (CustomFieldDto customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
             addRequestParameter("customField[" + i + "].fieldValue", "11");
             addRequestParameter("customField[" + i + "].fieldType", "1");
@@ -1278,16 +1278,16 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Short povertyStatus = Short.valueOf("41");
 
         StaticHibernateUtil.startTransaction();
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT, salutation, "Client", "",
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, salutation, "Client", "",
                 "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
                 TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(ethincity, citizenship, handicapped,
-                businessActivities, ClientDetailView.MARRIED, educationLevel, numChildren, gender, povertyStatus);
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(ethincity, citizenship, handicapped,
+                businessActivities, ClientPersonalDetailDto.MARRIED, educationLevel, numChildren, gender, povertyStatus);
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
-                clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1541,7 +1541,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
             verifyForward(ActionForwards.load_success.toString());
             List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                     ClientConstants.POVERTY_STATUS, request);
-            List<CustomFieldView> customFieldDefs = getCustomFieldFromSession();
+            List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
             setRequestPathInfo("/clientCustAction.do");
             addRequestParameter("method", "next");
             addRequestParameter("officeId", "3");
@@ -1556,7 +1556,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
             addRequestParameter("input", "personalInfo");
             addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
             int i = 0;
-            for (CustomFieldView customFieldDef : customFieldDefs) {
+            for (CustomFieldDto customFieldDef : customFieldDefs) {
                 addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
                 addRequestParameter("customField[" + i + "].fieldValue", "Req");
                 i++;
@@ -1597,15 +1597,15 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
-        ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT, 1, "Client", "", "1", "");
-        ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE, 1, "first", "middle",
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, 1, "Client", "", "1", "");
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, 1, "first", "middle",
                 "last", "secondLast");
-        ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus
+        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
-                clientNameDetailView, spouseNameDetailView, clientDetailView, null);
+                clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -1626,10 +1626,10 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
         return fields;
     }
 
@@ -1710,8 +1710,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
-    private List<CustomFieldView> getCustomFieldFromSession() throws PageExpiredException {
-        List<CustomFieldView> customFieldDefs = (List<CustomFieldView>) SessionUtils.getAttribute(
+    private List<CustomFieldDto> getCustomFieldFromSession() throws PageExpiredException {
+        List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(
                 CustomerConstants.CUSTOM_FIELDS_LIST, request);
         return customFieldDefs;
     }

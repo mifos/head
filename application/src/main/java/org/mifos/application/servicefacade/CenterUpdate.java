@@ -23,8 +23,8 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.customers.business.CustomerPositionView;
+import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.framework.business.util.Address;
 
 public class CenterUpdate {
@@ -35,12 +35,12 @@ public class CenterUpdate {
     private final String externalId;
     private final String mfiJoiningDate;
     private final Address address;
-    private final List<CustomFieldView> customFields;
-    private final List<CustomerPositionView> customerPositions;
+    private final List<CustomFieldDto> customFields;
+    private final List<CustomerPositionDto> customerPositions;
     private DateTime mfiJoiningDateTime;
 
     public CenterUpdate(Integer customerId, Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, Address address,
-            List<CustomFieldView> customFields, List<CustomerPositionView> customerPositions) {
+            List<CustomFieldDto> customFields, List<CustomerPositionDto> customerPositions) {
         this.customerId = customerId;
         this.versionNum = versionNum;
         this.loanOfficerId = loanOfficerId;
@@ -67,11 +67,11 @@ public class CenterUpdate {
         return this.address;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 
-    public List<CustomerPositionView> getCustomerPositions() {
+    public List<CustomerPositionDto> getCustomerPositions() {
         return this.customerPositions;
     }
 

@@ -27,7 +27,7 @@ import junit.framework.Assert;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -88,9 +88,9 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeLevel", "5");
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
-        List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
+        List<OfficeDetailsDto> parents = (List<OfficeDetailsDto>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
        Assert.assertEquals(2, parents.size());
-        List<OfficeView> levels = (List<OfficeView>) SessionUtils
+        List<OfficeDetailsDto> levels = (List<OfficeDetailsDto>) SessionUtils
                 .getAttribute(OfficeConstants.OFFICELEVELLIST, request);
        Assert.assertEquals(4, levels.size());
     }
@@ -102,9 +102,9 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
-        List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
+        List<OfficeDetailsDto> parents = (List<OfficeDetailsDto>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
        Assert.assertEquals(2, parents.size());
-        List<OfficeView> levels = (List<OfficeView>) SessionUtils
+        List<OfficeDetailsDto> levels = (List<OfficeDetailsDto>) SessionUtils
                 .getAttribute(OfficeConstants.OFFICELEVELLIST, request);
        Assert.assertEquals(4, levels.size());
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
@@ -119,7 +119,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
-        List<OfficeView> parents = (List<OfficeView>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
+        List<OfficeDetailsDto> parents = (List<OfficeDetailsDto>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
        Assert.assertEquals(1, parents.size());
     }
 

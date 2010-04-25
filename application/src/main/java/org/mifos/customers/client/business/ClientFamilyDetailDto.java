@@ -2,9 +2,10 @@ package org.mifos.customers.client.business;
 
 import java.sql.Date;
 
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class ClientFamilyDetailView {
+public class ClientFamilyDetailDto implements DataTransferObject  {
 
     private Short relationship;
     private Short gender;
@@ -12,7 +13,7 @@ public class ClientFamilyDetailView {
     private Date dateOfBirth;
     private String displayName;
 
-    public ClientFamilyDetailView(Short relationship, Short gender, Short livingStatus, Date dateOfBirth) {
+    public ClientFamilyDetailDto(Short relationship, Short gender, Short livingStatus, Date dateOfBirth) {
         super();
         this.relationship = relationship;
         this.gender = gender;

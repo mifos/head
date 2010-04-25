@@ -136,11 +136,11 @@ public class SecurityHelper {
      * @return List list of the offices under him
      * @throws HibernateProcessException
      */
-    public static List<OfficeSearch> getPersonnelOffices(Short officeid) throws SystemException, ApplicationException {
+    public static List<OfficeSearchDto> getPersonnelOffices(Short officeid) throws SystemException, ApplicationException {
 
         HierarchyManager hm = HierarchyManager.getInstance();
         String pattern = hm.getSearchId(officeid) + "%";
-        List<OfficeSearch> lst = null;
+        List<OfficeSearchDto> lst = null;
 
         Session session = null;
         Transaction transaction = null;
@@ -171,13 +171,13 @@ public class SecurityHelper {
      * search id so that it can find office under given person without going to
      * database every time
      *
-     * @return List of OfficeSearch objects which contains office is and
+     * @return List of OfficeSearchDto objects which contains office is and
      *         associated searchid
      * @throws HibernateProcessException
      */
-    public static List<OfficeSearch> getOffices() throws SystemException, ApplicationException {
+    public static List<OfficeSearchDto> getOffices() throws SystemException, ApplicationException {
 
-        List<OfficeSearch> lst = null;
+        List<OfficeSearchDto> lst = null;
         Session session = null;
         Transaction transaction = null;
         Query queryOfficeSearchList = null;

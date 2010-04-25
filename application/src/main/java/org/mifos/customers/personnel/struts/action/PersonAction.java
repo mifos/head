@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -412,15 +412,15 @@ public class PersonAction extends SearchAction {
 
     private void loadCreateCustomFields(PersonActionForm actionForm, List<CustomFieldDefinitionEntity> customFieldDefs,
             UserContext userContext) throws SystemException, ApplicationException {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
                         .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
             } else {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
                         .getFieldType()));
             }
         }
@@ -479,9 +479,9 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
     }
 
-    private List<CustomFieldView> createCustomFieldViews(Set<PersonnelCustomFieldEntity> customFieldEntities,
+    private List<CustomFieldDto> createCustomFieldViews(Set<PersonnelCustomFieldEntity> customFieldEntities,
             HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -490,11 +490,11 @@ public class PersonAction extends SearchAction {
             for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
                 if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
                     if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), DateUtils
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType()));
                     } else {
-                        customFields.add(new CustomFieldView(customFieldEntity.getFieldId(), customFieldEntity
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
                                 .getFieldValue(), customFieldDef.getFieldType()));
                     }
                 }

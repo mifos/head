@@ -33,14 +33,14 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.center.persistence.CenterPersistence;
-import org.mifos.customers.center.util.helpers.CenterSearchResults;
+import org.mifos.customers.center.util.helpers.CenterSearchResultsDto;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -242,7 +242,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCenterSearchResultsView() {
 
-        CenterSearchResults searchResults = new CenterSearchResults();
+        CenterSearchResultsDto searchResults = new CenterSearchResultsDto();
         searchResults.setCenterName("Center");
         searchResults.setCenterSystemId("1234");
         searchResults.setParentOfficeId(Short.valueOf("1"));
@@ -297,10 +297,10 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         return meeting;
     }
 
-    private List<CustomFieldView> getCustomFields() {
-        List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-        fields.add(new CustomFieldView(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldView(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+    private List<CustomFieldDto> getCustomFields() {
+        List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
         return fields;
     }
 

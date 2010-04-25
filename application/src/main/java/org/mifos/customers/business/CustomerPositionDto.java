@@ -20,17 +20,17 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class CustomerPositionView extends View {
+public class CustomerPositionDto implements DataTransferObject {
     Integer customerId;
 
     Short positionId;
 
-    public CustomerPositionView() {
+    public CustomerPositionDto() {
     }
 
-    public CustomerPositionView(Integer customerId, Short positionId) {
+    public CustomerPositionDto(Integer customerId, Short positionId) {
 
         this.customerId = customerId;
 

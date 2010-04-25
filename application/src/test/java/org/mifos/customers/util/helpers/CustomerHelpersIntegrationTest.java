@@ -54,44 +54,44 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCustomerView() {
         createCenter();
-        CustomerView customerView = new CustomerView(center.getCustomerId(), center.getDisplayName(), center
+        CustomerDto customerDto = new CustomerDto(center.getCustomerId(), center.getDisplayName(), center
                 .getGlobalCustNum(), center.getStatus().getValue());
-       Assert.assertEquals(center.getCustomerId(), customerView.getCustomerId());
-       Assert.assertEquals(center.getDisplayName(), customerView.getDisplayName());
-       Assert.assertEquals(center.getGlobalCustNum(), customerView.getGlobalCustNum());
-       Assert.assertEquals(center.getStatus().getValue(), customerView.getStatusId());
-        customerView = new CustomerView(center.getCustomerId(), center.getDisplayName(), center.getGlobalCustNum(),
+       Assert.assertEquals(center.getCustomerId(), customerDto.getCustomerId());
+       Assert.assertEquals(center.getDisplayName(), customerDto.getDisplayName());
+       Assert.assertEquals(center.getGlobalCustNum(), customerDto.getGlobalCustNum());
+       Assert.assertEquals(center.getStatus().getValue(), customerDto.getStatusId());
+        customerDto = new CustomerDto(center.getCustomerId(), center.getDisplayName(), center.getGlobalCustNum(),
                 center.getStatus().getValue(), center.getLevel().getValue(), center.getVersionNo(), center.getOffice()
                         .getOfficeId(), center.getPersonnel().getPersonnelId());
-       Assert.assertEquals(center.getCustomerId(), customerView.getCustomerId());
-       Assert.assertEquals(center.getDisplayName(), customerView.getDisplayName());
-       Assert.assertEquals(center.getGlobalCustNum(), customerView.getGlobalCustNum());
-       Assert.assertEquals(center.getStatus().getValue(), customerView.getStatusId());
-       Assert.assertEquals(center.getLevel().getValue(), customerView.getCustomerLevelId());
-       Assert.assertEquals(center.getVersionNo(), customerView.getVersionNo());
-       Assert.assertEquals(center.getOffice().getOfficeId(), customerView.getOfficeId());
-       Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerView.getPersonnelId());
+       Assert.assertEquals(center.getCustomerId(), customerDto.getCustomerId());
+       Assert.assertEquals(center.getDisplayName(), customerDto.getDisplayName());
+       Assert.assertEquals(center.getGlobalCustNum(), customerDto.getGlobalCustNum());
+       Assert.assertEquals(center.getStatus().getValue(), customerDto.getStatusId());
+       Assert.assertEquals(center.getLevel().getValue(), customerDto.getCustomerLevelId());
+       Assert.assertEquals(center.getVersionNo(), customerDto.getVersionNo());
+       Assert.assertEquals(center.getOffice().getOfficeId(), customerDto.getOfficeId());
+       Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerDto.getPersonnelId());
     }
 
     public void testCustomerViewDefaultConstructor() {
         createCenter();
-        CustomerView customerView = new CustomerView();
-        customerView.setCustomerId(center.getCustomerId());
-        customerView.setDisplayName(center.getDisplayName());
-        customerView.setGlobalCustNum(center.getGlobalCustNum());
-        customerView.setOfficeId(center.getOffice().getOfficeId());
-        customerView.setStatusId(center.getStatus().getValue());
-        customerView.setPersonnelId(center.getPersonnel().getPersonnelId());
-        customerView.setCustomerLevelId(center.getLevel().getValue());
-        customerView.setVersionNo(1);
-       Assert.assertEquals(center.getCustomerId(), customerView.getCustomerId());
-       Assert.assertEquals(center.getDisplayName(), customerView.getDisplayName());
-       Assert.assertEquals(center.getGlobalCustNum(), customerView.getGlobalCustNum());
-       Assert.assertEquals(center.getOffice().getOfficeId(), customerView.getOfficeId());
-       Assert.assertEquals(center.getStatus().getValue(), customerView.getStatusId());
-       Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerView.getPersonnelId());
-       Assert.assertEquals(center.getLevel().getValue(), customerView.getCustomerLevelId());
-       Assert.assertEquals("1", customerView.getVersionNo().toString());
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCustomerId(center.getCustomerId());
+        customerDto.setDisplayName(center.getDisplayName());
+        customerDto.setGlobalCustNum(center.getGlobalCustNum());
+        customerDto.setOfficeId(center.getOffice().getOfficeId());
+        customerDto.setStatusId(center.getStatus().getValue());
+        customerDto.setPersonnelId(center.getPersonnel().getPersonnelId());
+        customerDto.setCustomerLevelId(center.getLevel().getValue());
+        customerDto.setVersionNo(1);
+       Assert.assertEquals(center.getCustomerId(), customerDto.getCustomerId());
+       Assert.assertEquals(center.getDisplayName(), customerDto.getDisplayName());
+       Assert.assertEquals(center.getGlobalCustNum(), customerDto.getGlobalCustNum());
+       Assert.assertEquals(center.getOffice().getOfficeId(), customerDto.getOfficeId());
+       Assert.assertEquals(center.getStatus().getValue(), customerDto.getStatusId());
+       Assert.assertEquals(center.getPersonnel().getPersonnelId(), customerDto.getPersonnelId());
+       Assert.assertEquals(center.getLevel().getValue(), customerDto.getCustomerLevelId());
+       Assert.assertEquals("1", customerDto.getVersionNo().toString());
     }
 
     public void testIdGenerator() {
@@ -117,14 +117,14 @@ public class CustomerHelpersIntegrationTest extends MifosIntegrationTestCase {
 
     public void testCustomerRecentActivityView() throws Exception {
         java.sql.Date sampleDate = new java.sql.Date(System.currentTimeMillis());
-        CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView(sampleDate,
+        CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto(sampleDate,
                 "description", "1000", "mifos");
-        customerRecentActivityView.setLocale(new Locale("1"));
-       Assert.assertEquals("date", sampleDate, customerRecentActivityView.getActivityDate());
-       Assert.assertEquals("description", customerRecentActivityView.getDescription());
-       Assert.assertEquals("1000", customerRecentActivityView.getAmount());
-       Assert.assertEquals("mifos", customerRecentActivityView.getPostedBy());
-       Assert.assertEquals("1", customerRecentActivityView.getLocale().toString());
+        customerRecentActivityDto.setLocale(new Locale("1"));
+       Assert.assertEquals("date", sampleDate, customerRecentActivityDto.getActivityDate());
+       Assert.assertEquals("description", customerRecentActivityDto.getDescription());
+       Assert.assertEquals("1000", customerRecentActivityDto.getAmount());
+       Assert.assertEquals("mifos", customerRecentActivityDto.getPostedBy());
+       Assert.assertEquals("1", customerRecentActivityDto.getLocale().toString());
     }
 
     public void testGroupSearchResults() {

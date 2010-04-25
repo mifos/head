@@ -32,13 +32,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
@@ -248,10 +248,10 @@ public class OffAction extends BaseAction {
     private void loadEditCustomFields(HttpServletRequest request, OffActionForm offActionForm) throws Exception {
         // get the office
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        List<CustomFieldView> customfields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customfields = new ArrayList<CustomFieldDto>();
         if (office.getCustomFields() != null && office.getCustomFields().size() > 0) {
             for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
-                customfields.add(new CustomFieldView(customField.getFieldId(), customField.getFieldValue(),
+                customfields.add(new CustomFieldDto(customField.getFieldId(), customField.getFieldValue(),
                         CustomFieldType.NONE));
             }
         }
@@ -290,13 +290,13 @@ public class OffAction extends BaseAction {
             form.setOfficeLevel(officeLevel);
             OfficeLevel Level = OfficeLevel.getOfficeLevel(Short.valueOf(officeLevel));
 
-            List<OfficeView> parents = ((OfficeBusinessService) getService()).getActiveParents(Level, getUserContext(
+            List<OfficeDetailsDto> parents = ((OfficeBusinessService) getService()).getActiveParents(Level, getUserContext(
                     request).getLocaleId());
             OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
             if (form.getInput() != null && form.getInput().equals("edit") && office != null) {
                 for (int i = 0; i < parents.size(); i++) {
-                    OfficeView view = parents.get(i);
+                    OfficeDetailsDto view = parents.get(i);
                     if (view.getOfficeId().equals(office.getOfficeId())) {
                         parents.remove(view);
                     }
@@ -311,15 +311,15 @@ public class OffAction extends BaseAction {
         // Set Default values for custom fields
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
             if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
                     && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
                         request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
             } else {
-                customFields.add(new CustomFieldView(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
                         .getFieldType()));
             }
         }

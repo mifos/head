@@ -23,7 +23,7 @@ package org.mifos.customers.group.business.service;
 import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
@@ -96,7 +96,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
 
         List<CustomerSurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
 
-        List<CustomFieldView> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
+        List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
                 .getValue(), userContext);
 
         return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,

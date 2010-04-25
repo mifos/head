@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -57,18 +57,18 @@ public class LookupOptionsActionForm extends BaseActionForm {
     private String collateralType;
     private String paymentType;
 
-    private List<CustomValueListElement> salutations;
-    private List<CustomValueListElement> userTitles;
-    private List<CustomValueListElement> maritalStatuses;
-    private List<CustomValueListElement> ethnicities;
-    private List<CustomValueListElement> educationLevels;
-    private List<CustomValueListElement> citizenships;
-    private List<CustomValueListElement> businessActivities;
-    private List<CustomValueListElement> purposesOfLoan;
-    private List<CustomValueListElement> officerTitles;
-    private List<CustomValueListElement> handicappeds;
-    private List<CustomValueListElement> collateralTypes;
-    private List<CustomValueListElement> paymentTypes;
+    private List<CustomValueListElementDto> salutations;
+    private List<CustomValueListElementDto> userTitles;
+    private List<CustomValueListElementDto> maritalStatuses;
+    private List<CustomValueListElementDto> ethnicities;
+    private List<CustomValueListElementDto> educationLevels;
+    private List<CustomValueListElementDto> citizenships;
+    private List<CustomValueListElementDto> businessActivities;
+    private List<CustomValueListElementDto> purposesOfLoan;
+    private List<CustomValueListElementDto> officerTitles;
+    private List<CustomValueListElementDto> handicappeds;
+    private List<CustomValueListElementDto> collateralTypes;
+    private List<CustomValueListElementDto> paymentTypes;
 
     private String[] salutationList;
     private String[] userTitleList;
@@ -188,91 +188,91 @@ public class LookupOptionsActionForm extends BaseActionForm {
         this.collateralType = collateralType;
     }
 
-    public List<CustomValueListElement> getSalutations() {
+    public List<CustomValueListElementDto> getSalutations() {
         return salutations;
     }
 
-    public void setSalutations(List<CustomValueListElement> salutations) {
+    public void setSalutations(List<CustomValueListElementDto> salutations) {
         this.salutations = salutations;
     }
 
-    public List<CustomValueListElement> getUserTitles() {
+    public List<CustomValueListElementDto> getUserTitles() {
         return userTitles;
     }
 
-    public void setUserTitles(List<CustomValueListElement> userTitles) {
+    public void setUserTitles(List<CustomValueListElementDto> userTitles) {
         this.userTitles = userTitles;
     }
 
-    public List<CustomValueListElement> getMaritalStatuses() {
+    public List<CustomValueListElementDto> getMaritalStatuses() {
         return maritalStatuses;
     }
 
-    public void setMaritalStatuses(List<CustomValueListElement> maritalStatuses) {
+    public void setMaritalStatuses(List<CustomValueListElementDto> maritalStatuses) {
         this.maritalStatuses = maritalStatuses;
     }
 
-    public List<CustomValueListElement> getEthnicities() {
+    public List<CustomValueListElementDto> getEthnicities() {
         return ethnicities;
     }
 
-    public void setEthnicities(List<CustomValueListElement> ethnicities) {
+    public void setEthnicities(List<CustomValueListElementDto> ethnicities) {
         this.ethnicities = ethnicities;
     }
 
-    public List<CustomValueListElement> getBusinessActivities() {
+    public List<CustomValueListElementDto> getBusinessActivities() {
         return businessActivities;
     }
 
-    public void setBusinessActivities(List<CustomValueListElement> businessActivities) {
+    public void setBusinessActivities(List<CustomValueListElementDto> businessActivities) {
         this.businessActivities = businessActivities;
     }
 
-    public List<CustomValueListElement> getPurposesOfLoan() {
+    public List<CustomValueListElementDto> getPurposesOfLoan() {
         return purposesOfLoan;
     }
 
-    public void setPurposesOfLoan(List<CustomValueListElement> purposesOfLoan) {
+    public void setPurposesOfLoan(List<CustomValueListElementDto> purposesOfLoan) {
         this.purposesOfLoan = purposesOfLoan;
     }
 
-    public List<CustomValueListElement> getEducationLevels() {
+    public List<CustomValueListElementDto> getEducationLevels() {
         return educationLevels;
     }
 
-    public void setEducationLevels(List<CustomValueListElement> educationLevels) {
+    public void setEducationLevels(List<CustomValueListElementDto> educationLevels) {
         this.educationLevels = educationLevels;
     }
 
-    public List<CustomValueListElement> getCitizenships() {
+    public List<CustomValueListElementDto> getCitizenships() {
         return citizenships;
     }
 
-    public void setCitizenships(List<CustomValueListElement> citizenships) {
+    public void setCitizenships(List<CustomValueListElementDto> citizenships) {
         this.citizenships = citizenships;
     }
 
-    public List<CustomValueListElement> getHandicappeds() {
+    public List<CustomValueListElementDto> getHandicappeds() {
         return handicappeds;
     }
 
-    public void setHandicappeds(List<CustomValueListElement> handicappeds) {
+    public void setHandicappeds(List<CustomValueListElementDto> handicappeds) {
         this.handicappeds = handicappeds;
     }
 
-    public List<CustomValueListElement> getOfficerTitles() {
+    public List<CustomValueListElementDto> getOfficerTitles() {
         return officerTitles;
     }
 
-    public void setOfficerTitles(List<CustomValueListElement> officerTitles) {
+    public void setOfficerTitles(List<CustomValueListElementDto> officerTitles) {
         this.officerTitles = officerTitles;
     }
 
-    public List<CustomValueListElement> getCollateralTypes() {
+    public List<CustomValueListElementDto> getCollateralTypes() {
         return collateralTypes;
     }
 
-    public void setCollateralTypes(List<CustomValueListElement> collateralTypes) {
+    public void setCollateralTypes(List<CustomValueListElementDto> collateralTypes) {
         this.collateralTypes = collateralTypes;
     }
 
@@ -285,11 +285,11 @@ public class LookupOptionsActionForm extends BaseActionForm {
         this.paymentType = paymentType;
     }
 
-    public List<CustomValueListElement> getPaymentTypes() {
+    public List<CustomValueListElementDto> getPaymentTypes() {
         return this.paymentTypes;
     }
 
-    public void setPaymentTypes(List<CustomValueListElement> paymentTypes) {
+    public void setPaymentTypes(List<CustomValueListElementDto> paymentTypes) {
         this.paymentTypes = paymentTypes;
     }
 
@@ -373,9 +373,9 @@ public class LookupOptionsActionForm extends BaseActionForm {
                 ConfigurationConstants.CONFIG_PAYMENT_TYPE);
     }
 
-    private void checkOneList(List<CustomValueListElement> list, ActionErrors errors, String entity) {
+    private void checkOneList(List<CustomValueListElementDto> list, ActionErrors errors, String entity) {
 
-        for (CustomValueListElement element : list) {
+        for (CustomValueListElementDto element : list) {
             if (element.getLookUpValue() != null && element.getLookUpValue().equals(this.lookupValue)) {
                 addError(errors, entity, "errors.duplicatevalue", new String[] { null });
                 return;
@@ -417,7 +417,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
         }
     }
 
-    public void setOneList(String entity, List<CustomValueListElement> list) {
+    public void setOneList(String entity, List<CustomValueListElementDto> list) {
         if (entity == null) {
             throw new RuntimeException("Null entity passed to setOneList.");
         }

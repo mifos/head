@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -462,12 +462,12 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
     private PersonnelBO createPersonnel() throws Exception {
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         Name name = new Name("XYZ", null, null, null);
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();
         personnel = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"),
-                "PASSWORD", "USERNAME", "xyz@yahoo.com", null, customFieldView, name, "111111", date, Integer
+                "PASSWORD", "USERNAME", "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, Short.valueOf("1"));
         personnel.save();
         StaticHibernateUtil.commitTransaction();

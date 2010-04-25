@@ -29,7 +29,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterView;
+import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -55,7 +55,7 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
     }
 
     public void testGetCheckListMasterData() throws Exception {
-        List<CheckListMasterView> masterCheckList = null;
+        List<CheckListMasterDto> masterCheckList = null;
 
         masterCheckList = new CheckListPersistence().getCheckListMasterData((short) 1);
 
@@ -112,11 +112,11 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
     }
 
     public void testCheckListMasterView() {
-        CheckListMasterView checkListMasterView = new CheckListMasterView(Short.valueOf("1"), "Loan");
-        checkListMasterView.setIsCustomer(true);
-       Assert.assertEquals(Short.valueOf("1"), checkListMasterView.getMasterTypeId());
-       Assert.assertEquals("Loan", checkListMasterView.getMasterTypeName());
-       Assert.assertEquals(true, checkListMasterView.getIsCustomer());
+        CheckListMasterDto checkListMasterDto = new CheckListMasterDto(Short.valueOf("1"), "Loan");
+        checkListMasterDto.setIsCustomer(true);
+       Assert.assertEquals(Short.valueOf("1"), checkListMasterDto.getMasterTypeId());
+       Assert.assertEquals("Loan", checkListMasterDto.getMasterTypeName());
+       Assert.assertEquals(true, checkListMasterDto.getIsCustomer());
     }
 
     public void testCheckListStatesView() {

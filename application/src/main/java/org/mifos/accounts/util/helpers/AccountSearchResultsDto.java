@@ -20,9 +20,9 @@
 
 package org.mifos.accounts.util.helpers;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class AccountSearchResults extends View {
+public class AccountSearchResultsDto implements DataTransferObject {
 
     private String officeName;
 

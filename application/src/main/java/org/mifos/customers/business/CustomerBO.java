@@ -44,7 +44,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -203,7 +203,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     @Deprecated
     protected CustomerBO(final UserContext userContext, final String displayName, final CustomerLevel customerLevel,
             final CustomerStatus customerStatus, final String externalId, final Date mfiJoiningDate,
-            final Address address, final List<CustomFieldView> customFields, final List<FeeDto> fees,
+            final Address address, final List<CustomFieldDto> customFields, final List<FeeDto> fees,
             final PersonnelBO formedBy, final OfficeBO office, final CustomerBO parentCustomer,
             final MeetingBO meeting, final PersonnelBO loanOfficer) throws CustomerException {
 
@@ -516,7 +516,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
      */
     @Deprecated
     public void update(final UserContext userContext, final String externalId, final Address address,
-            final List<CustomFieldView> customFields, final List<CustomerPositionView> customerPositions)
+            final List<CustomFieldDto> customFields, final List<CustomerPositionDto> customerPositions)
             throws CustomerException, InvalidDateException {
         this.setUserContext(userContext);
         this.setExternalId(externalId);
@@ -938,9 +938,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return !isSameBranch(otherOffice);
     }
 
-    public void updateCustomFields(final List<CustomFieldView> customFields) throws InvalidDateException {
+    public void updateCustomFields(final List<CustomFieldDto> customFields) throws InvalidDateException {
         if (customFields != null) {
-            for (CustomFieldView fieldView : customFields) {
+            for (CustomFieldDto fieldView : customFields) {
                 if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
                         && StringUtils.isNotBlank(fieldView.getFieldValue())) {
                     fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
@@ -955,9 +955,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    public void updateCustomerPositions(final List<CustomerPositionView> customerPositions) throws CustomerException {
+    public void updateCustomerPositions(final List<CustomerPositionDto> customerPositions) throws CustomerException {
         if (customerPositions != null) {
-            for (CustomerPositionView positionView : customerPositions) {
+            for (CustomerPositionDto positionView : customerPositions) {
                 boolean isPositionFound = false;
                 for (CustomerPositionEntity positionEntity : getCustomerPositions()) {
                     if (positionView.getPositionId().equals(positionEntity.getPosition().getId())) {
@@ -1138,9 +1138,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    private void createCustomFields(final List<CustomFieldView> customFields) {
+    private void createCustomFields(final List<CustomFieldDto> customFields) {
         if (customFields != null) {
-            for (CustomFieldView customField : customFields) {
+            for (CustomFieldDto customField : customFields) {
                 addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
                         this));
             }

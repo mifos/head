@@ -26,8 +26,8 @@ import java.util.List;
 
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.customers.CustomerTemplate;
-import org.mifos.customers.client.business.ClientDetailView;
-import org.mifos.customers.client.business.ClientNameDetailView;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 
 public interface ClientTemplate extends CustomerTemplate {
     public Date getMfiJoiningDate();
@@ -50,11 +50,11 @@ public interface ClientTemplate extends CustomerTemplate {
 
     public Short getGroupFlag();
 
-    public ClientNameDetailView getClientNameDetailView();
+    public ClientNameDetailDto getClientNameDetailView();
 
-    public ClientNameDetailView getSpouseNameDetailView();
+    public ClientNameDetailDto getSpouseNameDetailView();
 
-    public ClientDetailView getClientDetailView();
+    public ClientPersonalDetailDto getClientDetailView();
 
     public InputStream getPicture();
 }

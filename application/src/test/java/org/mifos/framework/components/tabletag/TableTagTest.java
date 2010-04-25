@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RequestConstants;
 import org.mifos.config.Localization;
-import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
@@ -128,18 +128,18 @@ public class TableTagTest extends TestCase {
 
     public void testGetImage() throws Exception {
         Locale locale = Localization.getInstance().getMainLocale();
-        CustomerSearch customerSearch = new CustomerSearch();
+        CustomerSearchDto customerSearchDto = new CustomerSearchDto();
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
-                Text.getImage(customerSearch, "1", locale));
-        customerSearch.setCustomerType(Short.valueOf("4"));
+                Text.getImage(customerSearchDto, "1", locale));
+        customerSearchDto.setCustomerType(Short.valueOf("4"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Pending Approval</span>",
-                Text.getImage(customerSearch, "2", locale));
-        customerSearch.setCustomerType(Short.valueOf("6"));
+                Text.getImage(customerSearchDto, "2", locale));
+        customerSearchDto.setCustomerType(Short.valueOf("6"));
        Assert.assertEquals(
                 "<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
-                Text.getImage(customerSearch, "13", locale));
+                Text.getImage(customerSearchDto, "13", locale));
     }
 
     public void testTableTagParser() throws Exception {

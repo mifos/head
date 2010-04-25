@@ -63,7 +63,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -213,7 +213,7 @@ public class SavingsBO extends AccountBO {
     }
 
     public SavingsBO(final UserContext userContext, final SavingsOfferingBO savingsOffering, final CustomerBO customer,
-            final AccountState accountState, final Money recommendedAmount, final List<CustomFieldView> customFields)
+            final AccountState accountState, final Money recommendedAmount, final List<CustomFieldDto> customFields)
             throws AccountException {
         super(userContext, customer, AccountTypes.SAVINGS_ACCOUNT, accountState);
         this.setSavingsOffering(savingsOffering);
@@ -453,7 +453,7 @@ public class SavingsBO extends AccountBO {
         logger.info("In SavingsBO::save(), Successfully saved , accountId: " + getAccountId());
     }
 
-    public void update(final Money recommendedAmount, final List<CustomFieldView> customFields) throws AccountException {
+    public void update(final Money recommendedAmount, final List<CustomFieldDto> customFields) throws AccountException {
         logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
         this.setUpdatedBy(userContext.getId());
         this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
@@ -469,7 +469,7 @@ public class SavingsBO extends AccountBO {
         }
         this.recommendedAmount = recommendedAmount;
         if (this.getAccountCustomFields() != null && customFields != null) {
-            for (CustomFieldView view : customFields) {
+            for (CustomFieldDto view : customFields) {
                 boolean fieldPresent = false;
                 for (AccountCustomFieldEntity customFieldEntity : this.getAccountCustomFields()) {
                     if (customFieldEntity.getFieldId().equals(view.getFieldId())) {

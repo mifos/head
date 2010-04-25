@@ -61,9 +61,9 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerSearch;
+import org.mifos.customers.business.CustomerSearchDto;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.business.CustomerView;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CheckListBO;
@@ -317,7 +317,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         CustomerPersistence customerPersistence = new CustomerPersistence();
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
-        List<CustomerView> customers = customerPersistence.getActiveParentList(Short.valueOf("1"), CustomerLevel.CENTER
+        List<CustomerDto> customers = customerPersistence.getActiveParentList(Short.valueOf("1"), CustomerLevel.CENTER
                 .getValue(), Short.valueOf("3"));
         Assert.assertEquals(1, customers.size());
 
@@ -326,7 +326,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testActiveCustomersUnderParent() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        List<CustomerView> customers = customerPersistence.getChildrenForParent(center.getCustomerId(), center
+        List<CustomerDto> customers = customerPersistence.getChildrenForParent(center.getCustomerId(), center
                 .getSearchId(), center.getOffice().getOfficeId());
         Assert.assertEquals(2, customers.size());
     }
@@ -334,7 +334,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testOnHoldCustomersUnderParent() throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
         createCustomers(CustomerStatus.GROUP_HOLD, CustomerStatus.CLIENT_HOLD);
-        List<CustomerView> customers = customerPersistence.getChildrenForParent(center.getCustomerId(), center
+        List<CustomerDto> customers = customerPersistence.getChildrenForParent(center.getCustomerId(), center
                 .getSearchId(), center.getOffice().getOfficeId());
         Assert.assertEquals(2, customers.size());
     }
@@ -888,8 +888,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);
         Assert.assertEquals(1, results.size());
-        CustomerSearch customerSearch = (CustomerSearch) results.get(0);
-        Assert.assertEquals(0, customerSearch.getLoanGlobalAccountNum().size());
+        CustomerSearchDto customerSearchDto = (CustomerSearchDto) results.get(0);
+        Assert.assertEquals(0, customerSearchDto.getLoanGlobalAccountNum().size());
     }
 
     public void testSearchWithAccountGlobalNo() throws Exception {
@@ -1015,8 +1015,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(1, queryResult.getSize());
         List results = queryResult.get(0, 10);
         Assert.assertEquals(1, results.size());
-        CustomerSearch customerSearch = (CustomerSearch) results.get(0);
-        Assert.assertEquals(1, customerSearch.getLoanGlobalAccountNum().size());
+        CustomerSearchDto customerSearchDto = (CustomerSearchDto) results.get(0);
+        Assert.assertEquals(1, customerSearchDto.getLoanGlobalAccountNum().size());
     }
 
     public void testGetCustomersByLevelId() throws Exception {

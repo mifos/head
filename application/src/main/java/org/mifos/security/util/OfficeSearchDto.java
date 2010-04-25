@@ -20,9 +20,9 @@
 
 package org.mifos.security.util;
 
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class OfficeSearch extends View {
+public class OfficeSearchDto implements DataTransferObject {
     /***************************** Fields **********************/
     /**
      * This would hold the officeid
@@ -38,7 +38,7 @@ public class OfficeSearch extends View {
     /**
      * Default constructor
      */
-    public OfficeSearch() {
+    public OfficeSearchDto() {
 
     }
 
@@ -55,12 +55,12 @@ public class OfficeSearch extends View {
      * @param officeId
      * @param searchId
      */
-    public OfficeSearch(Short officeId, String searchId) {
+    public OfficeSearchDto(Short officeId, String searchId) {
         this.officeId = officeId;
         this.searchId = searchId;
     }
 
-    public OfficeSearch(Short officeId, String searchId, Short parentOfficeId) {
+    public OfficeSearchDto(Short officeId, String searchId, Short parentOfficeId) {
         this.officeId = officeId;
         this.searchId = searchId;
         this.parentOfficeId = parentOfficeId;

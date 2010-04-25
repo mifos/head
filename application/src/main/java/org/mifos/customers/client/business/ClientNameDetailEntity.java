@@ -35,7 +35,7 @@ public class ClientNameDetailEntity extends AbstractEntity {
     private String displayName;
     private Name name;
 
-    public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailView view) {
+    public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailDto view) {
         super();
         this.customerNameId = null;
         this.client = client;
@@ -105,16 +105,16 @@ public class ClientNameDetailEntity extends AbstractEntity {
         this.name = name;
     }
 
-    public void updateNameDetails(ClientNameDetailView nameView) {
+    public void updateNameDetails(ClientNameDetailDto nameView) {
         this.nameType = nameView.getNameType();
         this.salutation = nameView.getSalutation();
         this.displayName = nameView.getDisplayName();
         this.name = nameView.asName();
     }
 
-    public ClientNameDetailView toDto() {
+    public ClientNameDetailDto toDto() {
 
-        return new ClientNameDetailView(this.nameType, this.salutation,
+        return new ClientNameDetailDto(this.nameType, this.salutation,
                 new StringBuilder(this.displayName), this.name.getFirstName(),
                 this.name.getMiddleName(), this.name.getLastName(), this.name.getSecondLastName(), this.customerNameId);
     }

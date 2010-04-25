@@ -25,7 +25,7 @@ import java.util.List;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
-import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -34,11 +34,11 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
@@ -78,10 +78,10 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final Short branchId = userContext.getBranchId();
         final Short centerHierarchyExists = ClientRules.getCenterHierarchyExists() ? Constants.YES : Constants.NO;
 
-        List<OfficeView> activeBranches = new ArrayList<OfficeView>();
+        List<OfficeDetailsDto> activeBranches = new ArrayList<OfficeDetailsDto>();
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
-        List<CustomerView> customerList = new ArrayList<CustomerView>();
-        List<PersonnelView> loanOfficerList = new ArrayList<PersonnelView>();
+        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
+        List<PersonnelDto> loanOfficerList = new ArrayList<PersonnelDto>();
         Short reloadFormAutomatically = Constants.YES;
         final Short backDatedTransactionAllowed = Constants.NO;
 
@@ -125,7 +125,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     public CollectionSheetEntryFormDto loadLoanOfficersForBranch(final Short branchId, final UserContext userContext,
             final CollectionSheetEntryFormDto formDto) {
 
-        List<PersonnelView> loanOfficerList = new ArrayList<PersonnelView>();
+        List<PersonnelDto> loanOfficerList = new ArrayList<PersonnelDto>();
         try {
             loanOfficerList = personnelPersistence.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
                     branchId, userContext.getId(), userContext.getLevelId());
@@ -148,7 +148,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             customerLevel = Short.valueOf(CustomerLevel.GROUP.getValue());
         }
 
-        List<CustomerView> customerList = new ArrayList<CustomerView>();
+        List<CustomerDto> customerList = new ArrayList<CustomerDto>();
         try {
             customerList = customerPersistence.getActiveParentList(personnelId, customerLevel, officeId);
         } catch (PersistenceException e) {
@@ -188,7 +188,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
 
         try {
-            final List<CustomValueListElement> attendanceTypesList = masterPersistence.getCustomValueList(
+            final List<CustomValueListElementDto> attendanceTypesList = masterPersistence.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
                     "attendanceId").getCustomValueListElements();
 
@@ -224,20 +224,20 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         return newCollectionSheetEntryGridDto;
     }
 
-    public CollectionSheetErrorsView saveCollectionSheet(
+    public CollectionSheetErrorsDto saveCollectionSheet(
             final CollectionSheetEntryGridDto previousCollectionSheetEntryDto, final Short userId) {
 
         final SaveCollectionSheetDto saveCollectionSheet = new SaveCollectionSheetFromLegacyAssembler()
                 .fromWebTierLegacyStructuretoSaveCollectionSheetDto(previousCollectionSheetEntryDto, userId);
 
-        CollectionSheetErrorsView collectionSheetErrorsView = null;
+        CollectionSheetErrorsDto collectionSheetErrorsDto = null;
         try {
-            collectionSheetErrorsView = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
+            collectionSheetErrorsDto = collectionSheetService.saveCollectionSheet(saveCollectionSheet);
         } catch (SaveCollectionSheetException e) {
             throw new MifosRuntimeException(e.printInvalidSaveCollectionSheetReasons());
         }
 
-        return collectionSheetErrorsView;
+        return collectionSheetErrorsDto;
     }
 
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<? extends MasterDataEntity> paymentTypesList) {

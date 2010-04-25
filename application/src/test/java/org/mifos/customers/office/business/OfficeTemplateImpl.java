@@ -23,7 +23,7 @@ package org.mifos.customers.office.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.business.util.Address;
@@ -33,7 +33,7 @@ public class OfficeTemplateImpl implements OfficeTemplate {
     private Address address;
     private String officeName;
     private String shortName;
-    private List<CustomFieldView> customFieldViews;
+    private List<CustomFieldDto> customFieldDtos;
     private Short parentOfficeId;
     private OfficeLevel officeLevel;
 
@@ -44,11 +44,11 @@ public class OfficeTemplateImpl implements OfficeTemplate {
         this.shortName = "TON";
         this.parentOfficeId = TestObjectFactory.HEAD_OFFICE;
 
-        this.customFieldViews = new ArrayList<CustomFieldView>();
-        CustomFieldView customFieldView = new CustomFieldView();
-        customFieldView.setFieldId(Short.valueOf("1"));
-        customFieldView.setFieldValue("CustomField1Value");
-        customFieldViews.add(customFieldView);
+        this.customFieldDtos = new ArrayList<CustomFieldDto>();
+        CustomFieldDto customFieldDto = new CustomFieldDto();
+        customFieldDto.setFieldId(Short.valueOf("1"));
+        customFieldDto.setFieldValue("CustomField1Value");
+        customFieldDtos.add(customFieldDto);
     }
 
     public OfficeLevel getOfficeLevel() {
@@ -75,8 +75,8 @@ public class OfficeTemplateImpl implements OfficeTemplate {
         return address;
     }
 
-    public List<CustomFieldView> getCustomFieldViews() {
-        return customFieldViews;
+    public List<CustomFieldDto> getCustomFieldViews() {
+        return customFieldDtos;
     }
 
     public OperationMode getOperationMode() {

@@ -28,7 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.office.business.OfficeBO;
@@ -111,7 +111,7 @@ public class PersonnelBO extends AbstractBusinessObject {
     private Set<PersonnelNotesEntity> personnelNotes;
 
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
-            final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldView> customFields, final Name name,
+            final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldDto> customFields, final Name name,
             final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender, final Date dateOfJoiningMFI,
             final Date dateOfJoiningBranch, final Address address, final Short createdBy) throws PersistenceException,
             ValidationException {
@@ -139,7 +139,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.personnelId = null;
         this.globalPersonnelNum = new Long(new DateTimeService().getCurrentDateTime().getMillis()).toString();
         if (customFields != null) {
-            for (CustomFieldView view : customFields) {
+            for (CustomFieldDto view : customFields) {
                 this.customFields.add(new PersonnelCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
         }
@@ -349,9 +349,9 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.title = title;
     }
 
-    private void updateCustomFields(final List<CustomFieldView> customfields) {
+    private void updateCustomFields(final List<CustomFieldDto> customfields) {
         if (this.customFields != null && customfields != null) {
-            for (CustomFieldView fieldView : customfields) {
+            for (CustomFieldDto fieldView : customfields) {
                 for (PersonnelCustomFieldEntity fieldEntity : this.customFields) {
                     if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
@@ -450,7 +450,7 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     public void update(final PersonnelStatus newStatus, final PersonnelLevel newLevel, final OfficeBO office, final Integer title,
             final Short preferredLocale, final String password, final String emailId, final List<RoleBO> roles,
-            final List<CustomFieldView> customFields, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final List<CustomFieldDto> customFields, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
             final Short updatedById) throws PersonnelException {
         logger.debug("update in personnelBO called with values: " + newLevel + office.getOfficeId() + title + " "
                 + preferredLocale + " " + updatedById);

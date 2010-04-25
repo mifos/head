@@ -26,10 +26,10 @@ import java.util.List;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.business.View;
+import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class CustomerAccountView extends View {
+public class CustomerAccountDto implements DataTransferObject {
 
     private Integer accountId;
 
@@ -43,7 +43,7 @@ public class CustomerAccountView extends View {
 
     private final MifosCurrency currency;
 
-    public CustomerAccountView(Integer accountId, MifosCurrency currency) {
+    public CustomerAccountDto(Integer accountId, MifosCurrency currency) {
         this.accountId = accountId;
         this.customerId = null;
         customerAccountAmountEntered = "0.0";
@@ -52,7 +52,7 @@ public class CustomerAccountView extends View {
         this.currency = currency;
     }
 
-    public CustomerAccountView(final Integer accountId, final Integer customerId, MifosCurrency currency) {
+    public CustomerAccountDto(final Integer accountId, final Integer customerId, MifosCurrency currency) {
         this.accountId = accountId;
         this.customerId = customerId;
         customerAccountAmountEntered = "0.0";

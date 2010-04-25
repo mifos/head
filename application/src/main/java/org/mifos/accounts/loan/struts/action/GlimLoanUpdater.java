@@ -29,7 +29,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -45,7 +45,7 @@ public class GlimLoanUpdater {
                 loanAccountActionForm.getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount()), loan
                         .getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                 loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
-                new ArrayList<CustomFieldView>(), true);
+                new ArrayList<CustomFieldDto>(), true);
 
         individualLoan.setParentAccount(loan);
 

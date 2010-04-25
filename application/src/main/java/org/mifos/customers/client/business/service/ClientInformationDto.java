@@ -22,7 +22,7 @@ package org.mifos.customers.client.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.ClientPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
@@ -52,7 +52,7 @@ public class ClientInformationDto implements DataTransferObject {
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
     private final List<CustomerSurveyDto> customerSurveys;
-    private final List<CustomFieldView> customFields;
+    private final List<CustomFieldDto> customFields;
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
             final CustomerAccountSummaryDto customerAccountSummary,
@@ -60,7 +60,7 @@ public class ClientInformationDto implements DataTransferObject {
             final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerFlagDto> customerFlags,
             final List<LoanDetailDto> loanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
             final CustomerMeetingDto customerMeeting, final Boolean activeSurveys,
-            final List<CustomerSurveyDto> customerSurveys, final List<CustomFieldView> customFields) {
+            final List<CustomerSurveyDto> customerSurveys, final List<CustomFieldDto> customFields) {
         this.clientDisplay = clientDisplay;
         this.customerAccountSummary = customerAccountSummary;
         this.clientPerformanceHistory = clientPerformanceHistory;
@@ -119,7 +119,7 @@ public class ClientInformationDto implements DataTransferObject {
         return this.customerSurveys;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
 

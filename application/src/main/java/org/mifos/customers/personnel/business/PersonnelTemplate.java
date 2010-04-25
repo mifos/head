@@ -23,7 +23,7 @@ package org.mifos.customers.personnel.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -45,7 +45,7 @@ public interface PersonnelTemplate {
 
     public List<Short> getRoleIds();
 
-    public List<CustomFieldView> getCustomFields();
+    public List<CustomFieldDto> getCustomFields();
 
     public Name getName();
 

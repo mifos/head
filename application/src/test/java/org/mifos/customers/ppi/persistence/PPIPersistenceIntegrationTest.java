@@ -30,7 +30,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -143,14 +143,14 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private PersonnelBO createOfficer() throws Exception {
         TestObjectFactory factory = new TestObjectFactory();
         OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-        customFieldView.add(new CustomFieldView((short) 9, "123456", CustomFieldType.NUMERIC));
+        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
+        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC));
         Name name = new Name("XYZ", null, null, null);
         Address address = new Address("abcd" + "ppiSurvey", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();
         return new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"),
                 TestObjectFactory.TEST_LOCALE, "PASSWORD", "officer" + System.currentTimeMillis(), "officer@mifos.org",
-                null, customFieldView, name, "govId" + "ppiSurvey", date, Integer.valueOf("1"), Integer.valueOf("1"),
+                null, customFieldDto, name, "govId" + "ppiSurvey", date, Integer.valueOf("1"), Integer.valueOf("1"),
                 date, date, address, PersonnelConstants.SYSTEM_USER);
     }
 

@@ -33,9 +33,9 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerView;
-import org.mifos.customers.office.business.OfficeView;
-import org.mifos.customers.personnel.business.PersonnelView;
+import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -66,7 +66,7 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetListOfActiveLoanOfficers() throws Exception {
-        List<PersonnelView> loanOfficers = masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER,
+        List<PersonnelDto> loanOfficers = masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER,
                 Short
                 .valueOf("3"), Short.valueOf("3"), PersonnelConstants.LOAN_OFFICER);
        Assert.assertEquals(1, loanOfficers.size());
@@ -86,7 +86,7 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetActiveBranches() throws Exception {
-        List<OfficeView> branches = masterService.getActiveBranches(Short.valueOf("1"));
+        List<OfficeDetailsDto> branches = masterService.getActiveBranches(Short.valueOf("1"));
        Assert.assertEquals(1, branches.size());
     }
 
@@ -106,7 +106,7 @@ public class MasterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         CustomerBO center = TestObjectFactory.createWeeklyFeeCenter("Center_Active", meeting);
-        List<CustomerView> customers = masterService.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
+        List<CustomerDto> customers = masterService.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
                 CustomerLevel.CENTER.getValue(), Short.valueOf("3"));
        Assert.assertEquals(1, customers.size());
         TestObjectFactory.cleanUp(center);

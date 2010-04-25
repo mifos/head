@@ -73,7 +73,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
      *
      * @throws SaveCollectionSheetException
      * */
-    public CollectionSheetErrorsView saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
+    public CollectionSheetErrorsDto saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 
         Long totalTime;
@@ -163,7 +163,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         totalTime = System.currentTimeMillis() - totalTimeStart;
         printTiming(saveCollectionSheet.printSummary(), totalTime, saveTime, readTime, saveCollectionSheetSessionCache);
 
-        return new CollectionSheetErrorsView(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
+        return new CollectionSheetErrorsDto(failedSavingsDepositAccountNums, failedSavingsWithdrawalNums,
                 failedLoanDisbursementAccountNumbers, failedLoanRepaymentAccountNumbers,
                 failedCustomerAccountPaymentNums, databaseErrorOccurred, databaseError);
     }

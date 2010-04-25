@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
-import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -88,7 +88,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
             // try to get it from the database
             try {
 
-                CustomValueList entity = getEntity(locale, key);
+                CustomValueDto entity = getEntity(locale, key);
                 if (entity != null) {
                     returnVal = entity.getEntityLabel();
                     // put it into hash map for further use
@@ -120,7 +120,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
             // try to get it from the database
             try {
                 short locale_id = dao.getLocaleId(locale);
-                CustomValueList entity = null;
+                CustomValueDto entity = null;
                 if (mappingKey == null || mappingKey.equals("")) {
                     entity = dao.getLookUpEntity(key, locale_id);
                 } else {
@@ -146,8 +146,8 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Only called from one place: MifosPropertyMessageResources.getMessage in
      * order to get a label.
      */
-    public CustomValueList getEntity(final Locale locale, final String key) {
-        CustomValueList entity = null;
+    public CustomValueDto getEntity(final Locale locale, final String key) {
+        CustomValueDto entity = null;
         try {
             short locale_id = dao.getLocaleId(locale);
             entity = dao.getLookUpEntity(key, locale_id);

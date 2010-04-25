@@ -54,7 +54,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -91,7 +91,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         super();
         defaultFees = new ArrayList<FeeDto>();
         additionalFees = new ArrayList<FeeDto>();
-        customFields = new ArrayList<CustomFieldView>();
+        customFields = new ArrayList<CustomFieldDto>();
         clients = new ArrayList<String>();
         clientDetails = new ArrayList<LoanAccountDetailsDto>();
         configService = new ConfigurationBusinessService();
@@ -149,7 +149,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private String gracePeriod;
 
-    private List<CustomFieldView> customFields;
+    private List<CustomFieldDto> customFields;
 
     private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>();
 
@@ -449,17 +449,17 @@ public class LoanAccountActionForm extends BaseActionForm {
         this.noOfInstallments = noOfInstallments;
     }
 
-    public List<CustomFieldView> getCustomFields() {
+    public List<CustomFieldDto> getCustomFields() {
         return customFields;
     }
 
-    public void setCustomFields(List<CustomFieldView> customFields) {
+    public void setCustomFields(List<CustomFieldDto> customFields) {
         this.customFields = customFields;
     }
 
-    public CustomFieldView getCustomField(int i) {
+    public CustomFieldDto getCustomField(int i) {
         while (i >= customFields.size()) {
-            customFields.add(new CustomFieldView());
+            customFields.add(new CustomFieldDto());
         }
         return customFields.get(i);
     }
@@ -1050,7 +1050,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         try {
             List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                     .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
-            for (CustomFieldView customField : customFields) {
+            for (CustomFieldDto customField : customFields) {
                 for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
                     if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
                         if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
