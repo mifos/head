@@ -34,7 +34,6 @@ import junit.framework.Assert;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,7 +43,7 @@ import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
-/*
+/**
  * This class runs tests on database upgrade scripts (both SQL
  * based and java based).  It uses a version of the database referred to as
  * a "checkpoint" as a starting point.  The database checkpoint version that
@@ -59,7 +58,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  * database version that is at least 3-5 upgrades ago in order to allow for
  * fixes to be made to recent upgrades when necessary.
  */
-
 public class LatestTestAfterCheckpointIntegrationTest {
 
     private static Connection connection;
@@ -80,7 +78,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     public static void afterClass() throws Exception {
         // Cleaning the database using FK check disabled connection
         // If any one of the test fails or throws error it could lead to
-        // multiple failures in other tests duing test build
+        // multiple failures in other tests during test build
         TestDatabase.createMySQLTestDatabase();
         FinancialInitializer.initialize();
         StaticHibernateUtil.flushAndCloseSession();
@@ -91,30 +89,26 @@ public class LatestTestAfterCheckpointIntegrationTest {
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         loadLatest();
-        IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-        IDataSet latestDump = dbUnitConnection.createDataSet();
+        IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         applyUpgrades();
-        IDataSet upgradeDump = dbUnitConnection.createDataSet();
+        IDataSet upgradeDump = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
         createLatestDatabaseWithLatestData();
-
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
-        IDatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-        IDataSet latestDataDump = dbUnitConnection.createDataSet();
+        IDataSet latestDataDump = new DatabaseConnection(connection).createDataSet();
         String latestDump = TestDatabase.getAllTablesStructureDump();
         dropLatestDatabase();
         createLatestCheckPointDatabaseWithLatestData();
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
-
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
-        IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
+        IDataSet upgradeDataDump = new DatabaseConnection(connection).createDataSet();
         Assert.assertEquals(latestDump, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
     }
@@ -234,7 +228,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void createLatestDatabaseWithLatestData() throws Exception {
-        executeScript("mifosdroptables-checkpoint.sql", connection);
+        executeScript("mifosdroptables.sql", connection);
         executeScript("latest-schema.sql", connection);
         executeScript("latest-data.sql", connection);
         connection.commit();
