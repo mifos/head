@@ -13,7 +13,7 @@
     <import resource="messageSourceBean.xml" />
     <import resource="financialRulesBean.xml" />
 
-    <context:component-scan base-package="org.mifos.application.importexport" />
+    <!--<context:component-scan base-package="org.mifos.application.importexport" />
 
     <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
@@ -29,9 +29,9 @@
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${main.database.driver}" />
         <property name="url"
-            value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params.spring}" />
+            value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}" />
         <property name="username" value="${main.database.user}" />
         <property name="password" value="${main.database.password}" />
     </bean>
 
-</beans>
+--></beans>
