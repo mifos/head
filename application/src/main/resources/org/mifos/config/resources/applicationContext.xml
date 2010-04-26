@@ -1,94 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:sec="http://www.springframework.org/schema/security"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-      http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
-      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation=" http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!-- This MessageSource will load localized text from external
-         resource bundle files  -->
-    <bean id="messageSource"
-        class="org.springframework.context.support.ResourceBundleMessageSource"
-        abstract="false" lazy-init="default" autowire="default">
-        <property name="basenames">
-            <list>
-                <value>org/mifos/config/localizedResources/LookupValueMessages</value>
-                <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
-                <value>org/mifos/config/localizedResources/reporterrors</value>
-                <value>org/mifos/config/localizedResources/SharedMessages</value>
-            </list>
-        </property>
+    <import resource="mainPropertyConfigurer.xml" />
+    <import resource="messageSourceBean.xml" />
+    <import resource="financialRulesBean.xml" />
+
+    <context:component-scan base-package="org.mifos.application.importexport" />
+
+    <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <!-- Since MessageLookup is MessageSourceAware, the messageSource
-         will be injected -->
-    <bean id="messageLookup"
-        class="org.mifos.application.master.MessageLookup"
-        abstract="false" lazy-init="default" autowire="default"
-        factory-method="getInstance">        
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="/org/mifos/framework/util/resources/hibernate.cfg.xml" />
     </bean>
 
-
-    <!-- Keys must be constants from FinancialActionConstants or application
-         will throw an exception during initialization. REVERSAL_ADJUSTMENT is
-         not currently being used anywhere in the code, but if this changes,
-         a mapping must be added to this file.
-         
-         If this list is overridden using a custom bean config, this entire
-         element should be copied over. Mapping customizations can then be
-         introduced. --> 
-    <bean id = "financialRules"
-        class="org.mifos.accounts.financial.util.helpers.FinancialRules"
-        abstract="false" factory-method="getInstance">        
-        <property name="actionToDebitAccount">
-            <map>
-                <entry key="PRINCIPALPOSTING" value="11201"/>
-                <entry key="INTERESTPOSTING" value="11201"/>
-                <entry key="FEEPOSTING" value="11201"/>
-                <entry key="PENALTYPOSTING" value="11200"/>
-                <entry key="ROUNDING" value="31401"/>
-                <entry key="MANDATORYDEPOSIT" value="11201"/>
-                <entry key="VOLUNTORYDEPOSIT" value="11201"/>
-                <entry key="MANDATORYWITHDRAWAL" value="24000"/>
-                <entry key="VOLUNTORYWITHDRAWAL" value="23000"/>
-                <entry key="SAVINGS_INTERESTPOSTING" value="41000"/>
-                <entry key="DISBURSAL" value="13101"/>
-                <entry key="MISCFEEPOSTING" value="11201"/>
-                <entry key="MISCPENALTYPOSTING" value="11201"/>
-                <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="11201"/>
-                <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="24000"/>
-                <entry key="VOLUNTORYDEPOSIT_ADJUSTMENT" value="23000"/>
-                <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
-                <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
-                <entry key="WRITEOFF" value="13201"/>
-                <entry key="RESCHEDULE" value="11201"/>
-            </map>
-        </property>
-        <property name="actionToCreditAccount">
-            <map>
-                <entry key="PRINCIPALPOSTING" value="13100"/>
-                <entry key="INTERESTPOSTING" value="31100"/>
-                <entry key="FEEPOSTING" value="31300"/>
-                <entry key="PENALTYPOSTING" value="31102"/>
-                <entry key="ROUNDING" value="31401"/>
-                <entry key="MANDATORYDEPOSIT" value="24000"/>
-                <entry key="VOLUNTORYDEPOSIT" value="23000"/>
-                <entry key="MANDATORYWITHDRAWAL" value="11201"/>
-                <entry key="VOLUNTORYWITHDRAWAL" value="11201"/>
-                <entry key="SAVINGS_INTERESTPOSTING" value="24100"/>
-                <entry key="DISBURSAL" value="11201"/>
-                <entry key="MISCFEEPOSTING" value="31301"/>
-                <entry key="MISCPENALTYPOSTING" value="31102"/>
-                <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="31301"/>
-                <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="11201"/>
-                <entry key="VOLUNTORYDEPOSIT_ADJUSTMENT" value="11201"/>
-                <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="24000"/>
-                <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="23000"/>
-                <entry key="WRITEOFF" value="13101"/>
-                <entry key="RESCHEDULE" value="13101"/>
-            </map>
-        </property>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${main.database.driver}" />
+        <property name="url"
+            value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}?${main.database.params.spring}" />
+        <property name="username" value="${main.database.user}" />
+        <property name="password" value="${main.database.password}" />
     </bean>
-    
+
 </beans>
