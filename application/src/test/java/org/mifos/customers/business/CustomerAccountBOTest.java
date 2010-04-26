@@ -14,13 +14,14 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
@@ -141,7 +142,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountNoFeesNoHolidayGeneratesCorrectSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountNoFeesNoHolidayGeneratesCorrectSchedule() {
 
         // use default setup
 
@@ -163,7 +166,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountNoFeesWithMoratoriumGeneratesCorrectSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountNoFeesWithMoratoriumGeneratesCorrectSchedule() {
 
         // setup
         holidays.add(moratorium);
@@ -190,7 +195,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
@@ -215,7 +222,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountTwoPeriodicFeesNoHolidayGeneratesCorrectFeeSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountTwoPeriodicFeesNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
@@ -249,7 +258,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountTwoPeriodicFeesWithMoratoriumGeneratesCorrectFeeSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountTwoPeriodicFeesWithMoratoriumGeneratesCorrectFeeSchedule() {
 
         // setup
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
@@ -289,7 +300,9 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Test public void createNewWeeklyCustomerAccountOnePeriodicFeeWithMoratoriumGeneratesCorrectFeeSchedule() {
+    @Test
+    @Ignore
+    public void createNewWeeklyCustomerAccountOnePeriodicFeeWithMoratoriumGeneratesCorrectFeeSchedule() {
 
         // setup
         holidays.add(moratorium);
