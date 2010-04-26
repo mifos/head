@@ -80,6 +80,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     private String hideClientMiddleName;
 
+    private String mandatoryClientMiddleName;
+
     private String hideClientSecondLastName;
 
     private String mandatoryClientSecondLastName;
@@ -87,6 +89,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
     private String hideClientGovtId;
 
     private String mandatoryClientGovtId;
+
+    private String mandatoryMaritalStatus;
 
     private String hideClientPovertyStatus;
 
@@ -108,7 +112,11 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     private String mandatoryClientTrainedOn;
 
+    private String mandatoryClientBusinessWorkActivities;
+
     private String hideClientBusinessWorkActivities;
+
+    private String mandatoryNumberOfChildren;
 
     private String hideGroupTrained;
 
@@ -470,11 +478,13 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.hideSystemPostalCode = "0";
         this.hideSystemReceiptIdDate = "0";
         this.hideSystemCollateralTypeNotes = "0";
+        this.mandatoryClientMiddleName="0";
         this.hideClientMiddleName = "0";
         this.hideClientSecondLastName = "0";
         this.mandatoryClientSecondLastName = "0";
         this.hideClientGovtId = "0";
         this.mandatoryClientGovtId = "0";
+        this.mandatoryMaritalStatus = "0";
         this.hideClientPovertyStatus = "0";
         this.mandatoryClientPovertyStatus = "0";
         this.hideClientSpouseFatherMiddleName = "0";
@@ -486,6 +496,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.mandatoryClientTrained = "0";
         this.mandatoryClientTrainedOn = "0";
         this.hideClientBusinessWorkActivities = "0";
+        this.mandatoryNumberOfChildren = "0";
+        this.mandatoryClientBusinessWorkActivities = "0";
         this.hideGroupTrained = "0";
     }
 
@@ -511,5 +523,37 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     public void setMandatoryClientPovertyStatus(String mandatoryClientPovertyStatus) {
         this.mandatoryClientPovertyStatus = mandatoryClientPovertyStatus;
+    }
+
+    public void setMandatoryClientMiddleName(String mandatoryClientMiddleName) {
+        this.mandatoryClientMiddleName = mandatoryClientMiddleName;
+    }
+
+    public String getMandatoryClientMiddleName() {
+        return mandatoryClientMiddleName;
+    }
+
+    public void setMandatoryMaritalStatus(String mandatoryMaritalStatus) {
+        this.mandatoryMaritalStatus = mandatoryMaritalStatus;
+    }
+
+    public String getMandatoryMaritalStatus() {
+        return mandatoryMaritalStatus;
+    }
+
+    public void setMandatoryClientBusinessWorkActivities(String mandatoryClientBusinessWorkActivities) {
+        this.mandatoryClientBusinessWorkActivities = mandatoryClientBusinessWorkActivities;
+    }
+
+    public String getMandatoryClientBusinessWorkActivities() {
+        return mandatoryClientBusinessWorkActivities;
+    }
+
+    public void setMandatoryNumberOfChildren(String mandatoryNumberOfChildren) {
+        this.mandatoryNumberOfChildren = mandatoryNumberOfChildren;
+    }
+
+    public String getMandatoryNumberOfChildren() {
+        return mandatoryNumberOfChildren;
     }
 }

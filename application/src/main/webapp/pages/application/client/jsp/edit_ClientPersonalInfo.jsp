@@ -188,10 +188,10 @@ explanation of the license and how it is applied.
 						</tr>
 						<%-- Marital Status --%>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="client.MaritalStatus"
+							<td align="right"><mifos:mifoslabel keyhm="Client.MaritalStatus" name="client.MaritalStatus"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
 							<td>
-								<mifos:select name="clientCustActionForm" property="clientDetailView.maritalStatus" size="1">
+								<mifos:select keyhm="Client.MaritalStatus" name="clientCustActionForm" property="clientDetailView.maritalStatus" size="1">
 									<c:forEach var="maritalStatusEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusEntity')}" >
 										<html-el:option value="${maritalStatusEntityList.id}">${maritalStatusEntityList.name}</html-el:option>
 									</c:forEach>
@@ -201,8 +201,9 @@ explanation of the license and how it is applied.
 						<%-- Number Of Children--%>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span id="edit_ClientPersonalInfo.label.customField"><mifos:mifoslabel
-								name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" name="clientCustActionForm"	property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
+								keyhm="Client.NumberOfChildren" name="client.NumberOfChildren" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosnumbertext styleId="edit_ClientPersonalInfo.input.customField" keyhm="Client.NumberOfChildren" 
+									name="clientCustActionForm"	property="clientDetailView.numChildren" maxlength="5" size="10" /></td>
 						</tr>
 						<%-- Citizenship --%>
 						<tr class="fontnormal">

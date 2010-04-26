@@ -263,14 +263,17 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
     private void updateClientDetails(HiddenMandatoryConfigurationActionForm actionForm,
             FieldConfigurationEntity fieldConfiguration) throws Exception {
         if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MIDDLE_NAME)) {
-            fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
-                    .getHideClientMiddleName()));
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientMiddleName()),
+                    getShortValue(actionForm.getHideClientMiddleName()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SECOND_LAST_NAME)) {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientSecondLastName()),
                     getShortValue(actionForm.getHideClientSecondLastName()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.GOVERNMENT_ID)) {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientGovtId()), getShortValue(actionForm
                     .getHideClientGovtId()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MARITAL_STATUS)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryMaritalStatus()), fieldConfiguration
+                    .getHiddenFlag());
         } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientPovertyStatus()),
@@ -293,8 +296,11 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientTrainedOn()), getShortValue(actionForm
                     .getHideClientTrained())); // hidden field from Trained is shared with TrainedDate (#MIFOS-2731)
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.BUSINESS_ACTIVITIES)) {
-            fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientBusinessWorkActivities()), getShortValue(actionForm
                     .getHideClientBusinessWorkActivities()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.NUMBER_OF_CHILDREN)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryNumberOfChildren()), fieldConfiguration
+                    .getHiddenFlag());
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.EXTERNAL_ID)) {
             fieldConfiguration.update(getShortValue(actionForm.getMandatorySystemExternalId()),
                     getShortValue(actionForm.getHideSystemExternalId()));
@@ -363,12 +369,15 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             FieldConfigurationEntity fieldConfiguration) {
         if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MIDDLE_NAME)) {
             actionForm.setHideClientMiddleName(getStringValue(fieldConfiguration.getHiddenFlag()));
+            actionForm.setMandatoryClientMiddleName(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.SECOND_LAST_NAME)) {
             actionForm.setHideClientSecondLastName(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatoryClientSecondLastName(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.GOVERNMENT_ID)) {
             actionForm.setHideClientGovtId(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatoryClientGovtId(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.MARITAL_STATUS)) {
+            actionForm.setMandatoryMaritalStatus(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
             actionForm.setHideClientPovertyStatus(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatoryClientPovertyStatus(getStringValue(fieldConfiguration.getMandatoryFlag()));
@@ -390,6 +399,9 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             actionForm.setMandatoryClientTrainedOn(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.BUSINESS_ACTIVITIES)) {
             actionForm.setHideClientBusinessWorkActivities(getStringValue(fieldConfiguration.getHiddenFlag()));
+            actionForm.setMandatoryClientBusinessWorkActivities(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.NUMBER_OF_CHILDREN)) {
+            actionForm.setMandatoryNumberOfChildren(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.ETHINICITY)) {
             actionForm.setHideSystemEthnicity(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatorySystemEthnicity(getStringValue(fieldConfiguration.getMandatoryFlag()));

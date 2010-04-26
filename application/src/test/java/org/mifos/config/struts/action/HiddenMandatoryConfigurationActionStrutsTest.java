@@ -368,6 +368,50 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
         Assert.assertTrue(fieldConfig.isFieldManadatory("Loan.SourceOfFund"));
     }
 
+    public void testMiddleNameBusinessActivitiesMaritalStatusNumberOfChildren()
+        throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryClientMiddleName", "1");
+        addRequestParameter("mandatoryMaritalStatus", "1");
+        addRequestParameter("mandatoryClientBusinessWorkActivities", "0");
+        addRequestParameter("mandatoryNumberOfChildren", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.NumberOfChildren"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.BusinessActivities"));
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.MiddleName"));
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.MaritalStatus"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryClientMiddleName", "0");
+        addRequestParameter("mandatoryMaritalStatus", "0");
+        addRequestParameter("mandatoryClientBusinessWorkActivities", "1");
+        addRequestParameter("mandatoryNumberOfChildren", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.NumberOfChildren"));
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.BusinessActivities"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.MiddleName"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.MaritalStatus"));
+    }
+
     public void testSpouseFatherNameFields() throws HibernateProcessException, PersistenceException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");

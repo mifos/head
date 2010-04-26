@@ -24,6 +24,7 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;
 import org.apache.strutsel.taglib.html.ELTextTag;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
@@ -39,10 +40,13 @@ public class MifosNumberTextTag extends ELTextTag {
 
     // ----------------------------------------------------- Instance Variables
 
+    private FieldConfig fieldConfig = FieldConfig.getInstance();
     /**
      * Maximum value that can be entered in the text element
      */
     private String maxValue;
+
+    private String keyhm;
 
     public String getMaxValue() {
         return maxValue;
@@ -88,6 +92,11 @@ public class MifosNumberTextTag extends ELTextTag {
      */
     @Override
     public int doStartTag() throws JspException {
+        if (fieldConfig.isFieldHidden(getKeyhm())) {
+            return EVAL_PAGE;
+        } else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm())) {
+            TagUtils.getInstance().write(this.pageContext, renderFieldHiddenMandatory());
+        }
         // get User Preferred Locale
         String preferredUserLocale = LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
         if (maxValue == null) {
@@ -122,6 +131,20 @@ public class MifosNumberTextTag extends ELTextTag {
         html.endTag("script");
         html.startTag("script", "src", "pages/framework/js/func_" + preferredUserLocale + ".js");
         html.endTag("script");
+        return html.toString();
+    }
+
+    public void setKeyhm(String keyhm) {
+        this.keyhm = keyhm;
+    }
+
+    public String getKeyhm() {
+        return keyhm;
+    }
+
+    public String renderFieldHiddenMandatory() {
+        XmlBuilder html = new XmlBuilder();
+        html.singleTag("input", "type", "hidden", "name", getKeyhm(), "value", getPropertyExpr());
         return html.toString();
     }
 }

@@ -70,6 +70,8 @@ public interface HiddenMandatoryFieldNamesConstants {
 
     public static final String GOVERNMENT_ID = "GovernmentId";
 
+    public static final String MARITAL_STATUS = "MaritalStatus";
+
     public static final String POVERTY_STATUS = "PovertyStatus";
 
     public static final String SPOUSE_FATHER_MIDDLE_NAME = "SpouseFatherMiddleName";
@@ -81,4 +83,6 @@ public interface HiddenMandatoryFieldNamesConstants {
     public static final String TRAINED_DATE = "TrainedDate";
 
     public static final String BUSINESS_ACTIVITIES = "BusinessActivities";
+
+    public static final String NUMBER_OF_CHILDREN = "NumberOfChildren";
 }

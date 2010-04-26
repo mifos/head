@@ -268,7 +268,7 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="hideClientMiddleName" value="1"/>
 								</td>
 								<td class="drawtablerow">
-									&nbsp;
+									<html-el:checkbox property="mandatoryClientMiddleName" value="1"/>
 								</td>
 							</tr>
 							<tr>
@@ -293,6 +293,17 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="mandatoryClientGovtId" value="1"/>
 								</td>
 							</tr>
+							<tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.maritalstatus" />
+								</td>
+								<td class="drawtablerow">
+									&nbsp;
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryMaritalStatus" value="1"/>
+								</td>
+							</tr>							
                             <tr>
 								<td class="drawtablerow">
 									<mifos:mifoslabel name="configuration.povertystatus" />
@@ -367,9 +378,20 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="hideClientBusinessWorkActivities" value="1"/>
 								</td>
 								<td class="drawtablerow">
-									&nbsp;
+									<html-el:checkbox property="mandatoryClientBusinessWorkActivities" value="1"/>
 								</td>
 							</tr>
+							<tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.numberofchildren" />
+								</td>
+								<td class="drawtablerow">
+									&nbsp;
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryNumberOfChildren" value="1"/>
+								</td>
+							</tr>														
 						</table>
 						<span class="heading"></span>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
