@@ -91,6 +91,11 @@ public class FeeBuilder {
         return this;
     }
 
+    public FeeBuilder appliesToLoans() {
+        this.category = FeeCategory.LOAN;
+        return this;
+    }
+
     public FeeBuilder withFeeAmount(final String withFeeAmount) {
         this.feeAmount = new Money(TestUtils.RUPEE, withFeeAmount);
         return this;

@@ -835,6 +835,19 @@ public class LoanBO extends AccountBO {
         return false;
     }
 
+    /**
+     * Applies any type of charge to this loan.
+     * <p>Action by type:</p>
+     * <ul>
+     * <li> a miscellaneous fee or penalty -- apply it to the next due installment</li>
+     * <li> a one-time rate or amount fee -- apply it to the next due installment (if a rate fee, the
+     *      charge argument is the rate, otherwise it is the amount)</li>
+     * <li> a periodic rate or amount fee -- apply it to all due installments (if a rate fee, the
+     *      charge argument is the rate, otherwise it is the amount). If not yet applied, then add it
+     *      to all due installments, otherwise update the charge.</li>
+     * </ul>
+     * <p> Note that "due installments" means any unpaid installments due today or in the future.</p>
+     */
     @Override
     public void applyCharge(final Short feeId, final Double charge) throws AccountException, PersistenceException {
         List<AccountActionDateEntity> dueInstallments = getTotalDueInstallments();
@@ -1747,13 +1760,30 @@ public class LoanBO extends AccountBO {
         return feeInstallmentList;
     }
 
+    /**
+     * Calculate and return the list of {@link FeeInstallment}s to be applied. A fee installment will
+     * apply to one of the given loan installmentDates if the installmentIds match. Here's the criteria for
+     * matching a fee installment to a loan installment:  Calculate the dates in nonAdjustedInstallmentDates that the
+     * fee would be due if the fee were to start today. For each unadjusted fee date, build a FeeInstallment object
+     * based on the installmentId of the nearest loan installment date in the list installmentDates (this is what causes
+     * fees to pile up on a future loan installment that has been pushed out of a holiday), and add it to the list to
+     * be returned.
+     */
     @Override
     protected final List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
             final List<InstallmentDate> installmentDates, final List<InstallmentDate> nonAdjustedInstallmentDates)
             throws AccountException {
         Money accountFeeAmount = accountFees.getAccountFeeAmount();
         MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency().getFeeMeetingFrequency();
-        List<Date> feeDates = getFeeDates(feeMeetingFrequency, nonAdjustedInstallmentDates);
+
+        // Generate the dates in nonAdjustedInstallmentDates that the fee would be due if
+        // the fee were to start today
+        List<Date> feeDates = getFeeDates(feeMeetingFrequency, nonAdjustedInstallmentDates, false);
+
+        // For each unadjusted fee date, build a FeeInstallment object based on the installmentId of the
+        // nearest loan installment date adjusted for holidays (this is what causes fees to pile up
+        // on a future loan installment that has been pushed out of a holiday), and add it to the list to
+        // be returned
         ListIterator<Date> feeDatesIterator = feeDates.listIterator();
         List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
         while (feeDatesIterator.hasNext()) {
@@ -2007,25 +2037,47 @@ public class LoanBO extends AccountBO {
         return isValid;
     }
 
+    /**
+     * The fee (new or to be updated) is applied to the given list of AccountActionDateEntity(s). Note that the entities
+     * are the actual entity objects referenced by the loan, so this method acts by side-effect,
+     * adding fees to the given entities.
+     *
+     * @param fee the periodic FeeBO to apply to the given AccountActionDateEntity(s)
+     * @param charge the
+     * @param dueInstallments
+     * @throws AccountException
+     * @throws PersistenceException
+     */
     private void applyPeriodicFee(final FeeBO fee, final Double charge,
             final List<AccountActionDateEntity> dueInstallments) throws AccountException, PersistenceException {
+
+        //Create an AccountFeesEntity linking the loan to the given fee fee and charge if the fee hasn't been applied, or
+        // update the applied fee's AccountFeesEntity.feeAmount with the given charge. Then set the
+        // AccountFeeEntity.accountFeeAmount to this loan's originalInterest.
         AccountFeesEntity accountFee = getAccountFee(fee, charge);
         Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
         accountFeeSet.add(accountFee);
         populateAccountFeeAmount(accountFeeSet, loanSummary.getOriginalInterest());
+
+        // Extract the list of InstallmentDate(s) from the given AccountActionDateEntity(s). Note that
+        // the installmentId(s) likely do not start with 1 since the fee may be applied after some
+        // installment dates have passed.
         List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
         for (AccountActionDateEntity accountActionDateEntity : dueInstallments) {
             installmentDates.add(new InstallmentDate(accountActionDateEntity.getInstallmentId(),
                     accountActionDateEntity.getActionDate()));
         }
 
+        // Get the full list of all loan InstallmentDate(s), past, present and future, without adjusting for holidays.
+        // This will work correctly only if adjusting periodic fees is done when no installments have been paid
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        // get installments without adjusting for holidays
-        // note that this gets all installments, so this will only work if
-        // adjusting periodic fees is done when no installments have been paid
         List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(getLoanMeeting(), noOfInstallments,
                 getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled,
                 false);
+
+        // Use handlePeriodic to adjust fee installments for holiday periods and combine multiple fee installments due for the
+        // same loan installment. Finally, apply these updated fees to the given dueInstallments list and update
+        // loan summary and activity tables.
         List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(handlePeriodic(accountFee, installmentDates,
                 nonAdjustedInstallmentDates));
         Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);

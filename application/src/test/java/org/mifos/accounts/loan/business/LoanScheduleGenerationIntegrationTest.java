@@ -20,25 +20,37 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
-import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -48,15 +60,28 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.domain.builders.HolidayBuilder;
-import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * These tests validate new schedule-generating code for loan repayments
  */
-public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestCase {
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class LoanScheduleGenerationIntegrationTest {
 
     //Things you need to set up before you can create a loan
     private MeetingBO meeting;
@@ -67,34 +92,43 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
     private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
     private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
 
+    private static MifosCurrency oldDefaultCurrency;
 
-    /**
-     * These tests are disabled until I recode to restore overridden fiscal calendar rules
-     *
-     * @throws Exception
-     */
-    public LoanScheduleGenerationIntegrationTest() throws Exception {
-        super();
+//    @Autowired
+//    private CustomerDao customerDao;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.startTransaction();
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
 
-        //System.out.println("savedWorkingDays = " + weekDaysToPropertyString(savedWorkingDays));
-
+    @Before
+    public void cleanDatabaseTables() {
+        databaseCleaner.clean();
         fiscalCalendarRules.setWorkingDays("MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY");
+        office = sampleBranchOffice();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        StaticHibernateUtil.rollbackTransaction();
-        StaticHibernateUtil.flushAndClearSession();
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
         fiscalCalendarRules.setWorkingDays(weekDaysToPropertyString(savedWorkingDays));
-        //System.out.println("Restored Working Days = " + weekDaysToPropertyString(fiscalCalendarRules.getWorkingDays()));
     }
 
+    @Test
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
 
         LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 9); //Meets on Fridays
@@ -108,6 +142,55 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
                             date(2010, 12, 3),  date(2010, 12, 10), date(2010, 12, 17));
     }
 
+    @Test
+    public void testNewWeeklyGroupLoanOnePeriodicFeeNoHoliday() throws Exception {
+
+        MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
+        AmountFeeBO fee = new FeeBuilder().appliesToLoans()
+                                          .with(feeMeetingBuilder)
+                                          .withFeeAmount("14.0")
+                                          .withName("Periodic Loan Fee")
+                                          .withOffice(sampleBranchOffice())
+                                          .build();
+        IntegrationTestObjectMother.saveFee(fee);
+
+        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 9, fee); //Meets on Fridays
+        /*
+         * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
+         * All asserted dates are on Fridays
+         */
+        validateDates(loan, date(2010, 10, 22), date(2010, 10, 29), date(2010, 11, 5),
+                            date(2010, 11, 12), date(2010, 11, 19), date(2010, 11, 26),
+                            date(2010, 12, 3),  date(2010, 12, 10), date(2010, 12, 17));
+        validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
+    }
+
+//    @Test TODO KRP reactivate after fixing fee schedule generation
+    public void testNewWeeklyGroupLoanOnePeriodicFeeMoratorium() throws Exception {
+
+        MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
+        AmountFeeBO fee = new FeeBuilder().appliesToLoans()
+                                          .with(feeMeetingBuilder)
+                                          .withFeeAmount("14.0")
+                                          .withName("Periodic Loan Fee")
+                                          .withOffice(sampleBranchOffice())
+                                          .build();
+        IntegrationTestObjectMother.saveFee(fee);
+
+        // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
+        buildAndPersistMoratorium(date(2010, 10, 22), date(2010, 10, 28));
+
+        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 6, fee); //Meets on Fridays
+        /*
+         * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
+         * All asserted dates are on Fridays
+         */
+        validateDates(loan, date(2010, 10, 29), date(2010, 11, 5), date(2010, 11, 12),
+                            date(2010, 11, 19), date(2010, 11, 26), date(2010, 12, 3));
+        validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
+    }
+
+    @Test
     public void testNewWeeklyGroupLoanNoFeesSpansMoratorium() throws Exception {
 
         // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
@@ -129,6 +212,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
      * Generate loan schedules for monthly schedules meeting on a day of the month.
      *****************************************************/
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthNoHoliday() throws Exception {
 
         LoanBO loan = createMonthlyOnDateGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 6);
@@ -142,6 +226,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentSpansMoratorium() throws Exception {
 
         //setup meeting 15th of every month starting 10/15/2010, with moratorium on the second meeting date.
@@ -158,6 +243,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondAndThirdInstallmentsSpanMoratorium() throws Exception {
 
         //setup
@@ -174,6 +260,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHoliday() throws Exception {
 
         //Setup meeting and holiday spanning third meeting date.
@@ -192,6 +279,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextMeetingHolidayAndThirdInstallmentInMoratorium()
                     throws Exception {
 
@@ -212,6 +300,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextMeetingHoliday()
                     throws Exception {
 
@@ -233,6 +322,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInNextWorkingDayHoliday() throws Exception {
 
         //Setup meeting and holiday spanning third meeting date.
@@ -250,6 +340,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyLoanGroupOnDayOfMonthSecondInstallmentInNexWorkingDayHolidayAndNextWorkingDayIsInMoratorium()
                     throws Exception {
 
@@ -270,6 +361,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
 
     }
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfMonthSecondInstallmentInMoratoriumPushedIntoNextWorkingDayHoliday()
                     throws Exception {
 
@@ -292,6 +384,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
      * Generate loan schedules for monthly schedules meeting on a day in a week of the month.
      *****************************************************/
 
+    @Test
     public void testNewMonthlyGroupLoanOnDayOfWeekNoHoliday() throws Exception {
 
         /*
@@ -487,14 +580,16 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
      * Helper methods
      ****************************************/
 
-    private LoanBO createWeeklyGroupLoanWithStartDateWithOccurrences (DateTime startDate, int occurrences)
+    private LoanBO createWeeklyGroupLoanWithStartDateWithOccurrences (DateTime startDate, int occurrences, FeeBO...fees)
                 throws Exception {
         setupWeeklyScheduleStartingOn(startDate);
-        return createStandardLoan(startDate, occurrences, group);
+        return createStandardLoan(startDate, occurrences, group, fees);
     }
 
     private void setupWeeklyScheduleStartingOn(DateTime startDate) {
         meeting = new MeetingBuilder().weekly().withStartDate(startDate).build();
+        IntegrationTestObjectMother.saveMeeting(meeting);
+
         setupOfficeAndCenterAndGroupAndLoanOfferingForMeeting(meeting);
     }
 
@@ -526,24 +621,21 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
     }
 
     private void setupOfficeAndCenterAndGroupAndLoanOfferingForMeeting (MeetingBO meeting) {
-        office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
-        center = new CenterBuilder().withMeeting(meeting).with(office).build();
+        center = new CenterBuilder().withMeeting(meeting).with(office).withLoanOfficer(testUser()).build();
         group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
 
     }
 
-    private Holiday buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
         HolidayBO holiday = (HolidayBO) new HolidayBuilder().from(start)
                                                                .to(through)
                                                                .withRepaymentRule(rule).build();
-        GenericDao genericDao = new GenericDaoHibernate();
-        genericDao.createOrUpdate(holiday);
-        return holiday;
+        IntegrationTestObjectMother.saveHoliday(holiday);
     }
 
-    private Holiday buildAndPersistMoratorium (DateTime start, DateTime through) {
-        return buildAndPersistHoliday(start, through, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+    private void buildAndPersistMoratorium (DateTime start, DateTime through) {
+        buildAndPersistHoliday(start, through, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
     }
 
     private void validateDates (LoanBO loan, DateTime... dates) {
@@ -559,11 +651,16 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         return new DateTime().withDate(year, month, day).toDateMidnight().toDateTime();
     }
 
-    private LoanBO createStandardLoan (DateTime startDate, int numberOfInstallments, CustomerBO customer) throws Exception {
+    private LoanBO createStandardLoan (DateTime startDate, int numberOfInstallments, CustomerBO customer, FeeBO...fees) throws Exception {
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+        for (FeeBO fee : fees) {
+            FeeDto feeView = new FeeDto(TestUtils.makeUser(), fee);
+            feeDtos.add(feeView);
+        }
         return LoanBO
         .createLoan(TestUtils.makeUser(), loanOffering, customer, AccountState.LOAN_APPROVED, new Money(
-                getCurrency(), "300.0"), (short) numberOfInstallments, startDate.toDate(), false,
-                loanOffering.getDefInterestRate(), (short) 0, null, new ArrayList<FeeDto>(), null, 300.0, 300.0,
+                Money.getDefaultCurrency(), "300.0"), (short) numberOfInstallments, startDate.toDate(), false,
+                loanOffering.getDefInterestRate(), (short) 0, null, feeDtos, null, 300.0, 300.0,
                 loanOffering.getEligibleInstallmentSameForAllLoan().getMaxNoOfInstall(),
                 loanOffering.getEligibleInstallmentSameForAllLoan().getMinNoOfInstall(),
                 false, null);
@@ -579,8 +676,29 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
             } else {
                 first = false;
             }
-            propertyString = propertyString + day.getName().toUpperCase();
+            propertyString = propertyString + day.toString().toUpperCase();
         }
         return propertyString;
     }
+
+    private void validateOnePeriodicFee (LoanBO loan, String expectedPeriodicFeeName, double...expectedFees) {
+
+        int installmentId = 1;
+        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(loan)) {
+            LoanScheduleEntity scheduleEntity= (LoanScheduleEntity) accountActionDate;
+            assertThat("wrong number of fees for installment " + installmentId, scheduleEntity.getAccountFeesActionDetails().size(), is(1));
+            assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(),
+                    is(expectedPeriodicFeeName));
+            assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(),
+                    is(expectedFees[scheduleEntity.getInstallmentId()-1]));
+        }
+    }
+
+    private List<AccountActionDateEntity> getActionDatesSortedByDate(LoanBO loan) {
+        List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>();
+        sortedList.addAll(loan.getAccountActionDates());
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
 }

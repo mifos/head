@@ -14,7 +14,6 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -143,7 +142,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountNoFeesNoHolidayGeneratesCorrectSchedule() {
 
         // use default setup
@@ -167,7 +165,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountNoFeesWithMoratoriumGeneratesCorrectSchedule() {
 
         // setup
@@ -196,7 +193,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
@@ -223,7 +219,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
@@ -259,7 +254,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesWithMoratoriumGeneratesCorrectFeeSchedule() {
 
         // setup
@@ -301,7 +295,6 @@ public class CustomerAccountBOTest {
     }
 
     @Test
-    @Ignore
     public void createNewWeeklyCustomerAccountOnePeriodicFeeWithMoratoriumGeneratesCorrectFeeSchedule() {
 
         // setup
@@ -337,7 +330,7 @@ public class CustomerAccountBOTest {
 
     private DateTime getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(int dayOfWeek) {
         DateTime installmentDate = new DateTime().withDayOfWeek(dayOfWeek);
-        if (installmentDate.isBeforeNow() || installmentDate.isEqualNow()) {
+        if (installmentDate.isBeforeNow()) {
             installmentDate = installmentDate.plusWeeks(1);
         }
         return installmentDate;

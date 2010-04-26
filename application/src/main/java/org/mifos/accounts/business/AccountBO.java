@@ -105,6 +105,10 @@ public class AccountBO extends AbstractBusinessObject {
     protected Set<AccountNotesEntity> accountNotes;
     protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
     private final Set<AccountFlagMapping> accountFlags;
+
+    /**
+     * Links this loan to its applied fees
+     */
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
     private List<AccountPaymentEntity> accountPayments;
@@ -336,6 +340,9 @@ public class AccountBO extends AbstractBusinessObject {
         return accountFlags;
     }
 
+    /**
+     * Returns the set of {@link AccountFeesEntity}s -- links to the fees that apply to this loan.
+     */
     public Set<AccountFeesEntity> getAccountFees() {
         return accountFees;
     }
@@ -683,6 +690,13 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * Return an {@link AccountFeesEntity} that links this account to the given fee, or null if the
+     * fee does not apply to this account.
+     *
+     * @param feeId the primary key of the {@link FeeBO} being sought.
+     * @return
+     */
     public AccountFeesEntity getAccountFees(final Short feeId) {
         for (AccountFeesEntity accountFeesEntity : this.getAccountFees()) {
             if (accountFeesEntity.getFees().getFeeId().equals(feeId)) {
@@ -1119,6 +1133,9 @@ public class AccountBO extends AbstractBusinessObject {
         return dueInstallmentList;
     }
 
+    /**
+     * Get all unpaid {@link AccountActionDateEntity}s due today or in the future for this account.
+     */
     protected final List<AccountActionDateEntity> getTotalDueInstallments() {
         List<AccountActionDateEntity> dueInstallmentList = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
@@ -1135,6 +1152,14 @@ public class AccountBO extends AbstractBusinessObject {
         return getAccountFees(fee.getFeeId()) != null;
     }
 
+    /**
+     * If the given {@FeeBO} has not yet been applied to this account, build and return a new {@link AccountFeesEntity}
+     * linking this account to the fee; otherwise return the link object with the fee amount replaced with the charge.
+     *
+     * @param fee the fee to apply or update
+     * @param charge the amount to charge for the given fee
+     * @return return the new or updated {@link AccountFeesEntity} linking this account to the fee
+     */
     protected final AccountFeesEntity getAccountFee(final FeeBO fee, final Double charge) {
         AccountFeesEntity accountFee = null;
         if (fee.isPeriodic() && isFeeAlreadyApplied(fee)) {
@@ -1246,13 +1271,23 @@ public class AccountBO extends AbstractBusinessObject {
         return feeInstallmentList;
     }
 
-    public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates) {
+    public final List<Date> getFeeDates (final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates) {
+        return getFeeDates (feeMeetingFrequency, installmentDates, true);
+    }
+
+    public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates,
+           final boolean adjustForHolidays ) {
 
         MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays;
+        if (adjustForHolidays) {
+            holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        } else {
+            holidays = new ArrayList<Holiday>();
+        }
 
         DateTime startFromMeetingDate = new DateTime(installmentDates.get(0).getInstallmentDueDate());
         DateTime repaymentEndDatetime = new DateTime(installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate());
