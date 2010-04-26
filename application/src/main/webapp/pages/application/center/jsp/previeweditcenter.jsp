@@ -142,7 +142,7 @@ explanation of the license and how it is applied.
 
                   	  <c:forEach var="position" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'positions')}">
 						 <c:forEach var="cp" items="${sessionScope.centerCustActionForm.customerPositions}">
-							<c:if test="${position.id==cp.positionId}">
+							<c:if test="${position.positionId==cp.positionId}">
 								<c:out value="${position.name}"/>:
 								<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}">
 		    	            	 	<c:if test="${client.customerId==cp.customerId}">

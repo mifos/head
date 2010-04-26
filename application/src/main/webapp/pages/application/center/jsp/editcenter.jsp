@@ -219,7 +219,7 @@ explanation of the license and how it is applied.
 																<html-el:option value="${clientColList.customerId}">${clientColList.displayName}</html-el:option>
 															</c:forEach>
 														</mifos:select>
-														<html-el:hidden property='customerPosition[${ctr}].positionId' value="${pos.id}"></html-el:hidden>
+														<html-el:hidden property='customerPosition[${ctr}].positionId' value="${pos.positionId}"></html-el:hidden>
 													</td>
 												</tr>
 											</c:forEach>

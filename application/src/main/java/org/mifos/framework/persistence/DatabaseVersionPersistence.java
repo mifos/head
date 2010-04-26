@@ -453,16 +453,16 @@ public class DatabaseVersionPersistence {
 
         if (foundInSql) {
             return new SqlUpgrade(url, higherVersion);
-        } else {
-            String location;
-            try {
-                location = " in " + getClass().getProtectionDomain().getCodeSource().getLocation().toString();
-            } catch (Throwable e) {
-                location = "";
-            }
-            throw new IllegalStateException("Did not find upgrade to " + higherVersion + " in java or in " + scriptName
-                    + " next to " + getClass().getName() + location);
         }
+
+        String location;
+        try {
+            location = " in " + getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+        } catch (Throwable e) {
+            location = "";
+        }
+        throw new IllegalStateException("Did not find upgrade to " + higherVersion + " in java or in " + scriptName
+                + " next to " + getClass().getName() + location);
     }
 
     public void upgradeDatabase() throws Exception {

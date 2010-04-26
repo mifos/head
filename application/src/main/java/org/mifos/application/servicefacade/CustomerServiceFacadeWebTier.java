@@ -53,10 +53,10 @@ import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.business.CustomerNoteEntity;
+import org.mifos.customers.business.CustomerPositionDto;
+import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.business.service.CustomerService;
@@ -66,12 +66,12 @@ import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
-import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
+import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailEntity;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
@@ -746,12 +746,15 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             for (MasterDataEntity position : customerPositions) {
                 for (CustomerPositionEntity entity : customer.getCustomerPositions()) {
                     if (position.getId().equals(entity.getPosition().getId())) {
+
+                        CustomerPositionDto customerPosition;
                         if (entity.getCustomer() != null) {
-                            customerPositionDtos.add(new CustomerPositionDto(entity.getCustomer().getCustomerId(),
-                                    entity.getPosition().getId()));
+                            customerPosition = new CustomerPositionDto(entity.getCustomer().getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
                         } else {
-                            customerPositionDtos.add(new CustomerPositionDto(null, entity.getPosition().getId()));
+                            customerPosition = new CustomerPositionDto(customer.getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
                         }
+
+                        customerPositionDtos.add(customerPosition);
                     }
                 }
             }

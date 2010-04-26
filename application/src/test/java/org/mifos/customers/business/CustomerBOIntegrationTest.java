@@ -40,8 +40,8 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -98,7 +98,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
             TestObjectFactory.cleanUp(loanOfficer);
             TestObjectFactory.cleanUp(createdBranchOffice);
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
@@ -350,14 +349,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, customerPerformanceView.getMeetingsAttended().intValue());
         Assert.assertEquals(1, customerPerformanceView.getMeetingsMissed().intValue());
         Assert.assertEquals("10", customerPerformanceView.getLastLoanAmount());
-
-    }
-
-    public void testCustomerPositionView() throws Exception {
-        CustomerPositionDto customerPositionDto = new CustomerPositionDto(Integer.valueOf("1"), Short.valueOf("2"));
-
-        Assert.assertEquals(1, customerPositionDto.getCustomerId().intValue());
-        Assert.assertEquals(2, customerPositionDto.getPositionId().shortValue());
 
     }
 

@@ -23,18 +23,18 @@ package org.mifos.customers.business;
 import org.mifos.framework.business.service.DataTransferObject;
 
 public class CustomerPositionDto implements DataTransferObject {
-    Integer customerId;
 
-    Short positionId;
+    private Integer customerId;
+    private Short positionId;
+    private String name;
 
     public CustomerPositionDto() {
     }
 
-    public CustomerPositionDto(Integer customerId, Short positionId) {
-
+    public CustomerPositionDto(Integer customerId, Short positionId, String name) {
         this.customerId = customerId;
-
         this.positionId = positionId;
+        this.name = name;
     }
 
     public Integer getCustomerId() {
@@ -53,4 +53,11 @@ public class CustomerPositionDto implements DataTransferObject {
         this.positionId = positionId;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
