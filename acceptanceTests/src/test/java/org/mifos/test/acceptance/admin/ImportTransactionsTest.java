@@ -39,7 +39,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(enabled = false, sequential = true, groups = {"admin", "acceptance","ui"})
+@Test(sequential = true, groups = {"admin", "acceptance","ui"})
 public class ImportTransactionsTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -80,6 +80,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void importTabDelimitedAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-OneTransactionEA00002.txt").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
@@ -93,6 +94,7 @@ public class ImportTransactionsTest extends UiTestCaseBase {
 
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=false)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
@@ -111,6 +113,14 @@ public class ImportTransactionsTest extends UiTestCaseBase {
         importTransactionsPage.verifyPage();
         ImportTransactionsConfirmationPage importTransactionsConfirmationPage = importTransactionsPage.importAudiTransactions(importFile, importType);
         importTransactionsConfirmationPage.verifyPage();
+    }
+
+    //  Test the import transaction page loads with no plugins available  - regression test for MIFOS-2683
+    @Test(enabled=true)
+    public void importTransactionPageLoad() {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
+        importTransactionsPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
