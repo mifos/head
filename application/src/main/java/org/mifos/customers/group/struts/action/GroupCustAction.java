@@ -137,8 +137,6 @@ public class GroupCustAction extends CustAction {
 
         // inherit these settings from center/parent if center hierarchy is configured
         actionForm.setParentCustomer(groupFormCreationDto.getParentCustomer());
-//        actionForm.getParentCustomer().getCustomerMeeting().getMeeting().isMonthly();
-//        actionForm.getParentCustomer().getCustomerMeeting().getMeeting().isWeekly();
         actionForm.setOfficeId(groupFormCreationDto.getParentOfficeId());
         actionForm.setFormedByPersonnel(groupFormCreationDto.getParentPersonnelId());
 

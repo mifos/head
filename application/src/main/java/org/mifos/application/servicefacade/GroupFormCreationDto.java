@@ -31,16 +31,18 @@ public class GroupFormCreationDto {
 
     private final CustomerBO parentCustomer;
     private final boolean centerHierarchyExists;
+    private final Short groupOfficeId;
     private final List<CustomFieldDto> customFieldDtos;
     private final List<PersonnelDto> personnelList;
     private final List<PersonnelDto> formedByPersonnel;
     private final CustomerApplicableFeesDto applicableFees;
 
     public GroupFormCreationDto(boolean centerHierarchyExists, CustomerBO parentCustomer,
-            List<CustomFieldDto> customFieldDtos, List<PersonnelDto> personnelList,
+            Short groupOfficeId, List<CustomFieldDto> customFieldDtos, List<PersonnelDto> personnelList,
             List<PersonnelDto> formedByPersonnel, CustomerApplicableFeesDto applicableFees) {
         this.centerHierarchyExists = centerHierarchyExists;
         this.parentCustomer = parentCustomer;
+        this.groupOfficeId = groupOfficeId;
         this.customFieldDtos = customFieldDtos;
         this.personnelList = personnelList;
         this.formedByPersonnel = formedByPersonnel;
@@ -76,7 +78,7 @@ public class GroupFormCreationDto {
     }
 
     public String getParentOfficeId() {
-        String parentOfficeId = "";
+        String parentOfficeId = groupOfficeId.toString();
         if (this.getParentCustomer() != null) {
             parentOfficeId = this.parentCustomer.getOffice().getOfficeId().toString();
         }

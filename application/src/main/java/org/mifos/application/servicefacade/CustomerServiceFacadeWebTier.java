@@ -160,6 +160,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation) {
 
         CustomerBO parentCustomer = null;
+        Short parentOfficeId = groupCreation.getOfficeId();
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.empty();
         List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
 
@@ -169,7 +170,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         if (isCenterHierarchyExists) {
             parentCustomer = this.customerDao.findCenterBySystemId(groupCreation.getParentSystemId());
 
-            Short parentOfficeId = parentCustomer.getOffice().getOfficeId();
+            parentOfficeId = parentCustomer.getOffice().getOfficeId();
 
             centerCreation = new CenterCreation(parentOfficeId, groupCreation.getUserId(), groupCreation
                     .getUserLevelId(), groupCreation.getPreferredLocale());
@@ -192,7 +193,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation
                 .getOfficeId());
 
-        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, customFieldDtos, personnelList,
+        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, parentOfficeId, customFieldDtos, personnelList,
                 formedByPersonnel, applicableFees);
     }
 
