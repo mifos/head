@@ -22,7 +22,6 @@ package org.mifos.framework.persistence;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +54,6 @@ public abstract class Persistence {
             hibernateUtil = new HibernateUtil();
         }
         return hibernateUtil;
-    }
-
-    public void setHibernateUtil(final HibernateUtil hibernateUtil) {
-        this.hibernateUtil = hibernateUtil;
-    }
-
-    public Connection getConnection() {
-        return getHibernateUtil().getSessionTL().connection();
     }
 
     public Object createOrUpdate(final Object object) throws PersistenceException {
