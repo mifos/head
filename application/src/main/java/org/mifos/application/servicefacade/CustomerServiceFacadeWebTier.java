@@ -40,7 +40,6 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -739,29 +738,46 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
 
         try {
-            List<PositionEntity> customerPositions = new MasterPersistence().retrieveMasterEntities(
-                    PositionEntity.class, localeId);
+            List<PositionEntity> customerPositions = new MasterPersistence().retrieveMasterEntities(PositionEntity.class, localeId);
 
             List<CustomerPositionDto> customerPositionDtos = new ArrayList<CustomerPositionDto>();
-            for (MasterDataEntity position : customerPositions) {
-                for (CustomerPositionEntity entity : customer.getCustomerPositions()) {
-                    if (position.getId().equals(entity.getPosition().getId())) {
+            generatePositionsFromExistingCustomerPositions(customer, customerPositions, customerPositionDtos);
 
-                        CustomerPositionDto customerPosition;
-                        if (entity.getCustomer() != null) {
-                            customerPosition = new CustomerPositionDto(entity.getCustomer().getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
-                        } else {
-                            customerPosition = new CustomerPositionDto(customer.getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
-                        }
-
-                        customerPositionDtos.add(customerPosition);
-                    }
-                }
+            if (customerPositionDtos.isEmpty()) {
+                generateNewListOfPositions(customer, customerPositions, customerPositionDtos);
             }
 
             return customerPositionDtos;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
+        }
+    }
+
+    private void generatePositionsFromExistingCustomerPositions(CustomerBO customer,
+            List<PositionEntity> customerPositions, List<CustomerPositionDto> customerPositionDtos) {
+        for (PositionEntity position : customerPositions) {
+            for (CustomerPositionEntity entity : customer.getCustomerPositions()) {
+                if (position.getId().equals(entity.getPosition().getId())) {
+
+                    CustomerPositionDto customerPosition;
+                    if (entity.getCustomer() != null) {
+                        customerPosition = new CustomerPositionDto(entity.getCustomer().getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
+                    } else {
+                        customerPosition = new CustomerPositionDto(customer.getCustomerId(), entity.getPosition().getId(), entity.getPosition().getName());
+                    }
+
+                    customerPositionDtos.add(customerPosition);
+                }
+            }
+        }
+    }
+
+    private void generateNewListOfPositions(CustomerBO customer, List<PositionEntity> customerPositions,
+            List<CustomerPositionDto> customerPositionDtos) {
+        for (PositionEntity position : customerPositions) {
+            CustomerPositionDto customerPosition = new CustomerPositionDto(customer.getCustomerId(), position
+                    .getId(), position.getName());
+            customerPositionDtos.add(customerPosition);
         }
     }
 

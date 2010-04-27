@@ -242,7 +242,7 @@ explanation of the license and how it is applied.
 														<mifos:select name="groupCustActionForm" property='customerPosition[${ctr}].customerId' size="1">
 															<html-el:options collection="clientcol" property="customerId" labelProperty="displayName" />
 														</mifos:select>
-														<html-el:hidden property='customerPosition[${ctr}].positionId' value="${pos.id}"></html-el:hidden>
+														<html-el:hidden property='customerPosition[${ctr}].positionId' value="${pos.positionId}"></html-el:hidden>
 													</td>
 												</tr>
 											</c:forEach>

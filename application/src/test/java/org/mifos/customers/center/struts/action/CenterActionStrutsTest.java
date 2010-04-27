@@ -47,7 +47,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.PositionEntity;
+import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.persistence.CenterPersistence;
@@ -522,8 +522,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<PositionEntity> positions = (List<PositionEntity>) SessionUtils.getAttribute(CustomerConstants.POSITIONS,
-                request);
+        List<CustomerPositionDto> positions = (List<CustomerPositionDto>) SessionUtils.getAttribute(CustomerConstants.POSITIONS, request);
 
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "editPreview");
@@ -541,8 +540,8 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
             i++;
         }
         i = 0;
-        for (PositionEntity position : positions) {
-            addRequestParameter("customerPosition[" + i + "].positionId", position.getId().toString());
+        for (CustomerPositionDto position : positions) {
+            addRequestParameter("customerPosition[" + i + "].positionId", position.getPositionId().toString());
             addRequestParameter("customerPosition[" + i + "].customerId", "");
             i++;
         }
