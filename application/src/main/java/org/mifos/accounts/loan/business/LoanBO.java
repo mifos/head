@@ -49,8 +49,8 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -908,7 +908,7 @@ public class LoanBO extends AccountBO {
      *            - Installment id till which we want over due amounts.
      *
      */
-    public OverDueAmounts getOverDueAmntsUptoInstallment(final Short installmentId) throws AccountException {
+    public OverDueAmounts getOverDueAmntsUptoInstallment(final Short installmentId) {
         Set<AccountActionDateEntity> accountActionDateEntities = getAccountActionDates();
         OverDueAmounts totalOverDueAmounts = new OverDueAmounts();
         if (null != accountActionDateEntities && accountActionDateEntities.size() > 0) {
@@ -1369,9 +1369,8 @@ public class LoanBO extends AccountBO {
             if (disbursementDate != null && !disbursementDate.equals(getDisbursementDate())
                     && isDisbursementDateLessThanCurrentDate(disbursementDate)) {
                 throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-            } else {
-                setDisbursementDate(disbursementDate);
             }
+            setDisbursementDate(disbursementDate);
 
             regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         }
@@ -1702,7 +1701,7 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    protected final void applyRounding() throws AccountException {
+    protected final void applyRounding() {
         applyRounding_v2();
     }
 
@@ -1893,15 +1892,6 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private Boolean isPrincipalZeroInAnyInstallmemt() {
-        for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-            if (((LoanScheduleEntity) accountActionDate).isPrincipalZero()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Returns the number of payment periods in the fiscal year for this loan.
      *
@@ -1955,8 +1945,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void generateRepaymentSchedule(final List<InstallmentDate> installmentDates,
-            final List<EMIInstallment> EMIInstallments, final List<FeeInstallment> feeInstallmentList)
-            throws AccountException {
+            final List<EMIInstallment> EMIInstallments, final List<FeeInstallment> feeInstallmentList) {
         int count = installmentDates.size();
         for (int i = 0; i < count; i++) {
             InstallmentDate installmentDate = installmentDates.get(i);
@@ -1966,13 +1955,13 @@ public class LoanBO extends AccountBO {
                     PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
             addAccountActionDate(loanScheduleEntity);
             for (FeeInstallment feeInstallment : feeInstallmentList) {
-                if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
+                if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())
                         && !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
                     LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
                             feeInstallment.getAccountFeesEntity().getFees(), feeInstallment.getAccountFeesEntity(),
                             feeInstallment.getAccountFee());
                     loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-                } else if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
+                } else if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())
                         && isInterestDeductedAtDisbursement()
                         && feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
                     LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
@@ -1985,7 +1974,7 @@ public class LoanBO extends AccountBO {
         buildRawAmountTotal();
     }
 
-    private void validateSize(final List installmentDates, final List EMIInstallments) throws AccountException {
+    private void validateSize(final List<InstallmentDate> installmentDates, final List<EMIInstallment> EMIInstallments) throws AccountException {
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                 "Validating installment size  " + installmentDates.size());
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -1993,35 +1982,6 @@ public class LoanBO extends AccountBO {
         if (installmentDates.size() != EMIInstallments.size()) {
             throw new AccountException(AccountConstants.DATES_MISMATCH);
         }
-    }
-
-    private List<EMIInstallment> interestDeductedFirstPrincipalLast(final Money loanInterest) throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-        if (getGraceType() == GraceType.GRACEONALLREPAYMENTS || getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-            throw new AccountException(AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
-        }
-        if (getGraceType() == GraceType.NONE) {
-            Money principalLastInstallment = getLoanAmount();
-            Money interestFirstInstallment = loanInterest;
-
-            EMIInstallment installment = null;
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(new Money(getCurrency()));
-            installment.setInterest(interestFirstInstallment);
-            emiInstallments.add(installment);
-            for (int i = 1; i < getNoOfInstallments() - 1; i++) {
-                installment = new EMIInstallment(getCurrency());
-                installment.setPrincipal(new Money(getCurrency()));
-                installment.setInterest(new Money(getCurrency()));
-                emiInstallments.add(installment);
-            }
-            installment = new EMIInstallment(getCurrency());
-            installment.setPrincipal(principalLastInstallment);
-            installment.setInterest(new Money(getCurrency()));
-            emiInstallments.add(installment);
-            return emiInstallments;
-        }
-        throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
     }
 
     public static Boolean isDisbursementDateValid(final CustomerBO specifiedCustomer, final Date disbursementDate)
@@ -2493,17 +2453,6 @@ public class LoanBO extends AccountBO {
         return unpaidInstallmentList;
     }
 
-    private List<AccountActionDateEntity> getListOfUnpaidFutureInstallments() {
-        List<AccountActionDateEntity> unpaidInstallmentList = new ArrayList<AccountActionDateEntity>();
-        for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
-            if (DateUtils.getCurrentDateWithoutTimeStamp().compareTo(
-                    DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime())) <= 0) {
-                unpaidInstallmentList.add(accountActionDateEntity);
-            }
-        }
-        return unpaidInstallmentList;
-    }
-
     private Money getEarlyClosureAmount() {
         Money amount = new Money(getCurrency());
         for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
@@ -2677,9 +2626,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void makeEarlyRepaymentForDueInstallments(final AccountPaymentEntity accountPaymentEntity,
-            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser)
-            throws AccountException {
-        MasterPersistence masterPersistence = new MasterPersistence();
+            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
         List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
         for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
             LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
@@ -2715,9 +2662,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void makeEarlyRepaymentForFutureInstallments(final AccountPaymentEntity accountPaymentEntity,
-            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser)
-            throws AccountException {
-        MasterPersistence masterPersistence = new MasterPersistence();
+            final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
         List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
         for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
             LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDateEntity;
@@ -2868,7 +2813,9 @@ public class LoanBO extends AccountBO {
              * (a) apply a complicated formula (b) compute the sum of interest paid across all installments.
              */
             populateAccountFeeAmount(getAccountFees(), loanInterest);
-            feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
+            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getLoanMeeting());
+            feeInstallment = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, getAccountFees(), installmentDates.size());
+//            feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
         }
 
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee installment obtained ");

@@ -125,4 +125,9 @@ public class FeeBuilder {
         this.feeFrequencyType = withFeeFrequency;
         return this;
     }
+
+    public FeeBuilder withFeePayment (FeePayment withFeePayment) {
+        this.feePayment = withFeePayment;
+        return this;
+    }
 }

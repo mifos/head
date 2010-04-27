@@ -41,6 +41,8 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -61,6 +63,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -126,12 +129,13 @@ public class LoanScheduleGenerationIntegrationTest {
         // NOTE: - only added to stop older integration tests failing due to brittleness
         databaseCleaner.clean();
         fiscalCalendarRules.setWorkingDays(weekDaysToPropertyString(savedWorkingDays));
+        new DateTimeService().resetToCurrentSystemDateTime();
     }
 
     @Test
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
 
-        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 9); //Meets on Fridays
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 9); //Meets on Fridays
 
         /*
          * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
@@ -145,6 +149,8 @@ public class LoanScheduleGenerationIntegrationTest {
     @Test
     public void testNewWeeklyGroupLoanOnePeriodicFeeNoHoliday() throws Exception {
 
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13)); //Wednesday before loan start date
+
         MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
         AmountFeeBO fee = new FeeBuilder().appliesToLoans()
                                           .with(feeMeetingBuilder)
@@ -154,7 +160,7 @@ public class LoanScheduleGenerationIntegrationTest {
                                           .build();
         IntegrationTestObjectMother.saveFee(fee);
 
-        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 9, fee); //Meets on Fridays
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 9, fee); //Meets on Fridays
         /*
          * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
          * All asserted dates are on Fridays
@@ -165,7 +171,32 @@ public class LoanScheduleGenerationIntegrationTest {
         validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
     }
 
-//    @Test TODO KRP reactivate after fixing fee schedule generation
+    @Test
+    public void testNewWeeklyGroupLoanWithUpfrontFeeNoHoliday() throws Exception {
+
+        new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13)); //Wednesday before loan start date
+
+        AmountFeeBO fee = new FeeBuilder().appliesToLoans()
+                                          .withFeeFrequency(FeeFrequencyType.ONETIME)
+                                          .withFeePayment(FeePayment.UPFRONT)
+                                          .withFeeAmount("14.0")
+                                          .withName("Onetime Loan Fee Due on Disbursement")
+                                          .withOffice(sampleBranchOffice())
+                                          .build();
+        IntegrationTestObjectMother.saveFee(fee);
+
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 9, fee); //Meets on Fridays
+        /*
+         * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
+         * All asserted dates are on Fridays
+         */
+        validateDates(loan, date(2010, 10, 22), date(2010, 10, 29), date(2010, 11, 5),
+                            date(2010, 11, 12), date(2010, 11, 19), date(2010, 11, 26),
+                            date(2010, 12, 3),  date(2010, 12, 10), date(2010, 12, 17));
+        validateOneOneTimeFee(loan, "Onetime Loan Fee Due on Disbursement", 1, 14.0);
+    }
+
+    @Test
     public void testNewWeeklyGroupLoanOnePeriodicFeeMoratorium() throws Exception {
 
         MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
@@ -180,7 +211,7 @@ public class LoanScheduleGenerationIntegrationTest {
         // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
         buildAndPersistMoratorium(date(2010, 10, 22), date(2010, 10, 28));
 
-        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 6, fee); //Meets on Fridays
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 6, fee); //Meets on Fridays
         /*
          * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
          * All asserted dates are on Fridays
@@ -196,7 +227,7 @@ public class LoanScheduleGenerationIntegrationTest {
         // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
         buildAndPersistMoratorium(date(2010, 10, 22), date(2010, 10, 28));
 
-        LoanBO loan = createWeeklyGroupLoanWithStartDateWithOccurrences(date(2010, 10, 15), 6);
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 6);
 
         /*
          * Validate. Since start date is a meeting date, disbursal is on that day and
@@ -580,7 +611,7 @@ public class LoanScheduleGenerationIntegrationTest {
      * Helper methods
      ****************************************/
 
-    private LoanBO createWeeklyGroupLoanWithStartDateWithOccurrences (DateTime startDate, int occurrences, FeeBO...fees)
+    private LoanBO createWeeklyGroupLoanWithDisbursementDateWithOccurrences (DateTime startDate, int occurrences, FeeBO...fees)
                 throws Exception {
         setupWeeklyScheduleStartingOn(startDate);
         return createStandardLoan(startDate, occurrences, group, fees);
@@ -691,6 +722,27 @@ public class LoanScheduleGenerationIntegrationTest {
                     is(expectedPeriodicFeeName));
             assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(),
                     is(expectedFees[scheduleEntity.getInstallmentId()-1]));
+            installmentId++;
+        }
+    }
+
+    private void validateOneOneTimeFee (LoanBO loan, String expectedPeriodicFeeName, int expectedInstallmentFeeIsAppliedTo,
+            double expectedFee) {
+
+        int installmentId = 1;
+        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(loan)) {
+            LoanScheduleEntity scheduleEntity= (LoanScheduleEntity) accountActionDate;
+            if (installmentId == expectedInstallmentFeeIsAppliedTo) {
+                assertThat("wrong number of fees for one-time installment " + installmentId, scheduleEntity.getAccountFeesActionDetails().size(), is(1));
+                assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(),
+                        is(expectedPeriodicFeeName));
+                assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(),
+                        is(expectedFee));
+
+            } else {
+            assertThat("wrong number of fees for installment " + installmentId, scheduleEntity.getAccountFeesActionDetails().size(), is(0));
+            }
+           installmentId++;
         }
     }
 

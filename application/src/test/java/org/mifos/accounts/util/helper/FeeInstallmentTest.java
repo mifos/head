@@ -59,13 +59,13 @@ public class FeeInstallmentTest {
                                                     .createMergedFeeInstallmentsForOneFee(accountEvent,
                                                                                           accountFeesEntity, 4);
         assertThat(feeInstallments.size(), is(2));
-        assertFeeInstallment(feeInstallments.get(0), 2, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(1), 4, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(1), 3, 10.0, feeBO);
 
     }
 
     @Test
-    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryOtherWeekFeeScheduledEveryWeekShouldGetDoubleFeeInstallmentPerEveryAccountEvent() {
+    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryOtherWeekFeeScheduledEveryWeekt() {
         ScheduledEvent masterEvent = new ScheduledEventBuilder().every(2).weeks().build();
         FeeBO feeBO = createWeeklyFeeBO(1);
         AccountFeesEntity accountFeesEntity = createAccountFeesEntity(feeBO, 10.0);
@@ -74,7 +74,7 @@ public class FeeInstallmentTest {
                                                     .createMergedFeeInstallmentsForOneFee(masterEvent,
                                                                                           accountFeesEntity, 4);
         assertThat(feeInstallments.size(), is(4));
-        assertFeeInstallment(feeInstallments.get(0), 1, 20.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO);
         assertFeeInstallment(feeInstallments.get(1), 2, 20.0, feeBO);
         assertFeeInstallment(feeInstallments.get(2), 3, 20.0, feeBO);
         assertFeeInstallment(feeInstallments.get(3), 4, 20.0, feeBO);
@@ -82,7 +82,7 @@ public class FeeInstallmentTest {
     }
 
     @Test
-    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEverySecondWeekFeeScheduledEveryThirdWeekShouldGetPatternZeroOneOneZeroOneOne() {
+    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEverySecondWeekFeeScheduledEveryThirdWeek() {
         ScheduledEvent masterEvent = new ScheduledEventBuilder().every(2).weeks().build();
         FeeBO feeBO = createWeeklyFeeBO(3);
         AccountFeesEntity accountFeesEntity = createAccountFeesEntity(feeBO, 10.0);
@@ -90,16 +90,17 @@ public class FeeInstallmentTest {
         List<FeeInstallment> feeInstallments = FeeInstallment
                                                     .createMergedFeeInstallmentsForOneFee(masterEvent,
                                                                                           accountFeesEntity, 7);
-        assertThat(feeInstallments.size(), is(4));
-        assertFeeInstallment(feeInstallments.get(0), 2, 10.0, feeBO);
+        assertThat(feeInstallments.size(), is(5));
+        assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO);
         assertFeeInstallment(feeInstallments.get(1), 3, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(2), 5, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(2), 4, 10.0, feeBO);
         assertFeeInstallment(feeInstallments.get(3), 6, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(4), 7, 10.0, feeBO);
 
     }
 
     @Test
-    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryThirddWeekFeeScheduledEverySecondWeekShouldGetPatternOneTwoOneTwo() {
+    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryThirdWeekFeeScheduledEverySecondWeek() {
         ScheduledEvent accountScheduledEvent = new ScheduledEventBuilder().every(3).weeks().build();
         FeeBO feeBO = createWeeklyFeeBO(2);
         AccountFeesEntity accountFeesEntity = createAccountFeesEntity(feeBO, 10.0);
@@ -110,14 +111,14 @@ public class FeeInstallmentTest {
 
         assertThat(feeInstallments.size(), is(4));
         assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(1), 2, 20.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(2), 3, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(3), 4, 20.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(1), 2, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(2), 3, 20.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(3), 4, 10.0, feeBO);
 
     }
 
     @Test
-    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryThirdMonthFeeScheduledEverySecondMonthShouldGetPatternOneTwoOneTwo()
+    public void createMergedFeeInstallmentsForOneFeeAccountScheduledEveryThirdMonthFeeScheduledEverySecondMonth()
                 throws Exception {
         ScheduledEvent accountScheduledEvent = new ScheduledEventBuilder().every(3).months().onDayOfMonth(3).build();
         FeeBO feeBO = createMonthlyOnDayFeeBO(2);
@@ -129,9 +130,9 @@ public class FeeInstallmentTest {
 
         assertThat(feeInstallments.size(), is(4));
         assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(1), 2, 20.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(2), 3, 10.0, feeBO);
-        assertFeeInstallment(feeInstallments.get(3), 4, 20.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(1), 2, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(2), 3, 20.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(3), 4, 10.0, feeBO);
 
     }
 
@@ -186,15 +187,15 @@ public class FeeInstallmentTest {
                                                             masterEvent,
                                                             accountFees, 6);
         assertThat(feeInstallments.size(), is(10));
-        assertFeeInstallment(feeInstallments.get(0), 1, 20.0, feeBO1);
+        assertFeeInstallment(feeInstallments.get(0), 1, 10.0, feeBO1);
         assertFeeInstallment(feeInstallments.get(1), 2, 20.0, feeBO1);
         assertFeeInstallment(feeInstallments.get(2), 3, 20.0, feeBO1);
         assertFeeInstallment(feeInstallments.get(3), 4, 20.0, feeBO1);
         assertFeeInstallment(feeInstallments.get(4), 5, 20.0, feeBO1);
         assertFeeInstallment(feeInstallments.get(5), 6, 20.0, feeBO1);
-        assertFeeInstallment(feeInstallments.get(6), 2, 13.0, feeBO2);
+        assertFeeInstallment(feeInstallments.get(6), 1, 13.0, feeBO2);
         assertFeeInstallment(feeInstallments.get(7), 3, 13.0, feeBO2);
-        assertFeeInstallment(feeInstallments.get(8), 5, 13.0, feeBO2);
+        assertFeeInstallment(feeInstallments.get(8), 4, 13.0, feeBO2);
         assertFeeInstallment(feeInstallments.get(9), 6, 13.0, feeBO2);
 
     }

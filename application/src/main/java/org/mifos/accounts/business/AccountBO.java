@@ -58,8 +58,8 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -566,6 +566,11 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * This method should be called only from a subclass.
+     * TODO KRP this method should throw a runtime exception.
+     * @return null
+     */
     protected MeetingBO getMeetingForAccount() {
         return null;
     }

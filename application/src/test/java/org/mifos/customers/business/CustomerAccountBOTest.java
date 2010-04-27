@@ -237,7 +237,7 @@ public class CustomerAccountBOTest {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
             assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
             assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
-            if ( installmentId % 2 == 0) { // even-numbered events have both fees applied
+            if ( installmentId % 2 != 0) { // odd-numbered events have both fees applied
                 assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(2));
                 assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(), is(weeklyFeeName));
                 assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(), is(10.0));
@@ -278,7 +278,7 @@ public class CustomerAccountBOTest {
             } else {
                 assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.plusWeeks(1).toDate())));
             }
-            if ( installmentId % 2 == 0) { // even-numbered events have both fees applied
+            if ( installmentId % 2 != 0) { // odd-numbered occurrences have both fees applied
                 assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(2));
                 assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(), is(weeklyFeeName));
                 assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(), is(10.0));

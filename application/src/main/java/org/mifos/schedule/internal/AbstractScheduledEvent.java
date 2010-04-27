@@ -5,73 +5,108 @@ import org.mifos.schedule.ScheduledEvent;
 public abstract class AbstractScheduledEvent implements ScheduledEvent {
 
     /**
-     * Count the number of installments of the dependent event that would roll up to the given installment of this event.
+     * Count the number of occurrences of the dependent event that would roll up to the given occurrence of this event.
      * It is assumed that the two events have like recurrences (e.g both meet on Tuesdays) but may differ in
-     * the number of periods skipped. It is also assumed that both schedules have the same starting date.
+     * the number of periods skipped. It is also assumed that the dependent schedule starts on startingOccurrence
+     * of this event.
      *
-     * <p> See {@liink FeeInstallment#createFeeInstallments()} in which this method is used to determine how
+     * <p> See {@liink FeeInstallment#createMergedFeeInstallments()} in which this method is used to determine how
      * many fee installments roll up to meeting or loan installments.</p>
      *
      * <p>For example, if this event's schedule is every Tuesday but the dependent schedule is every other Tuesday,
-     * then two dependent events roll up to every even-numbered installment, and none roll up to an odd-numbered
-     * schedule:
+     * and the dependent schedule starts on this event's third occurrence:
      *
      *<pre>
-     * -----------------------------------------------------
-     *|installment | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
-     * -----------------------------------------------------
-     *|returns     | 0 | 2 | 0 | 2 | 0 | 2 | 0 | 2 | 0 | 2  |
-     * -----------------------------------------------------
+     * ---------------------------------------------
+     *|installment | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+     * --------------------------------------------
+     *|returns     | 1 | 0 | 1 | 0 | 1 | 0 | 1 |  0 |
+     * ---------------------------------------------
      *</pre>
      *
-     *<p>A more complex example: This event is scheduled for every other week and the dependent event is scheduled
-     *for every third week:
+     *<p>A more complex example: This event is scheduled for every third week and the dependent event is scheduled
+     *for every other week. Assume the dependent schedule starts with this event's 5th occurrence (table has
+     *one column for each week)
      *
      *<pre>
-     * ----------------------------------------------------------------------------------
-     * | week                |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | 10 | 11 | 12 |
-     * | this installments   |    |  1 |    |  2 |    |  3 |    |  4 |    |  5 |    |  6 |
-     * | dependent install.  |    |    |  1 |    |    |  2 |    |    |  3 |    |    |  4 |
-     * | returns             |    |  0 |    |  1 |    |  1 |    |  0 |    |  1 |    |  1 |
-     * ----------------------------------------------------------------------------------
+     * -------------------------------------------------------------------------------------------
+     * | this occurrences        |  5 |    |    |  6 |    |    |  7 |    |    |  8 |    |    |  9 |
+     * | dependent occurrences.  |  X |    |  X |    |  X |    |  X |    |  X |    |    |  X |    |
+     * | returns                 |  1 |    |    |  1 |    |    |  2 |    |    |  1 |    |    |  2 |
+     * -------------------------------------------------------------------------------------------
      *</pre>
      *
      *<p>Switching around: This event is scheduled for every third week and the dependent event is scheduled
      *for every second week:
      *
-     *<pre>
-     * ----------------------------------------------------------------------------------
-     * | week                |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 | 10 | 11 | 12 |
-     * | this installments   |    |    |  1 |    |    |  2 |    |    |  3 |    |    |  4 |
-     * | dependent install   |    |  1 |    |  2 |    |  3 |    |  4 |    |  5 |    |  6 |
-     * | returns             |    |    |  1 |    |    |  2 |    |    |  1 |    |    |  2 |
-     * ----------------------------------------------------------------------------------
-     *</pre>
      *
      * @param dependentEvent the ScheduledEvent whose dates roll up to dates of this event
-     * @param installment the index of the date of this event that dependent events roll up to
+     * @param occurrence the index of the date of this event that dependent events roll up to
+     * @param startingOccurrence the dependent event's occurrences start with this occurrence of this event
      * @return the number of installments of the dependent event falling between the given installment of this event
      *  and the previous installment, not including the previous but including the given installment.
-     * @throws IllegalArgumentException if installment is not positive
+     * @throws IllegalArgumentException if occurrence or startingOccurrence is not positive
      * @throws IllegalArgumentException if the two events' recurrences do not match
      */
-    public int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int installment) {
-        if (installment <=0) {
-            throw new IllegalArgumentException("Installment number must be positive.");
-        }
-        //TODO KRP: add check that events have similar recurrences (e.g. both weekly)
+    public int numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith
+                    (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence) {
 
-        int numberOfPeriodsForThisInstallment = installment * this.getEvery();
-        int numberOfPeriodsForPreviousInstallment = numberOfPeriodsForThisInstallment - this.getEvery();
-        int closestDependentInstallmentUpToThisInstallment = numberOfPeriodsForThisInstallment / dependentEvent.getEvery();
-        int numberOfPeriodsForDependentEvent = closestDependentInstallmentUpToThisInstallment * dependentEvent.getEvery();
-        int countRollups = 0;
-        while ((numberOfPeriodsForPreviousInstallment < numberOfPeriodsForDependentEvent)
-                && (numberOfPeriodsForDependentEvent <= numberOfPeriodsForThisInstallment)) {
-            countRollups++;
-            numberOfPeriodsForDependentEvent = numberOfPeriodsForDependentEvent - dependentEvent.getEvery();
+        if ((occurrence <=0) || (startingOccurrence <= 0)) {
+            throw new IllegalArgumentException("Occurrences must not be negative.");
         }
-        return countRollups;
+
+        if (occurrence < startingOccurrence) {
+            throw new IllegalArgumentException("Occurrence must be on or after starting occurrence.");
+        }
+       //TODO KRP: add check that events have similar recurrences (e.g. both weekly)
+
+        if (occurrence == startingOccurrence) {
+            return 1;
+        }
+        return numberOfEventsOnOrBefore (dependentEvent, occurrence, startingOccurrence)
+        - numberOfEventsOnOrBefore (dependentEvent, occurrence - 1, startingOccurrence);
+    }
+
+    /**
+     * Assume that this event's occurrences are numbered consecutively.
+     * Assume that this event and the dependent event have the same recurrence period (e.g., both are weekly events).
+     * Also assume this and the dependent event's first occurrence coincide.
+     * Then return the number of dependent event's occurrence that occur before or on
+     * this event's occurrence but after this event's previous occurrence.
+     */
+
+    public int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int occurrence) {
+        return numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith(dependentEvent, occurrence, 1);
+    }
+
+    /**
+     * Same as above, but assume that an occurrence of the dependent event coincides with this event's startingEventNumber.
+     */
+//    private int numberOfDependentOccurrencesRollingUpToThisOccurrenceWithStartingOccurrence
+//                    (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence) {
+//
+//        if ((occurrence <=0) || (startingOccurrence <= 0)) {
+//            throw new IllegalArgumentException("Installment number must be positive.");
+//        }
+//        //TODO KRP: add check that events have similar recurrences (e.g. both weekly)
+//
+//        if (occurrence == startingOccurrence) {
+//            return 1;
+//        }
+//        return numberOfEventsOnOrBefore (dependentEvent, occurrence, startingOccurrence)
+//            - numberOfEventsOnOrBefore (dependentEvent, occurrence - 1, startingOccurrence);
+//    }
+
+    /**
+     * Assume that this event's occurrences are numbered consecutively.
+     * Assume that this event and the dependent event have the same recurrence period (e.g., both are weekly events).
+     * Also assume that an occurrence of the dependent event coincides with this event's startingOccurrence.
+     * Then return the number of dependent event's occurrence that occur before or on
+     * this event's occurrence, starting with startingOdduccence.
+     */
+    private int numberOfEventsOnOrBefore (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence) {
+
+        return ((occurrence - startingOccurrence) * this.getEvery()) / dependentEvent.getEvery() + 1;
     }
 
 }

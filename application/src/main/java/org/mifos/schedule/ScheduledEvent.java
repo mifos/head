@@ -31,4 +31,8 @@ public interface ScheduledEvent {
     int getEvery();
 
     int numberOfEventsRollingUpToThis(ScheduledEvent dependentEvent, int installment);
+
+    int numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith
+                    (ScheduledEvent dependentEvent, int occurrence, int startingOccurrence);
+
 }

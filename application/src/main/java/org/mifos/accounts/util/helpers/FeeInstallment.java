@@ -21,6 +21,7 @@
 package org.mifos.accounts.util.helpers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +73,7 @@ public class FeeInstallment {
     }
 
     public static List<FeeInstallment> createMergedFeeInstallments(ScheduledEvent masterEvent,
-            List<AccountFeesEntity> accountFees, int numberOfInstallments) {
+            Collection<AccountFeesEntity> accountFees, int numberOfInstallments) {
 
         List<FeeInstallment> mergedFeeInstallments = new ArrayList<FeeInstallment>();
         for (AccountFeesEntity accountFeesEntity : accountFees) {
