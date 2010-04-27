@@ -23,10 +23,10 @@ package org.mifos.config;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -123,24 +123,40 @@ public class ProcessFlowRules {
         throw new ConfigurationException("unexpected override specified [" + fromDb + "], [" + fromCfg + "]");
     }
 
-    private static void initClientPendingApprovalState() throws PersistenceException, ConfigurationException {
-        CustomerPersistence cp = new CustomerPersistence();
-        CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
-                CustomerStatus.CLIENT_PENDING.getValue());
+    private static void initClientPendingApprovalState() throws ConfigurationException {
 
-        boolean fromDb = cse.getIsOptional();
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerStatusEntity cse = customerDao.findClientPendingStatus();
+
+        boolean fromDb = isClientPendingApprovalStateEnabledOnDatabaseConfiguration(cse);
         boolean fromCfg = isClientPendingApprovalStateEnabled();
-        String errMsg = getBadOverrideMsg(CLIENT_PENDING_APPROVAL,
-                "Records for clients in the 'pending approval' state" + " may already exist.");
 
-        if (!isValidOverride(fromDb, fromCfg)) {
-            throw new ConfigurationException(errMsg);
-        }
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = customerDao.countOfClients();
+            if (count > 0) {
+                final String errMsg = getBadOverrideMsg(CLIENT_PENDING_APPROVAL,
+                        "Records for clients in the 'pending approval' state" + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
 
-        if (needsOverride(fromDb, fromCfg)) {
-            cse.setIsOptional(fromCfg);
-            cp.createOrUpdate(cse);
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(customerDao, cse, fromCfg);
         }
+    }
+
+    private static boolean isClientPendingApprovalStateEnabledOnDatabaseConfiguration(CustomerStatusEntity cse) {
+        return cse.getIsOptional();
+    }
+
+    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(CustomerDao customerDao,
+            CustomerStatusEntity cse, boolean fromCfg) {
+        cse.setIsOptional(fromCfg);
+        StaticHibernateUtil.startTransaction();
+        customerDao.save(cse);
+        StaticHibernateUtil.commitTransaction();
+    }
+
+    private static boolean databaseAndCustomConfigurationAreNotTheSame(boolean fromDb, boolean fromCfg) {
+        return !Boolean.valueOf(fromDb).equals(Boolean.valueOf(fromCfg));
     }
 
     public static boolean isClientPendingApprovalStateEnabled() {
@@ -148,24 +164,28 @@ public class ProcessFlowRules {
         return cm.getBoolean(CLIENT_PENDING_APPROVAL);
     }
 
-    private static void initGroupPendingApprovalState() throws PersistenceException, ConfigurationException {
-        CustomerPersistence cp = new CustomerPersistence();
-        CustomerStatusEntity cse = (CustomerStatusEntity) cp.loadPersistentObject(CustomerStatusEntity.class,
-                CustomerStatus.GROUP_PENDING.getValue());
+    private static void initGroupPendingApprovalState() throws ConfigurationException {
 
-        boolean fromDb = cse.getIsOptional();
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerStatusEntity cse = customerDao.findGroupPendingStatus();
+
+        boolean fromDb = isGroupPendingApprovalStateEnabledOnDatabaseConfiguration(cse);
         boolean fromCfg = isGroupPendingApprovalStateEnabled();
-        String errMsg = getBadOverrideMsg(GROUP_PENDING_APPROVAL, "Records for groups in the 'pending approval' state"
-                + " may already exist.");
 
-        if (!isValidOverride(fromDb, fromCfg)) {
-            throw new ConfigurationException(errMsg);
-        }
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = customerDao.countOfGroups();
+            if (count > 0) {
+                final String errMsg = getBadOverrideMsg(GROUP_PENDING_APPROVAL, "Records for groups in the 'pending approval' state"
+                        + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
 
-        if (needsOverride(fromDb, fromCfg)) {
-            cse.setIsOptional(fromCfg);
-            cp.createOrUpdate(cse);
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(customerDao, cse, fromCfg);
         }
+    }
+
+    private static boolean isGroupPendingApprovalStateEnabledOnDatabaseConfiguration(CustomerStatusEntity cse) {
+        return cse.getIsOptional();
     }
 
     public static boolean isGroupPendingApprovalStateEnabled() {

@@ -26,10 +26,13 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,6 +44,14 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @Before
+    public void cleanDatabaseTables() {
+        databaseCleaner.clean();
+    }
 
     @Test
     public void shouldRetrieveSalutations() {
@@ -129,5 +140,40 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
 
         assertThat(livingStatus, is(notNullValue()));
         assertThat(livingStatus.size(), is(2));
+    }
+
+    @Test
+    public void clientPendingStatusShouldBeOptionalByDefault() {
+
+        CustomerStatusEntity customerStatus = customerDao.findClientPendingStatus();
+
+        assertThat(customerStatus.getId(), is(CustomerStatus.CLIENT_PENDING.getValue()));
+        assertThat(customerStatus.getIsOptional(), is(true));
+    }
+
+    @Test
+    public void groupPendingStatusShouldBeOptionalByDefault() {
+
+        CustomerStatusEntity customerStatus = customerDao.findGroupPendingStatus();
+
+        assertThat(customerStatus.getId(), is(CustomerStatus.GROUP_PENDING.getValue()));
+        assertThat(customerStatus.getIsOptional(), is(true));
+    }
+
+
+    @Test
+    public void countOfClientsIsZero() {
+
+        int count = customerDao.countOfClients();
+
+        assertThat(count, is(0));
+    }
+
+    @Test
+    public void countOfGroupsIsZero() {
+
+        int count = customerDao.countOfGroups();
+
+        assertThat(count, is(0));
     }
 }

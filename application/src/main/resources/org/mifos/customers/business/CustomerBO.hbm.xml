@@ -655,6 +655,14 @@
 	<query name="Customer.getCenterCount">
 	    <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
 	</query>
+	
+    <query name="countOfClients">
+	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client]]>
+	</query>
+	
+	<query name="countOfGroups">
+	    <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as group]]>
+	</query>
 
 	<query name="Customer.getGroupCountByGroupNameAndOffice">
 	     <![CDATA[select count(*) from org.mifos.customers.group.business.GroupBO as gp where gp.displayName=:DISPLAY_NAME and gp.office.officeId=:OFFICE_ID]]>

@@ -53,10 +53,11 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -266,6 +267,11 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public void save(CustomerAccountBO customerAccount) {
         this.genericDao.createOrUpdate(customerAccount);
+    }
+
+    @Override
+    public void save(CustomerStatusEntity customerStatusEntity) {
+        this.genericDao.createOrUpdate(customerStatusEntity);
     }
 
     @SuppressWarnings("unchecked")
@@ -1247,5 +1253,46 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
 
         return customerPerformanceHistoryDto;
+    }
+
+    @Override
+    public CustomerStatusEntity findClientPendingStatus() {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("STATUS_ID", CustomerStatus.CLIENT_PENDING.getValue());
+
+        return findCustomerStatusByStatusId(queryParameters);
+    }
+
+    @Override
+    public CustomerStatusEntity findGroupPendingStatus() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("STATUS_ID", CustomerStatus.GROUP_PENDING.getValue());
+
+        return findCustomerStatusByStatusId(queryParameters);
+    }
+
+    private CustomerStatusEntity findCustomerStatusByStatusId(Map<String, Object> queryParameters) {
+        return (CustomerStatusEntity) genericDao.executeUniqueResultNamedQuery("findCustomerStatusByStatusId", queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int countOfClients() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List queryResult = this.genericDao.executeNamedQuery("countOfClients", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public int countOfGroups() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+
+        List queryResult = this.genericDao.executeNamedQuery("countOfGroups", queryParameters);
+
+        return ((Long) queryResult.get(0)).intValue();
     }
 }

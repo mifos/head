@@ -32,10 +32,11 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -68,6 +69,8 @@ public interface CustomerDao {
     void save(CustomerBO customer);
 
     void save(CustomerAccountBO customerAccount);
+
+    void save(CustomerStatusEntity cse);
 
     CustomerBO findCustomerById(Integer customerId);
 
@@ -179,4 +182,12 @@ public interface CustomerDao {
     List<LoanDetailDto> getLoanDetailDto(List<LoanBO> openLoanAccounts);
 
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
+
+    CustomerStatusEntity findClientPendingStatus();
+
+    CustomerStatusEntity findGroupPendingStatus();
+
+    int countOfClients();
+
+    int countOfGroups();
 }
