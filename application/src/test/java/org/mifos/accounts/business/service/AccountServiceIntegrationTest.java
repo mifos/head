@@ -60,7 +60,6 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
@@ -76,7 +75,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -326,12 +324,6 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_PARTIAL_APPLICATION), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
        Assert.assertEquals(2, statusListForLoan.size());
         StaticHibernateUtil.closeSession();
-    }
-
-    public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = service.retrieveCustomFieldsDefinition(EntityType.LOAN);
-        Assert.assertNotNull(customFields);
-       Assert.assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {

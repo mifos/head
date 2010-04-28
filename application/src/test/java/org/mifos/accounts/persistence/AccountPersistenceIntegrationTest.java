@@ -59,11 +59,12 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
+
+    public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
 
     public AccountPersistenceIntegrationTest() throws Exception {
         super();
@@ -265,7 +266,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<CustomFieldDefinitionEntity> customFields = accountPersistence
                 .retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
         Assert.assertNotNull(customFields);
-        Assert.assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
+        Assert.assertEquals(LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {

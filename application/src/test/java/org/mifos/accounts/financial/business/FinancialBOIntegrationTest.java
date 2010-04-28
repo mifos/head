@@ -29,9 +29,10 @@ import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.util.helpers.TestConstants;
 
 public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
+
+    private final int FINANCIAL_PRINCIPALPOSTING_SIZE = 10;
 
     public FinancialBOIntegrationTest() throws Exception {
         super();
@@ -59,7 +60,7 @@ public class FinancialBOIntegrationTest extends MifosIntegrationTestCase {
 
         Set<COABO> applicableCreditCategory = finActionPrincipal.getApplicableCreditCharts();
 
-       Assert.assertEquals(TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE, applicableCreditCategory.size());
+       Assert.assertEquals(FINANCIAL_PRINCIPALPOSTING_SIZE, applicableCreditCategory.size());
     }
 
     public void testRoundingCredit() throws FinancialException {

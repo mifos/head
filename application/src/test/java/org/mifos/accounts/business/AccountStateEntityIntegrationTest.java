@@ -29,9 +29,10 @@ import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestConstants;
 
 public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase {
+
+    private String APPROVED = "Application Approved";
 
     public AccountStateEntityIntegrationTest() throws Exception {
         super();
@@ -81,13 +82,13 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
     public void testGetNameWithLocaleSuccess() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();
-       Assert.assertEquals(TestConstants.APPROVED, name);
+       Assert.assertEquals(APPROVED, name);
     }
 
     public void testGetNameWithLocaleFailure() {
         accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
         String name = accountStateEntity.getName();
-        Assert.assertFalse("This should fail, name is Approved", !(TestConstants.APPROVED.equals(name)));
+        Assert.assertFalse("This should fail, name is Approved", !(APPROVED.equals(name)));
     }
 
     private AccountStateEntity getAccountStateEntityObject(Short id) {

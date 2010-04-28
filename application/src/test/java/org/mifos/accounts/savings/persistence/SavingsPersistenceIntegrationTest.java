@@ -60,11 +60,13 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
+
+    private final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
+
 
     public SavingsPersistenceIntegrationTest() throws Exception {
         super();
@@ -148,7 +150,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         List<CustomFieldDefinitionEntity> customFields = savingsPersistence
                 .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
         Assert.assertNotNull(customFields);
-        Assert.assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
+        Assert.assertEquals(SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testFindById() throws Exception {

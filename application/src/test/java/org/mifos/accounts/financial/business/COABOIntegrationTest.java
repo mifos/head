@@ -30,9 +30,11 @@ import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestConstants;
 
 public class COABOIntegrationTest extends MifosIntegrationTestCase {
+
+    private final int FINANCIAL_DIRECTINCOME_SIZE = 10;
+
     public COABOIntegrationTest() throws Exception {
         super();
     }
@@ -48,7 +50,7 @@ public class COABOIntegrationTest extends MifosIntegrationTestCase {
         String directIncomeGlCode = "31000";
         COABO coaDirectIncome = ChartOfAccountsCache.get(directIncomeGlCode);
         Set<COABO> currentSubCategory = coaDirectIncome.getCurrentSubCategory();
-       Assert.assertEquals(TestConstants.FINANCIAL_DIRECTINCOME_SIZE, currentSubCategory.size());
+       Assert.assertEquals(FINANCIAL_DIRECTINCOME_SIZE, currentSubCategory.size());
 
         GLCodeEntity g = (GLCodeEntity) StaticHibernateUtil.getSessionTL().load(GLCodeEntity.class, new Short("1"));
         System.out.println(g.getGlcode());

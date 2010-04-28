@@ -35,7 +35,6 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -44,7 +43,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -116,12 +114,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         } finally {
             StaticHibernateUtil.closeSession();
         }
-    }
-
-    public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = service.retrieveCustomFieldsDefinition();
-        Assert.assertNotNull(customFields);
-        Assert.assertEquals(TestConstants.SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
