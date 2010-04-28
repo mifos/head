@@ -231,6 +231,21 @@ public class IntegrationTestObjectMother {
         }
     }
 
+    public static void saveSavingsProducts(final SavingsOfferingBO... savingsProducts) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            for (SavingsOfferingBO savingsProduct : savingsProducts) {
+                customerPersistence.createOrUpdate(savingsProduct);
+            }
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
     public static void createCenter(CenterBO center, MeetingBO meeting) {
         UserContext userContext = TestUtils.makeUser();
         center.setUserContext(userContext);
@@ -299,6 +314,17 @@ public class IntegrationTestObjectMother {
 
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+
+        customerService.createClient(client, meeting, accountFees, selectedOfferings);
+    }
+
+    public static void createClient(ClientBO client, MeetingBO meeting, SavingsOfferingBO savingsProduct) throws CustomerException {
+        UserContext userContext = TestUtils.makeUser();
+        client.setUserContext(userContext);
+
+        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
+        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
+        selectedOfferings.add(savingsProduct);
 
         customerService.createClient(client, meeting, accountFees, selectedOfferings);
     }

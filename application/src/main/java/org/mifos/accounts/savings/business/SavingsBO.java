@@ -50,6 +50,7 @@ import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionExceptio
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -63,6 +64,8 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -205,8 +208,9 @@ public class SavingsBO extends AccountBO {
         setSavingsPerformance(createSavingsPerformance());
         try {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            List<Holiday> holidays = new ArrayList<Holiday>();
-            setValuesForActiveState(workingDays, holidays);
+            HolidayDao holidayDao = new HolidayDaoHibernate(new GenericDaoHibernate());
+            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+            setValuesForActiveState(workingDays, thisAndNextYearsHolidays);
         } catch (AccountException e) {
             throw new IllegalStateException("Unable to create savings schedules", e);
         }
@@ -229,8 +233,9 @@ public class SavingsBO extends AccountBO {
         // saved in approved state
         if (isActive()) {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            List<Holiday> holidays = new ArrayList<Holiday>();
-            setValuesForActiveState(workingDays, holidays);
+            HolidayDao holidayDao = new HolidayDaoHibernate(new GenericDaoHibernate());
+            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+            setValuesForActiveState(workingDays, thisAndNextYearsHolidays);
         }
     }
 
