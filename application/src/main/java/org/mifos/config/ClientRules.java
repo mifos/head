@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigConstants;
@@ -180,16 +181,26 @@ public class ClientRules {
             if (dbValue == Constants.NO && cfgValue == true) {
                 getConfigPersistence().updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.YES);
             } else if (dbValue == Constants.YES && cfgValue == false) {
-                // Trying to override db value of "true/yes" with "false/no"
-                // in the config file violates business rules.
-                throw new ConfigurationException(getBadOverrideMsg(GroupCanApplyLoansKey,
-                        "Group loans may already exist."));
+
+                if (new LoanPersistence().countOfGroupLoanAccounts() > 0) {
+
+                    // Trying to override db value of "true/yes" with "false/no"
+                    // in the config file violates business rules.
+                    throw new ConfigurationException(getBadOverrideMsg(GroupCanApplyLoansKey,
+                            "Group loans may already exist."));
+                }
+
+                makeDatabaseConfigMatchFilebasedConfig();
             }
         } catch (PersistenceException ex) {
             throw new ConfigurationException(ex);
         }
 
         return cfgValue;
+    }
+
+    private static void makeDatabaseConfigMatchFilebasedConfig() throws PersistenceException {
+        getConfigPersistence().updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.NO);
     }
 
     private static boolean getClientCanExistOutsideGroupFromConfig() throws ConfigurationException {

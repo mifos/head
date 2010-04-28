@@ -21,6 +21,7 @@
 package org.mifos.config;
 
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -198,7 +199,7 @@ public class ProcessFlowRules {
         AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
                 AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
 
-        boolean fromDb = ase.getIsOptional();
+        boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isLoanDisbursedToLoanOfficerStateEnabled();
         String errMsg = getBadOverrideMsg(LOAN_DISBURSED_TO_LOAN_OFFICER,
                 "Records for loans in the 'disbursed to loan officer' state" + " may already exist.");
@@ -218,24 +219,46 @@ public class ProcessFlowRules {
         return cm.getBoolean(LOAN_DISBURSED_TO_LOAN_OFFICER);
     }
 
-    private static void initLoanPendingApprovalState() throws PersistenceException, ConfigurationException {
+    private static void initLoanPendingApprovalState() throws ConfigurationException {
+
         AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                AccountState.LOAN_PENDING_APPROVAL.getValue());
+        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
 
-        boolean fromDb = ase.getIsOptional();
+        boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isLoanPendingApprovalStateEnabled();
-        String errMsg = getBadOverrideMsg(LOAN_PENDING_APPROVAL, "Records for loans in the 'pending approval' state"
-                + " may already exist.");
 
-        if (!isValidOverride(fromDb, fromCfg)) {
-            throw new ConfigurationException(errMsg);
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = new LoanPersistence().countOfLoanAccounts();
+            if (count > 0) {
+                String errMsg = getBadOverrideMsg(LOAN_PENDING_APPROVAL, "Records for loans in the 'pending approval' state"
+                        + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
+
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
+        }
+    }
+
+    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(AccountPersistence persistence,
+            AccountStateEntity entity, boolean fromCfg) {
+        entity.setIsOptional(fromCfg);
+        try {
+            persistence.createOrUpdate(entity);
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
 
-        if (needsOverride(fromDb, fromCfg)) {
-            ase.setIsOptional(fromCfg);
-            ap.createOrUpdate(ase);
-        }
+    }
+
+    private static boolean isSavingPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
+        return ase.getIsOptional();
+    }
+
+    private static boolean isLoanPendingApprovalStateEnabledOnDatabaseConfig(AccountStateEntity ase) {
+        return ase.getIsOptional();
     }
 
     public static boolean isLoanPendingApprovalStateEnabled() {
@@ -243,23 +266,23 @@ public class ProcessFlowRules {
         return cm.getBoolean(LOAN_PENDING_APPROVAL);
     }
 
-    private static void initSavingsPendingApprovalState() throws PersistenceException, ConfigurationException {
+    private static void initSavingsPendingApprovalState() throws ConfigurationException {
+
         AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class,
-                AccountState.SAVINGS_PENDING_APPROVAL.getValue());
+        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
 
-        boolean fromDb = ase.getIsOptional();
+        boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isSavingsPendingApprovalStateEnabled();
-        String errMsg = getBadOverrideMsg(SAVINGS_PENDING_APPROVAL,
-                "Records for savings accounts in the 'pending approval' state" + " may already exist.");
 
-        if (!isValidOverride(fromDb, fromCfg)) {
-            throw new ConfigurationException(errMsg);
-        }
+        if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
+            int count = new LoanPersistence().countOfSavingsAccounts();
+            if (count > 0) {
+                String errMsg = getBadOverrideMsg(SAVINGS_PENDING_APPROVAL,
+                        "Records for savings accounts in the 'pending approval' state" + " may already exist.");
+                throw new ConfigurationException(errMsg);
+            }
 
-        if (needsOverride(fromDb, fromCfg)) {
-            ase.setIsOptional(fromCfg);
-            ap.createOrUpdate(ase);
+            makeDatabaseConfigurationMatchPropertiesFileConfiguration(ap, ase, fromCfg);
         }
     }
 

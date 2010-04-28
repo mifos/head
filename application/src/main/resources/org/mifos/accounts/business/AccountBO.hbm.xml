@@ -351,6 +351,10 @@
 			and account.customer.customerId=:customer
 			group by account.accountId]]>
 	</query>
+    <query name="findAllLoanAccountsForGroups">
+		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
+			where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
+	</query>
 	<!--    -->
 	<query name="accounts.GetLoanArrears">
 		<![CDATA[select account.accountId from org.mifos.accounts.loan.business.LoanBO account
@@ -403,6 +407,14 @@
 			]]>
 	</sql-query>
 
+	<query name="countOfLoanAccounts">
+		<![CDATA[select count(*) from org.mifos.accounts.loan.business.LoanBO loans]]>
+	</query>
+	
+    <query name="countOfSavingsAccounts">
+		<![CDATA[select count(*) from org.mifos.accounts.savings.business.SavingsBO savings]]>
+	</query>
+	
 	<query name="accounts.countOfMissedDeposits">
 		<![CDATA[select count(*) from 
 			org.mifos.accounts.savings.business.SavingsScheduleEntity  actionDate

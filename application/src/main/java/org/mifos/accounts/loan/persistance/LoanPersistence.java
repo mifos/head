@@ -50,6 +50,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -323,6 +324,60 @@ public class LoanPersistence extends Persistence {
         List<LoanBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS, queryParameters);
         return queryResult;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public int countOfLoanAccounts() {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        try {
+            List queryResult = executeNamedQuery("countOfLoanAccounts", queryParameters);
+
+            int count = 0;
+
+            if (null != queryResult && queryResult.size() > 0) {
+                Object obj = queryResult.get(0);
+                if (obj != null) {
+                    count = ((Number) obj).intValue();
+                }
+            }
+            return count;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public int countOfSavingsAccounts() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        try {
+            List queryResult = executeNamedQuery("countOfSavingsAccounts", queryParameters);
+
+            int count = 0;
+
+            if (null != queryResult && queryResult.size() > 0) {
+                Object obj = queryResult.get(0);
+                if (obj != null) {
+                    count = ((Number) obj).intValue();
+                }
+            }
+            return count;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public int countOfGroupLoanAccounts() {
+        try {
+            HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("CUSTOMER_LEVEL_ID", CustomerLevel.GROUP.getValue());
+
+            List<LoanBO> queryResult = executeNamedQuery("findAllLoanAccountsForGroups", queryParameters);
+            return queryResult.size();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     private StringBuilder loanQueryString(final Short branchId, final Short loanOfficerId, final Short loanProductId,
