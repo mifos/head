@@ -44,7 +44,7 @@ public class MifosSchedulerTest extends TestCase {
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml");
         mifosScheduler.registerTasks();
         List<String> taskNames = mifosScheduler.getTaskNames();
-       Assert.assertEquals(13, taskNames.size());
+       Assert.assertEquals(12, taskNames.size());
        Assert.assertTrue(taskNames.contains("ProductStatus"));
         //Assert.assertTrue(taskNames.contains("CollectionSheetTask"));
        Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
@@ -57,7 +57,8 @@ public class MifosSchedulerTest extends TestCase {
        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));
        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
-       Assert.assertTrue(taskNames.contains("CollectionSheetReportParameterCachingTask"));
+        // no longer required issue 2881
+        // Assert.assertTrue(taskNames.contains("CollectionSheetReportParameterCachingTask"));
        Assert.assertTrue(taskNames.contains("BranchReportTask"));
         // Temporarily commented out as requested by issue 1881
         //Assert.assertTrue(taskNames.contains("BranchCashConfirmationTask"));
