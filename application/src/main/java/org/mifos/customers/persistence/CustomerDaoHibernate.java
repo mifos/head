@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -1294,5 +1295,25 @@ public class CustomerDaoHibernate implements CustomerDao {
         List queryResult = this.genericDao.executeNamedQuery("countOfGroups", queryParameters);
 
         return ((Long) queryResult.get(0)).intValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<AccountBO> findGLIMLoanAccountsApplicableTo(final Integer customerId, final Integer customerWithActiveAccount) {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CUSTOMER_ID", customerId);
+
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery("findGLIMLoanAccountsByCustomerId", queryParameters);
+
+        List<AccountBO> matchingAccounts = new ArrayList<AccountBO>();
+        for (LoanBO loanAccount : queryResult) {
+            LoanBO parentAccount = loanAccount.getParentAccount();
+            if (parentAccount.getCustomer().getCustomerId().equals(customerWithActiveAccount)) {
+                matchingAccounts.add(loanAccount);
+            }
+        }
+
+        return matchingAccounts;
     }
 }

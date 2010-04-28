@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -156,6 +157,14 @@ public interface CustomerDao {
 
     List<CustomerDetailDto> findGroupsUnderUser(PersonnelBO personnel);
 
+    CustomerStatusEntity findClientPendingStatus();
+
+    CustomerStatusEntity findGroupPendingStatus();
+
+    int countOfClients();
+
+    int countOfGroups();
+
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
@@ -183,11 +192,5 @@ public interface CustomerDao {
 
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 
-    CustomerStatusEntity findClientPendingStatus();
-
-    CustomerStatusEntity findGroupPendingStatus();
-
-    int countOfClients();
-
-    int countOfGroups();
+    List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
 }

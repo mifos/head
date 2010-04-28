@@ -622,4 +622,10 @@
         and account.loanOffering.prdOfferingShortName = :productShortName
         and account.accountState.id in (5,9)]]>
     </query>
+    
+    <query name="findGLIMLoanAccountsByCustomerId">
+        <![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
+        where account.customer.customerId = :CUSTOMER_ID 
+        and account.parentAccount is not null]]>
+    </query>
 </hibernate-mapping>

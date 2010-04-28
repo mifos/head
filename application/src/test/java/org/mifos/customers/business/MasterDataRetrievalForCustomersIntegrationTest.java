@@ -29,6 +29,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -175,5 +176,15 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
         int count = customerDao.countOfGroups();
 
         assertThat(count, is(0));
+    }
+
+    @Test
+    public void countOfAccounts() {
+
+        Integer customerId = Integer.valueOf(1);
+        Integer customerWithActiveAccount = Integer.valueOf(1);
+        List<AccountBO> accounts = customerDao.findGLIMLoanAccountsApplicableTo(customerId, customerWithActiveAccount);
+
+        assertThat(accounts.size(), is(0));
     }
 }

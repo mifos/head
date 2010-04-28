@@ -30,11 +30,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
+import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -51,6 +55,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
@@ -190,8 +195,7 @@ public class GroupTransferAction extends BaseAction {
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(
-                Integer.valueOf(clientInSession.getCustomerId()));
+        CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(clientInSession.getCustomerId()));
 
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
@@ -203,7 +207,7 @@ public class GroupTransferAction extends BaseAction {
         SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS,
                 isCenterHierarchyExists ? Constants.YES : Constants.NO, request);
 
-        actionForm.setAssignedLoanOfficerId(clientInSession.getPersonnel().getPersonnelId().toString());
+        actionForm.setAssignedLoanOfficerId(customerBO.getPersonnel().getPersonnelId().toString());
 
         List<PersonnelDto> loanOfficers = loadLoanOfficersForBranch(userContext, customerBO.getOffice().getOfficeId());
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
@@ -253,10 +257,34 @@ public class GroupTransferAction extends BaseAction {
 
         if (customerBO.hasActiveLoanAccounts()) {
             throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-        } else if (customerBO.getParentCustomer() != null && customerBO.getParentCustomer().hasActiveLoanAccounts()) {
-            throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
         }
 
+        try {
+
+            if (customerBO.getParentCustomer() != null) {
+
+                boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
+
+                if (glimEnabled) {
+                    if (customerIsMemberOfAnyExistingGlimLoanAccount(customerBO, customerBO.getParentCustomer())) {
+                        throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+                    }
+                } else if (customerBO.getParentCustomer().hasActiveLoanAccounts()) {
+                    // not glim - then disallow removing client from group with active account
+                    throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+                }
+            }
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
+
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
+
+        return !activeLoanAccounts.isEmpty();
     }
 
     public CustomerBO getCustomer(Integer customerId) throws ServiceException {
