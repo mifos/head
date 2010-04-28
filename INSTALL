@@ -120,7 +120,7 @@ This file describes how to install Mifos for use in a production environment.
          "trapdoor".
 
     7.2. Release Notes -
-         http://www.mifos.org/developers/wiki/ReleaseNotes/V14
+         http://www.mifos.org/developers/wiki/ReleaseNotes/V15
 
     7.3. System Recommendations (hardware, networking) -
     	 http://www.mifos.org/developers/wiki/MifosSystemRecommendations
