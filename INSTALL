@@ -20,7 +20,7 @@ This file describes how to install Mifos for use in a production environment.
    http://www.mifos.org/knowledge/support/deploying-mifos/upgrading-mifos
 
    For upgrade instructions for this release see:
-   http://www.mifos.org/knowledge/support/deploying-mifos/upgradeto14
+   http://www.mifos.org/knowledge/support/deploying-mifos/upgradeto15
 
 3. Configuring MySQL
     3.1. Setting Database Parameters
