@@ -7,6 +7,7 @@ outputDir=/var/www/schema/trunk/$TRUNK_DB_VERSION
 if [ -d $outputDir ]
 then
     echo $outputDir exists, assuming schema has not changed. Exiting gracefully.
+    exit 0
 fi
 
 mkdir $outputDir
