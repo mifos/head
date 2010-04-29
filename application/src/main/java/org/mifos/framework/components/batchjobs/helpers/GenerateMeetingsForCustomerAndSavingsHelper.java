@@ -162,4 +162,8 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         return true;
     }
 
+    @Override
+    public void requiresExclusiveAccess() {
+        MifosTask.batchJobRequiresExclusiveAccess(false);
+    }
 }

@@ -118,7 +118,7 @@ public abstract class BaseAction extends DispatchAction {
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
         }
 
-        if (MifosTask.isBatchJobRunning()) {
+        if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
             return logout(mapping, request);
         }
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());

@@ -24,7 +24,8 @@ import java.util.TimerTask;
 
 public abstract class MifosTask extends TimerTask {
 
-    public static boolean batchJobRunning = false;
+    private static boolean batchJobRunning = false;
+    private static boolean requiresExclusiveAccess = true;
 
     public TaskHelper helper;
 
@@ -59,12 +60,25 @@ public abstract class MifosTask extends TimerTask {
         return batchJobRunning;
     }
 
+    public static boolean isBatchJobRunningThatRequiresExclusiveAccess() {
+        return batchJobRunning && requiresExclusiveAccess;
+    }
+
     public static void batchJobStarted() {
         batchJobRunning = true;
+        requiresExclusiveAccess = true;
     }
 
     public static void batchJobFinished() {
         batchJobRunning = false;
+    }
+
+    public static Boolean isExclusiveAccessRequired() {
+        return requiresExclusiveAccess;
+    }
+
+    public static void batchJobRequiresExclusiveAccess(Boolean setting) {
+        requiresExclusiveAccess = setting;
     }
 
     public abstract TaskHelper getTaskHelper();

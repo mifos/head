@@ -111,4 +111,9 @@ public class BranchReportHelper extends TaskHelper {
 
         branchReportService.removeBranchReports(branchReportService.getBranchReports(runDate));
     }
+
+    @Override
+    public void requiresExclusiveAccess() {
+        MifosTask.batchJobRequiresExclusiveAccess(false);
+    }
 }

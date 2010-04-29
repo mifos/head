@@ -59,13 +59,13 @@ public abstract class TaskHelper {
     }
 
     /**
-     * This method is responsible for inserting a row with the task name in the
-     * database. In cases that the task fails, the next day's task will not run
-     * till the completion of the previous day's task.
+     * This method is responsible for inserting a row with the task name in the database. In cases that the task fails,
+     * the next day's task will not run till the completion of the previous day's task.
      */
     public final void registerStartup(long timeInMillis) throws BatchJobException {
         try {
             MifosTask.batchJobStarted();
+            requiresExclusiveAccess();
             task = new Task();
             task.setDescription(SchedulerConstants.START);
             task.setTask(mifosTask.name);
@@ -82,10 +82,8 @@ public abstract class TaskHelper {
     }
 
     /**
-     * This method is responsible for inserting a row with the task name in the
-     * database, at end of task completion. In cases where the task fails, the
-     * next day's task will not run till the completion of th previous day's
-     * task.
+     * This method is responsible for inserting a row with the task name in the database, at end of task completion. In
+     * cases where the task fails, the next day's task will not run till the completion of th previous day's task.
      */
     public final void registerCompletion(long timeInMillis, String description, TaskStatus status) {
         try {
@@ -110,7 +108,8 @@ public abstract class TaskHelper {
     public final void executeTask() {
         if (!isTaskAllowedToRun()) {
             while ((new DateTimeService().getCurrentDateTime().getMillis() - timeInMillis) / (1000 * 60 * 60 * 24) != 1) {
-                getLogger().info(mifosTask.name + " will run catch-up execution for " + new java.util.Date(timeInMillis));
+                getLogger().info(
+                        mifosTask.name + " will run catch-up execution for " + new java.util.Date(timeInMillis));
                 perform(timeInMillis + (1000 * 60 * 60 * 24));
                 timeInMillis += (1000 * 60 * 60 * 24);
             }
@@ -126,19 +125,26 @@ public abstract class TaskHelper {
      * This methods, performs the job specific to each task. Most batch jobs must be run daily.
      *
      * @param timeInMillis
-     *            date the job is being run for. Useful for "catch up", ie: running batch jobs for dates past. Note
-     *            some jobs ignore this value.
+     *            date the job is being run for. Useful for "catch up", ie: running batch jobs for dates past. Note some
+     *            jobs ignore this value.
      */
     public abstract void execute(long timeInMillis) throws BatchJobException;
 
     /**
-     * This method determines if catch-up should be performed. If the
-     * previous day's task has failed, the default implementation suspends the
-     * current day's task and runs the previous days task.
+     * This method determines if users can continue to use the system while this task/batch job is running.
      * <p>
-     * Override this method and return true, if it is not mandatory that task
-     * should run daily i.e. In case yesterday's task has failed, you want it to
-     * continue running current days task.
+     * Override this method and return false it exclusive access is not necessary.
+     */
+    public void requiresExclusiveAccess() {
+        MifosTask.batchJobRequiresExclusiveAccess(true);
+    }
+
+    /**
+     * This method determines if catch-up should be performed. If the previous day's task has failed, the default
+     * implementation suspends the current day's task and runs the previous days task.
+     * <p>
+     * Override this method and return true, if it is not mandatory that task should run daily i.e. In case yesterday's
+     * task has failed, you want it to continue running current days task.
      */
     public boolean isTaskAllowedToRun() {
         try {
@@ -197,7 +203,7 @@ public abstract class TaskHelper {
                     }
                 }
             }
-            getLogger().info(mifosTask.name + " starting");
+            getLogger().info(mifosTask.name + " starting - Exclusive Access Required: " + MifosTask.isExclusiveAccessRequired());
             execute(timeInMillis);
             getLogger().info(mifosTask.name + " finished");
             registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);

@@ -85,4 +85,8 @@ public class ProductStatusHelper extends TaskHelper {
         }
     }
 
+    @Override
+    public void requiresExclusiveAccess() {
+        MifosTask.batchJobRequiresExclusiveAccess(false);
+    }
 }

@@ -28,8 +28,8 @@ import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -119,7 +119,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userName", "");
         addRequestParameter("password", "PASSWORD");
         actionPerform();
-       Assert.assertEquals(1, getErrorSize());
+        Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
@@ -134,7 +134,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("userName", personnel.getUserName());
         addRequestParameter("password", "");
         actionPerform();
-       Assert.assertEquals(1, getErrorSize());
+        Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
@@ -172,18 +172,18 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         StaticHibernateUtil.commitTransaction();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-       Assert.assertTrue(personnel.isPasswordChanged());
+        Assert.assertTrue(personnel.isPasswordChanged());
         // add verifying change log
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.PERSONNEL, personnel.getPersonnelId()
                 .intValue());
-       Assert.assertEquals(1, auditLogList.size());
+        Assert.assertEquals(1, auditLogList.size());
         for (int auditLogListIndex = 0; auditLogListIndex < auditLogList.size(); auditLogListIndex++) {
             auditLogList.get(auditLogListIndex).getAuditLogRecords();
         }
-       Assert.assertEquals(EntityType.PERSONNEL, auditLogList.get(0).getEntityTypeAsEnum());
-       Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+        Assert.assertEquals(EntityType.PERSONNEL, auditLogList.get(0).getEntityTypeAsEnum());
+        Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-           Assert.assertEquals(true, auditLogRecord.getFieldName().equalsIgnoreCase("lastLogin")
+            Assert.assertEquals(true, auditLogRecord.getFieldName().equalsIgnoreCase("lastLogin")
                     || auditLogRecord.getFieldName().equalsIgnoreCase("Password"));
         }
         TestObjectFactory.cleanUpChangeLog();
@@ -214,7 +214,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "LoginChangePW");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
-       Assert.assertEquals(1, getErrorSize());
+        Assert.assertEquals(1, getErrorSize());
         verifyInputForward();
     }
 
@@ -308,7 +308,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 
-       Assert.assertTrue(personnel.isPasswordChanged());
+        Assert.assertTrue(personnel.isPasswordChanged());
         Assert.assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession()));
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
@@ -342,7 +342,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(0, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(0, personnel.getNoOfTries().intValue());
     }
 
     public void testLoginForInvalidPassword() throws Exception {
@@ -362,7 +362,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(1, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(1, personnel.getNoOfTries().intValue());
     }
 
     public void testLoginForLockedUser() throws Exception {
@@ -382,8 +382,8 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-       Assert.assertTrue(personnel.isLocked());
-       Assert.assertEquals(5, personnel.getNoOfTries().intValue());
+        Assert.assertTrue(personnel.isLocked());
+        Assert.assertEquals(5, personnel.getNoOfTries().intValue());
     }
 
     public void testLogout() {
@@ -427,9 +427,10 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testLogin_batchJobNotRunning() throws Exception {
+    public void testLogin_batchJobNotRunningThatRequiresExclusiveAccess() throws Exception {
         loadLoginPage();
-       Assert.assertEquals(false, MifosTask.isBatchJobRunning());
+        MifosTask.batchJobFinished();
+        Assert.assertEquals(false, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
         Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
         setRequestPathInfo("/loginAction.do");
@@ -443,10 +444,28 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testLogin_batchJobRunning() throws Exception {
+    public void testLogin_batchJobRunningThatDoesntRequireExclusiveAccess() throws Exception {
         loadLoginPage();
         MifosTask.batchJobStarted();
-       Assert.assertEquals(true, MifosTask.isBatchJobRunning());
+        MifosTask.batchJobRequiresExclusiveAccess(false);
+        Assert.assertEquals(false, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
+        Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+        personnel = createPersonnel();
+        setRequestPathInfo("/loginAction.do");
+        addRequestParameter("method", Methods.login.toString());
+        addRequestParameter("userName", personnel.getUserName());
+        addRequestParameter("password", "PASSWORD");
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.loadChangePassword_success.toString());
+        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+    }
+
+    public void testLogin_batchJobRunningThatRequiresExclusiveAccess() throws Exception {
+        loadLoginPage();
+        MifosTask.batchJobStarted();/* should default to exclusive access */
+        Assert.assertEquals(true, MifosTask.isBatchJobRunningThatRequiresExclusiveAccess());
         Assert.assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
         personnel = createPersonnel();
         setRequestPathInfo("/loginAction.do");
@@ -492,19 +511,19 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
     private void lockUser() {
         tryLoginWithWrongPassword();
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(1, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(1, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(2, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(2, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(3, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(3, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
         Assert.assertFalse(personnel.isLocked());
-       Assert.assertEquals(4, personnel.getNoOfTries().intValue());
+        Assert.assertEquals(4, personnel.getNoOfTries().intValue());
         tryLoginWithWrongPassword();
-       Assert.assertTrue(personnel.isLocked());
-       Assert.assertEquals(5, personnel.getNoOfTries().intValue());
+        Assert.assertTrue(personnel.isLocked());
+        Assert.assertEquals(5, personnel.getNoOfTries().intValue());
     }
 
     private void loadLoginPage() {
