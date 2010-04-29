@@ -60,7 +60,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
                 "group-199", 833, "client-833", "GL:11550||EL:200||SPL:4200", BigDecimal.valueOf(15950.0), "0",
                 BigDecimal.ZERO, "0", BigDecimal.ZERO, "0", BigDecimal.ZERO });
         List<CollectionSheetReportData> reportData = new CollectionSheetReportPersistence().convertResultToDTO(results);
-       Assert.assertEquals(2, reportData.size());
+        Assert.assertEquals(2, reportData.size());
     }
 
 }

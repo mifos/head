@@ -35,7 +35,6 @@ import static org.mifos.reports.ui.SelectionItem.SELECT_LOAN_OFFICER_SELECTION_I
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -45,6 +44,10 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.ui.DateSelectionItem;
 import org.mifos.reports.ui.SelectionItem;
 
+/**
+ *@deprecated delete after CollectionSheetReportParameterCachingHelper and Task have been removed.
+ */
+@Deprecated
 public class CascadingReportParameterService {
 
     private IReportsParameterService reportsParameterService;
@@ -139,7 +142,6 @@ public class CascadingReportParameterService {
     public List<DateSelectionItem> getMeetingDatesForCollectionSheet(Integer branchIdInt, Integer officerIdInt,
             Integer customerId) throws ServiceException {
         Short branchId = convertIntegerToShort(branchIdInt);
-        Short officerId = convertIntegerToShort(officerIdInt);
         List<DateSelectionItem> meetingDates = new ArrayList<DateSelectionItem>();
         if (branchId == null || SELECT_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
                 || NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
@@ -169,44 +171,22 @@ public class CascadingReportParameterService {
                 }
             }
         } else {
-            if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)) {
-                CustomerBO customer = customerBusinessService.getCustomer(customerId);
-                officerId = customer.getPersonnel().getPersonnelId();
-            }
             List<DateSelectionItem> meetingDatesForOfficerBranchCustomer = reportsParameterService.getMeetingDates(
                     branchIdInt, officerIdInt, customerId, today());
             if (meetingDatesForOfficerBranchCustomer != null) {
                 meetingDates.addAll(meetingDatesForOfficerBranchCustomer);
             }
         }
+
         if (meetingDates.isEmpty()) {
             meetingDates.add(NA_MEETING_DATE);
         }
+
         return meetingDates;
     }
 
     java.sql.Date today() {
         return DateUtils.sqlToday();
-        // return DateUtils.getSqlDate(2007, Calendar.JUNE, 1);
-    }
-
-    public List<CustomerBO> getApplicableCustomers(Short branchId, Short officerId, Integer customerId)
-            throws ServiceException {
-        List<CustomerBO> activeCenters = new ArrayList<CustomerBO>();
-        if (ALL_CENTER_SELECTION_ITEM.sameAs(customerId)) {
-            List<PersonnelBO> activeLoanOfficers = new ArrayList<PersonnelBO>();
-            if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(convertShortToInteger(officerId))) {
-                activeLoanOfficers.addAll(personnelBusinessService.getActiveLoanOfficersUnderOffice(branchId));
-            } else {
-                activeLoanOfficers.add(personnelBusinessService.getPersonnel(officerId));
-            }
-            for (PersonnelBO loanOfficer : activeLoanOfficers) {
-                activeCenters.addAll(customerBusinessService.getActiveCentersUnderUser(loanOfficer));
-            }
-            return activeCenters;
-        }
-        activeCenters.add(customerBusinessService.getCustomer(customerId));
-        return activeCenters;
     }
 
     public void invalidate() {

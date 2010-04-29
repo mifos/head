@@ -36,6 +36,11 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 
+/**
+ * FIXME - #00001 - keithw - rename to BirtCollectionSheetReportDao and convert to DAO structure.
+ *
+ * All methods make call to large collection sheet query now stored in AccountBO.hbm.xml
+ */
 public class CollectionSheetReportPersistence extends Persistence {
 
     private static final String ALL_VALUE = "ALL";
@@ -88,6 +93,7 @@ public class CollectionSheetReportPersistence extends Persistence {
         return params.put(PERSONNEL_ID, ALL_VALUE);
     }
 
+    @SuppressWarnings("unchecked")
     private List<CollectionSheetReportData> runQueryAndConvertResult(Map<String, Object> params)
             throws PersistenceException {
         List<Object[]> results = executeNamedQuery(COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA, params);
@@ -100,5 +106,4 @@ public class CollectionSheetReportPersistence extends Persistence {
         params.put(MEETING_DATE, meetingDate);
         return params;
     }
-
 }

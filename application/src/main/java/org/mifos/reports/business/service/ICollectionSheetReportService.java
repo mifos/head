@@ -20,17 +20,12 @@
 
 package org.mifos.reports.business.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.reports.business.dto.CollectionSheetReportDTO;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 public interface ICollectionSheetReportService {
-
-    public List<CollectionSheetReportDTO> getCollectionSheets(Integer branchId, Integer officerId, Integer centerId,
-            Date meetingDate) throws Exception;
 
     public List<CollectionSheetReportData> getReportData(Integer branchId, String meetingDate, Integer personnelId,
             Integer centerId) throws ServiceException;

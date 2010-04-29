@@ -29,9 +29,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
-
-import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -56,26 +53,10 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
     private Date meetingDate;
     private CollSheetCustBO anotherGroup;
 
-    public void testReturnsCollectionSheetForMeetingDateCenter() throws Exception {
-        List<CollSheetCustBO> retrievedCenterCollectionSheets = collectionSheetService
-                .getCollectionSheetForCustomerOnMeetingDate(meetingDate, CENTER_ID, LOAN_OFFICER_SHORT_ID,
-                        CustomerLevel.CENTER);
-       Assert.assertEquals(1, retrievedCenterCollectionSheets.size());
-       Assert.assertEquals(centerCollectionSheet, retrievedCenterCollectionSheets.get(0));
-    }
-
-    public void testReturnsCollectionSheetsForGroup() throws Exception {
-        List<CollSheetCustBO> meetingsForGroups = collectionSheetService.getCollectionSheetForGroups(meetingDate,
-                centerCollectionSheet, LOAN_OFFICER_SHORT_ID);
-       Assert.assertEquals(2, meetingsForGroups.size());
-       Assert.assertTrue(meetingsForGroups.contains(groupCollectionSheet));
-       Assert.assertTrue(meetingsForGroups.contains(anotherGroup));
-    }
-
-    public void testCollectionSheetForIndividualCustomer() throws Exception {
-        List<CollSheetCustBO> collectionSheet = collectionSheetService.getCollectionSheetForCustomers(meetingDate,
-                groupCollectionSheet, LOAN_OFFICER_SHORT_ID);
-       Assert.assertEquals(2, collectionSheet.size());
+    @Override
+    protected void tearDown() throws Exception {
+        transaction.rollback();
+        super.tearDown();
     }
 
     @Override
@@ -179,11 +160,5 @@ public class CollectionSheetServiceIntegrationTest extends AbstractCollectionShe
         CollectionSheetService service = new CollectionSheetService(collectionSheetReportPersistenceMock);
         service.extractReportData(BRANCH_ID, meetingDate, LOAN_OFFICER_ID, CENTER_ID);
         verify(collectionSheetReportPersistenceMock);
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        transaction.rollback();
-        super.tearDown();
     }
 }

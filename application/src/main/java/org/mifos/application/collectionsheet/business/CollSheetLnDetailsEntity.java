@@ -34,6 +34,10 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ *@deprecated delete after {@link CollectionSheetBO} and {@link CollSheetCustBO} are removed.
+ */
+@Deprecated
 public class CollSheetLnDetailsEntity extends AbstractEntity {
 
     private Long loanDetailsId;

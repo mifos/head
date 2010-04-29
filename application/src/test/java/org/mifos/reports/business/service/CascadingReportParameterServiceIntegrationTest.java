@@ -225,18 +225,6 @@ public class CascadingReportParameterServiceIntegrationTest extends AbstractColl
         verify(reportsParameterServiceMock);
     }
 
-    public void testGetMeetingDatesForCeneterWhenSpecifiedBranchAllOfficerAndCenterParameters() throws Exception {
-        expect(
-                reportsParameterServiceMock.getMeetingDates(BRANCH_ID, ALL_LOAN_OFFICER_ID, CENTER_ID, DateUtils
-                        .sqlToday())).andReturn(new ArrayList<DateSelectionItem>());
-        expect(customerBusinessServiceMock.getCustomer(CENTER_ID)).andReturn(center);
-        replay(customerBusinessServiceMock);
-        replay(reportsParameterServiceMock);
-        cascadingReportParameterService.getMeetingDatesForCollectionSheet(BRANCH_ID, ALL_LOAN_OFFICER_ID, CENTER_ID);
-        verify(customerBusinessServiceMock);
-        verify(reportsParameterServiceMock);
-    }
-
     public void testGetMeetingDatesForCenterWhenNACenter() throws Exception {
         List<org.mifos.reports.ui.DateSelectionItem> meetingDates = cascadingReportParameterService
                 .getMeetingDatesForCollectionSheet(BRANCH_ID, NA_LOAN_OFFICER_SELECTION_ITEM.getId(),

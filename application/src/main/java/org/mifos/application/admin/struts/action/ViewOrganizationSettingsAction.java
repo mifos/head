@@ -45,8 +45,6 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.batchjobs.helpers.CollectionSheetHelper;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -66,8 +64,8 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         Properties orgSettings = new Properties();
 
@@ -178,12 +176,9 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         Integer timeoutVal = httpSession.getMaxInactiveInterval() / 60;
         misc.setProperty("sessionTimeout", timeoutVal.toString());
 
-        try {
-            Integer advanceDaysVal = CollectionSheetHelper.getDaysInAdvance();
-            misc.setProperty("collectionSheetAdvanceDays", advanceDaysVal.toString());
-        } catch (PersistenceException e) {
-            throw new RuntimeException(e);
-        }
+           // FIXME - #00001 - keithw - Check days in advance usage in CollectionsheetHelper
+//            Integer advanceDaysVal = CollectionSheetHelper.getDaysInAdvance();
+            misc.setProperty("collectionSheetAdvanceDays", "1");
 
         misc.setProperty("backDatedTransactions", booleanToYesNo(AccountingRules.isBackDatedTxnAllowed()));
         ConfigurationBusinessService cbs = new ConfigurationBusinessService();
@@ -202,15 +197,6 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         return StringUtils.join(workDayNames, DELIMITER);
     }
 
-    private String getWeekDays() {
-        List<WeekDay> weekDaysList = new FiscalCalendarRules().getWeekDaysList();
-        List<String> weekDayNames = new ArrayList<String>();
-        for (WeekDay weekDay : weekDaysList) {
-            weekDayNames.add(weekDay.getName());
-        }
-        return StringUtils.join(weekDayNames, DELIMITER);
-    }
-
     private String getOffDays() {
         List<Short> offDaysList = new FiscalCalendarRules().getWeekDayOffList();
         List<String> offDayNames = new ArrayList<String>();
@@ -224,9 +210,9 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         MessageLookup m = MessageLookup.getInstance();
         if (bool) {
             return m.lookup(YesNoFlag.YES);
-        } else {
-            return m.lookup(YesNoFlag.NO);
         }
+
+        return m.lookup(YesNoFlag.NO);
     }
 
     @Override
@@ -235,7 +221,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 }
