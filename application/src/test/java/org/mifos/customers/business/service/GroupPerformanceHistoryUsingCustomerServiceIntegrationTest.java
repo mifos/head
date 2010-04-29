@@ -222,7 +222,8 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest {
     public void shouldGetTotalSavingsBalance() throws Exception {
 
         // setup
-        SavingsOfferingBO groupSavingsProduct = new SavingsProductBuilder().appliesToGroupsOnly().voluntary().withName("groupSavings").buildForIntegrationTests();
+        SavingsOfferingBO groupSavingsProduct = new SavingsProductBuilder().appliesToGroupsOnly().voluntary().withName(
+                "groupSavings").withShortName("GSP").buildForIntegrationTests();
         IntegrationTestObjectMother.createProduct(groupSavingsProduct);
 
         SavingsBO groupSavingsAccount = new SavingsAccountBuilder().voluntary()
@@ -233,7 +234,8 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest {
                                                             .build();
         IntegrationTestObjectMother.saveSavingsAccount(groupSavingsAccount);
 
-        SavingsOfferingBO clientSavingsProduct = new SavingsProductBuilder().appliesToClientsOnly().voluntary().withName("clientSavings").buildForIntegrationTests();
+        SavingsOfferingBO clientSavingsProduct = new SavingsProductBuilder().appliesToClientsOnly().voluntary()
+                .withName("clientSavings").withShortName("CSP").buildForIntegrationTests();
         IntegrationTestObjectMother.createProduct(clientSavingsProduct);
 
         SavingsBO clientSavingsAccount = new SavingsAccountBuilder().voluntary()
