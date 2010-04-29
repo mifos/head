@@ -360,12 +360,13 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
     public void testShouldFindSavingsDepositsforCustomerHierarchy() {
 
         // setup
-        savingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly().buildForIntegrationTests();
+        savingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly().withShortName("SP1")
+                .buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
                 .withCustomer(center).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
-        savingsProduct2 = new SavingsProductBuilder().withName("product2").mandatory().appliesToCentersOnly()
+        savingsProduct2 = new SavingsProductBuilder().withName("product2").withShortName("SP2").mandatory().appliesToCentersOnly()
                 .buildForIntegrationTests();
         savingsAccount2 = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct2).withCustomer(
                 center).build();
