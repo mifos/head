@@ -67,6 +67,10 @@ public class BranchCashConfirmationReportPersistence extends Persistence {
         this(new PrdOfferingPersistence());
     }
 
+    /**
+     *@deprecated - don't think this is used for the actual reports done from birt but for reports done through legacy batch job task.
+     */
+    @Deprecated
     public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(Date actionDate,
             AccountTypes accountType, List<Short> prdOfferingIdsForRecovery, List<Short> prdOfferingIdsForIssue,
             List<Short> prdOfferingsForDisbursements, MifosCurrency currency, Date runDate) throws PersistenceException {
@@ -137,6 +141,10 @@ public class BranchCashConfirmationReportPersistence extends Persistence {
         return executeNamedQuery(GET_BRANCH_CASH_CONFIRMATION_CENTER_ISSUES, populateParams(branchId, runDate));
     }
 
+    /**
+     *@deprecated - don't think this is used for the actual reports done from birt but for reports done through legacy batch job task.
+     */
+    @Deprecated
     public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(Date runDate)
             throws PersistenceException {
         HashMap<String, Object> params = new HashMap<String, Object>();

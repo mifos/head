@@ -59,7 +59,7 @@ public class ReportServiceFactory {
     }
 
     public static ICollectionSheetReportService getCollectionSheetReportService() {
-        return new CollectionSheetReportService();
+        return new BirtCollectionSheetReportService();
     }
 
     public static BranchReportConfigService getBranchReportConfigService() {

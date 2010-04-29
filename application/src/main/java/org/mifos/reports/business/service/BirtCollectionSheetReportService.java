@@ -36,19 +36,19 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * FIXME - #0001 - keithw - rename to BirtCollectionSheetReportService
  */
-public class CollectionSheetReportService implements ICollectionSheetReportService {
+public class BirtCollectionSheetReportService implements ICollectionSheetReportService {
 
-    private final CollectionSheetService collectionSheetService;
+    private final BirtCollectionSheetService collectionSheetService;
     private final ReportProductOfferingService reportProductOfferingService;
 
-    public CollectionSheetReportService(final CollectionSheetService collectionSheetService, final ReportProductOfferingService reportProductOfferingService) {
+    public BirtCollectionSheetReportService(final BirtCollectionSheetService collectionSheetService, final ReportProductOfferingService reportProductOfferingService) {
         super();
         this.collectionSheetService = collectionSheetService;
         this.reportProductOfferingService = reportProductOfferingService;
     }
 
-    public CollectionSheetReportService() {
-        this(new CollectionSheetService(), new ReportProductOfferingService(
+    public BirtCollectionSheetReportService() {
+        this(new BirtCollectionSheetService(), new ReportProductOfferingService(
                 new LoanPrdBusinessService(), new SavingsPrdBusinessService(), new ClassPathResource(REPORT_PRODUCT_OFFERING_CONFIG)));
     }
 

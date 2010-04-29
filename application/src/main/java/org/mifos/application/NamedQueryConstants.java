@@ -128,9 +128,6 @@ public interface NamedQueryConstants {
 
     public String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";
 
-    //FIXME Only used in tests
-    public static final String COLLECTION_SHEETS_FOR_MEETING_DATE = "collectionSheet.getCollectionSheetForMeetingDate";
-
     /** M2 queries */
     /** Personnel Queries */
     public String MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH = "masterdata.activeloanofficers";

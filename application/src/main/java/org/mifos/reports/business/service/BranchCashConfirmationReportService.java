@@ -30,6 +30,7 @@ import java.util.List;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.framework.components.batchjobs.helpers.BranchCashConfirmationReportHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
@@ -43,7 +44,7 @@ import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmati
 
 public class BranchCashConfirmationReportService implements IBranchCashConfirmationReportService {
 
-    BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
+    private BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
     private OfficeBusinessService officeBusinessService;
 
     public BranchCashConfirmationReportService(
@@ -53,6 +54,17 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         this.officeBusinessService = officeBusinessService;
     }
 
+    // is called from CashConfirmationReport.rptdesign
+    public BranchCashConfirmationReportHeader getReportHeader(Integer branchId, String runDate) throws ServiceException {
+        try {
+            return new BranchCashConfirmationReportHeader(officeBusinessService.getOffice(
+                    NumberUtils.convertIntegerToShort(branchId)).getOfficeName(), parseReportDate(runDate));
+        } catch (ParseException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    // is called from CashConfirmationReport.rptdesign
     public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(Integer branchId, String runDate)
             throws ServiceException {
         try {
@@ -65,6 +77,7 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         }
     }
 
+    // is called from CashConfirmationReport.rptdesign
     public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId, String runDate) throws ServiceException {
         try {
             return branchCashConfirmationReportPersistence.getCenterIssues(convertIntegerToShort(branchId),
@@ -76,6 +89,7 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         }
     }
 
+    // is called from CashConfirmationReport.rptdesign
     public List<BranchCashConfirmationDisbursementBO> getDisbursements(Integer branchId, String runDate)
             throws ServiceException {
         try {
@@ -88,6 +102,10 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         }
     }
 
+    /**
+     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
+     */
+    @Deprecated
     public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(Date actionDate,
             AccountTypes accountType, List<Short> prdOfferingsForRecoveries, List<Short> prdOfferingsForIssues,
             List<Short> prdOfferingsForDisbursements, MifosCurrency currency, Date runDate) throws ServiceException {
@@ -99,6 +117,10 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         }
     }
 
+    /**
+     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
+     */
+    @Deprecated
     public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(Date runDate)
             throws ServiceException {
         try {
@@ -106,9 +128,12 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
-
     }
 
+    /**
+     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
+     */
+    @Deprecated
     public void deleteBranchCashConfirmationReports(List<BranchCashConfirmationReportBO> reports)
             throws ServiceException {
         try {
@@ -131,14 +156,4 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
             throw new RuntimeException(e);
         }
     }
-
-    public BranchCashConfirmationReportHeader getReportHeader(Integer branchId, String runDate) throws ServiceException {
-        try {
-            return new BranchCashConfirmationReportHeader(officeBusinessService.getOffice(
-                    NumberUtils.convertIntegerToShort(branchId)).getOfficeName(), parseReportDate(runDate));
-        } catch (ParseException e) {
-            throw new ServiceException(e);
-        }
-    }
-
 }

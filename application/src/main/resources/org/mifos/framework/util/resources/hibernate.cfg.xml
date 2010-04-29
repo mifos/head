@@ -133,13 +133,6 @@
 		<mapping
 			resource="org/mifos/application/collectionsheet/business/CollectionSheetRetrieveAndSave.hbm.xml" />
 
-		<!-- Mapping files for collection sheet generation-->
-		<mapping resource="org/mifos/application/collectionsheet/business/CollectionSheetBO.hbm.xml" />
-		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetCustBO.hbm.xml" />
-		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetLnDetailsEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetSavingsDetailsEntity.hbm.xml" />
-		<mapping resource="org/mifos/reports/ui/SelectionItem.hbm.xml" />
-		<!--<mapping resource="org/mifos/reports/ui/DateSelectionItem.hbm.xml" />-->
 		<!-- Mapping files for Master Data -->
 		<mapping class="org.mifos.application.master.business.MifosCurrency" />
 		<mapping class="org.mifos.application.master.business.CountryEntity" />

@@ -91,8 +91,6 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.collectionsheet.business.CollSheetCustBO;
-import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
@@ -103,10 +101,9 @@ import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -940,23 +937,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         Assert.assertEquals(loan.getLoanSummary().getOriginalPenalty(), new Money(getCurrency(), "200"));
         Assert.assertEquals(loan.getLoanSummary().getPenaltyPaid(), new Money(getCurrency(), "200"));
-    }
-
-    public void testAddLoanDetailsForDisbursal() {
-        LoanBO loan = (LoanBO) createLoanAccount();
-        loan.setLoanAmount(TestUtils.createMoney(100));
-        loan.setNoOfInstallments(Short.valueOf("5"));
-        InterestTypesEntity interestType = new InterestTypesEntity(InterestType.FLAT);
-        loan.setInterestType(interestType);
-        List<LoanBO> loanWithDisbursalDate = new ArrayList<LoanBO>();
-        loanWithDisbursalDate.add(loan);
-        CollectionSheetBO collSheet = new CollectionSheetBO();
-        collSheet.addLoanDetailsForDisbursal(loanWithDisbursalDate);
-        CollSheetCustBO collectionSheetCustomer = collSheet.getCollectionSheetCustomerForCustomerId(group
-                .getCustomerId());
-        Assert.assertNotNull(collectionSheetCustomer);
-        Assert.assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(loan.getAccountId())
-                .getTotalNoOfInstallments(), Short.valueOf("5"));
     }
 
     public void testPrdOfferingsCanCoexist() throws PersistenceException {

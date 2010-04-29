@@ -62,6 +62,7 @@ public class HOCashConfirmationConfigService extends CashConfirmationConfigServi
         return Configuration.getInstance().getSystemConfig().getCurrency();
     }
 
+    @SuppressWarnings("unchecked")
     private List<Short> getProductIds(String productIdKey) throws ServiceException {
         return (List<Short>) CollectionUtils.collect(getPropertyValues(productIdKey), TRANSFORM_STRING_TO_SHORT);
     }

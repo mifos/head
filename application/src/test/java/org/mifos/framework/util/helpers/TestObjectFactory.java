@@ -50,10 +50,10 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -101,10 +101,6 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.collectionsheet.business.CollSheetCustBO;
-import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
-import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
-import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
@@ -115,8 +111,8 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -146,9 +142,9 @@ import org.mifos.customers.checklist.business.CheckListDetailEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
@@ -1857,56 +1853,6 @@ public class TestObjectFactory {
         }
         StaticHibernateUtil.closeSession();
         return dueActionDates;
-    }
-
-    public static void cleanUp(CollectionSheetBO collSheet) {
-        if (null != collSheet) {
-            deleteCollectionSheet(collSheet, null);
-            collSheet = null;
-        }
-    }
-
-    private static void deleteCollectionSheet(final CollectionSheetBO collSheet, Session session) {
-        boolean newSession = false;
-
-        Transaction transaction = null;
-        if (null == session) {
-            session = StaticHibernateUtil.getSessionTL();
-            transaction = StaticHibernateUtil.startTransaction();
-            newSession = true;
-        }
-        if (collSheet.getCollectionSheetCustomers() != null) {
-            for (CollSheetCustBO collSheetCustomer : collSheet.getCollectionSheetCustomers()) {
-                if (null != collSheetCustomer) {
-                    deleteCollSheetCustomer(collSheetCustomer, session);
-                }
-            }
-        }
-        session.delete(collSheet);
-
-        if (newSession) {
-            transaction.commit();
-        }
-    }
-
-    private static void deleteCollSheetCustomer(final CollSheetCustBO collSheetCustomer, final Session session) {
-
-        if (collSheetCustomer.getCollectionSheetLoanDetails() != null) {
-            for (CollSheetLnDetailsEntity collSheetLoanDetails : collSheetCustomer.getCollectionSheetLoanDetails()) {
-                if (null != collSheetLoanDetails) {
-                    session.delete(collSheetLoanDetails);
-                }
-            }
-        }
-        if (collSheetCustomer.getCollSheetSavingsDetails() != null) {
-            for (CollSheetSavingsDetailsEntity collSheetSavingsDetails : collSheetCustomer.getCollSheetSavingsDetails()) {
-                if (null != collSheetSavingsDetails) {
-                    session.delete(collSheetSavingsDetails);
-                }
-            }
-        }
-        session.delete(collSheetCustomer);
-
     }
 
     public static PaymentData getLoanAccountPaymentData(final List<AccountActionDateEntity> accountActions,

@@ -38,6 +38,10 @@ import org.mifos.reports.business.service.IBranchCashConfirmationReportService;
 import org.mifos.reports.business.service.ReportServiceFactory;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
+/**
+ *@deprecated - not invoked from task.xml
+ */
+@Deprecated
 public class BranchCashConfirmationReportHelper extends TaskHelper {
 
     private IBranchCashConfirmationReportService service;

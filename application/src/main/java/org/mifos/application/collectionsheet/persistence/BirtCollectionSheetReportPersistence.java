@@ -41,7 +41,7 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
  *
  * All methods make call to large collection sheet query now stored in AccountBO.hbm.xml
  */
-public class CollectionSheetReportPersistence extends Persistence {
+public class BirtCollectionSheetReportPersistence extends Persistence {
 
     private static final String ALL_VALUE = "ALL";
 

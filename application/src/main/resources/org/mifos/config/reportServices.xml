@@ -16,7 +16,7 @@
 		<property name="cacheManager" ref="cacheManager" />
 	</bean>
 	
-	<bean id="collectionSheetService" class="org.mifos.reports.business.service.CollectionSheetService" />
+	<bean id="collectionSheetService" class="org.mifos.reports.business.service.BirtCollectionSheetService" />
 		
 	<bean id="officeBusinessService" class="org.mifos.customers.office.business.service.OfficeBusinessService" />
 		
@@ -43,7 +43,7 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="defaultCollectionSheetReportService" class="org.mifos.reports.business.service.CollectionSheetReportService">
+	<bean id="defaultCollectionSheetReportService" class="org.mifos.reports.business.service.BirtCollectionSheetReportService">
 		<constructor-arg ref="collectionSheetService" />
 		<constructor-arg ref="reportProductOfferingService" />
 	</bean>

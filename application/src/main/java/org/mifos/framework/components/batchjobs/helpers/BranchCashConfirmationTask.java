@@ -23,6 +23,10 @@ package org.mifos.framework.components.batchjobs.helpers;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
+/**
+ *@deprecated - not invoked from task.xml
+ */
+@Deprecated
 public class BranchCashConfirmationTask extends MifosTask {
 
     @Override

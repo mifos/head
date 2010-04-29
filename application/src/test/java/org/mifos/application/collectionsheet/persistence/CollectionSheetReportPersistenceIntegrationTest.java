@@ -45,7 +45,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
 
     public void testReportQueryIsValid() throws Exception {
         try {
-            new CollectionSheetReportPersistence().extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
+            new BirtCollectionSheetReportPersistence().extractReportData(BRANCH_ID, MEETING_DATE, PERSONNEL_ID, CENTER_ID);
         } catch (Exception e) {
             Assert.fail("Collection Sheet Report Query should not throw exception");
         }
@@ -59,7 +59,7 @@ public class CollectionSheetReportPersistenceIntegrationTest extends MifosIntegr
         results.add(new Object[] { "22-06-2007", 14, " Office 13", 4, " system user 5", 19, " center-29", 199,
                 "group-199", 833, "client-833", "GL:11550||EL:200||SPL:4200", BigDecimal.valueOf(15950.0), "0",
                 BigDecimal.ZERO, "0", BigDecimal.ZERO, "0", BigDecimal.ZERO });
-        List<CollectionSheetReportData> reportData = new CollectionSheetReportPersistence().convertResultToDTO(results);
+        List<CollectionSheetReportData> reportData = new BirtCollectionSheetReportPersistence().convertResultToDTO(results);
         Assert.assertEquals(2, reportData.size());
     }
 
