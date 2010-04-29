@@ -224,12 +224,13 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void testShouldFindOnlyMandatorySavingsAccountsForCentersOrGroupThatToBePaidIndividuallyByTheirClients() {
 
         // setup
-        savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().perIndividual().withSavingsProduct(savingsProduct)
-                .withCustomer(group).build();
+        savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().withShortName("SP1")
+                .buildForIntegrationTests();
+        savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().perIndividual().withSavingsProduct(
+                savingsProduct).withCustomer(group).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
-        secondSavingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly()
+        secondSavingsProduct = new SavingsProductBuilder().mandatory().withShortName("SP2").appliesToCentersOnly()
                 .withName("testSavingPrd2").buildForIntegrationTests();
         secondSavingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(secondSavingsProduct)
                 .withCustomer(center).build();
@@ -257,12 +258,12 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void testShouldFindOnlyVoluntarySavingsAccountsForIndividualClientsOfTheVoluntaryCentersOrVoluntaryGroupsWithPerIndividualStatus() {
 
         // setup
-        savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
+        savingsProduct = new SavingsProductBuilder().voluntary().withShortName("SP1").appliesToGroupsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().voluntary().completeGroup().perIndividual().withSavingsProduct(savingsProduct)
                 .withCustomer(group).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
-        secondSavingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly()
+        secondSavingsProduct = new SavingsProductBuilder().mandatory().withShortName("SP2").appliesToCentersOnly()
                 .withName("testSavingPrd2").buildForIntegrationTests();
         secondSavingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(secondSavingsProduct)
                 .withCustomer(center).build();
