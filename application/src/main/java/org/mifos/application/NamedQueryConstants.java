@@ -131,11 +131,6 @@ public interface NamedQueryConstants {
     //FIXME Only used in tests
     public static final String COLLECTION_SHEETS_FOR_MEETING_DATE = "collectionSheet.getCollectionSheetForMeetingDate";
 
-    public static final String GET_ACTIVE_BRANCHES_AS_SELECTION_ITEM = "SelectionItem.get_active_offices";
-    public static final String GET_ACTIVE_LOAN_OFFICERS_UNDER_OFFICE_AS_SELECTION_ITEM = "SelectionItem.get_active_loanofficers_under_office";
-    public static final String GET_ACTIVE_CUSTOMERS_UNDER_LOAN_OFFICER_AS_SELECTION_ITEM = "SelectionItem.get_active_customers_under_loanofficers";
-    public static final String GET_MEETING_DATES_AS_SELECTION_ITEM = "DateSelectionItem.get_meeting_dates";
-
     /** M2 queries */
     /** Personnel Queries */
     public String MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH = "masterdata.activeloanofficers";

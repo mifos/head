@@ -5,13 +5,6 @@
 		<initial-time>24:00:00</initial-time>
 		<delay-time>86400</delay-time>
 	</scheduler>
-	<!-- commented out as result of issue 2881 - no longer required
-	<scheduler>
-		<task-class-name>CollectionSheetReportParameterCachingTask</task-class-name>
-		<initial-time>24:00:00</initial-time>
-		<delay-time>86400</delay-time>
-	</scheduler>
-	 -->
 	<scheduler>
 		<task-class-name>LoanArrearsTask</task-class-name>
 		<initial-time>24:00:00</initial-time>

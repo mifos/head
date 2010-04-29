@@ -35,11 +35,6 @@ public class DateSelectionItem implements Serializable {
     private Date date;
     private String displayDate;
 
-    // For Hibernate
-    public DateSelectionItem() {
-        super();
-    }
-
     public DateSelectionItem(Date date) {
         this.date = date;
     }

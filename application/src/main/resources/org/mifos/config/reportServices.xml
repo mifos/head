@@ -42,36 +42,6 @@
 			</value>
 		</constructor-arg>
 	</bean>
-
-	<bean id="selectionItemPersistence" class="org.mifos.reports.persistence.SelectionItemPersistence" />
-	<bean id="reportParameterService" class="org.mifos.reports.business.service.ReportsParameterService">
-		<constructor-arg ref="selectionItemPersistence" />
-	</bean>
-	
-	<bean id="cascadingReportParameterService" class="org.mifos.reports.business.service.CascadingReportParameterService">
-		<constructor-arg type="org.mifos.reports.business.service.IReportsParameterService" ref="reportParameterServiceProxy" />
-		<constructor-arg ref="personnelBusinessService" />
-		<constructor-arg ref="customerBusinessService" />
-	</bean>
-	
-	<bean id="reportParameterServiceProxy" class="org.springmodules.cache.interceptor.proxy.CacheProxyFactoryBean">
-		<property name="cacheProviderFacade" ref="cacheProviderFacade" />
-		<property name="cachingModels">
-			<props>
-				<prop key="get*">
-					cacheName=org.mifos.reports.business.service.cache
-				</prop>
-			</props>
-		</property>
-		<property name="flushingModels">
-			<props>
-				<prop key="invalidate">
-					cacheNames=org.mifos.reports.business.service.cache
-				</prop>
-			</props>
-		</property>
-		<property name="target" ref="reportParameterService" />
-	</bean>
 	
 	<bean id="defaultCollectionSheetReportService" class="org.mifos.reports.business.service.CollectionSheetReportService">
 		<constructor-arg ref="collectionSheetService" />

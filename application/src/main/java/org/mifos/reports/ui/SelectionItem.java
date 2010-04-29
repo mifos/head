@@ -30,6 +30,7 @@ import static org.mifos.reports.util.helpers.ReportsConstants.SELECT_ID;
 import java.io.Serializable;
 
 public class SelectionItem implements Serializable {
+
     public static final SelectionItem ALL_LOAN_OFFICER_SELECTION_ITEM = new SelectionItem(ALL_ID, ALL_DISPLAY_NAME);
     public static final SelectionItem SELECT_LOAN_OFFICER_SELECTION_ITEM = new SelectionItem(SELECT_ID,
             SELECT_DISPLAY_NAME);
@@ -52,10 +53,6 @@ public class SelectionItem implements Serializable {
         super();
         this.displayName = displayName;
         this.id = id;
-    }
-
-    public SelectionItem() {
-        super();
     }
 
     public Integer getId() {
@@ -107,5 +104,4 @@ public class SelectionItem implements Serializable {
     public boolean sameAs(Integer id) {
         return this.id.equals(id);
     }
-
 }
