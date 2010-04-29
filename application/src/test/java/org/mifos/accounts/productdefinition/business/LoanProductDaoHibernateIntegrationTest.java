@@ -60,9 +60,9 @@ public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTest
 
         TestDatabase.resetMySQLDatabase();
 
-        activeLoanProduct = new LoanProductBuilder().active().appliesToGroupsOnly().withGlobalProductNumber("AAA-111")
+        activeLoanProduct = new LoanProductBuilder().active().withShortName("ALP").appliesToGroupsOnly().withGlobalProductNumber("AAA-111")
                 .buildForIntegrationTests();
-        inActiveLoanProduct = new LoanProductBuilder().inActive().appliesToGroupsOnly().withGlobalProductNumber(
+        inActiveLoanProduct = new LoanProductBuilder().inActive().withShortName("ILP").appliesToGroupsOnly().withGlobalProductNumber(
                 "AAA-112").buildForIntegrationTests();
         IntegrationTestObjectMother.saveLoanProducts(activeLoanProduct, inActiveLoanProduct);
 
