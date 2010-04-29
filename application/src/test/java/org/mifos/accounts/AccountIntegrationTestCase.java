@@ -76,8 +76,8 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
         try {
             TestObjectFactory.cleanUp(groupLoan);
             TestObjectFactory.cleanUp(clientLoan);
-            TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(savingsBO);
+            TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
             accountPersistence = null;

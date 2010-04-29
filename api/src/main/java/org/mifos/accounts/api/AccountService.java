@@ -90,6 +90,19 @@ public interface AccountService {
             String clientGovernmentId, String loanProductShortName) throws Exception;
 
     /**
+     * Lookup a Savings account reference for a savings based on the borrower's government id and the savings product short name.
+     *
+     * @param clientGovernmentId government ID
+     *
+     * @return a reference to the account found
+     *
+     * @throws Exception If no savings is found
+     */
+    AccountReferenceDto lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(
+            String clientGovernmentId, String savingsProductShortName) throws Exception;
+
+
+    /**
      * Validate a payment by checking for any errors that would result from making a
      * payment using the DTO being passed in.
      *

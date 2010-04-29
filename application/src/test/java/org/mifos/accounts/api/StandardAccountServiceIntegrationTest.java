@@ -30,8 +30,21 @@ import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
@@ -171,6 +184,44 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         }
     }
 
+    public void testLookupSavingsFromClientGovernmentIdAndSavingsProductShortName() throws Exception {
+        savingsBO = createSavingsAccount();
+        String clientGovernmentId = client.getGovernmentId();
+        String savingsProductShortName = savingsBO.getSavingsOffering().getPrdOfferingShortName();
+        AccountReferenceDto account = standardAccountService
+                .lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(clientGovernmentId,
+                        savingsProductShortName);
+        Assert.assertEquals(savingsBO.getAccountId().intValue(), account.getAccountId());
+    }
+
+    public void testFailureOfLookupSavingsFromClientGovernmentIdAndSavingsProductShortName() throws Exception {
+        savingsBO = createSavingsAccount();
+        try {
+            standardAccountService.lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(client
+                    .getGovernmentId(), "W");
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("savings not found for client government id 1034556 and savings product short name W", e
+                    .getMessage());
+        }
+        try {
+            standardAccountService.lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName("1000556",
+                    savingsBO.getSavingsOffering().getPrdOfferingShortName());
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("savings not found for client government id 1000556 and savings product short name S", e
+                    .getMessage());
+        }
+        try {
+            standardAccountService.lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName("1000556",
+                    "W");
+            Assert.fail("expected PersistenceException");
+        } catch (PersistenceException e) {
+            Assert.assertEquals("savings not found for client government id 1000556 and savings product short name W", e
+                    .getMessage());
+        }
+    }
+
     public void testValidatePaymentWithInvalidPaymentType() throws Exception {
         String paymentAmount = "700";
         standardAccountService.setAccountPersistence(new AccountPersistence());
@@ -215,5 +266,20 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         List<InvalidPaymentReason> errors = standardAccountService.validatePayment(accountPaymentParametersDto);
 
         Assert.assertTrue(errors.contains(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT));
+    }
+
+    private SavingsBO createSavingsAccount() throws Exception {
+        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(
+                RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING));
+        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(
+                RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, MeetingType.CUSTOMER_MEETING));
+
+        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings", ApplicableTo.CLIENTS,
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.SAVINGS_ACTIVE, 300.0,
+                RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 200.0, 200.0, SavingsType.VOLUNTARY,
+                InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
+
+        return TestObjectFactory.createSavingsAccount("12345678910", client, AccountState.SAVINGS_ACTIVE,
+                new DateTimeService().getCurrentJavaDateTime(), savingsOffering, TestUtils.makeUser());
     }
 }

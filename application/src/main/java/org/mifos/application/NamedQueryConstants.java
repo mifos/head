@@ -130,7 +130,7 @@ public interface NamedQueryConstants {
 
     //FIXME Only used in tests
     public static final String COLLECTION_SHEETS_FOR_MEETING_DATE = "collectionSheet.getCollectionSheetForMeetingDate";
-    
+
     public static final String COLLECTION_SHEET_CUSTOMERS_ON_MEETING_DATE_FOR_LOAN_OFFICER = "CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDateAndLoanOfficer";
     public static final String COLLECTION_SHEETS_OF_CHILDREN_ON_MEETING_DATE = "CollectionSheetCustomer.collectionSheetOfCustomersUnderAParentForSpecifiedMeetingDate";
     public static final String GET_ACTIVE_BRANCHES_AS_SELECTION_ITEM = "SelectionItem.get_active_offices";
@@ -188,6 +188,7 @@ public interface NamedQueryConstants {
     public String FIND_LOAN_ACCOUNT_BY_SYSTEM_ID = "accounts.findLoanBySystemId";
     public String FIND_LOAN_ACCOUNT_BY_EXTERNAL_ID = "accounts.findLoanByExternalId";
     public String FIND_LOAN_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME = "accounts.findLoanByClientGovernmentIdAndProductShortName";
+    public String FIND_SAVINGS_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME = "accounts.findSavingsByClientGovernmentIdAndProductShortName";
     public String FIND_INDIVIDUAL_LOANS = "accounts.findIndividualLoans";
     public String RETRIEVE_LAST_TRXN = "accounts.retrieveLastTrxn";
     public String RETRIEVE_FIRST_TRXN = "accounts.retrieveFirstTrxn";

@@ -635,6 +635,14 @@
         and account.accountState.id in (5,9)]]>
     </query>
     
+   <query name="accounts.findSavingsByClientGovernmentIdAndProductShortName">
+        <![CDATA[from org.mifos.accounts.business.AccountBO account 
+        where account.customer.governmentId = :clientGovernmentId
+        and account.accountType.accountTypeId = :savingsAccountTypeId
+        and account.savingsOffering.prdOfferingShortName = :productShortName
+        and account.accountState.id in (16,18)]]>
+    </query>
+    
     <query name="findGLIMLoanAccountsByCustomerId">
         <![CDATA[from org.mifos.accounts.loan.business.LoanBO account 
         where account.customer.customerId = :CUSTOMER_ID 
