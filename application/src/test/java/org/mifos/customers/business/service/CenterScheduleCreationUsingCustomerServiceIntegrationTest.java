@@ -105,7 +105,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
      ***********************************************/
 
     @Test
-    public void withWeeklyMeetingNoFeesNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesNoHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -133,7 +133,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdDateInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInMoratorium() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -160,7 +160,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdAndFourthDatesInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInMoratorium() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -187,7 +187,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdDateInNextMeetingHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInNextMeetingHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -214,7 +214,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdAndFourthDatesInNextMeetingHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInNextMeetingHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -241,7 +241,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdDateInSameDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInSameDayHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -268,7 +268,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdAndFourthDatesInSameDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInSameDayHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -296,7 +296,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdDateInOneDayNextWorkingDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneDayNextWorkingDayHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -323,7 +323,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingNoFeesThirdDateInOneWeekNextWorkingDayHolidayShouldPushOutToNextMonday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneWeekNextWorkingDayHolidayShouldPushOutToNextMonday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -355,7 +355,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
 
     @Test
-    public void withWeeklyMeetingWithOnePeriodicFeeNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeNoHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -394,7 +394,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeNoHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -440,7 +440,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithThirdAndFourthMeetingsInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithThirdAndFourthMeetingsInMoratorium() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -488,7 +488,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithFirstMeetingInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithFirstMeetingInMoratorium() {
 
         DateTime today = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(today.getMillis()); //Today is a Monday
@@ -543,7 +543,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
      ***********************************************/
 
     @Test
-    public void withBiWeeklyMeetingNoFeesNoHoliday() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesNoHoliday() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -571,7 +571,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withBiWeeklyMeetingNoFeesThirdDateInMoratorium() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdDateInMoratorium() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -600,7 +600,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void withBiWeeklyMeetingNoFeesThirdAndFifthDatesInMoratorium() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdAndFifthDatesInMoratorium() {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -628,6 +628,10 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                 startDate.plusWeeks(10), startDate.plusWeeks(12), startDate.plusWeeks(14), startDate.plusWeeks(16),
                 startDate.plusWeeks(18), startDate.plusWeeks(20), startDate.plusWeeks(22));
     }
+
+    /****************************************
+     * Helper methods
+     ****************************************/
 
 
     private DateTime date (int year, int month, int day) {

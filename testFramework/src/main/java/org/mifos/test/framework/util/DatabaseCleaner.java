@@ -87,6 +87,7 @@ public class DatabaseCleaner {
         template.execute("delete from customer_picture");
         template.execute("delete from customer_hierarchy");
         template.execute("delete from customer_movement");
+        template.execute("delete from customer_custom_field");
 
         template.execute("update customer set parent_customer_id = null");
         template.execute("delete from customer");

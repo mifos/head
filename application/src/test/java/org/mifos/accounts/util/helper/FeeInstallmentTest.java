@@ -34,6 +34,20 @@ public class FeeInstallmentTest {
      * These tests verify that fees are correctly merged for a single fee on an account.
      ****************************************/
     @Test
+    public void createMergedFeeInstallmentsForOneFeeBothAccountAndFeeAreScheduledEveryWeekStartwithSecondInstallmentShouldGetOneFeeInstallmentPerAccountEvent() {
+        ScheduledEvent masterEvent = new ScheduledEventBuilder().every(1).weeks().build();
+        FeeBO feeBO = createWeeklyFeeBO(1);
+        AccountFeesEntity accountFeesEntity = createAccountFeesEntity(feeBO, 10.0);
+
+       List<FeeInstallment> feeInstallments = FeeInstallment
+                                                    .createMergedFeeInstallmentsForOneFeeStartingWith(masterEvent, accountFeesEntity, 2, 2);
+        assertThat(feeInstallments.size(), is(2));
+        assertFeeInstallment(feeInstallments.get(0), 2, 10.0, feeBO);
+        assertFeeInstallment(feeInstallments.get(1), 3, 10.0, feeBO);
+
+    }
+
+    @Test
     public void createMergedFeeInstallmentsForOneFeeBothAccountAndFeeAreScheduledEveryWeekShouldGetOneFeeInstallmentPerAccountEvent() {
         ScheduledEvent masterEvent = new ScheduledEventBuilder().every(1).weeks().build();
         FeeBO feeBO = createWeeklyFeeBO(1);

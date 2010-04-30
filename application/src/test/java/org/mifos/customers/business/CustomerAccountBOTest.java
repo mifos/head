@@ -2,6 +2,7 @@ package org.mifos.customers.business;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyShort;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,14 +23,18 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
+import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.DayOfWeek;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
@@ -39,27 +45,22 @@ public class CustomerAccountBOTest {
 
     private CustomerAccountBO customerAccount;
 
-    @Mock
-    private UserContext userContext;
-
-    @Mock
-    private CustomerBO customer;
-
-    @Mock
-    private FeeBO weeklyFee;
-
-    @Mock
-    private FeeBO biWeeklyFee;
-
-    @Mock
-    private FeeFrequencyEntity weeklyFeeFrequencyEntity;
-
-    @Mock
-    private FeeFrequencyEntity biWeeklyFeeFrequencyEntity;
+    @Mock private UserContext userContext;
+    @Mock private CustomerBO customer;
+    @Mock private CustomerStatusEntity customerStatus;
+    @Mock private FeeBO weeklyFee;
+    @Mock private FeeBO biWeeklyFee;
+    @Mock private FeeBO oneTimeUpFrontFee;
+    @Mock private FeeFrequencyEntity weeklyFeeFrequencyEntity;
+    @Mock private FeeFrequencyEntity biWeeklyFeeFrequencyEntity;
+    @Mock private FeeFrequencyEntity oneTimeFeeFrequencyEntity;
+    @Mock private FeePaymentEntity oneTimeFeePaymentEntity;
+    @Mock private PersonnelPersistence personnelPersistence;
 
 
     private final String weeklyFeeName = "Fee 1";
     private final String biWeeklyFeeName = "Fee 2";
+    private final String oneTimeFeeName = "Fee 3";
     private MeetingBO defaultWeeklyCustomerMeeting;
     private MeetingBO feeMeetingEveryWeek;
     private MeetingBO biWeeklyFeeMeeting;
@@ -69,6 +70,8 @@ public class CustomerAccountBOTest {
     private List<Holiday> holidays;
     private List<AccountFeesEntity> accountFees;
     private Holiday moratorium;
+
+    private DateTimeService dateTimeService = new DateTimeService();
 
     @BeforeClass
     public static void setupDefaultCurrency() {
@@ -81,14 +84,22 @@ public class CustomerAccountBOTest {
 
         workingDays = Arrays.asList(DayOfWeek.mondayAsDay(), DayOfWeek.tuesdayAsDay(), DayOfWeek.wednesdayAsDay(), DayOfWeek.thursdayAsDay(), DayOfWeek.fridayAsDay());
 
-        customerAccount = new CustomerAccountBO(userContext, customer, fees);
     }
 
     @Before
-    public void setupDefaultObjects() {
+    public void setupDefaultObjects() throws Exception {
+        dateTimeService.resetToCurrentSystemDateTime();
         defaultWeeklyCustomerMeeting = new MeetingBuilder().every(1).weekly().occuringOnA(WeekDay.MONDAY).build();
+
         when(customer.getCustomerMeetingValue()).thenReturn(defaultWeeklyCustomerMeeting);
         when(customer.getUserContext()).thenReturn(TestUtils.makeUser());
+//        getCustomer().getCustomerStatus().getId().equals(CustomerConstants.CLIENT_APPROVED)
+        when(customer.getCustomerStatus())  .thenReturn(customerStatus);
+        when(customer.getCustomerMeetingValue())  .thenReturn(defaultWeeklyCustomerMeeting);
+
+        when(customerStatus.getId())    .thenReturn(CustomerConstants.CLIENT_APPROVED);
+
+
         holidays = new ArrayList<Holiday>();
         accountFees = new ArrayList<AccountFeesEntity>();
         moratorium = new HolidayBuilder().from(new DateTime().plusWeeks(2))
@@ -113,7 +124,26 @@ public class CustomerAccountBOTest {
         when(biWeeklyFee.getFeeFrequency())                    .thenReturn(biWeeklyFeeFrequencyEntity);
         when(biWeeklyFee.getFeeName())                         .thenReturn(biWeeklyFeeName);
         when(biWeeklyFeeFrequencyEntity.getFeeMeetingFrequency()).thenReturn(biWeeklyFeeMeeting);
+
+        when(oneTimeUpFrontFee.getFeeId())                     .thenReturn((short) 3);
+        when(oneTimeUpFrontFee.getFeeFrequency())                    .thenReturn(oneTimeFeeFrequencyEntity);
+        when(oneTimeFeeFrequencyEntity.getFeePayment())        .thenReturn(oneTimeFeePaymentEntity);
+
+        when(personnelPersistence.getPersonnel(anyShort())) .thenReturn(null);
+
+        customerAccount = new CustomerAccountBO(userContext, customer, fees);
+        customerAccount.setPersonnelPersistence(personnelPersistence);
+
     }
+
+    @After
+    public void tearDown() {
+        dateTimeService.resetToCurrentSystemDateTime();
+    }
+
+    /**********************************************************
+     * Test generateNextSetOfMeetingDates
+     **********************************************************/
 
     @Test
     public void canGenerateSchedulesMatchingMeetingRecurrenceWhenNoPreviousSchedulesExisted() {
@@ -141,6 +171,12 @@ public class CustomerAccountBOTest {
         }
     }
 
+    /******************************************************************
+     * Test generated meeting dates for new customer.
+     *   - with and without fees
+     *   - with and without moratorium adjustment
+     ******************************************************************/
+
     @Test
     public void createNewWeeklyCustomerAccountNoFeesNoHolidayGeneratesCorrectSchedule() {
 
@@ -153,7 +189,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         for (AccountActionDateEntity scheduledDate : customerAccount.getAccountActionDates()) {
             assertThat(scheduledDate.getInstallmentId(), is(installmentId));
@@ -176,7 +212,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         //Third through 10th dates should get pushed out one week
         for (AccountActionDateEntity scheduledDate : getActionDatesSortedByDate(customerAccount)) {
@@ -204,7 +240,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
@@ -231,7 +267,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
@@ -267,7 +303,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
@@ -307,7 +343,7 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(DayOfWeek.monday());
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         //Third through 10th installments pushed out one week. Fees are unchanged, remain attached to installments
         //even when the installment is pushed out
@@ -328,7 +364,17 @@ public class CustomerAccountBOTest {
         }
     }
 
-    private DateTime getFirstInstallmentDateForWeeklyScheduleForDayOfWeek(int dayOfWeek) {
+    /*********************************
+     * Test applying charges - verify added to correct installments
+     * It is nearly impossible to unit-test applying charges because persistence calls
+     * infest the class. See CustomerApplyFeesIntegrationTest
+     ***********************************/
+
+    /**************************************
+     * Helper methods
+     *************************************/
+
+    private DateTime getFirstInstallmentDateForWeeklyScheduleStartingNow(int dayOfWeek) {
         DateTime installmentDate = new DateTime().withDayOfWeek(dayOfWeek);
         if (installmentDate.isBeforeNow()) {
             installmentDate = installmentDate.plusWeeks(1);

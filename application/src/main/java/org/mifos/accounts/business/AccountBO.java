@@ -351,6 +351,13 @@ public class AccountBO extends AbstractBusinessObject {
         return accountActionDates;
     }
 
+    public List<AccountActionDateEntity> getActionDatesSortedByDate() {
+        List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>();
+        sortedList.addAll(this.getAccountActionDates());
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
     public List<AccountPaymentEntity> getAccountPayments() {
 
         return accountPayments;
@@ -1283,7 +1290,7 @@ public class AccountBO extends AbstractBusinessObject {
     public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates,
            final boolean adjustForHolidays ) {
 
-        MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
+        MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();

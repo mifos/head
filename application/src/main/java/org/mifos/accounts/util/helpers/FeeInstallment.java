@@ -75,16 +75,26 @@ public class FeeInstallment {
     public static List<FeeInstallment> createMergedFeeInstallments(ScheduledEvent masterEvent,
             Collection<AccountFeesEntity> accountFees, int numberOfInstallments) {
 
+        return createMergedFeeInstallmentsStartingWith(masterEvent, accountFees, numberOfInstallments, 1);
+    }
+
+    public static List<FeeInstallment> createMergedFeeInstallmentsStartingWith(ScheduledEvent masterEvent,
+            Collection<AccountFeesEntity> accountFees, int numberOfInstallments, int startingInstallmentNumber) {
+
         List<FeeInstallment> mergedFeeInstallments = new ArrayList<FeeInstallment>();
         for (AccountFeesEntity accountFeesEntity : accountFees) {
             mergedFeeInstallments
-                .addAll(createMergedFeeInstallmentsForOneFee(masterEvent, accountFeesEntity, numberOfInstallments));
+                .addAll(createMergedFeeInstallmentsForOneFeeStartingWith(masterEvent, accountFeesEntity, numberOfInstallments, startingInstallmentNumber));
             }
         return mergedFeeInstallments;
     }
 
-    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFee (ScheduledEvent masterEvent,
-            AccountFeesEntity accountFeesEntity, int numberOfInstallments) {
+    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFee (ScheduledEvent masterEvent, AccountFeesEntity accountFeesEntity, int numberOfInstallments) {
+        return createMergedFeeInstallmentsForOneFeeStartingWith(masterEvent, accountFeesEntity, numberOfInstallments, 1);
+    }
+
+    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFeeStartingWith (ScheduledEvent masterEvent,
+            AccountFeesEntity accountFeesEntity, int numberOfInstallments, int startingInstallmentNumber) {
 
         List<FeeInstallment> mergedFeeInstallments = new ArrayList<FeeInstallment>();
         if (accountFeesEntity.getFees().isOneTime()) {
@@ -98,8 +108,9 @@ public class FeeInstallment {
             ScheduledEvent feesEvent
             = ScheduledEventFactory
             .createScheduledEventFrom(accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency());
-            for (short installmentId = 1; installmentId <= numberOfInstallments; installmentId++) {
-                int numberOfFeeInstallmentsToRollup = masterEvent.numberOfEventsRollingUpToThis(feesEvent, installmentId);
+            for (short installmentId = (short) startingInstallmentNumber; installmentId <= numberOfInstallments + startingInstallmentNumber - 1; installmentId++) {
+                int numberOfFeeInstallmentsToRollup
+                    = masterEvent.numberOfDependentOccurrencesRollingUpToThisOccurrenceStartingWith(feesEvent, installmentId, startingInstallmentNumber);
                 if (numberOfFeeInstallmentsToRollup > 0) {
                     FeeInstallment feeInstallment
                     = buildFeeInstallment(

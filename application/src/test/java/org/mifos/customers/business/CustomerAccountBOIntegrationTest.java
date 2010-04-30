@@ -682,6 +682,8 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     public void testApplyPeriodicFeeToPartialPending() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
+
+        // The factory creates a "maint
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
         TestObjectFactory.flushandCloseSession();
