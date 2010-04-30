@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.mifos.calendar.CalendarUtils;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.ScheduledEventBuilder;
 
@@ -18,12 +17,11 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
         scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(1).on(DayOfWeek.tuesday()).build();
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
-        DateTime firstMondayOfNextMonth = CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(), firstOfNextMonth);
+        DateTime firstMondayOfMay2010 = new DateTime().withYear(2010).withMonthOfYear(5).withDayOfMonth(3).toDateMidnight().toDateTime();
 
-        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfMay2010);
 
-        assertThat(result, is(firstMondayOfNextMonth.plusDays(1)));
+        assertThat(result, is(firstMondayOfMay2010.plusDays(1)));
     }
 
     @Test
@@ -31,12 +29,11 @@ public class MonthlyOnWeekAndWeekDayScheduledEventTest {
 
         scheduledEvent = new ScheduledEventBuilder().every(1).months().onWeekOfMonth(2).on(DayOfWeek.tuesday()).build();
 
-        DateTime firstOfNextMonth = new DateTime().plusMonths(1).withDayOfMonth(1).toDateMidnight().toDateTime();
-        DateTime firstMondayOfNextMonth = CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(), firstOfNextMonth);
+        DateTime firstMondayOfMay2010 = new DateTime().withYear(2010).withMonthOfYear(5).withDayOfMonth(3).toDateMidnight().toDateTime();
 
-        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfNextMonth);
+        DateTime result = scheduledEvent.nearestMatchingDateBeginningAt(firstMondayOfMay2010);
 
-        assertThat(result, is(firstMondayOfNextMonth.plusDays(1).plusWeeks(1)));
+        assertThat(result, is(firstMondayOfMay2010.plusDays(1).plusWeeks(1)));
     }
 
     @Test

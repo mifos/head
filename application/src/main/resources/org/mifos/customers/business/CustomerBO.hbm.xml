@@ -578,23 +578,22 @@
 	<sql-query name="getCustomerAccountSummaryDto">
 		<return-scalar column="globalAccountNum" type="string" />
 		<return-scalar column="currency" type="short" />
-		<return-scalar column="nextScheduleChargeDue" type="big_decimal" />
-		<return-scalar column="nextFeesDue" type="big_decimal" />
+		<return-scalar column="totalChargeDue" type="big_decimal" />
+		<return-scalar column="totalFeesDue" type="big_decimal" />
 		<![CDATA[select a.global_account_num as globalAccountNum,
 				cs.misc_fees_currency_id as currency,
 				((cs.misc_fees - cs.misc_fees_paid) +
-					(cs.misc_penalty - cs.misc_penalty_paid)) as nextScheduleChargeDue,
-				sum(cfs.amount - cfs.amount_paid) as nextFeesDue
+					(cs.misc_penalty - cs.misc_penalty_paid)) as totalChargeDue,
+				sum(cfs.amount - cfs.amount_paid) as totalFeesDue
 				from account a
 				join customer_schedule cs on cs.account_id = a.account_id
 				left join customer_fee_schedule cfs on cfs.id = cs.id
 				where a.customer_id = :CUSTOMER_ID
-				and cs.action_date =
-					(select min(cs2.action_date)
+				and (cs.action_date <= date(:TODAY) or cs.action_date = (select min(cs2.action_date)
 					from customer_schedule cs2
 					where cs2.account_id = cs.account_id
-					and cs2.action_date >= date(:TODAY))
-				group by globalAccountNum, currency, nextScheduleChargeDue
+					and cs2.action_date >= date(:TODAY)))
+				group by globalAccountNum, currency
 		]]>
 	</sql-query>
 	<sql-query name="Customer.getCustomFieldViewForCustomers">

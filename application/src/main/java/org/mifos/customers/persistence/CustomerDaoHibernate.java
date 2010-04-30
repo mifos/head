@@ -508,16 +508,16 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String globalAccountNum = (String) queryResult.get(0)[0];
         // FIXME - johnw - currency
         final Short currency = (Short) queryResult.get(0)[1];
-        final BigDecimal nextScheduleChargeDue = (BigDecimal) queryResult.get(0)[2];
-        BigDecimal nextFeesDue = (BigDecimal) queryResult.get(0)[3];
-        if (nextFeesDue == null) {
-            nextFeesDue = BigDecimal.ZERO;
+        final BigDecimal totalChargesDue = (BigDecimal) queryResult.get(0)[2];
+        BigDecimal totalFeesDue = (BigDecimal) queryResult.get(0)[3];
+        if (totalFeesDue == null) {
+            totalFeesDue = BigDecimal.ZERO;
         }
 
         MifosCurrency mifosCurrency = Money.getDefaultCurrency();
-        final Money nextDueAmount = new Money(mifosCurrency, (nextScheduleChargeDue.add(nextFeesDue)));
+        final Money totalAmountDue = new Money(mifosCurrency, (totalChargesDue.add(totalFeesDue)));
 
-        return new CustomerAccountSummaryDto(globalAccountNum, nextDueAmount);
+        return new CustomerAccountSummaryDto(globalAccountNum, totalAmountDue);
     }
 
     @Override
