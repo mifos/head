@@ -187,13 +187,17 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.children = new HashSet<CustomerBO>();
         this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
         this.customerNotes = new HashSet<CustomerNoteEntity>();
-        this.mfiJoiningDate = mfiJoiningDate.toDate();
+        if (mfiJoiningDate != null) {
+            this.mfiJoiningDate = mfiJoiningDate.toDate();
+        }
         this.displayName = customerName;
         this.office = office;
         this.personnel = loanOfficer;
         this.formedByPersonnel = formedBy;
         this.customerLevel = new CustomerLevelEntity(customerLevel);
-        this.customerMeeting = new CustomerMeetingEntity(this, meeting);
+        if (meeting != null) {
+            this.customerMeeting = new CustomerMeetingEntity(this, meeting);
+        }
         this.customerStatus = new CustomerStatusEntity(customerStatus);
     }
 

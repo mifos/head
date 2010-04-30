@@ -274,7 +274,7 @@ public class SavingsScheduleIntegrationTest {
         meeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(expectedFirstDepositDate).build();
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        center = new CenterBuilder().withMeeting(meeting).withName("Center").with(sampleBranchOffice())
+        center = new CenterBuilder().with(meeting).withName("Center").with(sampleBranchOffice())
                 .withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, meeting);
 

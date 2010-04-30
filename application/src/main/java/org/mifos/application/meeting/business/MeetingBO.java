@@ -454,4 +454,8 @@ public class MeetingBO extends AbstractBusinessObject {
                 queryDate.isBefore(endOfMeetingInterval);
     }
 
+    public boolean hasSameRecurrenceAs(MeetingBO customerMeetingValue) {
+        return this.getRecurrenceType().equals(customerMeetingValue.getRecurrenceType());
+    }
+
 }

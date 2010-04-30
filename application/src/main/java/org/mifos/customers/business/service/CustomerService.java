@@ -38,12 +38,13 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.security.util.UserContext;
 
 public interface CustomerService {
 
-    void createCenter(CenterBO center, MeetingBO meeting, List<AccountFeesEntity> accountFees);
+    void createCenter(CenterBO center, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException;
 
     void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
 

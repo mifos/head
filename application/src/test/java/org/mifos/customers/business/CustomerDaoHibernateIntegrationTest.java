@@ -79,16 +79,16 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
         weeklyPeriodicFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly().withFeeAmount("100.0").withName(
-                "Center Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+                "Center Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).with(sampleBranchOffice())
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").with(sampleBranchOffice())
+        center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
         weeklyPeriodicFeeForGroupOnly = new FeeBuilder().appliesToGroupsOnly().withFeeAmount("50.0").withName(
-                "Group Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+                "Group Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).with(sampleBranchOffice())
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForGroupOnly);
 
@@ -97,7 +97,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
 
         weeklyPeriodicFeeForClientsOnly = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
-                "Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+                "Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).with(sampleBranchOffice())
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForClientsOnly);
 
@@ -107,7 +107,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.createClient(activeClient, weeklyMeeting);
 
         weeklyPeriodicFeeForSecondClient = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
-                "Inactive Client Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice())
+                "Inactive Client Periodic Fee").withSameRecurrenceAs(weeklyMeeting).with(sampleBranchOffice())
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForSecondClient);
 

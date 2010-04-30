@@ -75,7 +75,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").with(office).withLoanOfficer(
+        center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(office).withLoanOfficer(
                 testUser).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 

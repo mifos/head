@@ -81,11 +81,11 @@ public class ApplyCustomerFeeBatchJobIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").with(sampleBranchOffice())
+        center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
     }

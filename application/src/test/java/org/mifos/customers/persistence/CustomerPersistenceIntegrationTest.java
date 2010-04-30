@@ -849,7 +849,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().monthly().every(1).onDayOfMonth(1).build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName(this.getClass().getSimpleName() + " Center")
+        center = new CenterBuilder().with(weeklyMeeting).withName(this.getClass().getSimpleName() + " Center")
                 .with(office).withLoanOfficer(testUser).build();
         IntegrationTestObjectMother.createCenter((CenterBO) center, weeklyMeeting);
 

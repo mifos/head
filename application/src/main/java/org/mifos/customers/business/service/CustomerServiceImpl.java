@@ -56,12 +56,12 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
@@ -80,6 +80,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -102,7 +103,41 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
+    public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
+
+        if (StringUtils.isBlank(customer.getDisplayName())) {
+            throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_NAME);
+        }
+
+        if (customer.getPersonnel() == null) {
+            throw new ApplicationException(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER);
+        }
+
+        if (customer.getCustomerMeeting() == null || customer.getCustomerMeetingValue() == null) {
+
+            if (accountFees.size() > 0) {
+                throw new ApplicationException(CustomerConstants.MEETING_REQUIRED_EXCEPTION);
+            }
+
+            throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_MEETING);
+        }
+
+        if (customer.getMfiJoiningDate() == null) {
+            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
+        }
+
+        if (customer.getOffice() == null) {
+            throw new ApplicationException(CustomerConstants.INVALID_OFFICE);
+        }
+
+        for (AccountFeesEntity accountFee : accountFees) {
+            if (accountFee.getFees().isPeriodic()) {
+                MeetingBO feeMeeting = accountFee.getFees().getFeeFrequency().getFeeMeetingFrequency();
+                if (!feeMeeting.hasSameRecurrenceAs(customer.getCustomerMeetingValue())) {
+                    throw new ApplicationException(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH);
+                }
+            }
+        }
 
         createCustomer(customer, meeting, accountFees);
     }

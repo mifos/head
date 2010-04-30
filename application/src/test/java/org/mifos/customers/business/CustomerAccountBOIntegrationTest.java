@@ -1059,7 +1059,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             throws Exception {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName("Center").with(sampleBranchOffice())
+        center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(sampleBranchOffice())
                 .withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
@@ -1246,7 +1246,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName("Center_Active_test").with(
+        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).with(weeklyMeeting).withName("Center_Active_test").with(
                 sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 

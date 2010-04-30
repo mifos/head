@@ -164,7 +164,7 @@ public class TestSaveCollectionSheetUtils {
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).withMeeting(weeklyMeeting).withName(
+        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).with(weeklyMeeting).withName(
                 "Center").with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
 
@@ -173,7 +173,7 @@ public class TestSaveCollectionSheetUtils {
         IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
 
         AmountFeeBO weeklyPeriodicFeeForFirstClients = new FeeBuilder().appliesToClientsOnly().withFeeAmount("87.0")
-                .withName("First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).withOffice(
+                .withName("First Client Weekly Periodic Fee").withSameRecurrenceAs(weeklyMeeting).with(
                         sampleBranchOffice()).build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForFirstClients);
 
@@ -260,7 +260,7 @@ public class TestSaveCollectionSheetUtils {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
-        anotherCenter = new CenterBuilder().withMeeting(weeklyMeeting).withName("Another Center").with(
+        anotherCenter = new CenterBuilder().with(weeklyMeeting).withName("Another Center").with(
                 sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.saveCustomer(anotherCenter);
 

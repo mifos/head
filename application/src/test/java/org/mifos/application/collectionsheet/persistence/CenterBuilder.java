@@ -55,7 +55,7 @@ public class CenterBuilder {
 
     public CenterBO build() {
 
-        if (meeting == null) {
+        if (meeting == null && meetingBuilder != null) {
             meeting = meetingBuilder.build();
         }
 
@@ -76,7 +76,7 @@ public class CenterBuilder {
         return this;
     }
 
-    public CenterBuilder withMeeting(final MeetingBO withMeeting) {
+    public CenterBuilder with(final MeetingBO withMeeting) {
         this.meeting = withMeeting;
         return this;
     }
@@ -101,7 +101,7 @@ public class CenterBuilder {
         return this;
     }
 
-    public CenterBuilder withAddress(Address withAddress) {
+    public CenterBuilder with(Address withAddress) {
         this.address = withAddress;
         return this;
     }
@@ -125,6 +125,16 @@ public class CenterBuilder {
 
     public CenterBuilder inActive() {
         this.status = CustomerStatus.CENTER_INACTIVE;
+        return this;
+    }
+
+    public CenterBuilder withMfiJoiningDate(DateTime withMfiJoiningDate) {
+        this.mfiJoiningDate = withMfiJoiningDate;
+        return this;
+    }
+
+    public CenterBuilder withExternalId(String withExternalId) {
+        this.externalId = withExternalId;
         return this;
     }
 }

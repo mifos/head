@@ -128,7 +128,7 @@ public class ClientStatusChangeIntegrationTest {
     public void givenGroupIsInCancelledStateShouldNotPassValidationWhenTryingToTranistionClientToActive() throws Exception {
 
         // setup
-        CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
+        CenterBO existingCenter = new CenterBuilder().with(existingMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
@@ -166,7 +166,7 @@ public class ClientStatusChangeIntegrationTest {
     public void givenGroupIsInPartialStateShouldNotPassValidationWhenTryingToTranistionClientToActive() throws Exception {
 
         // setup
-        CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
+        CenterBO existingCenter = new CenterBuilder().with(existingMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
@@ -204,7 +204,7 @@ public class ClientStatusChangeIntegrationTest {
     public void givenClientHasActiveAccountsShouldNotPassValidationWhenTryingToTranistionClientToClosed() throws Exception {
 
         // setup
-        CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
+        CenterBO existingCenter = new CenterBuilder().with(existingMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)

@@ -315,7 +315,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext) {
+            UserContext userContext) throws ApplicationException {
 
         try {
             List<CustomFieldDto> customFields = actionForm.getCustomFields();

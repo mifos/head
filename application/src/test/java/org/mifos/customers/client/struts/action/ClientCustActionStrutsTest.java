@@ -42,8 +42,8 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -55,9 +55,9 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientTestUtils;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.business.service.ClientInformationDto;
@@ -506,54 +506,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
-        removeFees(feesToRemove);
-    }
-
-    public void testPreviewFaillure_FeesWithoutMeeting() throws Exception {
-        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
-        addRequestParameter("groupFlag", "0");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-        List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "next");
-        addRequestParameter("officeId", "3");
-        addRequestParameter("clientName.salutation", "1");
-        addRequestParameter("clientName.firstName", "Client");
-        addRequestParameter("clientName.lastName", "LastName");
-        addRequestParameter("spouseName.firstName", "Spouse");
-        addRequestParameter("spouseName.lastName", "LastName");
-        addRequestParameter("spouseName.nameType", "1");
-        addRequestDateParameter("dateOfBirth", "20/3/1987");
-        addRequestParameter("clientDetailView.gender", "1");
-        addRequestParameter("input", "personalInfo");
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "Req");
-            i++;
-        }
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        FeeDto fee = feeList.get(0);
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("input", "mfiInfo");
-        addRequestParameter("formedByPersonnel", "1");
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
-        addRequestParameter("selectedFee[0].amount", fee.getAmount());
-        // SessionUtils.setAttribute(ClientConstants.CLIENT_MEETING,new
-        // MeetingBO(MeetingFrequency.MONTHLY,
-        // Short.valueOf("2"),MeetingType.CUSTOMERMEETING), request);
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
         removeFees(feesToRemove);
     }
 

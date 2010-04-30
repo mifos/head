@@ -48,6 +48,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
@@ -252,7 +253,11 @@ public class IntegrationTestObjectMother {
 
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
-        customerService.createCenter(center, meeting, accountFees);
+        try {
+            customerService.createCenter(center, meeting, accountFees);
+        } catch (ApplicationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO fee) {
@@ -265,7 +270,11 @@ public class IntegrationTestObjectMother {
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         accountFees.add(accountFee);
 
-        customerService.createCenter(center, meeting, accountFees);
+        try {
+            customerService.createCenter(center, meeting, accountFees);
+        } catch (ApplicationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO...fees) {
@@ -278,7 +287,12 @@ public class IntegrationTestObjectMother {
             AccountFeesEntity accountFee = new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue());
             accountFees.add(accountFee);
         }
-        customerService.createCenter(center, meeting, accountFees);
+
+        try {
+            customerService.createCenter(center, meeting, accountFees);
+        } catch (ApplicationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void createGroup(GroupBO group, MeetingBO meeting) {

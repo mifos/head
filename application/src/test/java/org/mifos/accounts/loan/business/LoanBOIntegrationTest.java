@@ -284,7 +284,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().monthly().every(1).onDayOfMonth(1).build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
 
-        center = new CenterBuilder().withMeeting(weeklyMeeting).withName(this.getClass().getSimpleName() + " Center").with(office).withLoanOfficer(
+        center = new CenterBuilder().with(weeklyMeeting).withName(this.getClass().getSimpleName() + " Center").with(office).withLoanOfficer(
                 testUser).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
@@ -5155,7 +5155,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         DateTime startDate = new DateTime().withDate(2010, 10, 15).toDateMidnight().toDateTime(); // Friday
         MeetingBO meeting = new MeetingBuilder().weekly().withStartDate(startDate).build();
         OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
-        CenterBO center = new CenterBuilder().withMeeting(meeting).with(office).build();
+        CenterBO center = new CenterBuilder().with(meeting).with(office).build();
         GroupBO group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         LoanOfferingBO loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
         List<FeeDto> feeDtos = new ArrayList<FeeDto>();

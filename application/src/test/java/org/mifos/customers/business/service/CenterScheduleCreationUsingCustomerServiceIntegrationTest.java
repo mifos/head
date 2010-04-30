@@ -105,7 +105,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
      ***********************************************/
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesNoHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -116,7 +116,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -133,7 +133,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInMoratorium() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -144,7 +144,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -160,7 +160,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInMoratorium() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -171,7 +171,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -187,7 +187,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInNextMeetingHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInNextMeetingHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -198,7 +198,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -214,7 +214,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInNextMeetingHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInNextMeetingHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -225,7 +225,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -241,7 +241,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInSameDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInSameDayHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -252,7 +252,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -268,7 +268,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInSameDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdAndFourthDatesInSameDayHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -280,7 +280,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -296,7 +296,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneDayNextWorkingDayHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneDayNextWorkingDayHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -307,7 +307,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -323,7 +323,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneWeekNextWorkingDayHolidayShouldPushOutToNextMonday() {
+    public void createCenterScheduleWithWeeklyMeetingNoFeesThirdDateInOneWeekNextWorkingDayHolidayShouldPushOutToNextMonday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -334,7 +334,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .every(1)
                                                       .startingToday()
                                                       .build();
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -355,7 +355,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeNoHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -372,10 +372,10 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -394,7 +394,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeNoHoliday() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeNoHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -411,7 +411,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
@@ -421,7 +421,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                               .build();
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -440,7 +440,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithThirdAndFourthMeetingsInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithThirdAndFourthMeetingsInMoratorium() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -457,7 +457,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
@@ -469,7 +469,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
 
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -488,7 +488,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithFirstMeetingInMoratorium() {
+    public void createCenterScheduleWithWeeklyMeetingWithOnePeriodicFeeAndOneTimeFeeWithFirstMeetingInMoratorium() throws Exception {
 
         DateTime today = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(today.getMillis()); //Today is a Monday
@@ -506,7 +506,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
@@ -519,7 +519,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         // Declare a one-day moratorium on the first meeting day
         saveHoliday(tomorrow, tomorrow, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
 
-        CenterBO center = new CenterBuilder().withMeeting(weeklyMeeting)
+        CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -543,7 +543,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
      ***********************************************/
 
     @Test
-    public void createCenterScheduleWithBiWeeklyMeetingNoFeesNoHoliday() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesNoHoliday() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -555,7 +555,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .startingToday()
                                                       .build();
 
-        CenterBO center = new CenterBuilder().withMeeting(biWeeklyMeeting)
+        CenterBO center = new CenterBuilder().with(biWeeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -571,7 +571,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdDateInMoratorium() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdDateInMoratorium() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -584,7 +584,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .startingToday()
                                                       .build();
 
-        CenterBO center = new CenterBuilder().withMeeting(biWeeklyMeeting)
+        CenterBO center = new CenterBuilder().with(biWeeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
@@ -600,7 +600,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdAndFifthDatesInMoratorium() {
+    public void createCenterScheduleWithBiWeeklyMeetingNoFeesThirdAndFifthDatesInMoratorium() throws Exception {
 
         DateTime startDate = date(2010, 4, 5);
         DateTimeUtils.setCurrentMillisFixed(startDate.getMillis()); //Monday
@@ -614,7 +614,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                                       .startingToday()
                                                       .build();
 
-        CenterBO center = new CenterBuilder().withMeeting(biWeeklyMeeting)
+        CenterBO center = new CenterBuilder().with(biWeeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()

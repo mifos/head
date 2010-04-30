@@ -125,7 +125,7 @@ public class CustomerApplyFeesIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
@@ -133,7 +133,7 @@ public class CustomerApplyFeesIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Applied Weekly Periodic Fee")
                                                         .with(weeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(weeklyAppliedPeriodicFeeForCenterOnly);
 
@@ -141,7 +141,7 @@ public class CustomerApplyFeesIntegrationTest {
                                                         .withFeeAmount("100.0")
                                                         .withName("Center Applied Biweekly Periodic Fee")
                                                         .with(biWeeklyMeetingForFees)
-                                                        .withOffice(sampleBranchOffice())
+                                                        .with(sampleBranchOffice())
                                                         .build();
         IntegrationTestObjectMother.saveFee(biWeeklyAppliedPeriodicFeeForCenterOnly);
 
@@ -278,7 +278,7 @@ public class CustomerApplyFeesIntegrationTest {
 
 private void createCenterWithFeeStartingNextTuesday(MeetingBO centerMeeting, AmountFeeBO fee) {
 
-    center = new CenterBuilder().withMeeting(centerMeeting)
+    center = new CenterBuilder().with(centerMeeting)
                                 .withName("Center")
                                 .with(sampleBranchOffice())
                                 .withLoanOfficer(testUser())

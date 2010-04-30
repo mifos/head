@@ -360,7 +360,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
 
         AmountFeeBO monthlyPeriodicFeeForFirstClients = new FeeBuilder().appliesToCenterOnly().withFeeAmount("200.0")
-        .withName("PeriodicAmountFee").withSameRecurrenceAs(weeklyMeeting).withOffice(sampleBranchOffice()).build();
+        .withName("PeriodicAmountFee").withSameRecurrenceAs(weeklyMeeting).with(sampleBranchOffice()).build();
         IntegrationTestObjectMother.saveFee(monthlyPeriodicFeeForFirstClients);
 
         setRequestPathInfo("/centerCustAction.do");

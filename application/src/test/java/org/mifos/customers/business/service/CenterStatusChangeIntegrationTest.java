@@ -140,7 +140,7 @@ public class CenterStatusChangeIntegrationTest {
 
         // setup
         CenterBO existingCenter = new CenterBuilder().withName("Center-IntegrationTest")
-                                            .withMeeting(existingMeeting)
+                                            .with(existingMeeting)
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
                                             .withUserContext()
@@ -179,7 +179,7 @@ public class CenterStatusChangeIntegrationTest {
 
         // setup
         CenterBO existingCenter = new CenterBuilder().withName("Center-IntegrationTest")
-                                            .withMeeting(existingMeeting)
+                                            .with(existingMeeting)
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)
                                             .withUserContext()
@@ -219,7 +219,7 @@ public class CenterStatusChangeIntegrationTest {
     public void givenCenterIsInactiveAndAssignedLoanOfficerIsInactiveShouldNotPassValidationWhenTryingToTranistionClientToActive() throws Exception {
 
         // setup
-        CenterBO existingCenter = new CenterBuilder().withMeeting(existingMeeting)
+        CenterBO existingCenter = new CenterBuilder().with(existingMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(existingOffice)
                                             .withLoanOfficer(existingLoanOfficer)

@@ -436,7 +436,6 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
     protected void validateFees(HttpServletRequest request, ActionErrors errors) throws ApplicationException {
         Locale locale = getUserContext(request).getPreferredLocale();
-        validateForFeeAssignedWithoutMeeting(request, errors);
         validateForFeeRecurrence(request, errors);
         validateForFeeAmount(errors, locale);
         validateForDuplicatePeriodicFee(request, errors);

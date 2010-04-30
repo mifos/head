@@ -111,7 +111,7 @@ public class FeeBuilder {
         return this;
     }
 
-    public FeeBuilder withOffice(final OfficeBO withOffice) {
+    public FeeBuilder with(final OfficeBO withOffice) {
         this.office = withOffice;
         return this;
     }

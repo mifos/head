@@ -156,7 +156,7 @@ public class LoanScheduleGenerationIntegrationTest {
                                           .with(feeMeetingBuilder)
                                           .withFeeAmount("14.0")
                                           .withName("Periodic Loan Fee")
-                                          .withOffice(sampleBranchOffice())
+                                          .with(sampleBranchOffice())
                                           .build();
         IntegrationTestObjectMother.saveFee(fee);
 
@@ -181,7 +181,7 @@ public class LoanScheduleGenerationIntegrationTest {
                                           .withFeePayment(FeePayment.UPFRONT)
                                           .withFeeAmount("14.0")
                                           .withName("Onetime Loan Fee Due on Disbursement")
-                                          .withOffice(sampleBranchOffice())
+                                          .with(sampleBranchOffice())
                                           .build();
         IntegrationTestObjectMother.saveFee(fee);
 
@@ -204,7 +204,7 @@ public class LoanScheduleGenerationIntegrationTest {
                                           .with(feeMeetingBuilder)
                                           .withFeeAmount("14.0")
                                           .withName("Periodic Loan Fee")
-                                          .withOffice(sampleBranchOffice())
+                                          .with(sampleBranchOffice())
                                           .build();
         IntegrationTestObjectMother.saveFee(fee);
 
@@ -652,7 +652,7 @@ public class LoanScheduleGenerationIntegrationTest {
     }
 
     private void setupOfficeAndCenterAndGroupAndLoanOfferingForMeeting (MeetingBO meeting) {
-        center = new CenterBuilder().withMeeting(meeting).with(office).withLoanOfficer(testUser()).build();
+        center = new CenterBuilder().with(meeting).with(office).withLoanOfficer(testUser()).build();
         group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
 
