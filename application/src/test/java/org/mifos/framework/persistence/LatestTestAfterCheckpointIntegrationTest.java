@@ -24,6 +24,8 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICA
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -35,6 +37,7 @@ import junit.framework.Assert;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -103,12 +106,24 @@ public class LatestTestAfterCheckpointIntegrationTest {
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
         IDataSet latestDataDump = new DatabaseConnection(connection).createDataSet();
+
+        // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
+        // datasets FlatXmlDataSet seems to work here.
+        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(System.getProperty("java.io.tmpdir")
+                + "latestDataDump.xml"));
+        latestDataDump = new FlatXmlDataSet(new File(System.getProperty("java.io.tmpdir") + "latestDataDump.xml"));
+
         String latestDump = TestDatabase.getAllTablesStructureDump();
         dropLatestDatabase();
         createLatestCheckPointDatabaseWithLatestData();
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
+
         IDataSet upgradeDataDump = new DatabaseConnection(connection).createDataSet();
+
+        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(System.getProperty("java.io.tmpdir")+"upgradeDataDump.xml"));
+        upgradeDataDump = new FlatXmlDataSet(new File(System.getProperty("java.io.tmpdir")+"upgradeDataDump.xml"));
+
         Assert.assertEquals(latestDump, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
     }
