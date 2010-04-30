@@ -183,10 +183,6 @@ UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
 UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 0
   WHERE FIELD_NAME = 'SourceOfFund' AND ENTITY_ID = 22;
 
-
-/* make the Non-Working day a working day*/
-UPDATE WEEK_DAYS_MASTER SET WORKING_DAY = 1 WHERE WEEK_DAYS_MASTER_ID = 1;
-
 /* make a listdatasource for test*/
 Insert into report_datasource (DATASOURCE_ID,NAME,DRIVER,URL,USERNAME,PASSWORD) values(1,'test','test','test
 ','test','test');
