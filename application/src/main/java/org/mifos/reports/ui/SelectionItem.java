@@ -49,6 +49,12 @@ public class SelectionItem implements Serializable {
     private String displayName;
     private Integer id;
 
+    /*
+     * default constructor for hibernate
+     */
+    protected SelectionItem() {
+    }
+
     public SelectionItem(Integer id, String displayName) {
         super();
         this.displayName = displayName;

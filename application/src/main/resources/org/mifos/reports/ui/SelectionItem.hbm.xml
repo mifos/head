@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.reports.ui.SelectionItem">
+		<composite-id>
+			<key-property name="id" type="integer" access="field" />
+			<key-property name="displayName" type="string" access="field" />
+		</composite-id>
+	</class>
+	<class name="org.mifos.reports.ui.DateSelectionItem" mutable="false">
+		<id name="date" type="date" access="field" />
+	</class>
+
+	<sql-query name="SelectionItem.get_active_offices">
+		<return alias="branchOffice" class="org.mifos.reports.ui.SelectionItem" />
+		SELECT OFFICE_ID as {branchOffice.id}, DISPLAY_NAME as
+		{branchOffice.displayName} from office
+		where SEARCH_ID like :officeSearchId and
+		OFFICE_LEVEL_ID=:officeLevelId and STATUS_ID=:ACTIVE order by office.DISPLAY_NAME
+	</sql-query>
+
+	<sql-query name="SelectionItem.get_active_loanofficers_under_office">
+		<return alias="loanOfficer" class="org.mifos.reports.ui.SelectionItem" />
+		SELECT PERSONNEL_ID as {loanOfficer.id}, DISPLAY_NAME as
+		{loanOfficer.displayName} from PERSONNEL
+		where PERSONNEL.LEVEL_ID=:personnelLevelId and
+		PERSONNEL.OFFICE_ID=:officeId and PERSONNEL.PERSONNEL_STATUS=:ACTIVE
+		order by PERSONNEL.DISPLAY_NAME
+	</sql-query>
+
+	<sql-query name="SelectionItem.get_active_customers_under_loanofficers">
+		<return alias="center" class="org.mifos.reports.ui.SelectionItem" />
+		SELECT CUSTOMER_ID as {center.id}, DISPLAY_NAME as
+		{center.displayName} from CUSTOMER
+		where CUSTOMER.LOAN_OFFICER_ID=:personnelId and
+		CUSTOMER.BRANCH_ID=:officeId and
+		CUSTOMER.CUSTOMER_LEVEL_ID=:customerLevelId
+		and CUSTOMER.STATUS_ID=:ACTIVE
+
+	</sql-query>
+</hibernate-mapping>

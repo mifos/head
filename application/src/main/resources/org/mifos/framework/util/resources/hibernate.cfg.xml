@@ -132,6 +132,7 @@
 		<!-- Mapping files for collection sheet retrieve and save-->
 		<mapping
 			resource="org/mifos/application/collectionsheet/business/CollectionSheetRetrieveAndSave.hbm.xml" />
+	    <mapping resource="org/mifos/reports/ui/SelectionItem.hbm.xml" />
 
 		<!-- Mapping files for Master Data -->
 		<mapping class="org.mifos.application.master.business.MifosCurrency" />
