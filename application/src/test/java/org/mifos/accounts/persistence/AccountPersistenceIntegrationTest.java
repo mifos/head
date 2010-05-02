@@ -244,8 +244,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(0, accountPersistence.getAccountsWithYesterdaysInstallment().size());
     }
 
-    //FIXME failing the trunk
-    public void xtestSearchAccount() throws Exception {
+    public void testSearchAccount() throws Exception {
         savingsBO = createSavingsAccount();
 
         QueryResult queryResult = null;
