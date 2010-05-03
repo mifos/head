@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.api;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -126,4 +127,11 @@ public interface AccountService {
      */
     List<PaymentTypeDto> getFeePaymentTypes() throws Exception;
 
+    /**
+     * Gets the total payment due for an account.
+     *
+     * @return big decimal total payment due
+     *
+     */
+    BigDecimal getTotalPayementDueAmount(AccountReferenceDto account) throws Exception;
 }

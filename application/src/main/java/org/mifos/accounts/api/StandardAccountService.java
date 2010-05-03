@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.api;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,6 +152,10 @@ public class StandardAccountService implements AccountService {
             if (!getLoanPaymentTypes().contains(payment.getPaymentType())) {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
             }
+        } else if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.SAVINGS_ACCOUNT) {
+            if (!getSavingsPaymentTypes().contains(payment.getPaymentType())) {
+                errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
+            }
         } else if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.CUSTOMER_ACCOUNT) {
             if (!getFeePaymentTypes().contains(payment.getPaymentType())) {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
@@ -160,6 +165,10 @@ public class StandardAccountService implements AccountService {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;
+    }
+
+    public List<PaymentTypeDto> getSavingsPaymentTypes() throws PersistenceException {
+        return getPaymentTypes(TrxnTypes.savings_deposit.getValue());
     }
 
     public List<PaymentTypeDto> getFeePaymentTypes() throws PersistenceException {
@@ -210,5 +219,11 @@ public class StandardAccountService implements AccountService {
             throw new PersistenceException("savings not found for client government id " + clientGovernmentId + " and savings product short name " + savingsProductShortName);
         }
         return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
+    @Override
+    public BigDecimal getTotalPayementDueAmount(AccountReferenceDto account) throws Exception {
+        AccountBO accountBo = getAccountPersistence().getAccount(account.getAccountId());
+        return accountBo.getTotalAmountDue().getAmount();
     }
 }
