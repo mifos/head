@@ -28,20 +28,26 @@ import org.mifos.config.LocalizedTextLookup;
 public enum AccountState implements LocalizedTextLookup {
 
     // AccountState Entity Values
-    LOAN_PARTIAL_APPLICATION(1, "AccountState-PartialApplication"), LOAN_PENDING_APPROVAL(2,
-            "AccountState-ApplicationPendingApproval"), LOAN_APPROVED(3, "AccountState-ApplicationApproved"), LOAN_DISBURSED_TO_LOAN_OFFICER(
-            4, "AccountState-DisbursedToLo"), LOAN_ACTIVE_IN_GOOD_STANDING(5, "AccountState-ActiveInGoodStanding"), LOAN_CLOSED_OBLIGATIONS_MET(
-            6, "AccountState-ClosedObligationMet"), LOAN_CLOSED_WRITTEN_OFF(7, "AccountState-ClosedWrittenOff"), LOAN_CLOSED_RESCHEDULED(
-            8, "AccountState-ClosedRescheduled"), LOAN_ACTIVE_IN_BAD_STANDING(9, "AccountState-ActiveInBadStanding"), LOAN_CANCELLED(
-            10, "AccountState-Cancel"),
+    LOAN_PARTIAL_APPLICATION(1, "AccountState-PartialApplication"), //
+    LOAN_PENDING_APPROVAL(2, "AccountState-ApplicationPendingApproval"), //
+    LOAN_APPROVED(3, "AccountState-ApplicationApproved"), //
+    LOAN_DISBURSED_TO_LOAN_OFFICER(4, "AccountState-DisbursedToLo"), //
+    LOAN_ACTIVE_IN_GOOD_STANDING(5, "AccountState-ActiveInGoodStanding"), //
+    LOAN_CLOSED_OBLIGATIONS_MET(6, "AccountState-ClosedObligationMet"), //
+    LOAN_CLOSED_WRITTEN_OFF(7, "AccountState-ClosedWrittenOff"), //
+    LOAN_CLOSED_RESCHEDULED(8, "AccountState-ClosedRescheduled"), //
+    LOAN_ACTIVE_IN_BAD_STANDING(9, "AccountState-ActiveInBadStanding"), //
+    LOAN_CANCELLED(10, "AccountState-Cancel"), //
     // CustomerStatus Entity Values
-    CUSTOMER_ACCOUNT_ACTIVE(11, "CustomerStatus-CustomerAccountActive"), CUSTOMER_ACCOUNT_INACTIVE(12,
-            "CustomerStatus-CustomerAccountInactive"),
+    CUSTOMER_ACCOUNT_ACTIVE(11, "CustomerStatus-CustomerAccountActive"), //
+    CUSTOMER_ACCOUNT_INACTIVE(12, "CustomerStatus-CustomerAccountInactive"), //
     // SavingsStatus Entity Values
-    SAVINGS_PARTIAL_APPLICATION(13, "SavingsStatus-PartialApplication"), SAVINGS_PENDING_APPROVAL(14,
-            "SavingsStatus-ApplicationPendingApproval"), SAVINGS_CANCELLED(15, "SavingsStatus-Cancelled"), SAVINGS_ACTIVE(
-            16, "SavingsStatus-Active"), SAVINGS_CLOSED(17, "SavingsStatus-Closed"), SAVINGS_INACTIVE(18,
-            "SavingsStatus-Inactive");
+    SAVINGS_PARTIAL_APPLICATION(13, "SavingsStatus-PartialApplication"), //
+    SAVINGS_PENDING_APPROVAL(14, "SavingsStatus-ApplicationPendingApproval"), //
+    SAVINGS_CANCELLED(15, "SavingsStatus-Cancelled"), //
+    SAVINGS_ACTIVE(16, "SavingsStatus-Active"), //
+    SAVINGS_CLOSED(17, "SavingsStatus-Closed"), //
+    SAVINGS_INACTIVE(18, "SavingsStatus-Inactive");
 
     Short value;
     String messageKey;
@@ -62,8 +68,7 @@ public enum AccountState implements LocalizedTextLookup {
             }
         }
         /*
-         * Do we really want null rather than an exception? I suspect
-         * IllegalArgumentException would make more sense.
+         * Do we really want null rather than an exception? I suspect IllegalArgumentException would make more sense.
          */
         return null;
     }
