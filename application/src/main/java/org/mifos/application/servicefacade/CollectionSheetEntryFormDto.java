@@ -19,18 +19,18 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * I am a DTO for data that is needed to display collection sheet form.
  */
-public class CollectionSheetEntryFormDto implements Serializable {
+public class CollectionSheetEntryFormDto implements DataTransferObject {
 
     private final List<OfficeDetailsDto> activeBranchesList;
     private final List<ListItem<Short>> paymentTypesList;

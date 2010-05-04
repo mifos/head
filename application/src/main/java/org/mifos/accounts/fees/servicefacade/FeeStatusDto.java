@@ -17,12 +17,14 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.accounts.fees.servicefacade;
 
 import java.io.Serializable;
 
-public class FeeStatusDto implements Serializable {
+import org.mifos.framework.business.service.DataTransferObject;
+
+public class FeeStatusDto implements DataTransferObject {
 
     private String id;
 

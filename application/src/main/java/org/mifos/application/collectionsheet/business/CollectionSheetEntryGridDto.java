@@ -30,11 +30,12 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  *
  */
-public class CollectionSheetEntryGridDto implements Serializable {
+public class CollectionSheetEntryGridDto implements DataTransferObject {
 
     private final CollectionSheetEntryDto bulkEntryParent;
     private final PersonnelDto loanOfficer;

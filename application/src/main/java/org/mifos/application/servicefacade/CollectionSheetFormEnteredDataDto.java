@@ -19,17 +19,17 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.framework.business.service.DataTransferObject;
 
 /**
  * DTO for data entered on collection sheet form.
  */
-public class CollectionSheetFormEnteredDataDto implements Serializable {
+public class CollectionSheetFormEnteredDataDto implements DataTransferObject {
 
     private final OfficeDetailsDto office;
     private final PersonnelDto loanOfficer;

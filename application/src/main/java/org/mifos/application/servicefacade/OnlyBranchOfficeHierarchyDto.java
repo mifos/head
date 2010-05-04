@@ -6,11 +6,12 @@ import java.util.Locale;
 
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class OnlyBranchOfficeHierarchyDto implements Serializable {
+public class OnlyBranchOfficeHierarchyDto implements DataTransferObject {
 
     public static final String IDENTIFIER = "branchOnlyOffices";
-    
+
     private final List<OfficeDetailsDto> levels;
     private final String loggedInOfficeSearchId;
     private final Locale preferredLocaleOfUser;
