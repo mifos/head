@@ -29,7 +29,7 @@
     </distributionManagement>
     
     <properties>
-    	<hibernate.version>3.5.0-Final</hibernate.version>
+    	<hibernate.version>3.5.1-Final</hibernate.version>
     	<spring.version>3.0.2.RELEASE</spring.version>
         <slf4j.version>1.5.8</slf4j.version>
     </properties>
