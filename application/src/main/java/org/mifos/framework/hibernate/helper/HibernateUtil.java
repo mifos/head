@@ -30,6 +30,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -226,6 +227,7 @@ public class HibernateUtil {
     private void initializeDatabaseConnnectionSettings() {
         try {
             config.setProperties(new StandardTestingService().getDatabaseConnectionSettings());
+            config.setNamingStrategy(new ImprovedNamingStrategy());
         } catch (IOException e) {
             throw new HibernateStartUpException(e);
         }
