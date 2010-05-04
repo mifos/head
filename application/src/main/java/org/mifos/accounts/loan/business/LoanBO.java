@@ -2280,6 +2280,9 @@ public class LoanBO extends AccountBO {
                 if (gracePeriodDuration == null || gracePeriodDuration >= noOfInstallments) {
                     throw new AccountException("errors.gracePeriod");
                 }
+                if (gracePeriodDuration > loanOffering.getGracePeriodDuration()) {
+                    throw new AccountException("errors.gracePeriodProductDef");
+                }
             }
             setGracePeriodType(loanOffering.getGracePeriodType());
             this.gracePeriodDuration = gracePeriodDuration;

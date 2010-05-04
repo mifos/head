@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-25 11:11+0200\n"
+"POT-Creation-Date: 2010-05-04 16:15+0200\n"
 "PO-Revision-Date: 2009-09-22 10:17-0700\n"
 "Last-Translator: Ryan Sturgill <sturgillr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -219,6 +219,10 @@ msgstr ""
 #: errors.gracePeriod
 msgid "The Grace period should be less than the total number of installments."
 msgstr "يجب الفترة السماح أن يكون أقلّ من عدد الأقساط."
+
+#: errors.gracePeriodProductDef
+msgid "The Grace period cannot be greater than in loan product definition."
+msgstr ""
 
 #: errors.graceper
 msgid "Please specify valid {0}. {0} should be a value less than {1}."

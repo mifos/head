@@ -40,8 +40,9 @@ public class LoanOfferingTestUtils {
         loanOffering.setPrdStatus(prdStatus);
     }
 
-    public static void setGracePeriodType(LoanOfferingBO loanOffering, GracePeriodTypeEntity gracePeriodType) {
+    public static void setGracePeriodType(LoanOfferingBO loanOffering, GracePeriodTypeEntity gracePeriodType, short gracePeriodDuration) {
         loanOffering.setGracePeriodType(gracePeriodType);
+        loanOffering.setGracePeriodDuration(gracePeriodDuration);
     }
 
     public static LoanPrdActionForm populateLoanAmountFromLastLoanAmount(String loanAmtCalcType, Integer startRangeLoanAmt1,

@@ -955,7 +955,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
         if (((!isInterestDedAtDisbValue()) && StringUtils.isBlank(getGracePeriodDuration()))
                 || (getDoubleValue(getGracePeriodDuration()) != null && getDoubleValue(getNoOfInstallments()) != null && getDoubleValue(getGracePeriodDuration()) >= getDoubleValue(getNoOfInstallments()))) {
-            String gracePeriodForRepayments = resources.getString("loan.gracePeriodForRepayments");
+            String gracePeriodForRepayments = resources.getString("loan.grace_period");
             String noInst = StringUtils.isBlank(getNoOfInstallments()) ? getStringValue(installmentRange
                     .getMaxNoOfInstall()) : getNoOfInstallments();
             addError(errors, LoanConstants.GRACEPERIODDURATION, LoanConstants.GRACEPERIODERROR,

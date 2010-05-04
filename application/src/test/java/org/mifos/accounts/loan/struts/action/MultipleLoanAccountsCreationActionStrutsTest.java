@@ -405,7 +405,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
        Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
        Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
                 .getNoOfInstallments());
-       Assert.assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
+       Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
        Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         TestObjectFactory.cleanUp(loan);

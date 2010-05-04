@@ -972,16 +972,17 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         Money loanAmount = new Money(getCurrency(), "300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
+        short gracePeriodDuration = (short) 0;
         LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering",
                 "TLO", productCategory, prdApplicableMaster, loanProductStartDate, null, null, gracePeriodType,
-                (short) 0, interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
+                gracePeriodDuration, interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
                 installments, installments, installments, true, interestDeductedAtDisbursement,
                 principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
                 glCodePrincipal, glCodeInterest);
 
         PrdStatusEntity prdStatus = new TestObjectPersistence().retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, gracePeriodDuration);
         loanOffering.save();
 
         return loanOffering;

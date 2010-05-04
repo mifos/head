@@ -259,7 +259,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         PrdStatusEntity prdStatus = new TestObjectPersistence().retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, (short) 0);
         loanOffering.save();
 
         return loanOffering;
@@ -1594,4 +1594,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verify(clientMock1, clientMock2, loanMock);
     }
 
+    public void testSchedulePreviewWithDataWithGracePerTooLong() throws Exception {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+        schedulePreviewPageParams.put("gracePeriodDuration", "2");
+
+        jumpToSchedulePreview();
+        actionPerform();
+        verifyActionErrors(new String[] { "errors.gracePeriodProductDef" });
+    }
 }

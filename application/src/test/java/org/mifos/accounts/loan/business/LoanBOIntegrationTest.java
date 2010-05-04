@@ -562,7 +562,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS,
                 startDate.toDate(),
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1",currency);
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short)0, "1", "1",currency);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -584,7 +584,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS,
                 startDate.toDate(),
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1",currency);
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short) 0, "1", "1",currency);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -3642,7 +3642,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "Loan".substring(0, 1),
                 ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
                 (short) 3, InterestType.FLAT, true, false, center.getCustomerMeeting().getMeeting(),
-                GraceType.PRINCIPALONLYGRACE, "1", "1");
+                GraceType.PRINCIPALONLYGRACE, (short) 7, "1", "1");
         UserContext userContext = TestUtils.makeUser();
         userContext.setLocaleId(null);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
@@ -4540,7 +4540,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short) 0, "1", "1");
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -4606,7 +4606,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3, InterestType.DECLINING, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short) 0, "1", "1");
 
         FeeBO fee = TestObjectFactory.createPeriodicRateFee("Periodic Rate Fee", FeeCategory.LOAN, new Double("9.0"),
                 FeeFormula.INTEREST, RecurrenceType.WEEKLY, new Short("1"), userContext, meeting);
@@ -4684,7 +4684,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.FLAT, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short) 0, "1", "1");
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -4727,7 +4727,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 0.0, (short) 3, InterestType.DECLINING, false, false, center
-                        .getCustomerMeeting().getMeeting(), GraceType.NONE, "1", "1");
+                        .getCustomerMeeting().getMeeting(), GraceType.NONE, (short) 0, "1", "1");
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
@@ -4819,7 +4819,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.GROUPS,
                     new Date(System.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0, 12.0, (short) 3,
                     InterestType.DECLINING, false, false, center.getCustomerMeeting().getMeeting(),
-                    GraceType.PRINCIPALONLYGRACE, "1", "1");
+                    GraceType.PRINCIPALONLYGRACE, (short) 7, "1", "1");
             List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
             accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,

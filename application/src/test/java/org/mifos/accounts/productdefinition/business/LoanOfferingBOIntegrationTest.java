@@ -148,7 +148,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 .getPrdOfferingId().toString()));
        Assert.assertEquals(2, auditLogList.size());
        Assert.assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
-       Assert.assertEquals(13, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(14, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Fee Types")
                     && auditLogRecord.getNewValue().equalsIgnoreCase("Loan Periodic")) {
@@ -190,7 +190,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 .getPrdOfferingId().toString()));
        Assert.assertEquals(1, auditLogList.size());
        Assert.assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0).getEntityType());
-       Assert.assertEquals(14, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(15, auditLogList.get(0).getAuditLogRecords().size());
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Min Loan Amount")) {
                Assert.assertEquals("300.0", auditLogRecord.getOldValue());

@@ -490,7 +490,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
-                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
+                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
@@ -865,7 +865,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
-                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
+                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
@@ -930,7 +930,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
-                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
+                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
 
         // loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
@@ -1567,7 +1567,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
-                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), "1", "1");
+                false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 

@@ -572,7 +572,7 @@ public class TestObjectFactory {
             final MeetingBO meeting) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 (short) defInstallments, interestType, intDedAtDisb, princDueLastInst, meeting,
-                GraceType.GRACEONALLREPAYMENTS, "1", "1");
+                GraceType.GRACEONALLREPAYMENTS, (short) 8, "1", "1");
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
@@ -580,7 +580,7 @@ public class TestObjectFactory {
             final Double defLnAmnt, final Double defIntRate, final int defInstallments,
             final InterestType interestType, final MeetingBO meeting) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
-                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, "1", "1");
+                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, (short) 1, "1", "1");
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
@@ -589,7 +589,7 @@ public class TestObjectFactory {
             final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType,
             final String calcInstallmentType, final MifosCurrency currency) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
-                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
+                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, (short)8,
                 loanAmtCalcType, calcInstallmentType, currency);
     }
 
@@ -632,9 +632,10 @@ public class TestObjectFactory {
         GLCodeEntity glCodeInterest = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 Short.valueOf("21"));
         LoanOfferingBO loanOffering;
+        short gracePeriodDuration = (short) 0;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, TestUtils.createMoney(defLnAmnt),
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, TestUtils.createMoney(defLnAmnt),
                     TestUtils.createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt), defIntRate, defIntRate,
                     defIntRate, defInstallments, defInstallments, defInstallments, true,
                     interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
@@ -645,7 +646,7 @@ public class TestObjectFactory {
 
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, gracePeriodDuration);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
@@ -653,18 +654,20 @@ public class TestObjectFactory {
             final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
             final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
             final InterestType interestType, final boolean interestDeductedAtDisbursement,
-            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting,
+            final GraceType graceType, final short gracePeriodDuration,
             final String loanAmountCalcType, final String noOfInstallCalcType) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 defInstallments, interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting,
-                graceType, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE);
+                graceType, gracePeriodDuration, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE);
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
             final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
             final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
             final InterestType interestType, final boolean interestDeductedAtDisbursement,
-            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final boolean principalDueInLastInstallment, final MeetingBO meeting,
+            final GraceType graceType, final short gracePeriodDuration,
             final String loanAmountCalcType, final String noOfInstallCalcType, final MifosCurrency currency) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
@@ -678,7 +681,7 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, new Money(currency, defLnAmnt
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, new Money(currency, defLnAmnt
                             .toString()), new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt
                             .toString()), defIntRate, defIntRate, defIntRate, defInstallments, defInstallments,
                     defInstallments, true, interestDeductedAtDisbursement, principalDueInLastInstallment,
@@ -691,7 +694,7 @@ public class TestObjectFactory {
         loanOffering.setCurrency(currency);
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, gracePeriodDuration);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
@@ -709,10 +712,11 @@ public class TestObjectFactory {
 
         GLCodeEntity glCodeInterest = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 Short.valueOf("21"));
+        short gracePeriodDuration = (short) 2;
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, (short) 0, interestTypes, defIntRate, defIntRate,
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, defIntRate, defIntRate,
                     defIntRate, true, interestDeductedAtDisbursement, principalDueInLastInstallment,
                     new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest,
                     loanPrdActionForm);
@@ -722,7 +726,7 @@ public class TestObjectFactory {
 
         PrdStatusEntity prdStatus = testObjectPersistence.retrievePrdStatus(offeringStatus);
         LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType);
+        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, gracePeriodDuration);
         return (LoanOfferingBO) addObject(testObjectPersistence.persist(loanOffering));
     }
 
