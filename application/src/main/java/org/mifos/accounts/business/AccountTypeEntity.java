@@ -20,11 +20,11 @@
 
 package org.mifos.accounts.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.AbstractEntity;
@@ -39,25 +39,24 @@ public class AccountTypeEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ACCOUNT_TYPE_ID", nullable = false)
+    @NotNull
     private Short accountTypeId;
 
-    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "LOOKUP_ID", nullable = false)
-    private Integer lookUpId;
+    @NotNull
+    private Integer lookupId;
 
     public AccountTypeEntity() {
     }
 
     public AccountTypeEntity(Integer lookUpId) {
-        this.lookUpId = lookUpId;
+        this.lookupId = lookUpId;
     }
 
     public AccountTypeEntity(String description, Integer lookUpId) {
         this.description = description;
-        this.lookUpId = lookUpId;
+        this.lookupId = lookUpId;
     }
 
     public AccountTypeEntity(Short accountTypeId) {
@@ -81,11 +80,11 @@ public class AccountTypeEntity extends AbstractEntity {
     }
 
     public Integer getLookUpId() {
-        return this.lookUpId;
+        return this.lookupId;
     }
 
     public void setLookUpId(Integer lookUpId) {
-        this.lookUpId = lookUpId;
+        this.lookupId = lookUpId;
     }
 
 }
