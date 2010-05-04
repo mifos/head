@@ -41,7 +41,6 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
@@ -177,7 +176,7 @@ public class LoanScheduleGenerationIntegrationTest {
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13)); //Wednesday before loan start date
 
         AmountFeeBO fee = new FeeBuilder().appliesToLoans()
-                                          .withFeeFrequency(FeeFrequencyType.ONETIME)
+                                          .oneTime()
                                           .withFeePayment(FeePayment.UPFRONT)
                                           .withFeeAmount("14.0")
                                           .withName("Onetime Loan Fee Due on Disbursement")

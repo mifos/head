@@ -21,16 +21,19 @@
 package org.mifos.customers.business.service;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -80,11 +83,15 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -131,13 +138,44 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         for (AccountFeesEntity accountFee : accountFees) {
+
             if (accountFee.getFees().isPeriodic()) {
                 MeetingBO feeMeeting = accountFee.getFees().getFeeFrequency().getFeeMeetingFrequency();
                 if (!feeMeeting.hasSameRecurrenceAs(customer.getCustomerMeetingValue())) {
                     throw new ApplicationException(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH);
                 }
+
+                FeeBO fee = accountFee.getFees();
+
+                if (AccountFeesEntity.isPeriodicFeeDuplicated(accountFees, fee)) {
+                    throw new ApplicationException(CustomerConstants.ERRORS_DUPLICATE_PERIODIC_FEE);
+                }
             }
         }
+
+        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+//        for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryConfigurableFields) {
+//
+//            String fieldName = fieldConfigurationEntity.getFieldName();
+//
+//            Field[] fields = customer.getClass().getDeclaredFields();
+//
+//            try {
+//                Field mandatoryField = customer.getClass().getField(fieldName);
+//                Object value = mandatoryField.get(customer);
+//                if (value == null || value.toString().equals("")) {
+//                    throw new ApplicationException(FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), customer.getUserContext()));
+//                }
+//            } catch (SecurityException e) {
+//                throw new MifosRuntimeException(e);
+//            } catch (NoSuchFieldException e) {
+//                throw new MifosRuntimeException(e);
+//            } catch (IllegalArgumentException e) {
+//                throw new MifosRuntimeException(e);
+//            } catch (IllegalAccessException e) {
+//                throw new MifosRuntimeException(e);
+//            }
+//        }
 
         createCustomer(customer, meeting, accountFees);
     }
@@ -235,7 +273,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
-//        assertAccountFeesRecurrenceMatchesCustomerMeetingRecurrence(meeting, accountFees);
         try {
             StaticHibernateUtil.startTransaction();
             this.customerDao.save(customer);
@@ -259,23 +296,6 @@ public class CustomerServiceImpl implements CustomerService {
             StaticHibernateUtil.closeSession();
         }
     }
-
-    /* not needed -- fees can be different recurAfter from the customer
-    private void assertAccountFeesRecurrenceMatchesCustomerMeetingRecurrence(MeetingBO customerMeeting,
-            List<AccountFeesEntity> accountFees) {
-
-        for (AccountFeesEntity accountFeesEntity : accountFees) {
-            if (accountFeesEntity.isPeriodic()) {
-               if (customerMeeting.getRecurAfter() != accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency().getRecurAfter()) {
-                   throw new IllegalArgumentException("Unimplemented feature: mismatch between fee recurAfter and customer recurAfter.");
-               }
-            }
-
-
-        }
-
-    }
-    */
 
     @Override
     public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center)

@@ -20,7 +20,7 @@
 
 package org.mifos.customers.business.service;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -255,6 +255,120 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
         assertThat(center.getCustomerId(), is(notNullValue()));
         assertThat(center.getGlobalCustNum(), is(notNullValue()));
         assertThat(center.getCustomerAccount().getAccountFees().isEmpty(), is(false));
+    }
+
+    @Test
+    public void canCreateCenterWithMultipleInstancesOfTheSameOneTimeFee() throws Exception {
+
+        // minimal details
+        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
+        String centerName = "Center-IntegrationTest";
+        OfficeBO anExistingBranch = sampleBranchOffice();
+        PersonnelBO existingLoanOfficer = testUser();
+        DateTime aWeekFromNow = new DateTime().plusWeeks(1);
+
+        CenterBO center = new CenterBuilder().withName(centerName)
+                                            .with(aWeeklyMeeting)
+                                            .with(anExistingBranch)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withMfiJoiningDate(aWeekFromNow)
+                                            .withUserContext()
+                                            .build();
+
+        // setup
+        AmountFeeBO existingWeeklyFee = new FeeBuilder().oneTime().with(aWeeklyMeeting).appliesToCenterOnly().with(anExistingBranch).build();
+        IntegrationTestObjectMother.saveFee(existingWeeklyFee);
+
+        AccountFeesEntity accountFee = new AccountFeesEntity(null, existingWeeklyFee, existingWeeklyFee.getFeeAmount().getAmountDoubleValue());
+        List<AccountFeesEntity> centerAccountFees = new ArrayList<AccountFeesEntity>();
+        centerAccountFees.add(accountFee);
+        centerAccountFees.add(accountFee);
+
+        // exercise test
+        customerService.createCenter(center, center.getCustomerMeetingValue(), centerAccountFees);
+
+        // verification
+        assertThat(center.getCustomerId(), is(notNullValue()));
+        assertThat(center.getGlobalCustNum(), is(notNullValue()));
+        assertThat(center.getCustomerAccount().getAccountFees().isEmpty(), is(false));
+    }
+
+    @Test
+    public void canCreateCenterWithNameOfAlreadyExistingCenter() throws Exception {
+
+        // minimal details
+        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
+        String centerName = "existingCenterName";
+        OfficeBO anExistingBranch = sampleBranchOffice();
+        PersonnelBO existingLoanOfficer = testUser();
+        DateTime aWeekFromNow = new DateTime().plusWeeks(1);
+
+        CenterBO existingCenter = new CenterBuilder().withName(centerName)
+                                            .with(aWeeklyMeeting)
+                                            .with(anExistingBranch)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withMfiJoiningDate(aWeekFromNow)
+                                            .withUserContext()
+                                            .build();
+        IntegrationTestObjectMother.createCenter(existingCenter, existingCenter.getCustomerMeetingValue());
+
+        CenterBO newCenter = new CenterBuilder().withName(existingCenter.getDisplayName())
+                                                .with(aWeeklyMeeting)
+                                                .with(anExistingBranch)
+                                                .withLoanOfficer(existingLoanOfficer)
+                                                .withMfiJoiningDate(aWeekFromNow)
+                                                .withUserContext()
+                                                .build();
+
+        // setup
+        List<AccountFeesEntity> noCenterAccountFees = new ArrayList<AccountFeesEntity>();
+
+        // exercise test
+        customerService.createCenter(newCenter, newCenter.getCustomerMeetingValue(), noCenterAccountFees);
+
+        // verification
+        assertThat(existingCenter.getGlobalCustNum(), is(not(newCenter.getGlobalCustNum())));
+        assertThat(existingCenter.getDisplayName(), is(newCenter.getDisplayName()));
+    }
+
+    @Test
+    public void canCreateCenterWithExternalIdThatAlreadyExistsForAnotherCenter() throws Exception {
+
+        // minimal details
+        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();
+        OfficeBO anExistingBranch = sampleBranchOffice();
+        PersonnelBO existingLoanOfficer = testUser();
+        DateTime aWeekFromNow = new DateTime().plusWeeks(1);
+        String externalId = "xxx111";
+
+        CenterBO existingCenter = new CenterBuilder().withName("existingCenterName")
+                                            .withExternalId(externalId)
+                                            .with(aWeeklyMeeting)
+                                            .with(anExistingBranch)
+                                            .withLoanOfficer(existingLoanOfficer)
+                                            .withMfiJoiningDate(aWeekFromNow)
+                                            .withUserContext()
+                                            .build();
+        IntegrationTestObjectMother.createCenter(existingCenter, existingCenter.getCustomerMeetingValue());
+
+        CenterBO newCenter = new CenterBuilder().withName("newCenterName")
+                                                .withExternalId(externalId)
+                                                .with(aWeeklyMeeting)
+                                                .with(anExistingBranch)
+                                                .withLoanOfficer(existingLoanOfficer)
+                                                .withMfiJoiningDate(aWeekFromNow)
+                                                .withUserContext()
+                                                .build();
+
+        // setup
+        List<AccountFeesEntity> noCenterAccountFees = new ArrayList<AccountFeesEntity>();
+
+        // exercise test
+        customerService.createCenter(newCenter, newCenter.getCustomerMeetingValue(), noCenterAccountFees);
+
+        // verification
+        assertThat(existingCenter.getGlobalCustNum(), is(not(newCenter.getGlobalCustNum())));
+        assertThat(existingCenter.getExternalId(), is(newCenter.getExternalId()));
     }
 
     @Test

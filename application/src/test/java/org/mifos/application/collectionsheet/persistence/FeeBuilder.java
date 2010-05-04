@@ -121,8 +121,13 @@ public class FeeBuilder {
         return this;
     }
 
-    public FeeBuilder withFeeFrequency(FeeFrequencyType withFeeFrequency) {
-        this.feeFrequencyType = withFeeFrequency;
+    public FeeBuilder oneTime() {
+        this.feeFrequencyType = FeeFrequencyType.ONETIME;
+        return this;
+    }
+
+    public FeeBuilder periodic() {
+        this.feeFrequencyType = FeeFrequencyType.PERIODIC;
         return this;
     }
 

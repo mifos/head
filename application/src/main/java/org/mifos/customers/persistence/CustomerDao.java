@@ -59,6 +59,7 @@ import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
 
@@ -164,6 +165,8 @@ public interface CustomerDao {
     int countOfClients();
 
     int countOfGroups();
+
+    List<FieldConfigurationEntity> findMandatoryConfigurableFieldsApplicableToCenter();
 
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;

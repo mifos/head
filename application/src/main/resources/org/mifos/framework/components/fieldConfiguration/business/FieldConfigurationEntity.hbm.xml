@@ -27,5 +27,10 @@
  <query name="getAllFieldConfigurationList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce]]>
  </query>
+ 
+ <query name="findVisibleMandatoryConfigurableFieldsApplicableTo">
+         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
+         			fce.entityMaster.id=:entityId and fce.mandatoryFlag = 1 and fce.hiddenFlag=0]]>
+ </query>
 </hibernate-mapping>
  

@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -417,7 +416,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
                                                               .withFeeAmount("25.0")
                                                               .withName("Center UpfrontFee")
-                                                              .withFeeFrequency(FeeFrequencyType.ONETIME)
+                                                              .oneTime()
                                                               .build();
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 
@@ -463,7 +462,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
                                                               .withFeeAmount("25.0")
                                                               .withName("Center UpfrontFee")
-                                                              .withFeeFrequency(FeeFrequencyType.ONETIME)
+                                                              .oneTime()
                                                               .build();
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 
@@ -512,7 +511,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         AmountFeeBO oneTimeFeeForCenterOnly = new FeeBuilder().appliesToCenterOnly()
                                                               .withFeeAmount("25.0")
                                                               .withName("Center UpfrontFee")
-                                                              .withFeeFrequency(FeeFrequencyType.ONETIME)
+                                                              .oneTime()
                                                               .build();
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 

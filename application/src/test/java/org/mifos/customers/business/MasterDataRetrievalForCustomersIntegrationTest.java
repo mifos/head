@@ -33,6 +33,10 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -51,6 +55,8 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
 
     @Before
     public void cleanDatabaseTables() {
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
         databaseCleaner.clean();
     }
 
@@ -159,6 +165,14 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
 
         assertThat(customerStatus.getId(), is(CustomerStatus.GROUP_PENDING.getValue()));
         assertThat(customerStatus.getIsOptional(), is(true));
+    }
+
+    @Test
+    public void canRetrieveConfigurableMandatoryFieldsForCenterThatAreNotHidden() {
+
+        List<FieldConfigurationEntity> centerMandatoryFields = customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+
+        assertThat(centerMandatoryFields.isEmpty(), is(true));
     }
 
 

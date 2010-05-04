@@ -89,6 +89,7 @@ import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
@@ -1315,5 +1316,15 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
 
         return matchingAccounts;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<FieldConfigurationEntity> findMandatoryConfigurableFieldsApplicableToCenter() {
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("entityId", EntityType.CENTER.getValue());
+
+        return (List<FieldConfigurationEntity>) this.genericDao.executeNamedQuery("findVisibleMandatoryConfigurableFieldsApplicableTo", queryParameters);
     }
 }

@@ -57,9 +57,9 @@ public class FieldConfigurationHelper {
             labelName = MifosConfiguration.getInstance().getLabel(labelName, userContext.getPreferredLocale());
             if (labelName != null) {
                 return labelName;
-            } else {
-                return null;
             }
+
+            return null;
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }

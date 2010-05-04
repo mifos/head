@@ -56,9 +56,12 @@ import org.mifos.security.util.UserContext;
 public class BaseActionForm extends ValidatorActionForm {
 
     protected void checkForMandatoryFields(Short entityId, ActionErrors errors, HttpServletRequest request) {
+
         Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
                 .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+
         List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(entityId);
+
         for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
             String propertyName = request.getParameter(fieldConfigurationEntity.getLabel());
             if (propertyName != null && !propertyName.equals("")) {

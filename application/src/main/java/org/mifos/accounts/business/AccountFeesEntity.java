@@ -220,4 +220,19 @@ public class AccountFeesEntity extends AbstractEntity {
     public int getVersionNo() {
         return versionNo;
     }
+
+    public static boolean isPeriodicFeeDuplicated(List<AccountFeesEntity> accountFees, FeeBO fee) {
+
+        int feeOccurrenceCount = 0;
+
+        if (fee.isPeriodic()) {
+            for (AccountFeesEntity accountFee : accountFees) {
+                if (accountFee.getFees().getFeeName().equals(fee.getFeeName())) {
+                    feeOccurrenceCount++;
+                }
+            }
+        }
+
+        return feeOccurrenceCount > 1;
+    }
 }

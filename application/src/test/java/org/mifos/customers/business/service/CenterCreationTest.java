@@ -208,4 +208,29 @@ public class CenterCreationTest {
             assertThat(e.getKey(), is(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
         }
     }
+
+    @Test
+    public void cannotCreateCenterWithMultipleInstancesOfSamePeriodFee() {
+
+        // setup
+        DateTime today = new DateTime();
+        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly();
+        CenterBO center = new CenterBuilder().withName("center1").withLoanOfficer(anyLoanOfficer()).with(aWeeklyMeeting).withMfiJoiningDate(today).build();
+
+        MeetingBuilder aWeeklyFeeMeeting = new MeetingBuilder().periodicFeeMeeting().weekly();
+        AmountFeeBO montlyPeriodicFee = new FeeBuilder().appliesToCenterOnly().with(aWeeklyFeeMeeting).build();
+
+        AccountFeesEntity accountFee = new AccountFeesEntity(null, montlyPeriodicFee, montlyPeriodicFee.getFeeAmount().getAmountDoubleValue());
+        List<AccountFeesEntity> centerAccountFees = new ArrayList<AccountFeesEntity>();
+        centerAccountFees.add(accountFee);
+        centerAccountFees.add(accountFee);
+
+        // exercise test
+        try {
+            customerService.createCenter(center, aWeeklyMeeting.build(), centerAccountFees);
+            fail("cannotCreateCenterWithFeeThatHasDifferentPeriod");
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(CustomerConstants.ERRORS_DUPLICATE_PERIODIC_FEE));
+        }
+    }
 }
