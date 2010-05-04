@@ -269,10 +269,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
     /**
      * this test is disabled because of this issue http://mifosforge.jira.com/browse/MIFOS-2753
-     *
-     * @throws Exception
      */
-    public void testCreate() throws Exception {
+    public void ignore_testCreate() throws Exception {
         UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
         PersonnelBO personnel = createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER, userContext);
         SurveysPersistence surveysPersistence = new SurveysPersistence();

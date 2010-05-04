@@ -73,19 +73,4 @@ public class SelectionItemDaoHibernate implements SelectionItemDao {
         queryParameters.put("ACTIVE", PersonnelStatus.ACTIVE.getValue());
         return (List<SelectionItem>) this.genericDao.executeNamedQuery("SelectionItem.get_active_loanofficers_under_office", queryParameters);
     }
-
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public List<DateSelectionItem> getMeetingDates(Integer branchId, Integer loanOfficerId, Integer customerId,
-//            Date from) {
-//        Map<String, Object> queryParameters = new HashMap<String, Object>();
-//        queryParameters.put("COLL_SHEET_RUN_STATUS", CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
-//        queryParameters.put("customerId", customerId);
-//        queryParameters.put("CUSTOMER_LEVEL", CustomerLevel.CENTER.getValue());
-//        queryParameters.put("branchId", branchId);
-//        queryParameters.put("loanOfficerId", loanOfficerId);
-//        queryParameters.put("fromDate", from);
-//        return (List<DateSelectionItem>) this.genericDao.executeNamedQuery(
-//                "DateSelectionItem.get_meeting_dates", queryParameters);
-//    }
 }

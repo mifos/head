@@ -17,9 +17,7 @@
 	</bean>
 	
 	<bean id="collectionSheetService" class="org.mifos.reports.business.service.BirtCollectionSheetService" />
-		
 	<bean id="officeBusinessService" class="org.mifos.customers.office.business.service.OfficeBusinessService" />
-		
 	<bean id="personnelBusinessService" class="org.mifos.customers.personnel.business.service.PersonnelBusinessService" />
 		
 	<bean id="customerBusinessService" class="org.mifos.customers.business.service.CustomerBusinessService" />
@@ -39,9 +37,9 @@
 		<constructor-arg ref="genericDao" />
 	</bean>
 	
-	<bean id="reportParameterService" class="org.mifos.reports.business.service.ReportsParameterService">
-		<constructor-arg ref="selectionItemDao" />
-	</bean>
+	<bean id="personnelDao" class="org.mifos.customers.personnel.persistence.PersonnelDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
 	
 	<bean id="reportProductOfferingService" class="org.mifos.reports.business.service.ReportProductOfferingService">
 		<constructor-arg ref="loanPrdBusinessService" />
@@ -54,8 +52,8 @@
 	</bean>
 	
 	<bean id="cascadingReportParameterService" class="org.mifos.reports.business.service.CascadingReportParameterService">
-		<constructor-arg type="org.mifos.reports.business.service.IReportsParameterService" ref="reportParameterServiceProxy" />
-		<constructor-arg ref="personnelBusinessService" />
+		<constructor-arg index="0" type="org.mifos.reports.business.dao.SelectionItemDao" ref="reportParameterServiceProxy" />
+		<constructor-arg index="1" ref="personnelDao" />
 	</bean>
 	
 	<bean id="reportParameterServiceProxy" class="org.springmodules.cache.interceptor.proxy.CacheProxyFactoryBean">
@@ -74,7 +72,7 @@
 				</prop>
 			</props>
 		</property>
-		<property name="target" ref="reportParameterService" />
+		<property name="target" ref="selectionItemDao" />
 	</bean>
 	
 	<bean id="defaultCollectionSheetReportService" class="org.mifos.reports.business.service.BirtCollectionSheetReportService">

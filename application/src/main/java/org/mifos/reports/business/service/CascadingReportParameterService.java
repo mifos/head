@@ -35,28 +35,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.util.CollectionUtils;
-import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.reports.business.dao.SelectionItemDao;
 import org.mifos.reports.ui.SelectionItem;
 
 public class CascadingReportParameterService {
 
-    private IReportsParameterService reportsParameterService;
-    private PersonnelBusinessService personnelBusinessService;
+    private final SelectionItemDao selectionItemDao;
+    private final PersonnelDao personnelDao;
 
-    public CascadingReportParameterService(IReportsParameterService reportsParameterService,PersonnelBusinessService personnelBusinessService) {
-        this.reportsParameterService = reportsParameterService;
-        this.personnelBusinessService = personnelBusinessService;
+    public CascadingReportParameterService(SelectionItemDao selectionItemDao, PersonnelDao personnelDao) {
+        this.selectionItemDao = selectionItemDao;
+        this.personnelDao = personnelDao;
     }
 
-    public List<SelectionItem> getBranchOfficesUnderUser(PersonnelBO user) throws ServiceException {
+    public List<SelectionItem> getBranchOfficesUnderUser(PersonnelBO user) {
         if (user == null) {
             return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
         }
 
-        List<SelectionItem> offices = reportsParameterService.getActiveBranchesUnderUser(user.getOfficeSearchId());
+        List<SelectionItem> offices = selectionItemDao.getActiveBranchesUnderUser(user.getOfficeSearchId());
 
         if (offices.isEmpty()) {
             return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
@@ -68,8 +67,7 @@ public class CascadingReportParameterService {
         return branchOffices;
     }
 
-    public List<SelectionItem> getActiveLoanOfficersUnderUserInBranch(PersonnelBO user, Integer branchId)
-            throws ServiceException {
+    public List<SelectionItem> getActiveLoanOfficersUnderUserInBranch(PersonnelBO user, Integer branchId) {
         List<SelectionItem> officers = new ArrayList<SelectionItem>();
 
         if (NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchId)) {
@@ -92,14 +90,13 @@ public class CascadingReportParameterService {
             return officers;
         }
 
-        List<SelectionItem> loanOfficers = reportsParameterService.getActiveLoanOfficersUnderOffice(branchId);
+        List<SelectionItem> loanOfficers = selectionItemDao.getActiveLoanOfficersUnderOffice(branchId);
         officers.add(loanOfficers.isEmpty() ? NA_LOAN_OFFICER_SELECTION_ITEM : ALL_LOAN_OFFICER_SELECTION_ITEM);
         officers.addAll(loanOfficers);
         return officers;
     }
 
-    public List<SelectionItem> getActiveCentersInBranchForLoanOfficer(Integer branchId, Integer loanOfficerId)
-            throws ServiceException {
+    public List<SelectionItem> getActiveCentersInBranchForLoanOfficer(Integer branchId, Integer loanOfficerId) {
         List<SelectionItem> activeCenters = new ArrayList<SelectionItem>();
         if (loanOfficerId == null || SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId)) {
             return CollectionUtils.asList(SELECT_CENTER_SELECTION_ITEM);
@@ -111,16 +108,17 @@ public class CascadingReportParameterService {
 
         List<SelectionItem> loanOfficers = null;
         if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId)) {
-            loanOfficers = reportsParameterService.getActiveLoanOfficersUnderOffice(branchId);
+            loanOfficers = selectionItemDao.getActiveLoanOfficersUnderOffice(branchId);
         } else {
-            PersonnelBO loanOfficer = personnelBusinessService.getPersonnel(loanOfficerId.shortValue());
+            PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId.shortValue());
+
             loanOfficers = CollectionUtils.asList(new SelectionItem(
                     convertShortToInteger(loanOfficer.getPersonnelId()), loanOfficer.getDisplayName()));
         }
 
         List<SelectionItem> allCentersUnderBranch = new ArrayList<SelectionItem>();
         for (SelectionItem loanOfficer : loanOfficers) {
-            List<SelectionItem> activeCentersUnderUser = reportsParameterService.getActiveCentersUnderUser(branchId,
+            List<SelectionItem> activeCentersUnderUser = selectionItemDao.getActiveCentersUnderUser(branchId,
                     loanOfficer.getId());
             allCentersUnderBranch.addAll(activeCentersUnderUser);
         }
@@ -129,71 +127,15 @@ public class CascadingReportParameterService {
         return activeCenters;
     }
 
-//    public List<DateSelectionItem> getMeetingDatesForCollectionSheet(Integer branchIdInt, Integer officerIdInt,
-//            Integer customerId) throws ServiceException {
-//        Short branchId = convertIntegerToShort(branchIdInt);
-//        List<DateSelectionItem> meetingDates = new ArrayList<DateSelectionItem>();
-//        if (branchId == null || SELECT_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
-//                || NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
-//                || SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)
-//                || NA_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)
-//                || SELECT_CENTER_SELECTION_ITEM.sameAs(customerId) || NA_CENTER_SELECTION_ITEM.sameAs(customerId)) {
-//            meetingDates.add(NA_MEETING_DATE);
-//            return meetingDates;
-//        }
-//
-//        if (ALL_CENTER_SELECTION_ITEM.sameAs(customerId)) {
-//            List<SelectionItem> officers = new ArrayList<SelectionItem>();
-//            if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)) {
-//                officers = reportsParameterService.getActiveLoanOfficersUnderOffice(branchIdInt);
-//            } else {
-//                officers = CollectionUtils.asList(new SelectionItem(officerIdInt, null));
-//            }
-//            for (SelectionItem officer : officers) {
-//                List<SelectionItem> customers = new ArrayList<SelectionItem>();
-//                customers = reportsParameterService.getActiveCentersUnderUser(branchIdInt, officer.getId());
-//                for (SelectionItem customer : customers) {
-//                    List<DateSelectionItem> meetingDatesForCustomer = reportsParameterService.getMeetingDates(
-//                            branchIdInt, officer.getId(), customer.getId(), today());
-//                    if (meetingDatesForCustomer != null) {
-//                        meetingDates.addAll(meetingDatesForCustomer);
-//                    }
-//                }
-//            }
-//        } else {
-//            List<DateSelectionItem> meetingDatesForOfficerBranchCustomer = reportsParameterService.getMeetingDates(
-//                    branchIdInt, officerIdInt, customerId, today());
-//            if (meetingDatesForOfficerBranchCustomer != null) {
-//                meetingDates.addAll(meetingDatesForOfficerBranchCustomer);
-//            }
-//        }
-//
-//        if (meetingDates.isEmpty()) {
-//            meetingDates.add(NA_MEETING_DATE);
-//        }
-//
-//        return meetingDates;
-//    }
-
-    java.sql.Date today() {
-        return DateUtils.sqlToday();
+    public List<SelectionItem> getBranchOffices(Integer userId) {
+        return getBranchOfficesUnderUser(this.personnelDao.findPersonnelById(convertIntegerToShort(userId)));
     }
 
-    public void invalidate() {
-        reportsParameterService.invalidate();
+    public List<SelectionItem> getActiveLoanOfficers(Integer userId, Integer branchId) {
+        return getActiveLoanOfficersUnderUserInBranch(this.personnelDao.findPersonnelById(convertIntegerToShort(userId)), branchId);
     }
 
-    public List<SelectionItem> getBranchOffices(Integer userId) throws ServiceException {
-        return getBranchOfficesUnderUser(personnelBusinessService.getPersonnel(convertIntegerToShort(userId)));
-    }
-
-    public List<SelectionItem> getActiveLoanOfficers(Integer userId, Integer branchId) throws ServiceException {
-        return getActiveLoanOfficersUnderUserInBranch(personnelBusinessService
-                .getPersonnel(convertIntegerToShort(userId)), branchId);
-    }
-
-    public List<SelectionItem> getActiveCentersForLoanOfficer(Integer loanOfficerId, Integer branchId)
-            throws ServiceException {
+    public List<SelectionItem> getActiveCentersForLoanOfficer(Integer loanOfficerId, Integer branchId) {
         return getActiveCentersInBranchForLoanOfficer(branchId, loanOfficerId);
     }
 }
