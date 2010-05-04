@@ -19,3 +19,6 @@ java -jar $HOME/arc/schemaSpy_4.1.1.jar -t mysql -host localhost -u hudson -p hu
 # this mv increases the probability that $outputDir will not exist unless schemaSpy succeeded
 # FIXME: this won't work unless schemaSpy is modified to return exit codes that make sense... currently it appears to always return "success"
 mv $tempDir $outputDir
+
+# without this permission http://ci.mifos.org/schema/trunk/ will not list new directory
+chmod 755 $outputDir
