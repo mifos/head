@@ -113,9 +113,7 @@
 			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
 				class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 				unique="true" cascade="none" insert="true" update="false" access="field" />
-			<many-to-one name="fund" column="FUND_ID"
-				class="org.mifos.accounts.fund.business.FundBO" cascade="all"
-				insert="true" unique="true" />
+			<many-to-one name="fund" column="FUND_ID" class="org.mifos.accounts.fund.business.FundBO" cascade="none" insert="true" unique="true" />
 			<many-to-one name="loanMeeting" column="MEETING_ID"
 				access="field" class="org.mifos.application.meeting.business.MeetingBO"
 				unique="true" insert="true" cascade="all" />
