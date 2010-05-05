@@ -158,10 +158,14 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         return this.fieldType;
     }
 
+    public CustomFieldType getFieldTypeAsEnum() {
+        return CustomFieldType.fromInt(this.fieldType.intValue());
+    }
+
     public Short getEntityType() {
         return this.entityType;
     }
-    
+
     public String getEntityName() {
         return this.lookUpEntity.getEntityType();
     }
@@ -251,7 +255,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
                 fieldView = new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(),
                         fieldDef.getFieldType());
             }
-            
+
             fieldView.setMandatory(fieldDef.isMandatory());
             fieldView.setMandatoryString(fieldDef.getMandatoryStringValue());
             fieldView.setLookUpEntityType(fieldDef.getEntityName());

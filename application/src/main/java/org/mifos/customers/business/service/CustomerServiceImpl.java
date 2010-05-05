@@ -21,14 +21,12 @@
 package org.mifos.customers.business.service;
 
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -44,6 +42,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
@@ -59,6 +58,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -83,15 +83,12 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
-import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -153,31 +150,49 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
 
-        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
-//        for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryConfigurableFields) {
-//
-//            String fieldName = fieldConfigurationEntity.getFieldName();
-//
-//            Field[] fields = customer.getClass().getDeclaredFields();
-//
-//            try {
-//                Field mandatoryField = customer.getClass().getField(fieldName);
-//                Object value = mandatoryField.get(customer);
-//                if (value == null || value.toString().equals("")) {
-//                    throw new ApplicationException(FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(), customer.getUserContext()));
-//                }
-//            } catch (SecurityException e) {
-//                throw new MifosRuntimeException(e);
-//            } catch (NoSuchFieldException e) {
-//                throw new MifosRuntimeException(e);
-//            } catch (IllegalArgumentException e) {
-//                throw new MifosRuntimeException(e);
-//            } catch (IllegalAccessException e) {
-//                throw new MifosRuntimeException(e);
-//            }
-//        }
+        List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
+        validateMandatoryCustomFields(customer.getCustomFields(), allCustomFieldsForCenter);
+
+        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
+//        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         createCustomer(customer, meeting, accountFees);
+    }
+
+    private void validateMandatoryCustomFields(Set<CustomerCustomFieldEntity> customFields,
+            List<CustomFieldDefinitionEntity> allCustomFieldsApplicable) throws ApplicationException {
+
+        for (CustomFieldDefinitionEntity customFieldDefinition : allCustomFieldsApplicable) {
+
+            if (customFieldDefinition.isMandatory()) {
+
+                CustomerCustomFieldEntity centerCustomField = findMandatoryCustomFieldOrFail(customFields, customFieldDefinition);
+
+                if (StringUtils.isBlank(centerCustomField.getFieldValue())) {
+                    throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
+                }
+
+                if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
+                    try {
+                        DateUtils.getDate(centerCustomField.getFieldValue());
+                    } catch (Exception e) {
+                        throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+                    }
+                }
+            }
+        }
+    }
+
+    private CustomerCustomFieldEntity findMandatoryCustomFieldOrFail(Set<CustomerCustomFieldEntity> customFields, CustomFieldDefinitionEntity customFieldDefinition) throws ApplicationException {
+
+        for (CustomerCustomFieldEntity centerCustomField : customFields) {
+
+            if (customFieldDefinition.getFieldId().equals(centerCustomField.getFieldId())) {
+                return centerCustomField;
+            }
+        }
+
+        throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
     }
 
     @Override
