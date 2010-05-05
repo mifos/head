@@ -30,6 +30,7 @@ public class CreateLoanAccountSubmitParameters {
     private String lsimMonthTypeDayOfMonth;
     private String lsimMonthTypeNthWeekdayOfMonth;
     private String lsimMonthRank;
+    private boolean gracePeriodTypeNone;
 
 
     public String getAmount() {
@@ -101,5 +102,13 @@ public class CreateLoanAccountSubmitParameters {
 
     public void setLsimMonthRank(String lsimMonthRank) {
         this.lsimMonthRank = lsimMonthRank;
+    }
+
+    public boolean isGracePeriodTypeNone() {
+        return gracePeriodTypeNone;
+    }
+
+    public void setGracePeriodTypeNone(boolean gracePeriodTypeNone) {
+        this.gracePeriodTypeNone = gracePeriodTypeNone;
     }
 }

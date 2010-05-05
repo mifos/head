@@ -88,6 +88,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1234.0");
+        submitAccountParameters.setGracePeriodTypeNone(true);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
@@ -103,6 +104,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
+        submitAccountParameters.setGracePeriodTypeNone(true);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
@@ -118,6 +120,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000");
+        submitAccountParameters.setGracePeriodTypeNone(true);
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);

@@ -49,6 +49,9 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
+        if (formParameters.isGracePeriodTypeNone()) {
+            Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
+        }
         if (formParameters.getLsimFrequencyWeeks() != null)
         {
             selenium.click("loancreationdetails.input.frequencyWeeks");
