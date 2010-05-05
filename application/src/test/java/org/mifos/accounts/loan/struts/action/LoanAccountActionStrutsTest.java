@@ -89,6 +89,7 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -101,6 +102,8 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.calendar.CalendarUtils;
+import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
@@ -118,6 +121,7 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -929,6 +933,14 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     public void testSchedulePreview() throws Exception {
+
+        //The disbursement date must be on a working day, and, assuming loan schedule is not independent
+        // of meeting schedule, we set the group to meet on Mondays. This overrides default behavior in this
+        // class, where customer meets today.
+        MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+
         goToPrdOfferingPage();
         actionPerform();
         goToLoanAccountInputPage();
@@ -939,8 +951,11 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("interestRate", loanOffering.getDefInterestRate().toString());
         addRequestParameter("noOfInstallments", loanOffering.getEligibleInstallmentSameForAllLoan()
                 .getDefaultNoOfInstall().toString());
-        addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
-                .getAttribute("UserContext")).getPreferredLocale()));
+        //Set disbursement date to closest Monday, presumed to be a working day
+        addRequestParameter("disbursementDate",
+                            DateUtils.getLocalDateString(CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(),
+                                                                       new DateTimeService().getCurrentDateTime()),
+                            ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale()));
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");

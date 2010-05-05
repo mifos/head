@@ -40,6 +40,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -75,6 +76,7 @@ public class LoanAccountActionEasyMockTest extends TestCase {
         MasterDataService mockMasterDataService = createMock(MasterDataService.class);
         ConfigurationPersistence mockConfigurationPersistence = createMock(ConfigurationPersistence.class);
         AccountBusinessService mockAccountBusinessService = createMock(AccountBusinessService.class);
+        LoanService mockLoanService = createMock(LoanService.class);
 
         LoanOfferingBO mockLoanOfferingBO = createMock(LoanOfferingBO.class);
         expect(mockLoanPrdBusinessService.getLoanOffering(shortOne)).andReturn(mockLoanOfferingBO);
@@ -82,7 +84,8 @@ public class LoanAccountActionEasyMockTest extends TestCase {
         LoanAccountAction loanAccountAction = new LoanAccountAction(mockConfigurationBusinessService,
                 mockLoanBusinessService, mockGlimLoanUpdater, mockFeeBusinessService, mockLoanPrdBusinessService,
                 mockClientBusinessService, mockMasterDataService, mockConfigurationPersistence,
-                new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService), mockAccountBusinessService);
+                new LoanProductService(mockLoanPrdBusinessService, mockFeeBusinessService), mockAccountBusinessService,
+                mockLoanService);
 
         List<FeeDto> defaultFees = new ArrayList<FeeDto>();
         List<FeeDto> additionalFees = new ArrayList<FeeDto>();

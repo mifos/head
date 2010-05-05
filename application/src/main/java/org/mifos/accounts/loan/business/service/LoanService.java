@@ -23,15 +23,23 @@ package org.mifos.accounts.loan.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.calendar.WorkingDay;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.framework.business.service.Service;
@@ -54,6 +62,7 @@ public class LoanService implements Service {
 
     LoanProductService loanProductService;
     LoanDao loanDao;
+    HolidayDao holidayDao;
 
     public LoanProductService getLoanProductService() {
         return this.loanProductService;
@@ -114,12 +123,38 @@ public class LoanService implements Service {
         }
     }
 
-    private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId,
+    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short officeId, Short loanOfficerId,
             boolean saveFlag) {
         return AuthorizationManager.getInstance().isActivityAllowed(
                 userContext,
-                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
+                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newState), officeId,
                         loanOfficerId));
     }
 
+
+    public void validateDisbursementDateForNewLoan (final DateTime disbursementDate)
+                    throws ApplicationException {
+
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        validateDisbursementDateIsWorkingDay(disbursementDate, workingDays);
+
+        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        validateDisbursementDateIsNotInHoliday(disbursementDate, holidays);
+    }
+
+    //package-level visibility for testing
+    void validateDisbursementDateIsWorkingDay(DateTime disbursementDate, List<Days> workingDays) throws ApplicationException {
+        if (WorkingDay.isNotWorkingDay(disbursementDate, workingDays)) {
+            throw new ApplicationException(LoanExceptionConstants.DISBURSEMENTDATE_MUST_BE_A_WORKING_DAY);
+        }
+    }
+
+    void validateDisbursementDateIsNotInHoliday (DateTime disbursementDate, List<Holiday> holidays) throws ApplicationException{
+        for (Holiday holiday : holidays) {
+            if (holiday.encloses(disbursementDate)) {
+                throw new ApplicationException(LoanExceptionConstants.DISBURSEMENTDATE_MUST_NOT_BE_IN_A_HOLIDAY);
+            }
+        }
+    }
 }

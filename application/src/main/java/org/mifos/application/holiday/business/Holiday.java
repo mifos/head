@@ -32,6 +32,8 @@ public interface Holiday {
 
     boolean encloses(Date date);
 
+    boolean encloses(final DateTime dateTime);
+
     DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
 
     RepaymentRuleTypes getRepaymentRuleType();

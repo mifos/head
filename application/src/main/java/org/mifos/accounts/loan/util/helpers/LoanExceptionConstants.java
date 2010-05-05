@@ -26,6 +26,8 @@ package org.mifos.accounts.loan.util.helpers;
  */
 public interface LoanExceptionConstants {
     public final String INVALIDDISBURSEMENTDATE = "exceptions.application.loan.invalidDisbursementDate";
+    public final String DISBURSEMENTDATE_MUST_BE_A_WORKING_DAY = "exceptions.application.loan.disbursementDateMustBeAWorkingDay";
+    public final String DISBURSEMENTDATE_MUST_NOT_BE_IN_A_HOLIDAY = "exceptions.application.loan.disbursementDateMustNotBeInAHoliday";
     public final String ERROR_INVALIDDISBURSEMENTDATE = "errors.invalidDisbursementDate";
     public final String ERROR_INVALID_DISBURSEMENT_DATE_FORMAT = "errors.invalidDisbursementDateFormat";
     public final String ERROR_INVALIDDISBURSEMENTDATE_FOR_REDO_LOAN = "errors.invalidDisbursementDateForRedoLoan";

@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
@@ -204,6 +205,17 @@ public class DateUtils {
         locale = internalLocale;
         Calendar currentCalendar = getCurrentDateCalendar();
         java.sql.Date currentDate = new java.sql.Date(currentCalendar.getTimeInMillis());
+        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
+        String userfmt = convertToCurrentDateFormat(format.toPattern());
+        return convertDbToUserFmt(currentDate.toString(), userfmt);
+    }
+
+    public static String getLocalDateString(DateTime date, Locale locale) throws InvalidDateException {
+        // the following line is for 1.1 release and will be removed when date
+        // is localized
+        locale = internalLocale;
+        Calendar calendar = date.toCalendar(locale);
+        java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
         SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
         String userfmt = convertToCurrentDateFormat(format.toPattern());
         return convertDbToUserFmt(currentDate.toString(), userfmt);

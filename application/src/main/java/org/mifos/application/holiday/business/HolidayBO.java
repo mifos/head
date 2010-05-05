@@ -248,6 +248,12 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
                 && date.compareTo(getDateWithoutTimeStamp(getHolidayThruDate().getTime())) <= 0;
     }
 
+    public boolean encloses(final DateTime dateTime) {
+        Date date = dateTime.toDate();
+        return date.compareTo(getDateWithoutTimeStamp(getHolidayFromDate().getTime())) >= 0
+                && date.compareTo(getDateWithoutTimeStamp(getHolidayThruDate().getTime())) <= 0;
+    }
+
     /**
      * Shift the scheduled day according to the holiday's repayment rule.
      */

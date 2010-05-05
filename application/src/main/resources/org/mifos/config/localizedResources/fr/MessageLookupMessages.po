@@ -3,14 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-04 17:20-0700\n"
+"POT-Creation-Date: 2010-05-05 15:44-0500\n"
 "PO-Revision-Date: 2009-01-05 14:13-0800\n"
 "Last-Translator: Adam Feuer <adamf@pobox.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Translate Toolkit 1.5.3\n"
 "X-Accelerator-Marker: &\n"
 
 #. # Key value pairs in this file are for LOOKUP_ENTRY entries
@@ -362,6 +362,26 @@ msgstr "Statut du produit"
 #: ProductStatus.Label
 msgid "Product Status"
 msgstr "Statut Produit"
+
+#: RankOfDay.FIRST
+msgid "First"
+msgstr ""
+
+#: RankOfDay.SECOND
+msgid "Second"
+msgstr ""
+
+#: RankOfDay.THIRD
+msgid "Third"
+msgstr ""
+
+#: RankOfDay.FOURTH
+msgid "Fourth"
+msgstr ""
+
+#: RankOfDay.LAST
+msgid "Last"
+msgstr ""
 
 #: RecommendedAmtUnit.Label
 msgid "REC AMNT UNIT"

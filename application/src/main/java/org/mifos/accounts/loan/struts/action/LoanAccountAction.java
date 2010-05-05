@@ -74,6 +74,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -89,10 +90,12 @@ import org.mifos.accounts.fund.persistence.FundPersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -108,8 +111,8 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -254,6 +257,7 @@ public class LoanAccountAction extends AccountAppAction {
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
     private LoanProductService loanProductService;
+    private LoanService loanService;
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -262,7 +266,8 @@ public class LoanAccountAction extends AccountAppAction {
     public LoanAccountAction() throws Exception {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new FeeBusinessService(), new LoanPrdBusinessService(), new ClientBusinessService(),
-                new MasterDataService(), new ConfigurationPersistence(), null, new AccountBusinessService());
+                new MasterDataService(), new ConfigurationPersistence(), null, new AccountBusinessService(),
+                new LoanService());
         setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
     }
 
@@ -271,7 +276,7 @@ public class LoanAccountAction extends AccountAppAction {
             final FeeBusinessService feeService, final LoanPrdBusinessService loanPrdBusinessService,
             final ClientBusinessService clientBusinessService, final MasterDataService masterDataService,
             final ConfigurationPersistence configurationPersistence, final LoanProductService loanProductService,
-            final AccountBusinessService accountBusinessService) {
+            final AccountBusinessService accountBusinessService, final LoanService loanService) {
         super(accountBusinessService);
 
         this.configService = configService;
@@ -283,6 +288,7 @@ public class LoanAccountAction extends AccountAppAction {
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
         this.loanProductService = loanProductService;
+        this.loanService = loanService;
     }
 
     /**
@@ -302,7 +308,7 @@ public class LoanAccountAction extends AccountAppAction {
             final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater, new FeeBusinessService(),
                 new LoanPrdBusinessService(), new ClientBusinessService(), new MasterDataService(),
-                new ConfigurationPersistence(), null, new AccountBusinessService());
+                new ConfigurationPersistence(), null, new AccountBusinessService(), new LoanService());
         setLoanService(new LoanProductService(this.loanPrdBusinessService, this.feeService));
     }
 
@@ -502,7 +508,7 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         CustomerBO customer = getCustomer(request);
-
+        loanService.validateDisbursementDateForNewLoan (getDisbursementDate(loanActionForm, request));
         if (configService.isGlimEnabled() && customer.isGroup()) {
             setGlimEnabledSessionAttributes(request, customer);
             double totalAmount = calculateTotalAmountForGlim(loanActionForm.getClients(), loanActionForm
@@ -527,6 +533,11 @@ public class LoanAccountAction extends AccountAppAction {
                     .getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
         }
         return mapping.findForward(ActionForwards.schedulePreview_success.toString());
+    }
+
+    private DateTime getDisbursementDate (final LoanAccountActionForm form, final HttpServletRequest request)
+                throws InvalidDateException {
+        return new DateTime(form.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -932,6 +943,10 @@ public class LoanAccountAction extends AccountAppAction {
         return loan;
     }
 
+    private void forceException() throws AccountException {
+        int x = 0;
+        throw new AccountException(LoanExceptionConstants.CUSTOMER_LOAN_AMOUNT_FIELD);
+    }
     /**
      * Resolve repayment start date according to given disbursement date
      *
