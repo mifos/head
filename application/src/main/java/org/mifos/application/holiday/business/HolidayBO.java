@@ -226,7 +226,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     }
 
     public RepaymentRuleTypes getRepaymentRuleType() {
-        return RepaymentRuleTypes.fromOrd(repaymentRuleEntity.getId());
+        return RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId());
     }
 
     private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {

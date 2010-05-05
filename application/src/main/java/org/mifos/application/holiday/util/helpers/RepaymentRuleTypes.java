@@ -21,7 +21,10 @@
 package org.mifos.application.holiday.util.helpers;
 
 public enum RepaymentRuleTypes {
-    SAME_DAY((short) 1), NEXT_MEETING_OR_REPAYMENT((short) 2), NEXT_WORKING_DAY((short) 3), REPAYMENT_MORATORIUM((short) 4);
+    SAME_DAY((short) 1), //
+    NEXT_MEETING_OR_REPAYMENT((short) 2), //
+    NEXT_WORKING_DAY((short) 3), //
+    REPAYMENT_MORATORIUM((short) 4);
 
     Short value;
 
@@ -34,21 +37,17 @@ public enum RepaymentRuleTypes {
     }
 
     public static RepaymentRuleTypes fromShort(final Short id) {
-
         for (RepaymentRuleTypes adjustmentRule : values()) {
             if (adjustmentRule.getValue().equals(id)) {
                 return adjustmentRule;
             }
         }
 
-        return null;
+        throw new IllegalArgumentException("No " + RepaymentRuleTypes.class.getSimpleName() + " defined for id=" + id);
     }
 
-    public static RepaymentRuleTypes fromOrd(int i) {
-        if (i < 1 || i > RepaymentRuleTypes.values().length) {
-            throw new IndexOutOfBoundsException("Invalid ordinal value for RepaymentRuleTypes");
-        }
-        return RepaymentRuleTypes.values()[i-1];
+    public static RepaymentRuleTypes fromInt(Integer id) {
+        return fromShort(id.shortValue());
     }
 
 }
