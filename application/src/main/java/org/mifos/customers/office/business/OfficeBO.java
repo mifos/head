@@ -654,7 +654,6 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
                 .append(this.getShortName()) //
                 .append(this.getGlobalOfficeNum()) //
                 .append(this.getSearchId()) //
-                .append(this.getStatus()) //
                 .toHashCode();
     }
 
@@ -670,27 +669,14 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
                     .append(this.getOfficeId(), otherObject.getOfficeId()) //
                     .append(this.getOperationMode(), otherObject.getOperationMode()) //
                     .append(this.getOfficeName(), otherObject.getOfficeName()) //
-                    .append(this.getShortName(), otherObject.shortName) //
+                    .append(this.getShortName(), otherObject.getShortName()) //
                     .append(this.getGlobalOfficeNum(), otherObject.getGlobalOfficeNum()) //
                     .append(this.getSearchId(), otherObject.getSearchId()) //
-                    .append(this.getStatus(), otherObject.getStatus()) //
                     .isEquals();
         }
         return false;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)//
-                .append(this.getOfficeId()) //
-                .append(this.getOperationMode()) //
-                .append(this.getOfficeName()) //
-                .append(this.getShortName()) //
-                .append(this.getGlobalOfficeNum()) //
-                .append(this.getSearchId()) //
-                .append(this.getStatus()) //
-                .toString();
-    }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
         if (parent.getChildren() != null) {
