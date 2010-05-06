@@ -29,6 +29,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -55,6 +59,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     private final Short officeId;
     private final Short operationMode;
+
     @SuppressWarnings("unused")
     // see .hbm.xml file
     private Integer maxChildCount = Integer.valueOf(0);
@@ -104,7 +109,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     /**
      * minimal legal constructor
      */
-    public OfficeBO(final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
+    public OfficeBO(final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice,
+            OfficeLevel officeLevel, String searchId, OfficeStatus status) {
         this.officeId = null;
         this.officeName = name;
         this.shortName = shortName;
@@ -146,7 +152,6 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
         setCreateDetails();
 
-        this.globalOfficeNum = null;
         this.operationMode = operationMode.getValue();
         this.searchId = searchId;
         this.officeId = officeId;
@@ -250,6 +255,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public String getShortName() {
         return shortName;
+    }
+
+    private Short getOperationMode() {
+        return this.operationMode;
     }
 
     void setShortName(final String shortName) {
@@ -631,14 +640,56 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         return offices;
     }
 
-    /* FIXME: we also need to implement hashCode() */
-    @Override
-    public boolean equals(final Object o) {
-        return officeId.equals(((OfficeBO) o).getOfficeId());
-    }
-
     public int compareTo(final OfficeBO o) {
         return officeId.compareTo(o.getOfficeId());
+    }
+
+    /* Use getters instead of direct member access in case we're actually a Hibernate proxy instance. */
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(43, 11) //
+                .append(this.getOfficeId()) //
+                .append(this.getOperationMode()) //
+                .append(this.getOfficeName()) //
+                .append(this.getShortName()) //
+                .append(this.getGlobalOfficeNum()) //
+                .append(this.getSearchId()) //
+                .append(this.getStatus()) //
+                .toHashCode();
+    }
+
+    /* Use getters instead of direct member access in case we're actually a Hibernate proxy instance. */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof OfficeBO) {
+            final OfficeBO otherObject = (OfficeBO) obj;
+            return new EqualsBuilder() //
+                    .append(this.getOfficeId(), otherObject.getOfficeId()) //
+                    .append(this.getOperationMode(), otherObject.getOperationMode()) //
+                    .append(this.getOfficeName(), otherObject.getOfficeName()) //
+                    .append(this.getShortName(), otherObject.shortName) //
+                    .append(this.getGlobalOfficeNum(), otherObject.getGlobalOfficeNum()) //
+                    .append(this.getSearchId(), otherObject.getSearchId()) //
+                    .append(this.getStatus(), otherObject.getStatus()) //
+                    .isEquals();
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)//
+                .append(this.getOfficeId()) //
+                .append(this.getOperationMode()) //
+                .append(this.getOfficeName()) //
+                .append(this.getShortName()) //
+                .append(this.getGlobalOfficeNum()) //
+                .append(this.getSearchId()) //
+                .append(this.getStatus()) //
+                .toString();
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {

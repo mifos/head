@@ -270,4 +270,118 @@ public class TestUtils {
         }
         return startDate;
     }
+
+    /**
+     * x != notx <br/><br/>
+     * x = y = z (but different objects)
+     * @param x
+     * @param notx
+     * @param y
+     * @param z
+     */
+    public static void assertEqualsAndHashContract(Object x, Object notx, Object y, Object z) {
+        assertEqual_ToSelf(x);
+        assertPassIncompatibleType_isFalse(x);
+        assertNullReference_isFalse(x);
+        assertEquals_isReflexive_isSymmetric(x, y);
+        assertEquals_isTransitive(x, y, z);
+        assertEquals_isConsistent(x, y, notx);
+        assertHashcode_isConsistent(x);
+        assertHashcode_twoEqualsObjects_produceSameNumber(x, y);
+        assertHashcode_twoUnEqualObjects_produceDifferentNumber(x, notx);
+    }
+
+    /**
+     * A class is equal to itself.
+     */
+    private static void assertEqual_ToSelf(Object x) {
+
+        Assert.assertTrue("Class equal to itself.", x.equals(x));
+    }
+
+    /**
+     * x.equals(WrongType) must return false;
+     *
+     */
+    private static void assertPassIncompatibleType_isFalse(Object x) {
+        Assert.assertFalse("Passing incompatible object to equals should return false", x.equals("string"));
+    }
+
+    /**
+     * x.equals(null) must return false;
+     *
+     */
+    private static void assertNullReference_isFalse(Object x) {
+        Assert.assertFalse("Passing null to equals should return false", x.equals(null));
+    }
+
+    /**
+     * 1. x, x.equals(x) must return true. 2. x and y, x.equals(y) must return true if and only if y.equals(x) returns
+     * true.
+     */
+    private static void assertEquals_isReflexive_isSymmetric(Object x, Object y) {
+
+        Assert.assertTrue("Reflexive test fail x,y", x.equals(y));
+        Assert.assertTrue("Symmetric test fail y", y.equals(x));
+
+    }
+
+    /**
+     * 1. x.equals(y) returns true 2. y.equals(z) returns true 3. x.equals(z) must return true
+     */
+    private static void assertEquals_isTransitive(Object x, Object y, Object z) {
+
+        Assert.assertTrue("Transitive test fails x,y", x.equals(y));
+        Assert.assertTrue("Transitive test fails y,z", y.equals(z));
+        Assert.assertTrue("Transitive test fails x,z", x.equals(z));
+    }
+
+    /**
+     * Repeated calls to equals consistently return true or false.
+     */
+    private static void assertEquals_isConsistent(Object x, Object y, Object notx) {
+
+        Assert.assertTrue("Consistent test fail x,y", x.equals(y));
+        Assert.assertTrue("Consistent test fail x,y", x.equals(y));
+        Assert.assertTrue("Consistent test fail x,y", x.equals(y));
+        Assert.assertFalse(notx.equals(x));
+        Assert.assertFalse(notx.equals(x));
+        Assert.assertFalse(notx.equals(x));
+
+    }
+
+    /**
+     * Repeated calls to hashcode should consistently return the same integer.
+     */
+    private static void assertHashcode_isConsistent(Object x) {
+
+        int initial_hashcode = x.hashCode();
+
+        Assert.assertEquals("Consistent hashcode test fails", initial_hashcode, x.hashCode());
+        Assert.assertEquals("Consistent hashcode test fails", initial_hashcode, x.hashCode());
+    }
+
+    /**
+     * Objects that are equal using the equals method should return the same integer.
+     */
+    private static void assertHashcode_twoEqualsObjects_produceSameNumber(Object x, Object y) {
+
+        int xhashcode = x.hashCode();
+        int yhashcode = y.hashCode();
+
+        Assert.assertEquals("Equal object, return equal hashcode test fails", xhashcode, yhashcode);
+    }
+
+    /**
+     * A more optimal implementation of hashcode ensures that if the objects are unequal different integers are
+     * produced.
+     *
+     */
+    private static void assertHashcode_twoUnEqualObjects_produceDifferentNumber(Object x, Object notx) {
+
+        int xhashcode = x.hashCode();
+        int yhashcode = notx.hashCode();
+
+        Assert.assertTrue("Equal object, return unequal hashcode test fails", !(xhashcode == yhashcode));
+    }
 }
