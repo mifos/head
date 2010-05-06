@@ -462,6 +462,7 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
+            <version>2.4.1</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

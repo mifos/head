@@ -44,10 +44,7 @@
       <dependency>
          <groupId>org.dbunit</groupId>
          <artifactId>dbunit</artifactId>
-      </dependency>
-      <dependency>
-       <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
+         <version>2.4.1</version>
       </dependency>
       <dependency>
          <groupId>commons-cli</groupId>
