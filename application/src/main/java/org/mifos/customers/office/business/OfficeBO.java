@@ -677,6 +677,17 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         return false;
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)//
+                .append(this.getOfficeId()) //
+                .append(this.getOperationMode()) //
+                .append(this.getOfficeName()) //
+                .append(this.getShortName()) //
+                .append(this.getGlobalOfficeNum()) //
+                .append(this.getSearchId()) //
+                .toString();
+    }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
         if (parent.getChildren() != null) {
