@@ -795,19 +795,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) {
 
         try {
-            DateTime mfiJoiningDate = null;
-            if (centerUpdate.getMfiJoiningDate() != null) {
-                mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
-                        .getPreferredLocale());
-                centerUpdate.setMfiJoiningDateAsDateTime(mfiJoiningDate);
-            }
-
-            CustomerBO customer = customerDao.findCustomerById(centerUpdate.getCustomerId());
-
-            checkVersionMismatch(centerUpdate.getVersionNum(), customer.getVersionNo());
-
-            CenterBO center = (CenterBO) customer;
-            customerService.updateCenter(userContext, centerUpdate, center);
+            customerService.updateCenter(userContext, centerUpdate);
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }

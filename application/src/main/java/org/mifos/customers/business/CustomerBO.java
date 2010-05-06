@@ -78,6 +78,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -515,21 +516,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    /**
-     * @deprecated - use {@link CustomerDao}.
-     */
-    @Deprecated
-    public void update(final UserContext userContext, final String externalId, final Address address,
-            final List<CustomFieldDto> customFields, final List<CustomerPositionDto> customerPositions)
-            throws CustomerException, InvalidDateException {
-        this.setUserContext(userContext);
-        this.setExternalId(externalId);
-        updateAddress(address);
-        updateCustomFields(customFields);
-        updateCustomerPositions(customerPositions);
-        this.update();
-    }
-
     public void updateAddress(final Address address) {
 
         if (address == null) {
@@ -959,25 +945,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    public void updateCustomerPositions(final List<CustomerPositionDto> customerPositions) throws CustomerException {
-        if (customerPositions != null) {
-            for (CustomerPositionDto positionView : customerPositions) {
-                boolean isPositionFound = false;
-                for (CustomerPositionEntity positionEntity : getCustomerPositions()) {
-                    if (positionView.getPositionId().equals(positionEntity.getPosition().getId())) {
-                        positionEntity.setCustomer(getCustomer(positionView.getCustomerId()));
-                        isPositionFound = true;
-                        break;
-                    }
-                }
-                if (!isPositionFound) {
-                    addCustomerPosition(new CustomerPositionEntity(new PositionEntity(positionView.getPositionId()),
-                            getCustomer(positionView.getCustomerId()), this));
-                }
-            }
-        }
-    }
-
     public void checkIfClientIsATitleHolder() throws CustomerException {
         if (getParentCustomer() != null) {
             for (CustomerPositionEntity position : getParentCustomer().getCustomerPositions()) {
@@ -989,32 +956,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
                 }
             }
 
-        }
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao}
-     */
-    @Deprecated
-    protected void updateLoanOfficer(final Short loanOfficerId) throws Exception {
-
-        try {
-            if (isLOChanged(loanOfficerId)) {
-                // If a new loan officer has been assigned, then propagate this
-                // change to the customer's children and to their associated
-                // accounts.
-                getCustomerPersistence().updateLOsForAllChildren(loanOfficerId, getSearchId(),
-                        getOffice().getOfficeId());
-                getCustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, getSearchId(),
-                        getOffice().getOfficeId());
-                if (loanOfficerId != null) {
-                    this.personnel = getPersonnelPersistence().getPersonnel(loanOfficerId);
-                } else {
-                    this.personnel = null;
-                }
-            }
-        } catch (PersistenceException e) {
-            throw new CustomerException(e);
         }
     }
 
@@ -1134,6 +1075,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * @deprecated - using deprecated {@link CustomerAccountBO} constructor
+     */
+    @Deprecated
     private CustomerAccountBO createCustomerAccount(final List<FeeDto> fees) throws CustomerException {
         try {
             return new CustomerAccountBO(userContext, this, fees);
@@ -1151,7 +1096,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    private void inheritDetailsFromParent(final CustomerBO parentCustomer) throws CustomerException {
+    private void inheritDetailsFromParent(final CustomerBO parentCustomer) {
         personnel = parentCustomer.getPersonnel();
         office = parentCustomer.getOffice();
         if (parentCustomer.getCustomerMeeting() != null) {
@@ -1194,14 +1139,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
         if (customerStatus == null) {
             throw new CustomerException(CustomerConstants.INVALID_STATUS);
-        }
-    }
-
-    private CustomerBO getCustomer(final Integer customerId) throws CustomerException {
-        try {
-            return customerId != null ? getCustomerPersistence().getCustomer(customerId) : null;
-        } catch (PersistenceException pe) {
-            throw new CustomerException(pe);
         }
     }
 
@@ -1469,5 +1406,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             return this.displayName.equals(customer.displayName);
         }
         return this.globalCustNum.equals(customer.getGlobalCustNum());
+    }
+
+    public void validateVersion(Integer newVersionNum) throws CustomerException {
+        if (!this.versionNo.equals(newVersionNum)) {
+            throw new CustomerException(Constants.ERROR_VERSION_MISMATCH);
+        }
     }
 }

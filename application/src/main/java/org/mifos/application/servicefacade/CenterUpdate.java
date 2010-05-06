@@ -22,7 +22,6 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.framework.business.util.Address;
@@ -37,7 +36,6 @@ public class CenterUpdate {
     private final Address address;
     private final List<CustomFieldDto> customFields;
     private final List<CustomerPositionDto> customerPositions;
-    private DateTime mfiJoiningDateTime;
 
     public CenterUpdate(Integer customerId, Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, Address address,
             List<CustomFieldDto> customFields, List<CustomerPositionDto> customerPositions) {
@@ -81,17 +79,5 @@ public class CenterUpdate {
 
     public Integer getVersionNum() {
         return this.versionNum;
-    }
-
-    public void setMfiJoiningDateAsDateTime(DateTime mfiJoiningDateTime) {
-        this.mfiJoiningDateTime = mfiJoiningDateTime;
-    }
-
-    public DateTime getMfiJoiningDateTime() {
-        return this.mfiJoiningDateTime;
-    }
-
-    public void setMfiJoiningDateTime(DateTime mfiJoiningDateTime) {
-        this.mfiJoiningDateTime = mfiJoiningDateTime;
     }
 }

@@ -50,9 +50,9 @@ public interface CustomerService {
 
     void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees, List<SavingsOfferingBO> selectedOfferings) throws CustomerException;
 
-    void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center) throws CustomerException;
+    void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException;
 
-    void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws CustomerException;
+    void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws ApplicationException;
 
     GroupBO transferGroupTo(GroupBO group, CenterBO transferToCenter) throws CustomerException;
 

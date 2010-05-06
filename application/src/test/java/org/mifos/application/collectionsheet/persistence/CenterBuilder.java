@@ -53,6 +53,11 @@ public class CenterBuilder {
     private MeetingBO meeting;
     private CustomerStatus status = CustomerStatus.CENTER_ACTIVE;
 
+    /**
+     * do not update this value for integration tests.
+     */
+    private Integer versionNumber = null;
+
     public CenterBO build() {
 
         if (meeting == null && meetingBuilder != null) {
@@ -62,6 +67,10 @@ public class CenterBuilder {
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
                 numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId);
         center.updateCustomerStatus(status);
+
+        if (versionNumber != null) {
+            center.setVersionNo(versionNumber);
+        }
 
         return center;
     }
@@ -135,6 +144,14 @@ public class CenterBuilder {
 
     public CenterBuilder withExternalId(String withExternalId) {
         this.externalId = withExternalId;
+        return this;
+    }
+
+    /**
+     * do not update this when building centers for integration tests
+     */
+    public CenterBuilder withVersion(int withVersionNumber) {
+        this.versionNumber = withVersionNumber;
         return this;
     }
 }

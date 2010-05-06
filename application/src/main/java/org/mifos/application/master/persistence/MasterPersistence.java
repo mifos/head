@@ -81,8 +81,8 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-    private List<CustomValueListElementDto> lookUpValue(final String entityName, final Short localeId, final Session session)
-            throws PersistenceException {
+    @SuppressWarnings("unchecked")
+    private List<CustomValueListElementDto> lookUpValue(final String entityName, final Short localeId, final Session session) {
         Query queryEntity = session.getNamedQuery("masterdata.entitylookupvalue");
         queryEntity.setString("entityType", entityName);
         List<CustomValueListElementDto> entityList = queryEntity.list();
@@ -119,6 +119,7 @@ public class MasterPersistence extends Persistence {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private List<CustomValueListElementDto> getCustomValueListElements(final String entityName,
             final String entityClass, final String column, final Session session) {
         Query queryEntity = session
@@ -140,20 +141,7 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
-//    public List<MasterDataEntity> retrieveMasterEntities(final Class clazz, final Short localeId) throws PersistenceException {
-//        try {
-//            Session session = getSession();
-//            List<MasterDataEntity> masterEntities = session.createQuery("from " + clazz.getName()).list();
-//            for (MasterDataEntity masterData : masterEntities) {
-//                initialize(masterData.getNames());
-//                masterData.setLocaleId(localeId);
-//            }
-//            return masterEntities;
-//        } catch (Exception e) {
-//            throw new PersistenceException(e);
-//        }
-//    }
-
+    @SuppressWarnings("unchecked")
     public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) throws PersistenceException {
         try {
             Session session = getSession();
@@ -170,6 +158,7 @@ public class MasterPersistence extends Persistence {
 
 
 
+    @SuppressWarnings("unchecked")
     public MasterDataEntity retrieveMasterEntity(final Short entityId, final Class clazz, final Short localeId)
             throws PersistenceException {
         try {
@@ -191,6 +180,7 @@ public class MasterPersistence extends Persistence {
     /**
      * @deprecated - use {@link CustomerDao#retrieveCustomFieldsForCenter(org.mifos.security.util.UserContext)}
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(final EntityType entityType)
             throws PersistenceException {
@@ -213,6 +203,7 @@ public class MasterPersistence extends Persistence {
      * @deprecated - use specific methods on {@link CustomerDao}
      * @see CustomerDao#retrieveSalutations()
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
     public List<ValueListElement> retrieveMasterEntities(final String entityName, final Short localeId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -235,6 +226,7 @@ public class MasterPersistence extends Persistence {
         return MessageLookup.getInstance().lookup(lookupValue);
     }
 
+    @SuppressWarnings("unchecked")
     public List<MasterDataEntity> retrieveMasterDataEntity(final String classPath) throws PersistenceException {
         List<MasterDataEntity> queryResult = null;
         try {
@@ -245,6 +237,7 @@ public class MasterPersistence extends Persistence {
         return queryResult;
     }
 
+    @SuppressWarnings("unchecked")
     public MasterDataEntity getMasterDataEntity(final Class clazz, final Short id) throws PersistenceException {
         return (MasterDataEntity) getPersistentObject(clazz, id);
     }
@@ -277,8 +270,6 @@ public class MasterPersistence extends Persistence {
     public LookUpValueEntity addValueListElementForLocale(final DynamicLookUpValueCreationTypes type, final Short lookupEnityId,
             final String newElementText) throws PersistenceException {
 
-        // String lookUpName = SearchUtils.camelCase(newElementText + "." +
-        // System.currentTimeMillis());
         String lookUpName = SearchUtils.generateLookupName(type.name(), newElementText);
         return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName);
     }

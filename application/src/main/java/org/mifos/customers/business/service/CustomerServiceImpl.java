@@ -63,8 +63,11 @@ import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
+import org.mifos.customers.business.CustomerPositionDto;
+import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
+import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
@@ -313,19 +316,44 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate, CenterBO center)
-            throws CustomerException {
+    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
+
+        CustomerBO center = customerDao.findCustomerById(centerUpdate.getCustomerId());
+        center.validateVersion(centerUpdate.getVersionNum());
 
         Short loanOfficerId = centerUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
         PersonnelBO oldLoanOfficer = center.getPersonnel();
         center.setLoanOfficer(loanOfficer);
-        center.setMfiJoiningDate(centerUpdate.getMfiJoiningDateTime().toDate());
 
         if (center.isActive()) {
             center.validateLoanOfficer();
         }
+
+        try {
+            if (centerUpdate.getMfiJoiningDate() != null) {
+                DateTime mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
+                        .getPreferredLocale());
+                center.setMfiJoiningDate(mfiJoiningDate.toDate());
+            }
+        } catch (InvalidDateException e) {
+            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
+        }
+
+
+        try {
+            center.updateCustomFields(centerUpdate.getCustomFields());
+            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
+            validateMandatoryCustomFields(center.getCustomFields(), allCustomFieldsForCenter);
+        } catch (InvalidDateException e1) {
+            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+        }
+
+        assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
+
+        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer update (center, group, client)
+//        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         try {
             if (center.isLoanOfficerChanged(oldLoanOfficer)) {
@@ -342,8 +370,6 @@ public class CustomerServiceImpl implements CustomerService {
             center.setExternalId(centerUpdate.getExternalId());
             center.setUserContext(userContext);
             center.updateAddress(centerUpdate.getAddress());
-            center.updateCustomFields(centerUpdate.getCustomFields());
-            center.updateCustomerPositions(centerUpdate.getCustomerPositions());
             center.setUpdatedBy(userContext.getId());
             center.setUpdatedDate(new DateTime().toDate());
         } catch (Exception e) {
@@ -362,8 +388,33 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    private void assembleCustomerPostionsFromDto(List<CustomerPositionDto> customerPositions, CustomerBO center) {
+
+        for (CustomerPositionDto positionView : customerPositions) {
+            boolean isPositionFound = false;
+
+            for (CustomerPositionEntity positionEntity : center.getCustomerPositions()) {
+
+                if (positionView.getPositionId().equals(positionEntity.getPosition().getId())) {
+
+                    CustomerBO customer = customerDao.findCustomerById(positionView.getCustomerId());
+                    positionEntity.setCustomer(customer);
+                    isPositionFound = true;
+                    break;
+                }
+            }
+            if (!isPositionFound) {
+
+                CustomerBO customer = customerDao.findCustomerById(positionView.getCustomerId());
+                CustomerPositionEntity customerPosition = new CustomerPositionEntity(new PositionEntity(positionView
+                        .getPositionId()), customer, center);
+                center.addCustomerPosition(customerPosition);
+            }
+        }
+    }
+
     @Override
-    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO group) throws CustomerException {
+    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO group) throws ApplicationException {
 
         DateTime trainedDate = null;
 
@@ -402,6 +453,16 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         try {
+            group.updateCustomFields(groupUpdate.getCustomFields());
+            List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
+            validateMandatoryCustomFields(group.getCustomFields(), allCustomFieldsForGroup);
+        } catch (InvalidDateException e) {
+            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+        }
+
+        assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
+
+        try {
             if (group.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
@@ -416,8 +477,6 @@ public class CustomerServiceImpl implements CustomerService {
             group.setExternalId(groupUpdate.getExternalId());
             group.setUserContext(userContext);
             group.updateAddress(groupUpdate.getAddress());
-            group.updateCustomFields(groupUpdate.getCustomFields());
-            group.updateCustomerPositions(groupUpdate.getCustomerPositions());
             group.setUpdatedBy(userContext.getId());
             group.setUpdatedDate(new DateTime().toDate());
             group.setDisplayName(groupUpdate.getDisplayName());
