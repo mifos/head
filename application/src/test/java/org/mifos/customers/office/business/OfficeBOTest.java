@@ -20,12 +20,14 @@
 
 package org.mifos.customers.office.business;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.TestUtils;
 
 public class OfficeBOTest {
 
     @Test
+    @Ignore
     public void testEqualsAndHashcode() throws Exception {
         OfficeBO x = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
         OfficeBO y = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
