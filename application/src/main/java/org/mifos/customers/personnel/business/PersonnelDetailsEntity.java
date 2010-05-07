@@ -32,19 +32,12 @@ import org.mifos.framework.business.util.Name;
 public class PersonnelDetailsEntity extends AbstractEntity {
 
     private Name name;
-
     private String governmentIdNumber;
-
     private final Date dob;
-
     private Integer maritalStatus;
-
     private Integer gender;
-
     private Date dateOfJoiningMFI;
-
     private Date dateOfJoiningBranch;
-
     private Date dateOfLeavingBranch;
 
     @SuppressWarnings("unused")

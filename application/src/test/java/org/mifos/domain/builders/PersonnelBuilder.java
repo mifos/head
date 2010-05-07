@@ -20,18 +20,54 @@
 
 package org.mifos.domain.builders;
 
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.framework.TestUtils;
+import org.mifos.security.util.UserContext;
 
 /**
  *
  */
 public class PersonnelBuilder {
 
+    private String name = "BuilderLoanOfficer";
+    private PersonnelLevel level = PersonnelLevel.LOAN_OFFICER;
+    private OfficeBO office;
+    private UserContext userContext = TestUtils.makeUser();
+
     public static PersonnelBO anyLoanOfficer() {
         return new PersonnelBuilder().build();
     }
+
     public PersonnelBO build() {
-        return new PersonnelBO();
+        final PersonnelBO personnel = new PersonnelBO();
+        personnel.setPersonnelDetails(null);
+        personnel.setPreferredLocale(null);
+
+        personnel.setLevel(new PersonnelLevelEntity(level));
+        personnel.setOffice(office);
+        personnel.setDisplayName(name);
+
+        personnel.setUserContext(userContext);
+        personnel.setCreateDetails();
+
+        return personnel;
     }
 
+    public PersonnelBuilder withName(final String withName) {
+        this.name = withName;
+        return this;
+    }
+
+    public PersonnelBuilder asLoanOfficer() {
+        this.level = PersonnelLevel.LOAN_OFFICER;
+        return this;
+    }
+
+    public PersonnelBuilder with(OfficeBO withOffice) {
+        this.office = withOffice;
+        return this;
+    }
 }

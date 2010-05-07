@@ -67,47 +67,27 @@ public class PersonnelBO extends AbstractBusinessObject {
     }
 
     private final Short personnelId;
-
     private PersonnelLevelEntity level;
-
     private String globalPersonnelNum;
-
     private OfficeBO office;
-
     private Integer title;
-
     private String displayName;
-
     private String searchId;
-
     private Integer maxChildCount;
-
     private byte[] encryptedPassword;
-
     private final String userName;
-
     private String emailId;
-
-    private Short passwordChanged;
-
+    private Short passwordChanged = Short.valueOf("0");
     private Date lastLogin;
-
-    private Short locked;
-
-    private Short noOfTries;
+    private Short locked = Short.valueOf("0");
+    private Short noOfTries = Short.valueOf("0");
 
     private PersonnelStatusEntity status;
-
     private SupportedLocalesEntity preferredLocale;
-
     private PersonnelDetailsEntity personnelDetails;
-
     private Set<PersonnelRoleEntity> personnelRoles;
-
     private Set<PersonnelCustomFieldEntity> customFields;
-
     private Set<PersonnelMovementEntity> personnelMovements;
-
     private Set<PersonnelNotesEntity> personnelNotes;
 
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
@@ -325,7 +305,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.maxChildCount = maxChildCount;
     }
 
-    void setOffice(final OfficeBO office) {
+    public void setOffice(final OfficeBO office) {
         this.office = office;
     }
 

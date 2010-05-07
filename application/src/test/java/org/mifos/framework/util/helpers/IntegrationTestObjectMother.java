@@ -436,4 +436,16 @@ public class IntegrationTestObjectMother {
         }
     }
 
+    public static void createPersonnel(PersonnelBO personnel) {
+        try {
+            personnel.save();
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
 }
