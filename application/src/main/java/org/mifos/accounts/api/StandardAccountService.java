@@ -222,7 +222,7 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public BigDecimal getTotalPayementDueAmount(AccountReferenceDto account) throws Exception {
+    public BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception {
         AccountBO accountBo = getAccountPersistence().getAccount(account.getAccountId());
         return accountBo.getTotalAmountDue().getAmount();
     }

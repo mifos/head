@@ -133,5 +133,5 @@ public interface AccountService {
      * @return big decimal total payment due
      *
      */
-    BigDecimal getTotalPayementDueAmount(AccountReferenceDto account) throws Exception;
+    BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception;
 }
