@@ -189,7 +189,8 @@ public class SavingsBO extends AccountBO {
             final CustomerBO customer, final Integer offsettingAllowable,
             final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
             final Money recommendedAmount, final PersonnelBO savingsOfficer, final Date createdDate,
-            final Short createdByUserId) {
+            final Short createdByUserId, List<Holiday> holidays) {
+
         super(accountType, accountState, customer, offsettingAllowable, scheduledPayments,
                 new HashSet<AccountFeesEntity>(), null, savingsOfficer, createdDate, createdByUserId);
         this.savingsOffering = savingsProduct;
@@ -208,9 +209,7 @@ public class SavingsBO extends AccountBO {
         setSavingsPerformance(createSavingsPerformance());
         try {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = new HolidayDaoHibernate(new GenericDaoHibernate());
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-            setValuesForActiveState(workingDays, thisAndNextYearsHolidays);
+            setValuesForActiveState(workingDays, holidays);
         } catch (AccountException e) {
             throw new IllegalStateException("Unable to create savings schedules", e);
         }

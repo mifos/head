@@ -21,16 +21,15 @@
 package org.mifos.customers.business.service;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.domain.builders.AddressBuilder.anAddress;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -38,7 +37,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -47,15 +45,20 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.config.Localization;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.domain.builders.AddressBuilder;
 import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -166,6 +169,36 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest {
     }
 
     @Test
+    public void canUpdateCenterWithNoLoanOfficerWhenCenterIsInactive() throws Exception {
+
+        // setup
+        Locale locale = Localization.getInstance().getMainLocale();
+        AuditConfigurtion.init(locale);
+
+        CustomerStatusFlag centerStatusFlag = null;
+        CustomerNoteEntity customerNote = null;
+        customerService.updateCenterStatus(center, CustomerStatus.CENTER_INACTIVE, centerStatusFlag, customerNote);
+
+        Short loanOfficerId = null;
+        String externalId = center.getExternalId();
+        String mfiJoiningDate = new SimpleDateFormat("dd/MM/yyyy").format(center.getMfiJoiningDate());
+        Address address = center.getAddress();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+
+        CenterUpdate centerUpdate = new CenterUpdate(center.getCustomerId(), center.getVersionNo(), loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
+
+        UserContext userContext = TestUtils.makeUser();
+
+        // exercise test
+        customerService.updateCenter(userContext, centerUpdate);
+
+        // verification
+        center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
+        assertThat(center.getPersonnel(), is(nullValue()));
+    }
+
+    @Test
     public void canUpdateCenterWithDifferentMfiJoiningDateInPastOrFuture() throws Exception {
 
         // setup
@@ -222,7 +255,7 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest {
      * FIXME - #00001 - keithw - add custom fields to center being saved.
      */
     @Test
-    public void canUpdateCenterWithMandatoryCustomField() throws Exception {
+    public void canUpdateCenterWithMandatoryAdditionalFields() throws Exception {
 
     }
 

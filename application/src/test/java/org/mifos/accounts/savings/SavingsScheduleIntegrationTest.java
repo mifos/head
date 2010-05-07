@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.savings;
 
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
@@ -50,17 +49,17 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
@@ -76,21 +75,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml",
-                                    "/org/mifos/config/resources/hibernate-daos.xml",
-                                    "/org/mifos/config/resources/services.xml" })
+@ContextConfiguration(locations = { "/integration-test-context.xml"})
 public class SavingsScheduleIntegrationTest {
-
-    @Autowired
-    private CustomerService customerService;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
     private static MifosCurrency oldDefaultCurrency;
-
-    @Autowired
-    private CustomerDao customerDao;
 
     private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
     private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
@@ -137,8 +128,6 @@ public class SavingsScheduleIntegrationTest {
     @After
     public void cleanDatabaseTablesAfterTest() {
         // NOTE: - only added to stop older integration tests failing due to brittleness
-        IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount);
-        IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, meeting);
         databaseCleaner.clean();
         DateTimeUtils.setCurrentMillisSystem();
         fiscalCalendarRules.setWorkingDays(weekDaysToPropertyString(savedWorkingDays));
@@ -287,8 +276,13 @@ public class SavingsScheduleIntegrationTest {
         IntegrationTestObjectMother.createClient(client, meeting);
 
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
+
+
+        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+
         savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
-                .withCustomer(client).build();
+                .withCustomer(client).with(holidays).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
     }
 
@@ -298,5 +292,4 @@ public class SavingsScheduleIntegrationTest {
         Collections.sort(sortedList);
         return sortedList;
     }
-
 }
