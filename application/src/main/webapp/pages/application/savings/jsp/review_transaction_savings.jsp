@@ -75,7 +75,7 @@ explanation of the license and how it is applied.
               	<mifos:mifoslabel name="Savings.accountDetailsPage" />
             </tr>
             <tr>
-              <td colspan="2" class="blueline"><img src="images/trans.gif" width="10" height="5"></td>
+              <td colspan="2" class="blueline"><img src="pages/framework/images/trans.gif" width="10" height="5"></td>
             </tr>
           </table>
             <br>            

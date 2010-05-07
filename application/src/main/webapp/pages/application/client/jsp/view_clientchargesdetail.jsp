@@ -68,7 +68,7 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td align="right" class="headingorange"><img
-							src="images/trans.gif" width="10" height="5"></td>
+							src="pages/framework/images/trans.gif" width="10" height="5"></td>
 					</tr>
 				</table>
 				<c:if

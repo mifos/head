@@ -85,7 +85,7 @@ explanation of the license and how it is applied.
 						<table width="95%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td colspan="2" align="right" class="fontnormal">
-									<img src="images/trans.gif" width="10" height="2">
+									<img src="pages/framework/images/trans.gif" width="10" height="2">
 								</td>
 							</tr>
 							<tr>

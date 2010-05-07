@@ -62,7 +62,7 @@ explanation of the license and how it is applied.
 					</table>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td class="blueline"><img src="images/trans.gif" width="5"
+							<td class="blueline"><img src="pages/framework/images/trans.gif" width="5"
 								height="3"></td>
 						</tr>
 						<c:if

@@ -77,7 +77,7 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td colspan="2" align="right" class="fontnormal">
-									<img src="images/trans.gif" width="10" height="2">
+									<img src="pages/framework/images/trans.gif" width="10" height="2">
 								</td>
 							</tr>
 							<tr>

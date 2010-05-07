@@ -92,7 +92,7 @@ explanation of the license and how it is applied.
 						name="accounts.edittrans" /></td>
 				</tr>
 				<tr>
-					<td colspan="2" class="blueline"><img src="images/trans.gif"
+					<td colspan="2" class="blueline"><img src="pages/framework/images/trans.gif"
 						width="10" height="5"></td>
 				</tr>
 			</table>
