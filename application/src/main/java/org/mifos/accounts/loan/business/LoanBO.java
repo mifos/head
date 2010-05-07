@@ -2038,8 +2038,17 @@ public class LoanBO extends AccountBO {
         // Use handlePeriodic to adjust fee installments for holiday periods and combine multiple fee installments due for the
         // same loan installment. Finally, apply these updated fees to the given dueInstallments list and update
         // loan summary and activity tables.
+        /* old way
         List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(handlePeriodic(accountFee, installmentDates,
                 nonAdjustedInstallmentDates));
+        */
+        // new way
+        ScheduledEvent loanScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getMeetingForAccount());
+        List<FeeInstallment> feeInstallmentList
+            = FeeInstallment.createMergedFeeInstallmentsForOneFeeStartingWith(loanScheduledEvent,
+                                                                              accountFee,
+                                                                              dueInstallments.size(),
+                                                                              dueInstallments.get(0).getInstallmentId());
         Money totalFeeAmountApplied = applyFeeToInstallments(feeInstallmentList, dueInstallments);
         updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
         updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee.getFeeName() + AccountConstants.APPLIED);

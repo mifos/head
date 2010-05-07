@@ -100,7 +100,7 @@ public class FeeInstallment {
         if (accountFeesEntity.getFees().isOneTime()) {
             FeeInstallment feeInstallment
             = buildFeeInstallment(
-                    (short) 1,  //Customer one-time fees are always up-front, due at the first meeting
+                    (short) startingInstallmentNumber,  //Customer one-time fees are always up-front, due at the first meeting
                     accountFeesEntity.getAccountFeeAmount(),
                     accountFeesEntity);
             mergedFeeInstallments.add(feeInstallment);

@@ -20,6 +20,9 @@
 
 package org.mifos.customers.center.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +41,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.CenterInformationDto;
@@ -227,10 +231,17 @@ public class CenterCustAction extends CustAction {
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         UserContext userContext = getUserContext(request);
 
+
+        List<CustomerPositionDto> populatedCustomerPositions = new ArrayList<CustomerPositionDto>();
+        for (CustomerPositionDto position : actionForm.getCustomerPositions()) {
+            if (position.getCustomerId() != null) {
+                populatedCustomerPositions.add(position);
+            }
+        }
+
         CenterUpdate centerUpdate = new CenterUpdate(centerFromSession.getCustomerId(), centerFromSession
                 .getVersionNo(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), actionForm
-                .getMfiJoiningDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm
-                .getCustomerPositions());
+                .getMfiJoiningDate(), actionForm.getAddress(), actionForm.getCustomFields(), populatedCustomerPositions);
 
         this.customerServiceFacade.updateCenter(userContext, centerUpdate);
 

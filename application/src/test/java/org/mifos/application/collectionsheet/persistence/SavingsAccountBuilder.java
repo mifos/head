@@ -19,6 +19,7 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.mifos.accounts.savings.business.SavingsTransactionActivityHelper;
 import org.mifos.accounts.savings.business.SavingsTransactionActivityHelperImpl;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -75,6 +77,7 @@ public class SavingsAccountBuilder {
             savingsTransactionActivityHelper);
     private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
     private PersonnelBO savingsOfficer;
+    private List<Holiday> holidays = new ArrayList<Holiday>();
 
     public SavingsBO build() {
 
@@ -82,7 +85,7 @@ public class SavingsAccountBuilder {
                 savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
                 interestCalcType, accountType, accountState, customer, offsettingAllowable,
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, savingsOfficer, createdDate,
-                createdByUserId);
+                createdByUserId, holidays);
         savingsBO.setCustomerPersistence(customerDao);
 
         return savingsBO;
@@ -156,6 +159,11 @@ public class SavingsAccountBuilder {
 
     public SavingsAccountBuilder withRecommendedAmount(final Money withRecommendedAmount) {
         this.recommendedAmount = withRecommendedAmount;
+        return this;
+    }
+
+    public SavingsAccountBuilder with(List<Holiday> withHolidays) {
+        this.holidays = withHolidays;
         return this;
     }
 }

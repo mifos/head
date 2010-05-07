@@ -72,7 +72,7 @@ explanation of the license and how it is applied.
                 </td>
                 </tr>
               <tr>
-                <td align="right" class="headingorange"><img src="images/trans.gif" width="10" height="5"></td>
+                <td align="right" class="headingorange"><img src="pages/framework/images/trans.gif" width="10" height="5"></td>
               </tr>
             </table>
             <c:if test="${param.statusId == 1 || param.statusId == 2 || param.statusId == 3 || param.statusId == 4}">

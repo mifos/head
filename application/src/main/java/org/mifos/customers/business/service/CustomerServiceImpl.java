@@ -373,7 +373,10 @@ public class CustomerServiceImpl implements CustomerService {
             center.setUpdatedBy(userContext.getId());
             center.setUpdatedDate(new DateTime().toDate());
         } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
 
         try {

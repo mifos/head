@@ -52,6 +52,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.jfree.data.time.Week;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -96,6 +97,7 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
@@ -128,6 +130,7 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -256,7 +259,17 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    private HolidayBO createHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
+    private HolidayBO createOneDayHoliday(final Date holidayDate, RepaymentRuleTypes repaymentRule) throws PersistenceException, ApplicationException {
+        // next working day repayment rule
+        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRule.getValue());
+        HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, holidayDate), holidayDate, "a holiday", entity);
+        holiday.setValidationEnabled(false);
+        holiday.save();
+        StaticHibernateUtil.commitTransaction();
+        return holiday;
+    }
+
+    private HolidayBO createOneDayNextWorkingDayHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
         // next working day repayment rule
         RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
         HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, holidayDate), holidayDate, "a holiday", entity);
@@ -647,7 +660,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testApplyPeriodicFeeWithHoliday() throws Exception {
-        Date startDate = DateUtils.getDate(2008, Calendar.MAY, 23);
+        Date startDate = DateUtils.getDate(2008, Calendar.MAY, 23);  // Friday
         new DateTimeService().setCurrentDateTime(new DateTime(startDate));
 
         accountBO = getLoanAccount(startDate, AccountState.LOAN_APPROVED);
@@ -657,7 +670,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
 
         // create holiday on first installment date
-        HolidayBO holiday = createHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
+        HolidayBO holiday = createOneDayNextWorkingDayHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
 
         try {
             LoanBO loanBO = (LoanBO) accountBO;
@@ -731,6 +744,95 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
+    public void testApplyPeriodicFeeWithMoratorium() throws Exception {
+        DateTime startDate = date(2008,5,23); //Friday
+        new DateTimeService().setCurrentDateTime(startDate);
+
+        accountBO = getLoanAccount(startDate.toDate(), AccountState.LOAN_APPROVED);
+
+        Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary().getOriginalFees();
+        TestObjectFactory.flushandCloseSession();
+        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
+
+        // create holiday on first installment date
+        HolidayBO holiday = createOneDayHoliday(startDate.plusWeeks(1).toDate(), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+
+        try {
+            StaticHibernateUtil.getSessionTL();
+            StaticHibernateUtil.startTransaction();
+            LoanBO loanBO = (LoanBO) accountBO;
+            loanBO.updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
+                    .getInterestRate(), loanBO.getNoOfInstallments(), loanBO.getDisbursementDate(), loanBO
+                    .getGracePeriodDuration(), loanBO.getBusinessActivityId(), "Loan account updated", null, null,
+                    false, null, null);
+
+            FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "25",
+                    RecurrenceType.WEEKLY, EVERY_WEEK);
+
+            UserContext uc = TestUtils.makeUser();
+            loanBO.setUserContext(uc);
+            loanBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
+                    .getAmountDoubleValue());
+            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.closeSession();
+
+            Map<String, String> fees1 = new HashMap<String, String>();
+            fees1.put("Mainatnence Fee", "100.0");
+
+            Map<String, String> fees2 = new HashMap<String, String>();
+            fees2.put("Mainatnence Fee", "100.0");
+            fees2.put("Periodic Fee", "25.0");
+
+            LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(loanBO
+                    .getAccountActionDates());
+
+            List<Date> installmentDates = new ArrayList<Date>();
+            List<Date> feeDates = new ArrayList<Date>();
+            for (LoanScheduleEntity loanScheduleEntity : paymentsArray) {
+                installmentDates.add(loanScheduleEntity.getActionDate());
+                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+                        .getAccountFeesActionDetails()) {
+                    Date feeDate = accountFeesActionDetailEntity.getAccountActionDate().getActionDate();
+                    feeDates.add(feeDate);
+                }
+            }
+
+            Assert.assertEquals(6, paymentsArray.length);
+
+//            checkFees(fees2, paymentsArray[0], false);
+            checkFees(fees2, paymentsArray[1], false);
+            checkFees(fees2, paymentsArray[2], false);
+            checkFees(fees2, paymentsArray[3], false);
+            checkFees(fees2, paymentsArray[4], false);
+            checkFees(fees2, paymentsArray[5], false);
+
+            List<Date> expectedDates = new ArrayList<Date>();
+
+            // moratorium on first installment date pushes all dates out one Week from unadjusted date.
+            expectedDates.add(startDate.plusWeeks(2).toDate());
+            expectedDates.add(startDate.plusWeeks(3).toDate());
+            expectedDates.add(startDate.plusWeeks(4).toDate());
+            expectedDates.add(startDate.plusWeeks(5).toDate());
+            expectedDates.add(startDate.plusWeeks(6).toDate());
+            expectedDates.add(startDate.plusWeeks(7).toDate());
+
+            int i = 0;
+            for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
+                LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+                Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
+                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+            }
+
+            Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "750.0")), loanBO.getLoanSummary()
+                    .getOriginalFees());
+        } finally {
+            // make sure that we don't leave any persistent changes that could
+            // affect subsequent tests
+            new DateTimeService().resetToCurrentSystemDateTime();
+           deleteHoliday(holiday);
+        }
+    }
+
     public void testPeriodicFeeWithHoliday() throws Exception {
         Date startDate = DateUtils.getDate(2008, Calendar.MAY, 23);
         new DateTimeService().setCurrentDateTime(new DateTime(startDate));
@@ -742,7 +844,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
 
         // create holiday on first installment date
-        HolidayBO holiday = createHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
+        HolidayBO holiday = createOneDayNextWorkingDayHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
 
         try {
             LoanBO loanBO = (LoanBO) accountBO;
@@ -5739,4 +5841,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             }
         }, client, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
     }
+
+    private DateTime date (int year, int month, int day) {
+        return new DateTime().withDate(year, month, day).toDateMidnight().toDateTime();
+    }
+
 }

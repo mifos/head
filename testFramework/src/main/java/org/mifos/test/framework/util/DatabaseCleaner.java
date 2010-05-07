@@ -53,6 +53,8 @@ public class DatabaseCleaner {
 
         template.execute("delete from account_status_change_history");
         template.execute("delete from loan_summary");
+//        template.execute("delete from max_min_loan_amount");
+//        template.execute("delete from max_min_no_of_install");
         template.execute("delete from loan_account");
 
         template.execute("delete from saving_schedule");

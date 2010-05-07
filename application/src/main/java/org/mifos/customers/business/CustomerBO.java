@@ -122,7 +122,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     private CustomerPersistence customerPersistence = null;
     private PersonnelPersistence personnelPersistence = null;
-    private MasterPersistence masterPersistence = null;
 
     /**
      * default constructor for hibernate
@@ -969,6 +968,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             return false;
         }
 
+        if (oldLoanOfficer != null && this.personnel == null) {
+            return true;
+        }
+
         if (oldLoanOfficer == null && this.personnel != null) {
             return true;
         }
@@ -1196,6 +1199,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * @deprecated pull up to service level to remove persistence/update here and remove getPersonnelPersistence
+     */
+    @Deprecated
     public void removeGroupMemberShip(final PersonnelBO personnel, final String comment) throws PersistenceException,
             CustomerException {
         PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
@@ -1337,17 +1344,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
-    }
-
-    public MasterPersistence getMasterPersistence() {
-        if (null == masterPersistence) {
-            masterPersistence = new MasterPersistence();
-        }
-        return masterPersistence;
-    }
-
-    public void setMasterPersistence(final MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
     }
 
     public void validateLoanOfficerIsActive() throws CustomerException {
