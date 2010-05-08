@@ -50,22 +50,24 @@ explanation of the license and how it is applied.
 		</c:if>
 
 		<script>
-		function showMeetingFrequency(){
-			if (document.loanAccountActionForm.frequency[1].checked == true) {
-				document.loanAccountActionForm.frequency[0].disabled=true;
-				document.getElementById("weekDIV").style.display = "none";
-				document.getElementById("monthDIV").style.display = "block";
-				document.getElementsByName("recurrenceId")[0].value = "2";
-				if(document.loanAccountActionForm.monthType[0].checked == false && document.loanAccountActionForm.monthType[1].checked == false)
-					document.getElementsByName("monthType")[0].checked=true;
-			} else {
-				document.loanAccountActionForm.frequency[0].checked=true;
-				document.loanAccountActionForm.frequency[1].disabled=true;
-				document.getElementById("weekDIV").style.display = "block";
-				document.getElementById("monthDIV").style.display = "none";
-				document.getElementsByName("recurrenceId")[0].value = "1";
-			}
-		}
+            function showMeetingFrequency(){
+                if (document.loanAccountActionForm.frequency != undefined) {
+                    if (document.loanAccountActionForm.frequency[1].checked == true) {
+                        document.loanAccountActionForm.frequency[0].disabled=true;
+                        document.getElementById("weekDIV").style.display = "none";
+                        document.getElementById("monthDIV").style.display = "block";
+                        document.getElementsByName("recurrenceId")[0].value = "2";
+                        if(document.loanAccountActionForm.monthType[0].checked == false && document.loanAccountActionForm.monthType[1].checked == false)
+                            document.getElementsByName("monthType")[0].checked=true;
+                    } else {
+                        document.loanAccountActionForm.frequency[0].checked=true;
+                        document.loanAccountActionForm.frequency[1].disabled=true;
+                        document.getElementById("weekDIV").style.display = "block";
+                        document.getElementById("monthDIV").style.display = "none";
+                        document.getElementsByName("recurrenceId")[0].value = "1";
+                    }
+                }
+            }
 
 		</script>
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>

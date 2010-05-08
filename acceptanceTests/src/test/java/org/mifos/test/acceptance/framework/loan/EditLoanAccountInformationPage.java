@@ -47,4 +47,12 @@ public class EditLoanAccountInformationPage extends MifosPage {
    }
 
 
+    public void editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        if (accountSubmitParameters.getAmount() != null) {
+            selenium.type("editLoanAccount.input.loanAmount", accountSubmitParameters.getAmount());
+        }
+        if (editAccountParameters.getGracePeriod() != null) {
+            selenium.type("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
+        }
+    }
 }

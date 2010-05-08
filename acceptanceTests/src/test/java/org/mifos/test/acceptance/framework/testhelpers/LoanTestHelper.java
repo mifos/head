@@ -49,6 +49,9 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreview
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationPage;
+import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 
@@ -97,6 +100,24 @@ public class LoanTestHelper {
      * TODO: Create a helper for creating a GLIM loan account.
      */
 
+
+    /**
+     * Edits the loan account with id loanId and updates its settings with the ones in params.
+     * @param loanId The account id.
+     * @param accountSubmitParameters The create loan parameters.
+     * @param editAccountParameters The edit loan parameters.
+     * @return edit preview loan account page
+     */
+    public EditPreviewLoanAccountPage changeLoanAccountInformation(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        loanAccountPage.verifyPage();
+
+        EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
+        editAccountInformationPage.verifyPage();
+
+        editAccountInformationPage.editAccountParams(accountSubmitParameters, editAccountParameters);
+        return editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
+    }
 
     /**
      * Edits the loan account with id loanId and updates its settings with the ones in params.

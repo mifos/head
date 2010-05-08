@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -40,5 +41,9 @@ public class EditPreviewLoanAccountPage extends MifosPage {
 
         waitForPageToLoad();
         return new LoanAccountPage(selenium);
+    }
+
+    public void verifyErrorInForm(String error) {
+        Assert.assertTrue(selenium.isTextPresent(error));
     }
 }

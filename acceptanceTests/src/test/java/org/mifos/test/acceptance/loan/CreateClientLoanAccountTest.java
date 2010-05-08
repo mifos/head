@@ -28,6 +28,8 @@ import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSubmitParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.EditLoanAccountInformationParameters;
+import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,26 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    // one of the dependent methods throws Exception
+    public void newWeeklyClientLoanAccountWithModifyErrors() throws Exception {
+        CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
+        searchParameters.setSearchString("Client - Veronica Abisya");
+        searchParameters.setLoanProduct("Flat Interest Loan Product With Fee");
+
+        CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
+        submitAccountParameters.setAmount("1012.0");
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+
+        String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters);
+        submitAccountParameters.setAmount("10666.0");
+        EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
+        editAccountParameters.setGracePeriod("15");
+        EditPreviewLoanAccountPage editPreviewLoanAccountPage = tryToEditLoan(loanId, submitAccountParameters, editAccountParameters);
+        editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Amount. Amount should be a value between 1 and 10,000, inclusive");
+        editPreviewLoanAccountPage.verifyErrorInForm("Please specify valid Grace period for repayments. Grace period for repayments should be a value less than 12");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -146,11 +168,16 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.verifyAdditionalFeesAreEmpty();
     }
 
-    private void createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
+    private String createLoanAndCheckAmount(CreateLoanAccountSearchParameters searchParameters,
             CreateLoanAccountSubmitParameters submitAccountParameters) {
 
         LoanAccountPage loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
         loanAccountPage.verifyPage();
         loanAccountPage.verifyLoanAmount(submitAccountParameters.getAmount());
+        return loanAccountPage.getAccountId();
+    }
+
+    private EditPreviewLoanAccountPage tryToEditLoan(String loanId, CreateLoanAccountSubmitParameters submitAccountParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        return loanTestHelper.changeLoanAccountInformation(loanId, submitAccountParameters, editAccountParameters);
     }
 }
