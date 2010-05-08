@@ -46,7 +46,6 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -700,8 +699,18 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return amount;
     }
 
+    /**
+     * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
+     * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
+     */
+    @Deprecated
     public abstract void updateMeeting(MeetingBO meeting) throws CustomerException;
 
+    /**
+     * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
+     * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
+     */
+    @Deprecated
     protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
         logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
         getCustomerMeeting().setUpdatedMeeting(meeting);

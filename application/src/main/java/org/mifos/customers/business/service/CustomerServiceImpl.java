@@ -89,6 +89,7 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -100,13 +101,15 @@ public class CustomerServiceImpl implements CustomerService {
     private final PersonnelDao personnelDao;
     private final OfficeDao officeDao;
     private HolidayDao holidayDao;
+    private HibernateTransactionHelper hibernateTransactionHelper;
 
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
-            HolidayDao holidayDao) {
+            HolidayDao holidayDao, final HibernateTransactionHelper hibernateTransactionHelper) {
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.officeDao = officeDao;
         this.holidayDao = holidayDao;
+        this.hibernateTransactionHelper = hibernateTransactionHelper;
     }
 
     @Override
@@ -320,18 +323,18 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO center = customerDao.findCustomerById(centerUpdate.getCustomerId());
         center.validateVersion(centerUpdate.getVersionNum());
+        center.setUserContext(userContext);
 
         Short loanOfficerId = centerUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
-        PersonnelBO oldLoanOfficer = center.getPersonnel();
-        center.setLoanOfficer(loanOfficer);
-
         if (center.isActive()) {
-            center.validateLoanOfficer();
+            if (loanOfficer == null) {
+                throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+            }
         }
 
-        try {
+       try {
             if (centerUpdate.getMfiJoiningDate() != null) {
                 DateTime mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
                         .getPreferredLocale());
@@ -341,10 +344,10 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
         }
 
-
         try {
             center.updateCustomFields(centerUpdate.getCustomFields());
-            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
+            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao
+                    .retrieveCustomFieldEntitiesForCenter();
             validateMandatoryCustomFields(center.getCustomFields(), allCustomFieldsForCenter);
         } catch (InvalidDateException e1) {
             throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
@@ -352,42 +355,44 @@ public class CustomerServiceImpl implements CustomerService {
 
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
 
-        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer update (center, group, client)
-//        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer update (center, group,
+        // client)
+        // List<FieldConfigurationEntity> mandatoryConfigurableFields =
+        // this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         try {
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(center);
+
+            PersonnelBO oldLoanOfficer = center.getPersonnel();
+            center.setLoanOfficer(loanOfficer);
+
             if (center.isLoanOfficerChanged(oldLoanOfficer)) {
                 // If a new loan officer has been assigned, then propagate this
                 // change to the customer's children and to their associated
                 // accounts.
-                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, center.getSearchId(), center
-                        .getOffice().getOfficeId());
+                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, center.getSearchId(), center.getOffice()
+                        .getOfficeId());
 
                 new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, center.getSearchId(), center
                         .getOffice().getOfficeId());
             }
 
             center.setExternalId(centerUpdate.getExternalId());
-            center.setUserContext(userContext);
             center.updateAddress(centerUpdate.getAddress());
             center.setUpdatedBy(userContext.getId());
             center.setUpdatedDate(new DateTime().toDate());
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
 
-        try {
-            StaticHibernateUtil.startTransaction();
             customerDao.save(center);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            throw e;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 

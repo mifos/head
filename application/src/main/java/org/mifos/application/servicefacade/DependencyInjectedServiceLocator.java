@@ -52,6 +52,8 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.authentication.AuthenticationDaoHibernate;
 
@@ -99,6 +101,9 @@ public class DependencyInjectedServiceLocator {
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
 
+    // helpers
+    private static HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
     public static CollectionSheetService locateCollectionSheetService() {
 
         if (collectionSheetService == null) {
@@ -111,7 +116,7 @@ public class DependencyInjectedServiceLocator {
     public static CustomerService locateCustomerService() {
 
         if (customerService == null) {
-            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao);
+            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransactionHelper);
         }
         return customerService;
     }

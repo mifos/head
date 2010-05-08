@@ -57,6 +57,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -83,6 +84,9 @@ public class CenterCreationTest {
     @Mock
     private HolidayDao holidayDao;
 
+    @Mock
+    private HibernateTransactionHelper hibernateTransaction;
+
     private static MifosCurrency oldCurrency;
 
     @BeforeClass
@@ -98,7 +102,7 @@ public class CenterCreationTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao);
+        customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransaction);
     }
 
     @Test
