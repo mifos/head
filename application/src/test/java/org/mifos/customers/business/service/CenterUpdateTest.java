@@ -55,6 +55,7 @@ import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -83,6 +84,9 @@ public class CenterUpdateTest {
     @Mock
     private HolidayDao holidayDao;
 
+    @Mock
+    private HibernateTransactionHelper hibernateTransaction;
+
     private static MifosCurrency oldCurrency;
 
     @BeforeClass
@@ -98,7 +102,7 @@ public class CenterUpdateTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao);
+        customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransaction);
     }
 
     @Test

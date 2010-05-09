@@ -18,32 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.loan;
+package org.mifos.framework.hibernate.helper;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-import org.testng.Assert;
+import org.mifos.framework.business.AbstractBusinessObject;
 
-import com.thoughtworks.selenium.Selenium;
+/**
+ * Helper class for encasulating calls to {@link StaticHibernateUtil}.
+ */
+public interface HibernateTransactionHelper {
 
+    void beginAuditLoggingFor(AbstractBusinessObject domainEntity);
 
-public class EditPreviewLoanAccountPage extends MifosPage {
-    public EditPreviewLoanAccountPage(Selenium selenium) {
-        super(selenium);
-    }
+    void startTransaction();
 
-    public void verifyPage() {
-        this.verifyPage("EditPreviewLoanAccount");
-    }
+    void commitTransaction();
 
-    public LoanAccountPage submitAndNavigateToLoanAccountPage() {
+    void rollbackTransaction();
 
-        selenium.click("editPreviewLoanAccount.button.submit");
-
-        waitForPageToLoad();
-        return new LoanAccountPage(selenium);
-    }
-
-    public void verifyErrorInForm(String error) {
-        Assert.assertTrue(selenium.isTextPresent(error));
-    }
+    void closeSession();
 }

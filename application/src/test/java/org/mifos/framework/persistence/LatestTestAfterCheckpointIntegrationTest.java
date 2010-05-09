@@ -261,6 +261,4 @@ public class LatestTestAfterCheckpointIntegrationTest {
         executeScript("latest-data-checkpoint.sql", connection);
         connection.commit();
     }
-
-
 }

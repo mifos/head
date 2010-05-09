@@ -44,34 +44,20 @@ function disableFields(){
  			 		document.getElementsByName("noOfInstallments")[0].disabled=true	;
  			 		document.getElementsByName("disbursementDateDD")[0].disabled=true	;
  			 		document.getElementsByName("disbursementDateMM")[0].disabled=true	;
- 			 		document.getElementsByName("disbursementDateYY")[0].disabled=true	; 			 		
- 			 		document.getElementsByName("intDedDisb")[0].disabled=true	;
+ 			 		document.getElementsByName("disbursementDateYY")[0].disabled=true	;
  			 		document.getElementsByName("gracePeriod")[0].disabled=true;
  		} 		
- }	
- 
-	function setIntrestAtDisb() {
-		if(document.getElementsByName("gracePeriodTypeId")[0].value!="1") {
-		if(document.getElementsByName("intDedDisbursement")[0].value==1){
-			document.getElementsByName("intDedDisb")[0].checked=true;
-			document.getElementsByName("gracePeriod")[0].disabled=true;
-		}	
-		else{
-			document.getElementsByName("intDedDisb")[0].checked=false;
-			document.getElementsByName("gracePeriod")[0].disabled=false;
-		}	
-		document.getElementsByName("gracePeriod")[0].value=document.getElementsByName("gracePeriodDuration")[0].value;
-	}else {
-		document.getElementsByName("gracePeriodDuration")[0].value=0;
-		document.getElementsByName("gracePeriod")[0].value=0;
-		document.getElementsByName("gracePeriod")[0].disabled=true;
-		if(document.getElementsByName("intDedDisbursement")[0].value==1){
-			document.getElementsByName("intDedDisb")[0].checked=true;
-		}	
-		else{
-			document.getElementsByName("intDedDisb")[0].checked=false;
-		}
-	}
+ }
+
+function checkGracePeriod() {
+    if(document.getElementsByName("gracePeriodTypeId")[0].value!="1") {
+        document.getElementsByName("gracePeriod")[0].disabled=false;
+        document.getElementsByName("gracePeriod")[0].value=document.getElementsByName("gracePeriodDuration")[0].value;
+    }else {
+        document.getElementsByName("gracePeriodDuration")[0].value=0;
+        document.getElementsByName("gracePeriod")[0].value=0;
+        document.getElementsByName("gracePeriod")[0].disabled=true;
+    }
 }
 
 function setGracePeriod() {

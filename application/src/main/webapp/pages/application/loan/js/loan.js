@@ -66,14 +66,15 @@ function fun_approved(form) {
 function intDedAtDisb() {
 	if(document.getElementsByName("gracePeriodTypeId")[0].value==1) {
 		document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-	} else  {
-		if(document.getElementsByName("intDedDisbursement")[0].checked==true) {
-		    document.getElementsByName("gracePeriodDuration")[0].value="0";
-			document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-		}else{
-			document.getElementsByName("gracePeriodDuration")[0].disabled=false;
-		}
-	}
+    } else  {
+        if(document.getElementsByName("intDedDisbursement").length != 0 &&
+           document.getElementsByName("intDedDisbursement")[0].checked==true) {
+            document.getElementsByName("gracePeriodDuration")[0].value="0";
+            document.getElementsByName("gracePeriodDuration")[0].disabled=true;
+        }else{
+            document.getElementsByName("gracePeriodDuration")[0].disabled=false;
+        }
+    }
 }
 function displayAmount(listBox, textBox,index ){
 	var comboBox = document.getElementsByName(listBox)[0];

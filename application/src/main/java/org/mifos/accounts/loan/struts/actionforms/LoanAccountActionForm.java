@@ -896,6 +896,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         Locale locale = getUserContext(request).getPreferredLocale();
         if (getState().equals(AccountState.LOAN_PARTIAL_APPLICATION)
                 || getState().equals(AccountState.LOAN_PENDING_APPROVAL)) {
+            checkValidationForPreviewBefore(errors, request);
             checkValidationForPreview(errors, currency, request);
             // Only validate the disbursement date before a loan has been approved. After
             // approval, it cannot be edited.
@@ -913,6 +914,9 @@ public class LoanAccountActionForm extends BaseActionForm {
         performGlimSpecificValidations(errors, currency, request);
         validateCustomFields(request, errors);
         validateRepaymentDayRequired(errors);
+        if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
+            validatePurposeOfLoanFields(errors, getMandatoryFields(request));
+        }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);

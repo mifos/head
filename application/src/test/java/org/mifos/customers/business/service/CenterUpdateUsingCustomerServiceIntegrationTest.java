@@ -101,6 +101,9 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest {
     @BeforeClass
     public static void initialiseHibernateUtil() {
 
+        Locale locale = Localization.getInstance().getMainLocale();
+        AuditConfigurtion.init(locale);
+
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
         new StandardTestingService().setTestMode(TestMode.INTEGRATION);
@@ -172,9 +175,6 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest {
     public void canUpdateCenterWithNoLoanOfficerWhenCenterIsInactive() throws Exception {
 
         // setup
-        Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
-
         CustomerStatusFlag centerStatusFlag = null;
         CustomerNoteEntity customerNote = null;
         customerService.updateCenterStatus(center, CustomerStatus.CENTER_INACTIVE, centerStatusFlag, customerNote);
