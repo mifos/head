@@ -36,6 +36,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -437,20 +438,25 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulManage_AmountFee() throws Exception {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100.0",
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getAmountBasedFee(feeId, "StatusID", "12.34"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("feeId", feeId);
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.manage_success.toString());
 
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        Assert.assertEquals("100.0", actionForm.getAmount());
+        Assert.assertEquals("12.3", actionForm.getAmount());
         Assert.assertNull(actionForm.getRate());
         Assert.assertNull(actionForm.getFeeFormula());
 
@@ -458,35 +464,18 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(FeeConstants.STATUSLIST, request)).size());
     }
 
-    public void testSuccessfulManage_RateFee() throws Exception {
-        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
-        setRequestPathInfo("/feeaction.do");
-        addRequestParameter("method", "manage");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.manage_success.toString());
-
-        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
-        Assert.assertEquals("24.0", actionForm.getRate());
-        Assert.assertEquals(FeeFormula.AMOUNT.getValue().toString(), actionForm.getFeeFormula());
-        Assert.assertNull(actionForm.getAmount());
-
-        Assert.assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils
-                .getAttribute(FeeConstants.STATUSLIST, request)).size());
-    }
-
     public void testFailureEditPreviewForAmount() throws PageExpiredException {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getAmountBasedFee(feeId, "1", "12.34"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         setRequestPathInfo("/feeaction.do");
@@ -500,12 +489,17 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getAmountBasedFee(feeId, "1", "0"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         setRequestPathInfo("/feeaction.do");
@@ -518,13 +512,48 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
-    public void testFailureEditPreviewForRate() throws Exception {
-        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
+    public void testSuccessfulManage_RateFee() throws Exception {
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT, null);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        ((RateFeeBO)fee).getFeeFormula().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getRateBasedFee(feeId, "StatusID", 12.34, "1"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("feeId", feeId);
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.manage_success.toString());
+
+        FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
+        Assert.assertEquals("12.34", actionForm.getRate());
+        Assert.assertEquals("1", actionForm.getFeeFormula());
+        Assert.assertNull(actionForm.getAmount());
+
+        Assert.assertEquals("The size of master data for status", 2, ((List<MasterDataEntity>) SessionUtils
+                .getAttribute(FeeConstants.STATUSLIST, request)).size());
+    }
+
+    public void testFailureEditPreviewForRate() throws Exception {
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT, null);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        ((RateFeeBO)fee).getFeeFormula().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getRateBasedFee(feeId, "1", 12.34d, "1"));
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/feeaction.do");
+        addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         setRequestPathInfo("/feeaction.do");
@@ -538,12 +567,17 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulEditPreview() throws Exception {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getAmountBasedFee(feeId, "1", "12.34"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
@@ -564,15 +598,21 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulUpdate_AmountFee() throws Exception {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
+        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getAmountBasedFee(feeId, "1", "12.34"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
+        request.removeAttribute("model");
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "editPreview");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -580,6 +620,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("feeStatus", FeeStatus.INACTIVE.getValue().toString());
         actionPerform();
 
+        request.removeAttribute("model");
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "update");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -593,25 +634,39 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessfulGetFee() throws Exception {
-        fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "100",
-                FeePayment.UPFRONT);
+        fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
+                FeePayment.UPFRONT, "non null lookup value");
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        ((RateFeeBO)fee).getFeeFormula().setLookUpValue(lookUpValue);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "get");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter("feeId", fee.getFeeId().toString());
         actionPerform();
-        fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        Assert.assertNotNull(fee);
+        Object sessionObj = getRequest().getAttribute("model");
+        Assert.assertTrue("Should have got FeeDto", sessionObj instanceof FeeDto);
+        Assert.assertNotNull(sessionObj);
+        FeeDto feeDto = (FeeDto) sessionObj;
+        Assert.assertEquals("One Time Fee", feeDto.getName());
+        Assert.assertEquals(24.0, feeDto.getRate());
     }
 
     public void testSuccessfulUpdate_RateFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
+                FeePayment.UPFRONT, null);
+        LookUpValueEntity lookUpValue = new LookUpValueEntity();
+        fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
+        fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
+        ((RateFeeBO)fee).getFeeFormula().setLookUpValue(lookUpValue);
+        String feeId = fee.getFeeId().toString();
+        request.setAttribute("model", TestObjectFactory.getRateBasedFee(feeId, "1", 24d, "1"));
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "manage");
+        addRequestParameter("feeId", feeId);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
@@ -636,13 +691,13 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulViewAllFees() throws Exception {
         StaticHibernateUtil.startTransaction();
         fee = TestObjectFactory.createOneTimeRateFee("Group_Fee", FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
+                FeePayment.UPFRONT, null);
         fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee", FeeCategory.ALLCUSTOMERS, 20.0,
-                FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         fee2 = TestObjectFactory.createOneTimeRateFee("Loan_Fee1", FeeCategory.LOAN, 30.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
+                FeePayment.UPFRONT, null);
         fee3 = TestObjectFactory.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0, FeeFormula.AMOUNT,
-                FeePayment.UPFRONT);
+                FeePayment.UPFRONT, null);
         fee3.updateStatus(FeeStatus.INACTIVE);
 
         StaticHibernateUtil.commitTransaction();

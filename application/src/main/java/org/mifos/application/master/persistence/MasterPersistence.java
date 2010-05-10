@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -46,6 +47,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
@@ -141,7 +143,6 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) throws PersistenceException {
         try {
             Session session = getSession();
@@ -156,8 +157,6 @@ public class MasterPersistence extends Persistence {
         }
     }
 
-
-
     @SuppressWarnings("unchecked")
     public MasterDataEntity retrieveMasterEntity(final Short entityId, final Class clazz, final Short localeId)
             throws PersistenceException {
@@ -167,6 +166,24 @@ public class MasterPersistence extends Persistence {
                     "from " + clazz.getName() + " masterEntity where masterEntity.id = " + entityId).list();
             if (masterEntity != null && masterEntity.size() > 0) {
                 MasterDataEntity masterDataEntity = masterEntity.get(0);
+                masterDataEntity.setLocaleId(localeId);
+                initialize(masterDataEntity.getNames());
+                return masterDataEntity;
+            }
+            throw new PersistenceException("errors.entityNotFound");
+        } catch (Exception he) {
+            throw new PersistenceException(he);
+        }
+    }
+
+    public <T extends MasterDataEntity> T retrieveMasterEntity(final Class<T> entityType, final Short entityId, final Short localeId)
+    throws PersistenceException {
+        try {
+            Session session = getSession();
+            List<T> masterEntities = session.createQuery(
+                    "from " + entityType.getName() + " masterEntity where masterEntity.id = " + entityId).list();
+            if (masterEntities != null && masterEntities.size() > 0) {
+                T masterDataEntity = masterEntities.get(0);
                 masterDataEntity.setLocaleId(localeId);
                 initialize(masterDataEntity.getNames());
                 return masterDataEntity;
@@ -338,6 +355,14 @@ public class MasterPersistence extends Persistence {
             return (LookUpValueLocaleEntity) obj;
         }
         return null;
+    }
+
+    public GLCodeEntity retrieveGLCodeEntity(Short id) {
+        //TODO: Move this to appropriate place
+        Session session = StaticHibernateUtil.getSessionTL();
+        Query query = session.getNamedQuery(NamedQueryConstants.GL_CODE_BY_ID);
+        query.setParameter("glcodeId", id);
+        return (GLCodeEntity)query.uniqueResult();
     }
 
 }

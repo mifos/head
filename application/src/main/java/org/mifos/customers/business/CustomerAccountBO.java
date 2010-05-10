@@ -172,10 +172,10 @@ public class CustomerAccountBO extends AccountBO {
 
     private CustomerAccountBO(CustomerBO customer, List<AccountFeesEntity> accountFees) throws AccountException {
         super(customer.getUserContext(), customer, AccountTypes.CUSTOMER_ACCOUNT, AccountState.CUSTOMER_ACCOUNT_ACTIVE);
-          for (AccountFeesEntity accountFee : accountFees) {
-              accountFee.setAccount(this);
-              this.addAccountFees(accountFee);
-          }
+        for (AccountFeesEntity accountFee : accountFees) {
+            accountFee.setAccount(this);
+            this.addAccountFees(accountFee);
+        }
     }
 
     /**

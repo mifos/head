@@ -331,6 +331,8 @@ public class GroupBO extends CustomerBO {
     @Override
     public void validate() throws CustomerException {
         super.validate();
+        validateFormedBy();
+        validateTrained();
     }
 
     private void validateFields(final String displayName, final PersonnelBO formedBy, final boolean trained,
@@ -338,9 +340,6 @@ public class GroupBO extends CustomerBO {
         validateFormedBy(formedBy);
         if (trained && trainedDate == null || !trained && trainedDate != null) {
             throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
-        }
-        if (getOffice() != null) {
-//            validateForDuplicateName(displayName, getOffice().getOfficeId());
         }
     }
 

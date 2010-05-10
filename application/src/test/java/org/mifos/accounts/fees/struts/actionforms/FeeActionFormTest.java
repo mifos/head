@@ -28,9 +28,12 @@ import org.apache.struts.action.ActionErrors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeActionFormTest {
+
     Locale locale = TestUtils.ukLocale();
     FeeActionForm form;
 
@@ -72,6 +75,26 @@ public class FeeActionFormTest {
     public void testIsAmountValidWithTooLargeANumber() {
         form.setAmount("123456789111111.5");
         Assert.assertFalse(isAmountValid(form));
+    }
+
+    @Test
+    public void testUpdateWithRateFee() throws Exception {
+        FeeDto fee = TestObjectFactory.getRateBasedFee("100", "StatusID", 12.34, "12");
+        form.updateWithFee(fee);
+        Assert.assertEquals("StatusID", form.getFeeStatus());
+        Assert.assertEquals("12.34", form.getRate());
+        Assert.assertEquals("12", form.getFeeFormula());
+        Assert.assertNull(form.getAmount());
+    }
+
+    @Test
+    public void testUpdateWithAmountFee() throws Exception {
+        FeeDto fee = TestObjectFactory.getAmountBasedFee("100", "StatusID", "12.34");
+        form.updateWithFee(fee);
+        Assert.assertEquals("StatusID", form.getFeeStatus());
+        Assert.assertEquals("12.3", form.getAmount());
+        Assert.assertNull(form.getRate());
+        Assert.assertNull(form.getFeeFormula());
     }
 
     private boolean isAmountValid(FeeActionForm form) {

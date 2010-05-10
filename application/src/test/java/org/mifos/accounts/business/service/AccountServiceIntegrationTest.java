@@ -355,7 +355,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountBO.getAccountActionDate(Short.valueOf("1"));
 
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(accountBO, upfrontFee, new Double("20.0"),
                 FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountUpfrontFee, accountBO);
@@ -409,7 +409,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 .getAccountActionDate(Short.valueOf("1"));
 
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.CENTER, Double
-                .valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                .valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(customerAccountBO, upfrontFee, new Double("20.0"),
                 FeeStatus.ACTIVE.getValue(), null, customerScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountUpfrontFee, customerAccountBO);

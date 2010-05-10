@@ -792,27 +792,15 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) {
+    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
 
-        try {
-            customerService.updateCenter(userContext, centerUpdate);
-        } catch (Exception e) {
-            throw new MifosRuntimeException(e);
-        }
+        customerService.updateCenter(userContext, centerUpdate);
     }
 
     @Override
-    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate) {
+    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException {
 
-        try {
-            GroupBO groupBO = this.customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
-
-            checkVersionMismatch(groupUpdate.getVersionNo(), groupBO.getVersionNo());
-
-            customerService.updateGroup(userContext, groupUpdate, groupBO);
-        } catch (Exception e) {
-            throw new MifosRuntimeException(e);
-        }
+        customerService.updateGroup(userContext, groupUpdate);
     }
 
     private void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {

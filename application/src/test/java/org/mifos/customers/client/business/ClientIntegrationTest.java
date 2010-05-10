@@ -828,7 +828,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSuccessfulTransferToGroupInSameBranch() throws Exception {
         createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-        PositionEntity position = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
+        PositionEntity position = new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
                 Short.valueOf("1")).get(0);
         group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
         center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
@@ -843,7 +843,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting()
                 .getUpdatedMeeting().getMeetingId());
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(0, group.getMaxChildCount().intValue());
         Assert.assertEquals(1, group1.getMaxChildCount().intValue());
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
@@ -865,12 +864,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
 
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(0, group.getMaxChildCount().intValue());
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
         Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-
     }
 
     /**
@@ -926,7 +921,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     public void testSuccessfulTransferToGroupInDifferentBranch() throws Exception {
         createObjectsForTransferToGroup_DifferentBranch();
-        PositionEntity position = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
+        PositionEntity position = new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
                 Short.valueOf("1")).get(0);
         group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
         center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
@@ -941,7 +936,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(0, group.getMaxChildCount().intValue());
         Assert.assertEquals(1, group1.getMaxChildCount().intValue());
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();

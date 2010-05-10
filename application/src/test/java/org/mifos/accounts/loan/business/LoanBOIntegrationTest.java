@@ -1446,7 +1446,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
@@ -1546,7 +1546,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         // 20% of 300 = 60.0, applied to first installment
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
 
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
@@ -1678,7 +1678,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 
@@ -3353,7 +3353,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary().getOriginalFees();
         TestObjectFactory.flushandCloseSession();
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         UserContext uc = TestUtils.makeUser();
         accountBO.setUserContext(uc);
@@ -3684,7 +3684,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("3"));
         feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
                 FeePayment.TIME_OF_DISBURSEMENT);
@@ -3752,7 +3752,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.WEEKLY, Short.valueOf("3"));
         feeViewList.add(new FeeDto(userContext, periodicFee));
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee("Disbursement Fee", FeeCategory.LOAN, "30",
                 FeePayment.TIME_OF_DISBURSEMENT);
@@ -3844,13 +3844,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         userContext.setLocaleId(null);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
-                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
+                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT, null);
         feeViewList.add(new FeeDto(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
-                Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+                Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT, null);
         feeViewList.add(new FeeDto(userContext, firstRepaymentFee));
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.MONTHLY, Short.valueOf("1"));
@@ -3936,13 +3936,13 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         userContext.setLocaleId(null);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
-                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT);
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
         feeViewList.add(new FeeDto(userContext, upfrontFee));
         FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee("Disbursement Fee", FeeCategory.LOAN, Double
-                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT);
+                .valueOf("30"), FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSEMENT, null);
         feeViewList.add(new FeeDto(userContext, disbursementFee));
         FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee("First Repayment Fee", FeeCategory.LOAN,
-                Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
+                Double.valueOf("40"), FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT, null);
         feeViewList.add(new FeeDto(userContext, firstRepaymentFee));
         FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "100",
                 RecurrenceType.MONTHLY, Short.valueOf("1"));

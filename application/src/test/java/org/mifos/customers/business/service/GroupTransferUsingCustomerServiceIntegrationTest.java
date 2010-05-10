@@ -145,7 +145,7 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void transferingGroupToCenterInSameBranchIncrementsMaxChildCountOfNewParentAndDecrementsMaxChildCountOfOldParent() throws Exception {
+    public void transferingGroupToCenterInSameBranchIncrementsMaxChildCountOfNewParentAndDoesNotDecrementsMaxChildCountOfOldParent() throws Exception {
 
         // setup
         CenterBuilder centerWithWeeklyMeeting = anActiveCenter().withName("center-with-no-children").with(aWeeklyMeeting()).with(
@@ -172,7 +172,7 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
         assertThat(centerWithNoChildren.getChildren().size(), is(1));
 
         assertThat(previousParent.getDisplayName(), is("center-with-group"));
-        assertThat(previousParent.getMaxChildCount(), is(0));
+        assertThat(previousParent.getMaxChildCount(), is(1));
         assertThat(previousParent.getChildren().size(), is(0));
     }
 

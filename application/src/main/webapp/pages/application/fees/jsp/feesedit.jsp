@@ -31,7 +31,6 @@ explanation of the license and how it is applied.
 		<script src="pages/application/fees/js/Fees.js"></script>
 		
 		<html-el:form action="/feeaction.do?method=editPreview">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -41,8 +40,8 @@ explanation of the license and how it is applied.
 							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" />
 
-							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${BusinessKey.feeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-								<c:out value="${BusinessKey.feeName}"></c:out>
+							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${model.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<c:out value="${model.name}"></c:out>
 							</html-el:link> </span>
 					</td>
 				</tr>
@@ -54,7 +53,7 @@ explanation of the license and how it is applied.
 							<tr>
 								<font class="fontnormalRedBold">
 								<td class="headingorange">
-									<span class="heading"> <c:out value="${BusinessKey.feeName}"></c:out> - </span>
+									<span class="heading"> <c:out value="${model.name}"></c:out> - </span>
 									<mifos:mifoslabel name="Fees.editfeeinformation" />
 								</td>
 							</tr>
@@ -79,7 +78,7 @@ explanation of the license and how it is applied.
 							<tr class="fontnormal">
 								<td width="27%" align="right">
 									<c:choose>
-										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+										<c:when test="${model.rateBasedFee}">
 											<mifos:mifoslabel name="Fees.calculatefeeas" mandatory="yes" />
 										</c:when>
 										<c:otherwise>
@@ -90,10 +89,10 @@ explanation of the license and how it is applied.
 								</td>
 								<td width="73%" valign="top">
 									<c:choose>
-										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+										<c:when test="${model.rateBasedFee}">
 											<html-el:text property="rate" size="3"/>
 											<mifos:mifoslabel name="Fees.percentof" />
-											<c:out value="${BusinessKey.feeFormula.name}" />
+											<c:out value="${model.feeFormula.name}" />
 										</c:when>
 										<c:otherwise>
 											<html-el:text property="amount" />
@@ -129,14 +128,14 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="Fees.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${model.id})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>
 							</tr>
 							<html-el:hidden property="input" value="edit" />
-							<html-el:hidden property="feeIdTemp" value="${BusinessKey.feeId}" />
-							<html-el:hidden property="feeId" value="${BusinessKey.feeId}" />
+							<html-el:hidden property="feeIdTemp" value="${model.id}" />
+							<html-el:hidden property="feeId" value="${model.id}" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 

@@ -17,13 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.accounts.fees.servicefacade;
 
 import java.util.List;
 
+import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
 public interface FeeServiceFacade {
 
@@ -32,5 +34,11 @@ public interface FeeServiceFacade {
     public List<FeeDto> getCustomerFees() throws ServiceException;
 
     public FeeParameters parameters(Short localeId) throws ServiceException;
+
+    public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
+
+    public FeeDto getFeeDetails(Short feeId) throws ServiceException;
+
+    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException;
 
 }

@@ -22,6 +22,7 @@ package org.mifos.application.master.business.service;
 
 import java.util.List;
 
+import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -80,23 +81,6 @@ public class MasterDataService implements BusinessService {
 
     }
 
-//    @SuppressWarnings("unchecked")
-//    public List<MasterDataEntity> retrieveMasterEntities(Class entityName, Short localeId) throws ServiceException {
-//        try {
-//            return masterPersistence.retrieveMasterEntities(entityName, localeId);
-//        } catch (PersistenceException e) {
-//            throw new ServiceException(e);
-//        }
-//    }
-
-    public <T extends MasterDataEntity>  List<T> retrieveMasterEntities(Class<T> entityType, Short localeId) throws ServiceException {
-        try {
-          return masterPersistence.retrieveMasterEntities(entityType, localeId);
-      } catch (PersistenceException e) {
-          throw new ServiceException(e);
-      }
-    }
-
     /**
      * @deprecated - use {@link CustomerDao#retrieveCustomFieldsForCenter(UserContext)}
      */
@@ -133,5 +117,26 @@ public class MasterDataService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
+    }
+
+    public GLCodeEntity findGLCodeEntity(Short id) {
+       return new MasterPersistence().retrieveGLCodeEntity(id);
+    }
+
+    /* protected MasterDataEntity getMasterEntities(Short entityId, Class clazz, Short localeId) throws PersistenceException {
+        return new MasterPersistence().retrieveMasterEntity(entityId, clazz, localeId);
+    }*/
+
+    public <T extends MasterDataEntity>  T retrieveMasterEntity(Class<T> entityType, Short entityId, Short localeId)
+      throws PersistenceException {
+        return new MasterPersistence().retrieveMasterEntity(entityType, entityId, localeId);
+    }
+
+    public <T extends MasterDataEntity>  List<T> retrieveMasterEntities(Class<T> entityType, Short localeId) throws ServiceException {
+        try {
+          return masterPersistence.retrieveMasterEntities(entityType, localeId);
+      } catch (PersistenceException e) {
+          throw new ServiceException(e);
+      }
     }
 }
