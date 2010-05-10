@@ -289,8 +289,8 @@ public class AccountBO extends AbstractBusinessObject {
         this.office = customer.getOffice();
         this.personnel = customer.getPersonnel();
         this.setAccountState(new AccountStateEntity(accountState));
-        offsettingAllowable = new Integer(1);
-        setCreateDetails();
+        this.offsettingAllowable = new Integer(1);
+        this.setCreateDetails();
     }
 
     public Integer getAccountId() {

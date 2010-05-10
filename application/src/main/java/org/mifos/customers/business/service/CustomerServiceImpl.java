@@ -115,13 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
 
-        if (StringUtils.isBlank(customer.getDisplayName())) {
-            throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_NAME);
-        }
-
-        if (customer.getPersonnel() == null) {
-            throw new ApplicationException(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER);
-        }
+        customer.validate();
 
         if (customer.getCustomerMeeting() == null || customer.getCustomerMeetingValue() == null) {
 
@@ -134,10 +128,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (customer.getMfiJoiningDate() == null) {
             throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
-        }
-
-        if (customer.getOffice() == null) {
-            throw new ApplicationException(CustomerConstants.INVALID_OFFICE);
         }
 
         for (AccountFeesEntity accountFee : accountFees) {
@@ -182,7 +172,7 @@ public class CustomerServiceImpl implements CustomerService {
                     try {
                         DateUtils.getDate(centerCustomField.getFieldValue());
                     } catch (Exception e) {
-                        throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+                        throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
                     }
                 }
             }
@@ -295,6 +285,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
         try {
+            // in case any other leaked sessions exist from legacy code use.
+            StaticHibernateUtil.closeSession();
+
             StaticHibernateUtil.startTransaction();
             this.customerDao.save(customer);
 
@@ -309,6 +302,11 @@ public class CustomerServiceImpl implements CustomerService {
             StaticHibernateUtil.startTransaction();
             customer.generateGlobalCustomerNumber();
             this.customerDao.save(customer);
+
+            if (customer.getParentCustomer() != null) {
+                this.customerDao.save(customer.getParentCustomer());
+            }
+
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
@@ -341,7 +339,7 @@ public class CustomerServiceImpl implements CustomerService {
                 center.setMfiJoiningDate(mfiJoiningDate.toDate());
             }
         } catch (InvalidDateException e) {
-            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
+            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
 
         try {
@@ -350,7 +348,7 @@ public class CustomerServiceImpl implements CustomerService {
                     .retrieveCustomFieldEntitiesForCenter();
             validateMandatoryCustomFields(center.getCustomFields(), allCustomFieldsForCenter);
         } catch (InvalidDateException e1) {
-            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e1);
         }
 
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
@@ -387,6 +385,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             hibernateTransactionHelper.commitTransaction();
         } catch (ApplicationException e) {
+            hibernateTransactionHelper.rollbackTransaction();
             throw e;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
@@ -445,10 +444,10 @@ public class CustomerServiceImpl implements CustomerService {
             throw new MifosRuntimeException(e);
         }
 
-        if (!group.getDisplayName().equals(groupUpdate.getDisplayName())) {
+//        if (!group.getDisplayName().equals(groupUpdate.getDisplayName())) {
             // customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(),
             // group.getOffice().getOfficeId());
-        }
+//        }
 
         Short loanOfficerId = groupUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
@@ -465,7 +464,7 @@ public class CustomerServiceImpl implements CustomerService {
             List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
             validateMandatoryCustomFields(group.getCustomFields(), allCustomFieldsForGroup);
         } catch (InvalidDateException e) {
-            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD);
+            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
         }
 
         assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
@@ -553,9 +552,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         if (oldParent != null) {
-            // FIXME - #00001 - question - if we decrease maxChildCount then its likely we run into problems with searchId generation
-            // should we not only increase it so we always get a unique searchId?
-            oldParent.decrementChildCount();
             oldParent.setUserContext(group.getUserContext());
         }
 
@@ -816,11 +812,11 @@ public class CustomerServiceImpl implements CustomerService {
             CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
-        if (newStatus.isClientActive()) {
+//        if (newStatus.isClientActive()) {
             // FIXME - #000023 - keithw - verify business validaton when updating clients
             // this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(),
             // userContext);
-        }
+//        }
 
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
@@ -841,7 +837,6 @@ public class CustomerServiceImpl implements CustomerService {
 
             customerDao.save(client);
             StaticHibernateUtil.commitTransaction();
-
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

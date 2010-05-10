@@ -93,7 +93,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private String displayName;
     private String displayAddress;
     private String externalId;
-    private Short trained;
+    private Short trained = Short.valueOf("0");
     private Date trainedDate;
     private Date mfiJoiningDate;
     private String searchId;
@@ -198,6 +198,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             this.customerMeeting = new CustomerMeetingEntity(this, meeting);
         }
         this.customerStatus = new CustomerStatusEntity(customerStatus);
+        this.setCreateDetails();
     }
 
     /**
@@ -867,10 +868,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.maxChildCount = this.getMaxChildCount().intValue() + 1;
     }
 
-    public void decrementChildCount() {
-        this.maxChildCount = this.getMaxChildCount().intValue() - 1;
-    }
-
     public CustomerLevel getLevel() {
         return CustomerLevel.getLevel(getCustomerLevel().getId());
     }
@@ -896,7 +893,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public final void validateLoanOfficer() throws CustomerException {
         if (this.personnel == null) {
-            throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
+            throw new CustomerException(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER);
         }
     }
 
@@ -1024,7 +1021,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
         addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
         handleParentTransfer();
-        childRemovedForParent(oldParent);
         childAddedForParent(newParent);
         setSearchId(newParent.getSearchId() + "." + String.valueOf(newParent.getMaxChildCount()));
 
@@ -1123,13 +1119,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void validate() throws CustomerException {
         if (StringUtils.isBlank(displayName)) {
-            throw new CustomerException(CustomerConstants.INVALID_NAME);
+            throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_NAME);
         }
 
         validateOffice();
         validateLoanOfficer();
-        validateFormedBy();
-        validateTrained();
     }
 
     public final void validateTrained() throws CustomerException {
@@ -1156,10 +1150,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public void childAddedForParent(final CustomerBO parent) {
         parent.incrementChildCount();
-    }
-
-    protected void childRemovedForParent(final CustomerBO parent) {
-        parent.decrementChildCount();
     }
 
     public void resetPositions(final CustomerBO newParent) {

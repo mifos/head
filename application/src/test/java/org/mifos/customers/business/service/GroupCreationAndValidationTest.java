@@ -62,7 +62,7 @@ public class GroupCreationAndValidationTest {
             group.validate();
             fail("should throw customer exception as name must be set on group.");
         } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.INVALID_NAME));
+            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_NAME));
         }
     }
 
@@ -88,7 +88,7 @@ public class GroupCreationAndValidationTest {
             group.validate();
             fail("should throw customer exception as loan officer must exist when creating group under a branch.");
         } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.INVALID_LOAN_OFFICER));
+            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SELECT_LOAN_OFFICER));
         }
     }
 

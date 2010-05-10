@@ -157,4 +157,9 @@ public class GroupBuilder {
         this.userContext = withUserContext;
         return this;
     }
+
+    public GroupBuilder active() {
+        this.customerStatus = CustomerStatus.GROUP_ACTIVE;
+        return this;
+    }
 }

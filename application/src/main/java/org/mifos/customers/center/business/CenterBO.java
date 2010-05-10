@@ -145,4 +145,9 @@ public class CenterBO extends CustomerBO {
             throw new CustomerException(CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
         }
     }
+
+    @Override
+    public void validate() throws CustomerException {
+        super.validate();
+    }
 }

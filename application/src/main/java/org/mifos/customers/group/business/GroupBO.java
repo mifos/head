@@ -331,6 +331,8 @@ public class GroupBO extends CustomerBO {
     @Override
     public void validate() throws CustomerException {
         super.validate();
+        validateFormedBy();
+        validateTrained();
     }
 
     private void validateFields(final String displayName, final PersonnelBO formedBy, final boolean trained,
