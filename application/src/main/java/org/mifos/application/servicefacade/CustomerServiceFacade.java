@@ -53,9 +53,9 @@ public interface CustomerServiceFacade {
 
     CenterDto retrieveGroupDetailsForUpdate(String globalCustNum, UserContext userContext);
 
-    void updateCenter(UserContext userContext, CenterUpdate centerUpdate);
+    void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException;
 
-    void updateGroup(UserContext userContext, GroupUpdate groupUpdate);
+    void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException;
 
     CustomerSearch search(String searchString, UserContext userContext) throws ApplicationException;
 

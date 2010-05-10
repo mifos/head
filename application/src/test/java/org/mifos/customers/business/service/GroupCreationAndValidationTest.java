@@ -55,7 +55,7 @@ public class GroupCreationAndValidationTest {
     }
 
     @Test
-    public void givenNameIsNotSetThenShouldThrowCustomerExceptionWhenCreatingAGroup() {
+    public void nameCannotBeBlank() {
         group = new GroupBuilder().withName(null).withParentCustomer(center).build();
 
         try {
@@ -67,19 +67,20 @@ public class GroupCreationAndValidationTest {
     }
 
     @Test
-    public void givenCenterHierarchyIsOffAndOfficeIsNotSetThenShouldThrowCustomerExceptionWhenCreatingAGroup() {
-        group = new GroupBuilder().withName("group-On-branch").withOffice(null).buildAsTopOfHierarchy();
+    public void formedByPersonnelMustBeAssigned() {
+
+        group = new GroupBuilder().withName("group-On-center").withParentCustomer(center).formedBy(null).build();
 
         try {
             group.validate();
-            fail("should throw customer exception as office must exist when creating group under a branch.");
+            fail("should throw customer exception as personnel that fomed group must exist when creating group.");
         } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.INVALID_OFFICE));
+            assertThat(e.getKey(), is(CustomerConstants.INVALID_FORMED_BY));
         }
     }
 
     @Test
-    public void givenCenterHierarchyIsOffAndLoanOfficerIsNotSetThenShouldThrowCustomerExceptionWhenCreatingAGroup() {
+    public void loanOfficerMustBeAssigned() {
 
         OfficeBO office = new OfficeBuilder().build();
         group = new GroupBuilder().withName("group-On-branch").withOffice(office).withLoanOfficer(null).buildAsTopOfHierarchy();
@@ -93,20 +94,19 @@ public class GroupCreationAndValidationTest {
     }
 
     @Test
-    public void givenCenterHierarchyExistsAndFormedByPersonnelIsNotSetThenShouldThrowCustomerExceptionWhenCreatingAGroup() {
-
-        group = new GroupBuilder().withName("group-On-center").withParentCustomer(center).build();
+    public void officeMustBeAssigned() {
+        group = new GroupBuilder().withName("group-On-branch").withOffice(null).buildAsTopOfHierarchy();
 
         try {
             group.validate();
-            fail("should throw customer exception as personnel that fomed group must exist when creating group.");
+            fail("should throw customer exception as office must exist when creating group under a branch.");
         } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.INVALID_FORMED_BY));
+            assertThat(e.getKey(), is(CustomerConstants.INVALID_OFFICE));
         }
     }
 
     @Test
-    public void givenCenterHierarchyExistsAndIsTrainedButTrainedDateIsNotSetThenShouldThrowCustomerExceptionWhenCreatingAGroup() {
+    public void givenGroupIsTrainedButTrainedDateIsNotSetThenShouldThrowCustomerException() {
 
         PersonnelBO formedBy = new PersonnelBuilder().build();
         group = new GroupBuilder().withName("group-On-center").withParentCustomer(center).formedBy(formedBy).isTrained().trainedOn(null).build();
@@ -120,18 +120,18 @@ public class GroupCreationAndValidationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void givenGroupWithNullMeetingShouldThrowIllegalArgumentException() {
+        OfficeBO office = new OfficeBuilder().build();
+        PersonnelBO loanOfficer = new PersonnelBuilder().asLoanOfficer().build();
+        group = new GroupBuilder().withName("group-On-branch").withOffice(office).withLoanOfficer(loanOfficer).withMeeting(null).buildAsTopOfHierarchy();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void givenGroupWithNullParentShouldThrowIllegalArgumentException() {
         OfficeBO office = new OfficeBuilder().build();
         PersonnelBO loanOfficer = new PersonnelBuilder().asLoanOfficer().build();
         MeetingBO meeting = new MeetingBuilder().customerMeeting().build();
         group = new GroupBuilder().withName("group-On-center").withOffice(office).withLoanOfficer(loanOfficer).withMeeting(meeting).withParentCustomer(null).build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void givenGroupWithNullMeetingShouldThrowIllegalArgumentException() {
-        OfficeBO office = new OfficeBuilder().build();
-        PersonnelBO loanOfficer = new PersonnelBuilder().asLoanOfficer().build();
-        group = new GroupBuilder().withName("group-On-branch").withOffice(office).withLoanOfficer(loanOfficer).withMeeting(null).buildAsTopOfHierarchy();
     }
 
     @Test(expected = IllegalArgumentException.class)

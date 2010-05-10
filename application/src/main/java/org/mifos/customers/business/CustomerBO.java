@@ -1118,12 +1118,17 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public void validate() throws CustomerException {
+        validateName();
+        validateOffice();
+        if (isActive()) {
+            validateLoanOfficer();
+        }
+    }
+
+    private void validateName() throws CustomerException {
         if (StringUtils.isBlank(displayName)) {
             throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_NAME);
         }
-
-        validateOffice();
-        validateLoanOfficer();
     }
 
     public final void validateTrained() throws CustomerException {
@@ -1407,5 +1412,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         if (!this.versionNo.equals(newVersionNum)) {
             throw new CustomerException(Constants.ERROR_VERSION_MISMATCH);
         }
+    }
+
+    public boolean isNameDifferent(final String nameToCheck) {
+        return !this.displayName.equalsIgnoreCase(nameToCheck);
     }
 }

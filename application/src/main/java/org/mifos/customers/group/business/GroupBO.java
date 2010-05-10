@@ -341,9 +341,6 @@ public class GroupBO extends CustomerBO {
         if (trained && trainedDate == null || !trained && trainedDate != null) {
             throw new CustomerException(CustomerConstants.INVALID_TRAINED_OR_TRAINEDDATE);
         }
-        if (getOffice() != null) {
-//            validateForDuplicateName(displayName, getOffice().getOfficeId());
-        }
     }
 
     private void validateFormedBy(final PersonnelBO formedBy) throws CustomerException {

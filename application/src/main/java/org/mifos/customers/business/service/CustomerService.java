@@ -52,7 +52,7 @@ public interface CustomerService {
 
     void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException;
 
-    void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO groupBO) throws ApplicationException;
+    void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException;
 
     GroupBO transferGroupTo(GroupBO group, CenterBO transferToCenter) throws CustomerException;
 

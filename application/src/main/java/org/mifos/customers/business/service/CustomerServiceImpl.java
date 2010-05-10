@@ -332,7 +332,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
 
-       try {
+        try {
             if (centerUpdate.getMfiJoiningDate() != null) {
                 DateTime mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
                         .getPreferredLocale());
@@ -421,14 +421,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate, GroupBO group) throws ApplicationException {
+    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException {
 
-        DateTime trainedDate = null;
+        GroupBO group = customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
+        group.validateVersion(groupUpdate.getVersionNo());
+        group.setUserContext(userContext);
 
         try {
             if (groupUpdate.getTrainedDateAsString() != null && !StringUtils.isBlank(groupUpdate.getTrainedDateAsString())) {
-                trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
+                DateTime trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
                         .getPreferredLocale());
+
+                if (trainedDate != null) {
+                    group.setTrainedDate(trainedDate.toDate());
+                }
             }
 
             if (groupUpdate.isTrained()) {
@@ -436,28 +442,20 @@ public class CustomerServiceImpl implements CustomerService {
             } else {
                 group.setTrained(false);
             }
-
-            if (trainedDate != null) {
-                group.setTrainedDate(trainedDate.toDate());
-            }
         } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
+            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
-
-//        if (!group.getDisplayName().equals(groupUpdate.getDisplayName())) {
-            // customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(),
-            // group.getOffice().getOfficeId());
-//        }
 
         Short loanOfficerId = groupUpdate.getLoanOfficerId();
         PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
 
         PersonnelBO oldLoanOfficer = group.getPersonnel();
         group.setLoanOfficer(loanOfficer);
+        group.setExternalId(groupUpdate.getExternalId());
+        group.updateAddress(groupUpdate.getAddress());
+        group.setUpdateDetails();
 
-        if (group.isActive()) {
-            group.validateLoanOfficer();
-        }
+        group.validate();
 
         try {
             group.updateCustomFields(groupUpdate.getCustomFields());
@@ -480,30 +478,26 @@ public class CustomerServiceImpl implements CustomerService {
                 new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, group.getSearchId(), group
                         .getOffice().getOfficeId());
             }
-
-            group.setExternalId(groupUpdate.getExternalId());
-            group.setUserContext(userContext);
-            group.updateAddress(groupUpdate.getAddress());
-            group.setUpdatedBy(userContext.getId());
-            group.setUpdatedDate(new DateTime().toDate());
-            group.setDisplayName(groupUpdate.getDisplayName());
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
 
-        group.validate();
+        if (group.isNameDifferent(groupUpdate.getDisplayName())) {
+            group.setDisplayName(groupUpdate.getDisplayName());
+            customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
+        }
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
 
             customerDao.save(group);
 
-            StaticHibernateUtil.commitTransaction();
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
