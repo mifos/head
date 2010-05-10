@@ -128,6 +128,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
     private DateTime wed_2011_06_29 = date(2011,6,29);
     private DateTime mon_2011_07_04 = date(2011,7,4);
     private DateTime mon_2011_06_27 = date(2011,6,27);
+    private DateTime mon_2011_06_29 = date(2011,6,29);
     private Holiday sevenDayMoratoriumStartingJuly4th = new HolidayBuilder().from(mon_2011_07_04)
                                                           .to(mon_2011_07_04.plusDays(6))
                                                           .withNextMeetingRule()
@@ -406,6 +407,104 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGenerationTest {
                                            .withNumberOfDates(3)
                                            .build(),
                       date(2011, 6, 20), date(2011,7,18), date(2011,8,1));
+    }
+
+    @Test
+    public void weeklyScheduleMoratoriumSpansNextWorkingDayHolidayShouldIgnoreNextWorkingDayHoliday() {
+
+        Holiday twoWeekNextWorkingDayHoliday = new HolidayBuilder()
+                                                .from(mon_2011_06_27)
+                                                .to(mon_2011_06_27.plusWeeks(2).minusDays(1))
+                                                .withNextWorkingDayRule()
+                                                .build();
+        Holiday twoWeekMoratorium = new HolidayBuilder()
+                                                .from(mon_2011_06_27)
+                                                .to(mon_2011_06_27.plusWeeks(2).minusDays(1))
+                                                .withRepaymentMoratoriumRule()
+                                                .build();
+
+        /*
+         * Schedule should start on the next Wednesday (2 days from the starting point).
+         * The second and third unadjusted dates, being in the moratorium shift them
+         * and the remaining schedule are shifted two weeks past the moratorium. Next working day is ignored.
+         */
+        validateDates(new ScheduleBuilder().withHolidays(twoWeekNextWorkingDayHoliday, twoWeekMoratorium)
+                                           .withWeeklyEvent(1, DayOfWeek.wednesday())
+                                           .withNumberOfDates(6)
+                                           .withStartDate(mon_2011_06_20)
+                                           .build(),
+                      wed_2011_06_22,
+                      wed_2011_06_22.plusWeeks(3),
+                      wed_2011_06_22.plusWeeks(4),
+                      wed_2011_06_22.plusWeeks(5),
+                      wed_2011_06_22.plusWeeks(6),
+                      wed_2011_06_22.plusWeeks(7));
+    }
+
+    @Test
+    public void weeklyScheduleMoratoriumOverlapsNextWorkingDayHolidayAndIncludesOneScheduledDateShouldIgnoreNextWorkingDayHoliday() {
+
+        Holiday oneWeekNextWorkingDayHoliday = new HolidayBuilder()
+                                                .from(mon_2011_06_27)
+                                                .to(mon_2011_06_27.plusWeeks(1).minusDays(1))
+                                                .withNextWorkingDayRule()
+                                                .build();
+        Holiday twoWeekMoratorium = new HolidayBuilder()
+                                                .from(mon_2011_06_29)
+                                                .to(mon_2011_06_29)
+                                                .withRepaymentMoratoriumRule()
+                                                .build();
+
+        /*
+         * Schedule should start on the next Wednesday (2 days from the starting point).
+         * The second date is in both holidays, so it and remaining dates are shifted one week. The
+         * second date is now past the normal holiday.
+         */
+        validateDates(new ScheduleBuilder().withHolidays(oneWeekNextWorkingDayHoliday, twoWeekMoratorium)
+                                           .withWeeklyEvent(1, DayOfWeek.wednesday())
+                                           .withNumberOfDates(6)
+                                           .withStartDate(mon_2011_06_20)
+                                           .build(),
+                      wed_2011_06_22,
+                      wed_2011_06_22.plusWeeks(2),
+                      wed_2011_06_22.plusWeeks(3),
+                      wed_2011_06_22.plusWeeks(4),
+                      wed_2011_06_22.plusWeeks(5),
+                      wed_2011_06_22.plusWeeks(6));
+    }
+
+    @Test
+    public void weeklyScheduleMoratoriumOverlapsNextWorkingDayHolidayDoesNotIncludeOneScheduledDateShouldShiftTheDate() {
+
+        // Second date, 6/29, falls in next-working-day holiday
+        Holiday oneWeekNextWorkingDayHoliday = new HolidayBuilder()
+                                                .from(mon_2011_06_27)
+                                                .to(mon_2011_06_27.plusWeeks(1).minusDays(1))
+                                                .withNextWorkingDayRule()
+                                                .build();
+        // Moratorium starts on 6/30, overlapping above holiday but does not include the second date.
+        Holiday twoWeekMoratorium = new HolidayBuilder()
+                                                .from(mon_2011_06_27.plusDays(3)) // 6/30
+                                                .to(mon_2011_06_27.plusWeeks(1)) // Monday 7/4
+                                                .withRepaymentMoratoriumRule()
+                                                .build();
+
+        /*
+         * Schedule should start on the next Wednesday (2 days from the starting point).
+         * The second date is in both holidays, so it and remaining dates are shifted one week. The
+         * second date is now past the normal holiday.
+         */
+        validateDates(new ScheduleBuilder().withHolidays(oneWeekNextWorkingDayHoliday, twoWeekMoratorium)
+                                           .withWeeklyEvent(1, DayOfWeek.wednesday())
+                                           .withNumberOfDates(6)
+                                           .withStartDate(mon_2011_06_20)
+                                           .build(),
+                      wed_2011_06_22,
+                      wed_2011_06_22.plusWeeks(2).withDayOfWeek(DayOfWeek.tuesday()), // Tuesday 7/5 (next working day after moratorium)
+                      wed_2011_06_22.plusWeeks(2), // Wednesday, 7/6
+                      wed_2011_06_22.plusWeeks(3),
+                      wed_2011_06_22.plusWeeks(4),
+                      wed_2011_06_22.plusWeeks(5));
     }
 
     /**************************************************
