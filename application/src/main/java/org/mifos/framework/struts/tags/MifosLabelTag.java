@@ -28,10 +28,12 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
+ * Fetch localized text from a translatable/translated resource bundle.
+ * <p>
  * Custom tag that represents type label. The tag adds a * if the corresponding
  * field assaociated is mandatory. The tag has a currency of the Locale
  * associated with it based on our attributes.
- *
+ * <p>
  * NOTES: If you do not pass a "bundle" argument to this tag, then it will
  * dynamically construct the name of a resource bundle to load. In this case, if
  * you pass a "name" key in of the form FirstPart.LastPart then this tag will

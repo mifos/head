@@ -35,7 +35,6 @@ explanation of the license and how it is applied.
 	
 		<script src="pages/application/fees/js/Fees.js"></script>
 		<html-el:form action="/feeaction.do">
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -45,7 +44,7 @@ explanation of the license and how it is applied.
 							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
 								</mifos:mifoslabel>
-							</html-el:link> / </span> <span class="fontnormal8ptbold"> <c:out value="${BusinessKey.feeName}"></c:out> </span>
+							</html-el:link> / </span> <span class="fontnormal8ptbold"> <c:out value="${model.name}"></c:out> </span>
 					</td>
 				</tr>
 			</table>
@@ -55,10 +54,10 @@ explanation of the license and how it is applied.
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="67%" height="23" class="headingorange">
-									<c:out value="${BusinessKey.feeName}"></c:out>
+									<c:out value="${model.name}"></c:out>
 								</td>
 								<td width="33%" align="right">
-									<html-el:link href="feeaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link href="feeaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&feeId=${model.id}">
 										<mifos:mifoslabel name="Fees.editfeeinformation" bundle="FeesUIResources">
 										</mifos:mifoslabel>
 									</html-el:link>
@@ -71,23 +70,23 @@ explanation of the license and how it is applied.
 									<span class="fontnormal"> </span>
 									<br>
 									<font class="fontnormalRedBold"> <html-el:errors bundle="FeesUIResources" /> </font> <span class="fontnormal"> <c:choose>
-											<c:when test="${BusinessKey.active == true}">
+											<c:when test="${model.active == true}">
 												<img src="pages/framework/images/status_activegreen.gif" width="8" height="9">
 											</c:when>
 											<c:otherwise>
 												<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">
 											</c:otherwise>
-										</c:choose> <c:out value="${BusinessKey.feeStatus.name}" /> </span>
+										</c:choose> <c:out value="${model.feeStatus.name}" /> </span>
 									<br>
 									<br>
 									<mifos:mifoslabel name="Fees.feeappliesto" bundle="FeesUIResources"></mifos:mifoslabel>
-									<c:out value="${BusinessKey.categoryType.name}" />
+									<c:out value="${model.categoryType}" />
 									<br>
 									<c:choose>
-										<c:when test="${BusinessKey.categoryType.id != FeeCategory.LOAN.value}">
+										<c:when test="${!model.loanCategoryType}">
 											<mifos:mifoslabel name="Fees.defaultFees" bundle="FeesUIResources"></mifos:mifoslabel>
 											<c:choose>
-												<c:when test="${BusinessKey.customerDefaultFee}">
+												<c:when test="${model.customerDefaultFee}">
 													<mifos:mifoslabel name="Fees.DefaultFeeYes" />
 												</c:when>
 												<c:otherwise>
@@ -98,31 +97,29 @@ explanation of the license and how it is applied.
 										</c:when>
 									</c:choose>
 									<mifos:mifoslabel name="Fees.frequency" bundle="FeesUIResources"></mifos:mifoslabel>
-									<c:out value="${BusinessKey.feeFrequency.feeFrequencyType.name}" />
+									<c:out value="${model.feeFrequency.type}" />
 									<br>
 									<mifos:mifoslabel name="Fees.timeToCharge" bundle="FeesUIResources"></mifos:mifoslabel>
 									<c:choose>
-										<c:when test="${BusinessKey.oneTime==true}">
-											<c:out value="${BusinessKey.feeFrequency.feePayment.name}" />
+										<c:when test="${model.oneTime}">
+											<c:out value="${model.feeFrequency.payment}" />
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="Fees.labelRecurEvery" />
-											<c:out value="${BusinessKey.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>
-											<c:if test="${BusinessKey.feeFrequency.feeMeetingFrequency.weekly==true}">
+											<c:out value="${model.feeFrequency.recurAfterPeriod}"></c:out>
+											<c:if test="${model.feeFrequency.weekly}">
 												<mifos:mifoslabel name="Fees.labelWeeks" />
 											</c:if>
-											<c:if test="${BusinessKey.feeFrequency.feeMeetingFrequency.monthly==true}">
+											<c:if test="${model.feeFrequency.monthly}">
 												<mifos:mifoslabel name="Fees.labelMonths" />
 											</c:if>
 										</c:otherwise>
 									</c:choose>
-                                    <c:if test='${sessionScope.isMultiCurrencyEnabled 
-                                    && BusinessKey.categoryType.id == FeeCategory.LOAN.value 
-                                    && BusinessKey.feeType.value == RateAmountFlag.AMOUNT.value}'>
+                                    <c:if test='${sessionScope.isMultiCurrencyEnabled && model.loanCategoryType && !model.rateBasedFee }'>
 									<br>
                                       <span class="fontnormal"> 
                                       <mifos:mifoslabel name="Fees.currency" bundle="FeesUIResources" isColonRequired="yes" />
-                                      <c:out value="${BusinessKey.feeAmount.currency.currencyCode}" />
+                                      <c:out value="${model.amount.currency.currencyCode}" />
                                       </span>
                                     </c:if>
                                     <br>
@@ -131,15 +128,16 @@ explanation of the license and how it is applied.
 										</mifos:mifoslabel> </span>
 									<br>
 									<c:choose>
-										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
+										<c:when test="${model.rateBasedFee}">
 											<fmt:message key="Fees.amountCalcComplete">
-												<fmt:param><c:out value="${BusinessKey.rate}" /></fmt:param>
-												<fmt:param><c:out value="${BusinessKey.feeFormula.name}" /></fmt:param>
+												<%-- FIXME: use a rate decimal formatter --%>
+												<fmt:param><c:out value="${model.rate}" /></fmt:param>
+												<fmt:param><c:out value="${model.feeFormula.name}" /></fmt:param>
 											</fmt:message>
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="Fees.amount" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:out value="${BusinessKey.feeAmount}" />
+											<c:out value="${model.amount}" />
 										</c:otherwise>
 									</c:choose>
 									<br>
@@ -149,7 +147,7 @@ explanation of the license and how it is applied.
 									<br>
 									<mifos:mifoslabel name="Fees.GLCode" bundle="FeesUIResources"></mifos:mifoslabel>
 
-									<c:out value="${BusinessKey.glCode.glcode}" />
+									<c:out value="${model.glCode}" />
 								</td>
 								<td height="23" align="right" valign="top" class="fontnormalbold">
 									<span class="fontnormal"> <br> <br> </span>

@@ -93,6 +93,10 @@ public class StandardAccountService implements AccountService {
     @Override
     public void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList)
             throws PersistenceException, AccountException {
+        /*
+         * We're counting on rollback on exception behavior in BaseAction. If we want to expose makePayments via a
+         * non-Mifos-Web-UI service, we'll need to handle the rollback here.
+         */
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDTO : accountPaymentParametersDtoList) {
             makePaymentNoCommit(accountPaymentParametersDTO);

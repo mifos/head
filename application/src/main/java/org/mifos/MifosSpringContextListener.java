@@ -47,6 +47,7 @@ public class MifosSpringContextListener extends ContextLoaderListener {
         }
 
         if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+            // FIXME: is this broken? Shouldn't this be CHART_OF_ACCOUNTS_DEFAULT ??
             configLocations.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
         }
 

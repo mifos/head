@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -367,6 +368,19 @@ public class FeeActionForm extends BaseActionForm {
         if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
             addError(errors, FeeConstants.RATE, FeeConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
                     lookupLocalizedPropertyValue(FeeConstants.RATE, locale, FilePaths.FEE_UI_RESOURCE_PROPERTYFILE));
+        }
+    }
+
+    public void updateWithFee(FeeDto fee) {
+        setFeeStatus(fee.getFeeStatus().getId().toString());
+        if (!fee.isRateBasedFee()) {
+            setAmount(fee.getAmount().toString());
+            setRate(null);
+            setFeeFormula(null);
+        } else {
+            setRate(fee.getRate().toString());
+            setFeeFormula(fee.getFeeFormula().getId().toString());
+            setAmount(null);
         }
     }
 

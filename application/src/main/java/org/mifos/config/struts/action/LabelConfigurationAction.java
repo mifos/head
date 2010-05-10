@@ -35,9 +35,8 @@ import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.business.MifosConfiguration;
@@ -174,9 +173,9 @@ public class LabelConfigurationAction extends BaseAction {
 
     private void setGracePeriodTypesInForm(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
             throws Exception {
-        List<MasterDataEntity> gracePeriodTypes = getMasterEntities(GracePeriodTypeEntity.class, localeId);
-        for (MasterDataEntity masterDataEntity : gracePeriodTypes) {
-            GracePeriodTypeEntity gracePeriodType = (GracePeriodTypeEntity) masterDataEntity;
+        List<GracePeriodTypeEntity> gracePeriodTypes = getMasterEntities(GracePeriodTypeEntity.class, localeId);
+        for (GracePeriodTypeEntity masterDataEntity : gracePeriodTypes) {
+            GracePeriodTypeEntity gracePeriodType = masterDataEntity;
             if (gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
                 labelConfigurationActionForm.setNone(gracePeriodType.getName());
             } else if (gracePeriodType.getId().equals(GraceType.PRINCIPALONLYGRACE.getValue())) {
@@ -308,9 +307,9 @@ public class LabelConfigurationAction extends BaseAction {
 
     private void updateGracePeriodTypes(LabelConfigurationActionForm labelConfigurationActionForm, Short localeId)
             throws Exception {
-        List<MasterDataEntity> gracePeriodTypes = getMasterEntities(GracePeriodTypeEntity.class, localeId);
-        for (MasterDataEntity masterDataEntity : gracePeriodTypes) {
-            GracePeriodTypeEntity gracePeriodType = (GracePeriodTypeEntity) masterDataEntity;
+        List<GracePeriodTypeEntity> gracePeriodTypes = getMasterEntities(GracePeriodTypeEntity.class, localeId);
+        for (GracePeriodTypeEntity masterDataEntity : gracePeriodTypes) {
+            GracePeriodTypeEntity gracePeriodType = masterDataEntity;
             if (gracePeriodType.getId().equals(GraceType.NONE.getValue())) {
                 gracePeriodType.update(labelConfigurationActionForm.getNone());
             } else if (gracePeriodType.getId().equals(GraceType.PRINCIPALONLYGRACE.getValue())) {

@@ -55,6 +55,8 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.servicefacade.FeeFormulaDto;
+import org.mifos.accounts.fees.servicefacade.FeeStatusDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
@@ -1023,7 +1025,9 @@ public class TestObjectFactory {
                     .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
             LookUpValueEntity lookUpValue = new LookUpValueEntity();
             lookUpValue.setLookUpName(categoryLookupValue);
-            FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory, lookUpValue),
+            CategoryTypeEntity categoryType = new CategoryTypeEntity(feeCategory);
+            categoryType.setLookUpValue(lookUpValue);
+            FeeBO fee = new AmountFeeBO(userContext, feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
                     false, meeting);
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
@@ -1090,7 +1094,7 @@ public class TestObjectFactory {
             final String feeAmnt, final FeePayment feePayment) {
         FeeBO fee;
         try {
-            fee = createOneTimeAmountFee(feeName, feeCategory, feeAmnt, feePayment, getUserContext());
+            fee = createOneTimeAmountFee(feeName, feeCategory, feeAmnt, feePayment, getUserContext(), "");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1098,11 +1102,15 @@ public class TestObjectFactory {
     }
 
     public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
-            final String feeAmnt, final FeePayment feePayment, final UserContext userContext) {
+            final String feeAmnt, final FeePayment feePayment, final UserContext userContext, String categoryTypeName) {
         GLCodeEntity glCode = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 TestGeneralLedgerCode.FEES);
         try {
-            FeeBO fee = new AmountFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
+            CategoryTypeEntity categoryType = new CategoryTypeEntity(feeCategory);
+            LookUpValueEntity lookUpValue = new LookUpValueEntity();
+            lookUpValue.setLookUpName(categoryTypeName);
+            categoryType.setLookUpValue(lookUpValue);
+            FeeBO fee = new AmountFeeBO(userContext, feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, TestUtils.createMoney(feeAmnt),
                     false, new FeePaymentEntity(feePayment));
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
@@ -1116,14 +1124,19 @@ public class TestObjectFactory {
      *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
      * {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
+     * @param categoryTypeName TODO
      */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
-            final FeeFormula feeFormula, final FeePayment feePayment) {
+            final FeeFormula feeFormula, final FeePayment feePayment, String categoryTypeName) {
         GLCodeEntity glCode = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
                 TestGeneralLedgerCode.FEES);
         FeeBO fee;
         try {
-            fee = new RateFeeBO(getUserContext(), feeName, new CategoryTypeEntity(feeCategory),
+            LookUpValueEntity lookUpValue = new LookUpValueEntity();
+            lookUpValue.setLookUpName(categoryTypeName);
+            CategoryTypeEntity categoryType = new CategoryTypeEntity(feeCategory);
+            categoryType.setLookUpValue(lookUpValue);
+            fee = new RateFeeBO(getUserContext(), feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, rate,
                     new FeeFormulaEntity(feeFormula), false, new FeePaymentEntity(feePayment));
         } catch (Exception e) {
@@ -2256,5 +2269,31 @@ public class TestObjectFactory {
             throw new RuntimeException(e);
         }
     }
+
+    public static org.mifos.accounts.fees.servicefacade.FeeDto getAmountBasedFee(String feeId, String statusId, String amount) {
+        org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
+        FeeStatusDto feeStatus = new FeeStatusDto();
+        feeStatus.setId(statusId);
+        fee.setFeeStatus(feeStatus);
+        fee.setRateBasedFee(false);
+        fee.setAmount(TestUtils.createMoney(amount));
+        fee.setId(feeId);
+        return fee;
+    }
+
+    public static org.mifos.accounts.fees.servicefacade.FeeDto getRateBasedFee(String feeId, String statusId, double rate, String formulaId) {
+        org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
+        FeeStatusDto feeStatus = new FeeStatusDto();
+        feeStatus.setId(statusId);
+        fee.setFeeStatus(feeStatus);
+        fee.setRateBasedFee(true);
+        fee.setRate(rate);
+        FeeFormulaDto feeFormula = new FeeFormulaDto();
+        feeFormula.setId(Short.valueOf(formulaId));
+        fee.setFeeFormula(feeFormula);
+        fee.setId(feeId);
+        return fee;
+    }
+
 
 }

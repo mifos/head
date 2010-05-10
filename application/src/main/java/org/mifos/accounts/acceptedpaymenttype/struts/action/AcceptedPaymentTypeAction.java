@@ -35,7 +35,6 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
 import org.mifos.accounts.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
 import org.mifos.accounts.acceptedpaymenttype.util.helpers.PaymentTypeData;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -73,9 +72,9 @@ public class AcceptedPaymentTypeAction extends BaseAction {
         List<PaymentTypeData> paymentTypeList = new ArrayList<PaymentTypeData>();
         PaymentTypeData payment = null;
         Short id = 0;
-        List<MasterDataEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
-        for (MasterDataEntity masterDataEntity : paymentTypes) {
-            PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
+        List<PaymentTypeEntity> paymentTypes = getMasterEntities(PaymentTypeEntity.class, localeId);
+        for (PaymentTypeEntity masterDataEntity : paymentTypes) {
+            PaymentTypeEntity paymentType = masterDataEntity;
             id = paymentType.getId();
             payment = new PaymentTypeData(id);
             payment.setName(paymentType.getName());

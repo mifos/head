@@ -30,6 +30,7 @@ import org.mifos.framework.business.service.DataTransferObject;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.UserContext;
 
+/** FIXME: resolve/collapse with {@link org.mifos.accounts.fees.servicefacade.FeeDto}. */
 public class FeeDto implements DataTransferObject {
     private String feeId;
 

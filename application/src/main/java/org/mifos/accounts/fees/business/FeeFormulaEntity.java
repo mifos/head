@@ -103,7 +103,7 @@ public class FeeFormulaEntity extends MasterDataEntity {
         this.localeId = localeId;
     }
 
-    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+    public void setLookUpValue(LookUpValueEntity lookUpValue) {
         this.lookUpValue = lookUpValue;
     }
 

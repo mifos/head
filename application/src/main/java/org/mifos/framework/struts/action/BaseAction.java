@@ -43,7 +43,6 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanServiceFacade;
@@ -67,7 +66,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValueObjectConversionException;
@@ -324,15 +322,11 @@ public abstract class BaseAction extends DispatchAction {
         return (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
     }
 
-    protected List<MasterDataEntity> getMasterEntities(Class clazz, Short localeId) throws ServiceException,
-            PersistenceException {
-        return new MasterDataService().retrieveMasterEntities(clazz, localeId);
+    protected <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) throws ServiceException {
+        return new MasterDataService().retrieveMasterEntities(type, localeId);
     }
 
-    protected MasterDataEntity getMasterEntities(Short entityId, Class clazz, Short localeId) throws ServiceException,
-            PersistenceException {
-        return new MasterPersistence().retrieveMasterEntity(entityId, clazz, localeId);
-    }
+
 
     protected Short getShortValue(String str) {
         return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;

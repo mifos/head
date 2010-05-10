@@ -73,7 +73,8 @@ public class FeePaymentEntity extends MasterDataEntity {
         return lookUpValue;
     }
 
-    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+    /** FIXME: made public for tests. */
+    public void setLookUpValue(LookUpValueEntity lookUpValue) {
         this.lookUpValue = lookUpValue;
     }
 

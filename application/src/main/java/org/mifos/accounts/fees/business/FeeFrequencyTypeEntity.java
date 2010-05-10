@@ -70,7 +70,7 @@ public class FeeFrequencyTypeEntity extends MasterDataEntity {
         return lookUpValue;
     }
 
-    protected void setLookUpValue(LookUpValueEntity lookUpValue) {
+    public void setLookUpValue(LookUpValueEntity lookUpValue) {
         this.lookUpValue = lookUpValue;
     }
 
