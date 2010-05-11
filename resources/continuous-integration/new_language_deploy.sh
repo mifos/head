@@ -19,7 +19,7 @@ then
     exit 1
 fi
 
-ciResources=$HOME/hudson-home/jobs/trunk/workspace/working_copy/resources/continuous-integration
+ciResources=$HOME/hudson-home/jobs/trunk/workspace/resources/continuous-integration
 
 set -x
 mkdir $deployRoot
