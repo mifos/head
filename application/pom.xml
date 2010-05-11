@@ -12,13 +12,14 @@
         <version>1.6-SNAPSHOT</version>
     </parent>
     <scm>
-        <url>https://mifos.svn.sourceforge.net/svnroot/mifos</url>
-        <connection>scm:svn:https://mifos.svn.sourceforge.net/svnroot/mifos</connection>
-        <developerConnection>scm:svn:https://mifos.svn.sourceforge.net/svnroot/mifos</developerConnection>
+        <url>git://mifos.git.sourceforge.net/gitroot/mifos/head</url>
+        <connection>scm:git:git://mifos.git.sourceforge.net/gitroot/mifos/</connection>
+        <developerConnection>scm:git:ssh://mifos.git.sourceforge.net/gitroot/mifos/head</developerConnection>
     </scm>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
+        <buildNumber>FIXME</buildNumber>
         <current.release.name>mifos-trunk_r${buildNumber}</current.release.name>
 
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
@@ -960,23 +961,6 @@
                             </excludes>
                         </resource>
                     </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.0-beta-4</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doUpdate>false</doUpdate>
-                    <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
                 </configuration>
             </plugin>
             <plugin>
