@@ -19,17 +19,20 @@
  */
 package org.mifos.application.holiday.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -38,45 +41,33 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class HolidayServiceFacadeWebTierTest {
 
-    // class under test
-    private HolidayServiceFacade holidayServiceFacade;
-
-    // collaborators
-//    @Mock
-//    private LoanProductDao loanProductDao;
-
+    HolidayDetails holidayDetails;
+    HolidayServiceFacade holidayServiceFacade;
+    OfficePersistence officePersistence;
 
     @Before
     public void setupAndInjectDependencies() {
-        holidayServiceFacade = new HolidayServiceFacadeWebTier();
+        String name = "testHoliday";
+        DateTime dateTime = new DateTime();
+        Date fromDate = dateTime.plusDays(10).toDate();
+        Date thruDate = dateTime.plusDays(20).toDate();
+        RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.SAME_DAY;
+        holidayDetails = new HolidayDetails(name, fromDate, thruDate, repaymentRule);
+        officePersistence = Mockito.mock(OfficePersistence.class);
+        holidayServiceFacade = new HolidayServiceFacadeWebTier(officePersistence);
     }
 
     @Test
-    public void createHolidayShouldSucceed() {
-
+    public void shouldCreateHoliday() throws ServiceException, PersistenceException {
         List<Short> officeIds = new ArrayList<Short>();
-        LocalDate fromDate = new LocalDate(2010,4,10);
-        LocalDate toDate = new LocalDate(2010,4,14);
-        short repaymentRuleId = 1;
-        HolidayDto holidayDto = holidayServiceFacade.createHoliday(officeIds, fromDate, toDate, repaymentRuleId);
-        assertThat(holidayDto.getFromDate(), is(fromDate));
-        assertThat(holidayDto.getToDate(), is(toDate));
-        assertThat(holidayDto.getRepaymentRuleId(), is(repaymentRuleId));
-        assertTrue(holidayDto.getOfficesForHoliday().containsAll(officeIds));
-/*
-        // setup
-        when(customer.getCustomerLevel()).thenReturn(customerLevelEntity);
-        when(loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(customerLevelEntity)).thenReturn(
-                activeLoanProducts);
-        when(customer.getCustomerMeetingValue()).thenReturn(meeting);
-        when(activeLoanProduct.getLoanOfferingMeetingValue()).thenReturn(meeting);
-
-        // exercise test
-        List<LoanOfferingBO> activeLoanProductsForCustomer = loanServiceFacade
-                .loadActiveProductsApplicableForCustomer(customer);
-
-        // verification
-        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct));
-*/
+        Short officeId1 = new Short((short) 1);
+        Short officeId2 = new Short((short) 2);
+        officeIds.add(officeId1);
+        officeIds.add(officeId2);
+        holidayServiceFacade.createHoliday(holidayDetails, officeIds);
+        Mockito.verify(officePersistence, Mockito.times(1)).addHoliday(Mockito.eq(officeId1),
+                Mockito.any(HolidayBO.class));
+        Mockito.verify(officePersistence, Mockito.times(1)).addHoliday(Mockito.eq(officeId2),
+                Mockito.any(HolidayBO.class));
     }
 }

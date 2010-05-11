@@ -211,8 +211,7 @@ public class HolidayActionForm extends BaseActionForm {
     }
 
     public void populate(HolidayBO holidayBO) {
-
-        this.repaymentRuleId = holidayBO.getRepaymentRuleId().toString();
+        this.repaymentRuleId = holidayBO.getRepaymentRuleType().getValue().toString();
         this.holidayName = holidayBO.getHolidayName();
         this.fromDate = holidayBO.getHolidayFromDate();
         this.thruDate = holidayBO.getHolidayThruDate();

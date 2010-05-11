@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -68,6 +69,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     private OfficeAddressEntity address;
     private Set<OfficeCustomFieldEntity> customFields;
     private Set<OfficeBO> children;
+    private Set<HolidayBO> holidays;
 
     public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(
             List<OfficeBO> branchParents) {
@@ -283,6 +285,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         this.children = children;
     }
 
+    public void setHolidays(final Set<HolidayBO> holidays) {
+        this.holidays = holidays;
+    }
+
     void setGlobalOfficeNum(final String globalOfficeNum) {
         this.globalOfficeNum = globalOfficeNum;
     }
@@ -301,6 +307,10 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public Set<OfficeBO> getChildren() {
         return children;
+    }
+
+    public Set<HolidayBO> getHolidays() {
+        return holidays;
     }
 
     private void removeChild(final OfficeBO office) {

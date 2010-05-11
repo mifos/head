@@ -29,7 +29,6 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -67,19 +66,6 @@ public class HolidayPersistence extends MasterPersistence {
             throw new PersistenceException(e);
         }
         return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
-    }
-
-    public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        return executeNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE_TYPES, parameters);
-    }
-
-    public RepaymentRuleEntity getRepaymentRule(final short repaymentRuleId) throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("repaymentRuleId", repaymentRuleId);
-        return (RepaymentRuleEntity) execUniqueResultNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE, parameters);
     }
 
     public List<HolidayBO> getUnAppliedHolidays() throws PersistenceException {

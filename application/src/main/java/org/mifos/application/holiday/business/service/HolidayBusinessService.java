@@ -26,7 +26,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.HolidayUtils;
@@ -70,16 +69,6 @@ public class HolidayBusinessService implements BusinessService {
             return new HolidayPersistence().getHolidays(year);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
-        }
-    }
-
-    public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws ServiceException {
-        try {
-            return new HolidayPersistence().getRepaymentRuleTypes();
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        } catch (Exception e) { //declared by Predicate.evaluate()
-            throw new ServiceException(e);
         }
     }
 

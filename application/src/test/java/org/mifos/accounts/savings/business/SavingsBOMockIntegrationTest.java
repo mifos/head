@@ -44,6 +44,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -53,7 +54,8 @@ import org.mockito.runners.MockitoJUnitRunner;
  * I test {@link SavingsBO}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SavingsBOTest {
+public class SavingsBOMockIntegrationTest extends MifosIntegrationTestCase{
+
 
     private static MifosCurrency defaultCurrency;
 
@@ -97,6 +99,10 @@ public class SavingsBOTest {
 
     @Mock
     private SavingsTrxnDetailEntity savingsTrxnDetail;
+
+    public SavingsBOMockIntegrationTest() throws Exception {
+        super();
+    }
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {

@@ -7,36 +7,23 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.application.holiday.business.HolidayBO" table="HOLIDAY">
-		<composite-id
-		        name="holidayPK"
-		        class="org.mifos.application.holiday.business.HolidayPK" >
-		        <key-property name="officeId" column="OFFICE_ID" type="short" />
-		        <key-property name="holidayFromDate" column="HOLIDAY_FROM_DATE" type="date" />
-	    </composite-id>
-
+        <id name="id" column="HOLIDAY_ID" type="int">
+            <generator class="native"/>
+        </id>
+	    <property name="holidayFromDate" column="HOLIDAY_FROM_DATE" type="date" />
 	    <property name="holidayThruDate" column="HOLIDAY_THRU_DATE" type="date" />
 		<property name="holidayName" column="HOLIDAY_NAME" type="string" />
-		<many-to-one name="repaymentRuleEntity" column="REPAYMENT_RULE_ID" 		
-			 class="org.mifos.application.holiday.business.RepaymentRuleEntity" cascade="none" update="false" 	
-	     unique="true" insert="true"  /> 
+        <property name="repaymentRuleType" column="REPAYMENT_RULE_ID"
+            type="org.mifos.application.holiday.util.helpers.RepaymentRuleUserType" not-null="true"/>
 		<property name="holidayChangesAppliedFlag" column="HOLIDAY_CHANGES_APPLIED_FLAG"/>        
 	</class>
 
 	<!-- Holiday Specific Queries  -->
 	<query name="holiday.getHolidays">
-   	       <![CDATA[select new org.mifos.application.holiday.business.HolidayBO(holidayBO.holidayPK, 
-   	       				   holidayBO.holidayThruDate, holidayBO.holidayName,  
-   	       				   repaymentRuleEntity.id, lv.lookUpName)
- 			          from org.mifos.application.holiday.business.HolidayBO holidayBO,
- 			               org.mifos.application.holiday.business.RepaymentRuleEntity repaymentRuleEntity
- 			               ,org.mifos.application.master.business.LookUpValueEntity lv  
-                     where  holidayBO.repaymentRuleEntity.id = repaymentRuleEntity.id
-		               and ((holidayBO.holidayThruDate >= :START_OF_YEAR  
-		               and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
-		               or  (holidayBO.holidayPK.holidayFromDate >= :START_OF_YEAR 
-		               and  holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR))
-                       and lv.lookUpId = repaymentRuleEntity.lookUpValue.lookUpId  
-                       order by holidayBO.holidayPK.holidayFromDate
+   	       <![CDATA[select holidayBO from org.mifos.application.holiday.business.HolidayBO holidayBO
+                       where (holidayBO.holidayThruDate >= :START_OF_YEAR  and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
+		               or (holidayBO.holidayFromDate >= :START_OF_YEAR and  holidayBO.holidayFromDate <= :END_OF_YEAR)
+                       order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
 	<query name="holiday.getHoildaysByFlag">

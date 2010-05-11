@@ -101,7 +101,7 @@ public class CustomerApplyFeesIntegrationTest {
 
     @Before
     public void setup() {
-        databaseCleaner.clean();
+//        databaseCleaner.clean();
         firstTuesdayInstallmentDate = getNearestDayOfWeekFromNow(DayOfWeek.tuesday());
 
         weeklyMeeting = new MeetingBuilder().customerMeeting()

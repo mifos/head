@@ -44,7 +44,7 @@ public class GenericDaoHibernate implements GenericDao {
         try {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
-            setParametersInQuery(query, nameQueryParameters);
+            query.setProperties(nameQueryParameters);
             return query.list();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -58,7 +58,7 @@ public class GenericDaoHibernate implements GenericDao {
         try {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
-            setParametersInQuery(query, nameQueryParameters);
+            query.setProperties(nameQueryParameters);
             return query.uniqueResult();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -72,8 +72,7 @@ public class GenericDaoHibernate implements GenericDao {
         try {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName);
-
-            setParametersInQuery(query, queryParameters);
+            query.setProperties(queryParameters);
             return query.list();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -87,8 +86,7 @@ public class GenericDaoHibernate implements GenericDao {
         try {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName);
-
-            setParametersInQuery(query, queryParameters);
+            query.setProperties(queryParameters);
             return query.uniqueResult();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -105,14 +103,6 @@ public class GenericDaoHibernate implements GenericDao {
             }
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
-        }
-    }
-
-    private void setParametersInQuery(final Query query, final Map<String, ?> queryParameters) {
-
-        final Set<String> queryParamKeys = queryParameters.keySet();
-        for (String queryParamKey : queryParamKeys) {
-            query.setParameter(queryParamKey, queryParameters.get(queryParamKey));
         }
     }
 

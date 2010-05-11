@@ -114,10 +114,10 @@ explanation of the license and how it is applied.
 	            	<td width="11%" class="drawtablerow">${holidayActionForm.holidayThruDate}</td>
 	                <td width="28%" class="drawtablerow">${holidayActionForm.holidayName}</td>
 	                <td width="50%" class="drawtablerow">
-	                	<c:forEach var="RRT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RepaymentRuleType')}" >
+	                	<c:forEach var="RRT" items="${RepaymentRuleType}" >
 							<c:if
-								  test="${RRT.id == sessionScope.holidayActionForm.repaymentRuleId}">
-									<c:out value="${RRT.lookUpValue}" />
+								  test="${RRT.key == sessionScope.holidayActionForm.repaymentRuleId}">
+									<c:out value="${RRT.value}" />
 							</c:if>
 						</c:forEach>
 				</td>

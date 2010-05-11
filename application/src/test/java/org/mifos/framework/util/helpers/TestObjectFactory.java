@@ -110,9 +110,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanIn
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -1612,17 +1609,6 @@ public class TestObjectFactory {
         return addObject(testObjectPersistence.getObject(clazz, pk));
     }
 
-    public static Object getObject(final Class clazz, final HolidayPK pk) {
-        return addObject(testObjectPersistence.getObject(clazz, pk));
-    }
-
-    public static void cleanUpHolidays(List<HolidayBO> holidayList) {
-        if (null != holidayList) {
-            deleteHolidays(holidayList);
-            holidayList = null;
-        }
-    }
-
     public static CustomerCheckListBO createCustomerChecklist(final Short customerLevel, final Short customerStatus,
             final Short checklistStatus) throws Exception {
         List<String> details = new ArrayList<String>();
@@ -1671,42 +1657,6 @@ public class TestObjectFactory {
         session.delete(checkListBO);
         transaction.commit();
 
-    }
-
-    public static HolidayBO createHoliday(final HolidayPK holidayPK, final Date holidayThruDate,
-            final String holidayName, final Short repaymentRuleId, final Short localeId) throws Exception {
-
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRuleId);
-        HolidayBO accountHoliday = new HolidayBO(holidayPK, holidayThruDate, holidayName, entity);
-
-        accountHoliday.save();
-
-        StaticHibernateUtil.commitTransaction();
-        return accountHoliday;
-    }
-
-    public static void cleanUp(HolidayBO holidayBO) {
-        if (null != holidayBO) {
-            deleteHoliday(holidayBO);
-            holidayBO = null;
-        }
-    }
-
-    public static void deleteHoliday(final HolidayBO holidayBO) {
-        Session session = StaticHibernateUtil.getSessionTL();
-        session.lock(holidayBO, LockMode.UPGRADE);
-        Transaction transaction = StaticHibernateUtil.startTransaction();
-        session.delete(holidayBO);
-        transaction.commit();
-    }
-
-    private static void deleteHolidays(List<HolidayBO> holidayList) {
-        for (HolidayBO holidayBO : holidayList) {
-            if (holidayBO != null) {
-                deleteHoliday(holidayBO);
-            }
-        }
-        holidayList = null;
     }
 
     public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {

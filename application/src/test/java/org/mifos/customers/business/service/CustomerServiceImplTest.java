@@ -37,17 +37,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
-import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -165,46 +161,7 @@ public class CustomerServiceImplTest {
         }
     }
 
-    @Test
-    public void givenGroupHasActiveAccountsGroupTransferToCenterShouldFailValidation() {
-        // setup
 
-        CenterBO center = new CenterBuilder().withName("newCenter").build();
-        GroupBO group = new GroupBuilder().build();
-
-        SavingsBO savingsAccount = new SavingsAccountBuilder().withCustomer(group).voluntary().build();
-
-        group.addAccount(savingsAccount);
-
-        // exercise test
-        try {
-            customerService.transferGroupTo(group, center);
-            fail("should fail validation");
-        } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT));
-        }
-    }
-
-    @Test
-    public void givenChildrenOfGroupHasActiveAccountsGroupTransferToCenterShouldFailValidation() {
-        // setup
-
-        CenterBO center = new CenterBuilder().withName("newCenter").build();
-        GroupBO group = new GroupBuilder().build();
-        ClientBO client = new ClientBuilder().withParentCustomer(group).active().buildForUnitTests();
-
-        SavingsBO savingsAccount = new SavingsAccountBuilder().withCustomer(group).voluntary().build();
-        client.addAccount(savingsAccount);
-        group.getChildren().add(client);
-
-        // exercise test
-        try {
-            customerService.transferGroupTo(group, center);
-            fail("should fail validation");
-        } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT));
-        }
-    }
 
     @Ignore
     @Test

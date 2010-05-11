@@ -27,11 +27,10 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.NextScheduledEventStrategy;
 import org.mifos.calendar.NextWorkingDayStrategy;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -41,17 +40,27 @@ import org.mifos.schedule.ScheduledEvent;
 
 public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
-    private HolidayPK holidayPK;
-
     private Date holidayThruDate;
 
     private String holidayName;
 
-    private RepaymentRuleEntity repaymentRuleEntity;
+    private RepaymentRuleTypes repaymentRuleType;
 
     private boolean validationEnabled = true;
 
     private Short holidayChangesAppliedFlag;
+
+    private Date holidayFromDate;
+
+    private Integer id;
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public boolean isValidationEnabled() {
         return validationEnabled;
@@ -61,52 +70,21 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         this.validationEnabled = validationEnabled;
     }
 
-    protected HolidayBO() {
-        this.holidayPK = null;
-        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    public HolidayBO(){
     }
 
-    public HolidayBO(final HolidayPK holidayPK, final Date holidayThruDate, final String holidayName,
-            final RepaymentRuleEntity repaymentRuleEntity) throws ApplicationException {
-
-        this.holidayPK = new HolidayPK();
-
-        if (holidayPK != null) {
-            this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-            this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-        } else {
-            throw new ApplicationException(HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
-        }
-        this.holidayThruDate = holidayThruDate;
-        this.holidayName = holidayName;
-        this.repaymentRuleEntity = repaymentRuleEntity;
-        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    public HolidayBO(HolidayDetails holidayDetails){
+        this.holidayName = holidayDetails.getName();
+        this.holidayFromDate = holidayDetails.getFromDate();
+        this.holidayThruDate = holidayDetails.getThruDate();
+        this.holidayChangesAppliedFlag = holidayDetails.getHolidayChangesAppliedFlag().getValue();
+        this.repaymentRuleType = holidayDetails.getRepaymentRuleType();
     }
 
-    public HolidayBO(final HolidayPK holidayPK, final Date holidayThruDate, final String holidayName, final short repaymentRuleId,
-            final String lookupValueKey) throws ApplicationException {
-
-        this.holidayPK = new HolidayPK();
-
-        if (holidayPK != null) {
-            this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-            this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-        } else {
-            throw new ApplicationException(HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
-        }
-        this.holidayThruDate = holidayThruDate;
-        this.holidayName = holidayName;
-        this.repaymentRuleEntity = new RepaymentRuleEntity(repaymentRuleId, lookupValueKey);
-        this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+    public RepaymentRuleTypes getRepaymentRuleType() {
+        return this.repaymentRuleType;
     }
 
-    public HolidayPK getHolidayPK() {
-        return this.holidayPK;
-    }
-
-    public RepaymentRuleEntity getRepaymentRuleEntity() {
-        return this.repaymentRuleEntity;
-    }
 
     @Override
     public DateTime getFromDate() {
@@ -114,7 +92,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     }
 
     public Date getHolidayFromDate() {
-        return this.holidayPK.getHolidayFromDate();
+        return holidayFromDate;
     }
 
     public DateTime getThruDate() {
@@ -129,20 +107,16 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         return this.holidayName;
     }
 
-    public void setHolidayPK(final HolidayPK holidayPK) {
-        this.holidayPK = holidayPK;
-    }
-
     @SuppressWarnings("unused")
     // see .hbm.xml file
-    private void setRepaymentRuleEntity(final RepaymentRuleEntity repaymentRuleEntity) {
-        this.repaymentRuleEntity = repaymentRuleEntity;
+    private void setRepaymentRuleType(final RepaymentRuleTypes repaymentRuleType) {
+        this.repaymentRuleType = repaymentRuleType;
     }
 
     @SuppressWarnings("unused")
     // see .hbm.xml file
     private void setHolidayFromDate(final Date holidayFromDate) {
-        this.holidayPK.setHolidayFromDate(holidayFromDate);
+        this.holidayFromDate = holidayFromDate;
     }
 
     @SuppressWarnings("unused")
@@ -165,49 +139,6 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         this.holidayChangesAppliedFlag = flag;
     }
 
-    /**
-     * @deprecated use {@link HolidayDao#save}
-     */
-    @Deprecated
-    public void save() throws ApplicationException {
-        if (this.getHolidayThruDate() == null) {
-            this.setHolidayThruDate(this.getHolidayFromDate());
-        }
-
-        if (isValidationEnabled()) {
-            this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
-            this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
-        }
-
-        new HolidayPersistence().createOrUpdate(this);
-    }
-
-    public void update(final HolidayPK holidayPK, final Date holidayThruDate, final String holidayName) throws ApplicationException {
-        this.holidayName = holidayName;
-        this.holidayPK.setOfficeId(holidayPK.getOfficeId());
-        this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-
-        if (this.getHolidayThruDate() == null) {
-            this.setHolidayThruDate(this.getHolidayFromDate());
-        }
-
-        if (isValidationEnabled()) {
-            this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
-            this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
-        }
-
-        if (this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue())) {
-            this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
-        }
-
-        new HolidayPersistence().createOrUpdate(this);
-
-        // this block should not be here
-        // HolidayUtils.rescheduleLoanRepaymentDates(this);
-        // HolidayUtils.rescheduleSavingDates(this);
-        // end of block
-    }
-
     protected void validateHolidayState(final Short masterTypeId, final Short stateId, final boolean isCustomer)
             throws ApplicationException {
         Integer records;
@@ -215,18 +146,6 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         if (records.intValue() != 0) {
             throw new ApplicationException(HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
         }
-    }
-
-    public String getRepaymentRule() {
-        return repaymentRuleEntity.getLookUpValue();
-    }
-
-    public Short getRepaymentRuleId() {
-        return repaymentRuleEntity.getId();
-    }
-
-    public RepaymentRuleTypes getRepaymentRuleType() {
-        return RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId());
     }
 
     private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {
@@ -264,7 +183,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         //specialized classes for each repayment rule
 
         DateTime adjustedDate = scheduledDay;
-        switch (RepaymentRuleTypes.fromShort(repaymentRuleEntity.getId())) {
+        switch (repaymentRuleType) {
         case NEXT_MEETING_OR_REPAYMENT:
             do {
                 adjustedDate = (new NextScheduledEventStrategy(scheduledEvent)).adjust(adjustedDate);
@@ -290,5 +209,4 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         return !(date.isBefore(new DateTime(this.getHolidayFromDate()))
                  || date.isAfter(new DateTime(this.getHolidayThruDate())));
     }
-
 }

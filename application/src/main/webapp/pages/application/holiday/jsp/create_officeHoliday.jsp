@@ -121,8 +121,8 @@ explanation of the license and how it is applied.
 							
 							<td class="fontnormal"><mifos:select
 								name="holidayActionForm" property="repaymentRuleId" styleId="holiday.input.repaymentrule">
-								<c:forEach var="RRT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RepaymentRuleType')}" >
-									<html-el:option value="${RRT.id}">${RRT.lookUpValue}</html-el:option>
+								<c:forEach var="RRT" items="${RepaymentRuleType}" >
+									<html-el:option value="${RRT.key}">${RRT.value}</html-el:option>
 								</c:forEach>
 							</mifos:select></td>
 							

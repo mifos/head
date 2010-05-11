@@ -27,10 +27,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.schedule.ScheduledEvent;
 
 public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
@@ -140,14 +138,10 @@ public class MoratoriumStrategy implements ListOfDatesAdjustmentStrategy {
         return adjustedDate;
     }
 
-    private Holiday buildHolidayFromCurrentHolidayWithRepaymentRule (Holiday originalHoliday, RepaymentRuleTypes rule) {
-        HolidayPK holidayPK = new HolidayPK((short)1, originalHoliday.getFromDate().toDate());
-        RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(rule.getValue(), "lookup.value.key");
-        try {
-            return new HolidayBO(holidayPK, originalHoliday.getThruDate().toDate(), "temporaryHoliday", repaymentRuleEntity);
-        } catch (ApplicationException e) {
-            throw new IllegalStateException("Could not create temporary holiday", e);
-        }
+    private Holiday buildHolidayFromCurrentHolidayWithRepaymentRule(Holiday originalHoliday, RepaymentRuleTypes rule) {
+        HolidayDetails holidayDetails = new HolidayDetails("temporaryHoliday", originalHoliday.getFromDate().toDate(),
+                originalHoliday.getThruDate().toDate(), rule);
+        return new HolidayBO(holidayDetails);
     }
 
     private boolean isEnclosedByAHolidayWithRepaymentRule (DateTime date, RepaymentRuleTypes rule) {

@@ -22,17 +22,47 @@ package org.mifos.application.holiday.persistence;
 
 import java.util.List;
 
-import org.joda.time.LocalDate;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ValidationException;
 
 /**
  *
  */
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
-    @Override
-    public HolidayDto createHoliday(List<Short> officeIds, LocalDate fromDate, LocalDate toDate, short repaymentRuleId) {
-        // TODO Auto-generated method stub
-        return new HolidayDto(officeIds, fromDate, toDate, repaymentRuleId);
+    private final OfficePersistence officePersistence;
+
+    public HolidayServiceFacadeWebTier(OfficePersistence officePersistence) {
+        this.officePersistence = officePersistence;
     }
 
+    @Override
+    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ServiceException {
+        try {
+            holidayDetails.validate();
+            HolidayBO holiday = new HolidayBO(holidayDetails);
+            for (Short officeId : officeIds) {
+                officePersistence.addHoliday(officeId, holiday);
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+    }
+    @Override
+    public void createHoliday(HolidayDetails holidayDetails) throws ServiceException {
+        try {
+            holidayDetails.validate();
+            HolidayBO holiday = new HolidayBO(holidayDetails);
+            officePersistence.createOrUpdate(holiday);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

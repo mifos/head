@@ -295,7 +295,7 @@ public class AccountPersistence extends Persistence {
         try {
             session = StaticHibernateUtil.openSession();
             Query query = session.getNamedQuery(queryName);
-            setParametersInQuery(query, queryName, queryParameters);
+            query.setProperties(queryParameters);
             return query.list();
         } catch (Exception e) {
             throw new PersistenceException(e);

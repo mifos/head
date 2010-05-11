@@ -22,23 +22,28 @@ package org.mifos.application.holiday.business;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import junit.framework.Assert;
 
+import org.hibernate.Transaction;
 import org.joda.time.DateMidnight;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
     public HolidayBOIntegrationTest() throws Exception {
         super();
     }
-
-    private HolidayBO holidayEntity;
 
     @Override
     protected void setUp() throws Exception {
@@ -47,48 +52,45 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(holidayEntity);
-        StaticHibernateUtil.closeSession();
+        rollback();
         super.tearDown();
     }
 
-    public void testAddHoliday() throws Exception {
-        long fromDateMillis = new DateMidnight().getMillis();
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date(fromDateMillis));
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-        // Disable date Validation because startDate is less than today
-        holidayEntity.setValidationEnabled(false);
+    private void rollback() {
+        Transaction transaction = StaticHibernateUtil.getSessionTL().getTransaction();
+        if(transaction.isActive()){
+            transaction.rollback();
+        }
+    }
 
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
-
-       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
-       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
-       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+    private void createHolidayForHeadOffice(HolidayDetails holidayDetails) throws ServiceException {
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short) 1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
     }
 
     /**
      * test Holiday From Date Validations Failure.
      */
-    public void testHolidayFromDateValidationFailure() throws Exception {
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-
+    public void testHolidayFromDateValidationFailure(){
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", new Date(), null, RepaymentRuleTypes.fromInt(1));
         try {
-            holidayEntity.save();
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.closeSession();
-            // If it succedded to create this holiday
-            // Asssert false as it shouldn't by validations.
-           Assert.assertTrue(false);
-        } catch (ApplicationException e) {
-            holidayEntity = null;
+            createHolidayForHeadOffice(holidayDetails);
+            Assert.fail("Did not raise ServiceException");
+        } catch (ServiceException e) {
         }
+    }
+
+    public void testHolidayRepaymentRuleTypeEntity() throws ServiceException, PersistenceException {
+        Calendar startDate = Calendar.getInstance();
+        startDate.add(Calendar.DAY_OF_MONTH, 1);
+        Date holidayStartDate = startDate.getTime();
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holidayStartDate, null,
+                RepaymentRuleTypes.SAME_DAY);
+        createHolidayForHeadOffice(holidayDetails);
+        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(holidayStartDate.getYear()+1900);
+        assertEquals(1, holidays.size());
+        assertNotNull(holidays.get(0).getRepaymentRuleType().getPropertiesKey());
     }
 
     /**
@@ -100,44 +102,34 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         fromDate.setTimeInMillis(fromDateMillis);
         fromDate.add(Calendar.DAY_OF_MONTH, 1);
         fromDateMillis = fromDate.getTimeInMillis();
+        Date startDate = new Date(fromDateMillis);
 
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date(fromDateMillis));
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", startDate, null, RepaymentRuleTypes
+                .fromInt(1));
+        createHolidayForHeadOffice(holidayDetails);
 
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(startDate.getYear()+1900);
+        Assert.assertEquals(1, holidays.size());
 
-        holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
-
-       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
-       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+        HolidayBO holiday = holidays.get(0);
+        Assert.assertEquals("Test Holiday", holiday.getHolidayName());
+        Assert.assertEquals(fromDateMillis, holiday.getHolidayFromDate().getTime());
         // automatically Fromdate is copied into thruDate if thrudate is null.
-       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+        Assert.assertEquals(fromDateMillis, holiday.getHolidayThruDate().getTime());
     }
 
     /**
      * test Holiday From Date Against Thru Date Failure.
      */
-    public void testHolidayFromDateAgainstThruDateFailure() throws Exception {
-        HolidayPK holidayPK = new HolidayPK((short) 1, Calendar.getInstance().getTime());
+    public void testHolidayFromDateAgainstThruDateFailure(){
         Calendar thruDate = Calendar.getInstance();
         thruDate.add(Calendar.DAY_OF_MONTH, -1);
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday", entity);
-
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", Calendar.getInstance().getTime(), thruDate.getTime(), RepaymentRuleTypes
+                .fromInt(1));
         try {
-            holidayEntity.save();
-
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.closeSession();
-
-            // If it succedded to create this holiday
-            // Asssert false as it shouldn't by validation rules.
-           Assert.assertTrue(false);
-        } catch (ApplicationException e) {
-            holidayEntity = null;
+            createHolidayForHeadOffice(holidayDetails);
+            Assert.fail("Did not raise ServiceException");
+        } catch (ServiceException e) {
         }
     }
 
@@ -151,25 +143,24 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         fromDate.add(Calendar.DAY_OF_MONTH, 1);
         fromDateMillis = fromDate.getTimeInMillis();
 
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date(fromDateMillis));
-
         Calendar thruDate = Calendar.getInstance();
         long thruDateMillis = new DateMidnight().getMillis();
         thruDate.setTimeInMillis(thruDateMillis);
         thruDate.add(Calendar.DAY_OF_MONTH, 1);
         thruDateMillis = thruDate.getTimeInMillis();
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday", entity);
 
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        Date startDate = new Date(fromDateMillis);
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", startDate, thruDate.getTime(),
+                RepaymentRuleTypes.fromInt(1));
+        createHolidayForHeadOffice(holidayDetails);
 
-        holidayEntity = (HolidayBO) TestObjectFactory.getObject(HolidayBO.class, holidayEntity.getHolidayPK());
+        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(startDate.getYear()+1900);
+        Assert.assertEquals(1, holidays.size());
 
-       Assert.assertEquals("Test Holiday", holidayEntity.getHolidayName());
-       Assert.assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
-       Assert.assertEquals(thruDateMillis, holidayEntity.getHolidayThruDate().getTime());
+        HolidayBO holiday = holidays.get(0);
+        Assert.assertEquals("Test Holiday", holiday.getHolidayName());
+        Assert.assertEquals(fromDateMillis, holiday.getHolidayFromDate().getTime());
+        Assert.assertEquals(thruDateMillis, holiday.getHolidayThruDate().getTime());
     }
 
     /*
@@ -179,25 +170,13 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
      */
     public void testSaveSuppliesThruDate() throws Exception {
         long startDate = new DateMidnight(2003, 1, 26).getMillis();
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, new Date(startDate)), null, "Test Day", entity);
-
-        // Disable date Validation because startDate is less than today
-        holiday.setValidationEnabled(false);
-
-        holiday.save();
-       Assert.assertEquals(startDate, holiday.getHolidayThruDate().getTime());
-    }
-
-    public void testUpdateSuppliesThruDate() throws Exception {
-        long startDate = new DateMidnight(2003, 1, 26).getMillis();
-        RepaymentRuleEntity entity = new RepaymentRuleEntity((short) 1, "RepaymentRule-SameDay");
-        HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, new Date(startDate)), null, "Test Day", entity);
-
-        // Disable date Validation because startDate is less than today
-        holiday.setValidationEnabled(false);
-
-        holiday.update(holiday.getHolidayPK(), null, "New Name");
-       Assert.assertEquals(startDate, holiday.getHolidayThruDate().getTime());
+        Date fromDate = new Date(startDate);
+        HolidayDetails holidayDetails = new HolidayDetails("Test Day", fromDate, null,
+                RepaymentRuleTypes.fromInt(1));
+        holidayDetails.disableValidation(true);
+        createHolidayForHeadOffice(holidayDetails);
+        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(fromDate.getYear()+1900);
+        Assert.assertEquals(1, holidays.size());
+        Assert.assertEquals(startDate, holidays.get(0).getHolidayThruDate().getTime());
     }
 }

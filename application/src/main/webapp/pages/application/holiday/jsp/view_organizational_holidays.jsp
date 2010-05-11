@@ -102,10 +102,10 @@ explanation of the license and how it is applied.
               </tr>
               <c:forEach var="holidayItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey, holidayList)}" >
 	              <tr>
-	                <td width="11%" class="drawtablerow">${holidayItem.holidayPK.holidayFromDate}</td>
+	                <td width="11%" class="drawtablerow">${holidayItem.holidayFromDate}</td>
 	                <td width="11%" class="drawtablerow">${holidayItem.holidayThruDate}&nbsp;</td>
 	                <td width="28%" class="drawtablerow">${holidayItem.holidayName}</td>
-	                <td width="50%" class="drawtablerow">${holidayItem.repaymentRule}</td>
+	                <td width="50%" class="drawtablerow">${holidayItem.repaymentRuleType.name}</td>
 	              </tr>
               </c:forEach>           
               <tr>

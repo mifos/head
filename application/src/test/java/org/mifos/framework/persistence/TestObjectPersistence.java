@@ -27,7 +27,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -174,10 +173,6 @@ public class TestObjectPersistence {
     }
 
     public Object getObject(Class clazz, Short pk) {
-        return StaticHibernateUtil.getSessionTL().get(clazz, pk);
-    }
-
-    public Object getObject(Class clazz, HolidayPK pk) {
         return StaticHibernateUtil.getSessionTL().get(clazz, pk);
     }
 

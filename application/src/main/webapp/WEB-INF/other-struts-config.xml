@@ -458,8 +458,6 @@
             <forward name="manageprevious_success" path="/pages/application/holiday/jsp/manage_holiday.jsp"/>
             <forward name="cancelEdit_success" path="/holidayAction.do?method=get"/>
             <forward name="get_failure" path="/pages/application/holiday/jsp/view_holiday.jsp"/>
-            <forward name="loadAllHoliday_success" path="/pages/application/holiday/jsp/viewOfficesHolidays.jsp"/>
-            <forward name="loadAllHoliday_failure" path="/AdminAction.do?method=load"/>
             <forward name="view_organizational_holidays"
                      path="/pages/application/holiday/jsp/view_organizational_holidays.jsp"/>
             <forward name="create_office_holiday" path="/pages/application/holiday/jsp/create_officeHoliday.jsp"/>

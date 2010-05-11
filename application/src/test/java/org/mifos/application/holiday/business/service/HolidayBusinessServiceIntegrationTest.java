@@ -20,27 +20,27 @@
 
 package org.mifos.application.holiday.business.service;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
 
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     public HolidayBusinessServiceIntegrationTest() throws Exception {
         super();
     }
-
-    private HolidayBO holidayEntity;
 
     @Override
     protected void setUp() throws Exception {
@@ -49,31 +49,26 @@ public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(holidayEntity);
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
     public void testGetHolidays() throws Exception {
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-        // Disable date Validation because startDate is less than today
-        holidayEntity.setValidationEnabled(false);
-
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", new Date(), null, RepaymentRuleTypes.fromInt(1));
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
 
         List<HolidayBO> holidays = new HolidayBusinessService().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
         Assert.assertNotNull(holidays);
-       Assert.assertEquals(1, holidays.size());
+        Assert.assertEquals(1, holidays.size());
     }
 
     public void testGetRepaymentRuleTypes() throws Exception {
-        List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes();
+        List<RepaymentRuleTypes> repaymentRules = Arrays.asList(RepaymentRuleTypes.values());
         Assert.assertNotNull(repaymentRules);
-       Assert.assertEquals(4, repaymentRules.size());
+        Assert.assertEquals(4, repaymentRules.size());
     }
 
     public void testGetDistinctYears() throws Exception {
