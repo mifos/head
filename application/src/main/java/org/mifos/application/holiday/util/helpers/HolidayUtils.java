@@ -90,7 +90,7 @@ public class HolidayUtils {
         if (holiday == null) {
             return adjustedDate;
         }
-        return adjustDateUsingRepaymentRule(holiday.getRepaymentRuleId(), adjustedDate, meeting);
+        return adjustDateUsingRepaymentRule(holiday.getRepaymentRuleType(), adjustedDate, meeting);
     }
 
     public static Calendar getNextWorkingDay(final Calendar day) {
@@ -100,12 +100,12 @@ public class HolidayUtils {
         return day;
     }
 
-    private static Calendar adjustDateUsingRepaymentRule(final Short repaymentRuleId, final Calendar adjustedDate,
+    private static Calendar adjustDateUsingRepaymentRule(final RepaymentRuleTypes repaymentRule, final Calendar adjustedDate,
             final MeetingBO meeting) throws MeetingException {
-        if (NEXT_WORKING_DAY.getValue().equals(repaymentRuleId)) {
+        if (NEXT_WORKING_DAY.equals(repaymentRule)) {
             adjustedDate.add(Calendar.DATE, 1);
             return adjustDate(adjustedDate, meeting);
-        } else if (NEXT_MEETING_OR_REPAYMENT.getValue().equals(repaymentRuleId)) {
+        } else if (NEXT_MEETING_OR_REPAYMENT.equals(repaymentRule)) {
             Date nextDate = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(adjustedDate.getTime());
             return adjustDate(getCalendar(nextDate), meeting);
         }

@@ -22,13 +22,10 @@ package org.mifos.application.holiday.persistence;
 
 import java.util.List;
 
-import org.joda.time.LocalDate;
+import org.mifos.framework.exceptions.ServiceException;
 
-/**
- *
- */
 public interface HolidayServiceFacade {
+    void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds) throws ServiceException;
 
-    HolidayDto createHoliday(List<Short> officeIds, LocalDate fromDate, LocalDate toDate, short repaymentRuleId);
-
+    void createHoliday(HolidayDetails holidayDetails) throws ServiceException;
 }

@@ -128,7 +128,7 @@ public class BranchCashConfirmationReportPersistence extends Persistence {
         HashMap<String, Object> queryParams = new HashMap<String, Object>();
         populateExtractParams(queryParams, currency, accountType);
         queryParams.put(ACTION_DATE, actionDate);
-        setParametersInQuery(query, EXTRACT_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES, queryParams);
+        query.setProperties(queryParams);
         query.setParameterList(PRODUCT_OFFERING_IDS, productOfferings);
     }
 
@@ -181,7 +181,7 @@ public class BranchCashConfirmationReportPersistence extends Persistence {
         HashMap<String, Object> params = new HashMap<String, Object>();
         populateExtractParams(params, currency, accountType);
         params.put(DISBURSEMENT_DATE, disbursementDate);
-        setParametersInQuery(query, EXTRACT_BRANCH_CASH_CONFIRMATION_DISBURSEMENTS, params);
+        query.setProperties(params);
         query.setParameterList(PRODUCT_OFFERING_IDS, disbursementProductOfferingIds);
         return runQuery(query);
     }

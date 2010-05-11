@@ -64,7 +64,7 @@ public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.load_success.toString());
-        Assert.assertNotNull(SessionUtils.getAttribute(HolidayConstants.REPAYMENTRULETYPES, request)); // HOLIDAY_MASTERDATA
+        Assert.assertNotNull(request.getSession().getAttribute(HolidayConstants.REPAYMENTRULETYPES)); // HOLIDAY_MASTERDATA
     }
 
     public void testGetHolidays() throws Exception {

@@ -23,11 +23,8 @@ package org.mifos.domain.builders;
 import org.joda.time.DateTime;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.exceptions.ApplicationException;
 
 public class HolidayBuilder {
 
@@ -38,15 +35,9 @@ public class HolidayBuilder {
     private final Short officeId = Short.valueOf("1");
 
     public Holiday build() {
+        HolidayBO holidayBO = new HolidayBO(new HolidayDetails("builderCreatedHoliday",from.toDate(), to.toDate(), repaymentRule));
 
-        HolidayPK holidayPK = new HolidayPK(officeId, from.toDate());
-        RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(repaymentRule.getValue(), "lookup.value.key");
-
-        try {
-            return new HolidayBO(holidayPK, to.toDate(), "builderCreatedHoliday", repaymentRuleEntity);
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e);
-        }
+        return holidayBO;
     }
 
     public HolidayBuilder from(final DateTime withFrom) {

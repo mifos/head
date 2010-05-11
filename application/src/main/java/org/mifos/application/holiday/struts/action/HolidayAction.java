@@ -22,8 +22,11 @@ package org.mifos.application.holiday.struts.action;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,13 +36,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -51,6 +55,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class HolidayAction extends BaseAction {
 
@@ -87,7 +93,7 @@ public class HolidayAction extends BaseAction {
 
         request.getSession().setAttribute("HolidayActionForm", null);
 
-        SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes(), request);
+        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -108,18 +114,18 @@ public class HolidayAction extends BaseAction {
         return getHolidayBizService().getHolidays(year);
     }
 
-    private List<RepaymentRuleEntity> getRepaymentRuleTypes() throws Exception {
-        return getHolidayBizService().getRepaymentRuleTypes();
+    private Map<Short, String> getRepaymentRuleTypes() throws Exception {
+        List<RepaymentRuleTypes> repaymentRuleTypes = Arrays.asList(RepaymentRuleTypes.values());
+        Map<Short, String> repaymentRuleTypesMap = new TreeMap<Short, String>();
+        for (RepaymentRuleTypes repaymentRule : repaymentRuleTypes) {
+            repaymentRuleTypesMap.put(repaymentRule.getValue(), repaymentRule.getName());
+        }
+        return repaymentRuleTypesMap;
     }
 
     public ActionForward addHoliday(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-
-        SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes(), request);
-
+        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
         return mapping.findForward(ActionForwards.load_success.toString());// "create_office_holiday");
     }
 
@@ -137,7 +143,7 @@ public class HolidayAction extends BaseAction {
 
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
 
-        SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes(), request);
+        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
 
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
@@ -149,7 +155,7 @@ public class HolidayAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
 
-        SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes(), request);
+        request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
 
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
@@ -203,20 +209,22 @@ public class HolidayAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
         HolidayActionForm holidayActionForm = (HolidayActionForm) form;
+        RepaymentRuleTypes repaymentRuleType = RepaymentRuleTypes.fromShort(new Short(holidayActionForm
+                .getRepaymentRuleId()));
+        HolidayDetails holidayDetails = new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm
+                .getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
+        List<Short> officeIds = new LinkedList<Short>();
+        // TODO as of now all holidays are associated to head office
+        // this should be a list of office id(s) in the action form
+        // when branch level holiday is implemented.
+        officeIds.add(new Short((short) 1));
+        // TODO HolidayServiceFacadeWebTier and OfficePersistence to be injected
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
 
-        HolidayPK holidayPK = new HolidayPK((short) 1, holidayActionForm.getFromDate());
-        short repaymentRuleId = Short.parseShort(holidayActionForm.getRepaymentRuleId());
-        RepaymentRuleEntity repaymentRuleEntity = new HolidayPersistence().getRepaymentRule(repaymentRuleId);
-        HolidayBO accountHoliday = new HolidayBO(holidayPK, holidayActionForm.getThruDate(), holidayActionForm
-                .getHolidayName(), repaymentRuleEntity);
-
-        accountHoliday.update(holidayPK, holidayActionForm.getThruDate(), holidayActionForm.getHolidayName());
         if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
         }
-
         FlowManager flowManager = new FlowManager();
         Flow flow = new Flow();
         flow.addObjectToSession(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));

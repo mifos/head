@@ -23,12 +23,12 @@ package org.mifos.application.holiday.persistence;
 import java.util.List;
 
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.framework.exceptions.PersistenceException;
 
 public interface HolidayDao {
 
     List<Holiday> findAllHolidaysThisYearAndNext();
 
-    void save(HolidayBO holiday);
+    void save(Holiday holiday) throws PersistenceException;
 
 }

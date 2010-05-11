@@ -92,8 +92,7 @@ public abstract class Persistence {
     public List executeNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);
-
-            setParametersInQuery(query, queryName, queryParameters);
+            query.setProperties(queryParameters);
             return runQuery(query);
         } catch (Exception e) {
             throw new PersistenceException(e);
@@ -122,7 +121,7 @@ public abstract class Persistence {
                         "The query object for the query with the name  " + queryName + " has been obtained");
             }
 
-            setParametersInQuery(query, queryName, queryParameters);
+            query.setProperties(queryParameters);
             if (null != query) {
                 return query.uniqueResult();
             }
@@ -141,7 +140,7 @@ public abstract class Persistence {
             Query query = null;
             Session session = getHibernateUtil().getSessionTL();
             query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
-            setParametersInQuery(query, queryName, queryParameters);
+            query.setProperties(queryParameters);
             query.setResultTransformer(Transformers.aliasToBean(clazz));
             return query.uniqueResult();
         } catch (GenericJDBCException gje) {
@@ -158,7 +157,7 @@ public abstract class Persistence {
         try {
             Session session = getHibernateUtil().getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
-            setParametersInQuery(query, queryName, queryParameters);
+            query.setProperties(queryParameters);
             return query.list();
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
@@ -177,35 +176,6 @@ public abstract class Persistence {
         Session session = getHibernateUtil().getSessionTL();
         final Query query = session.createQuery(hqlQuery);
         return query.list();
-    }
-
-    public static void setParametersInQuery(final Query query, final String queryName, final Map queryParameters)
-            throws PersistenceException {
-
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-                "Check if query object and queryParameters are not null for query with name  " + queryName);
-        try {
-            if (null != queryParameters) {
-
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-                        "Obtaining keys for the parameter map query with name  " + queryName);
-                Set queryParamKeys = queryParameters.keySet();
-                Iterator queryParamIterator = queryParamKeys.iterator();
-
-                MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-                        "Iterating over the keys for query with name  " + queryName);
-                while (queryParamIterator.hasNext()) {
-                    String key = queryParamIterator.next().toString();
-                    MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-                            "The parameter key  for query with name  " + queryName + " is " + key);
-                    Object value = queryParameters.get(key);
-                    query.setParameter(key, value);
-                }
-            }
-        } catch (Exception e) {
-            throw new PersistenceException(e);
-        }
-
     }
 
     /**

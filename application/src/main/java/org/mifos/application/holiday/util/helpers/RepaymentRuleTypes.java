@@ -20,20 +20,28 @@
 
 package org.mifos.application.holiday.util.helpers;
 
+import org.mifos.application.master.MessageLookup;
+
 public enum RepaymentRuleTypes {
-    SAME_DAY((short) 1), //
-    NEXT_MEETING_OR_REPAYMENT((short) 2), //
-    NEXT_WORKING_DAY((short) 3), //
-    REPAYMENT_MORATORIUM((short) 4);
+    SAME_DAY((short) 1, "RepaymentRule-SameDay"), //
+    NEXT_MEETING_OR_REPAYMENT((short) 2, "RepaymentRule-NextMeetingRepayment"), //
+    NEXT_WORKING_DAY((short) 3, "RepaymentRule-NextWorkingDay"), //
+    REPAYMENT_MORATORIUM((short) 4, "RepaymentRule-RepaymentMoratorium");
 
-    Short value;
+    private Short value;
+    private String propertyKey;
 
-    RepaymentRuleTypes(final Short value) {
+    RepaymentRuleTypes(final Short value, final String key) {
         this.value = value;
+        this.propertyKey = key;
     }
 
     public Short getValue() {
         return value;
+    }
+
+    public String getPropertiesKey() {
+        return propertyKey;
     }
 
     public static RepaymentRuleTypes fromShort(final Short id) {
@@ -50,4 +58,12 @@ public enum RepaymentRuleTypes {
         return fromShort(id.shortValue());
     }
 
+    /**
+     * This method will always read from Message resource bundle as
+     * see the class doc of {@link MessageLookup}
+     * @return
+     */
+    public String getName() {
+        return MessageLookup.getInstance().lookup(getPropertiesKey());
+    }
 }

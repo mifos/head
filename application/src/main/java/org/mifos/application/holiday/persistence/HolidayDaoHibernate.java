@@ -34,9 +34,10 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.Persistence;
 
-public class HolidayDaoHibernate implements HolidayDao {
+public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
     private final GenericDao genericDao;
 
@@ -77,16 +78,7 @@ public class HolidayDaoHibernate implements HolidayDao {
 
 
     @Override
-    public void save(final HolidayBO holiday) {
-        // TODO: transaction code will move up towards service layer.
-        try {
-            StaticHibernateUtil.startTransaction();
-            genericDao.createOrUpdate(holiday);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
+    public void save(final Holiday holiday) throws PersistenceException {
+        createOrUpdate(holiday);
     }
 }

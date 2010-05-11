@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeDetailsDto;
@@ -103,6 +104,12 @@ public class OfficePersistence extends Persistence {
             return null;
         }
         return (OfficeBO) getPersistentObject(OfficeBO.class, officeId);
+    }
+
+    public void addHoliday(Short officeId, HolidayBO holiday) throws PersistenceException {
+        OfficeBO office = getOffice(officeId);
+        office.getHolidays().add(holiday);
+        createOrUpdate(office);
     }
 
     public OfficeBO getHeadOffice() throws PersistenceException {

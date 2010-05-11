@@ -46,21 +46,21 @@ public class BranchReportSqlPersistence extends Persistence {
     }
 
     public Map<String, Integer> getCustomerCountBasedOnStatus(Short officeId, CustomerLevel customerLevel,
-            List<String> customerStatusDescriptions) throws PersistenceException {
+            List<String> customerStatusDescriptions) {
         Query query = createQueryForCustomerCountBasedOnStatus(
                 NamedQueryConstants.GET_SQL_CUSTOMER_COUNT_BASED_ON_STATUS_FOR_OFFICE, officeId, customerLevel,
                 customerStatusDescriptions);
         return extractResultFromResultset(query.list());
     }
 
-    public Integer getActiveBorrowersCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
+    public Integer getActiveBorrowersCount(Short officeId, CustomerLevel customerLevel) {
         Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
 
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.LOAN_ACCOUNT);
-        setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        query.setProperties(params);
         return getCountFromQueryResult(runQuery(query));
     }
 
@@ -71,34 +71,32 @@ public class BranchReportSqlPersistence extends Persistence {
         return params;
     }
 
-    public Integer getVeryPoorActiveBorrowersCount(Short officeId, CustomerLevel customerLevel)
-            throws PersistenceException {
+    public Integer getVeryPoorActiveBorrowersCount(Short officeId, CustomerLevel customerLevel) {
         Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
 
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.LOAN_ACCOUNT);
-        setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        query.setProperties(params);
         return getCountFromQueryResult(runQuery(query));
     }
 
-    public Integer getActiveSaversCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
+    public Integer getActiveSaversCount(Short officeId, CustomerLevel customerLevel) {
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.SAVINGS_ACCOUNT);
         Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
-        setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        query.setProperties(params);
         return getCountFromQueryResult(runQuery(query));
     }
 
-    public Integer getVeryPoorActiveSaversCount(Short officeId, CustomerLevel customerLevel)
-            throws PersistenceException {
+    public Integer getVeryPoorActiveSaversCount(Short officeId, CustomerLevel customerLevel) {
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.SAVINGS_ACCOUNT);
         Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
-        setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+        query.setProperties(params);
         return getCountFromQueryResult(runQuery(query));
     }
 

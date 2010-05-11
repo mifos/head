@@ -22,12 +22,12 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -37,16 +37,16 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.business.RepaymentRuleEntity;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.servicefacade.TestSaveCollectionSheetUtils;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -88,7 +88,6 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         holidays = new HolidayPersistence().getUnAppliedHolidays();
         Assert.assertEquals(0, holidays.size());
         TestObjectFactory.cleanUp(center);
-        TestObjectFactory.deleteHoliday(holidayEntity);
         applyHolidayChangesHelper = null;
         holidayEntity = null;
 
@@ -112,38 +111,24 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     }
 
     public void testExecuteAgainstAppliedHolidays() throws Exception {
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-        holidayEntity.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
-        // Disable date Validation because startDate is less than today
-        holidayEntity.setValidationEnabled(false);
-
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", new Date(), null, RepaymentRuleTypes.fromInt(1));
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
         // //////Meat&Potato//////////
         applyHolidayChangesHelper.execute(System.currentTimeMillis());
-        StaticHibernateUtil.closeSession();
         // ////////////////
     }
 
     public void testExecuteAgainst_Un_AppliedHolidays() throws Exception {
-
-        HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short) 1);
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-        // Disable date Validation because startDate is less than today
-        holidayEntity.setValidationEnabled(false);
-
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", new Date(), null, RepaymentRuleTypes.fromInt(1));
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
         // //////Meat&Potato//////////
         applyHolidayChangesHelper.execute(System.currentTimeMillis());
-        StaticHibernateUtil.closeSession();
         // ////////////////
     }
 
@@ -161,19 +146,13 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         StaticHibernateUtil.startTransaction();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         Assert.assertEquals(10, center.getCustomerAccount().getAccountActionDates().size());
-        long fromDateMillis = new DateMidnight().getMillis();
         final Date holidayStartDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
                 .withDayOfMonth(8).toDate();
-        final HolidayPK holidayPK = new HolidayPK((short) 1, holidayStartDate);
-        final RepaymentRuleEntity entity = new HolidayPersistence()
-                .getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
-        holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
-        // Disable date Validation because startDate is less than today
-        holidayEntity.setValidationEnabled(false);
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holidayStartDate, null, RepaymentRuleTypes.NEXT_WORKING_DAY);
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
         Set<AccountActionDateEntity> accountActionDates = center.getCustomerAccount().getAccountActionDates();
         Assert.assertEquals("Customer schedule unadjusted", LocalDate.fromDateFields(holidayStartDate), LocalDate
                 .fromDateFields(accountActionDates.toArray(new AccountActionDateEntity[] {})[1].getActionDate()));
@@ -192,24 +171,19 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     }
 
     public void testThatAllTypesofSchedulesAreUpdatedGivenALengthyHoliday() throws Exception {
-
         // create center hierarchy with loan and savings and customer accounts.
         final Date today = dateTimeService.getCurrentJavaDateTime();
         createCenterHierarchy(today);
-
         // Creating Holiday
         final LocalDate holidayFromDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
                 .withDayOfMonth(9).toLocalDate();
         final LocalDate holidayThruDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
                 .withDayOfMonth(28).toLocalDate();
-        final HolidayPK holidayPK = new HolidayPK((short) 1, DateUtils.getDateFromLocalDate(holidayFromDate));
-        final RepaymentRuleEntity entity = new HolidayPersistence()
-                .getRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY.getValue());
-        holidayEntity = new HolidayBO(holidayPK, DateUtils.getDateFromLocalDate(holidayThruDate), "Brand New Holiday",
-                entity);
-        holidayEntity.save();
-        StaticHibernateUtil.commitTransaction();
-
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", DateUtils.getDateFromLocalDate(holidayFromDate), DateUtils.getDateFromLocalDate(holidayThruDate), RepaymentRuleTypes.NEXT_WORKING_DAY);
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
         // Generate expected results
         final LocalDate adjustedLocalDate = new DateTime().withYear(2010).withMonthOfYear(DateTimeConstants.MARCH)
                 .withDayOfMonth(29).toLocalDate();
