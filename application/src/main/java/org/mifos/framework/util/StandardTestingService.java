@@ -150,6 +150,7 @@ public class StandardTestingService implements TestingService {
         hibernateToMifos.put("hibernate.cache.provider_class", testMode + ".database.hibernate.cache.provider_class");
         hibernateToMifos.put("hibernate.cache.use_query_cache", testMode + ".database.hibernate.cache.use_query_cache");
         hibernateToMifos.put("hibernate.cache.use_second_level_cache", testMode + ".database.hibernate.cache.use_second_level_cache");
+        hibernateToMifos.put("hibernate.connection.provider_class", testMode + ".database.hibernate.connection.provider_class");
         hibernateToMifos.put("hibernate.connection.isolation", testMode + ".database.hibernate.connection.isolation");
         hibernateToMifos.put("hibernate.connection.release_mode", testMode + ".database.hibernate.connection.release_mode");
         hibernateToMifos.put("hibernate.c3p0.acquire_increment", testMode
