@@ -66,11 +66,11 @@ public class SpringUtil {
         // required config file. exception thrown if not found.
         configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
-        if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
-            logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS + " for custom bean configuration");
-            configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
+        if (null != ClasspathResource.findResource(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN)) {
+            logger.info("using " + FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN + " for custom bean configuration");
+            configFiles.add(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
         } else {
-            logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS + " not found in application classpath. Ignoring.");
+            logger.debug(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN + " not found in application classpath. Ignoring.");
         }
 
         return configFiles.toArray(new String[] {});

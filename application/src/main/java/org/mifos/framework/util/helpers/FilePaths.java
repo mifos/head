@@ -67,7 +67,7 @@ public interface FilePaths {
      * bean definitions in {@link #SPRING_CONFIG_CORE}. This is a relative path,
      * meant to be resolved by something that walks the classpath.
      */
-    public static final String SPRING_CONFIG_CUSTOM_BEANS = "mifosBeanConfig.custom.xml";
+    public static final String FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN = "mifosBeanConfig.custom.xml";
     /**
      * Default chart of accounts. Will be bundled inside WAR.
      */

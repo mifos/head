@@ -20,6 +20,7 @@
 
 package org.mifos;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class MifosSpringContextListener extends ContextLoaderListener {
             configLocations.add(config);
         }
 
-        if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
-            // FIXME: is this broken? Shouldn't this be CHART_OF_ACCOUNTS_DEFAULT ??
-            configLocations.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
+        URI financialActionMappingsCustomisation = ClasspathResource.findResource(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
+        if (financialActionMappingsCustomisation != null) {
+            configLocations.add(financialActionMappingsCustomisation.toASCIIString());
         }
 
         applicationContext.setConfigLocations(configLocations.toArray(new String[configLocations.size()]));
