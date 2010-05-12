@@ -111,17 +111,21 @@ public class CustomerAccountBO extends AccountBO {
             MeetingBO customerMeeting, List<Days> workingDays, List<Holiday> thisYearsAndNextYearsHolidays) {
 
         try {
-            ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-            DateTime meetingStartDate = new DateTime(customerMeeting.getMeetingStartDate());
+            if (customerMeeting != null) {
+                ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+                DateTime meetingStartDate = new DateTime(customerMeeting.getMeetingStartDate());
 
-            List<InstallmentDate> withHolidayInstallmentDates
-                = generateMeetingDatesForNewCustomer(meetingScheduledEvent, meetingStartDate, workingDays,
-                                                     thisYearsAndNextYearsHolidays);
-            List<FeeInstallment> mergedFeeInstallments
-                = FeeInstallment.createMergedFeeInstallments(meetingScheduledEvent, accountFees,
-                                                             numberOfMeetingDatesToGenerateOnCreation);
+                List<InstallmentDate> withHolidayInstallmentDates = generateMeetingDatesForNewCustomer(
+                        meetingScheduledEvent, meetingStartDate, workingDays, thisYearsAndNextYearsHolidays);
 
-            return assembleCustomerAccountBO(customer, accountFees, withHolidayInstallmentDates, mergedFeeInstallments);
+                List<FeeInstallment> mergedFeeInstallments = FeeInstallment.createMergedFeeInstallments(
+                        meetingScheduledEvent, accountFees, numberOfMeetingDatesToGenerateOnCreation);
+
+                return assembleCustomerAccountBO(customer, accountFees, withHolidayInstallmentDates,
+                        mergedFeeInstallments);
+            }
+
+            return new CustomerAccountBO(customer, accountFees);
         } catch (AccountException e) {
             throw new MifosRuntimeException(e);
         }

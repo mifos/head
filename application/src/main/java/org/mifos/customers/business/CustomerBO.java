@@ -872,6 +872,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return CustomerLevel.getLevel(getCustomerLevel().getId());
     }
 
+    protected void validateMeetingEntity(final CustomerMeetingEntity meeting) throws CustomerException {
+        if (meeting == null) {
+            throw new CustomerException(CustomerConstants.INVALID_MEETING);
+        }
+        validateMeeting(meeting.getMeeting());
+    }
+
     protected void validateMeeting(final MeetingBO meeting) throws CustomerException {
         if (meeting == null) {
             throw new CustomerException(CustomerConstants.INVALID_MEETING);
