@@ -261,17 +261,15 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    private HolidayBO createOneDayHoliday(final Date holidayDate, RepaymentRuleTypes repaymentRule) throws PersistenceException, ApplicationException {
+    private HolidayBO createOneDayHoliday(final Date holidayDate, RepaymentRuleTypes repaymentRule)
+            throws PersistenceException, ApplicationException {
         // next working day repayment rule
-        /*
-        RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRule.getValue());
-        HolidayBO holiday = new HolidayBO(new HolidayPK((short) 1, holidayDate), holidayDate, "a holiday", entity);
-        holiday.setValidationEnabled(false);
-        holiday.save();
-        StaticHibernateUtil.commitTransaction();
+        HolidayDetails holidayDetails = new HolidayDetails("a holiday", holidayDate, holidayDate, repaymentRule);
+        HolidayBO holiday = new HolidayBO(holidayDetails);
+        // Hard coded value for head office id is 1
+        Short officeId = (short) 1;
+        new OfficePersistence().addHoliday(officeId, holiday);
         return holiday;
-        */
-        return null;
     }
 
     private void createHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
@@ -746,7 +744,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void XtestApplyPeriodicFeeWithMoratorium() throws Exception {
+    public void testApplyPeriodicFeeWithMoratorium() throws Exception {
         DateTime startDate = date(2008,5,23); //Friday
         new DateTimeService().setCurrentDateTime(startDate);
 
@@ -830,7 +828,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             // make sure that we don't leave any persistent changes that could
             // affect subsequent tests
-            new DateTimeService().resetToCurrentSystemDateTime();
+           new DateTimeService().resetToCurrentSystemDateTime();
            deleteHoliday(holiday);
         }
     }
