@@ -806,23 +806,18 @@ public class CustomerServiceImpl implements CustomerService {
             CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
-//        if (newStatus.isClientActive()) {
-            // FIXME - #000023 - keithw - verify business validaton when updating clients
-            // this.officeDao.validateBranchIsActiveWithNoActivePersonnel(client.getOffice().getOfficeId(),
-            // userContext);
-//        }
 
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
             StaticHibernateUtil.startTransaction();
 
-            changeStatus(client, newStatus.getValue());
-
             setInitialObjectForAuditLogging(client);
             client.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
 
             client.updateCustomerStatus(newStatus);
+            changeStatus(client, oldStatus, newStatus);
+
             if (customerStatusFlagEntity != null) {
                 client.addCustomerFlag(customerStatusFlagEntity);
             }
@@ -867,8 +862,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void changeStatus(CustomerBO customer, Short newStatusId) throws CustomerException {
-        Short oldStatusId = customer.getCustomerStatus().getId();
+    private void changeStatus(CustomerBO customer, CustomerStatus oldStatus, CustomerStatus newStatus) throws CustomerException {
+        Short oldStatusId = oldStatus.getValue();
+        Short newStatusId = newStatus.getValue();
 
         if (customer.isClient()) {
 

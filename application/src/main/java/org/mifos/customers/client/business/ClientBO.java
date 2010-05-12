@@ -857,7 +857,7 @@ public class ClientBO extends CustomerBO {
         if (isActive()) {
             if (!isClientUnderGroup()) {
                 validateLO(this.getPersonnel());
-                validateMeeting(this.getCustomerMeetingValue());
+                validateMeetingEntity(this.getCustomerMeeting());
             }
         }
     }
