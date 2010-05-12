@@ -22,20 +22,21 @@
 #
 
 # The project as known to CIA
-project="foo"
+project="mifos"
 
 # Set to true if you want the full log to be sent
-noisy=false
+noisy=true
 
 # Addresses for the e-mail
-from="you@yourthing.com"
+from="mifostech@grameenfoundation.org"
 to="cia@cia.vc"
 
 # SMTP client to use
-sendmail="/usr/bin/nbsmtp -f ${from}"
+sendmail="/usr/sbin/sendmail -f ${from} ${to}"
 
 # Changeset URL
-url="http://www.example.com/gitweb/?p=${project}.git;a=commit;h=@@sha1@@"
+repository=`basename $PWD`
+url="http://mifos.git.sourceforge.net/git/gitweb.cgi?p=${project}/${repository};a=commit;h=@@sha1@@"
 
 # You shouldn't be touching anything else.
 if [[ $# = 0 ]] ; then
@@ -56,6 +57,8 @@ rev=$(git describe ${merged} 2>/dev/null)
 
 rawcommit=$(git cat-file commit ${merged})
 
+authorName=$(sed -n -e '/^author \(.*\)<[^@]*.*$/s--\1-p' \
+	<<< "${rawcommit}")
 author=$(sed -n -e '/^author .*<\([^@]*\).*$/s--\1-p' \
 	<<< "${rawcommit}")
 
@@ -82,7 +85,7 @@ out="
   <timestamp>${ts}</timestamp>
   <body>
     <commit>
-      <author>${author}</author>
+      <author>${authorName}</author>
       <revision>${rev}</revision>
       <files>
         $(git diff-tree -r --name-only ${merged} |
