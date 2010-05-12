@@ -24,9 +24,12 @@ import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -44,6 +47,7 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -58,6 +62,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -73,6 +78,17 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
     private AccountPersistence accountPersistence = new AccountPersistence();
+    private DateTimeService dateTimeService = new DateTimeService();
+
+
+    /*
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        dateTimeService.resetToCurrentSystemDateTime();
+    }
+    */
+
 
     public void testAddDuplicateGlAccounts() {
         String name = "New Account Name";
@@ -354,6 +370,57 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         // should pick up group savings account
         Assert.assertEquals(1, accountIds.size());
     }
+
+    public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnNothing() throws Exception {
+        // Superclass creates a center, a group, and a client that start meeting today
+        // They should have 10 current or future meeting dates. Savings account should also have 10 deposit installments
+        // so should not be retrieved.
+
+        savingsBO = new SavingsTestHelper().createSavingsAccount(createSavingsOffering("qqqqq"), group,
+                AccountState.SAVINGS_ACTIVE, TestUtils.makeUser());
+        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        assertThat(accountIds.size(), is(0));
+
+    }
+
+
+    public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccounts()
+                    throws Exception {
+
+        // Superclass creates a center, a group, and a client that start meeting today
+        // They should have 10 current or future meeting dates
+        // Set time ahead 7 weeks to force regenerating customer schedules.
+
+        new DateTimeService().setCurrentDateTime(new DateTime().plusWeeks(7));
+        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        assertThat(accountIds.size(), is(3));
+        assertThat(accountIds.contains(center.getCustomerAccount().getAccountId()), is(true));
+        assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
+        assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
+    }
+
+    public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccountsAndOneSavingsAccount()
+                    throws Exception {
+
+        // Superclass creates a center, a group, and a client that start meeting today
+        // They should have 10 current or future meeting dates
+        // Set time ahead 7 weeks to force regenerating customer schedules.
+
+        savingsBO = new SavingsTestHelper().createSavingsAccount(createSavingsOffering("qqqqq"), group,
+                AccountState.SAVINGS_ACTIVE, TestUtils.makeUser());
+
+        new DateTimeService().setCurrentDateTime(new DateTime().plusWeeks(7));
+        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        assertThat(accountIds.size(), is(4));
+        assertThat(accountIds.contains(center.getCustomerAccount().getAccountId()), is(true));
+        assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
+        assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
+        assertThat(accountIds.contains(savingsBO.getAccountId()), is(true));
+    }
+
+    /*********************
+     * Helper methods
+     ********************/
 
     private SavingsBO createSavingsAccount() throws Exception {
         return TestObjectFactory.createSavingsAccount("12345678910", group, AccountState.SAVINGS_ACTIVE, new Date(),

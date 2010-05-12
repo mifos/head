@@ -152,6 +152,7 @@ public class CustomerAccountBO extends AccountBO {
 
             customerAccount.addAccountActionDate(customerScheduleEntity);
 
+            // TODO KRP set last applied date for each account fee, to the latest date that a fee installment is added
             for (FeeInstallment feeInstallment : mergedFeeInstallments) {
                 if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())) {
                     CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(

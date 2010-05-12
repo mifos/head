@@ -46,6 +46,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
@@ -85,6 +86,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         } finally {
+            new DateTimeService().resetToCurrentSystemDateTime();
             StaticHibernateUtil.closeSession();
         }
         super.tearDown();
