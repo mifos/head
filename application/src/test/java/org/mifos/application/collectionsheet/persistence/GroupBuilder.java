@@ -57,6 +57,7 @@ public class GroupBuilder {
     private PersonnelBO formedBy;
     private int numberOfChildrenUnderBranch = 0;
     private UserContext userContext = TestUtils.makeUser();
+    private Integer versionNumber;
 
     public GroupBO build() {
 
@@ -66,6 +67,10 @@ public class GroupBuilder {
 
         group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
                 customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
+
+        if (this.versionNumber != null) {
+            group.setVersionNo(versionNumber);
+        }
 
         return group;
     }
@@ -160,6 +165,14 @@ public class GroupBuilder {
 
     public GroupBuilder active() {
         this.customerStatus = CustomerStatus.GROUP_ACTIVE;
+        return this;
+    }
+
+    /**
+     * do not update this when building centers for integration tests
+     */
+    public GroupBuilder withVersion(int withVersionNumber) {
+        this.versionNumber = withVersionNumber;
         return this;
     }
 }

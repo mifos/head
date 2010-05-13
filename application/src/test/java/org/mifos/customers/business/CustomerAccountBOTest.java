@@ -21,6 +21,7 @@
 package org.mifos.customers.business;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyShort;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -281,6 +283,7 @@ public class CustomerAccountBOTest {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
             assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
             assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            // When the schedule is first created, periodic fees are applied to each meeting date.
             assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(1));
             assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(), is(weeklyFeeName));
             assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(), is(10.0));
@@ -289,8 +292,7 @@ public class CustomerAccountBOTest {
         }
         assertThat(customerAccount.getAccountFees().size(), is(1));
         AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
-        // Last applied date for the fee is the date of the last meeting date, which is the last date that
-        // the fee was applied
+        // The last date that the fee was applied is the 10th meeting date
         assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
                 is (new LocalDate(actionDates.get(9).getActionDate())));
     }
@@ -309,6 +311,7 @@ public class CustomerAccountBOTest {
 
         // Advance time to the day after the 10th installment
         dateTimeService.setCurrentDateTime(startingMeetingDate.plusWeeks(9).plusDays(1));
+        // Should apply the fee to the next upcoming installment, the 11th
         customerAccount.applyPeriodicFees(workingDays, holidays);
 
         //verification
@@ -467,7 +470,6 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Ignore
     @Test
     public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeScheduleAndSetsFeeLastAppliedDateToLastMeetingDate() {
 
@@ -497,25 +499,29 @@ public class CustomerAccountBOTest {
         AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
         // Last applied date for the fee is the date of the last meeting date
         assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
-                is (new LocalDate(actionDates.get(actionDates.size()-1).getActionDate())));
+                is (new LocalDate(actionDates.get(9).getActionDate())));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
         accountFees.add(createAccountFeesEntity(biWeeklyFee, 13.0));
+        DateTime startingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
 
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
-        Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
-        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
+        Short installmentId = Short.valueOf("1");
+        DateTime installmentDate = startingDate;
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
+
+        for (AccountActionDateEntity accountActionDate : actionDates) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
             assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
             assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
@@ -533,8 +539,30 @@ public class CustomerAccountBOTest {
             installmentId++;
             installmentDate = installmentDate.plusWeeks(1);
         }
+
+        // Verify that account fees are stored as expected
+        Set<AccountFeesEntity> accountFeeEntities = customerAccount.getAccountFees();
+        assertThat(accountFeeEntities.size(), is(2));
+        for (AccountFeesEntity feeEntity : accountFeeEntities) {
+            assertThat(feeEntity.getFees().getFeeName(), anyOf(is(weeklyFeeName), is(biWeeklyFeeName)));
+        }
+
+        // Verify each fee's last applied date
+        for (AccountFeesEntity feeEntity : customerAccount.getAccountFees()) {
+            // Weekly fee is applied to all 10 meeting events
+            if (feeEntity.getFees().getFeeName().equals(weeklyFeeName)) {
+                assertThat(new LocalDate(feeEntity.getLastAppliedDate()),
+                        is (new LocalDate(actionDates.get(9).getActionDate())));
+            }
+            // Biweekly fee is applied to meetings 1, 3, 5, 7, 9
+            else if (feeEntity.getFees().getFeeName().equals(biWeeklyFeeName)) {
+                assertThat(new LocalDate(feeEntity.getLastAppliedDate()),
+                        is (new LocalDate(actionDates.get(8).getActionDate())));
+            }
+        }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesWithMoratoriumGeneratesCorrectFeeSchedule() {
 
@@ -542,6 +570,7 @@ public class CustomerAccountBOTest {
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
         accountFees.add(createAccountFeesEntity(biWeeklyFee, 13.0));
         holidays.add(moratorium);
+        DateTime startingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
@@ -549,9 +578,10 @@ public class CustomerAccountBOTest {
         //verification
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
-        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
+        DateTime installmentDate = startingDate;
 
-        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
+        for (AccountActionDateEntity accountActionDate : actionDates) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
             assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
             // Third and subsequent installments are pushed out one week
@@ -573,6 +603,27 @@ public class CustomerAccountBOTest {
             }
             installmentId++;
             installmentDate = installmentDate.plusWeeks(1);
+        }
+
+        // Verify that account fees are stored as expected
+        Set<AccountFeesEntity> accountFeeEntities = customerAccount.getAccountFees();
+        assertThat(accountFeeEntities.size(), is(2));
+        for (AccountFeesEntity feeEntity : accountFeeEntities) {
+            assertThat(feeEntity.getFees().getFeeName(), anyOf(is(weeklyFeeName), is(biWeeklyFeeName)));
+        }
+
+        // Verify each fee's last applied date
+        for (AccountFeesEntity feeEntity : customerAccount.getAccountFees()) {
+            // Weekly fee is applied to all 10 meeting events
+            if (feeEntity.getFees().getFeeName().equals(weeklyFeeName)) {
+                assertThat(new LocalDate(feeEntity.getLastAppliedDate()),
+                        is (new LocalDate(actionDates.get(9).getActionDate())));
+            }
+            // Biweekly fee is applied to meetings 1, 3, 5, 7, 9
+            else if (feeEntity.getFees().getFeeName().equals(biWeeklyFeeName)) {
+                assertThat(new LocalDate(feeEntity.getLastAppliedDate()),
+                        is (new LocalDate(actionDates.get(8).getActionDate())));
+            }
         }
     }
 

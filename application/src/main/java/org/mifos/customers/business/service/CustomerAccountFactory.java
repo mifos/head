@@ -17,30 +17,22 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.savings.persistence;
+
+package org.mifos.customers.business.service;
 
 import java.util.List;
-import java.util.Map;
 
-import org.hibernate.Query;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.calendar.CalendarEvent;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
 
 /**
  *
  */
-public interface GenericDao {
+public interface CustomerAccountFactory {
 
-    Object executeUniqueResultNamedQueryWithResultTransformer(String namedQuery, Map<String, ?> nameQueryParameters,
-            Class<?> className);
-
-    List<? extends Object> executeNamedQueryWithResultTransformer(String namedQuery,
-            Map<String, ?> nameQueryParameters, Class<?> className);
-
-    List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-
-    Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-
-    void createOrUpdate(Object entity);
-
-    Query createQueryForUpdate(String hql);
-
+    CustomerAccountBO create(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO meeting,
+            CalendarEvent upcomingCalendarEvents);
 }

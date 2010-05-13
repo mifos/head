@@ -17,30 +17,30 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.savings.persistence;
 
+package org.mifos.domain.builders;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.hibernate.Query;
+import org.joda.time.Days;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.calendar.CalendarEvent;
+import org.mifos.config.FiscalCalendarRules;
 
 /**
  *
  */
-public interface GenericDao {
+public class CalendarEventBuilder {
 
-    Object executeUniqueResultNamedQueryWithResultTransformer(String namedQuery, Map<String, ?> nameQueryParameters,
-            Class<?> className);
+    public CalendarEvent build() {
 
-    List<? extends Object> executeNamedQueryWithResultTransformer(String namedQuery,
-            Map<String, ?> nameQueryParameters, Class<?> className);
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> holidays = new ArrayList<Holiday>();
+        // FIXME - i believe moratoria should be split out from holiday in data sense
+        // List<Holiday> moratoria = new ArrayList<Holiday>();
 
-    List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-
-    Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-
-    void createOrUpdate(Object entity);
-
-    Query createQueryForUpdate(String hql);
+        return new CalendarEvent(workingDays, holidays);
+    }
 
 }

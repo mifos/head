@@ -168,6 +168,8 @@ public interface CustomerDao {
 
     List<FieldConfigurationEntity> findMandatoryConfigurableFieldsApplicableToCenter();
 
+    void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);
+
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 

@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -149,5 +151,37 @@ public class CenterBO extends CustomerBO {
     @Override
     public void validate() throws CustomerException {
         super.validate();
+
+        if (this.getMfiJoiningDate() == null) {
+            throw new CustomerException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
+        }
+    }
+
+    public void validateMeetingAndFees(List<AccountFeesEntity> accountFees) throws CustomerException {
+
+        if (this.getCustomerMeeting() == null || this.getCustomerMeetingValue() == null) {
+
+            if (accountFees.size() > 0) {
+                throw new CustomerException(CustomerConstants.MEETING_REQUIRED_EXCEPTION);
+            }
+
+            throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_MEETING);
+        }
+
+        for (AccountFeesEntity accountFee : accountFees) {
+
+            if (accountFee.getFees().isPeriodic()) {
+                MeetingBO feeMeeting = accountFee.getFees().getFeeFrequency().getFeeMeetingFrequency();
+                if (!feeMeeting.hasSameRecurrenceAs(this.getCustomerMeetingValue())) {
+                    throw new CustomerException(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH);
+                }
+
+                FeeBO fee = accountFee.getFees();
+
+                if (AccountFeesEntity.isPeriodicFeeDuplicated(accountFees, fee)) {
+                    throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_PERIODIC_FEE);
+                }
+            }
+        }
     }
 }

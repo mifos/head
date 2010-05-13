@@ -21,7 +21,6 @@ package org.mifos.accounts.savings.persistence;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -38,7 +37,7 @@ public class GenericDaoHibernate implements GenericDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<? extends Object> executeNamedQueryWithResultTransformer(final String queryName,
+    public final List<? extends Object> executeNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
@@ -52,7 +51,7 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
-    public Object executeUniqueResultNamedQueryWithResultTransformer(final String queryName,
+    public final Object executeUniqueResultNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
@@ -67,7 +66,7 @@ public class GenericDaoHibernate implements GenericDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
+    public final List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
 
         try {
             Session session = getHibernateUtil().getSessionTL();
@@ -80,7 +79,7 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
-    public Object executeUniqueResultNamedQuery(final String queryName,
+    public final Object executeUniqueResultNamedQuery(final String queryName,
             final Map<String, ?> queryParameters) {
 
         try {
@@ -94,7 +93,7 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
-    public void createOrUpdate(final Object entity) {
+    public final void createOrUpdate(final Object entity) {
         try {
             Session session = getHibernateUtil().getSessionTL();
             session.saveOrUpdate(entity);
@@ -106,10 +105,16 @@ public class GenericDaoHibernate implements GenericDao {
         }
     }
 
-    private HibernateUtil getHibernateUtil() {
+    public final HibernateUtil getHibernateUtil() {
         if (null == hibernateUtil) {
             hibernateUtil = new HibernateUtil();
         }
         return hibernateUtil;
+    }
+
+    @Override
+    public final Query createQueryForUpdate(String hql) {
+        Session session = getHibernateUtil().getSessionTL();
+        return session.createQuery(hql);
     }
 }
