@@ -111,27 +111,42 @@ public class CustomerAccountBO extends AccountBO {
             MeetingBO customerMeeting, List<Days> workingDays, List<Holiday> thisYearsAndNextYearsHolidays) {
 
         try {
+            CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customerMeeting != null) {
-                ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-                DateTime meetingStartDate = new DateTime(customerMeeting.getMeetingStartDate());
-
-                List<InstallmentDate> withHolidayInstallmentDates = generateMeetingDatesForNewCustomer(
-                        meetingScheduledEvent, meetingStartDate, workingDays, thisYearsAndNextYearsHolidays);
-
-                List<FeeInstallment> mergedFeeInstallments = FeeInstallment.createMergedFeeInstallments(
-                        meetingScheduledEvent, accountFees, numberOfMeetingDatesToGenerateOnCreation);
-
-                return assembleCustomerAccountBO(customer, accountFees, withHolidayInstallmentDates,
-                        mergedFeeInstallments);
+                customerAccount.createFirstSetOfScheduledEvents(customer,
+                        accountFees, customerMeeting, workingDays, thisYearsAndNextYearsHolidays);
             }
-
-            return new CustomerAccountBO(customer, accountFees);
+            return customerAccount;
         } catch (AccountException e) {
             throw new MifosRuntimeException(e);
         }
     }
 
-    public static List<InstallmentDate> generateMeetingDatesForNewCustomer(ScheduledEvent meetingEvent, DateTime meetingStartDate,
+    public void createFirstSetOfScheduledEvents(CustomerBO customer,
+            List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, List<Days> workingDays,
+            List<Holiday> thisYearsAndNextYearsHolidays) {
+
+        ScheduledEvent meetingScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+        DateTime meetingStartDate = new DateTime(customerMeeting.getMeetingStartDate());
+
+        List<InstallmentDate> withHolidayInstallmentDates = this.generateInitialInstallmentDates(
+                meetingScheduledEvent, meetingStartDate, workingDays, thisYearsAndNextYearsHolidays);
+
+        for (InstallmentDate installmentDate : withHolidayInstallmentDates) {
+
+            CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(this, customer,
+                    installmentDate.getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate()
+                            .getTime()), PaymentStatus.UNPAID);
+            this.addAccountActionDate(customerScheduleEntity);
+
+            List<FeeInstallment> mergedFeeInstallments = FeeInstallment.createMergedFeeInstallments(
+                    meetingScheduledEvent, accountFees, numberOfMeetingDatesToGenerateOnCreation);
+            this.applyFeesToScheduledEvent(customerScheduleEntity, mergedFeeInstallments);
+        }
+        this.setLastAppliedDatesForFees(accountFees);
+    }
+
+    public List<InstallmentDate> generateInitialInstallmentDates(ScheduledEvent meetingEvent, DateTime meetingStartDate,
             List<Days> workingDays, List<Holiday> thisAndNextYearsHolidays) {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
@@ -142,32 +157,48 @@ public class CustomerAccountBO extends AccountBO {
         return InstallmentDate.createInstallmentDates(meetingDates);
     }
 
-    public static CustomerAccountBO assembleCustomerAccountBO(CustomerBO customer, List<AccountFeesEntity> accountFees,
-            List<InstallmentDate> withHolidayInstallmentDates, List<FeeInstallment> mergedFeeInstallments)
-                    throws AccountException {
+    private void applyFeesToScheduledEvent(CustomerScheduleEntity customerScheduleEntity,
+            List<FeeInstallment> mergedFeeInstallments) {
 
-        CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
+        for (FeeInstallment feeInstallment : mergedFeeInstallments) {
+            if (feeInstallment.getInstallmentId().equals(customerScheduleEntity.getInstallmentId())) {
+                CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(
+                        customerScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(), feeInstallment
+                                .getAccountFeesEntity(), feeInstallment.getAccountFee());
+                customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
+            }
+        }
+    }
 
-        for (InstallmentDate installmentDate : withHolidayInstallmentDates) {
+    private void setLastAppliedDatesForFees(List<AccountFeesEntity> accountFees) {
+        for (AccountFeesEntity accountFeeEntity : accountFees) {
+            accountFeeEntity.setLastAppliedDate(this.getLatestAppliedDateForFee (accountFeeEntity));
+        }
+    }
 
-            CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(customerAccount, customer,
-                    installmentDate.getInstallmentId(), new java.sql.Date(installmentDate.getInstallmentDueDate()
-                            .getTime()), PaymentStatus.UNPAID);
-
-            customerAccount.addAccountActionDate(customerScheduleEntity);
-
-            // TODO KRP set last applied date for each account fee, to the latest date that a fee installment is added
-            for (FeeInstallment feeInstallment : mergedFeeInstallments) {
-                if (feeInstallment.getInstallmentId().equals(installmentDate.getInstallmentId())) {
-                    CustomerFeeScheduleEntity customerFeeScheduleEntity = new CustomerFeeScheduleEntity(
-                            customerScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(), feeInstallment
-                                    .getAccountFeesEntity(), feeInstallment.getAccountFee());
-                    customerScheduleEntity.addAccountFeesAction(customerFeeScheduleEntity);
+    /**
+     * Return the latest action date for which
+     * the given fee was applied, if any, otherwise return null.
+     *
+     * @param accountFeeEntity the given fee we're searching for among all action dates
+     * @return null if the fee has not been applied, otherwise the latest date to which the fee installment was applied.
+     */
+    private Date getLatestAppliedDateForFee (AccountFeesEntity accountFeeEntity) {
+        Date latestAppliedDate = null;
+        for (AccountActionDateEntity event : this.getAccountActionDates()) {
+            CustomerScheduleEntity customerEvent = (CustomerScheduleEntity) event;
+            for (AccountFeesActionDetailEntity feeActionDetail : customerEvent.getAccountFeesActionDetails()) {
+                if (feeActionDetail.getAccountFee().equals(accountFeeEntity)) {
+                    Date actionDate = customerEvent.getActionDate();
+                    if ((latestAppliedDate == null) || (actionDate.compareTo(latestAppliedDate) > 0)) {
+                        latestAppliedDate = actionDate;
+                    }
                 }
             }
         }
-        return customerAccount;
+        return latestAppliedDate;
     }
+
     /**
      * default constructor for hibernate usage
      */
