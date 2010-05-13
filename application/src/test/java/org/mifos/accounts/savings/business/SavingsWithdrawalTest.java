@@ -49,8 +49,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * I test {@link SavingsBO}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SavingsWithdrawalIntegrationTest extends MifosIntegrationTestCase{
-
+public class SavingsWithdrawalTest {
 
     private static MifosCurrency defaultCurrency;
 
@@ -84,10 +83,6 @@ public class SavingsWithdrawalIntegrationTest extends MifosIntegrationTestCase{
 
     @Mock
     private SavingsActivityEntity savingsActivityDetail;
-
-    public SavingsWithdrawalIntegrationTest() throws Exception {
-        super();
-    }
 
     @BeforeClass
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {

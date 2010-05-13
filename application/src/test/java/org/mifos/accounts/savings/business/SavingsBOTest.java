@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.mifos.customers.util.helpers.CustomerLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,14 +50,12 @@ import org.mifos.application.collectionsheet.persistence.SavingsScheduleBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
@@ -68,7 +67,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * I test {@link SavingsBO}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SavingsBOMockIntegrationTest {
+public class SavingsBOTest {
 
     private static MifosCurrency defaultCurrency;
 
@@ -78,7 +77,6 @@ public class SavingsBOMockIntegrationTest {
     private DateTimeService dateTimeService = new DateTimeService();
     private List<Days> allWorkingDays;
     private List<Holiday> emptyListOfHolidays;
-
 
     // collaborators
     @Mock private SavingsPaymentStrategy paymentStrategy;
