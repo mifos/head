@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -42,7 +41,6 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterUpdate;
@@ -59,7 +57,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -93,7 +90,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -153,48 +149,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
-        validateMandatoryCustomFields(customer.getCustomFields(), allCustomFieldsForCenter);
+        customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
 
         // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
 //        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         createCustomer(customer, meeting, accountFees);
-    }
-
-    private void validateMandatoryCustomFields(Set<CustomerCustomFieldEntity> customFields,
-            List<CustomFieldDefinitionEntity> allCustomFieldsApplicable) throws ApplicationException {
-
-        for (CustomFieldDefinitionEntity customFieldDefinition : allCustomFieldsApplicable) {
-
-            if (customFieldDefinition.isMandatory()) {
-
-                CustomerCustomFieldEntity centerCustomField = findMandatoryCustomFieldOrFail(customFields, customFieldDefinition);
-
-                if (StringUtils.isBlank(centerCustomField.getFieldValue())) {
-                    throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
-                }
-
-                if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
-                    try {
-                        DateUtils.getDate(centerCustomField.getFieldValue());
-                    } catch (Exception e) {
-                        throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
-                    }
-                }
-            }
-        }
-    }
-
-    private CustomerCustomFieldEntity findMandatoryCustomFieldOrFail(Set<CustomerCustomFieldEntity> customFields, CustomFieldDefinitionEntity customFieldDefinition) throws ApplicationException {
-
-        for (CustomerCustomFieldEntity centerCustomField : customFields) {
-
-            if (customFieldDefinition.getFieldId().equals(centerCustomField.getFieldId())) {
-                return centerCustomField;
-            }
-        }
-
-        throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
     }
 
     @Override
@@ -347,14 +307,9 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
 
-        try {
-            center.updateCustomFields(centerUpdate.getCustomFields());
-            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao
-                    .retrieveCustomFieldEntitiesForCenter();
-            validateMandatoryCustomFields(center.getCustomFields(), allCustomFieldsForCenter);
-        } catch (InvalidDateException e1) {
-            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e1);
-        }
+        List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
+        center.updateCustomFields(centerUpdate.getCustomFields());
+        center.validateMandatoryCustomFields(allCustomFieldsForCenter);
 
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
 
@@ -400,27 +355,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void assembleCustomerPostionsFromDto(List<CustomerPositionDto> customerPositions, CustomerBO center) {
+    private void assembleCustomerPostionsFromDto(List<CustomerPositionDto> customerPositions, CustomerBO customer) {
 
         for (CustomerPositionDto positionView : customerPositions) {
             boolean isPositionFound = false;
 
-            for (CustomerPositionEntity positionEntity : center.getCustomerPositions()) {
+            for (CustomerPositionEntity positionEntity : customer.getCustomerPositions()) {
 
                 if (positionView.getPositionId().equals(positionEntity.getPosition().getId())) {
 
-                    CustomerBO customer = customerDao.findCustomerById(positionView.getCustomerId());
-                    positionEntity.setCustomer(customer);
+                    CustomerBO customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
+                    positionEntity.setCustomer(customerInPosition);
                     isPositionFound = true;
                     break;
                 }
             }
             if (!isPositionFound) {
 
-                CustomerBO customer = customerDao.findCustomerById(positionView.getCustomerId());
+                CustomerBO customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
                 CustomerPositionEntity customerPosition = new CustomerPositionEntity(new PositionEntity(positionView
-                        .getPositionId()), customer, center);
-                center.addCustomerPosition(customerPosition);
+                        .getPositionId()), customerInPosition, customer);
+                customer.addCustomerPosition(customerPosition);
             }
         }
     }
@@ -431,66 +386,32 @@ public class CustomerServiceImpl implements CustomerService {
         GroupBO group = customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
         group.validateVersion(groupUpdate.getVersionNo());
         group.setUserContext(userContext);
-
-        try {
-            if (groupUpdate.getTrainedDateAsString() != null && !StringUtils.isBlank(groupUpdate.getTrainedDateAsString())) {
-                DateTime trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
-                        .getPreferredLocale());
-
-                if (trainedDate != null) {
-                    group.setTrainedDate(trainedDate.toDate());
-                }
-            }
-
-            if (groupUpdate.isTrained()) {
-                group.setTrained(groupUpdate.isTrained());
-            } else {
-                group.setTrained(false);
-            }
-        } catch (InvalidDateException e) {
-            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
-        }
-
-        Short loanOfficerId = groupUpdate.getLoanOfficerId();
-        PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
-
-        PersonnelBO oldLoanOfficer = group.getPersonnel();
-        group.setLoanOfficer(loanOfficer);
+        group.updateTrainedDetails(groupUpdate);
         group.setExternalId(groupUpdate.getExternalId());
         group.updateAddress(groupUpdate.getAddress());
-        group.setUpdateDetails();
-
-        group.validate();
-
-        try {
-            group.updateCustomFields(groupUpdate.getCustomFields());
-            List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
-            validateMandatoryCustomFields(group.getCustomFields(), allCustomFieldsForGroup);
-        } catch (InvalidDateException e) {
-            throw new ApplicationException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
-        }
-
-        assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
-
-        try {
-            if (group.isLoanOfficerChanged(oldLoanOfficer)) {
-                // If a new loan officer has been assigned, then propagate this
-                // change to the customer's children and to their associated
-                // accounts.
-                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, group.getSearchId(), group.getOffice()
-                        .getOfficeId());
-
-                new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, group.getSearchId(), group
-                        .getOffice().getOfficeId());
-            }
-        } catch (Exception e) {
-            throw new MifosRuntimeException(e);
-        }
 
         if (group.isNameDifferent(groupUpdate.getDisplayName())) {
             group.setDisplayName(groupUpdate.getDisplayName());
             customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
         }
+
+        Short loanOfficerId = groupUpdate.getLoanOfficerId();
+        PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
+
+        if (group.isLoanOfficerChanged(loanOfficer)) {
+            group.setLoanOfficer(loanOfficer);
+            group.validate();
+
+            customerDao.updateLoanOfficersForAllChildrenAndAccounts(loanOfficerId, group.getSearchId(), group.getOffice().getOfficeId());
+        } else {
+            group.validate();
+        }
+
+        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
+        group.updateCustomFields(groupUpdate.getCustomFields());
+        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
+
+        assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
 
         try {
             hibernateTransactionHelper.startTransaction();

@@ -43,6 +43,7 @@ import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
@@ -78,6 +79,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -940,20 +942,25 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return !isSameBranch(otherOffice);
     }
 
-    public void updateCustomFields(final List<CustomFieldDto> customFields) throws InvalidDateException {
-        if (customFields != null) {
-            for (CustomFieldDto fieldView : customFields) {
-                if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
-                        && StringUtils.isNotBlank(fieldView.getFieldValue())) {
-                    fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
-                }
+    public void updateCustomFields(final List<CustomFieldDto> customFields) throws CustomerException {
 
-                for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
-                    if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
-                        fieldEntity.setFieldValue(fieldView.getFieldValue());
+        try {
+            if (customFields != null) {
+                for (CustomFieldDto fieldView : customFields) {
+                    if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
+                            && StringUtils.isNotBlank(fieldView.getFieldValue())) {
+                        fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                    }
+
+                    for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
+                        if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
+                            fieldEntity.setFieldValue(fieldView.getFieldValue());
+                        }
                     }
                 }
             }
+        } catch (InvalidDateException e) {
+            throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
         }
     }
 
@@ -1423,5 +1430,42 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public boolean isNameDifferent(final String nameToCheck) {
         return !this.displayName.equalsIgnoreCase(nameToCheck);
+    }
+
+    public void validateMandatoryCustomFields(List<CustomFieldDefinitionEntity> allCustomFieldsApplicable) throws CustomerException {
+
+        for (CustomFieldDefinitionEntity customFieldDefinition : allCustomFieldsApplicable) {
+
+            if (customFieldDefinition.isMandatory()) {
+
+                CustomerCustomFieldEntity centerCustomField = findMandatoryCustomFieldOrFail(this.getCustomFields(),
+                        customFieldDefinition);
+
+                if (StringUtils.isBlank(centerCustomField.getFieldValue())) {
+                    throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
+                }
+
+                if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
+                    try {
+                        DateUtils.getDate(centerCustomField.getFieldValue());
+                    } catch (Exception e) {
+                        throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
+                    }
+                }
+            }
+        }
+    }
+
+    private CustomerCustomFieldEntity findMandatoryCustomFieldOrFail(Set<CustomerCustomFieldEntity> customFields,
+            CustomFieldDefinitionEntity customFieldDefinition) throws CustomerException {
+
+        for (CustomerCustomFieldEntity centerCustomField : customFields) {
+
+            if (customFieldDefinition.getFieldId().equals(centerCustomField.getFieldId())) {
+                return centerCustomField;
+            }
+        }
+
+        throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
     }
 }
