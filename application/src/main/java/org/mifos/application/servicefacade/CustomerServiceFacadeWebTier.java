@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -91,7 +90,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;

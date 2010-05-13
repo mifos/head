@@ -24,13 +24,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.GroupUpdate;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -48,7 +53,10 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.springframework.util.Assert;
@@ -495,6 +503,30 @@ public class GroupBO extends CustomerBO {
                 client.setUserContext(getUserContext());
                 ((ClientBO) client).handleGroupTransfer();
             }
+        }
+    }
+
+    public void updateTrainedDetails(GroupUpdate groupUpdate) throws CustomerException {
+
+        try {
+            if (groupUpdate.getTrainedDateAsString() != null && !StringUtils.isBlank(groupUpdate.getTrainedDateAsString())) {
+                DateTime trainedDate = CalendarUtils.getDateFromString(groupUpdate.getTrainedDateAsString(), userContext
+                        .getPreferredLocale());
+
+                if (trainedDate != null) {
+                    this.setTrainedDate(trainedDate.toDate());
+                }
+            }
+
+            if (groupUpdate.isTrained()) {
+                this.setTrained(groupUpdate.isTrained());
+            } else {
+                this.setTrained(false);
+            }
+
+            this.setUpdateDetails();
+        } catch (InvalidDateException e) {
+            throw new CustomerException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
     }
 }

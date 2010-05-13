@@ -22,6 +22,8 @@ package org.mifos.accounts.savings.persistence;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
+
 /**
  *
  */
@@ -38,5 +40,7 @@ public interface GenericDao {
     Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
 
     void createOrUpdate(Object entity);
+
+    Query createQueryForUpdate(String hql);
 
 }
