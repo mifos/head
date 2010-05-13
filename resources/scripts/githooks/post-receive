@@ -165,13 +165,7 @@ generate_email()
 		exit 0
 	fi
 
-	# Email parameters
-	# The email subject will contain the best description of the ref
-	# that we can build from the parameters
-	describe=$(git describe $rev 2>/dev/null)
-	if [ -z "$describe" ]; then
-		describe=$rev
-	fi
+	describe=$rev
 
 	generate_email_header
 
