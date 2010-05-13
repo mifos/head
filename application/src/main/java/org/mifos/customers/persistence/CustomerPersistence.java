@@ -738,6 +738,10 @@ public class CustomerPersistence extends Persistence {
         return (Short) queryResult.get(0);
     }
 
+    /**
+     * @deprecated - use {@link CustomerDao#updateLoanOfficersForAllChildrenAndAccounts(Short, String, Short)}
+     */
+    @Deprecated
     public void updateLOsForAllChildren(final Short parentLO, final String parentSearchId, final Short parentOfficeId) {
         String hql = "update CustomerBO customer " + " set customer.personnel.personnelId = :parentLoanOfficer "
                 + " where customer.searchId like :parentSearchId" + " and customer.office.officeId = :parentOfficeId";
@@ -761,13 +765,15 @@ public class CustomerPersistence extends Persistence {
     }
 
     /**
+     * @deprecated - use {@link CustomerDao#updateLoanOfficersForAllChildrenAndAccounts(Short, String, Short)}
+     *
      * Update loan officer for all children accounts.
      *
      * This method was introduced for when a center is assigned a new loan officer, and this loan officer needs to be
      * re-assigned not just for the center's groups and clients, but for each account belonging to those customers.
      *
-     * Note: Required as to fix issues 1570 and 1804 Note 10/08/2008: direct sqls are used to improve performance (issue
-     * 2209)
+     * Note: Required as to fix issues 1570 and 1804
+     * Note: 10/08/2008: direct sqls are used to improve performance (issue 2209)
      *
      * @param parentLO
      *            the parent loan officer
@@ -776,7 +782,7 @@ public class CustomerPersistence extends Persistence {
      * @param parentOfficeId
      *            the parent office id
      */
-
+    @Deprecated
     public void updateLOsForAllChildrenAccounts(final Short parentLO, String parentSearchId, final Short parentOfficeId)
             throws Exception {
 

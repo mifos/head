@@ -196,7 +196,7 @@ generate_email_header()
 	# Generate header
 	cat <<-EOF
 	To: $recipients
-	Subject: ${emailprefix}$projectdesc $refname_type, $short_refname, ${change_type}d. $describe
+	Subject: ${emailprefix}$projectdesc, $refname_type $short_refname, ${change_type}d. $describe
 	Content-Type: text/plain; charset=utf-8
 	X-Git-Refname: $refname
 	X-Git-Reftype: $refname_type
@@ -217,7 +217,7 @@ generate_email_footer()
 	cat <<-EOF
 
 
-	hooks/post-receive
+	resources/scripts/githooks/post-receive
 	--${SPACE}
 	$projectdesc
 	EOF

@@ -20,7 +20,11 @@
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -38,6 +44,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -91,6 +98,7 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -1326,5 +1334,91 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("entityId", EntityType.CENTER.getValue());
 
         return (List<FieldConfigurationEntity>) this.genericDao.executeNamedQuery("findVisibleMandatoryConfigurableFieldsApplicableTo", queryParameters);
+    }
+
+    @Override
+    public void updateLoanOfficersForAllChildrenAndAccounts(Short parentLO, String parentSearchId, Short parentOfficeId) {
+
+        String hql = "update CustomerBO customer " + " set customer.personnel.personnelId = :parentLoanOfficer "
+                + " where customer.searchId like :parentSearchId" + " and customer.office.officeId = :parentOfficeId";
+
+        Query update = this.genericDao.createQueryForUpdate(hql);
+
+        update.setParameter("parentLoanOfficer", parentLO);
+        update.setParameter("parentSearchId", parentSearchId + ".%");
+        update.setParameter("parentOfficeId", parentOfficeId);
+        update.executeUpdate();
+
+        updateLoanOfficersForAllChildrenAccounts(parentLO, parentSearchId, parentOfficeId);
+    }
+
+    /**
+     * Update loan officer for all children accounts.
+     *
+     * This method was introduced for when a center is assigned a new loan officer, and this loan officer needs to be
+     * re-assigned not just for the center's groups and clients, but for each account belonging to those customers.
+     *
+     * Note: Required as to fix issues 1570 and 1804
+     * Note: 10/08/2008: direct sqls are used to improve performance (issue 2209)
+     *
+     * @param parentLO
+     *            the parent loan officer
+     * @param parentSearchId
+     *            the parent search id
+     * @param parentOfficeId
+     *            the parent office id
+     */
+    public final void updateLoanOfficersForAllChildrenAccounts(final Short parentLO, String parentSearchId, final Short parentOfficeId) {
+
+        if (parentLO == null || parentSearchId == null || parentOfficeId == null) {
+            return;
+        }
+
+        ResultSet customerIds = null;
+        Statement statement = null;
+        String childrenSearchId = parentSearchId + ".%";
+
+        try {
+            Connection connection = ((GenericDaoHibernate)this.genericDao).getHibernateUtil().getSessionTL().connection();
+            statement = connection.createStatement();
+            String sql = " select customer_id from customer where " + " customer.search_id like '" + childrenSearchId
+                    + "' and customer.branch_id = " + parentOfficeId.shortValue();
+            customerIds = statement.executeQuery(sql);
+            if (customerIds != null) {
+                while (customerIds.next()) {
+                    int customerId = customerIds.getInt("customer_id");
+                    updateAccountsForOneCustomer(customerId, parentLO, connection);
+                }
+            }
+        } catch (SQLException e) {
+            throw new MifosRuntimeException(e);
+        }
+        finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (customerIds != null) {
+                    customerIds.close();
+                }
+            } catch (SQLException e) {
+                // ignore as can't rethrow from finally
+            }
+        }
+
+    }
+
+    private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO,
+            final Connection connection) {
+
+        try {
+            Statement statement = connection.createStatement();
+            String sql = "update account " + " set personnel_id = " + parentLO.shortValue()
+                    + " where account.customer_id = " + customerId.intValue();
+            statement.executeUpdate(sql);
+            statement.close();
+        } catch (SQLException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

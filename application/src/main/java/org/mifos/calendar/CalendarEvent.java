@@ -17,30 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.savings.persistence;
+
+package org.mifos.calendar;
 
 import java.util.List;
-import java.util.Map;
 
-import org.hibernate.Query;
+import org.joda.time.Days;
+import org.mifos.application.holiday.business.Holiday;
 
 /**
  *
  */
-public interface GenericDao {
+public class CalendarEvent {
 
-    Object executeUniqueResultNamedQueryWithResultTransformer(String namedQuery, Map<String, ?> nameQueryParameters,
-            Class<?> className);
+    private final List<Days> workingDays;
+    private final List<Holiday> holidays;
 
-    List<? extends Object> executeNamedQueryWithResultTransformer(String namedQuery,
-            Map<String, ?> nameQueryParameters, Class<?> className);
+    public CalendarEvent(List<Days> workingDays, List<Holiday> holidays) {
+        this.workingDays = workingDays;
+        this.holidays = holidays;
+    }
 
-    List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters);
+    public List<Days> getWorkingDays() {
+        return this.workingDays;
+    }
 
-    Object executeUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters);
-
-    void createOrUpdate(Object entity);
-
-    Query createQueryForUpdate(String hql);
-
+    public List<Holiday> getHolidays() {
+        return this.holidays;
+    }
 }

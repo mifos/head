@@ -23,6 +23,7 @@ package org.mifos.application.holiday.persistence;
 import java.util.List;
 
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public interface HolidayDao {
@@ -30,5 +31,7 @@ public interface HolidayDao {
     List<Holiday> findAllHolidaysThisYearAndNext();
 
     void save(Holiday holiday) throws PersistenceException;
+
+    CalendarEvent findCalendarEventsForThisYearAndNext();
 
 }

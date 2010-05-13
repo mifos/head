@@ -29,10 +29,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.calendar.CalendarEvent;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
@@ -46,7 +49,7 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     }
 
     @Override
-    public List<Holiday> findAllHolidaysThisYearAndNext() {
+    public final List<Holiday> findAllHolidaysThisYearAndNext() {
 
         DateTime today = new DateTime();
 
@@ -78,7 +81,16 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
 
     @Override
-    public void save(final Holiday holiday) throws PersistenceException {
+    public final void save(final Holiday holiday) throws PersistenceException {
         createOrUpdate(holiday);
+    }
+
+    @Override
+    public final CalendarEvent findCalendarEventsForThisYearAndNext() {
+
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> upcomingHolidays = this.findAllHolidaysThisYearAndNext();
+
+        return new CalendarEvent(workingDays, upcomingHolidays);
     }
 }

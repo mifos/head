@@ -116,7 +116,7 @@ public class GroupCreationUsingCustomerServiceIntegrationTest {
     }
 
     @Test
-    public void shouldCreateCenterAndRelatedCustomerAccountWithGlobalCustomerNumbersGenerated() throws Exception {
+    public void shouldCreateGroupAndRelatedCustomerAccountWithGlobalCustomerNumbersGenerated() throws Exception {
 
         // setup
         GroupBO group = new GroupBuilder().withParentCustomer(existingCenter).formedBy(existingUser).build();
