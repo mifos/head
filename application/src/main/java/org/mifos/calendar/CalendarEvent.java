@@ -18,20 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.persistence;
+package org.mifos.calendar;
 
 import java.util.List;
 
+import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.calendar.CalendarEvent;
-import org.mifos.framework.exceptions.PersistenceException;
 
-public interface HolidayDao {
+/**
+ *
+ */
+public class CalendarEvent {
 
-    List<Holiday> findAllHolidaysThisYearAndNext();
+    private final List<Days> workingDays;
+    private final List<Holiday> holidays;
 
-    void save(Holiday holiday) throws PersistenceException;
+    public CalendarEvent(List<Days> workingDays, List<Holiday> holidays) {
+        this.workingDays = workingDays;
+        this.holidays = holidays;
+    }
 
-    CalendarEvent findCalendarEventsForThisYearAndNext();
+    public List<Days> getWorkingDays() {
+        return this.workingDays;
+    }
 
+    public List<Holiday> getHolidays() {
+        return this.holidays;
+    }
 }

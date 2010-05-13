@@ -18,20 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.persistence;
+package org.mifos.domain.builders;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.Days;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.calendar.CalendarEvent;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.config.FiscalCalendarRules;
 
-public interface HolidayDao {
+/**
+ *
+ */
+public class CalendarEventBuilder {
 
-    List<Holiday> findAllHolidaysThisYearAndNext();
+    public CalendarEvent build() {
 
-    void save(Holiday holiday) throws PersistenceException;
+        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        List<Holiday> holidays = new ArrayList<Holiday>();
+        // FIXME - i believe moratoria should be split out from holiday in data sense
+        // List<Holiday> moratoria = new ArrayList<Holiday>();
 
-    CalendarEvent findCalendarEventsForThisYearAndNext();
+        return new CalendarEvent(workingDays, holidays);
+    }
 
 }

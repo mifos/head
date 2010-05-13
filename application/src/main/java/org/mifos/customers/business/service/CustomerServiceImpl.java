@@ -52,6 +52,7 @@ import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -100,8 +101,9 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
     private final OfficeDao officeDao;
-    private HolidayDao holidayDao;
-    private HibernateTransactionHelper hibernateTransactionHelper;
+    private final HolidayDao holidayDao;
+    private final HibernateTransactionHelper hibernateTransactionHelper;
+    private CustomerAccountFactory customerAccountFactory = DefaultCustomerAccountFactory.createNew();
 
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
             HolidayDao holidayDao, final HibernateTransactionHelper hibernateTransactionHelper) {
@@ -110,6 +112,10 @@ public class CustomerServiceImpl implements CustomerService {
         this.officeDao = officeDao;
         this.holidayDao = holidayDao;
         this.hibernateTransactionHelper = hibernateTransactionHelper;
+    }
+
+    public void setCustomerAccountFactory(CustomerAccountFactory customerAccountFactory) {
+        this.customerAccountFactory = customerAccountFactory;
     }
 
     @Override
@@ -286,20 +292,19 @@ public class CustomerServiceImpl implements CustomerService {
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
         try {
             // in case any other leaked sessions exist from legacy code use.
-            StaticHibernateUtil.closeSession();
+            this.hibernateTransactionHelper.closeSession();
 
-            StaticHibernateUtil.startTransaction();
+            this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
 
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-            CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees,
-                    meeting, workingDays, thisAndNextYearsHolidays);
+            CalendarEvent upcomingCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext();
+            CustomerAccountBO customerAccount = this.customerAccountFactory.create(customer, accountFees, meeting, upcomingCalendarEvents);
             customer.addAccount(customerAccount);
-            this.customerDao.save(customer);
-            StaticHibernateUtil.commitTransaction();
 
-            StaticHibernateUtil.startTransaction();
+            this.customerDao.save(customer);
+            this.hibernateTransactionHelper.commitTransaction();
+
+            this.hibernateTransactionHelper.startTransaction();
             customer.generateGlobalCustomerNumber();
             this.customerDao.save(customer);
 
@@ -307,12 +312,12 @@ public class CustomerServiceImpl implements CustomerService {
                 this.customerDao.save(customer.getParentCustomer());
             }
 
-            StaticHibernateUtil.commitTransaction();
+            this.hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 

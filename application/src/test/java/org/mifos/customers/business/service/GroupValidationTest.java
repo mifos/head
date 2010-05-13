@@ -39,10 +39,12 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.domain.builders.PersonnelBuilder;
 
-public class GroupCreationAndValidationTest {
+public class GroupValidationTest {
 
+    // class under test
     private GroupBO group;
 
+    // collaborators
     private CenterBO center;
 
     @Before

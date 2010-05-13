@@ -18,20 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.persistence;
+package org.mifos.customers.business.service;
 
 import java.util.List;
 
-import org.mifos.application.holiday.business.Holiday;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.CalendarEvent;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerBO;
 
-public interface HolidayDao {
+/**
+ *
+ */
+public interface CustomerAccountFactory {
 
-    List<Holiday> findAllHolidaysThisYearAndNext();
-
-    void save(Holiday holiday) throws PersistenceException;
-
-    CalendarEvent findCalendarEventsForThisYearAndNext();
-
+    CustomerAccountBO create(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO meeting,
+            CalendarEvent upcomingCalendarEvents);
 }
