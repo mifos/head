@@ -1375,7 +1375,8 @@ public class AccountBO extends AbstractBusinessObject {
         List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
         for (AccountFeesEntity accountFee : getAccountFees()) {
             if (accountFee.getFees().isPeriodic()) {
-                getFeePersistence().getFee(accountFee.getFees().getFeeId());
+                // Why? Doesn't appear to do anything with the retrieved FeeBO
+//                getFeePersistence().getFee(accountFee.getFees().getFeeId());
                 periodicFeeList.add(accountFee);
             }
         }

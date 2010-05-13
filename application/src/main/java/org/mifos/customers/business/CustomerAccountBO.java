@@ -492,7 +492,7 @@ public class CustomerAccountBO extends AccountBO {
 
                     FeeBO feesBO = getAccountFeesObject(accountFeesEntity.getFees().getFeeId());
 
-                    Money totalAmount = ((AmountFeeBO) feesBO).getFeeAmount().multiply(Double.valueOf(Integer.valueOf(installmentDates.size()).toString()));
+                    Money totalAmount = ((AmountFeeBO) feesBO).getFeeAmount().multiply(Double.valueOf(Integer.valueOf(applicableDatesCount).toString()));
 
                     ((CustomerScheduleEntity) accountActionDate).applyPeriodicFees(accountFeesEntity.getFees().getFeeId(), totalAmount);
 

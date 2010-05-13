@@ -45,6 +45,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
@@ -74,9 +75,9 @@ public class CustomerAccountBOTest {
     @Mock private UserContext userContext;
     @Mock private CustomerBO customer;
     @Mock private CustomerStatusEntity customerStatus;
-    @Mock private FeeBO weeklyFee;
-    @Mock private FeeBO biWeeklyFee;
-    @Mock private FeeBO oneTimeUpFrontFee;
+    @Mock private AmountFeeBO weeklyFee;
+    @Mock private AmountFeeBO biWeeklyFee;
+    @Mock private AmountFeeBO oneTimeUpFrontFee;
     @Mock private FeeFrequencyEntity weeklyFeeFrequencyEntity;
     @Mock private FeeFrequencyEntity biWeeklyFeeFrequencyEntity;
     @Mock private FeeFrequencyEntity oneTimeFeeFrequencyEntity;
@@ -96,12 +97,14 @@ public class CustomerAccountBOTest {
     private List<Holiday> holidays;
     private List<AccountFeesEntity> accountFees;
     private Holiday moratorium;
+    private static MifosCurrency defaultCurrency;
+
 
     private DateTimeService dateTimeService = new DateTimeService();
 
     @BeforeClass
     public static void setupDefaultCurrency() {
-        MifosCurrency defaultCurrency = TestUtils.EURO;
+        defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
     }
 
@@ -144,12 +147,14 @@ public class CustomerAccountBOTest {
         when(weeklyFee.getFeeFrequency())                      .thenReturn(weeklyFeeFrequencyEntity);
         when(weeklyFee.getFeeName())                           .thenReturn(weeklyFeeName);
         when(weeklyFeeFrequencyEntity.getFeeMeetingFrequency()).thenReturn(feeMeetingEveryWeek);
+        when(weeklyFee.isPeriodic())                           .thenReturn(true);
 
 
         when(biWeeklyFee.getFeeId())                           .thenReturn((short) 2);
         when(biWeeklyFee.getFeeFrequency())                    .thenReturn(biWeeklyFeeFrequencyEntity);
         when(biWeeklyFee.getFeeName())                         .thenReturn(biWeeklyFeeName);
         when(biWeeklyFeeFrequencyEntity.getFeeMeetingFrequency()).thenReturn(biWeeklyFeeMeeting);
+        when(biWeeklyFee.isPeriodic())                           .thenReturn(true);
 
         when(oneTimeUpFrontFee.getFeeId())                     .thenReturn((short) 3);
         when(oneTimeUpFrontFee.getFeeFrequency())                    .thenReturn(oneTimeFeeFrequencyEntity);
@@ -222,11 +227,11 @@ public class CustomerAccountBOTest {
         }
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void generateNextSetOfMeetingDatesDoesNotApplyFeesToNextTenEvents() {
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
@@ -262,11 +267,11 @@ public class CustomerAccountBOTest {
                 is (new LocalDate(actionDates.get(9).getActionDate())));
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void applyPeriodicFeesToFreshlyGeneratedScheduleDoesNothing() {
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
@@ -297,11 +302,10 @@ public class CustomerAccountBOTest {
                 is (new LocalDate(actionDates.get(9).getActionDate())));
     }
 
-    @Ignore
     @Test
     public void applyPeriodicFeesAfterGeneratingNextSetOfMeetingDatesAppliesFeeToTenthhMeeting() {
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
         DateTime startingMeetingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         // exercise test
@@ -474,7 +478,7 @@ public class CustomerAccountBOTest {
     public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeScheduleAndSetsFeeLastAppliedDateToLastMeetingDate() {
 
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
@@ -507,8 +511,8 @@ public class CustomerAccountBOTest {
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesNoHolidayGeneratesCorrectFeeSchedule() {
 
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
-        accountFees.add(createAccountFeesEntity(biWeeklyFee, 13.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
+        accountFees.add(createAccountFeesEntity(biWeeklyFee, "13.0"));
         DateTime startingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
         // exercise test
@@ -567,8 +571,8 @@ public class CustomerAccountBOTest {
     public void createNewWeeklyCustomerAccountTwoPeriodicFeesWithMoratoriumGeneratesCorrectFeeSchedule() {
 
         // setup
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
-        accountFees.add(createAccountFeesEntity(biWeeklyFee, 13.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
+        accountFees.add(createAccountFeesEntity(biWeeklyFee, "13.0"));
         holidays.add(moratorium);
         DateTime startingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
 
@@ -632,7 +636,7 @@ public class CustomerAccountBOTest {
 
         // setup
         holidays.add(moratorium);
-        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        accountFees.add(createAccountFeesEntity(weeklyFee, "10.0"));
 
         // exercise test
         customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
@@ -693,9 +697,10 @@ public class CustomerAccountBOTest {
     }
 
 
-    private AccountFeesEntity createAccountFeesEntity (FeeBO feeBO, double feeAmount) {
+    private AccountFeesEntity createAccountFeesEntity (AmountFeeBO feeBO, String feeAmount) {
+        when(feeBO.getFeeAmount()) .thenReturn(new Money(defaultCurrency, feeAmount));
         AccountFeesEntity accountFeesEntity
-            = new AccountFeesEntity(null, feeBO, feeAmount);
+            = new AccountFeesEntity(null, feeBO, new Double(feeAmount));
         return accountFeesEntity;
     }
 

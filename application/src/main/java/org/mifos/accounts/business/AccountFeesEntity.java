@@ -198,9 +198,7 @@ public class AccountFeesEntity extends AbstractEntity {
 
             for (DateTime installmentDate : installmentDates) {
                 if (DateUtils.getDateWithoutTimeStamp(installmentDate.toDate().getTime()).compareTo(
-                        DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) == 0) {
-                    // is not applicable
-                } else {
+                        DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) > 0) {
                     applicableDates.add(installmentDate);
                 }
             }
