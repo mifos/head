@@ -81,4 +81,13 @@ public abstract class TransactionImport {
     protected UserReferenceDto getUserReferenceDto() {
         return userReferenceDto;
     }
+
+    /**
+     * Get the number of transaction one physical row of import sheet(file) is supposed to implement in plugin.
+     *
+     * @return numberOfTransactionsPerRow an integer
+     */
+    public int getNumberOfTransactionsPerRow() {
+        return 1;
+    }
 }

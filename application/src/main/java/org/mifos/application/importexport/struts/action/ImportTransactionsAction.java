@@ -109,12 +109,13 @@ public class ImportTransactionsAction extends BaseAction {
         }
 
         boolean submitButtonDisabled = false;
-        if (importResult.getSuccessfullyParsedRows().size() <= 0) {
+        int numberRowSuccessfullyParsed = importResult.getSuccessfullyParsedRows().size()/ti.getNumberOfTransactionsPerRow();
+        if (numberRowSuccessfullyParsed <= 0) {
             submitButtonDisabled = true;
         }
 
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
-        request.setAttribute("numSuccessfulRows", importResult.getSuccessfullyParsedRows().size());
+        request.setAttribute("numSuccessfulRows", numberRowSuccessfullyParsed);
         request.setAttribute("submitButtonDisabled", submitButtonDisabled);
 
         stream.close();
