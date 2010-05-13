@@ -118,35 +118,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
 
         customer.validate();
-
-        if (customer.getCustomerMeeting() == null || customer.getCustomerMeetingValue() == null) {
-
-            if (accountFees.size() > 0) {
-                throw new ApplicationException(CustomerConstants.MEETING_REQUIRED_EXCEPTION);
-            }
-
-            throw new ApplicationException(CustomerConstants.ERRORS_SPECIFY_MEETING);
-        }
-
-        if (customer.getMfiJoiningDate() == null) {
-            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY);
-        }
-
-        for (AccountFeesEntity accountFee : accountFees) {
-
-            if (accountFee.getFees().isPeriodic()) {
-                MeetingBO feeMeeting = accountFee.getFees().getFeeFrequency().getFeeMeetingFrequency();
-                if (!feeMeeting.hasSameRecurrenceAs(customer.getCustomerMeetingValue())) {
-                    throw new ApplicationException(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH);
-                }
-
-                FeeBO fee = accountFee.getFees();
-
-                if (AccountFeesEntity.isPeriodicFeeDuplicated(accountFees, fee)) {
-                    throw new ApplicationException(CustomerConstants.ERRORS_DUPLICATE_PERIODIC_FEE);
-                }
-            }
-        }
+        customer.validateMeetingAndFees(accountFees);
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
