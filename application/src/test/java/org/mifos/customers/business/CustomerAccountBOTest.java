@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -36,14 +37,17 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
@@ -191,6 +195,221 @@ public class CustomerAccountBOTest {
         }
     }
 
+    @Test
+    public void canGenerateNextSetOfMeetingDatesWithFreshlyGeneratedSchedule() {
+
+        // use default setup
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting,
+                workingDays, holidays);
+
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(20));
+        Short installmentId = Short.valueOf("1");
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+
+        for (AccountActionDateEntity scheduledDate : customerAccount.getAccountActionDates()) {
+            assertThat(scheduledDate.getInstallmentId(), is(installmentId));
+            assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+    }
+
+    @Ignore
+    @Test
+    public void generateNextSetOfMeetingDatesDoesNotApplyFeesToNextTenEvents() {
+        // setup
+        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
+
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(20));
+        Short installmentId = Short.valueOf("1");
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
+
+        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
+            CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
+            assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
+            assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            if (installmentId <= 10) {
+                assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(1));
+                assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(), is(weeklyFeeName));
+                assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(), is(10.0));
+            } else {
+                assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(0));
+
+            }
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+        assertThat(customerAccount.getAccountFees().size(), is(1));
+        AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
+        // Last applied date for the fee is the date of the last meeting date, which is the last date that
+        // the fee was applied
+        assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
+                is (new LocalDate(actionDates.get(9).getActionDate())));
+    }
+
+    @Ignore
+    @Test
+    public void applyPeriodicFeesToFreshlyGeneratedScheduleDoesNothing() {
+        // setup
+        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
+
+        customerAccount.applyPeriodicFees(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(10));
+        Short installmentId = Short.valueOf("1");
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
+
+        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
+            CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
+            assertThat(scheduleEntity.getInstallmentId(), is(installmentId));
+            assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            assertThat(scheduleEntity.getAccountFeesActionDetails().size(), is(1));
+            assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFee().getFeeName(), is(weeklyFeeName));
+            assertThat(scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0).getFeeAmount().getAmountDoubleValue(), is(10.0));
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+        assertThat(customerAccount.getAccountFees().size(), is(1));
+        AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
+        // Last applied date for the fee is the date of the last meeting date, which is the last date that
+        // the fee was applied
+        assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
+                is (new LocalDate(actionDates.get(9).getActionDate())));
+    }
+
+    @Ignore
+    @Test
+    public void applyPeriodicFeesAfterGeneratingNextSetOfMeetingDatesAppliesFeeToTenthhMeeting() {
+        // setup
+        accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
+        DateTime startingMeetingDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, workingDays, holidays);
+
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
+
+        // Advance time to the day after the 10th installment
+        dateTimeService.setCurrentDateTime(startingMeetingDate.plusWeeks(9).plusDays(1));
+        customerAccount.applyPeriodicFees(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(20));
+        Short installmentId = Short.valueOf("1");
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
+        DateTime installmentDate = startingMeetingDate;
+
+        for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
+            CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
+            assertThat("Installment id", scheduleEntity.getInstallmentId(), is(installmentId));
+            assertThat(new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            if (installmentId <= 11) {
+                assertThat("Installment " + installmentId + " number of fees",
+                        scheduleEntity.getAccountFeesActionDetails().size(), is(1));
+                AccountFeesActionDetailEntity feeDetail = scheduleEntity.getAccountFeesActionDetailsSortedByFeeId().get(0);
+                assertThat("Installment " + installmentId + " fee name",
+                        feeDetail.getFee().getFeeName(), is(weeklyFeeName));
+                assertThat("Installment " + installmentId + " fee amount",
+                        feeDetail.getFeeAmount().getAmountDoubleValue(), is(10.0));
+                assertThat("Installment " + installmentId + " fee due ",
+                        feeDetail.getFeeDue().getAmountDoubleValue(), is(10.0));
+            } else {
+                assertThat("Installment " + installmentId + " number of fees",
+                        scheduleEntity.getAccountFeesActionDetails().size(), is(0));
+            }
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+        assertThat(customerAccount.getAccountFees().size(), is(1));
+        AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
+        // Last applied date for the fee is the date of the 11th meeting date, where the fee was applied
+        assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
+                is (new LocalDate(actionDates.get(10).getActionDate())));
+    }
+
+    @Test
+    public void canGenerateNextSetOfMeetingDatesWhenAllButThreeDatesAreInThePast() {
+
+        // use default setup
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting,
+                workingDays, holidays);
+
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+
+        dateTimeService.setCurrentDateTime(dateTimeService.getCurrentDateTime().plusWeeks(7));
+
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(20));
+        Short installmentId = Short.valueOf("1");
+
+        for (AccountActionDateEntity scheduledDate : customerAccount.getAccountActionDates()) {
+            assertThat(scheduledDate.getInstallmentId(), is(installmentId));
+            assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+    }
+
+    @Test
+    public void canGenerateNextSetOfMeetingDatesWhenAllButThreeDatesAreInThePastWithMoratoriumShouldShiftDatesOneWeekStartingWith12thDate() {
+
+        // setup
+        DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+        Holiday holiday =  new HolidayBuilder().from(installmentDate.plusWeeks(11))
+                                               .to(new DateTime().plusWeeks(12).minusDays(1))
+                                               .withRepaymentMoratoriumRule()
+                                               .build();
+        holidays.add(holiday);
+
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting,
+                workingDays, holidays);
+
+        dateTimeService.setCurrentDateTime(dateTimeService.getCurrentDateTime().plusWeeks(7));
+
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
+
+        //verification
+        assertThat(customerAccount.getAccountActionDates().size(), is(20));
+        Short installmentId = Short.valueOf("1");
+
+        for (AccountActionDateEntity scheduledDate : customerAccount.getAccountActionDates()) {
+            assertThat(scheduledDate.getInstallmentId(), is(installmentId));
+            if (installmentId < 12) {
+                assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            } else {
+                assertThat(new LocalDate(scheduledDate.getActionDate()), is(new LocalDate(installmentDate.plusWeeks(1).toDate())));
+            }
+
+            installmentId++;
+            installmentDate = installmentDate.plusWeeks(1);
+        }
+    }
+
     /******************************************************************
      * Test generated meeting dates for new customer.
      *   - with and without fees
@@ -248,8 +467,9 @@ public class CustomerAccountBOTest {
         }
     }
 
+    @Ignore
     @Test
-    public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeSchedule() {
+    public void createNewWeeklyCustomerAccountOnePeriodicFeeNoHolidayGeneratesCorrectFeeScheduleAndSetsFeeLastAppliedDateToLastMeetingDate() {
 
         // setup
         accountFees.add(createAccountFeesEntity(weeklyFee, 10.0));
@@ -261,6 +481,7 @@ public class CustomerAccountBOTest {
         assertThat(customerAccount.getAccountActionDates().size(), is(10));
         Short installmentId = Short.valueOf("1");
         DateTime installmentDate = getFirstInstallmentDateForWeeklyScheduleStartingNow(DayOfWeek.monday());
+        List<AccountActionDateEntity> actionDates = getActionDatesSortedByDate(customerAccount);
 
         for (AccountActionDateEntity accountActionDate : getActionDatesSortedByDate(customerAccount)) {
             CustomerScheduleEntity scheduleEntity = (CustomerScheduleEntity) accountActionDate;
@@ -272,6 +493,11 @@ public class CustomerAccountBOTest {
             installmentId++;
             installmentDate = installmentDate.plusWeeks(1);
         }
+        assertThat(customerAccount.getAccountFees().size(), is(1));
+        AccountFeesEntity accountFeeEntity = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees()).get(0);
+        // Last applied date for the fee is the date of the last meeting date
+        assertThat(new LocalDate(accountFeeEntity.getLastAppliedDate()),
+                is (new LocalDate(actionDates.get(actionDates.size()-1).getActionDate())));
     }
 
     @Test
@@ -383,6 +609,12 @@ public class CustomerAccountBOTest {
             installmentDate = installmentDate.plusWeeks(1);
         }
     }
+
+
+    /*********************************
+     * Test applying a periodic fee. This is the method used by batch job ApplyCustomerFee, to add fees to
+     * future customer meeting dates.
+     ********************************/
 
     /*********************************
      * Test applying charges - verify added to correct installments

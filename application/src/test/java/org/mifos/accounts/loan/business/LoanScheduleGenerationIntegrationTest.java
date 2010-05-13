@@ -178,7 +178,7 @@ public class LoanScheduleGenerationIntegrationTest {
         validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
     }
 
-    //@Test
+    @Test
     public void testNewWeeklyGroupLoanWithUpfrontFeeNoHoliday() throws Exception {
 
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13)); //Wednesday before loan start date
@@ -203,7 +203,7 @@ public class LoanScheduleGenerationIntegrationTest {
         validateOneOneTimeFee(loan, "Onetime Loan Fee Due on Disbursement", 1, 14.0);
     }
 
-    //@Test
+    @Test
     public void testNewWeeklyGroupLoanOnePeriodicFeeMoratorium() throws Exception {
 
         MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
@@ -224,6 +224,31 @@ public class LoanScheduleGenerationIntegrationTest {
          * All asserted dates are on Fridays
          */
         validateDates(loan, date(2010, 10, 29), date(2010, 11, 5), date(2010, 11, 12),
+                            date(2010, 11, 19), date(2010, 11, 26), date(2010, 12, 3));
+        validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
+    }
+
+    @Test
+    public void testNewWeeklyGroupLoanOnePeriodicFeeMoratoriumHitsThirdRepayment() throws Exception {
+
+        MeetingBuilder feeMeetingBuilder = new MeetingBuilder().every(1).weekly().withStartDate(date(2010, 10, 15));
+        AmountFeeBO fee = new FeeBuilder().appliesToLoans()
+                                          .with(feeMeetingBuilder)
+                                          .withFeeAmount("14.0")
+                                          .withName("Periodic Loan Fee")
+                                          .with(sampleBranchOffice())
+                                          .build();
+        IntegrationTestObjectMother.saveFee(fee);
+
+        // Moratorium starts Friday (when 1st payment due) thru the Thursday before the 2nd payment
+        buildAndPersistMoratorium(date(2010, 11, 5), date(2010, 11, 11));
+
+        LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 6, fee); //Meets on Fridays
+        /*
+         * Since disbursal is on a meeting day, the first installment date is one week from disbursement date.
+         * Third and later payments pushed out one week.
+         */
+        validateDates(loan, date(2010, 10, 22), date(2010, 10, 29), date(2010, 11, 12),
                             date(2010, 11, 19), date(2010, 11, 26), date(2010, 12, 3));
         validateOnePeriodicFee(loan, "Periodic Loan Fee", 14.0, 14.0, 14.0, 14.0, 14.0, 14.0);
     }

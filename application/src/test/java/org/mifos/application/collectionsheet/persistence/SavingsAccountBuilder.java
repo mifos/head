@@ -166,4 +166,11 @@ public class SavingsAccountBuilder {
         this.holidays = withHolidays;
         return this;
     }
+
+    public SavingsAccountBuilder with(Holiday...holidays) {
+        for (Holiday holiday : holidays) {
+            this.holidays.add(holiday);
+        }
+        return this;
+    }
 }
