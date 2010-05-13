@@ -880,10 +880,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
             String newStatusIdAsString, String notes, UserContext userContext) throws ApplicationException {
 
-        runningTime = System.currentTimeMillis();
-        startTime = System.currentTimeMillis();
-        markposition("Very Start of updateCustomerStatus");
-
         CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
 
         checkVersionMismatch(previousCustomerVersionNo, customerBO.getVersionNo());
@@ -899,9 +895,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             newStatusId = Short.valueOf(newStatusIdAsString);
         }
 
-        markposition("before checkPermission");
         checkPermission(customerBO, userContext, newStatusId, flagId);
-        markposition("after checkPermission");
 
         Short oldStatusId = customerBO.getCustomerStatus().getId();
 
@@ -918,44 +912,23 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
 
-        markposition("after loggedInUser");
         CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(),
                 loggedInUser, customerBO);
-        markposition("after customerNote new");
 
         if (customerBO.isGroup()) {
 
             GroupBO group = (GroupBO) customerBO;
             this.customerService.updateGroupStatus(group, oldStatus, newStatus, customerStatusFlag, customerNote);
-            markposition("after updateGroupStatus");
         } else if (customerBO.isClient()) {
 
             ClientBO client = (ClientBO) customerBO;
 
             this.customerService.updateClientStatus(client, oldStatus, newStatus, customerStatusFlag, customerNote);
-            markposition("after updateClientStatus");
-
         } else {
             CenterBO center = (CenterBO) customerBO;
             this.customerService.updateCenterStatus(center, newStatus, customerStatusFlag, customerNote);
-            markposition("after updateCenterStatus");
         }
 
-        markposition("FINISHED the service update");
-    }
-
-    Long runningTime = null;
-    Long startTime = null;
-
-    private void markposition(String string) {
-
-        Session session = new SurveysPersistence().getSession();
-        Long timeTaken = (System.currentTimeMillis() - runningTime);
-        session.createSQLQuery("select 'A' from customer where 1=0 and display_name = 'Finished: " + string + "'")
-                .list();
-
-        System.out.println(string + ": " + timeTaken);
-        runningTime = System.currentTimeMillis();
     }
 
     private void checkPermission(CustomerBO customerBO, UserContext userContext, Short newStatusId, Short flagId) {
