@@ -52,8 +52,7 @@ refname=${refname##refs/heads/}
 gitver=$(git --version)
 gitver=${gitver##* }
 
-rev=$(git describe ${merged} 2>/dev/null)
-[[ -z ${rev} ]] && rev=${merged:0:12}
+rev=${merged:0:7}
 
 rawcommit=$(git cat-file commit ${merged})
 
