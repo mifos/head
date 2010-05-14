@@ -198,4 +198,6 @@ public interface CustomerDao {
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
+
+    void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 }

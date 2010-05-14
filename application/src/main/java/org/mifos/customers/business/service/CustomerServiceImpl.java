@@ -23,6 +23,7 @@ package org.mifos.customers.business.service;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +87,6 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -461,19 +461,16 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO customer = this.customerDao.findCustomerById(customerStatusUpdate.getCustomerId());
         customer.validateVersion(customerStatusUpdate.getVersionNum());
-        customer.setUserContext(userContext);
-        customer.setUpdateDetails();
+        customer.updateDetails(userContext);
 
         checkPermission(customer, userContext, customerStatusUpdate.getNewStatus(), customerStatusUpdate.getCustomerStatusFlag());
 
         Short oldStatusId = customer.getCustomerStatus().getId();
         CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
 
-//        customer.validateLoanOfficerIsActive();
-
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
 
-        CustomerNoteEntity customerNote = new CustomerNoteEntity(customerStatusUpdate.getNotes(), new DateTimeService().getCurrentJavaSqlDate(), loggedInUser, customer);
+        CustomerNoteEntity customerNote = new CustomerNoteEntity(customerStatusUpdate.getNotes(), new Date(), loggedInUser, customer);
 
         if (customer.isGroup()) {
             GroupBO group = (GroupBO) customer;
@@ -487,23 +484,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void checkPermission(CustomerBO customerBO, UserContext userContext, CustomerStatus newStatus, CustomerStatusFlag statusFlag) {
-        try {
+    private void checkPermission(CustomerBO customerBO, UserContext userContext, CustomerStatus newStatus,
+            CustomerStatusFlag statusFlag) throws CustomerException {
 
-            Short statusFlagId = null;
-            if (statusFlag != null) {
-                statusFlagId = statusFlag.getValue();
-            }
+        Short statusFlagId = null;
+        if (statusFlag != null) {
+            statusFlagId = statusFlag.getValue();
+        }
 
-            if (null != customerBO.getPersonnel()) {
-                new CustomerBusinessService().checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId,
-                        customerBO.getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-            } else {
-                new CustomerBusinessService().checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId,
-                        customerBO.getOffice().getOfficeId(), userContext.getId());
-            }
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
+        if (null != customerBO.getPersonnel()) {
+            this.customerDao.checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId, customerBO.getOfficeId(), customerBO.getPersonnel().getPersonnelId());
+        } else {
+
+            this.customerDao.checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId, customerBO.getOfficeId(), userContext.getId());
         }
     }
 
@@ -535,8 +528,9 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
-            StaticHibernateUtil.startTransaction();
-            setInitialObjectForAuditLogging(center);
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(center);
+
             center.clearCustomerFlagsIfApplicable(center.getStatus(), newStatus);
             center.updateCustomerStatus(newStatus);
             center.addCustomerNotes(customerNote);
@@ -545,12 +539,13 @@ public class CustomerServiceImpl implements CustomerService {
             }
 
             customerDao.save(center);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 

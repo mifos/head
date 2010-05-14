@@ -34,6 +34,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -42,6 +43,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -204,5 +206,55 @@ public class CenterUpdateTest {
         } catch (ApplicationException e) {
             assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
         }
+    }
+
+    @Test(expected = MifosRuntimeException.class)
+    public void rollsbackTransactionClosesSessionAndThrowsRuntimeExceptionWhenExceptionOccurs() throws Exception {
+
+        // setup
+        PersonnelBO existingLoanOfficer = PersonnelBuilder.anyLoanOfficer();
+        UserContext userContext = TestUtils.makeUser();
+        CenterUpdate centerUpdate = new CenterUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(centerUpdate.getCustomerId())).thenReturn(mockedCenter);
+        when(personnelDao.findPersonnelById(centerUpdate.getLoanOfficerId())).thenReturn(existingLoanOfficer);
+        when(mockedCenter.isLoanOfficerChanged(existingLoanOfficer)).thenReturn(false);
+        when(mockedCenter.getOffice()).thenReturn(new OfficeBuilder().build());
+
+        // stub
+        doThrow(new RuntimeException()).when(customerDao).save(mockedCenter);
+
+        // exercise test
+        customerService.updateCenter(userContext, centerUpdate);
+
+        // verification
+        verify(hibernateTransaction).rollbackTransaction();
+        verify(hibernateTransaction).closeSession();
+    }
+
+    @Test(expected = CustomerException.class)
+    public void rollsbackTransactionClosesSessionAndReThrowsApplicationException() throws Exception {
+
+        // setup
+        PersonnelBO existingLoanOfficer = PersonnelBuilder.anyLoanOfficer();
+        UserContext userContext = TestUtils.makeUser();
+        CenterUpdate centerUpdate = new CenterUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(centerUpdate.getCustomerId())).thenReturn(mockedCenter);
+        when(personnelDao.findPersonnelById(centerUpdate.getLoanOfficerId())).thenReturn(existingLoanOfficer);
+        when(mockedCenter.isLoanOfficerChanged(existingLoanOfficer)).thenReturn(false);
+        when(mockedCenter.getOffice()).thenReturn(new OfficeBuilder().build());
+
+        // stub
+        doThrow(new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER)).when(mockedCenter).validate();
+
+        // exercise test
+        customerService.updateCenter(userContext, centerUpdate);
+
+        // verification
+        verify(hibernateTransaction).rollbackTransaction();
+        verify(hibernateTransaction).closeSession();
     }
 }

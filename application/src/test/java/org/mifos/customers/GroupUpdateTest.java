@@ -39,6 +39,7 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.domain.builders.GroupUpdateBuilder;
 import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
@@ -212,11 +213,34 @@ public class GroupUpdateTest {
         when(mockedGroup.isLoanOfficerChanged(newLoanOfficer)).thenReturn(false);
         when(mockedGroup.getOffice()).thenReturn(new OfficeBuilder().build());
 
+        // stub
+        doThrow(new RuntimeException()).when(customerDao).save(mockedGroup);
+
         // exercise test
         customerService.updateGroup(userContext, groupUpdate);
 
+        // verification
+        verify(hibernateTransactionHelper).rollbackTransaction();
+        verify(hibernateTransactionHelper).closeSession();
+    }
+
+    @Test(expected = CustomerException.class)
+    public void rollsbackTransactionClosesSessionAndReThrowsApplicationException() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        GroupUpdate groupUpdate = new GroupUpdateBuilder().build();
+        PersonnelBO newLoanOfficer = new PersonnelBuilder().anyLoanOfficer();
+
+        // stubbing
+        when(customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum())).thenReturn(mockedGroup);
+        when(mockedGroup.isNameDifferent(groupUpdate.getDisplayName())).thenReturn(false);
+        when(personnelDao.findPersonnelById(groupUpdate.getLoanOfficerId())).thenReturn(newLoanOfficer);
+        when(mockedGroup.isLoanOfficerChanged(newLoanOfficer)).thenReturn(false);
+        when(mockedGroup.getOffice()).thenReturn(new OfficeBuilder().build());
+
         // stub
-        doThrow(new RuntimeException()).when(customerDao).save(mockedGroup);
+        doThrow(new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER)).when(mockedGroup).validate();
 
         // exercise test
         customerService.updateGroup(userContext, groupUpdate);

@@ -103,6 +103,8 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -1419,5 +1421,19 @@ public class CustomerDaoHibernate implements CustomerDao {
         } catch (SQLException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public final void checkPermissionForStatusChange(Short newState, UserContext userContext, Short flagSelected,
+            Short recordOfficeId, Short recordLoanOfficerId) throws CustomerException {
+        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
+            Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isStateChangePermittedForCustomer(newState.shortValue(),
+                null != flagSelected ? flagSelected.shortValue() : 0, userContext, recordOfficeId, recordLoanOfficerId);
     }
 }

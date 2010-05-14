@@ -1488,4 +1488,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             throw new CustomerException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
     }
+
+    public final Short getOfficeId() {
+        return getOffice().getOfficeId();
+    }
 }

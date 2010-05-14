@@ -95,7 +95,7 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
         return this.userContext;
     }
 
-    final public void setCreateDetails() {
+    public void setCreateDetails() {
         setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
         if (userContext != null) {
             setCreatedBy(userContext.getId());
@@ -109,13 +109,18 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
         setCreatedBy(userId);
     }
 
-    final public void setUpdateDetails() {
+    public void setUpdateDetails() {
         setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
         if (userContext != null) {
             setUpdatedBy(userContext.getId());
         } else {
             setUpdatedBy((short) 1);
         }
+    }
+
+    public void updateDetails(UserContext userContext) {
+        this.updatedDate = new Date();
+        this.updatedBy = userContext.getId();
     }
 
     protected void setUpdateDetails(Short userId) {
