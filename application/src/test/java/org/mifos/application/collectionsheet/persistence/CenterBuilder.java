@@ -132,6 +132,11 @@ public class CenterBuilder {
         return this;
     }
 
+    public CenterBuilder active() {
+        this.status = CustomerStatus.CENTER_ACTIVE;
+        return this;
+    }
+
     public CenterBuilder inActive() {
         this.status = CustomerStatus.CENTER_INACTIVE;
         return this;

@@ -31,7 +31,9 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPerformanceHistory;
+import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -183,5 +185,12 @@ public class CenterBO extends CustomerBO {
                 }
             }
         }
+    }
+
+    @Override
+    public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote,
+            CustomerStatusFlagEntity customerStatusFlagEntity) {
+        clearCustomerFlagsIfApplicable(getStatus(), newStatus);
+        super.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
     }
 }

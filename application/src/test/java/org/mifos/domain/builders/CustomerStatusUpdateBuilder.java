@@ -35,4 +35,9 @@ public class CustomerStatusUpdateBuilder {
     public CustomerStatusUpdate build() {
         return new CustomerStatusUpdate(customerId, versionNum, customerStatusFlag, newStatus, notes);
     }
+
+    public CustomerStatusUpdateBuilder with(CustomerStatus withStatus) {
+        this.newStatus = withStatus;
+        return this;
+    }
 }

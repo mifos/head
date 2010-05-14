@@ -306,6 +306,14 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.customerStatus = new CustomerStatusEntity(newCustomerStatus);
     }
 
+    public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote, CustomerStatusFlagEntity customerStatusFlagEntity) {
+        this.customerStatus = new CustomerStatusEntity(newStatus);
+        addCustomerNotes(customerNote);
+        if (customerStatusFlagEntity != null) {
+            addCustomerFlag(customerStatusFlagEntity);
+        }
+    }
+
     public String getDisplayAddress() {
         return displayAddress;
     }
