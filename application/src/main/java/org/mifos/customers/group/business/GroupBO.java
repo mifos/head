@@ -441,7 +441,7 @@ public class GroupBO extends CustomerBO {
             throws CustomerException {
         GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
         try {
-            performanceHistory.updateOnRepayment(loan, totalAmount);
+            performanceHistory.updateOnFullRepayment(loan);
         } catch (AccountException e) {
             throw new CustomerException(e);
         }

@@ -1086,7 +1086,7 @@ public class ClientBO extends CustomerBO {
     @Override
     public void updatePerformanceHistoryOnRepayment(final LoanBO loan, final Money totalAmount) {
         ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
-        clientPerfHistory.updateOnRepayment(totalAmount);
+        clientPerfHistory.updateOnFullRepayment(loan.getLoanAmount());
     }
 
     @Override

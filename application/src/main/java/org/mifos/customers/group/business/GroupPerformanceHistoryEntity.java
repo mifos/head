@@ -355,7 +355,6 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public void updateOnDisbursement(LoanBO loan, Money disburseAmount) throws AccountException {
-        setLastGroupLoanAmount(disburseAmount);
         LoanOfferingBO loanOffering = loan.getLoanOffering();
         updateLoanCounter(loanOffering, YesNoFlag.YES);
         try {
@@ -385,7 +384,6 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
     }
 
     public void updateOnReversal(LoanBO loan, Money lastLoanAmount) throws AccountException {
-        setLastGroupLoanAmount(lastLoanAmount);
         updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
         try {
             if (configService.isGlimEnabled()) {
@@ -397,7 +395,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
         }
     }
 
-    public void updateOnRepayment(LoanBO loan, Money totalAmount) throws AccountException {
+    public void updateOnFullRepayment(LoanBO loan) throws AccountException {
+        setLastGroupLoanAmount(loan.getLoanAmount());
         try {
             if (configService.isGlimEnabled()) {
                 CollectionUtils.forAllDo(accountBusinessService.getCoSigningClientsForGlim(loan.getAccountId()),

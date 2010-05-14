@@ -1088,7 +1088,7 @@ public class LoanBO extends AccountBO {
             setClosedDate(transactionDate);
 
             // Client performance entry
-            updateCustomerHistoryOnRepayment(totalAmount);
+            updateCustomerHistoryOnRepayment();
             this.delete(loanArrearsAgingEntity);
             loanArrearsAgingEntity = null;
             getLoanPersistence().createOrUpdate(this);
@@ -2322,9 +2322,9 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void updateCustomerHistoryOnRepayment(final Money totalAmount) throws AccountException {
+    private void updateCustomerHistoryOnRepayment() throws AccountException {
         try {
-            getCustomer().updatePerformanceHistoryOnRepayment(this, totalAmount);
+            getCustomer().updatePerformanceHistoryOnRepayment(this, this.getLoanAmount());
         } catch (CustomerException e) {
             throw new AccountException(e);
         }

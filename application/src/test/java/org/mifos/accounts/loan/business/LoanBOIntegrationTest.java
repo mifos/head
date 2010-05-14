@@ -2550,7 +2550,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Assert.assertEquals(Integer.valueOf(1), clientPerfHistory.getLoanCycleNumber());
         Assert.assertEquals(noOfActiveLoans - 1, clientPerfHistory.getNoOfActiveLoans().intValue());
-        Assert.assertEquals(totalRepaymentAmount, clientPerfHistory.getLastLoanAmount());
+        Assert.assertEquals(((LoanBO) accountBO).getLoanAmount(), clientPerfHistory.getLastLoanAmount());
         StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -2658,7 +2658,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         LoanBO loan = (LoanBO) accountBO;
-        Assert.assertEquals(new Money(getCurrency(), "300.0"), groupPerformanceHistoryEntity.getLastGroupLoanAmount());
         LoanPerformanceHistoryEntity loanPerfHistory = loan.getPerformanceHistory();
         Assert.assertEquals(getLastInstallmentAccountAction(loan).getActionDate(), loanPerfHistory
                 .getLoanMaturityDate());

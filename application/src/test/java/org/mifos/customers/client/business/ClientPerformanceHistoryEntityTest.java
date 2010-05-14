@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.group.business;
+package org.mifos.customers.client.business;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -42,19 +42,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GroupPerformanceHistoryEntityTest {
+public class ClientPerformanceHistoryEntityTest {
 
-    private GroupPerformanceHistoryEntity groupPerformanceHistoryEntity;
+    private ClientPerformanceHistoryEntity clientgroupPerformanceHistoryEntity;
 
     @Mock
     private LoanBO loan;
 
     @Mock
-    private ConfigurationBusinessService configurationBusinessService;
-
-    @Mock
-    private AccountBusinessService accountBusinessService;
-
+    private ClientBO client;
 
     private static MifosCurrency oldDefaultCurrency;
 
@@ -75,17 +71,16 @@ public class GroupPerformanceHistoryEntityTest {
     public void shouldUpdateLastLoanAmountWhenLoanIsFullyPaid() throws Exception {
 
         Money loanAmount = new Money(Money.getDefaultCurrency(), "55.6");
-
         // setup
-        groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessService);
+        clientgroupPerformanceHistoryEntity = new ClientPerformanceHistoryEntity(client);
 
         when(loan.getLoanAmount()).thenReturn(loanAmount);
 
         // exercise test
-        groupPerformanceHistoryEntity.updateOnFullRepayment(loan);
+        clientgroupPerformanceHistoryEntity.updateOnFullRepayment(loanAmount);
 
         // verification
-        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount(), is(notNullValue()));
-        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
+        assertThat(clientgroupPerformanceHistoryEntity.getLastLoanAmount(), is(notNullValue()));
+        assertThat(clientgroupPerformanceHistoryEntity.getLastLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
     }
 }
