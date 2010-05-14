@@ -30,7 +30,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -47,11 +46,11 @@ import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
+import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
-import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
@@ -87,11 +86,15 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
+/**
+ * Default implementation of {@link CustomerService}.
+ */
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerDao customerDao;
@@ -115,33 +118,42 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
+    public final void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
 
         customer.validate();
         customer.validateMeetingAndFees(accountFees);
+
+//        FIXME - keithw - should we ensure center names are unique per branch/office
+//        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
 
         // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
-//        List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         createCustomer(customer, meeting, accountFees);
     }
 
     @Override
-    public void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees)
+    public final void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees)
             throws CustomerException {
 
         group.validate();
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
+        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
+        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
+
+        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
+        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+
         createCustomer(group, meeting, accountFees);
     }
 
     @Override
-    public void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees,
+    public final void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees,
             List<SavingsOfferingBO> savingProducts) throws CustomerException {
 
         if (client.isStatusValidationRequired()) {
@@ -254,30 +266,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
+    public final void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
 
         CustomerBO center = customerDao.findCustomerById(centerUpdate.getCustomerId());
         center.validateVersion(centerUpdate.getVersionNum());
         center.setUserContext(userContext);
-
-        Short loanOfficerId = centerUpdate.getLoanOfficerId();
-        PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
-
-        if (center.isActive()) {
-            if (loanOfficer == null) {
-                throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
-            }
-        }
-
-        try {
-            if (centerUpdate.getMfiJoiningDate() != null) {
-                DateTime mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
-                        .getPreferredLocale());
-                center.setMfiJoiningDate(mfiJoiningDate.toDate());
-            }
-        } catch (InvalidDateException e) {
-            throw new ApplicationException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
-        }
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         center.updateCustomFields(centerUpdate.getCustomFields());
@@ -294,24 +287,9 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(center);
 
-            PersonnelBO oldLoanOfficer = center.getPersonnel();
-            center.setLoanOfficer(loanOfficer);
+            updateLoanOfficerAndValidate(centerUpdate.getLoanOfficerId(), center);
 
-            if (center.isLoanOfficerChanged(oldLoanOfficer)) {
-                // If a new loan officer has been assigned, then propagate this
-                // change to the customer's children and to their associated
-                // accounts.
-                new CustomerPersistence().updateLOsForAllChildren(loanOfficerId, center.getSearchId(), center.getOffice()
-                        .getOfficeId());
-
-                new CustomerPersistence().updateLOsForAllChildrenAccounts(loanOfficerId, center.getSearchId(), center
-                        .getOffice().getOfficeId());
-            }
-
-            center.setExternalId(centerUpdate.getExternalId());
-            center.updateAddress(centerUpdate.getAddress());
-            center.setUpdatedBy(userContext.getId());
-            center.setUpdatedDate(new DateTime().toDate());
+            center.updateCenterDetails(userContext, centerUpdate);
 
             customerDao.save(center);
 
@@ -324,6 +302,132 @@ public class CustomerServiceImpl implements CustomerService {
             throw new MifosRuntimeException(e);
         } finally {
             hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public final void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException {
+
+        GroupBO group = customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
+        group.validateVersion(groupUpdate.getVersionNo());
+        group.setUserContext(userContext);
+
+        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
+        group.updateCustomFields(groupUpdate.getCustomFields());
+        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
+
+        assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
+
+            group.updateTrainedDetails(groupUpdate);
+            group.setExternalId(groupUpdate.getExternalId());
+            group.updateAddress(groupUpdate.getAddress());
+
+            if (group.isNameDifferent(groupUpdate.getDisplayName())) {
+                customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
+                group.setDisplayName(groupUpdate.getDisplayName());
+            }
+
+            updateLoanOfficerAndValidate(groupUpdate.getLoanOfficerId(), group);
+
+            customerDao.save(group);
+
+            hibernateTransactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw e;
+        } catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public final void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+
+        setInitialObjectForAuditLogging(client);
+        client.updatePersonalInfo(personalInfo);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            InputStream pictureSteam = personalInfo.getPicture();
+
+            if (pictureSteam != null) {
+                Blob pictureAsBlob = new ClientPersistence().createBlob(pictureSteam);
+                client.createOrUpdatePicture(pictureAsBlob);
+            }
+
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public final void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+
+        try {
+            setInitialObjectForAuditLogging(client);
+            client.updateFamilyInfo(clientFamilyInfoUpdate);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    @Override
+    public final void updateClientMfiInfo(ClientBO client, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
+
+        client.setExternalId(clientMfiInfoUpdate.getExternalId());
+        client.setTrained(clientMfiInfoUpdate.isTrained());
+        client.setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+
+        setInitialObjectForAuditLogging(client);
+
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(clientMfiInfoUpdate.getPersonnelId());
+        client.updateMfiInfo(personnel);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerDao.save(client);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    private void updateLoanOfficerAndValidate(Short loanOfficerId, CustomerBO customer) throws CustomerException {
+        PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
+
+        if (customer.isLoanOfficerChanged(loanOfficer)) {
+            customer.setLoanOfficer(loanOfficer);
+            customer.validate();
+
+            customerDao.updateLoanOfficersForAllChildrenAndAccounts(loanOfficerId, customer.getSearchId(), customer.getOffice().getOfficeId());
+        } else {
+            customer.validate();
         }
     }
 
@@ -353,204 +457,58 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException {
+    public final void updateCustomerStatus(UserContext userContext, CustomerStatusUpdate customerStatusUpdate) throws CustomerException {
 
-        GroupBO group = customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
-        group.validateVersion(groupUpdate.getVersionNo());
-        group.setUserContext(userContext);
-        group.updateTrainedDetails(groupUpdate);
-        group.setExternalId(groupUpdate.getExternalId());
-        group.updateAddress(groupUpdate.getAddress());
+        CustomerBO customer = this.customerDao.findCustomerById(customerStatusUpdate.getCustomerId());
+        customer.validateVersion(customerStatusUpdate.getVersionNum());
+        customer.setUserContext(userContext);
+        customer.setUpdateDetails();
 
-        if (group.isNameDifferent(groupUpdate.getDisplayName())) {
-            group.setDisplayName(groupUpdate.getDisplayName());
-            customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
-        }
+        checkPermission(customer, userContext, customerStatusUpdate.getNewStatus(), customerStatusUpdate.getCustomerStatusFlag());
 
-        Short loanOfficerId = groupUpdate.getLoanOfficerId();
-        PersonnelBO loanOfficer = personnelDao.findPersonnelById(loanOfficerId);
+        Short oldStatusId = customer.getCustomerStatus().getId();
+        CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
 
-        if (group.isLoanOfficerChanged(loanOfficer)) {
-            group.setLoanOfficer(loanOfficer);
-            group.validate();
+//        customer.validateLoanOfficerIsActive();
 
-            customerDao.updateLoanOfficersForAllChildrenAndAccounts(loanOfficerId, group.getSearchId(), group.getOffice().getOfficeId());
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        CustomerNoteEntity customerNote = new CustomerNoteEntity(customerStatusUpdate.getNotes(), new DateTimeService().getCurrentJavaSqlDate(), loggedInUser, customer);
+
+        if (customer.isGroup()) {
+            GroupBO group = (GroupBO) customer;
+            updateGroupStatus(group, oldStatus, customerStatusUpdate.getNewStatus(), customerStatusUpdate.getCustomerStatusFlag(), customerNote);
+        } else if (customer.isClient()) {
+            ClientBO client = (ClientBO) customer;
+            updateClientStatus(client, oldStatus, customerStatusUpdate.getNewStatus(), customerStatusUpdate.getCustomerStatusFlag(), customerNote);
         } else {
-            group.validate();
-        }
-
-        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
-        group.updateCustomFields(groupUpdate.getCustomFields());
-        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
-
-        assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
-
-        try {
-            hibernateTransactionHelper.startTransaction();
-
-            customerDao.save(group);
-
-            hibernateTransactionHelper.commitTransaction();
-        } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            hibernateTransactionHelper.closeSession();
+            CenterBO center = (CenterBO) customer;
+            updateCenterStatus(center, customerStatusUpdate.getNewStatus(), customerStatusUpdate.getCustomerStatusFlag(), customerNote);
         }
     }
 
-    @Override
-    public GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
+    private void checkPermission(CustomerBO customerBO, UserContext userContext, CustomerStatus newStatus, CustomerStatusFlag statusFlag) {
+        try {
 
-        group.validateNewCenter(receivingCenter);
-        group.validateForActiveAccounts();
-
-        setInitialObjectForAuditLogging(group);
-
-        OfficeBO centerOffice = receivingCenter.getOffice();
-        if (group.isDifferentBranch(centerOffice)) {
-            group.makeCustomerMovementEntries(centerOffice);
-            if (group.isActive()) {
-                group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            Short statusFlagId = null;
+            if (statusFlag != null) {
+                statusFlagId = statusFlag.getValue();
             }
-        }
 
-        CustomerBO oldParent = group.getParentCustomer();
-        group.setParentCustomer(receivingCenter);
-
-        CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
-        if (null != currentHierarchy) {
-            currentHierarchy.makeInactive(group.getUserContext().getId());
-        }
-        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, receivingCenter));
-
-        // handle parent
-        group.setPersonnel(receivingCenter.getPersonnel());
-
-        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
-        MeetingBO groupMeeting = group.getCustomerMeetingValue();
-        if (centerMeeting != null) {
-            if (groupMeeting != null) {
-                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
-                    // FIXME - #000002 - this will store meeting waiting for batch job to come along and update schedules to match updated meeting frequency
-                    group.setUpdatedMeeting(centerMeeting);
-                }
+            if (null != customerBO.getPersonnel()) {
+                new CustomerBusinessService().checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId,
+                        customerBO.getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
             } else {
-                CustomerMeetingEntity customerMeeting = group.createCustomerMeeting(centerMeeting);
-                group.setCustomerMeeting(customerMeeting);
+                new CustomerBusinessService().checkPermissionForStatusChange(newStatus.getValue(), userContext, statusFlagId,
+                        customerBO.getOffice().getOfficeId(), userContext.getId());
             }
-        } else if (groupMeeting != null) {
-            group.setCustomerMeeting(null);
-        }
-
-        if (oldParent != null) {
-            oldParent.setUserContext(group.getUserContext());
-        }
-
-        receivingCenter.incrementChildCount();
-        group.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
-
-        receivingCenter.setUserContext(group.getUserContext());
-
-        try {
-            StaticHibernateUtil.startTransaction();
-
-            group.setUpdateDetails();
-
-            if (oldParent != null) {
-                customerDao.save(oldParent);
-            }
-            customerDao.save(receivingCenter);
-
-            customerDao.save(group);
-
-            Set<CustomerBO> clients = group.getChildren();
-
-            if (clients != null) {
-                for (CustomerBO client : clients) {
-                    client.setUserContext(group.getUserContext());
-                    ((ClientBO) client).handleGroupTransfer();
-                    client.setUpdateDetails();
-                    customerDao.save(client);
-                }
-            }
-            StaticHibernateUtil.commitTransaction();
-
-            return group;
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+        } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Override
-    public GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
-
-        group.validateNewOffice(transferToOffice);
-        group.validateForActiveAccounts();
-
-        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
-
-        if (group.isActive()) {
-            group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-        }
-
-        group.makeCustomerMovementEntries(transferToOffice);
-        group.setPersonnel(null);
-
-        CustomerBO oldParentOfGroup = group.getParentCustomer();
-
-        String searchId = null;
-        if (oldParentOfGroup != null) {
-            oldParentOfGroup.incrementChildCount();
-            searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
-        } else {
-            try {
-                int newSearchIdSuffix = new CustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, group.getOffice().getOfficeId()) + 1;
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-        }
-        group.setSearchId(searchId);
-
-        try {
-            StaticHibernateUtil.startTransaction();
-
-            group.setUpdateDetails();
-
-            if (oldParentOfGroup != null) {
-                customerDao.save(oldParentOfGroup);
-            }
-
-            customerDao.save(group);
-
-            Set<CustomerBO> clients = group.getChildren();
-
-            if (clients != null) {
-                for (CustomerBO client : clients) {
-                    client.setUserContext(group.getUserContext());
-                    ((ClientBO) client).handleGroupTransfer();
-                    client.setUpdateDetails();
-                    customerDao.save(client);
-                }
-            }
-            StaticHibernateUtil.commitTransaction();
-
-            return group;
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     @Override
-    public void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag,
+    public final void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag,
             CustomerNoteEntity customerNote) throws CustomerException {
 
         if (newStatus.isCenterInActive()) {
@@ -597,7 +555,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus,
+    public final void updateGroupStatus(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus,
             CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         validateChangeOfStatusForGroup(group, oldStatus, newStatus);
@@ -700,7 +658,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
+    public final void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
             CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
         handeClientChangeOfStatus(client, newStatus);
@@ -891,69 +849,147 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo)
-            throws InvalidDateException {
+    public final GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
-        setInitialObjectForAuditLogging(client);
-        client.updatePersonalInfo(personalInfo);
+        group.validateNewCenter(receivingCenter);
+        group.validateForActiveAccounts();
+
+        setInitialObjectForAuditLogging(group);
+
+        OfficeBO centerOffice = receivingCenter.getOffice();
+        if (group.isDifferentBranch(centerOffice)) {
+            group.makeCustomerMovementEntries(centerOffice);
+            if (group.isActive()) {
+                group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
+        }
+
+        CustomerBO oldParent = group.getParentCustomer();
+        group.setParentCustomer(receivingCenter);
+
+        CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
+        if (null != currentHierarchy) {
+            currentHierarchy.makeInactive(group.getUserContext().getId());
+        }
+        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, receivingCenter));
+
+        // handle parent
+        group.setPersonnel(receivingCenter.getPersonnel());
+
+        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
+        MeetingBO groupMeeting = group.getCustomerMeetingValue();
+        if (centerMeeting != null) {
+            if (groupMeeting != null) {
+                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
+                    // FIXME - #000002 - this will store meeting waiting for batch job to come along and update schedules to match updated meeting frequency
+                    group.setUpdatedMeeting(centerMeeting);
+                }
+            } else {
+                CustomerMeetingEntity customerMeeting = group.createCustomerMeeting(centerMeeting);
+                group.setCustomerMeeting(customerMeeting);
+            }
+        } else if (groupMeeting != null) {
+            group.setCustomerMeeting(null);
+        }
+
+        if (oldParent != null) {
+            oldParent.setUserContext(group.getUserContext());
+        }
+
+        receivingCenter.incrementChildCount();
+        group.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
+
+        receivingCenter.setUserContext(group.getUserContext());
 
         try {
             StaticHibernateUtil.startTransaction();
-            InputStream pictureSteam = personalInfo.getPicture();
 
-            if (pictureSteam != null) {
-                Blob pictureAsBlob = new ClientPersistence().createBlob(pictureSteam);
-                client.createOrUpdatePicture(pictureAsBlob);
+            group.setUpdateDetails();
+
+            if (oldParent != null) {
+                customerDao.save(oldParent);
+            }
+            customerDao.save(receivingCenter);
+
+            customerDao.save(group);
+
+            Set<CustomerBO> clients = group.getChildren();
+
+            if (clients != null) {
+                for (CustomerBO client : clients) {
+                    client.setUserContext(group.getUserContext());
+                    ((ClientBO) client).handleGroupTransfer();
+                    client.setUpdateDetails();
+                    customerDao.save(client);
+                }
+            }
+            StaticHibernateUtil.commitTransaction();
+
+            return group;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
+    }
+
+    @Override
+    public final GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
+
+        group.validateNewOffice(transferToOffice);
+        group.validateForActiveAccounts();
+
+        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
+
+        if (group.isActive()) {
+            group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+        }
+
+        group.makeCustomerMovementEntries(transferToOffice);
+        group.setPersonnel(null);
+
+        CustomerBO oldParentOfGroup = group.getParentCustomer();
+
+        String searchId = null;
+        if (oldParentOfGroup != null) {
+            oldParentOfGroup.incrementChildCount();
+            searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
+        } else {
+            try {
+                int newSearchIdSuffix = new CustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, group.getOffice().getOfficeId()) + 1;
+                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
+            } catch (PersistenceException pe) {
+                throw new CustomerException(pe);
+            }
+        }
+        group.setSearchId(searchId);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+
+            group.setUpdateDetails();
+
+            if (oldParentOfGroup != null) {
+                customerDao.save(oldParentOfGroup);
             }
 
-            customerDao.save(client);
+            customerDao.save(group);
+
+            Set<CustomerBO> clients = group.getChildren();
+
+            if (clients != null) {
+                for (CustomerBO client : clients) {
+                    client.setUserContext(group.getUserContext());
+                    ((ClientBO) client).handleGroupTransfer();
+                    client.setUpdateDetails();
+                    customerDao.save(client);
+                }
+            }
             StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
 
-    @Override
-    public void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
-
-        try {
-            setInitialObjectForAuditLogging(client);
-            client.updateFamilyInfo(clientFamilyInfoUpdate);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Override
-    public void updateClientMfiInfo(ClientBO client, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
-
-        client.setExternalId(clientMfiInfoUpdate.getExternalId());
-        client.setTrained(clientMfiInfoUpdate.isTrained());
-        client.setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
-
-        setInitialObjectForAuditLogging(client);
-
-        PersonnelBO personnel = this.personnelDao.findPersonnelById(clientMfiInfoUpdate.getPersonnelId());
-        client.updateMfiInfo(personnel);
-
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+            return group;
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);

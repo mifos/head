@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
@@ -34,7 +35,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -98,7 +98,6 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;

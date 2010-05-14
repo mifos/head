@@ -47,22 +47,16 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterInformationDto;
-import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -242,9 +236,9 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private List<CustomFieldDto> retrieveCustomFieldsFromSession() throws PageExpiredException {
-        List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(
-                CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         return customFieldDefs;
     }
 
@@ -255,8 +249,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         actionPerform();
 
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeDto> feeList = retrieveAdditionalFeesFromSession();
         FeeDto fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -277,8 +270,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeId", "3");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeDto> feeList = retrieveAdditionalFeesFromSession();
         FeeDto fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -296,8 +288,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
         actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeDto> feeList = retrieveAdditionalFeesFromSession();
         FeeDto fee = feeList.get(0);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, getMeeting(), request);
         setRequestPathInfo("/centerCustAction.do");
@@ -319,8 +310,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, new MeetingBO(RecurrenceType.MONTHLY, Short
                 .valueOf("2"), new Date(), MeetingType.CUSTOMER_MEETING), request);
         List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeDto> feeList = retrieveAdditionalFeesFromSession();
         FeeDto fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -370,7 +360,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
 
         List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        List<FeeDto> feeList = retrieveAdditionalFeesFromSession();
 
         FeeDto fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
@@ -396,6 +386,11 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_success.toString());
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute("centerCustActionForm");
         center = TestObjectFactory.getCenter(actionForm.getCustomerIdAsInt());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<FeeDto> retrieveAdditionalFeesFromSession() throws PageExpiredException {
+        return (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
     }
 
     public void testManage() throws Exception {
@@ -503,65 +498,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    public void testSuccessfulUpdate() throws Exception {
-        Short officeId = (short) 3;
-        Short loanOfficerId = (short) 1;
-        center = new CenterBO(TestUtils.makeUser(), "center", new Address(), null, null, null, null,
-                new OfficePersistence().getOffice(officeId), getMeeting(), new PersonnelPersistence()
-                        .getPersonnel(loanOfficerId), new CustomerPersistence());
-        new CenterPersistence().saveCenter(center);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(new Integer(center.getCustomerId()).intValue());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
-
-        createGroupAndClient();
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "manage");
-        addRequestParameter("officeId", "3");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        List<CustomerPositionDto> positions = (List<CustomerPositionDto>) SessionUtils.getAttribute(CustomerConstants.POSITIONS, request);
-
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "editPreview");
-        addRequestParameter("displayName", "center");
-        addRequestParameter("loanOfficerId", "1");
-        addRequestParameter("externalId", "12");
-        addRequestParameter("mfiJoiningDateDD", "01");
-        addRequestParameter("mfiJoiningDateMM", "01");
-        addRequestParameter("mfiJoiningDateYY", "01");
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            addRequestParameter("customField[" + i + "].fieldType", customFieldDef.getFieldType().toString());
-            i++;
-        }
-        i = 0;
-        for (CustomerPositionDto position : positions) {
-            addRequestParameter("customerPosition[" + i + "].positionId", position.getPositionId().toString());
-            addRequestParameter("customerPosition[" + i + "].customerId", "");
-            i++;
-        }
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        Assert.assertEquals(0, getErrorSize());
-
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "update");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyForward(ActionForwards.update_success.toString());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(positions.size(), center.getCustomerPositions().size());
-        Assert.assertEquals("12", center.getExternalId());
-
-    }
-
     private void createAndSetCenterInSession() throws Exception {
         String name = "manage_center";
         center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
@@ -667,10 +603,5 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         for (FeeDto fee : feesToRemove) {
             TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
         }
-    }
-
-    private void createGroupAndClient() {
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client", CustomerStatus.CLIENT_ACTIVE, group);
     }
 }

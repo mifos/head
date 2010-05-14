@@ -49,7 +49,9 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -1467,5 +1469,23 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
 
         throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
+    }
+
+    public void updateCenterDetails(UserContext userContext, CenterUpdate centerUpdate) throws CustomerException {
+        this.setUserContext(userContext);
+        this.setUpdateDetails();
+
+        this.setExternalId(centerUpdate.getExternalId());
+        this.updateAddress(centerUpdate.getAddress());
+
+        try {
+            if (centerUpdate.getMfiJoiningDate() != null) {
+                DateTime mfiJoiningDate = CalendarUtils.getDateFromString(centerUpdate.getMfiJoiningDate(), userContext
+                        .getPreferredLocale());
+                this.setMfiJoiningDate(mfiJoiningDate.toDate());
+            }
+        } catch (InvalidDateException e) {
+            throw new CustomerException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
+        }
     }
 }
