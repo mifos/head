@@ -950,6 +950,11 @@ public class LoanBO extends AccountBO {
             final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
             final boolean persistChange) throws AccountException, PersistenceException {
 
+        if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
+                && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
+            throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
+        }
+
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
 
@@ -1020,15 +1025,9 @@ public class LoanBO extends AccountBO {
     /*
      * This disburseLoan only used via saveCollectionSheet - JPW
      *
-     * During refactoring... the checks in here should be applied to any loan disbursal and the error msgs organised and
-     * internationalised
      */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
-        if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
-                && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
-            throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
-        }
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
             throw new AccountException("Loan Amount to be Disbursed Held on Database : "
                     + this.getLoanAmount().getAmount() + " does not match the Input Loan Amount to be Disbursed: "
