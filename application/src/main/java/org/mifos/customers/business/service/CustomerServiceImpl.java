@@ -557,10 +557,8 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
-            StaticHibernateUtil.startTransaction();
-            setInitialObjectForAuditLogging(group);
-
-            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
 
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
@@ -590,16 +588,16 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
 
+            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
             group.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
 
             customerDao.save(group);
-            StaticHibernateUtil.commitTransaction();
-
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -620,6 +618,10 @@ public class CustomerServiceImpl implements CustomerService {
     private void validateChangeOfStatusForGroup(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus)
             throws CustomerException {
 
+        if (newStatus.isGroupActive()) {
+            group.validateGroupCanBeActive();
+        }
+
         if (newStatus.isGroupClosed()) {
             group.validateNoActiveAccountExist();
 
@@ -631,10 +633,6 @@ public class CustomerServiceImpl implements CustomerService {
                         new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
                                 group.getUserContext()) });
             }
-        }
-
-        if (newStatus.isGroupActive()) {
-            group.validateGroupCanBeActive();
         }
 
         if (oldStatus.isGroupCancelled() && newStatus.isGroupPartial()) {

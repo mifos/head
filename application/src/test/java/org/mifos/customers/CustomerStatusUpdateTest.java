@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
@@ -42,6 +43,7 @@ import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.business.service.MessageLookupHelper;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
@@ -241,5 +243,23 @@ public class CustomerStatusUpdateTest {
         // verification
         verify(hibernateTransaction).rollbackTransaction();
         verify(hibernateTransaction).closeSession();
+    }
+
+    @Test(expected=CustomerException.class)
+    public void throwsCheckedExceptionWhenValidationFailsForTransitioningToActive() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.GROUP_ACTIVE).build();
+
+        CenterBO existingCenter = new CenterBuilder().build();
+        GroupBO existingGroup = new GroupBuilder().active().withParentCustomer(existingCenter).withVersion(customerStatusUpdate.getVersionNum()).build();
+        existingGroup.setLoanOfficer(null);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingGroup);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
     }
 }
