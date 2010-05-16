@@ -294,7 +294,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return customerStatus;
     }
 
-    public final void setCustomerStatus(final CustomerStatusEntity customerStatus) {
+    public void setCustomerStatus(final CustomerStatusEntity customerStatus) {
         this.customerStatus = customerStatus;
     }
 
