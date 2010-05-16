@@ -494,4 +494,7 @@ public interface SecurityConstants {
 
     /** Can shutdown Mifos */
     public final short CAN_SHUTDOWN_MIFOS = 234;
+
+    /** Can define new holidays */
+    public final short CAN_DEFINE_HOLIDAY = 235;
 }

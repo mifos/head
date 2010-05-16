@@ -67,7 +67,7 @@ import org.mifos.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 247;
+    public static final int APPLICATION_VERSION = 248;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
@@ -132,6 +132,7 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade237());
         register(register, new Upgrade238());
         register(register, new Upgrade240());
+        register248(register);
         return Collections.unmodifiableMap(register);
     }
 
@@ -331,6 +332,15 @@ public class DatabaseVersionPersistence {
     private static void register236(Map<Integer, Upgrade> register) {
         register(register, new AddActivity(236, "Permissions-CanShutdownMifos",
                 SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION));
+    }
+
+    private static void register248(Map<Integer, Upgrade> register) {
+        register(register, new AddActivity(248, "Permissions-CanDefineHoliday",
+                SecurityConstants.CAN_DEFINE_HOLIDAY, SecurityConstants.ORGANIZATION_MANAGEMENT));
+//        register(register, new CompositeUpgrade(
+//                new AddActivity(248, SecurityConstants.PRODUCT_MIX, null, ENGLISH_LOCALE, "Product mix"),
+//                new AddActivity(248, SecurityConstants.CAN_DEFINE_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Define product mix"),
+//                new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Edit product mix")));
     }
 
     public DatabaseVersionPersistence() {
