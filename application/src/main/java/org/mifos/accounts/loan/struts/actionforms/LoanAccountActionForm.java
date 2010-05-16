@@ -181,6 +181,10 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private AmountRange amountRange;
 
+    private Double maxInterestRate;
+
+    private Double minInterestRate;
+
     private InstallmentRange installmentRange;
 
     private String dayNumber;
@@ -939,7 +943,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         if (!(configService.isGlimEnabled() && getCustomer(request).isGroup())) {
             checkForMinMax(errors, loanAmount, amountRange, resources.getString("loan.amount"));
         }
-        checkForMinMax(errors, interestRate, loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
+        checkForMinMax(errors, interestRate, maxInterestRate, minInterestRate,
                 resources.getString("loan.interestRate"));
         checkForMinMax(errors, noOfInstallments, installmentRange, resources.getString("loan.noOfInstallments"));
         if (StringUtils.isBlank(getDisbursementDate())) {
@@ -995,8 +999,8 @@ public class LoanAccountActionForm extends BaseActionForm {
     private void checkForMinMax(ActionErrors errors, String currentValue, Double maxValue, Double minValue, String field) {
         try {
             if (StringUtils.isBlank(currentValue)
-                    || getDoubleValue(currentValue).doubleValue() > maxValue.doubleValue()
-                    || getDoubleValue(currentValue).doubleValue() < minValue.doubleValue()) {
+                    || getDoubleValue(currentValue) > maxValue
+                    || getDoubleValue(currentValue) < minValue) {
                 addError(errors, field, LoanExceptionConstants.INVALIDMINMAX, field, getStringValue(minValue),
                         getStringValue(maxValue));
             }
@@ -1362,8 +1366,32 @@ public class LoanAccountActionForm extends BaseActionForm {
         this.amountRange = amountRange;
     }
 
+    public void setMaxInterestRate(Double maxInterestRate) {
+        this.maxInterestRate = maxInterestRate;
+    }
+
+    public void setMinInterestRate(Double minInterestRate) {
+        this.minInterestRate = minInterestRate;
+    }
+
     public void setInstallmentRange(InstallmentRange installmentRange) {
         this.installmentRange = installmentRange;
+    }
+
+    public String getMinInterestRate() {
+        return getDoubleStringForMoney(getMinInterestRateValue());
+    }
+
+    public Double getMinInterestRateValue() {
+        return minInterestRate;
+    }
+
+    public String getMaxInterestRate() {
+        return getDoubleStringForMoney(getMaxInterestRateValue());
+    }
+
+    public Double getMaxInterestRateValue() {
+        return maxInterestRate;
     }
 
     public String getMinLoanAmount() {
