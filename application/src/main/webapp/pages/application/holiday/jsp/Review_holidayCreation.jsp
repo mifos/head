@@ -66,7 +66,7 @@ explanation of the license and how it is applied.
           			</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-					<html-el:link action="holidayAction.do?method=getHolidays&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+					<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
           				<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
           			</html-el:link>
           	     </span>

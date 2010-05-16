@@ -57,6 +57,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -174,6 +175,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
 
     public void testThatLoanInPendingApprovalStateDoesNotGenerateArrearsData() throws Exception {
+        new TestCaseInitializer().createDb();
+        setUp();
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_PENDING_APPROVAL);
 
         Assert.assertNull(ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan));

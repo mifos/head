@@ -17,16 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-
-package org.mifos.application.holiday.persistence;
+package org.mifos.customers.office.business.service;
 
 import java.util.List;
-import java.util.Map;
 
+import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.framework.exceptions.ServiceException;
 
-public interface HolidayServiceFacade {
-    void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds) throws ServiceException;
 
-    Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException;
+public class OfficeFacade {
+
+    private OfficeBusinessService officeBusinessService;
+
+    public OfficeFacade(OfficeBusinessService officeBusinessService) {
+        this.officeBusinessService = officeBusinessService;
+    }
+
+    public List<OfficeDto> depthFirstHeadOfficeHierarchy() throws ServiceException {
+        return officeBusinessService.depthFirstHeadOfficeHierarchy();
+    }
 }

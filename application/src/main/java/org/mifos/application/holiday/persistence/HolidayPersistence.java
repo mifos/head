@@ -42,7 +42,7 @@ public class HolidayPersistence extends MasterPersistence {
     public HolidayPersistence() {
     }
 
-    public HolidayBO getHoliday(final Short holidayId) throws PersistenceException {
+    public HolidayBO getHoliday(final Integer holidayId) throws PersistenceException {
         return (HolidayBO) getPersistentObject(HolidayBO.class, holidayId);
     }
 

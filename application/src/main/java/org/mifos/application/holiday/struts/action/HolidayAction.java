@@ -21,13 +21,11 @@
 package org.mifos.application.holiday.struts.action;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,10 +37,14 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.persistence.OfficeHoliday;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
+import org.mifos.customers.office.business.service.OfficeFacade;
+import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -85,33 +87,10 @@ public class HolidayAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-
         doCleanUp(request);
-
         request.getSession().setAttribute("HolidayActionForm", null);
-
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    public ActionForward getHolidays(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-
-        // call method to set list of holidays in session
-        setHolidayListInSession(request, userContext);
-
-        return mapping.findForward("view_organizational_holidays");
-    }
-
-    private List<HolidayBO> getHolidays(int year, int localeId) throws Exception {
-        return getHolidayBizService().getHolidays(year);
     }
 
     private Map<Short, String> getRepaymentRuleTypes() throws Exception {
@@ -127,10 +106,6 @@ public class HolidayAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
         return mapping.findForward(ActionForwards.load_success.toString());// "create_office_holiday");
-    }
-
-    private HolidayBusinessService getHolidayBizService() {
-        return new HolidayBusinessService();
     }
 
     private void doCleanUp(HttpServletRequest request) {
@@ -169,19 +144,17 @@ public class HolidayAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-
-        // call method to set list of holidays in session
-        setHolidayListInSession(request, userContext);
-
+        HolidayServiceFacadeWebTier holidayServiceFacade = new HolidayServiceFacadeWebTier(new OfficePersistence());
+        int count = 1;
+        Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
+        Set<String> distinctYears = holidaysByYear.keySet();
+        for (String year : distinctYears) {
+            request.getSession().setAttribute(HolidayConstants.HOLIDAY_LIST + count, holidaysByYear.get(year));
+            request.getSession().setAttribute(HolidayConstants.YEAR + count, year);
+            count++;
+        }
+        request.getSession().setAttribute(HolidayConstants.NO_OF_YEARS, count - 1);
         return mapping.findForward(ActionForwards.get_success.toString());
-    }
-
-    private List<HolidayBO> getDistinctYears() throws Exception {
-        List returnValues = getHolidayBizService().getDistinctYears();
-        return returnValues;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -247,37 +220,4 @@ public class HolidayAction extends BaseAction {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
-
-    private void setHolidayListInSession(HttpServletRequest request, UserContext userContext) throws Exception {
-        List years = getDistinctYears();
-        Set distinctYears = null;
-        if (years != null && years.size() != 0) {
-            List temp = new ArrayList();
-            Iterator iter = years.iterator();
-
-            while (iter.hasNext()) {
-                String date = iter.next().toString();
-                date = date.substring(0, 4);
-                temp.add(date);
-            }
-
-            // distinctYears = new HashSet(temp);
-            distinctYears = new TreeSet(temp);
-        }
-
-        int yearGroupingCount = 1;
-        if (distinctYears != null && distinctYears.size() != 0) {
-            Iterator iter = distinctYears.iterator();
-            while (iter.hasNext()) {
-                String year = (String) iter.next();
-                int intYear = Integer.parseInt(year);
-                SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAY_LIST + yearGroupingCount, getHolidays(
-                        intYear, userContext.getLocaleId()), request);
-                request.getSession().setAttribute(HolidayConstants.YEAR + yearGroupingCount, intYear);
-                yearGroupingCount++;
-            }
-        }
-        request.getSession().setAttribute(HolidayConstants.NO_OF_YEARS, yearGroupingCount - 1);
-    }
-
 }

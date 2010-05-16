@@ -20,13 +20,16 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -53,39 +56,43 @@ public class TestCaseInitializer {
     public synchronized void initialize() throws Exception {
         if (initialized == false) {
             initialized = true;
-            /*
-             * Make sure TestingService is aware that we're running integration
-             * tests. This is for integration test cases that use a database,
-             * but could also apply to other "black box" tests.
-             */
-            new StandardTestingService().setTestMode(TestMode.INTEGRATION);
-
-            TestDatabase.createMySQLTestDatabase();
-            DatabaseSetup.initializeHibernate();
-            // add this because it is added to Application Initializer
-            Localization.getInstance().init();
-            /*
-             * initializeSpring needs to come before AuditConfiguration.init in
-             * order for MasterDataEntity data to be loaded.
-             */
-
-            /*
-             * shouldn't we have other initialization from
-             * ApplicationInitializer in here ?
-             */
-
-            Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
-
-            TestUtils.initializeSpring();
-            // Spring must be initialized before FinancialInitializer
-            FinancialInitializer.initialize();
-            ActivityMapper.getInstance().init();
-            AuthorizationManager.getInstance().init();
-            HierarchyManager.getInstance().init();
-
-            MifosConfiguration.getInstance().init();
-            AuditConfigurtion.init(Localization.getInstance().getMainLocale());
-            AccountingRules.init();
+            createDb();
         }
+    }
+
+    public void createDb() throws Exception{
+        /*
+         * Make sure TestingService is aware that we're running integration
+         * tests. This is for integration test cases that use a database,
+         * but could also apply to other "black box" tests.
+         */
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+
+        TestDatabase.createMySQLTestDatabase();
+        DatabaseSetup.initializeHibernate();
+        // add this because it is added to Application Initializer
+        Localization.getInstance().init();
+        /*
+         * initializeSpring needs to come before AuditConfiguration.init in
+         * order for MasterDataEntity data to be loaded.
+         */
+
+        /*
+         * shouldn't we have other initialization from
+         * ApplicationInitializer in here ?
+         */
+
+        Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
+
+        TestUtils.initializeSpring();
+        // Spring must be initialized before FinancialInitializer
+        FinancialInitializer.initialize();
+        ActivityMapper.getInstance().init();
+        AuthorizationManager.getInstance().init();
+        HierarchyManager.getInstance().init();
+
+        MifosConfiguration.getInstance().init();
+        AuditConfigurtion.init(Localization.getInstance().getMainLocale());
+        AccountingRules.init();
     }
 }

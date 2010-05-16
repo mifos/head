@@ -91,7 +91,9 @@ public interface HolidayConstants {
     public final String HOLIDAYLIST1 = "holidayList1";
     public final String HOLIDAYLIST2 = "holidayList2";
     public final String REPAYMENTRULETYPES = "RepaymentRuleType";
-    public String HOLIDAY_ACTIONFORM = "holidayActionForm";
+    public final String DEPTH_FIRST_HIERARCHY = "depthFirstHeadOfficeHierarchy";
+    public final String HOLIDAY_ACTIONFORM = "holidayActionForm";
+    public final String APPLICABLE_OFFICES = "applicableOffices";
     public static final String ALL_HOLIDAYLIST = "allHolidays";
 
     public static final String HOLIDAYNAME = "holiday.HolidayName";

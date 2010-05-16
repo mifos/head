@@ -31,14 +31,14 @@
 		</set>
 		<set name="children"  inverse="true"  lazy="true" >
 			<key column="PARENT_OFFICE_ID"  />
-			<one-to-many class="org.mifos.customers.office.business.OfficeBO"   />
+			<one-to-many class="org.mifos.customers.office.business.OfficeBO"/>
 		</set>
 
 		<one-to-one name="address"	class="org.mifos.customers.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" />
-	    <set name="holidays" table="office_holiday" cascade="all" inverse="true">
+	    <set name="holidays" table="office_holiday" access="field" cascade="all">
 	        <key column="office_id"/>
 	        <many-to-many column="holiday_id"
-	            class="org.mifos.application.holiday.business.HolidayBO" />
+	            class="org.mifos.application.holiday.business.HolidayBO"/>
 	    </set>
 	</class>
 	<query name="masterdata.activeBranches">

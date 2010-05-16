@@ -44,6 +44,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -178,6 +179,8 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
     }
 
     public void testSearch() throws Exception {
+        new TestCaseInitializer().createDb();
+        setUp();
         center = createCenter("Center_Active_test");
         String groupName = "Group_Active_test";
         group = createGroup(groupName);

@@ -20,10 +20,13 @@
 
 package org.mifos.customers.office.business.service;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -112,6 +115,29 @@ public class OfficeBusinessService implements BusinessService {
             return officePersistence.getAllofficesForCustomFIeld();
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
+        }
+    }
+
+    public List<OfficeDto> depthFirstHeadOfficeHierarchy() throws ServiceException {
+        OfficeBO headOffice = getHeadOffice();
+        return depthFirstHierarchy(headOffice);
+    }
+
+    private List<OfficeDto> depthFirstHierarchy(OfficeBO office) {
+        LinkedList<OfficeDto> hierarchy = new LinkedList<OfficeDto>();
+        hierarchy.add(new OfficeDto(office.getOfficeId(), office.getOfficeName(), office.getSearchId()));
+        Set<OfficeBO> children = office.getChildren();
+        for (OfficeBO child : children) {
+            hierarchy.addAll(depthFirstHierarchy(child));
+        }
+        return hierarchy;
+    }
+
+    public OfficeBO getHeadOffice() throws ServiceException {
+        try {
+            return officePersistence.getHeadOffice();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
         }
     }
 }

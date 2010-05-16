@@ -64,6 +64,16 @@ public class HolidayActionForm extends BaseActionForm {
 
     private String holidayName;
 
+    private String[] applicableOffices;
+
+    public String[] getApplicableOffices() {
+        return this.applicableOffices;
+    }
+
+    public void setApplicableOffices(String[] applicableOffices) {
+        this.applicableOffices = applicableOffices;
+    }
+
     public HolidayActionForm() {
     }
 

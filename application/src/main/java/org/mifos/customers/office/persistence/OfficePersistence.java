@@ -108,8 +108,11 @@ public class OfficePersistence extends Persistence {
 
     public void addHoliday(Short officeId, HolidayBO holiday) throws PersistenceException {
         OfficeBO office = getOffice(officeId);
-        office.getHolidays().add(holiday);
-        createOrUpdate(office);
+        office.addHoliday(holiday);
+        createOrUpdate(holiday);
+        for (OfficeBO childOffice : office.getChildren()) {
+            addHoliday(childOffice.getOfficeId(), holiday);
+        }
     }
 
     public OfficeBO getHeadOffice() throws PersistenceException {

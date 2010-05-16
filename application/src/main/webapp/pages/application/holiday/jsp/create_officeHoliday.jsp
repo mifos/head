@@ -33,16 +33,16 @@ explanation of the license and how it is applied.
 		<SCRIPT>
 	function ViewHolidays(){
 	    //alert("ViewHolidays() have been called");
-		holidayActionForm.action="holidayAction.do?method=getHolidays";
+		holidayActionForm.action="holidayAction.do?method=get";
 		//alert("ViewHolidays() will submit");
 		holidayActionForm.submit();
 	}
 
 	function ViewHolidays(form){
 		//alert("ViewHolidays(form) have been called");
-		holidayActionForm.action="holidayAction.do?method=getHolidays";
+		holidayActionForm.action="holidayAction.do?method=get";
 		holidayActionForm.submit();
-		//form.action="holidayAction.do?method=getHolidays";
+		//form.action="holidayAction.do?method=get";
 		//form.submit();
 	}
 </SCRIPT>
@@ -63,7 +63,7 @@ explanation of the license and how it is applied.
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="holidayAction.do?method=getHolidays&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	              	<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
           				<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
           			</html-el:link> /
 	              </span>
