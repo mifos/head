@@ -108,9 +108,14 @@ public class ImportTransactionsAction extends BaseAction {
             errorsForDisplay.addAll(importResult.getParseErrors());
         }
 
+
+        int numberRowSuccessfullyParsed = ti.getSuccessfullyParsedRows();
+
+        if(numberRowSuccessfullyParsed == -1) {
+            numberRowSuccessfullyParsed = importResult.getSuccessfullyParsedPayments().size();
+        }
         boolean submitButtonDisabled = false;
-        int numberRowSuccessfullyParsed = importResult.getSuccessfullyParsedRows().size()/ti.getNumberOfTransactionsPerRow();
-        if (numberRowSuccessfullyParsed <= 0) {
+        if (numberRowSuccessfullyParsed == 0) {
             submitButtonDisabled = true;
         }
 
@@ -173,7 +178,7 @@ public class ImportTransactionsAction extends BaseAction {
         ImportTransactionsServiceFacade importedFilesServiceFacade = new WebTierImportTransactionsServiceFacade();
         importedFilesServiceFacade.saveImportedFileName(userContext, importTransactionsFileName);
 
-        logger.info(importResult.getSuccessfullyParsedRows().size() + " transaction(s) imported from "
+        logger.info(transactionImport.getSuccessfullyParsedRows() + " transaction(s) imported from "
                 + importTransactionsFileName + ".");
 
         new File(tempFilename).delete();
