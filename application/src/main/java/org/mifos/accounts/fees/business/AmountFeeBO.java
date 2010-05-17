@@ -65,9 +65,9 @@ public class AmountFeeBO extends FeeBO {
      */
     public AmountFeeBO(final UserContext userContext, final String feeName, final CategoryTypeEntity categoryType,
             final FeeFrequencyTypeEntity feeFrequencyType, final GLCodeEntity glCodeEntity, final Money amount,
-            final boolean isCustomerDefaultFee, final FeePaymentEntity feePayment) throws FeeException {
+            final boolean isCustomerDefaultFee, final FeePaymentEntity feePayment, final OfficeBO office) throws FeeException {
         this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, amount, isCustomerDefaultFee,
-                feePayment, null);
+                feePayment, null, office);
     }
 
     /**
@@ -76,16 +76,17 @@ public class AmountFeeBO extends FeeBO {
      */
     public AmountFeeBO(final UserContext userContext, final String feeName, final CategoryTypeEntity categoryType,
             final FeeFrequencyTypeEntity feeFrequencyType, final GLCodeEntity glCodeEntity, final Money amount,
-            final boolean isCustomerDefaultFee, final MeetingBO meeting) throws FeeException {
+            final boolean isCustomerDefaultFee, final MeetingBO meeting, final OfficeBO office) throws FeeException {
         this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, amount, isCustomerDefaultFee, null,
-                meeting);
+                meeting, office);
     }
 
     private AmountFeeBO(final UserContext userContext, final String feeName, final CategoryTypeEntity categoryType,
             final FeeFrequencyTypeEntity feeFrequencyType, final GLCodeEntity glCodeEntity, final Money amount,
-            final boolean isCustomerDefaultFee, final FeePaymentEntity feePayment, final MeetingBO meeting) throws FeeException {
+            final boolean isCustomerDefaultFee, final FeePaymentEntity feePayment, final MeetingBO meeting,
+            final OfficeBO office) throws FeeException {
         super(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, isCustomerDefaultFee, feePayment,
-                meeting);
+                meeting, office);
         validateFeeAmount(amount);
         this.feeAmount = amount;
     }

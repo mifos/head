@@ -504,7 +504,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), intglCodeEntity, new Money(
                         getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, EVERY_MONTH,
-                CUSTOMER_MEETING, MONDAY)));
+                CUSTOMER_MEETING, MONDAY)), TestObjectFactory.getHeadOffice());
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(fee);
         try {
@@ -524,10 +524,12 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date endDate = offSetCurrentDate(2);
         FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), intglCodeEntity, new Money(
-                        getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting()));
+                        getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting()),
+                        TestObjectFactory.getHeadOffice());
         FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), intglCodeEntity, new Money(
-                        getCurrency(), "100"), false, new FeePaymentEntity(FeePayment.UPFRONT));
+                        getCurrency(), "100"), false, new FeePaymentEntity(FeePayment.UPFRONT),
+                        TestObjectFactory.getHeadOffice());
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(fee);
         fees.add(fee1);
@@ -887,7 +889,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), intglCodeEntity, new Money(
                         getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, EVERY_MONTH,
-                CUSTOMER_MEETING, MONDAY)));
+                CUSTOMER_MEETING, MONDAY)), TestObjectFactory.getHeadOffice());
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(fee);
         product = createLoanOfferingBO("Loan Product", "LOAP");
@@ -908,10 +910,12 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         Date endDate = offSetCurrentDate(2);
         FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), intglCodeEntity, new Money(
-                        getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting()));
+                        getCurrency(), "100"), false, TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting()),
+                        TestObjectFactory.getHeadOffice());
         FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(), "Loan Periodic", new CategoryTypeEntity(
                 FeeCategory.LOAN), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), intglCodeEntity, new Money(
-                        getCurrency(), "100"), false, new FeePaymentEntity(FeePayment.UPFRONT));
+                        getCurrency(), "100"), false, new FeePaymentEntity(FeePayment.UPFRONT),
+                        TestObjectFactory.getHeadOffice());
         List<FeeBO> fees = new ArrayList<FeeBO>();
         fees.add(fee);
         fees.add(fee1);

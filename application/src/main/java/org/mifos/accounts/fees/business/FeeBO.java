@@ -57,6 +57,8 @@ public abstract class FeeBO extends AbstractBusinessObject {
     private final Set<FeeLevelEntity> feeLevels;
 
     private OfficePersistence officePersistence;
+    private MasterPersistence masterPersistence;
+    private FeePersistence feePersistence;
 
     public OfficePersistence getOfficePersistence() {
         if(officePersistence == null){
@@ -69,6 +71,29 @@ public abstract class FeeBO extends AbstractBusinessObject {
         this.officePersistence = officePersistence;
     }
 
+    public void setFeePersistence(FeePersistence feePersistence) {
+        this.feePersistence = feePersistence;
+    }
+
+    public void setMasterPersistence(MasterPersistence masterPersistence) {
+        this.masterPersistence = masterPersistence;
+    }
+
+    public MasterPersistence getMasterPersistence() {
+        if (masterPersistence == null) {
+            masterPersistence = new MasterPersistence();
+        }
+        return masterPersistence;
+    }
+
+    public FeePersistence getFeePersistence() {
+        if (feePersistence == null) {
+            feePersistence = new FeePersistence();
+        }
+        return feePersistence;
+    }
+
+
     /**
      * @param office
      * @param createdByUserId
@@ -79,6 +104,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
             final GLCodeEntity feeGLCode, final MeetingBO meetingPeriodicity, final OfficeBO office,
             final Date createdDate,
             final Short createdByUserId) {
+        //FIXME: introduced for testing purpose only. check reference.
         this.feeId = null;
         this.feeName = name;
         this.categoryType = new CategoryTypeEntity(category);
@@ -105,7 +131,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
      */
     protected FeeBO(final UserContext userContext, final String feeName, final CategoryTypeEntity categoryType,
             final FeeFrequencyTypeEntity feeFrequencyType, final GLCodeEntity glCodeEntity, final boolean isCustomerDefaultFee,
-            final FeePaymentEntity feePayment, final MeetingBO feeMeeting) throws FeeException {
+            final FeePaymentEntity feePayment, final MeetingBO feeMeeting, final OfficeBO office) throws FeeException {
 
         validateFields(feeName, categoryType, glCodeEntity);
         this.feeFrequency = new FeeFrequencyEntity(feeFrequencyType, this, feePayment, feeMeeting);
@@ -120,7 +146,11 @@ public abstract class FeeBO extends AbstractBusinessObject {
         this.feeId = null;
         this.feeLevels = new HashSet<FeeLevelEntity>();
         try {
-            this.office = getOfficePersistence().getHeadOffice();
+            if (office == null) {
+                this.office = getOfficePersistence().getHeadOffice();
+            } else {
+                this.office = office;
+            }
         } catch (PersistenceException e) {
             throw new FeeException(e);
         }
@@ -198,7 +228,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public void update() throws FeeException {
         try {
             setUpdateDetails();
-            new FeePersistence().createOrUpdate(this);
+            getFeePersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new FeeException(FeeConstants.FEE_UPDATE_ERROR, e);
         }
@@ -208,7 +238,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     public void save() throws FeeException {
         try {
-            new FeePersistence().createOrUpdate(this);
+            getFeePersistence().createOrUpdate(this);
         } catch (PersistenceException he) {
             throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
         }
@@ -296,7 +326,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     private FeeStatusEntity retrieveFeeStatusEntity(final FeeStatus status) throws FeeException {
         try {
-            return (FeeStatusEntity) new MasterPersistence().retrieveMasterEntity(status.getValue(),
+            return (FeeStatusEntity) getMasterPersistence().retrieveMasterEntity(status.getValue(),
                     FeeStatusEntity.class, userContext.getLocaleId());
         } catch (PersistenceException pe) {
             throw new FeeException(pe);

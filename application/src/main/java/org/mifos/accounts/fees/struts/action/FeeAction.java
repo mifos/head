@@ -93,7 +93,7 @@ public class FeeAction extends BaseAction {
         form.reset(mapping, request);
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
-        FeeParameters feeParameters = feeServiceFacade.parameters(getUserContext(request).getLocaleId());
+        FeeParameters feeParameters = feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId());
         request.setAttribute(FeeParameters.class.getSimpleName(), feeParameters);
         return mapping.findForward(ActionForwards.load_success.toString());
     }

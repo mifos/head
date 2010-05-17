@@ -26,6 +26,7 @@ import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.security.util.UserContext;
 
 public class RateFeeBO extends FeeBO {
@@ -40,9 +41,9 @@ public class RateFeeBO extends FeeBO {
      */
     public RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
             FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Double rate,
-            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, FeePaymentEntity feePayment) throws FeeException {
+            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, FeePaymentEntity feePayment, final OfficeBO office) throws FeeException {
         this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, rate, feeFormula,
-                isCustomerDefaultFee, feePayment, null);
+                isCustomerDefaultFee, feePayment, null, office);
     }
 
     /**
@@ -51,10 +52,11 @@ public class RateFeeBO extends FeeBO {
      */
     public RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
             FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Double rate,
-            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, MeetingBO feeMeeting) throws FeeException {
+            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee,
+            MeetingBO feeMeeting, final OfficeBO office) throws FeeException {
 
         this(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, rate, feeFormula,
-                isCustomerDefaultFee, null, feeMeeting);
+                isCustomerDefaultFee, null, feeMeeting, office);
     }
 
     /**
@@ -68,10 +70,11 @@ public class RateFeeBO extends FeeBO {
 
     private RateFeeBO(UserContext userContext, String feeName, CategoryTypeEntity categoryType,
             FeeFrequencyTypeEntity feeFrequencyType, GLCodeEntity glCodeEntity, Double rate,
-            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, FeePaymentEntity feePayment, MeetingBO feeMeeting)
+            FeeFormulaEntity feeFormula, boolean isCustomerDefaultFee, FeePaymentEntity feePayment,
+            MeetingBO feeMeeting, final OfficeBO office)
             throws FeeException {
         super(userContext, feeName, categoryType, feeFrequencyType, glCodeEntity, isCustomerDefaultFee, feePayment,
-                feeMeeting);
+                feeMeeting, office);
         validateFields(rate, feeFormula);
         this.feeFormula = feeFormula;
         this.rate = rate;

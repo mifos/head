@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation=" http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+      
+      
+    <!--
+    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
+    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController">
+       <property name="methodNameResolver">     
+         <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+           <property name="mappings">
+             <value>
+                /**/create.shtml=createFee
+             </value>
+           </property>
+        </bean>
+       </property>
+       <property name="feeServiceFacade" ref="feeServiceFacade"/>
+    </bean>
+    -->
+    
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="driverClass" value="com.mysql.jdbc.Driver"/> 
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test"/>
+    	<property name="user" value="root"/>
+    	<property name="password" value="admin"/>
+    	<property name="initialPoolSize" value="5"></property>
+    	<property name="minPoolSize" value="5"></property>
+    	<property name="maxPoolSize" value="15"/>
+    	<property name="checkoutTimeout" value="1000"/> 
+    	<property name="maxStatements" value="50"></property>
+    	<property name="testConnectionOnCheckin" value="true"></property>
+    	<property name="idleConnectionTestPeriod" value="60"></property> 
+   	</bean>
+    <!--     
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">        
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>        
+		<property name="url" value="jdbc:mysql://localhost:3306/test"/>        
+		<property name="username" value="root"/>        
+		<property name="password" value="admin"/>        
+		<property name="initialSize" value="2" />        
+		<property name="maxActive" value="8" />        
+		<property name="maxIdle" value="2" />        
+		<property name="minIdle" value="2" />        
+		<property name="maxWait" value="-1" />        
+		<property name="testWhileIdle" value="true"/>    
+	</bean>
+	 -->
+	<!--  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingResources">
+			<list>
+				<value>/org/mifos/accounts/fees/business/FeeStatusEntity.hbm.xml</value>
+				<value>/org/mifos/accounts/fees/business/CategoryTypeEntity.hbm.xml</value>
+				<value>/org/mifos/accounts/fees/business/FeeFrequencyTypeEntity.hbm.xml</value>
+				<value>/org/mifos/accounts/fees/business/FeeFormulaEntity.hbm.xml</value>
+				<value>/org/mifos/accounts/fees/business/FeePaymentEntity.hbm.xml</value>
+				
+				<value>/org/mifos/customers/office/business/OfficeBO.hbm.xml</value>
+				<value>/org/mifos/customers/office/business/OfficeCustomFieldEntity.hbm.xml</value>
+				<value>/org/mifos/customers/office/business/OfficeAddressEntity.hbm.xml</value>
+				<value>/org/mifos/customers/office/business/OfficeLevelEntity.hbm.xml</value>
+				<value>/org/mifos/customers/office/business/OfficeStatusEntity.hbm.xml</value>
+				
+				<value>/org/mifos/application/master/business/LookUpValueEntity.hbm.xml</value>
+				<value>/org/mifos/application/master/business/LookUpValueLocaleEntity.hbm.xml</value>
+				<value>/org/mifos/application/master/business/LookUpLabelEntity.hbm.xml</value>
+				<value>/org/mifos/application/master/business/SupportedLocalesEntity.hbm.xml</value>
+				<value>/org/mifos/application/master/business/LanguageEntity.hbm.xml</value>
+				
+				<value>/org/mifos/application/meeting/business/MeetingBO.hbm.xml</value>
+				<value>/org/mifos/application/meeting/business/MeetingDetailsEntity.hbm.xml</value>
+				<value>/org/mifos/application/meeting/business/MeetingRecurrenceEntity.hbm.xml</value>
+				<value>/org/mifos/application/meeting/business/MeetingTypeEntity.hbm.xml</value>
+				<value>/org/mifos/application/meeting/business/RecurrenceTypeEntity.hbm.xml</value>
+				<value>/org/mifos/application/holiday/business/HolidayBO.hbm.xml</value>
+				
+				<value>/org/mifos/accounts/financial/business/COABO.hbm.xml</value>
+				<value>/org/mifos/accounts/financial/business/COAHierarchyEntity.hbm.xml</value>
+			</list>
+		</property>
+		
+		<property name="annotatedClasses">
+     		<list>
+     			<value>org.mifos.accounts.fees.entities.FeeEntity</value>
+     			<value>org.mifos.accounts.fees.entities.FeeLevelEntity</value>
+     			<value>org.mifos.accounts.fees.entities.FeeFrequencyEntity</value>
+     			<value>org.mifos.accounts.fees.entities.RateFeeEntity</value>
+     			<value>org.mifos.accounts.fees.entities.AmountFeeEntity</value>
+       			<value>org.mifos.accounts.financial.business.GLCodeEntity</value>
+       			<value>org.mifos.application.master.business.LookUpEntity</value>
+       			<value>org.mifos.application.master.business.CountryEntity</value>
+	     	</list>
+     	</property>
+		<!--  <property name = "packagesToScan" value="org.mifos.accounts.fees.servicefacade" />  -->        
+        <!-- 
+        <property name="hibernateProperties">            
+    		<value>            
+    			hibernate.dialect=org.hibernate.dialect.MySQLDialect           
+    			hibernate.show_sql=true            
+   			</value>        
+   		</property>
+   		 -->
+    </bean>
+	
+	<bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">        
+ 		<property name="sessionFactory">            
+ 			<ref local="sessionFactory" />        
+		</property>    
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="platformTransactionManager">
+		<tx:attributes>
+			<!-- all methods starting with 'get', 'find', 'list', 'iterate', 'retrieve' are read-only -->
+			<tx:method name="get*" read-only="true"/>
+          	<tx:method name="find*" read-only="true"/>
+          	<tx:method name="list*" read-only="true"/>
+          	<tx:method name="retrieve*" read-only="true"/>
+          	<tx:method name="*" rollback-for="org.springframework.dao.DataAccessException"/>
+			<!-- other methods use the default transaction settings (see below) -->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- ensure that the above transactional advice runs for any execution
+		of an operation defined by the ServiceService interface -->
+	<aop:config>
+		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*ServiceFacade.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
+	</aop:config>
+
+	
+	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
+	
+	<bean id="masterEntityDao" class="org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+
+    <!--<context:component-scan base-package="org.mifos.application.importexport" />
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    -->
+</beans>
+
+
+      
+

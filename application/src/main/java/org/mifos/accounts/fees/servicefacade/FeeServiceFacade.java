@@ -22,7 +22,6 @@ package org.mifos.accounts.fees.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
@@ -33,12 +32,12 @@ public interface FeeServiceFacade {
 
     public List<FeeDto> getCustomerFees() throws ServiceException;
 
-    public FeeParameters parameters(Short localeId) throws ServiceException;
+    public FeeParameters getFeeParameters(Short localeId) throws ServiceException;
 
     public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
 
     public FeeDto getFeeDetails(Short feeId) throws ServiceException;
 
-    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException;
+    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ServiceException;
 
 }

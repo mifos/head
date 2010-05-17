@@ -63,7 +63,7 @@ public class FeeBuilder {
         } else { //one-time defaults to up-front payment
             fee = new AmountFeeBO(TestUtils.makeUserWithLocales(), name, new CategoryTypeEntity(category),
                     new FeeFrequencyTypeEntity(feeFrequencyType), feeGLCode, feeAmount, false,
-                    new FeePaymentEntity(feePayment));
+                    new FeePaymentEntity(feePayment), office);
         }
         } catch (FeeException e) {
             throw new MifosRuntimeException("Error building AmountFeeBO", e);

@@ -1026,7 +1026,7 @@ public class TestObjectFactory {
             categoryType.setLookUpValue(lookUpValue);
             FeeBO fee = new AmountFeeBO(userContext, feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, TestUtils.createMoney(feeAmnt),
-                    false, meeting);
+                    false, meeting, getHeadOffice());
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -1062,7 +1062,7 @@ public class TestObjectFactory {
             GLCodeEntity glCode = new GLCodeEntity((short) 1, "31301");
             RateFeeBO fee = new RateFeeBO(userContext, feeName, new CategoryTypeEntity(feeCategory),
                     new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode, rate, new FeeFormulaEntity(
-                            feeFormula), false, newMeeting);
+                            feeFormula), false, newMeeting, getHeadOffice());
             // [keith] I have no idea why the fee must save itself. Otherwise
             // mySQL errors crop up
             // when you try to attach the fee to a loan.
@@ -1109,7 +1109,7 @@ public class TestObjectFactory {
             categoryType.setLookUpValue(lookUpValue);
             FeeBO fee = new AmountFeeBO(userContext, feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, TestUtils.createMoney(feeAmnt),
-                    false, new FeePaymentEntity(feePayment));
+                    false, new FeePaymentEntity(feePayment), getHeadOffice());
             return (FeeBO) addObject(testObjectPersistence.createFee(fee));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -1135,7 +1135,7 @@ public class TestObjectFactory {
             categoryType.setLookUpValue(lookUpValue);
             fee = new RateFeeBO(getUserContext(), feeName, categoryType,
                     new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME), glCode, rate,
-                    new FeeFormulaEntity(feeFormula), false, new FeePaymentEntity(feePayment));
+                    new FeeFormulaEntity(feeFormula), false, new FeePaymentEntity(feePayment), getHeadOffice());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -2245,5 +2245,13 @@ public class TestObjectFactory {
         return fee;
     }
 
+    public static OfficeBO getHeadOffice() {
+
+        try {
+            return new OfficePersistence().getHeadOffice();
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

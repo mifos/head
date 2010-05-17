@@ -36,6 +36,7 @@ import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -51,6 +52,8 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -65,6 +68,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     private FeeBusinessService feeBusinessService = new FeeBusinessService();
     private MasterDataService masterDataService = new MasterDataService();
     private FinancialBusinessService financeService = new FinancialBusinessService();
+    private FeeService feeService;
 
     public WebTierFeeServiceFacade() {
         super();
@@ -173,7 +177,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     }
 
     @Override
-    public FeeParameters parameters(Short localeId) throws ServiceException {
+    public FeeParameters getFeeParameters(Short localeId) throws ServiceException {
         List<GLCodeEntity> glCodes = retrieveGlCodes();
         List<CategoryTypeEntity> categories = masterDataService.retrieveMasterEntities(CategoryTypeEntity.class,
                 localeId);
@@ -237,6 +241,9 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
                     CategoryTypeEntity.class, feeCreateRequest.getCategoryType().getValue(), userContext.getLocaleId());
             GLCodeEntity glCodeEntity = masterDataService.findGLCodeEntity(feeCreateRequest.getGlCode());
 
+
+
+            //FIXME: replace with (feeCreateRequest.getFeeFrequencyType() == FeeFrequencyType.ONETIME) ??
             FeeBO feeBO = feeFrequencyType.isOneTime() ?
                     createOneTimeFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext) :
                         createPeriodicFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext);
@@ -256,6 +263,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
             CategoryTypeEntity feeCategoryType, GLCodeEntity glCodeEntity, UserContext userContext)
             throws FeeException, PersistenceException, MeetingException {
 
+
         MeetingBO feeMeeting = feeCreateRequest.getFeeRecurrenceType().equals(RecurrenceType.MONTHLY) ? new MeetingBO(
                 feeCreateRequest.getFeeRecurrenceType(), feeCreateRequest.getMonthRecurAfter(), new DateTimeService()
                         .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE) : new MeetingBO(feeCreateRequest
@@ -267,11 +275,29 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
                     feeCreateRequest.getFeeFormula().getValue(), userContext.getLocaleId());
             feeBO = new RateFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
                     glCodeEntity, feeCreateRequest.getRate(), feeFormulaEntity,
-                    feeCreateRequest.isCustomerDefaultFee(), feeMeeting);
+                    feeCreateRequest.isCustomerDefaultFee(), feeMeeting, getHeadOffice());
+
+            /*
+            Short recurAfter =
+                feeCreateRequest.getFeeRecurrenceType().equals(RecurrenceType.MONTHLY)) ?
+                        feeCreateRequest.getMonthRecurAfter() : feeCreateRequest.getWeekRecurAfter();
+            feeService.createPeriodicFee(
+                    userContext,
+                    feeCreateRequest.getFeeName(),
+                    feeCreateRequest.isCustomerDefaultFee(),
+                    feeCreateRequest.isRateFee(),
+                    feeCreateRequest.getRate(),
+                    new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount()),
+                    feeCategoryType,
+                    feeCreateRequest.getFeeFormula(),
+                    glCodeEntity,
+                    getHeadOffice(),
+                    feeCreateRequest.getFeeRecurrenceType(),
+                    recurAfter);*/
         } else {
             Money feeMoney = new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount());
             feeBO = new AmountFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
-                    glCodeEntity, feeMoney, feeCreateRequest.isCustomerDefaultFee(), feeMeeting);
+                    glCodeEntity, feeMoney, feeCreateRequest.isCustomerDefaultFee(), feeMeeting, getHeadOffice());
         }
         feeBO.save();
         return feeBO;
@@ -289,18 +315,23 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
                     feeCreateRequest.getFeeFormula().getValue(), userContext.getLocaleId());
             feeBO = new RateFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
                     glCodeEntity, feeCreateRequest.getRate(), feeFormulaEntity,
-                    feeCreateRequest.isCustomerDefaultFee(), feePaymentEntity);
+                    feeCreateRequest.isCustomerDefaultFee(), feePaymentEntity, getHeadOffice());
         } else {
             Money feeMoney = new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount());
             feeBO = new AmountFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
-                    glCodeEntity, feeMoney, feeCreateRequest.isCustomerDefaultFee(), feePaymentEntity);
+                    glCodeEntity, feeMoney, feeCreateRequest.isCustomerDefaultFee(), feePaymentEntity, getHeadOffice());
         }
         feeBO.save();
         return feeBO;
     }
 
+    private OfficeBO getHeadOffice() throws PersistenceException {
+        //FIXME:
+        return new OfficePersistence().getHeadOffice();
+    }
+
     @Override
-    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException {
+    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ServiceException {
         /*
          * Move the following logic into FeeBusinessService.updateFee(feeId)
          */
@@ -319,9 +350,14 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
             rateFee.setRate(feeUpdateRequest.getRateValue());
         }
 
-        feeBo.updateStatus(feeUpdateRequest.getFeeStatusValue());
-        feeBo.updateFeeChangeType(feeChangeType);
-        feeBo.update();
+        try {
+            feeBo.updateStatus(feeUpdateRequest.getFeeStatusValue());
+            feeBo.updateFeeChangeType(feeChangeType);
+            feeBo.update();
+        } catch (FeeException e) {
+            throw new ServiceException(e);
+        }
+
     }
 
 }
