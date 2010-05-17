@@ -351,6 +351,16 @@ public class AccountBO extends AbstractBusinessObject {
         return accountActionDates;
     }
 
+    public List<AccountActionDateEntity> getAccountActionDatesSortedByInstallmentId() {
+        List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>(getAccountActionDates());
+        Collections.sort(sortedList, new Comparator<AccountActionDateEntity>() {
+            public int compare (AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
+                return new Integer(entity1.getInstallmentId()).compareTo(new Integer(entity2.getInstallmentId()));
+            }
+        });
+        return sortedList;
+    }
+
     public List<AccountActionDateEntity> getActionDatesSortedByDate() {
         List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>();
         sortedList.addAll(this.getAccountActionDates());
@@ -1094,9 +1104,8 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * Returns the next {@link AccountActionDateEntity} occuring after today, if any, otherwise
      * return null.
-     * <p>If more than one installment occurs on the next closest installment date, the method chooses one
-     * arbitrarily. This could happen, say, if the next normally scheduled installment falls in a holiday
-     * with repayment rule "Next Meeting Date/Repayment".
+     * <p>If more than one installment occurs on the next closest installment date, the method returns the entity
+     * with the lowest installment id.
      */
     public AccountActionDateEntity getDetailsOfUpcomigInstallment() {
         AccountActionDateEntity nextAccountAction = null;
