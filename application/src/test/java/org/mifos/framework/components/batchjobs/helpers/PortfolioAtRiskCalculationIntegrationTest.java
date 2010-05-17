@@ -86,6 +86,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.getSessionTL().clear();
     }
 
     @Override

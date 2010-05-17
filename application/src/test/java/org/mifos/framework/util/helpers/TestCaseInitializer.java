@@ -56,11 +56,11 @@ public class TestCaseInitializer {
     public synchronized void initialize() throws Exception {
         if (initialized == false) {
             initialized = true;
-            createDb();
+            initializeDB();
         }
     }
 
-    public void createDb() throws Exception{
+    private void initializeDB() throws Exception{
         /*
          * Make sure TestingService is aware that we're running integration
          * tests. This is for integration test cases that use a database,

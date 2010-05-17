@@ -90,6 +90,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.getSessionTL().clear();
         LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
         loanArrearsAgingHelper = (LoanArrearsAgingHelper) loanArrearsAgingTask.getTaskHelper();
         dateTime = initializeToFixedDateTime();
@@ -175,8 +176,6 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
 
     public void testThatLoanInPendingApprovalStateDoesNotGenerateArrearsData() throws Exception {
-        new TestCaseInitializer().createDb();
-        setUp();
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_PENDING_APPROVAL);
 
         Assert.assertNull(ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan));

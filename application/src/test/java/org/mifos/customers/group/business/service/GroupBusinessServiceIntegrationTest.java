@@ -75,6 +75,7 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.getSessionTL().clear();
         groupBusinessService = (GroupBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.Group);
     }
@@ -179,8 +180,6 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
     }
 
     public void testSearch() throws Exception {
-        new TestCaseInitializer().createDb();
-        setUp();
         center = createCenter("Center_Active_test");
         String groupName = "Group_Active_test";
         group = createGroup(groupName);
