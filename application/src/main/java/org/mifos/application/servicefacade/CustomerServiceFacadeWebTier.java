@@ -554,11 +554,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
 
+                int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(
                         mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields,
                         clientNameDetailEntity, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address);
+                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address, numberOfCustomersInOfficeAlready);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());

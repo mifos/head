@@ -65,6 +65,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -126,6 +127,9 @@ public class ClientBO extends CustomerBO {
                 clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(group);
+        client.childAddedForParent(client.getParentCustomer());
+
+        client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -157,13 +161,17 @@ public class ClientBO extends CustomerBO {
             DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
             String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
             ClientDetailEntity clientDetailEntity, Blob pictureAsBlob,
-            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address) {
+            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, int numberOfCustomersInOfficeAlready) {
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                 clientFirstName, clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(null);
+
+        int searchIdCustomerCount = numberOfCustomersInOfficeAlready + 1;
+        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + searchIdCustomerCount;
+        client.setSearchId(searchId);
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -285,7 +293,7 @@ public class ClientBO extends CustomerBO {
         super(userContext, displayName, CustomerLevel.CLIENT, customerStatus, externalId, mfiJoiningDate, address,
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
         validateOffice(office);
-        validateOfferings(offeringsSelected);
+        validateNoDuplicateSavings(offeringsSelected);
         nameDetailSet = new HashSet<ClientNameDetailEntity>();
         clientAttendances = new HashSet<ClientAttendanceBO>();
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
@@ -313,7 +321,6 @@ public class ClientBO extends CustomerBO {
         this.customerDetail = new ClientDetailEntity(this, clientPersonalDetailDto);
         createPicture(picture);
         createAssociatedOfferings(offeringsSelected);
-//        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
         if (parentCustomer != null) {
             checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
@@ -856,7 +863,7 @@ public class ClientBO extends CustomerBO {
     public void validateFieldsForActiveClient() throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
-                validateLO(this.getPersonnel());
+                validateLoanOfficer();
                 validateMeetingEntity(this.getCustomerMeeting());
             }
         }
@@ -866,7 +873,7 @@ public class ClientBO extends CustomerBO {
      *
      */
     @Deprecated
-    public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting)
+    private void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting)
             throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
@@ -971,8 +978,7 @@ public class ClientBO extends CustomerBO {
         return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId), CustomerStatus.fromInt(parentStatus));
     }
 
-    @Deprecated
-    private void validateOfferings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
+    public void validateNoDuplicateSavings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
         if (offeringsSelected != null) {
             for (int i = 0; i < offeringsSelected.size() - 1; i++) {
                 for (int j = i + 1; j < offeringsSelected.size(); j++) {
@@ -1218,5 +1224,13 @@ public class ClientBO extends CustomerBO {
 
     public boolean isStatusValidationRequired() {
         return getParentCustomer() != null;
+    }
+
+    @Override
+    public void validate() throws CustomerException {
+        super.validate();
+        if (isStatusValidationRequired()) {
+            this.validateClientStatus();
+        }
     }
 }

@@ -161,14 +161,16 @@ public class CustomerServiceImpl implements CustomerService {
     public final void createClient(ClientBO client, MeetingBO meeting, List<AccountFeesEntity> accountFees,
             List<SavingsOfferingBO> savingProducts) throws CustomerException {
 
-        if (client.isStatusValidationRequired()) {
-            client.validateClientStatus();
-        }
+        client.validate();
+        client.validateNoDuplicateSavings(savingProducts);
 
-        client.validateOffice();
-        // FIXME - #00003 - keithw verify validation here when creating clients
-        // client.validateOfferings();
-        // client.validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
+        customerDao.validateClientForDuplicateNameOrGovtId(client);
+
+        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForClient();
+        client.validateMandatoryCustomFields(allCustomFieldsForGroup);
+
+        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
+        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         if (client.isActive()) {
             client.validateFieldsForActiveClient();
@@ -177,18 +179,23 @@ public class CustomerServiceImpl implements CustomerService {
 
             List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
             for (SavingsOfferingBO clientSavingsProduct : savingProducts) {
+
                 try {
                     if (clientSavingsProduct.isActive()) {
+
                         List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
                                 .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+
                         List<CustomFieldDto> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
                                 customFieldDefs, userContext.getPreferredLocale());
 
                         SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
                                 AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
                                 savingCustomFieldViews);
+
                         savingsAccounts.add(savingsAccount);
                     }
+
                 } catch (PersistenceException pe) {
                     throw new MifosRuntimeException(pe);
                 } catch (AccountException pe) {
@@ -233,8 +240,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
 
-        client.generateSearchId();
-
         createCustomer(client, meeting, accountFees);
     }
 
@@ -246,8 +251,8 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
 
-            CalendarEvent upcomingCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext();
-            CustomerAccountBO customerAccount = this.customerAccountFactory.create(customer, accountFees, meeting, upcomingCalendarEvents);
+            CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext();
+            CustomerAccountBO customerAccount = this.customerAccountFactory.create(customer, accountFees, meeting, applicableCalendarEvents);
             customer.addAccount(customerAccount);
 
             this.customerDao.save(customer);
