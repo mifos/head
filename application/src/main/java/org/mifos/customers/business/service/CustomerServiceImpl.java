@@ -562,13 +562,8 @@ public class CustomerServiceImpl implements CustomerService {
 
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
-
-                if (group.getParentCustomer() != null) {
-                    CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(group, group.getParentCustomer());
-                    group.addCustomerHierarchy(hierarchy);
-                }
-
-                group.getCustomerAccount().generateCustomerFeeSchedule();
+                group.updateCustomerHierarchy();
+                group.regenerateCustomerFeeSchedule();
             }
 
             Set<CustomerBO> groupChildren = group.getChildren();
@@ -581,14 +576,13 @@ public class CustomerServiceImpl implements CustomerService {
 
                     if (client.isPending()) {
                         client.setUserContext(group.getUserContext());
+                        hibernateTransactionHelper.beginAuditLoggingFor(client);
                         client.updateCustomerStatus(CustomerStatus.CLIENT_PARTIAL);
-                        changeClientStatus(client, customerStatusFlag, customerNote);
                         customerDao.save(client);
                     }
                 }
             }
 
-            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
             group.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
 
             customerDao.save(group);
@@ -666,7 +660,7 @@ public class CustomerServiceImpl implements CustomerService {
                 client.addCustomerFlag(customerStatusFlagEntity);
             }
             client.addCustomerNotes(customerNote);
-            this.changeClientStatus(client, customerStatusFlag, customerNote);
+            this.handleChangeOfClientStatusToClosedOrCancelled(client, customerStatusFlag, customerNote);
 
             customerDao.save(client);
             StaticHibernateUtil.commitTransaction();
@@ -678,7 +672,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void changeClientStatus(ClientBO client, CustomerStatusFlag customerStatusFlag,
+    private void handleChangeOfClientStatusToClosedOrCancelled(ClientBO client, CustomerStatusFlag customerStatusFlag,
             CustomerNoteEntity customerNote) throws AccountException {
         if (client.isClosedOrCancelled()) {
 
