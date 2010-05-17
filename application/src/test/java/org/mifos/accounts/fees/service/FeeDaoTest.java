@@ -1,6 +1,8 @@
 package org.mifos.accounts.fees.service;
 
+
 import java.util.Date;
+
 import java.util.Set;
 
 import org.hibernate.SessionFactory;
@@ -18,6 +20,7 @@ import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
 import org.mifos.accounts.fees.entities.FeeLevelEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.servicefacade.FeeDao;
 import org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl;
 import org.mifos.accounts.fees.servicefacade.MasterEntityDao;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -57,11 +60,11 @@ public class FeeDaoTest {
     @Autowired
     private MasterEntityDao masterEntityDao;
 
-    //private FeeDao feeDao;
+    @Autowired
+    private FeeDao feeDao;
 
 
     @Transactional(rollbackFor=DataAccessException.class)
-    //@Rollback(true)
     public void shouldCreateRateFee() {
         GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
         dao.setSessionFactory(sessionFactory);
@@ -130,7 +133,11 @@ public class FeeDaoTest {
         }
     }
 
-    private GenericDaoHibernateImpl<FeeEntity, Short> getFeeDao() {
+    private FeeDao getFeeDao() {
+        return feeDao;
+    }
+
+    private GenericDaoHibernateImpl<FeeEntity, Short> getGenericFeeDao() {
         GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
         dao.setSessionFactory(sessionFactory);
         return dao;

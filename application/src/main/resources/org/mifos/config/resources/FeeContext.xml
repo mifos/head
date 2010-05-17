@@ -139,13 +139,26 @@
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
 	</aop:config>
 
-	
-	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
-	
+	<bean id="abstractDaoTarget"
+        class="org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl" abstract="true">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true">
+    </bean>
+    <bean id="feeDao" parent="abstractDao">
+       <property name="proxyInterfaces" value="org.mifos.accounts.fees.servicefacade.FeeDao"/>
+       <property name="target">
+           <bean parent="abstractDaoTarget">
+              <constructor-arg><value>org.mifos.accounts.fees.entities.FeeEntity</value></constructor-arg>
+           </bean>
+       </property>
+    </bean>
+		
 	<bean id="masterEntityDao" class="org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
 
     <!--<context:component-scan base-package="org.mifos.application.importexport" />
     <tx:annotation-driven transaction-manager="transactionManager" />
