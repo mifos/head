@@ -103,6 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final HolidayDao holidayDao;
     private final HibernateTransactionHelper hibernateTransactionHelper;
     private CustomerAccountFactory customerAccountFactory = DefaultCustomerAccountFactory.createNew();
+    private MessageLookupHelper messageLookupHelper = DefaultMessageLookupHelper.createNew();
 
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
             HolidayDao holidayDao, final HibernateTransactionHelper hibernateTransactionHelper) {
@@ -115,6 +116,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     public void setCustomerAccountFactory(CustomerAccountFactory customerAccountFactory) {
         this.customerAccountFactory = customerAccountFactory;
+    }
+
+    public void setMessageLookupHelper(MessageLookupHelper messageLookupHelper) {
+        this.messageLookupHelper = messageLookupHelper;
     }
 
     @Override
@@ -515,9 +520,8 @@ public class CustomerServiceImpl implements CustomerService {
                     .findGroupsThatAreNotCancelledOrClosed(center.getSearchId(), center.getOffice().getOfficeId());
 
             if (clientsThatAreNotClosedOrCanceled.size() > 0 || groupsThatAreNotClosedOrCancelled.size() > 0) {
-                throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-                        new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
-                                center.getUserContext()) });
+                final String errorMessage = messageLookupHelper.lookupLabel(ConfigurationConstants.GROUP, center.getUserContext());
+                throw new CustomerException(CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION, new Object[] {errorMessage});
             }
 
         } else if (newStatus.isCenterActive()) {
@@ -531,12 +535,7 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(center);
 
-            center.clearCustomerFlagsIfApplicable(center.getStatus(), newStatus);
-            center.updateCustomerStatus(newStatus);
-            center.addCustomerNotes(customerNote);
-            if (customerStatusFlagEntity != null) {
-                center.addCustomerFlag(customerStatusFlagEntity);
-            }
+            center.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
 
             customerDao.save(center);
 
@@ -558,10 +557,8 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
-            StaticHibernateUtil.startTransaction();
-            setInitialObjectForAuditLogging(group);
-
-            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
 
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
@@ -591,20 +588,16 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
 
-            group.updateCustomerStatus(newStatus);
-            group.addCustomerNotes(customerNote);
-            if (customerStatusFlagEntity != null) {
-                group.addCustomerFlag(customerStatusFlagEntity);
-            }
+            group.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
+            group.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
 
             customerDao.save(group);
-            StaticHibernateUtil.commitTransaction();
-
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -625,6 +618,10 @@ public class CustomerServiceImpl implements CustomerService {
     private void validateChangeOfStatusForGroup(GroupBO group, CustomerStatus oldStatus, CustomerStatus newStatus)
             throws CustomerException {
 
+        if (newStatus.isGroupActive()) {
+            group.validateGroupCanBeActive();
+        }
+
         if (newStatus.isGroupClosed()) {
             group.validateNoActiveAccountExist();
 
@@ -636,10 +633,6 @@ public class CustomerServiceImpl implements CustomerService {
                         new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
                                 group.getUserContext()) });
             }
-        }
-
-        if (newStatus.isGroupActive()) {
-            group.validateGroupCanBeActive();
         }
 
         if (oldStatus.isGroupCancelled() && newStatus.isGroupPartial()) {

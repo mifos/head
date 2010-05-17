@@ -89,6 +89,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundPersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -1135,7 +1136,9 @@ public class LoanAccountAction extends AccountAppAction {
                 request).getLocaleId());
         loanActionForm.setInstallmentRange(loanBO.getMaxMinNoOfInstall());
         loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
-        loanActionForm.setLoanAmountRange(loanBO.getMaxMinLoanAmount());
+        MaxMinInterestRate interestRateRange = loanBO.getMaxMinInterestRate();
+        loanActionForm.setMaxInterestRate(interestRateRange.getMaxLoanAmount());
+        loanActionForm.setMinInterestRate(interestRateRange.getMinLoanAmount());
         loanActionForm.setExternalId(loanBO.getExternalId());
         if (null != loanBO.getFund()) {
             loanActionForm.setLoanOfferingFund(loanBO.getFund().getFundId().toString());
@@ -1534,6 +1537,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setLoanAmountRange(eligibleLoanAmount);
         loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount(),
                 loanOffering.getCurrency()));
+        loanAccountActionForm.setMaxInterestRate(loanOffering.getMaxInterestRate());
+        loanAccountActionForm.setMinInterestRate(loanOffering.getMinInterestRate());
         LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                 .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
         loanAccountActionForm.setInstallmentRange(eligibleNoOfInstall);

@@ -232,9 +232,9 @@ explanation of the license and how it is applied.
 								<fmt:message key="loan.allowedInterest">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 								</fmt:message>&nbsp; <c:out
-								value="${BusinessKey.loanOffering.minInterestRate}" />&nbsp;
+								value="${sessionScope.loanAccountActionForm.minInterestRate}" />&nbsp;
 							- &nbsp; <c:out
-								value="${BusinessKey.loanOffering.maxInterestRate}" />
+								value="${sessionScope.loanAccountActionForm.maxInterestRate}" />
 							%)</td>
 						</tr>
 						<tr class="fontnormal">

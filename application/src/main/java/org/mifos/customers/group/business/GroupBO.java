@@ -469,13 +469,12 @@ public class GroupBO extends CustomerBO {
 
     public void validateGroupCanBeActive() throws CustomerException {
 
-        if (this.getParentCustomer() == null || this.getParentCustomer().getCustomerId() == null) {
-            if (this.getPersonnel() == null || this.getPersonnel().getPersonnelId() == null) {
-                throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
-            }
-            if (this.getCustomerMeeting() == null || this.getCustomerMeeting().getMeeting() == null) {
-                throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-            }
+        if (this.getPersonnel() == null) {
+            throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
+        }
+
+        if (this.getCustomerMeeting() == null || this.getCustomerMeeting().getMeeting() == null) {
+            throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
         }
     }
 

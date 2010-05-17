@@ -121,6 +121,7 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
     public void updateDetails(UserContext userContext) {
         this.updatedDate = new Date();
         this.updatedBy = userContext.getId();
+        setUserContext(userContext);
     }
 
     protected void setUpdateDetails(Short userId) {

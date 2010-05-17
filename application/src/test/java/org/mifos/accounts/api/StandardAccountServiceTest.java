@@ -206,6 +206,8 @@ public class StandardAccountServiceTest {
         private final short gracePeriodDuration = 0;
         private final double maxLoan = 10000.0;
         private final double minLoan = 100.0;
+        private final double maxInterestRate = 5.0;
+        private final double minInterestRate = 0.0;
         private final short maxInstall = 100;
         private final short minInstall = 2;
         /*
@@ -248,6 +250,8 @@ public class StandardAccountServiceTest {
                     false,
                     maxLoan,
                     minLoan,
+                    maxInterestRate,
+                    minInterestRate,
                     maxInstall,
                     minInstall,
                     false,

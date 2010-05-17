@@ -18,18 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.rolesandpermission;
+package org.mifos.customers.business.service;
 
-public class RoleTestUtil {
-    /**
-     * The total number of activities for the built in Admin role. Whenever a
-     * new activity is added to the role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 159;
-    /**
-     * The total number of activities. Whenever a new activity is added to the
-     * role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITY_COUNT = 180;
+import org.mifos.security.util.UserContext;
+
+public interface MessageLookupHelper {
+
+    String lookupLabel(String labelKey, UserContext userContext);
 
 }

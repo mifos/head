@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -39,6 +40,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -181,12 +183,7 @@ public class LoanDisbursementAction extends BaseAction {
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc.getId());
 
         if (!loan.isTrxnDateValid(trxnDate)) {
-
-            if (AccountingRules.isBackDatedTxnAllowed()) {
-                throw new AccountException("errors.invalidTxndate");
-            } else {
-                throw new AccountException("errors.invalidTxndate");
-            }
+            throw new AccountException("errors.invalidTxndate");
         }
 
         if (loan.getCustomer().hasActiveLoanAccountsForProduct(loan.getLoanOffering())) {
@@ -196,9 +193,14 @@ public class LoanDisbursementAction extends BaseAction {
         String modeOfPayment = actionForm.getPaymentModeOfPayment();
         Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH.getValue() : Short
                 .valueOf(modeOfPayment);
+        try {
+            loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short.valueOf(actionForm.getPaymentTypeId()),
+                    personnel, receiptDate, modeOfPaymentId);
 
-        loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short.valueOf(actionForm.getPaymentTypeId()), personnel,
-                receiptDate, modeOfPaymentId);
+        } catch (Exception e) {
+            throw new AccountException("errors.cannotDisburseLoan.because.disburseFailed");
+        }
+
         return mapping.findForward(Constants.UPDATE_SUCCESS);
     }
 

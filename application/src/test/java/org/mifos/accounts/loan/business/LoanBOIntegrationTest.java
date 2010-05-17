@@ -3946,7 +3946,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 RecurrenceType.MONTHLY, Short.valueOf("1"));
         feeViewList.add(new FeeDto(userContext, periodicFee));
         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
+                AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER, new Money(getCurrency(), "300.0"), Short.valueOf("6"),
                 disbursementDate.getTime(), false, 1.2, (short) 0, null, feeViewList, null, DOUBLE_ZERO,
                 DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false);
         new TestObjectPersistence().persist(accountBO);

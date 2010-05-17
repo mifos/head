@@ -154,6 +154,7 @@ public class LoanBO extends AccountBO {
     private final LoanOfferingBO loanOffering;
     private final LoanSummaryEntity loanSummary;
     private MaxMinLoanAmount maxMinLoanAmount;
+    private MaxMinInterestRate maxMinInterestRate;
     private MaxMinNoOfInstall maxMinNoOfInstall;
     private MeetingBO loanMeeting;
     private GracePeriodTypeEntity gracePeriodType;
@@ -185,7 +186,7 @@ public class LoanBO extends AccountBO {
      * default constructor for hibernate usage
      */
     protected LoanBO() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
         this.loanPrdPersistence = null;
         this.loanActivityDetails = new ArrayList<LoanActivityEntity>();
         this.redone = false;
@@ -213,11 +214,12 @@ public class LoanBO extends AccountBO {
     // FIXME used by test, test should try to use other constructors or factory
     // methods
     private LoanBO(final LoanOfferingBO loanOffering, final LoanSummaryEntity loanSummary,
-            final MaxMinLoanAmount maxMinLoanAmount, final MaxMinNoOfInstall maxMinNoOfInstall,
-            final LoanPerformanceHistoryEntity performanceHistory) {
+            final MaxMinLoanAmount maxMinLoanAmount, final MaxMinInterestRate maxMinInterestRate,
+            final MaxMinNoOfInstall maxMinNoOfInstall, final LoanPerformanceHistoryEntity performanceHistory) {
         this.loanOffering = loanOffering;
         this.loanSummary = loanSummary;
         this.maxMinLoanAmount = maxMinLoanAmount;
+        this.maxMinInterestRate = maxMinInterestRate;
         this.maxMinNoOfInstall = maxMinNoOfInstall;
         this.performanceHistory = performanceHistory;
     }
@@ -239,13 +241,15 @@ public class LoanBO extends AccountBO {
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
             final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
             final List<CustomFieldDto> customFields, final Boolean isRedone, final Double maxLoanAmount,
-            final Double minLoanAmount, final Short maxNoOfInstall, final Short minNoOfInstall,
+            final Double minLoanAmount, final Double maxInterestRate, final Double minInterestRate,
+            final Short maxNoOfInstall, final Short minNoOfInstall,
             final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
             throws AccountException {
         this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
                 interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos, customFields,
                 isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount, minLoanAmount, this);
+        this.maxMinInterestRate = new MaxMinInterestRate(maxInterestRate, minInterestRate, this);
         this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall, minNoOfInstall, this);
     }
 
@@ -278,6 +282,7 @@ public class LoanBO extends AccountBO {
         generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         this.loanSummary = buildLoanSummary();
         this.maxMinLoanAmount = null;
+        this.maxMinInterestRate = null;
         this.maxMinNoOfInstall = null;
         addcustomFields(customFields);
     }
@@ -322,8 +327,9 @@ public class LoanBO extends AccountBO {
         }
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, true, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
-                isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+                customFields, true, maxLoanAmount, minLoanAmount,
+                loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
+                maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
     /*
@@ -435,12 +441,14 @@ public class LoanBO extends AccountBO {
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
+                customFields, false, maxLoanAmount, minLoanAmount,
+                loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
+                maxNoOfInstall, minNoOfInstall,
                 isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
     }
 
     public static LoanBO createInstanceForTest(final LoanOfferingBO loanOffering) {
-        return new LoanBO(loanOffering, null, null, null, null);
+        return new LoanBO(loanOffering, null, null, null, null, null);
     }
 
     public Integer getBusinessActivityId() {
@@ -950,6 +958,11 @@ public class LoanBO extends AccountBO {
             final PersonnelBO loggedInUser, final Date receiptDate, final Short rcvdPaymentTypeId,
             final boolean persistChange) throws AccountException, PersistenceException {
 
+        if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
+                && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
+            throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
+        }
+
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
 
@@ -1020,15 +1033,9 @@ public class LoanBO extends AccountBO {
     /*
      * This disburseLoan only used via saveCollectionSheet - JPW
      *
-     * During refactoring... the checks in here should be applied to any loan disbursal and the error msgs organised and
-     * internationalised
      */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
-        if ((this.getState().compareTo(AccountState.LOAN_APPROVED) != 0)
-                && (this.getState().compareTo(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) != 0)) {
-            throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
-        }
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
             throw new AccountException("Loan Amount to be Disbursed Held on Database : "
                     + this.getLoanAmount().getAmount() + " does not match the Input Loan Amount to be Disbursed: "
@@ -2746,6 +2753,10 @@ public class LoanBO extends AccountBO {
 
     public MaxMinLoanAmount getMaxMinLoanAmount() {
         return maxMinLoanAmount;
+    }
+
+    public MaxMinInterestRate getMaxMinInterestRate() {
+        return maxMinInterestRate;
     }
 
     public MaxMinNoOfInstall getMaxMinNoOfInstall() {

@@ -22,23 +22,33 @@ package org.mifos.customers;
 
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
+import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
+import org.mifos.customers.business.service.MessageLookupHelper;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.CustomerStatusUpdateBuilder;
 import org.mifos.framework.TestUtils;
@@ -78,12 +88,16 @@ public class CustomerStatusUpdateTest {
     private CustomerAccountFactory customerAccountFactory;
 
     @Mock
+    private MessageLookupHelper messageLookupHelper;
+
+    @Mock
     private CenterBO mockedCenter;
 
     @Before
     public void setupAndInjectDependencies() {
         customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransaction);
         ((CustomerServiceImpl)customerService).setCustomerAccountFactory(customerAccountFactory);
+        ((CustomerServiceImpl)customerService).setMessageLookupHelper(messageLookupHelper);
     }
 
     @Test(expected=CustomerException.class)
@@ -99,6 +113,25 @@ public class CustomerStatusUpdateTest {
 
         // exercise test
         customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+    }
+
+    @Test(expected=CustomerException.class)
+    public void throwsCheckedExceptionWhenUserDoesNotHavePermissionToUpdateCustomerStatus() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().build();
+        CenterBO existingCenter = new CenterBuilder().withVersion(customerStatusUpdate.getVersionNum()).build();
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingCenter);
+        doThrow(new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)).when(customerDao).checkPermissionForStatusChange(anyShort(), eq(userContext), anyShort(), anyShort(), anyShort());
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        verify(customerDao).checkPermissionForStatusChange(customerStatusUpdate.getNewStatus().getValue(), userContext, customerStatusUpdate.getCustomerStatusFlag().getValue(), existingCenter.getOffice().getOfficeId(), existingCenter.getPersonnel().getPersonnelId());
     }
 
     @Test
@@ -121,22 +154,112 @@ public class CustomerStatusUpdateTest {
         verify(mockedCenter).updateDetails(userContext);
     }
 
-    @Test(expected=CustomerException.class)
-    public void throwsCheckedExceptionWhenUserDoesNotHavePermissionToUpdateCustomerStatus() throws Exception {
+    @Test(expected = CustomerException.class)
+    public void throwsCheckedExceptionWhenCenterTransitionsToInActiveStateAndFailsValidation() throws Exception {
 
         // setup
+        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").build();
         UserContext userContext = TestUtils.makeUser();
-        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().build();
-        CenterBO existingCenter = new CenterBuilder().withVersion(customerStatusUpdate.getVersionNum()).build();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.CENTER_INACTIVE).build();
 
         // stubbing
-        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingCenter);
-        doThrow(new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED)).when(customerDao).checkPermissionForStatusChange(anyShort(), eq(userContext), anyShort(), anyShort(), anyShort());
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(mockedCenter);
+        when(mockedCenter.getOffice()).thenReturn(office);
+        when(mockedCenter.getCustomerStatus()).thenReturn(new CustomerStatusEntity(CustomerStatus.CENTER_ACTIVE));
+        doThrow(new CustomerException(CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION)).when(mockedCenter).validateChangeToInActive();
 
         // exercise test
         customerService.updateCustomerStatus(userContext, customerStatusUpdate);
 
         // verification
-        verify(customerDao).checkPermissionForStatusChange(customerStatusUpdate.getNewStatus().getValue(), userContext, customerStatusUpdate.getCustomerStatusFlag().getValue(), existingCenter.getOffice().getOfficeId(), existingCenter.getPersonnel().getPersonnelId());
+        verify(mockedCenter).validateChangeToInActive();
+    }
+
+    @Test(expected = CustomerException.class)
+    public void throwsCheckedExceptionWhenCenterTransitionsToInActiveStateAndCenterHasActiveClients() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.CENTER_INACTIVE).build();
+        CenterBO existingCenter = new CenterBuilder().withVersion(customerStatusUpdate.getVersionNum()).active().build();
+
+        CustomerDto customer1 = new CustomerDto();
+        List<CustomerDto> clientsThatAreNotCancelledOrClosed = new ArrayList<CustomerDto>();
+        clientsThatAreNotCancelledOrClosed.add(customer1);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingCenter);
+        when(customerDao.findClientsThatAreNotCancelledOrClosed(existingCenter.getSearchId(), existingCenter.getOffice().getOfficeId())).thenReturn(clientsThatAreNotCancelledOrClosed);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP, userContext);
+    }
+
+    @Test(expected = CustomerException.class)
+    public void throwsCheckedExceptionWhenCenterTransitionsToInActiveStateAndCenterHasActiveGroups() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.CENTER_INACTIVE).build();
+        CenterBO existingCenter = new CenterBuilder().withVersion(customerStatusUpdate.getVersionNum()).active().build();
+
+        CustomerDto customer1 = new CustomerDto();
+        List<CustomerDto> clientsThatAreNotCancelledOrClosed = new ArrayList<CustomerDto>();
+        clientsThatAreNotCancelledOrClosed.add(customer1);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingCenter);
+        when(customerDao.findGroupsThatAreNotCancelledOrClosed(existingCenter.getSearchId(), existingCenter.getOffice().getOfficeId())).thenReturn(clientsThatAreNotCancelledOrClosed);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        verify(messageLookupHelper).lookupLabel(ConfigurationConstants.GROUP, userContext);
+    }
+
+    @Test(expected = MifosRuntimeException.class)
+    public void rollsbackTransactionClosesSessionAndThrowsRuntimeExceptionWhenExceptionOccurs() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.CENTER_INACTIVE).build();
+        CenterBO existingCenter = new CenterBuilder().withVersion(customerStatusUpdate.getVersionNum()).active().build();
+
+        CustomerDto customer1 = new CustomerDto();
+        List<CustomerDto> clientsThatAreNotCancelledOrClosed = new ArrayList<CustomerDto>();
+        clientsThatAreNotCancelledOrClosed.add(customer1);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingCenter);
+        doThrow(new RuntimeException()).when(customerDao).save(existingCenter);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        verify(hibernateTransaction).rollbackTransaction();
+        verify(hibernateTransaction).closeSession();
+    }
+
+    @Test(expected=CustomerException.class)
+    public void throwsCheckedExceptionWhenValidationFailsForTransitioningToActive() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.GROUP_ACTIVE).build();
+
+        CenterBO existingCenter = new CenterBuilder().build();
+        GroupBO existingGroup = new GroupBuilder().active().withParentCustomer(existingCenter).withVersion(customerStatusUpdate.getVersionNum()).build();
+        existingGroup.setLoanOfficer(null);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingGroup);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
     }
 }
