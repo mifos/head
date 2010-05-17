@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business.service;
+package org.mifos.customers;
 
 import static org.mifos.domain.builders.PersonnelBuilder.*;
 import static org.mockito.Matchers.*;
@@ -41,6 +41,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.service.CustomerAccountFactory;
+import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;

@@ -41,7 +41,7 @@ public class GroupPerformanceHistoryUpdater {
             CustomerBO client = (CustomerBO) arg0;
             LoanBO matchingIndividualAccount = (LoanBO) CollectionUtils.find(client.getAccounts(),
                     new ClientAccountWithParentAccountMatcher(loan));
-            getPerformanceHistory(arg0).updateOnRepayment(matchingIndividualAccount.getLoanAmount());
+            getPerformanceHistory(arg0).updateOnFullRepayment(matchingIndividualAccount.getLoanAmount());
         }
     }
 

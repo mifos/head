@@ -83,12 +83,14 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
     }
 
     @Test(dependsOnMethods = { "testFailureRemoveFees" })
-    public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
+    public void testSuccessGetLastPmntAmntToBeAdjusted()  throws Exception {
 
         LoanBO loan = groupLoan;
 
         Date currentDate = new Date(System.currentTimeMillis());
         Date startDate = new Date(System.currentTimeMillis());
+
+        loan.setAccountState(new AccountStateEntity(AccountState.LOAN_APPROVED));
         disburseLoan(loan, startDate);
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();

@@ -52,12 +52,11 @@ refname=${refname##refs/heads/}
 gitver=$(git --version)
 gitver=${gitver##* }
 
-rev=$(git describe ${merged} 2>/dev/null)
-[[ -z ${rev} ]] && rev=${merged:0:12}
+rev=${merged:0:7}
 
 rawcommit=$(git cat-file commit ${merged})
 
-authorName=$(sed -n -e '/^author \(.*\)<[^@]*.*$/s--\1-p' \
+authorName=$(sed -n -e '/^author \(.*\)\s\+<[^@]*.*$/s--\1-p' \
 	<<< "${rawcommit}")
 author=$(sed -n -e '/^author .*<\([^@]*\).*$/s--\1-p' \
 	<<< "${rawcommit}")
@@ -80,6 +79,7 @@ out="
   </generator>
   <source>
     <project>${project}</project>
+    <module>${repository}</module>
     <branch>${refname}</branch>
   </source>
   <timestamp>${ts}</timestamp>

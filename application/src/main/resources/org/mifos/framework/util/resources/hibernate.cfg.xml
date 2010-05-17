@@ -216,6 +216,7 @@
 		<mapping resource="org/mifos/accounts/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 			 
 		<mapping resource="org/mifos/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
+        <mapping resource="org/mifos/accounts/loan/business/MaxMinInterestRate.hbm.xml" />
 		<mapping resource="org/mifos/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 
 		
 		<!-- Administratives Documents  -->

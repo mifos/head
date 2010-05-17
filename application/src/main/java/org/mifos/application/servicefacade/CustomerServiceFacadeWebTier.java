@@ -52,7 +52,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerDto;
-import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -101,7 +100,6 @@ import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -556,11 +554,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
 
+                int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(
                         mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields,
                         clientNameDetailEntity, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address);
+                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address, numberOfCustomersInOfficeAlready);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
@@ -878,12 +878,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
             String newStatusIdAsString, String notes, UserContext userContext) throws ApplicationException {
 
-        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
-
-        checkVersionMismatch(previousCustomerVersionNo, customerBO.getVersionNo());
-
-        customerBO.setUserContext(userContext);
-
         Short flagId = null;
         Short newStatusId = null;
         if (StringUtils.isNotBlank(flagIdAsString)) {
@@ -893,55 +887,16 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             newStatusId = Short.valueOf(newStatusIdAsString);
         }
 
-        checkPermission(customerBO, userContext, newStatusId, flagId);
-
-        Short oldStatusId = customerBO.getCustomerStatus().getId();
-
-        // FIXME - keithw - this validation was failing an integration test.. check with business expert on all states
-        // for customer status update.
-        // customerBO.validateLoanOfficerIsActive();
-
-        CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
-        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
         CustomerStatusFlag customerStatusFlag = null;
         if (flagId != null) {
             customerStatusFlag = CustomerStatusFlag.fromInt(flagId);
         }
 
-        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
 
-        CustomerNoteEntity customerNote = new CustomerNoteEntity(notes, new DateTimeService().getCurrentJavaSqlDate(),
-                loggedInUser, customerBO);
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdate(customerId, previousCustomerVersionNo, customerStatusFlag, newStatus, notes);
 
-        if (customerBO.isGroup()) {
-
-            GroupBO group = (GroupBO) customerBO;
-            this.customerService.updateGroupStatus(group, oldStatus, newStatus, customerStatusFlag, customerNote);
-        } else if (customerBO.isClient()) {
-
-            ClientBO client = (ClientBO) customerBO;
-
-            this.customerService.updateClientStatus(client, oldStatus, newStatus, customerStatusFlag, customerNote);
-        } else {
-            CenterBO center = (CenterBO) customerBO;
-            this.customerService.updateCenterStatus(center, newStatus, customerStatusFlag, customerNote);
-        }
-
-    }
-
-    private void checkPermission(CustomerBO customerBO, UserContext userContext, Short newStatusId, Short flagId) {
-
-        try {
-            if (null != customerBO.getPersonnel()) {
-                new CustomerBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
-                        customerBO.getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-            } else {
-                new CustomerBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
-                        customerBO.getOffice().getOfficeId(), userContext.getId());
-            }
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
-        }
+        this.customerService.updateCustomerStatus(userContext, customerStatusUpdate);
     }
 
     @Override

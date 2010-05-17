@@ -137,6 +137,9 @@
 			<one-to-one name="maxMinLoanAmount"
 				class="org.mifos.accounts.loan.business.MaxMinLoanAmount"
 				cascade="all" access="field" />
+            <one-to-one name="maxMinInterestRate"
+				class="org.mifos.accounts.loan.business.MaxMinInterestRate"
+				cascade="all" access="field" />
 			<one-to-one name="maxMinNoOfInstall"
 				class="org.mifos.accounts.loan.business.MaxMinNoOfInstall"
 				cascade="all" access="field" />

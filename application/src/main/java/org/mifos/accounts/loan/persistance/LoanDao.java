@@ -84,8 +84,9 @@ public class LoanDao implements DataAccessObject {
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, false, maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,
-                isRepaymentIndepOfMeetingEnabled, null);
+                customFields, false, maxLoanAmount, minLoanAmount,
+                loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
+                maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
     }
 
     private boolean isAnyLoanParamsNull(Object... args) {

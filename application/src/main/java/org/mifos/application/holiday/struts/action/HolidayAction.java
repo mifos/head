@@ -72,13 +72,13 @@ public class HolidayAction extends BaseAction {
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("holidayAction");
-        security.allow("load", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.CAN_DEFINE_HOLIDAY);
         security.allow("get", SecurityConstants.VIEW);
         security.allow("preview", SecurityConstants.VIEW);
         security.allow("getHolidays", SecurityConstants.VIEW);
         security.allow("addHoliday", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.CAN_DEFINE_HOLIDAY);
         return security;
     }
 

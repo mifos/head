@@ -171,11 +171,11 @@ public class GroupStatusChangeIntegrationTest {
                                                  .formedBy(existingUser).build();
         IntegrationTestObjectMother.createGroup(existingPendingGroup, existingMeeting);
 
-        ClientBO existingPartialClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_PARTIAL).withParentCustomer(
+        ClientBO existingPartialClient = new ClientBuilder().withName("partialClient").withStatus(CustomerStatus.CLIENT_PARTIAL).withParentCustomer(
                 existingPendingGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingPartialClient, existingMeeting);
 
-        ClientBO existingPendingClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_PENDING).withParentCustomer(
+        ClientBO existingPendingClient = new ClientBuilder().withName("pendingClient").withStatus(CustomerStatus.CLIENT_PENDING).withParentCustomer(
                 existingPendingGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingPendingClient, existingMeeting);
 

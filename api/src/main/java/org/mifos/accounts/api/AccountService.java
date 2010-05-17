@@ -134,4 +134,14 @@ public interface AccountService {
      *
      */
     BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception;
+
+    /**
+     * Gets a property from the mifos configuration file. This is the most basic get method for retrieving values of
+     * properties.
+     *
+     * @param propertyKey
+     * @return the value to which this configuration maps the specified key, or null if the configuration contains no
+     *         mapping for this key.
+     */
+    Object getMifosConfiguration(String propertyKey);
 }

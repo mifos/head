@@ -22,6 +22,7 @@ package org.mifos.application.holiday.struts.action;
 
 import junit.framework.Assert;
 
+import org.mifos.accounts.fund.struts.action.FundAction;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -29,6 +30,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
 public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
@@ -42,13 +45,13 @@ public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        UserContext userContext = TestUtils.makeUser();
+        UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-        // addRequestParameter("recordLoanOfficerId", "1");
-        // addRequestParameter("recordOfficeId", "1");
-        // ActivityContext ac = new ActivityContext((short) 0, userContext
-        // .getBranchId().shortValue(), userContext.getId().shortValue());
-        // request.getSession(false).setAttribute("ActivityContext", ac);
+        addRequestParameter("recordLoanOfficerId", "1");
+        addRequestParameter("recordOfficeId", "1");
+        ActivityContext ac = TestObjectFactory.getActivityContext();
+        request.getSession(false).setAttribute("ActivityContext", ac);
+
         flowKey = createFlow(request, HolidayAction.class);
     }
 

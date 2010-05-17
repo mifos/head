@@ -596,6 +596,7 @@ public class CustomerAccountBOTest {
 
     }
 
+    @Ignore
     @Test
     public void createNewWeeklyCustomerAccountOnePeriodicFeeWithMoratoriumGeneratesCorrectFeeSchedule() {
 

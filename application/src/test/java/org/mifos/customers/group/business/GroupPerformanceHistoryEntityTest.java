@@ -24,11 +24,20 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -41,21 +50,42 @@ public class GroupPerformanceHistoryEntityTest {
     private LoanBO loan;
 
     @Mock
-    private GroupBO group;
+    private ConfigurationBusinessService configurationBusinessService;
 
-    @Ignore
+    @Mock
+    private AccountBusinessService accountBusinessService;
+
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
+
+
     @Test
-    public void shouldUpdateLastLoanAmountOnFullRepayment() throws Exception {
+    public void shouldUpdateLastLoanAmountWhenLoanIsFullyPaid() throws Exception {
+
+        Money loanAmount = new Money(Money.getDefaultCurrency(), "55.6");
 
         // setup
-        groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(group);
-        Money totalAmount = null;
+        groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(configurationBusinessService, accountBusinessService);
+
+        when(loan.getLoanAmount()).thenReturn(loanAmount);
 
         // exercise test
-        groupPerformanceHistoryEntity.updateOnRepayment(loan, totalAmount);
+        groupPerformanceHistoryEntity.updateOnFullRepayment(loan);
 
         // verification
         assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount(), is(notNullValue()));
-        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount().getAmountDoubleValue(), is(Double.valueOf("")));
+        assertThat(groupPerformanceHistoryEntity.getLastGroupLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
     }
 }

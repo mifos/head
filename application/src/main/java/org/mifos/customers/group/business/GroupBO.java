@@ -30,16 +30,17 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
+import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -53,10 +54,8 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.springframework.util.Assert;
@@ -441,7 +440,7 @@ public class GroupBO extends CustomerBO {
             throws CustomerException {
         GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
         try {
-            performanceHistory.updateOnRepayment(loan, totalAmount);
+            performanceHistory.updateOnFullRepayment(loan);
         } catch (AccountException e) {
             throw new CustomerException(e);
         }
@@ -469,13 +468,12 @@ public class GroupBO extends CustomerBO {
 
     public void validateGroupCanBeActive() throws CustomerException {
 
-        if (this.getParentCustomer() == null || this.getParentCustomer().getCustomerId() == null) {
-            if (this.getPersonnel() == null || this.getPersonnel().getPersonnelId() == null) {
-                throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
-            }
-            if (this.getCustomerMeeting() == null || this.getCustomerMeeting().getMeeting() == null) {
-                throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
-            }
+        if (this.getPersonnel() == null) {
+            throw new CustomerException(GroupConstants.GROUP_LOANOFFICER_NOT_ASSIGNED);
+        }
+
+        if (this.getCustomerMeeting() == null || this.getCustomerMeeting().getMeeting() == null) {
+            throw new CustomerException(GroupConstants.MEETING_NOT_ASSIGNED);
         }
     }
 
@@ -528,5 +526,25 @@ public class GroupBO extends CustomerBO {
         } catch (InvalidDateException e) {
             throw new CustomerException(CustomerConstants.MFI_JOINING_DATE_MANDATORY, e);
         }
+    }
+
+    public final void updateCustomerHierarchy() {
+        if (this.getParentCustomer() != null) {
+            CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(this, this.getParentCustomer());
+            this.addCustomerHierarchy(hierarchy);
+        }
+    }
+
+    public final void regenerateCustomerFeeSchedule() throws AccountException {
+        CustomerAccountBO customerAccount = this.getCustomerAccount();
+        if (customerAccount != null) {
+            this.getCustomerAccount().generateCustomerFeeSchedule();
+        }
+    }
+
+    @Override
+    public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote, CustomerStatusFlagEntity customerStatusFlagEntity) {
+        this.clearCustomerFlagsIfApplicable(getStatus(), newStatus);
+        super.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
     }
 }

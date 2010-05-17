@@ -29,6 +29,7 @@ import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
+import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
@@ -57,6 +58,8 @@ public interface CustomerService {
     GroupBO transferGroupTo(GroupBO group, CenterBO transferToCenter) throws CustomerException;
 
     GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException;
+
+    void updateCustomerStatus(UserContext userContext, CustomerStatusUpdate customerStatusUpdate) throws CustomerException;
 
     void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException;
 

@@ -170,6 +170,8 @@ public interface CustomerDao {
 
     void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);
 
+    void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException;
+
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
@@ -198,4 +200,6 @@ public interface CustomerDao {
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
+
+    void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 }

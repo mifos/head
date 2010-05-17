@@ -17,16 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.customers.persistence;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -57,6 +57,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -98,12 +99,13 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -1248,7 +1250,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         CustomerPerformanceHistoryDto customerPerformanceHistoryDto = new CustomerPerformanceHistoryDto();
 
-        java.util.Date dateOneYearBefore = new DateTime().minusYears(1).toDate();
+        Date dateOneYearBefore = new DateTime().minusYears(1).toDate();
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMERID", clientId);
@@ -1420,5 +1422,61 @@ public class CustomerDaoHibernate implements CustomerDao {
         } catch (SQLException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public final void checkPermissionForStatusChange(Short newState, UserContext userContext, Short flagSelected,
+            Short recordOfficeId, Short recordLoanOfficerId) throws CustomerException {
+        if (!isPermissionAllowed(newState, userContext, flagSelected, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short flagSelected,
+            Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isStateChangePermittedForCustomer(newState.shortValue(),
+                null != flagSelected ? flagSelected.shortValue() : 0, userContext, recordOfficeId, recordLoanOfficerId);
+    }
+
+    @Override
+    public void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException {
+
+        Integer customerId = Integer.valueOf(0);
+        String name = client.getDisplayName();
+        Date dob = client.getDateOfBirth();
+        String governmentId = client.getGovernmentId();
+
+        if (StringUtils.isNotBlank(governmentId)) {
+            if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
+                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID, client.getUserContext());
+                throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId, label });
+            }
+        } else {
+            if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
+                throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
+            }
+        }
+    }
+
+    // Returns true if another client with same govt id is found with a state other than closed
+    public boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
+        return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId);
+    }
+
+    // returns true if a duplicate client is found with same display name and dob in state other than closed
+    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob, final Integer customerId) {
+        return checkForDuplicacyBasedOnName("Customer.getNonClosedClientBasedOnNameAndDateOfBirth" , name, dob, customerId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob, final Integer customerId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("clientName", name);
+        queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
+        queryParameters.put("DATE_OFBIRTH", dob);
+        queryParameters.put("customerId", customerId);
+        queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
+        List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
+        return ((Number) queryResult.get(0)).intValue() > 0;
     }
 }

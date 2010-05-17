@@ -244,7 +244,6 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     public void updateOnReversal(LoanOfferingBO loanOffering, Money lastLoanAmount) {
         updateCommonHistoryOnReversal(loanOffering);
-        setLastLoanAmount(lastLoanAmount);
     }
 
     public void updateCommonHistoryOnReversal(LoanOfferingBO loanOffering) {
@@ -252,7 +251,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
         setNoOfActiveLoans(getNoOfActiveLoans() - 1);
     }
 
-    public void updateOnRepayment(Money totalAmount) {
+    public void updateOnFullRepayment(Money totalAmount) {
         setLastLoanAmount(totalAmount);
         setNoOfActiveLoans(getNoOfActiveLoans() - 1);
     }
