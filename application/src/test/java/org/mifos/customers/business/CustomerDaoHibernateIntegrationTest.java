@@ -69,7 +69,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
     private CustomerBO center;
     private GroupBO group;
     private ClientBO activeClient;
-    private ClientBO inActiveClient;
+    private ClientBO pendingClient;
 
     @Override
     protected void setUp() throws Exception {
@@ -111,10 +111,10 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
                 .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForSecondClient);
 
-        inActiveClient = new ClientBuilder().inActive().withMeeting(weeklyMeeting).withName("Inactive Client")
+        pendingClient = new ClientBuilder().pendingApproval().withMeeting(weeklyMeeting).withName("Pending Client")
                 .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForSecondClient)
                 .withParentCustomer(group).buildForIntegrationTests();
-        IntegrationTestObjectMother.createClient(inActiveClient, weeklyMeeting);
+        IntegrationTestObjectMother.createClient(pendingClient, weeklyMeeting);
 
         customerDao = new CustomerDaoHibernate(genericDao);
     }
@@ -123,7 +123,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
     protected void tearDown() throws Exception {
         super.tearDown();
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(activeClient,
-                inActiveClient, group, center, weeklyMeeting);
+                pendingClient, group, center, weeklyMeeting);
     }
 
     public void testShouldFindCustomerByIdGivenCustomerExists() {

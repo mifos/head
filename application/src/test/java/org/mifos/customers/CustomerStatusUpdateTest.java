@@ -21,17 +21,24 @@
 package org.mifos.customers;
 
 import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
@@ -42,18 +49,22 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.business.service.MessageLookupHelper;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.CustomerStatusUpdateBuilder;
+import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
@@ -92,6 +103,19 @@ public class CustomerStatusUpdateTest {
 
     @Mock
     private CenterBO mockedCenter;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseCurrencyForMoney() {
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
 
     @Before
     public void setupAndInjectDependencies() {
@@ -261,5 +285,53 @@ public class CustomerStatusUpdateTest {
 
         // exercise test
         customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+    }
+
+    @Test
+    public void setsActivationDateAndUpdatesCustomerHierarchyWhenTransitioningToActiveForFirstTime() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.GROUP_ACTIVE).build();
+
+        PersonnelBO loanOfficer = PersonnelBuilder.anyLoanOfficer();
+        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(loanOfficer).active().build();
+        GroupBO existingGroup = new GroupBuilder().pendingApproval().withParentCustomer(existingCenter).withVersion(customerStatusUpdate.getVersionNum()).build();
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingGroup);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        assertThat(new LocalDate(existingGroup.getCustomerActivationDate()), is(new LocalDate()));
+        assertThat((CenterBO)existingGroup.getActiveCustomerHierarchy().getParentCustomer(), is(existingCenter));
+        assertThat((GroupBO)existingGroup.getActiveCustomerHierarchy().getCustomer(), is(existingGroup));
+    }
+
+    @Test
+    public void updatesPendingChildrenToPartialWhenTransitioningGroupFromPendingToCancelled() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdateBuilder().with(CustomerStatus.GROUP_CANCELLED).build();
+
+        PersonnelBO loanOfficer = PersonnelBuilder.anyLoanOfficer();
+        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(loanOfficer).active().build();
+        GroupBO existingGroup = new GroupBuilder().pendingApproval().withParentCustomer(existingCenter).withVersion(customerStatusUpdate.getVersionNum()).build();
+        ClientBO existingClient = new ClientBuilder().withParentCustomer(existingGroup).pendingApproval().buildForUnitTests();
+        existingGroup.addChild(existingClient);
+
+        // stubbing
+        when(customerDao.findCustomerById(customerStatusUpdate.getCustomerId())).thenReturn(existingGroup);
+
+        // exercise test
+        customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+
+        // verification
+        assertThat(existingGroup.getStatus(), is(CustomerStatus.GROUP_CANCELLED));
+        assertThat(existingClient.getUserContext(), is(userContext));
+        assertThat(existingClient.getStatus(), is(CustomerStatus.CLIENT_PARTIAL));
     }
 }
