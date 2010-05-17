@@ -50,7 +50,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
  *
  */
 public class CollectionSheetServiceImpl implements CollectionSheetService {
-    private static final MifosLogger logger = MifosLogManager.getLogger("org.mifos.application.servicefacade.CollectionSheetServiceImpl");
+    private static final MifosLogger logger = MifosLogManager.getLogger(CollectionSheetServiceImpl.class.getName());
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
