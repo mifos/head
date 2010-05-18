@@ -1087,19 +1087,12 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public void updateFamilyInfo(Integer customerId, UserContext userContext, Integer oldVersionNum,
-            ClientCustActionForm actionForm) {
-        ClientBO client = (ClientBO) this.customerDao.findCustomerById(customerId);
-        client.setUserContext(userContext);
+            ClientCustActionForm actionForm) throws ApplicationException {
 
-        try {
-            checkVersionMismatch(oldVersionNum, client.getVersionNo());
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdate(customerId, oldVersionNum, actionForm.getFamilyPrimaryKey(),
+                actionForm.getFamilyNames(), actionForm.getFamilyDetails());
 
-            ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdate(
-                    actionForm.getFamilyPrimaryKey(), actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-            this.customerService.updateClientFamilyInfo(client, clientFamilyInfoUpdate);
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e);
-        }
+        this.customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
     }
 
     @Override

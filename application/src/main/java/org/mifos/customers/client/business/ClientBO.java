@@ -52,6 +52,7 @@ import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
@@ -601,17 +602,27 @@ public class ClientBO extends CustomerBO {
 
         for (int key = 0; key < primaryKeys.size(); key++) {
             if (primaryKeys.get(key) != null) {
+
                 List<ClientNameDetailDto> clientNameDetailDto = clientFamilyInfoUpdate.getFamilyNames();
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
+
                         clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
+
+                        // if switched from familyDetailsRequired=false to true then migrate data to family details table.
+                        if (familyDetailSet.isEmpty() && ClientRules.isFamilyDetailsRequired()) {
+                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
+                            for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
+                                ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this, clientNameDetailEntity, clientFamilyDetail);
+                                familyDetailSet.add(clientFamilyEntity);
+                            }
+                        }
                     }
                 }
 
                 List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
                 for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
-                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key)
-                            .intValue()) {
+                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
                         clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailDto.get(key));
                     }
                 }

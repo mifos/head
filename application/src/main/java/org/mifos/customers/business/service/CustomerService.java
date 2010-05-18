@@ -68,7 +68,7 @@ public interface CustomerService {
 
     void updateClientPersonalInfo(UserContext userContext, ClientPersonalInfoUpdate personalInfo) throws CustomerException;
 
-    void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate);
+    void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws CustomerException;
 
     void updateClientMfiInfo(UserContext userContext, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException;
 }

@@ -402,7 +402,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public final void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+    public void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate)
+            throws CustomerException {
+
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId());
+        client.validateVersion(clientFamilyInfoUpdate.getOldVersionNum());
+        client.updateDetails(userContext);
 
         try {
             hibernateTransactionHelper.startTransaction();

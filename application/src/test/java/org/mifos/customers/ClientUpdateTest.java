@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.core.MifosRuntimeException;
@@ -42,6 +43,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.domain.builders.ClientFamilyInfoUpdateBuilder;
 import org.mifos.domain.builders.ClientMfiInfoUpdateBuilder;
 import org.mifos.domain.builders.ClientPersonalInfoUpdateBuilder;
 import org.mifos.framework.TestUtils;
@@ -289,6 +291,79 @@ public class ClientUpdateTest {
 
         // exercise test
         customerService.updateClientPersonalInfo(userContext, clientPersonalInfoUpdate);
+
+        // verification
+        verify(hibernateTransactionHelper).rollbackTransaction();
+        verify(hibernateTransactionHelper).closeSession();
+    }
+
+    @Test(expected = CustomerException.class)
+    public void throwsCheckedExceptionWhenVersionOfClientForFamilyInfoUpdateIsDifferentToPersistedClient() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId())).thenReturn(mockedClient);
+        doThrow(new CustomerException(Constants.ERROR_VERSION_MISMATCH)).when(mockedClient).validateVersion(clientFamilyInfoUpdate.getOldVersionNum());
+
+        // exercise test
+        customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
+
+        // verify
+        verify(mockedClient).validateVersion(clientFamilyInfoUpdate.getOldVersionNum());
+    }
+
+    @Test
+    public void userContextAndUpdateDetailsAreSetBeforeBeginningAuditLoggingForFamilyInfo() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId())).thenReturn(mockedClient);
+
+        // exercise test
+        customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
+
+        // verification
+        InOrder inOrder = inOrder(hibernateTransactionHelper, mockedClient);
+        inOrder.verify(mockedClient).updateDetails(userContext);
+        inOrder.verify(hibernateTransactionHelper).beginAuditLoggingFor(mockedClient);
+    }
+
+    @Test
+    public void familyDetailsAreUpdated() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId())).thenReturn(mockedClient);
+
+        // exercise test
+        customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
+
+        // verification
+        verify(mockedClient).updateFamilyInfo(clientFamilyInfoUpdate);
+    }
+
+    @Test(expected = MifosRuntimeException.class)
+    public void rollsbackTransactionClosesSessionAndThrowsRuntimeExceptionWhenExceptionOccurs3() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdateBuilder().build();
+
+        // stubbing
+        when(customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId())).thenReturn(mockedClient);
+        doThrow(new RuntimeException()).when(customerDao).save(mockedClient);
+
+        // exercise test
+        customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
 
         // verification
         verify(hibernateTransactionHelper).rollbackTransaction();
