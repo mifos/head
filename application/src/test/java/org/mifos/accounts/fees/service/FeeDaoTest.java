@@ -1,12 +1,13 @@
 package org.mifos.accounts.fees.service;
 
 
-import java.util.Date;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
@@ -43,7 +44,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -63,37 +63,43 @@ public class FeeDaoTest {
     @Autowired
     private FeeDao feeDao;
 
+    private UserContext userCtx;
 
-    @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldCreateRateFee() {
-        GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
-        dao.setSessionFactory(sessionFactory);
-        //AmountFeeEntity amtFee = new AmountFeeEntity();
-        //List<FeeEntity> fees = dao.getDetailsAll();
-        //Assert.assertEquals(0, fees.size());
+    private GLCodeEntity glCode;
+
+    @Before
+    public void setUserContext() {
+        userCtx = TestUtils.makeUser();
     }
+
+    @Before
+    public void setGLCode() {
+        GenericDaoHibernateImpl<GLCodeEntity, Short> dao = new GenericDaoHibernateImpl<GLCodeEntity, Short>(GLCodeEntity.class);
+        dao.setSessionFactory(sessionFactory);
+        glCode = new GLCodeEntity(Short.valueOf("666"), "666");
+        dao.create(glCode);
+    }
+
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     public void shouldCreateOnetimeUpfrontAmountFee() {
-        UserContext userCtx = TestUtils.makeUser();
+        /*GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
+        dao.setSessionFactory(sessionFactory);*/
         try {
             boolean isCustomerDefaultFee = false;
             FeeEntity fee =
                 new AmountFeeEntity(
                         "test.shouldCreateOnetimeUpfrontAmountFee",
                         getCategoryTypeEntity(userCtx, FeeCategory.CENTER),
-                        getGLCode("7"),
+                        glCode,
                         new Money(TestUtils.RUPEE, "100"),
                         isCustomerDefaultFee,
                         TestObjectFactory.getHeadOffice());
             FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
             FeePaymentEntity feePayment = getFeePaymentEntiry(userCtx, FeePayment.UPFRONT);
-            fee.setFeeFrequency(new FeeFrequencyEntity(feeFrequencyType, fee, feePayment, null));
-            fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-            fee.setCreatedBy(userCtx.getId());
-            fee.setFeeStatus(getFeeStatusEntity(userCtx, FeeStatus.ACTIVE));
-            makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                    new FeeFrequencyEntity(feeFrequencyType, fee, feePayment, null));
             getFeeDao().create(fee);
             Assert.assertTrue( fee.getFeeId() != null);
         } catch (FeeException e) {
@@ -103,27 +109,24 @@ public class FeeDaoTest {
         }
     }
 
+
+
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     public void shouldCreateOneTimeUpfrontRateFee() {
-        UserContext userCtx = TestUtils.makeUser();
         try {
             boolean isCustomerDefaultFee = false;
             FeeEntity rateFee =
                 new RateFeeEntity("test.shouldCreateOneTimeUpfrontRateFee",
                     new CategoryTypeEntity(FeeCategory.CENTER),
-                    getGLCode("7"), 2.0,
+                    glCode,
+                    2.0,
                     getFeeFormulaEntity(userCtx, FeeFormula.AMOUNT),
                     isCustomerDefaultFee,
                     TestObjectFactory.getHeadOffice());
-
             FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
-            rateFee.setFeeFrequency(
+            setFeeAttributesBeforeCreate(isCustomerDefaultFee, rateFee, FeeStatus.ACTIVE,
                     new FeeFrequencyEntity(feeFrequencyType, rateFee, new FeePaymentEntity(FeePayment.UPFRONT), null));
-            rateFee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-            rateFee.setCreatedBy(userCtx.getId());
-            rateFee.setFeeStatus(getFeeStatusEntity(userCtx, FeeStatus.ACTIVE));
-            makeFeeDefaultToCustomer(rateFee, isCustomerDefaultFee);
             getFeeDao().create(rateFee);
             Assert.assertTrue( rateFee.getFeeId() != null);
         } catch (FeeException e) {
@@ -133,37 +136,24 @@ public class FeeDaoTest {
         }
     }
 
-    private FeeDao getFeeDao() {
-        return feeDao;
-    }
 
-    private GenericDaoHibernateImpl<FeeEntity, Short> getGenericFeeDao() {
-        GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
-        dao.setSessionFactory(sessionFactory);
-        return dao;
-    }
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     public void shouldCreatePeriodicAmountFee() {
         try {
-            UserContext userCtx = TestUtils.makeUser();
-            MeetingBO feefrequencyMeeting = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(),
-                    MeetingType.PERIODIC_FEE);
+            MeetingBO feefrequencyMeeting = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
             boolean isCustomerDefaultFee = false;
             FeeEntity fee =
                 new AmountFeeEntity("test.shouldCreatePeriodicAmountFee",
                     new CategoryTypeEntity(FeeCategory.CENTER),
-                    getGLCode("7"),
+                    glCode,
                     new Money(TestUtils.RUPEE, "100"),
                     isCustomerDefaultFee,
                     TestObjectFactory.getHeadOffice());
             FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.PERIODIC);
-            fee.setFeeFrequency(new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
-            fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-            fee.setCreatedBy(userCtx.getId());
-            fee.setFeeStatus(getFeeStatusEntity(userCtx, FeeStatus.ACTIVE));
-            makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                    new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
             getFeeDao().create(fee);
             Assert.assertTrue( fee.getFeeId() != null);
         } catch (FeeException e) {
@@ -179,28 +169,21 @@ public class FeeDaoTest {
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     public void shouldCreatePeriodicRateFee() {
-
-        UserContext userCtx = TestUtils.makeUser();
         try {
             MeetingBO feefrequencyMeeting =
                 new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
             boolean isCustomerDefaultFee = false;
             FeeEntity fee = new RateFeeEntity("test.shouldCreatePeriodicRateFee",
                     new CategoryTypeEntity(FeeCategory.CENTER),
-                    getGLCode("7"), 100.0,
+                    glCode, 100.0,
                     new FeeFormulaEntity(FeeFormula.AMOUNT),
                     isCustomerDefaultFee,
                     TestObjectFactory.getHeadOffice());
-
             FeeFrequencyTypeEntity feeFrequencyType = new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC);
-            fee.setFeeFrequency(new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
-            fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-            fee.setCreatedBy(userCtx.getId());
-            fee.setFeeStatus(getFeeStatusEntity(userCtx, FeeStatus.ACTIVE));
-            makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                    new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
             getFeeDao().create(fee);
             Assert.assertTrue( fee.getFeeId() != null);
-
         } catch (FeeException e) {
             Assert.fail(String.format("FeeException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
         } catch (MeetingException e) {
@@ -214,24 +197,19 @@ public class FeeDaoTest {
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     //@Rollback(false)
-    public void ShouldCreatePeriodicDefaultFee() throws Exception {
-        UserContext userCtx = TestUtils.makeUser();
+    public void shouldCreatePeriodicDefaultFee() throws Exception {
+        //with customer default fee
+        boolean isCustomerDefaultFee = true;
         MeetingBO feefrequencyMeeting =
             new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
-
-       FeeEntity fee = new RateFeeEntity("test.ShouldCreatePeriodicDefaultFee",
-                new CategoryTypeEntity(FeeCategory.ALLCUSTOMERS),
-                getGLCode("7"), 100.0,
-                new FeeFormulaEntity(FeeFormula.AMOUNT),
-                true,
+        FeeEntity fee =
+           new RateFeeEntity("test.ShouldCreatePeriodicDefaultFee",
+                new CategoryTypeEntity(FeeCategory.ALLCUSTOMERS), glCode, 100.0,
+                new FeeFormulaEntity(FeeFormula.AMOUNT), isCustomerDefaultFee,
                 TestObjectFactory.getHeadOffice());
-
         FeeFrequencyTypeEntity feeFrequencyType = new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC);
-        fee.setFeeFrequency(new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
-        fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-        fee.setCreatedBy(userCtx.getId());
-        fee.setFeeStatus(getFeeStatusEntity(userCtx, FeeStatus.ACTIVE));
-        makeFeeDefaultToCustomer(fee, true);
+        setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
         getFeeDao().create(fee);
         Assert.assertTrue( fee.getFeeId() != null);
 
@@ -242,6 +220,30 @@ public class FeeDaoTest {
         Assert.assertEquals(true, newFee.isCustomerDefaultFee());
         Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
     }
+
+
+    private void setFeeAttributesBeforeCreate(
+            boolean isCustomerDefaultFee,
+            FeeEntity fee,
+            FeeStatus feeStatus,
+            FeeFrequencyEntity feeFrequency) throws FeeException, PersistenceException {
+        fee.setFeeFrequency(feeFrequency);
+        fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+        fee.setCreatedBy(userCtx.getId());
+        fee.setFeeStatus(getFeeStatusEntity(userCtx, feeStatus));
+        makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+    }
+
+    private FeeDao getFeeDao() {
+        return feeDao;
+    }
+
+    /*private GenericDaoHibernateImpl<FeeEntity, Short> getGenericFeeDao() {
+        GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
+        dao.setSessionFactory(sessionFactory);
+        return dao;
+    }*/
+
 
     private FeeFormulaEntity getFeeFormulaEntity(UserContext userCtx, FeeFormula formula) throws PersistenceException {
         return masterEntityDao.retrieveMasterEntity(FeeFormulaEntity.class,
@@ -270,9 +272,9 @@ public class FeeDaoTest {
         return categoryType;
     }
 
-    private GLCodeEntity getGLCode(String glCode) {
+    /*private GLCodeEntity getGLCode(String glCode) {
         return masterEntityDao.retrieveGLCodeEntity(Short.valueOf(glCode));
-    }
+    }*/
 
     private void makeFeeDefaultToCustomer(FeeEntity fee, boolean isCustomerDefaultFee) throws FeeException {
         if (!isCustomerDefaultFee) {

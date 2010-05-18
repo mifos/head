@@ -1,13 +1,14 @@
 package org.mifos.accounts.fees.servicefacade;
 
 
-import org.mifos.accounts.fees.business.AmountFeeBO;
+
+import java.util.Date;
+
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
-import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.entities.AmountFeeEntity;
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
@@ -29,14 +30,20 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FeeServiceImpl implements FeeService {
 
+    @Autowired
     private MasterEntityDao masterDao;
+
+    @Autowired
     private FeeDao feeDao;
+
+    public FeeServiceImpl() {
+    }
 
     public FeeServiceImpl(MasterEntityDao masterDao, FeeDao feeDao) {
         super();
@@ -46,8 +53,8 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public FeeEntity createOneTimeFee(UserContext userContext, String feeName, boolean isCustomerDefaultFee,
-            boolean isRateFee, Double rate, Money feeMoney, FeePayment feePayment, FeeCategory category,
-            FeeFormula feeFormula, GLCodeEntity glCode, OfficeBO office) throws PersistenceException, FeeException {
+            boolean isRateFee, Double rate, Money feeMoney, FeeCategory category,
+            FeeFormula feeFormula, GLCodeEntity glCode, OfficeBO office, FeePayment feePayment) throws PersistenceException, FeeException {
         FeePaymentEntity feePaymentEntity = getFeePaymentEntity(userContext, feePayment);
         CategoryTypeEntity feeCategoryType = getFeeCategoryTypeEntity(userContext, category);
 
@@ -80,12 +87,13 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public FeeEntity createPeriodicFee(UserContext userContext, String feeName, boolean isCustomerDefaultFee,
-            boolean isRateFee, Double rate, Money feeMoney, CategoryTypeEntity categoryType, FeeFormula feeFormula,
+            boolean isRateFee, Double rate, Money feeMoney, FeeCategory category, FeeFormula feeFormula,
             GLCodeEntity glCode, OfficeBO office, RecurrenceType feeRecurrenceType, Short recurAfter)
             throws PersistenceException, FeeException {
+        CategoryTypeEntity feeCategoryType = getFeeCategoryTypeEntity(userContext, category);
         MeetingBO feeMeeting;
         try {
-            feeMeeting = new MeetingBO(feeRecurrenceType, recurAfter, new DateTimeService().getCurrentJavaDateTime(),
+            feeMeeting = new MeetingBO(feeRecurrenceType, recurAfter, getCreateDate(),
                     MeetingType.PERIODIC_FEE);
         } catch (MeetingException e) {
             //FIXME: Should introduce constant for INVALID_MEETING
@@ -100,7 +108,7 @@ public class FeeServiceImpl implements FeeService {
              * new RateFeeBO(userContext, feeName, categoryType, feeFrequencyType, glCode, rate, feeFormulaEntity,
              * isCustomerDefaultFee, feeMeeting, getFeeOffice(office));
              */
-            fee = new RateFeeEntity(feeName, categoryType, glCode, rate, feeFormulaEntity, isCustomerDefaultFee,
+            fee = new RateFeeEntity(feeName, feeCategoryType, glCode, rate, feeFormulaEntity, isCustomerDefaultFee,
                     getFeeOffice(office));
         } else {
             validateAmount(feeMoney);
@@ -108,7 +116,7 @@ public class FeeServiceImpl implements FeeService {
              * new AmountFeeBO(userContext, feeName, categoryType, feeFrequencyType, glCode, feeMoney,
              * isCustomerDefaultFee, feeMeeting, getFeeOffice(office));
              */
-            fee = new AmountFeeEntity(feeName, categoryType, glCode, feeMoney, isCustomerDefaultFee,
+            fee = new AmountFeeEntity(feeName, feeCategoryType, glCode, feeMoney, isCustomerDefaultFee,
                     getFeeOffice(office));
 
         }
@@ -117,7 +125,7 @@ public class FeeServiceImpl implements FeeService {
                 fee, new FeeFrequencyEntity(feeFrequencyType, fee, null, feeMeeting),
                 isCustomerDefaultFee, userContext);
         feeDao.create(fee);
-        return null;
+        return fee;
     }
 
 
@@ -132,8 +140,12 @@ public class FeeServiceImpl implements FeeService {
 
     private void setCreateDetails(UserContext userContext, FeeEntity fee) {
         //NOTE: copied from FeeBO!
-        fee.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+        fee.setCreatedDate(getCreateDate());
         fee.setCreatedBy(userContext.getId());
+    }
+
+    private Date getCreateDate() {
+        return new org.mifos.framework.util.DateTimeService().getCurrentJavaDateTime();
     }
 
     private OfficeBO getFeeOffice(OfficeBO office) throws PersistenceException {

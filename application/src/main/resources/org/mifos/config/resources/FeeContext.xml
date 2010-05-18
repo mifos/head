@@ -11,51 +11,27 @@
       http://www.springframework.org/schema/aop
       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
       
-      
-    <!--
-    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
-    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController">
-       <property name="methodNameResolver">     
-         <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
-           <property name="mappings">
-             <value>
-                /**/create.shtml=createFee
-             </value>
-           </property>
-        </bean>
-       </property>
-       <property name="feeServiceFacade" ref="feeServiceFacade"/>
+  	<import resource="mainPropertyConfigurer.xml" />
+  	<!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/integrationDatabase.properties"/>
     </bean>
     -->
     
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-    	<property name="driverClass" value="com.mysql.jdbc.Driver"/> 
-    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test"/>
-    	<property name="user" value="root"/>
-    	<property name="password" value="admin"/>
+    	<property name="driverClass" value="${integration.database.driver}"/> 
+    	<property name="jdbcUrl" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params.spring}" />
+    	<property name="user" value="${integration.database.user}"/>
+    	<property name="password" value="${integration.database.password}"/>
     	<property name="initialPoolSize" value="5"></property>
-    	<property name="minPoolSize" value="5"></property>
-    	<property name="maxPoolSize" value="15"/>
-    	<property name="checkoutTimeout" value="1000"/> 
-    	<property name="maxStatements" value="50"></property>
+    	<property name="minPoolSize" value="${integration.database.hibernate.c3p0.min_size}"/>
+    	<property name="maxPoolSize" value="${integration.database.hibernate.c3p0.max_size}"/>
+    	<property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/> 
+    	<property name="maxStatements" value="${integration.database.hibernate.c3p0.max_statements}"></property>
     	<property name="testConnectionOnCheckin" value="true"></property>
-    	<property name="idleConnectionTestPeriod" value="60"></property> 
+    	<property name="idleConnectionTestPeriod" value="${integration.database.hibernate.c3p0.idle_test_period}"></property> 
    	</bean>
-    <!--     
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">        
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>        
-		<property name="url" value="jdbc:mysql://localhost:3306/test"/>        
-		<property name="username" value="root"/>        
-		<property name="password" value="admin"/>        
-		<property name="initialSize" value="2" />        
-		<property name="maxActive" value="8" />        
-		<property name="maxIdle" value="2" />        
-		<property name="minIdle" value="2" />        
-		<property name="maxWait" value="-1" />        
-		<property name="testWhileIdle" value="true"/>    
-	</bean>
-	 -->
-	<!--  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  -->
+    
+    <!--  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  -->
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="mappingResources">
@@ -102,15 +78,18 @@
        			<value>org.mifos.application.master.business.CountryEntity</value>
 	     	</list>
      	</property>
-		<!--  <property name = "packagesToScan" value="org.mifos.accounts.fees.servicefacade" />  -->        
-        <!-- 
-        <property name="hibernateProperties">            
-    		<value>            
-    			hibernate.dialect=org.hibernate.dialect.MySQLDialect           
-    			hibernate.show_sql=true            
-   			</value>        
-   		</property>
-   		 -->
+		<!--  <property name = "packagesToScan" value="org.mifos.accounts.fees.servicefacade.entities" />  -->
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=${integration.database.hibernate.dialect}
+				hibernate.show_sql=${integration.database.hibernate.show_sql}
+				hibernate.generate_statistics=true
+				hibernate.format_sql=${integration.database.hibernate.format_sql}
+				hibernate.use_sql_comments=false
+				hibernate.cache.use_query_cache=${integration.database.hibernate.cache.use_query_cache}
+				hibernate.cache.use_second_level_cache=${integration.database.hibernate.cache.use_second_level_cache}
+			</value>
+	  </property>
     </bean>
 	
 	<bean id="platformTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">        
@@ -131,7 +110,6 @@
 			<tx:method name="*"/>
 		</tx:attributes>
 	</tx:advice>
-	
 	<!-- ensure that the above transactional advice runs for any execution
 		of an operation defined by the ServiceService interface -->
 	<aop:config>
@@ -153,18 +131,32 @@
            </bean>
        </property>
     </bean>
-		
 	<bean id="masterEntityDao" class="org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	
+
+
 	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
+	
+	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
 
     <!--<context:component-scan base-package="org.mifos.application.importexport" />
     <tx:annotation-driven transaction-manager="transactionManager" />
     -->
+    
+    <!--
+    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
+    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController">
+       <property name="methodNameResolver">     
+         <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+           <property name="mappings">
+             <value>
+                /**/create.shtml=createFee
+             </value>
+           </property>
+        </bean>
+       </property>
+       <property name="feeServiceFacade" ref="feeServiceFacade"/>
+    </bean>
+    -->
 </beans>
-
-
-      
-

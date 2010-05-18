@@ -1,7 +1,5 @@
 package org.mifos.accounts.fees.servicefacade;
 
-import org.mifos.accounts.fees.business.CategoryTypeEntity;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -17,10 +15,10 @@ import org.mifos.security.util.UserContext;
 public interface FeeService {
 
     public FeeEntity createOneTimeFee(UserContext userContext, String feeName, boolean isCustomerDefaultFee, boolean isRateFee,
-            Double rate, Money feeMoney, FeePayment feePaymentType, FeeCategory categoryType, FeeFormula feeFormula,
-            GLCodeEntity glCode, OfficeBO office) throws PersistenceException, FeeException;
+            Double rate, Money feeMoney, FeeCategory categoryType, FeeFormula feeFormula,
+            GLCodeEntity glCode, OfficeBO office, FeePayment feePaymentType) throws PersistenceException, FeeException;
 
     public FeeEntity createPeriodicFee(UserContext userContext, String feeName, boolean isCustomerDefaultFee, boolean isRateFee,
-            Double rate, Money feeMoney, CategoryTypeEntity categoryType, FeeFormula feeFormula,
+            Double rate, Money feeMoney, FeeCategory categoryType, FeeFormula feeFormula,
             GLCodeEntity glCode, OfficeBO office, RecurrenceType feeRecurrenceType, Short recurAfter) throws PersistenceException, FeeException;
 }

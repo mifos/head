@@ -32,6 +32,7 @@ import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 @Entity
 @Table(name = "FEES")
@@ -220,6 +221,14 @@ public abstract class FeeEntity extends org.mifos.framework.business.AbstractEnt
         if (StringUtils.isBlank(feeName)) {
             throw new FeeException(FeeConstants.INVALID_FEE_NAME);
         }
+    }
+
+    public FeeChangeType getFeeChangeType() throws PropertyNotFoundException {
+        return FeeChangeType.getFeeChangeType(this.changeType);
+    }
+
+    public void updateFeeChangeType(final FeeChangeType updateFlag) {
+        this.changeType = updateFlag.getValue();
     }
 
     /** FIXME: createdData, createdBy, freeFrequency, feeStatus fields are set from outside

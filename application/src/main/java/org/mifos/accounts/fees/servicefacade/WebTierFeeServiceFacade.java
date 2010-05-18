@@ -33,6 +33,9 @@ import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fees.entities.AmountFeeEntity;
+import org.mifos.accounts.fees.entities.FeeEntity;
+import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
@@ -62,12 +65,15 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class WebTierFeeServiceFacade implements FeeServiceFacade {
 
     private FeeBusinessService feeBusinessService = new FeeBusinessService();
     private MasterDataService masterDataService = new MasterDataService();
     private FinancialBusinessService financeService = new FinancialBusinessService();
+
+    @Autowired
     private FeeService feeService;
 
     public WebTierFeeServiceFacade() {
@@ -112,7 +118,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         feeDto.setId(Short.toString(feeBO.getFeeId()));
         feeDto.setName(feeBO.getFeeName());
         feeDto.setCategoryType(feeBO.getCategoryType().getName());
-        feeDto.setFeeStatus(mapFeeStatusDto(feeBO));
+        feeDto.setFeeStatus(mapFeeStatusDto(feeBO.getFeeStatus()));
         feeDto.setOneTime(feeBO.isOneTime());
         feeDto.setFeeFrequency(mapFeeFrequencyDto(feeBO.getFeeFrequency()));
         feeDto.setActive(feeBO.isActive());
@@ -168,11 +174,10 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         return glCodeDto;
     }
 
-    private FeeStatusDto mapFeeStatusDto(FeeBO feeBO) {
+    private FeeStatusDto mapFeeStatusDto(FeeStatusEntity feeStatusEntity) {
         FeeStatusDto feeStatus = new FeeStatusDto();
-        FeeStatusEntity feeStatusBO = feeBO.getFeeStatus();
-        feeStatus.setId(Short.toString(feeStatusBO.getId()));
-        feeStatus.setName(feeStatusBO.getName());
+        feeStatus.setId(Short.toString(feeStatusEntity.getId()));
+        feeStatus.setName(feeStatusEntity.getName());
         return feeStatus;
     }
 
@@ -232,16 +237,92 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
 
 
     @Override
+    public FeeDto createFeeSpike(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException {
+        try {
+            Money feeMoney = new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount());
+            GLCodeEntity glCodeEntity = masterDataService.findGLCodeEntity(feeCreateRequest.getGlCode());
+            FeeEntity fee;
+            if (feeCreateRequest.getFeeFrequencyType().equals(FeeFrequencyType.ONETIME)) {
+                fee = feeService.createOneTimeFee(userContext,
+                        feeCreateRequest.getFeeName(), feeCreateRequest.isCustomerDefaultFee(),
+                        feeCreateRequest.isRateFee(), feeCreateRequest.getRate(), feeMoney,
+                        feeCreateRequest.getCategoryType(), feeCreateRequest.getFeeFormula(),
+                        glCodeEntity, getHeadOffice(), feeCreateRequest.getFeePaymentType());
+            } else {
+                Short recurAfter =
+                    feeCreateRequest.getFeeRecurrenceType().equals(RecurrenceType.MONTHLY) ?
+                            feeCreateRequest.getMonthRecurAfter() : feeCreateRequest.getWeekRecurAfter();
+                fee = feeService.createPeriodicFee(userContext,
+                        feeCreateRequest.getFeeName(), feeCreateRequest.isCustomerDefaultFee(),
+                        feeCreateRequest.isRateFee(), feeCreateRequest.getRate(), feeMoney,
+                        feeCreateRequest.getCategoryType(), feeCreateRequest.getFeeFormula(),
+                        glCodeEntity, getHeadOffice(), feeCreateRequest.getFeeRecurrenceType(), recurAfter);
+            }
+            return mapFeeDto(fee);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e);
+        } catch (FeeException e) {
+            throw new ServiceException(e);
+        } catch (PropertyNotFoundException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    private FeeDto mapFeeDto(FeeEntity fee) throws PropertyNotFoundException {
+        FeeDto feeDto = new FeeDto();
+        feeDto.setId(Short.toString(fee.getFeeId()));
+        feeDto.setName(fee.getFeeName());
+        feeDto.setCategoryType(fee.getCategoryType().getName());
+        feeDto.setFeeStatus(mapFeeStatusDto(fee.getFeeStatus()));
+        feeDto.setOneTime(fee.getFeeFrequency().isOneTime());
+        feeDto.setFeeFrequency(mapFeeFrequencyDto(fee.getFeeFrequency()));
+        feeDto.setActive(fee.getFeeStatus().isActive());
+        feeDto.setGlCode(fee.getGlCode().getGlcode());
+        feeDto.setCustomerDefaultFee(fee.isCustomerDefaultFee());
+        feeDto.setRateBasedFee(fee instanceof RateFeeEntity);
+
+        feeDto.setChangeType(fee.getFeeChangeType().getValue());
+        feeDto.setFeeFrequencyType(fee.getFeeFrequency().getFeeFrequencyType().getName());
+        feeDto.setGlCodeDto(mapGLCodeDto(fee.getGlCode()));
+
+        feeDto.setOneTime(fee.getFeeFrequency().isOneTime());
+        feeDto.setPeriodic(fee.getFeeFrequency().isPeriodic());
+        feeDto.setTimeOfDisbursement(fee.getFeeFrequency().isTimeOfDisbursement());
+
+        if (fee instanceof AmountFeeEntity) {
+            feeDto.setAmount(((AmountFeeEntity) fee).getFeeAmount());
+        } else {
+            RateFeeEntity rateFee = (RateFeeEntity) fee;
+            feeDto.setRate(rateFee.getRate());
+            feeDto.setFeeFormula(mapFeeFormulaDto(rateFee.getFeeFormula()));
+        }
+        return feeDto;
+    }
+
+    private FeeFrequencyDto mapFeeFrequencyDto(org.mifos.accounts.fees.entities.FeeFrequencyEntity feeFrequency) {
+        FeeFrequencyDto feeFrequencyDto = new FeeFrequencyDto();
+        FeeFrequencyTypeEntity feeFrequencyType = feeFrequency.getFeeFrequencyType();
+        feeFrequencyDto.setType(feeFrequencyType.getName());
+        if (feeFrequencyType.isOneTime()) {
+            feeFrequencyDto.setPayment(feeFrequency.getFeePayment().getName());
+        } else {
+            MeetingBO feeMeetingFrequency = feeFrequency.getFeeMeetingFrequency();
+            feeFrequencyDto.setMonthly(feeMeetingFrequency.isMonthly());
+            feeFrequencyDto.setWeekly(feeMeetingFrequency.isWeekly());
+            feeFrequencyDto.setRecurAfterPeriod(feeMeetingFrequency.getRecurAfter().toString());
+        }
+        return feeFrequencyDto;
+    }
+
+    @Override
     public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException {
         try {
+            GLCodeEntity glCodeEntity = masterDataService.findGLCodeEntity(feeCreateRequest.getGlCode());
             FeeFrequencyTypeEntity feeFrequencyType =
                 masterDataService.retrieveMasterEntity(
                         FeeFrequencyTypeEntity.class, feeCreateRequest.getFeeFrequencyType().getValue(), userContext.getLocaleId());
             CategoryTypeEntity feeCategoryType = masterDataService.retrieveMasterEntity(
                     CategoryTypeEntity.class, feeCreateRequest.getCategoryType().getValue(), userContext.getLocaleId());
-            GLCodeEntity glCodeEntity = masterDataService.findGLCodeEntity(feeCreateRequest.getGlCode());
-
-
 
             //FIXME: replace with (feeCreateRequest.getFeeFrequencyType() == FeeFrequencyType.ONETIME) ??
             FeeBO feeBO = feeFrequencyType.isOneTime() ?
@@ -276,24 +357,6 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
             feeBO = new RateFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
                     glCodeEntity, feeCreateRequest.getRate(), feeFormulaEntity,
                     feeCreateRequest.isCustomerDefaultFee(), feeMeeting, getHeadOffice());
-
-            /*
-            Short recurAfter =
-                feeCreateRequest.getFeeRecurrenceType().equals(RecurrenceType.MONTHLY)) ?
-                        feeCreateRequest.getMonthRecurAfter() : feeCreateRequest.getWeekRecurAfter();
-            feeService.createPeriodicFee(
-                    userContext,
-                    feeCreateRequest.getFeeName(),
-                    feeCreateRequest.isCustomerDefaultFee(),
-                    feeCreateRequest.isRateFee(),
-                    feeCreateRequest.getRate(),
-                    new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount()),
-                    feeCategoryType,
-                    feeCreateRequest.getFeeFormula(),
-                    glCodeEntity,
-                    getHeadOffice(),
-                    feeCreateRequest.getFeeRecurrenceType(),
-                    recurAfter);*/
         } else {
             Money feeMoney = new Money(getCurrency(feeCreateRequest.getCurrencyId()), feeCreateRequest.getAmount());
             feeBO = new AmountFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
