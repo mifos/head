@@ -1397,8 +1397,12 @@ public class LoanBO extends AccountBO {
     }
 
     public Short getDaysInArrears() {
+        return getDaysInArrears(false);
+    }
+
+    public Short getDaysInArrears(boolean accountReOpened) {
         Short daysInArrears = 0;
-        if (isAccountActive()) {
+        if (isAccountActive() || accountReOpened) {
             if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
                 AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears().get(0);
                 daysInArrears = Short.valueOf(Long.valueOf(
@@ -1610,18 +1614,19 @@ public class LoanBO extends AccountBO {
             boolean accountReOpened = false;
             AccountStateEntity currentAccountState = this.getAccountState();
             AccountStateEntity newAccountState = currentAccountState;
-
+            boolean statusChangeNeeded = false;
             if (getAccountStatusChangeHistory() != null && getAccountStatusChangeHistory().size() > 0
                     && !getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
                 List<Object> objectList = Arrays.asList(getAccountStatusChangeHistory().toArray());
                 AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
                         .get(objectList.size() - 1);
                 if (accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
-                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                    setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) ||
+                        accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
+                                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                    statusChangeNeeded = true;
                 } else if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
-
-                    setAccountState(accountStatusChangeHistoryEntity.getOldStatus());
+                    statusChangeNeeded = true;
                     newAccountState = accountStatusChangeHistoryEntity.getOldStatus();
                 }
             }
@@ -1640,6 +1645,18 @@ public class LoanBO extends AccountBO {
             } else if (reversedTrxns.size() > 0) {
                 updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
             }
+            if (statusChangeNeeded) {
+                    if (getDaysInArrears(accountReOpened) == 0) {
+                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+                        }
+                    }
+                    else {
+                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+                        }
+                    }
+                }
             PersonnelBO personnel;
             try {
                 personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
