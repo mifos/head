@@ -24,16 +24,28 @@ import org.joda.time.DateTime;
 
 public class ClientMfiInfoUpdate {
 
+    private final Integer clientId;
+    private final Integer orginalClientVersionNumber;
     private final Short personnelId;
     private final String externalId;
     private final boolean trained;
     private final DateTime trainedDate;
 
-    public ClientMfiInfoUpdate(Short personnelId, String externalId, boolean trained, DateTime trainedDate) {
+    public ClientMfiInfoUpdate(Integer clientId, Integer orginalClientVersionNumber, Short personnelId, String externalId, boolean trained, DateTime trainedDate) {
+        this.clientId = clientId;
+        this.orginalClientVersionNumber = orginalClientVersionNumber;
         this.personnelId = personnelId;
         this.externalId = externalId;
         this.trained = trained;
         this.trainedDate = trainedDate;
+    }
+
+    public Integer getClientId() {
+        return this.clientId;
+    }
+
+    public Integer getOrginalClientVersionNumber() {
+        return this.orginalClientVersionNumber;
     }
 
     public Short getPersonnelId() {
@@ -51,5 +63,4 @@ public class ClientMfiInfoUpdate {
     public DateTime getTrainedDate() {
         return this.trainedDate;
     }
-
 }

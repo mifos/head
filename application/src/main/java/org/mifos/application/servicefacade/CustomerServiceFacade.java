@@ -80,7 +80,7 @@ public interface CustomerServiceFacade {
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo(ClientDetailDto clientDetailDto);
 
     void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
-            ClientCustActionForm actionForm);
+            ClientCustActionForm actionForm) throws ApplicationException;
 
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum, UserContext userContext);
 
@@ -88,5 +88,5 @@ public interface CustomerServiceFacade {
 
     ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId, UserContext userContext);
 
-    void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, UserContext userContext, ClientCustActionForm actionForm);
+    void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, UserContext userContext, ClientCustActionForm actionForm) throws ApplicationException;
 }

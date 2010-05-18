@@ -48,11 +48,11 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
+import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -65,7 +65,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -77,7 +76,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -498,7 +496,7 @@ public class ClientBO extends CustomerBO {
 
     // when this method is called from Bulk Entry preview persist will be false
     public void handleAttendance(final Date meetingDate, final Short attendance, final boolean persist)
-            throws ServiceException, CustomerException {
+            throws CustomerException {
         ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
         if (clientAttendance == null) {
             clientAttendance = new ClientAttendanceBO();
@@ -515,8 +513,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void handleAttendance(final Date meetingDate, final AttendanceType attendance) throws ServiceException,
-            CustomerException {
+    public void handleAttendance(final Date meetingDate, final AttendanceType attendance) throws CustomerException {
         boolean persist = true;
         handleAttendance(meetingDate, attendance.getValue(), persist);
     }
@@ -547,10 +544,14 @@ public class ClientBO extends CustomerBO {
                 && newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue());
     }
 
-    public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+    public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws CustomerException {
 
         this.governmentId = personalInfo.getGovernmentId();
-        this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+        try {
+            this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+        } catch (InvalidDateException e) {
+            throw new CustomerException(ClientConstants.INVALID_DOB_EXCEPTION);
+        }
         ClientNameDetailDto clientName = personalInfo.getClientNameDetails();
         this.getClientName().updateNameDetails(clientName);
         this.firstName = clientName.getFirstName();
@@ -562,7 +563,6 @@ public class ClientBO extends CustomerBO {
 
         setDisplayName(personalInfo.getClientDisplayName());
         updateAddress(personalInfo.getAddress());
-        setUpdateDetails();
     }
 
     /**
@@ -674,11 +674,17 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
-        if (isActive() || isOnHold()) {
-            validateLO(personnel);
-        }
+    public void updateMfiInfo(final PersonnelBO personnel, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
+
+        setExternalId(clientMfiInfoUpdate.getExternalId());
+        setTrained(clientMfiInfoUpdate.isTrained());
+        setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+
         setPersonnel(personnel);
+        if (isActive() || isOnHold()) {
+            validateLoanOfficer();
+        }
+
         for (AccountBO account : this.getAccounts()) {
             account.setPersonnel(this.getPersonnel());
         }
@@ -755,10 +761,6 @@ public class ClientBO extends CustomerBO {
         return null;
     }
 
-    /**
-     * @deprecated -
-     */
-    @Deprecated
     public void updateClientDetails(final ClientPersonalDetailDto clientPersonalDetailDto) {
         customerDetail.updateClientDetails(clientPersonalDetailDto);
     }
@@ -831,7 +833,6 @@ public class ClientBO extends CustomerBO {
 
     private void validateForGroupStatus(final CustomerStatus groupStatus) throws CustomerException {
         if (isGroupStatusLower(getStatus(), groupStatus)) {
-            MifosConfiguration labelConfig = MifosConfiguration.getInstance();
             throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, new Object[] {
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, userContext),
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, userContext) });
@@ -1016,7 +1017,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void updateClientFlag() throws CustomerException, PersistenceException {
+    public void updateClientFlag() throws CustomerException {
         this.groupFlag = YesNoFlag.NO.getValue();
         update();
     }
@@ -1033,7 +1034,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private boolean isClientCancelledOrClosed() throws CustomerException {
+    private boolean isClientCancelledOrClosed() {
         return getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED ? true
                 : false;
     }

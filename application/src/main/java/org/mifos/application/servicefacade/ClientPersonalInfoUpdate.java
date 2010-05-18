@@ -23,14 +23,16 @@ package org.mifos.application.servicefacade;
 import java.io.InputStream;
 import java.util.List;
 
-import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdate {
 
-    private final List<CustomerCustomFieldEntity> clientCustomFields;
+    private final Integer customerId;
+    private final Integer originalClientVersionNumber;
+    private final List<CustomFieldDto> clientCustomFields;
     private final Address address;
     private final ClientPersonalDetailDto clientDetail;
     private final ClientNameDetailDto clientNameDetails;
@@ -40,9 +42,11 @@ public class ClientPersonalInfoUpdate {
     private final String clientDisplayName;
     private final String dateOfBirth;
 
-    public ClientPersonalInfoUpdate(List<CustomerCustomFieldEntity> clientCustomFields, Address address,
+    public ClientPersonalInfoUpdate(Integer customerId, Integer originalClientVersionNumber, List<CustomFieldDto> clientCustomFields, Address address,
             ClientPersonalDetailDto clientDetail, ClientNameDetailDto clientNameDetails, ClientNameDetailDto spouseFather,
             InputStream picture, String governmentId, String clientDisplayName, String dateOfBirth) {
+        this.customerId = customerId;
+        this.originalClientVersionNumber = originalClientVersionNumber;
         this.clientCustomFields = clientCustomFields;
         this.address = address;
         this.clientDetail = clientDetail;
@@ -54,7 +58,15 @@ public class ClientPersonalInfoUpdate {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<CustomerCustomFieldEntity> getClientCustomFields() {
+    public Integer getCustomerId() {
+        return this.customerId;
+    }
+
+    public Integer getOriginalClientVersionNumber() {
+        return this.originalClientVersionNumber;
+    }
+
+    public List<CustomFieldDto> getClientCustomFields() {
         return this.clientCustomFields;
     }
 
