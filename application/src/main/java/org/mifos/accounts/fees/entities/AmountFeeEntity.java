@@ -32,6 +32,14 @@ public class AmountFeeEntity extends FeeEntity {
         this.feeAmount = feeMoney;
     }
 
+    /**
+     * default constructor for hibernate's requirement and should not be
+     * used to create a valid AmountFee object.
+     */
+    protected AmountFeeEntity() {
+        super();
+    }
+
     public Money getFeeAmount() {
         return this.feeAmount;
     }

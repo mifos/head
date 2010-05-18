@@ -1,5 +1,7 @@
 package org.mifos.accounts.fees.servicefacade;
 
+import java.util.List;
+
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -21,4 +23,8 @@ public interface FeeService {
     public FeeEntity createPeriodicFee(UserContext userContext, String feeName, boolean isCustomerDefaultFee, boolean isRateFee,
             Double rate, Money feeMoney, FeeCategory categoryType, FeeFormula feeFormula,
             GLCodeEntity glCode, OfficeBO office, RecurrenceType feeRecurrenceType, Short recurAfter) throws PersistenceException, FeeException;
+
+    public List<FeeEntity> retrieveCustomerFees();
+    public List<FeeEntity> retrieveProductFees();
+    public FeeEntity findFeeById(Short feeId);
 }

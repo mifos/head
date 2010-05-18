@@ -3,6 +3,7 @@ package org.mifos.accounts.fees.service;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.SessionFactory;
@@ -78,6 +79,14 @@ public class FeeDaoTest {
         dao.setSessionFactory(sessionFactory);
         glCode = new GLCodeEntity(Short.valueOf("666"), "666");
         dao.create(glCode);
+    }
+
+    @Test
+    @Transactional(rollbackFor=DataAccessException.class)
+    public void shouldRetrieveCustomerFees() {
+        List<FeeEntity> fees = feeDao.retrieveCustomerFees();
+        Assert.assertTrue(!fees.isEmpty());
+        Assert.assertEquals(16, fees.size());
     }
 
 

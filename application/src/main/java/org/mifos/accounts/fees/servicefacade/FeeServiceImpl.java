@@ -3,6 +3,7 @@ package org.mifos.accounts.fees.servicefacade;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
@@ -213,6 +214,24 @@ public class FeeServiceImpl implements FeeService {
             fee.addFeeLevel(FeeLevel.GROUPLEVEL);
             fee.addFeeLevel(FeeLevel.CENTERLEVEL);
         }
+    }
+
+    @Override
+    public List<FeeEntity> retrieveCustomerFees() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public FeeEntity findFeeById(Short feeId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<FeeEntity> retrieveProductFees() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

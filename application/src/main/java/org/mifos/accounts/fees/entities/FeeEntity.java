@@ -16,6 +16,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -38,6 +40,16 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 @Table(name = "FEES")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="DISCRIMINATOR",discriminatorType=DiscriminatorType.STRING)
+@NamedQueries( {
+  @NamedQuery(
+    name="FeeEntity.retrieveCustomerFees",
+    query="from FeeEntity fee where fee.categoryType.id in (1,2,3,4) order by fee.feeName"
+  ),
+  @NamedQuery(
+    name="FeeEntity.retrieveProductFees",
+    query="from FeeEntity fee where fee.categoryType.id in (5) order by fee.feeName"
+  )
+})
 public abstract class FeeEntity extends org.mifos.framework.business.AbstractEntity {
     /**
     * NOTE: This is a replacement entity for FeeBO. Not be used with HibernateUtil.
