@@ -77,5 +77,16 @@ explanation of the license and how it is applied.
 				    and p.office_id=:officeId
 				    and p.personnel_status=1
 		]]>
-	</sql-query>		
+	</sql-query>
+	
+	<sql-query name="branchReport.extractStaffingLevelSummaryForBranchByTitle">
+		<return-scalar column="personnelCount" type="integer"/>
+	    <return-scalar column="titleKey" type="string"/> 	    
+	    <return-scalar column="titleValueOverride" type="string"/> 	    
+		<![CDATA[select count(*) as personnelCount, lv.lookup_name as titleKey, lvl.lookup_value as titleValueOverride
+			from personnel p left join lookup_value lv on p.title = lv.lookup_id  
+			left join lookup_value_locale lvl on lvl.lookup_value_id = lv.lookup_id 
+			where p.office_id = :officeId group by title;
+		]]>
+	</sql-query>			
 </hibernate-mapping>

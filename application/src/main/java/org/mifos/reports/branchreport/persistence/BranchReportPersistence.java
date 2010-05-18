@@ -70,6 +70,7 @@ import org.apache.commons.collections.Closure;
 import org.hibernate.Query;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.QueryParamConstants;
@@ -238,6 +239,7 @@ public class BranchReportPersistence extends Persistence {
         return getCalculateValueFromQueryResult(executeNamedQuery(EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR, params));
     }
 
+    /*
     public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummary(Short branchId)
             throws PersistenceException {
         List<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = new ArrayList<BranchReportStaffingLevelSummaryBO>();
@@ -252,6 +254,36 @@ public class BranchReportPersistence extends Persistence {
                     (Integer) result[2]));
         }
         return staffingLevelSummaries;
+    }
+    */
+
+    public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummary(Short branchId)
+    throws PersistenceException {
+        List<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = new ArrayList<BranchReportStaffingLevelSummaryBO>();
+        List<Object[]> resultSet = executeNamedQuery("branchReport.extractStaffingLevelSummaryForBranchByTitle",
+                populateQueryParams(branchId));
+
+        int totalStaff = 0;
+        for (Object[] result : resultSet) {
+            int staffCountForThisTitle = (Integer) result[0];
+            String messageKeyForTitleName = (String) result[1];
+            String messageValueOverrideForTitleName = (String) result[2];
+            String titleName = "No Title";
+            if (messageValueOverrideForTitleName != null) {
+                titleName = messageValueOverrideForTitleName;
+            } else if (messageKeyForTitleName != null) {
+                titleName = MessageLookup.getInstance().lookup(messageKeyForTitleName);
+            }
+            totalStaff += staffCountForThisTitle;
+            staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(1,
+                    titleName, staffCountForThisTitle));
+        }
+        List<BranchReportStaffingLevelSummaryBO> staffingLevelSummariesWithTotal = new ArrayList<BranchReportStaffingLevelSummaryBO>();
+        staffingLevelSummariesWithTotal.add(new BranchReportStaffingLevelSummaryBO(1,
+                "Total Staff", totalStaff));
+        staffingLevelSummariesWithTotal.addAll(staffingLevelSummaries);
+
+        return staffingLevelSummariesWithTotal;
     }
 
     public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
