@@ -6,7 +6,7 @@ set -o errexit
 deployNickname=$1
 if [ -z "$deployNickname" ]
 then
-    echo "ERROR: Must provide a deployment nickname like 'trunk' or 'v1.3.x' to proceed"
+    echo "ERROR: Must provide a deployment nickname like 'head-master' to proceed"
     echo "Usage: $0 NICKNAME"
     exit 1
 fi
