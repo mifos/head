@@ -964,6 +964,10 @@ public class LoanBO extends AccountBO {
             throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
         }
 
+        if (this.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(this.getLoanOffering())) {
+            throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
+        }
+
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
 
