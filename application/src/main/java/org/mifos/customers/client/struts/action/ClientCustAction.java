@@ -586,6 +586,7 @@ public class ClientCustAction extends CustAction {
         // client family specific
         int familyMemberCount = 0;
         for (ClientNameDetailDto familyMember : clientFamilyInfo.getFamilyMembers()) {
+
             actionForm.addFamilyMember();
             actionForm.setFamilyPrimaryKey(familyMemberCount, familyMember.getCustomerNameId());
             actionForm.setFamilyFirstName(familyMemberCount, familyMember.getFirstName());
@@ -597,6 +598,7 @@ public class ClientCustAction extends CustAction {
 
             Integer key = Integer.valueOf(familyMemberCount);
             List<ClientFamilyDetailDto> clientFamilyDetails = clientFamilyDetailsMap.get(key);
+
             if (clientFamilyDetails != null) {
                 for (ClientFamilyDetailDto clientFamilyDetailDto : clientFamilyDetails) {
                     Calendar cal = Calendar.getInstance();
@@ -613,7 +615,10 @@ public class ClientCustAction extends CustAction {
                     actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailDto.getGender());
                     actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailDto.getLivingStatus());
                 }
+
             }
+
+            familyMemberCount++;
         }
 
         ClientBO client = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());

@@ -609,25 +609,47 @@ public class ClientBO extends CustomerBO {
 
                         clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
 
-                        // if switched from familyDetailsRequired=false to true then migrate data to family details table.
-                        if (familyDetailSet.isEmpty() && ClientRules.isFamilyDetailsRequired()) {
-                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
+                        // if switched from familyDetailsRequired=false to true then migrate clientNameDetail to family
+                        // details table.
+                        if (ClientRules.isFamilyDetailsRequired()) {
+                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate
+                                    .getFamilyDetails();
+
+                            // check each detail to see if it is part of familyDetails and if not, add it to
+                            // familyDetails
                             for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
-                                ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this, clientNameDetailEntity, clientFamilyDetail);
-                                familyDetailSet.add(clientFamilyEntity);
+
+                                if (familyDetailsDoesNotAlreadyContain(clientNameDetailEntity.getCustomerNameId())) {
+                                    ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this,
+                                            clientNameDetailEntity, clientFamilyDetail);
+                                    familyDetailSet.add(clientFamilyEntity);
+                                }
                             }
                         }
                     }
-                }
 
-                List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
-                for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
-                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
-                        clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailDto.get(key));
+                    List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
+                    for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
+                        if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(
+                                key).intValue()) {
+                            clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailDto.get(key));
+                        }
                     }
                 }
             }
         }
+    }
+
+    private boolean familyDetailsDoesNotAlreadyContain(Integer customerNameId) {
+
+        boolean resultNotFound = true;
+        for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
+            if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == customerNameId.intValue()) {
+                return false;
+            }
+        }
+
+        return resultNotFound;
     }
 
     /**

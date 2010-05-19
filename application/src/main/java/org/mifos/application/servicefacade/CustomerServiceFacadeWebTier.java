@@ -1064,14 +1064,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                                 .getCustomerNameId())) {
                             ClientFamilyDetailDto clientFamilyDetail = clientFamilyDetailEntity.toDto();
 
-                            final Integer mapKey = Integer.valueOf(familyMemberCount);
-                            if (clientFamilyDetails.containsKey(mapKey)) {
-                                clientFamilyDetails.get(mapKey).add(clientFamilyDetail);
-                            } else {
-                                List<ClientFamilyDetailDto> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailDto>();
-                                clientFamilyDetailsList.add(clientFamilyDetail);
-                                clientFamilyDetails.put(mapKey, clientFamilyDetailsList);
-                            }
+                            addFamilyDetailsDtoToMap(clientFamilyDetails, familyMemberCount, clientFamilyDetail);
                         }
                     }
                     familyMemberCount++;
@@ -1082,6 +1075,18 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     familyMembers, clientFamilyDetails);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
+        }
+    }
+
+    private void addFamilyDetailsDtoToMap(Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails,
+            int familyMemberCount, ClientFamilyDetailDto clientFamilyDetail) {
+        final Integer mapKey = Integer.valueOf(familyMemberCount);
+        if (clientFamilyDetails.containsKey(mapKey)) {
+            clientFamilyDetails.get(mapKey).add(clientFamilyDetail);
+        } else {
+            List<ClientFamilyDetailDto> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailDto>();
+            clientFamilyDetailsList.add(clientFamilyDetail);
+            clientFamilyDetails.put(mapKey, clientFamilyDetailsList);
         }
     }
 
