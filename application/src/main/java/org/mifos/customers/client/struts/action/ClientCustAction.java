@@ -293,6 +293,7 @@ public class ClientCustAction extends CustAction {
         String fromPage = actionForm.getInput();
         if (ClientConstants.INPUT_PERSONAL_INFO.equals(fromPage) || ClientConstants.INPUT_MFI_INFO.equals(fromPage)
                 || CenterConstants.INPUT_CREATE.equals(fromPage)) {
+            actionForm.setEditFamily("notEdit");
             forward = ActionForwards.cancelCreate_success.toString();
         } else if (ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(fromPage)
                 || ClientConstants.INPUT_EDIT_MFI_INFO.equals(fromPage)
