@@ -10,16 +10,15 @@ Ext.ns('Example', 'WebPage');
 		 renderTo:'officeTree'
 		,id:'officeHierarchy'
 		,height:'auto'
-		,width:'49%'
+		,width:'50%'
 		,border:false
 		,header:false
 		,trackMouseOver:false
-        ,anchor:'absolute'
 		,autoScroll:true
 		,rootVisible:false
 		,deepestOnly:false
         ,bubbleCheck:'none'
-        ,cascadeCheck:'none'
+        ,cascadeCheck:'all'
 		,root:{
 			 nodeType:'async'
 			,id:'root'
@@ -37,10 +36,6 @@ Ext.ns('Example', 'WebPage');
 			checkchange: function() {
 				selectedOfficeIds.setValue(this.getValue());
         	}
-			,
-			beforeload: function() {
-	        	//this.setValue(selectedOfficeIds.getValue());
-    		}
 		}
 	});
 
