@@ -32,7 +32,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -66,7 +65,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -95,7 +93,7 @@ public class CustomerAccountBO extends AccountBO {
 
     private ScheduledEvent meetingScheduledEvent;
 
-    private static int numberOfMeetingDatesToGenerateOnCreation = 10;
+    private static int numberOfMeetingDatesToGenerate = 10;
 
     public ScheduledEvent getMeetingScheduledEvent() {
         return this.meetingScheduledEvent;
@@ -124,7 +122,7 @@ public class CustomerAccountBO extends AccountBO {
         try {
             CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customerMeeting != null) {
-                customerAccount.createFirstSetOfScheduledEvents(customer,
+                customerAccount.createFirstSetOfMeetingDates(customer,
                         accountFees, customerMeeting, workingDays, thisYearsAndNextYearsHolidays);
             }
             return customerAccount;
@@ -155,14 +153,14 @@ public class CustomerAccountBO extends AccountBO {
      * @param workingDays the days of the week specified as working days.
      * @param thisYearsAndNextYearsHolidays The list of {@link Holiday} to schedule around.
      */
-    private void createFirstSetOfScheduledEvents(CustomerBO customer,
+    private void createFirstSetOfMeetingDates(CustomerBO customer,
             List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, List<Days> workingDays,
             List<Holiday> thisYearsAndNextYearsHolidays) {
 
         this.setMeetingScheduledEvent(ScheduledEventFactory.createScheduledEventFrom(customerMeeting));
         createInitialSetOfCustomerScheduleEntities(customer, new DateTime(customerMeeting.getMeetingStartDate()),
                 workingDays, thisYearsAndNextYearsHolidays);
-        applyFeesToInitialSetOfInstallments(accountFees, customerMeeting);
+        applyFeesToInitialSetOfInstallments(accountFees);
     }
 
     private void createInitialSetOfCustomerScheduleEntities (CustomerBO customer, DateTime meetingStartDate,
@@ -182,10 +180,10 @@ public class CustomerAccountBO extends AccountBO {
 
     }
 
-    private void applyFeesToInitialSetOfInstallments (List<AccountFeesEntity> accountFees, MeetingBO customerMeeting) {
+    private void applyFeesToInitialSetOfInstallments (List<AccountFeesEntity> accountFees) {
 
         List<FeeInstallment> mergedFeeInstallments = FeeInstallment.createMergedFeeInstallments(
-                this.getMeetingScheduledEvent(), accountFees, numberOfMeetingDatesToGenerateOnCreation);
+                this.getMeetingScheduledEvent(), accountFees, numberOfMeetingDatesToGenerate);
         for (AccountActionDateEntity accountAction : this.getAccountActionDates()) {
             this.applyFeesToScheduledEvent((CustomerScheduleEntity) accountAction, mergedFeeInstallments);
         }
@@ -197,7 +195,7 @@ public class CustomerAccountBO extends AccountBO {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
                 thisAndNextYearsHolidays);
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerateOnCreation,
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate,
                                                                             meetingStartDate,
                                                                             meetingEvent);
         return InstallmentDate.createInstallmentDates(meetingDates);
@@ -501,75 +499,33 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    /**
-     * If the next installment has not been paid, apply any periodic fees to it that have not yet been
-     * applied for that date. To "apply" a fee means to add to the customer installment a fee installment for each
-     * periodic fee assigned to the customer. (These fee installments are persisted to table CUSTOMER_FEE_SCHEDULE).
-     *
-     * <p>This method "catches up" a fee installment: It adds to the total fee due one fee amount for each
-     * fee installment from the last date that the fee was applied, up to and including the next upcoming
-     * customer meeting.</p>
-     */
-//    public void applyPeriodicFees(List<Days> workingDays, List<Holiday> holidays) {
-//
-//        if (isUpcomingInstallmentUnpaid()) {
-//
-//            AccountActionDateEntity accountActionDate = getDetailsOfUpcomigInstallment();
-//            List<AccountFeesEntity> periodicFeeList = getPeriodicFeeList();
-//            for (AccountFeesEntity accountFeesEntity : periodicFeeList) {
-//
-//                MeetingBO feeMeeting = accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency();
-//
-//                DateTime startFromMeetingDate = new DateTime(feeMeeting.getMeetingStartDate());
-//                ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(feeMeeting);
-//                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-//                        workingDays, holidays);
-//
-//                DateTime endDate = new DateTime(accountActionDate.getActionDate());
-//                List<DateTime> installmentDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate, endDate, scheduledEvent);
-//
-//                Integer applicableDatesCount = accountFeesEntity.getApplicableDatesCount(installmentDates);
-//
-//                if (applicableDatesCount > 0) {
-//
-//                    accountFeesEntity.setLastAppliedDate(accountActionDate.getActionDate());
-//
-//                    new AccountPersistence().initialize(accountFeesEntity.getFees());
-//
-//                    FeeBO feesBO = getAccountFeesObject(accountFeesEntity.getFees().getFeeId());
-//
-//                    Money totalAmount = ((AmountFeeBO) feesBO).getFeeAmount().multiply(Double.valueOf(Integer.valueOf(applicableDatesCount).toString()));
-//
-//                    ((CustomerScheduleEntity) accountActionDate).applyPeriodicFees(accountFeesEntity.getFees().getFeeId(), totalAmount);
-//
-//                    String description = feesBO.getFeeName() + " " + AccountConstants.FEES_APPLIED;
-//
-//                    final PersonnelBO personnel = null;
-//                    final Date today = new Date();
-//                    final CustomerActivityEntity customerActivity = new CustomerActivityEntity(this, personnel, totalAmount, description, today);
-//                    addCustomerActivity(customerActivity);
-//                }
-//            }
-//        }
-//    }
-
-    public void applyPeriodicFees (List<Days> workingDays, List<Holiday> holidays) {
+    public void applyPeriodicFeesToNewSchedule () {
 
         for (AccountFeesEntity accountFee : getPeriodicFeeList()) {
-            List<AccountActionDateEntity> applicableInstallments = installmentsToApplyFeeTo (accountFee);
-            if (applicableInstallments.size() > 0) {
-            ScheduledEvent loanScheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getMeetingForAccount());
-            List<FeeInstallment> feeInstallmentList = FeeInstallment.createMergedFeeInstallmentsForOneFeeStartingWith(
-                    loanScheduledEvent,
-                    accountFee,
-                    applicableInstallments.size(),
-                    applicableInstallments.get(0).getInstallmentId());
-            applyFeeToInstallments(feeInstallmentList, applicableInstallments);
-            }
+            applyOnePeriodicFeeToInstallments(accountFee, getAccountActionDatesSortedByInstallmentId());
         }
     }
 
-    private List<AccountActionDateEntity> installmentsToApplyFeeTo (AccountFeesEntity accountFee) {
+    public void applyPeriodicFeesToNextSetOfMeetingDates () {
+
+        for (AccountFeesEntity accountFee : getPeriodicFeeList()) {
+            applyOnePeriodicFeeToInstallments(accountFee, getInstallmentsAfterLatestInstallmentThatFeeWasAppliedTo (accountFee));
+        }
+
+    }
+
+    private void applyOnePeriodicFeeToInstallments(AccountFeesEntity accountFee, List<AccountActionDateEntity> actionDateEntities) {
+        if (actionDateEntities.size() > 0) {
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(this.getMeetingForAccount());
+            List<FeeInstallment> feeInstallmentList
+                = FeeInstallment
+                    .createMergedFeeInstallmentsForOneFee(scheduledEvent, accountFee, getAccountActionDates().size());
+            applyFeeToInstallments(feeInstallmentList, actionDateEntities);
+        }
+
+    }
+
+    private List<AccountActionDateEntity> getInstallmentsAfterLatestInstallmentThatFeeWasAppliedTo (AccountFeesEntity accountFee) {
         List<AccountActionDateEntity> installmentsToApply = new ArrayList<AccountActionDateEntity>();
         List<AccountActionDateEntity> allInstallments = getAccountActionDatesSortedByInstallmentId();
         for (int installmentId = getLatestInstallmentFeeIsAppliedTo(accountFee) + 1; installmentId <= allInstallments.size(); installmentId++) {
@@ -603,7 +559,7 @@ public class CustomerAccountBO extends AccountBO {
         try {
             PersonnelBO personnel = null;
             if (personnelId != null) {
-                personnel = new PersonnelPersistence().getPersonnel(personnelId);
+                personnel = getPersonnelPersistence().getPersonnel(personnelId);
             }
             return new CustomerActivityEntity(this, personnel, amount, description, new DateTimeService()
                     .getCurrentJavaDateTime());
@@ -712,18 +668,39 @@ public class CustomerAccountBO extends AccountBO {
             lastInstallmentDate = lastInstallment.getActionDate();
         }
 
-        DateTime startFromDayAfterLastKnownSchedule = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime().plusDays(1);
-        ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
-        List<DateTime> scheduledDates = scheduleGenerationStrategy.generateScheduledDates(10, startFromDayAfterLastKnownSchedule, scheduledEvent);
+        /*
+         * Generate more scheduled dates starting with the date of the last generated installment.
+         * This ensures that the customer's meeting recurrence is taken into account. But then
+         * skip the first date when adding account actions because it's already there.
+         */
+        DateTime dateOfLastInstallment
+            = new DateTime(lastInstallmentDate).toDateMidnight().toDateTime();
+        ScheduledDateGeneration scheduleGenerationStrategy
+            = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, orderedUpcomingHolidays);
+        List<DateTime> scheduledDates
+            = scheduleGenerationStrategy.generateScheduledDates(numberOfMeetingDatesToGenerate + 1,
+                                                                dateOfLastInstallment,
+                                                                scheduledEvent);
 
         int count = 1;
-        for (DateTime installmentDate : scheduledDates) {
+        for (DateTime installmentDate : allButFirst(scheduledDates)) {
             CustomerScheduleEntity customerScheduleEntity = new CustomerScheduleEntity(this, getCustomer(), Short
-                    .valueOf(String.valueOf(count + lastInstallmentId)), new java.sql.Date(installmentDate.toDate().getTime()),
-                    PaymentStatus.UNPAID);
+                    .valueOf(String.valueOf(count + lastInstallmentId)),
+                                            new java.sql.Date(installmentDate.toDate().getTime()),
+                                            PaymentStatus.UNPAID);
             count++;
             addAccountActionDate(customerScheduleEntity);
         }
+
+        applyPeriodicFeesToNextSetOfMeetingDates();
+    }
+
+    private List<DateTime> allButFirst(List<DateTime> scheduledDates) {
+        List<DateTime> scheduledDatesButFirst = new ArrayList<DateTime>();
+        for (int i = 1; i < scheduledDates.size(); i++) {
+            scheduledDatesButFirst.add(scheduledDates.get(i));
+        }
+        return scheduledDatesButFirst;
     }
 
     @Override
@@ -768,12 +745,20 @@ public class CustomerAccountBO extends AccountBO {
                 }
                 FeeBO fee = getFeePersistence().getFee(feeId);
                 if (fee.getFeeFrequency().getFeePayment() != null) {
-                    applyOneTimeFee(fee, chargeAmount, dueInstallments.get(0));
+                    applyOneTimeFee(fee, chargeAmount);
                 } else {
-                    applyPeriodicFee(fee, chargeAmount, dueInstallments);
+                    applyPeriodicFee(fee, chargeAmount);
                 }
             }
         }
+    }
+
+    void applyOneTimeFee(final FeeBO fee, final Money chargeAmount) throws AccountException {
+        applyOneTimeFee (fee, chargeAmount, getTotalDueInstallments().get(0));
+    }
+
+    void applyPeriodicFee (final FeeBO fee, Money chargeAmount) throws AccountException {
+        applyPeriodicFee (fee, chargeAmount, getTotalDueInstallments());
     }
 
     public Date getUpcomingChargesDate() {
@@ -816,7 +801,10 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    private void applyPeriodicFee(final FeeBO fee, final Money charge,
+    /*
+     * Package-level visibility for testing
+     */
+    void applyPeriodicFee(final FeeBO fee, final Money charge,
             final List<AccountActionDateEntity> dueInstallments) throws AccountException {
         AccountFeesEntity accountFee = getAccountFee(fee, charge.getAmountDoubleValue());
         accountFee.setAccountFeeAmount(charge);
@@ -864,7 +852,7 @@ public class CustomerAccountBO extends AccountBO {
     private void updateCustomerActivity(final Short chargeType, final Money charge, final String comments)
             throws AccountException {
         try {
-            PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
+            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(getUserContext().getId());
             CustomerActivityEntity customerActivityEntity = null;
             if (chargeType != null && chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
                 customerActivityEntity = new CustomerActivityEntity(this, personnel, charge,
@@ -1123,7 +1111,7 @@ public class CustomerAccountBO extends AccountBO {
         nextInstallment.addAccountFeesAction(accountFeesaction);
         String description = fee.getFees().getFeeName() + " " + AccountConstants.FEES_APPLIED;
         try {
-            addCustomerActivity(new CustomerActivityEntity(this, new PersonnelPersistence().getPersonnel(Short
+            addCustomerActivity(new CustomerActivityEntity(this, getPersonnelPersistence().getPersonnel(Short
                     .valueOf("1")), fee.getAccountFeeAmount(), description, new DateTimeService()
                     .getCurrentJavaDateTime()));
         } catch (PersistenceException e) {
