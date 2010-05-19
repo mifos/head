@@ -28,7 +28,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.accounts.fees.servicefacade.MasterEntityDao;
+import org.mifos.accounts.fees.persistence.MasterEntityDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;

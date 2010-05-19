@@ -15,6 +15,8 @@ import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.persistence.MasterEntityDao;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;

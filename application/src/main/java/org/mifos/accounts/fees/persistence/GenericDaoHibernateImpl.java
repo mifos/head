@@ -1,9 +1,10 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.accounts.fees.persistence;
 
 import java.io.Serializable;
 
+
 import org.hibernate.Query;
-import org.mifos.accounts.fees.servicefacade.GenericDao;
+import org.mifos.accounts.fees.persistence.GenericDao;
 import java.util.Collection;
 import java.util.List;
 

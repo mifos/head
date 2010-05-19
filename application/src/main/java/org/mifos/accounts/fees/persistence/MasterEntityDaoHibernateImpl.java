@@ -1,19 +1,12 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.accounts.fees.persistence;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.mifos.accounts.fees.servicefacade.MasterEntityDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
-
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class MasterEntityDaoHibernateImpl extends HibernateDaoSupport implements MasterEntityDao {

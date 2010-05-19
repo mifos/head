@@ -10,7 +10,7 @@ import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.servicefacade.FeeService;
-import org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl;
+import org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;

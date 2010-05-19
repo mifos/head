@@ -116,12 +116,12 @@
 		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*ServiceFacade.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
 	</aop:config>
-	<bean id="queryInterceptor" class="org.mifos.accounts.fees.servicefacade.QueryIntroductionInterceptor" />
-	<bean id="queryIntroductionAdvisor" class="org.mifos.accounts.fees.servicefacade.QueryIntroductionAdvisor">
+	<bean id="queryInterceptor" class="org.mifos.accounts.fees.persistence.QueryIntroductionInterceptor" />
+	<bean id="queryIntroductionAdvisor" class="org.mifos.accounts.fees.persistence.QueryIntroductionAdvisor">
 		<constructor-arg ref="queryInterceptor"/>
 	</bean>
 	<bean id="abstractDaoTarget"
-        class="org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl" abstract="true">
+        class="org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true">
@@ -136,14 +136,14 @@
 
 
     <bean id="feeDao" parent="abstractDao">
-       <property name="proxyInterfaces" value="org.mifos.accounts.fees.servicefacade.FeeDao"/>
+       <property name="proxyInterfaces" value="org.mifos.accounts.fees.persistence.FeeDao"/>
        <property name="target">
            <bean parent="abstractDaoTarget">
               <constructor-arg><value>org.mifos.accounts.fees.entities.FeeEntity</value></constructor-arg>
            </bean>
        </property>
     </bean>
-	<bean id="masterEntityDao" class="org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl">
+	<bean id="masterEntityDao" class="org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>

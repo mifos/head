@@ -1,4 +1,4 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.accounts.fees.persistence;
 
 import java.util.List;
 

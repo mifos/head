@@ -1,4 +1,4 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.accounts.fees.persistence;
 
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;

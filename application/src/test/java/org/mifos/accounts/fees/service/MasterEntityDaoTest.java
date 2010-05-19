@@ -6,9 +6,7 @@ import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.entities.FeeEntity;
-import org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl;
-import org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl;
+import org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml"})
-@TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=false)
+@TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
 public class MasterEntityDaoTest {
 
     @Autowired
@@ -47,7 +45,6 @@ public class MasterEntityDaoTest {
             Assert.fail("failed for exception:" + e.getMessage());
         }
         Assert.assertEquals(Short.valueOf("1"), feePayment.getId());
-        System.out.println("glcode="+ feePayment.getName());
     }
 
 }

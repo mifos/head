@@ -1,4 +1,4 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.accounts.fees.persistence;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
