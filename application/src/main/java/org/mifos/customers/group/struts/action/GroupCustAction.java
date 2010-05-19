@@ -20,9 +20,6 @@
 
 package org.mifos.customers.group.struts.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,7 +38,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -290,16 +286,9 @@ public class GroupCustAction extends CustAction {
             trained = true;
         }
 
-        List<CustomerPositionDto> populatedCustomerPositions = new ArrayList<CustomerPositionDto>();
-        for (CustomerPositionDto position : actionForm.getCustomerPositions()) {
-            if (position.getCustomerId() != null) {
-                populatedCustomerPositions.add(position);
-            }
-        }
-
         GroupUpdate groupUpdate = new GroupUpdate(group.getCustomerId(), group.getGlobalCustNum(), group.getVersionNo(), actionForm.getDisplayName(),
                 actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), trained,
-                actionForm.getTrainedDate(), actionForm.getAddress(), actionForm.getCustomFields(), populatedCustomerPositions);
+                actionForm.getTrainedDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
         this.customerServiceFacade.updateGroup(userContext, groupUpdate);
 

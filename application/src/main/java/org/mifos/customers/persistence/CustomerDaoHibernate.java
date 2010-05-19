@@ -1451,10 +1451,10 @@ public class CustomerDaoHibernate implements CustomerDao {
                 String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID, client.getUserContext());
                 throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId, label });
             }
-        } else {
-            if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
-            }
+        }
+
+        if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
+            throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
         }
     }
 

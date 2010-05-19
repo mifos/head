@@ -85,7 +85,6 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -175,72 +174,79 @@ public class CustomerServiceImpl implements CustomerService {
         if (client.isActive()) {
             client.validateFieldsForActiveClient();
 
-            UserContext userContext = client.getUserContext();
+            createSavingsAccountsForActiveSavingProducts(client, savingProducts);
 
-            List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
-            for (SavingsOfferingBO clientSavingsProduct : savingProducts) {
+            generateSavingSchedulesForGroupAndCenterSavingAccounts(client);
+        }
 
-                try {
-                    if (clientSavingsProduct.isActive()) {
+        createCustomer(client, meeting, accountFees);
+    }
 
-                        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
-                                .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+    private void generateSavingSchedulesForGroupAndCenterSavingAccounts(ClientBO client) {
 
-                        List<CustomFieldDto> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
-                                customFieldDefs, userContext.getPreferredLocale());
-
-                        SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
-                                AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
-                                savingCustomFieldViews);
-
-                        savingsAccounts.add(savingsAccount);
-                    }
-
-                } catch (PersistenceException pe) {
-                    throw new MifosRuntimeException(pe);
-                } catch (AccountException pe) {
-                    throw new MifosRuntimeException(pe);
-                }
-            }
-
-            client.addSavingsAccounts(savingsAccounts);
-
+        try {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
-            try {
-                CustomerBO parentCustomer = client.getParentCustomer();
-                if (parentCustomer != null) {
-                    List<SavingsBO> groupSavingAccounts = new CustomerPersistence()
-                            .retrieveSavingsAccountForCustomer(parentCustomer.getCustomerId());
+            UserContext userContext = client.getUserContext();
+            CustomerBO group = client.getParentCustomer();
 
-                    CustomerBO grandParentCustomer = parentCustomer.getParentCustomer();
-                    if (grandParentCustomer != null) {
-                        List<SavingsBO> centerSavingAccounts = new CustomerPersistence()
-                                .retrieveSavingsAccountForCustomer(grandParentCustomer.getCustomerId());
-                        groupSavingAccounts.addAll(centerSavingAccounts);
-                    }
+            if (group != null) {
 
-                    for (SavingsBO savings : groupSavingAccounts) {
-                        savings.setUserContext(userContext);
+                List<SavingsBO> groupSavingAccounts = new CustomerPersistence().retrieveSavingsAccountForCustomer(group.getCustomerId());
 
-                        if (client.getCustomerMeetingValue() != null) {
+                CustomerBO center = group.getParentCustomer();
+                if (center != null) {
+                    List<SavingsBO> centerSavingAccounts = new CustomerPersistence().retrieveSavingsAccountForCustomer(center.getCustomerId());
+                    groupSavingAccounts.addAll(centerSavingAccounts);
+                }
 
-                            if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings
-                                    .getRecommendedAmntUnit().getId().equals(
-                                            RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
-                                savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(),
-                                        workingDays, holidays);
-                            }
+                for (SavingsBO savings : groupSavingAccounts) {
+                    savings.setUserContext(userContext);
+
+                    if (client.getCustomerMeetingValue() != null) {
+
+                        if (!(savings.getCustomer().getLevel() == CustomerLevel.GROUP && savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
+                            savings.generateDepositAccountActions(client, client.getCustomerMeeting().getMeeting(), workingDays, holidays);
                         }
                     }
                 }
+            }
+        } catch (PersistenceException pe) {
+            throw new MifosRuntimeException(pe);
+        }
+    }
+
+    private void createSavingsAccountsForActiveSavingProducts(ClientBO client, List<SavingsOfferingBO> savingProducts) {
+
+        UserContext userContext = client.getUserContext();
+        List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
+        for (SavingsOfferingBO clientSavingsProduct : savingProducts) {
+
+            try {
+                if (clientSavingsProduct.isActive()) {
+
+                    List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence()
+                            .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+
+                    List<CustomFieldDto> savingCustomFieldViews = CustomFieldDefinitionEntity.toDto(
+                            customFieldDefs, userContext.getPreferredLocale());
+
+                    SavingsBO savingsAccount = new SavingsBO(userContext, clientSavingsProduct, client,
+                            AccountState.SAVINGS_ACTIVE, clientSavingsProduct.getRecommendedAmount(),
+                            savingCustomFieldViews);
+
+                    savingsAccounts.add(savingsAccount);
+                }
+
             } catch (PersistenceException pe) {
+                throw new MifosRuntimeException(pe);
+            } catch (AccountException pe) {
                 throw new MifosRuntimeException(pe);
             }
         }
 
-        createCustomer(client, meeting, accountFees);
+        client.addSavingsAccounts(savingsAccounts);
     }
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
@@ -358,13 +364,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public final void updateClientPersonalInfo(ClientBO client, ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+    public final void updateClientPersonalInfo(UserContext userContext, ClientPersonalInfoUpdate personalInfo) throws CustomerException {
 
-        setInitialObjectForAuditLogging(client);
-        client.updatePersonalInfo(personalInfo);
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(personalInfo.getCustomerId());
+        client.validateVersion(personalInfo.getOriginalClientVersionNumber());
+        client.updateDetails(userContext);
+
+        List<CustomFieldDefinitionEntity> allCustomFieldsForClient = customerDao.retrieveCustomFieldEntitiesForClient();
+        client.updateCustomFields(personalInfo.getClientCustomFields());
+        client.validateMandatoryCustomFields(allCustomFieldsForClient);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
+
+            client.updatePersonalInfo(personalInfo);
+
             InputStream pictureSteam = personalInfo.getPicture();
 
             if (pictureSteam != null) {
@@ -373,58 +388,69 @@ public class CustomerServiceImpl implements CustomerService {
             }
 
             customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new CustomerException(e.getKey(), e);
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.commitTransaction();
         }
     }
 
     @Override
-    public final void updateClientFamilyInfo(ClientBO client, ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+    public void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate)
+            throws CustomerException {
+
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientFamilyInfoUpdate.getCustomerId());
+        client.validateVersion(clientFamilyInfoUpdate.getOldVersionNum());
+        client.updateDetails(userContext);
 
         try {
-            setInitialObjectForAuditLogging(client);
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
+
             client.updateFamilyInfo(clientFamilyInfoUpdate);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
 
-        try {
-            StaticHibernateUtil.startTransaction();
             customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
     @Override
-    public final void updateClientMfiInfo(ClientBO client, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
+    public final void updateClientMfiInfo(UserContext userContext, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
 
-        client.setExternalId(clientMfiInfoUpdate.getExternalId());
-        client.setTrained(clientMfiInfoUpdate.isTrained());
-        client.setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
-
-        setInitialObjectForAuditLogging(client);
-
-        PersonnelBO personnel = this.personnelDao.findPersonnelById(clientMfiInfoUpdate.getPersonnelId());
-        client.updateMfiInfo(personnel);
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientMfiInfoUpdate.getClientId());
+        client.validateVersion(clientMfiInfoUpdate.getOrginalClientVersionNumber());
+        client.updateDetails(userContext);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
+
+            PersonnelBO personnel = this.personnelDao.findPersonnelById(clientMfiInfoUpdate.getPersonnelId());
+            client.updateMfiInfo(personnel, clientMfiInfoUpdate);
+
             customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
+        } catch (CustomerException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw e;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -450,7 +476,10 @@ public class CustomerServiceImpl implements CustomerService {
 
                 if (positionView.getPositionId().equals(positionEntity.getPosition().getId())) {
 
-                    CustomerBO customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
+                    CustomerBO customerInPosition = null;
+                    if (positionView.getCustomerId() != null) {
+                        customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
+                    }
                     positionEntity.setCustomer(customerInPosition);
                     isPositionFound = true;
                     break;
@@ -458,9 +487,11 @@ public class CustomerServiceImpl implements CustomerService {
             }
             if (!isPositionFound) {
 
-                CustomerBO customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
-                CustomerPositionEntity customerPosition = new CustomerPositionEntity(new PositionEntity(positionView
-                        .getPositionId()), customerInPosition, customer);
+                CustomerBO customerInPosition = null;
+                if (positionView.getCustomerId() != null) {
+                    customerInPosition = customerDao.findCustomerById(positionView.getCustomerId());
+                }
+                CustomerPositionEntity customerPosition = new CustomerPositionEntity(new PositionEntity(positionView.getPositionId()), customerInPosition, customer);
                 customer.addCustomerPosition(customerPosition);
             }
         }

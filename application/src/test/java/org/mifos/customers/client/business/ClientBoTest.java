@@ -58,9 +58,47 @@ public class ClientBoTest {
         client = new ClientBuilder().buildForUnitTests();
     }
 
-    @Test
-    public void testHasActiveLoanAccountsForProductReturnsTrueIfCustomerHasSuchAccounts() throws Exception {
+    // @Test
+    // public void
+    // testIsDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProductReturnsTrueIfLoanAmountSameForAllLoansOptionNotChosen()
+    // throws Exception {
+    //
+    // // setup
+    // client = new ClientBuilder().active().buildForUnitTests();
+    // LoanOfferingBO loanProduct = new LoanProductBuilder().withGlobalProductNumber("xxxx-111").buildForUnitTests();
+    //
+    // // exercise
+    // boolean isDisbursalPrevented = client
+    // .isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanProduct);
+    //
+    // assertThat(isDisbursalPrevented, is(true));
+    // }
 
+    @Test
+    public void testIsDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProductReturnsTrueIfCustomerHasSuchAccounts()
+            throws Exception {
+
+        // setup
+        client = new ClientBuilder().active().buildForUnitTests();
+        LoanOfferingBO loanProduct = new LoanProductBuilder().active().withoutLoanAmountSameForAllLoans()
+                .buildForUnitTests();
+        client.addAccount(loanAccount);
+
+        // stubbing
+        when(loanAccount.isActiveLoanAccount()).thenReturn(true);
+        when(loanAccount.getLoanOffering()).thenReturn(loanProduct);
+
+        // exercise
+        boolean isDisbursalPrevented = client
+                .isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanProduct);
+
+        assertThat(isDisbursalPrevented, is(true));
+    }
+
+    @Test
+    public void testIsDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProductReturnsFalseIfCustomerHasSuchAccountsButIsDefinedAsSameForAllLoans()
+            throws Exception {
+        // Same for all loans is the default in the LoanProductBuilder
         // setup
         client = new ClientBuilder().active().buildForUnitTests();
         LoanOfferingBO loanProduct = new LoanProductBuilder().active().buildForUnitTests();
@@ -71,17 +109,20 @@ public class ClientBoTest {
         when(loanAccount.getLoanOffering()).thenReturn(loanProduct);
 
         // exercise
-        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct);
+        boolean isDisbursalPrevented = client
+                .isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanProduct);
 
-        assertThat(hasActiveAccounts, is(true));
+        assertThat(isDisbursalPrevented, is(false));
     }
 
     @Test
-    public void testHasActiveLoanAccountsForProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct() throws Exception {
+    public void testIsDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct()
+            throws Exception {
 
         // setup
         client = new ClientBuilder().active().buildForUnitTests();
-        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111").buildForUnitTests();
+        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111")
+                .withoutLoanAmountSameForAllLoans().buildForUnitTests();
         LoanOfferingBO loanProduct2 = new LoanProductBuilder().withGlobalProductNumber("xxxx-222").buildForUnitTests();
         client.addAccount(loanAccount);
 
@@ -90,26 +131,30 @@ public class ClientBoTest {
         when(loanAccount.getLoanOffering()).thenReturn(loanProduct2);
 
         // exercise
-        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct1);
+        boolean isDisbursalPrevented = client
+                .isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanProduct1);
 
-        assertThat(hasActiveAccounts, is(false));
+        assertThat(isDisbursalPrevented, is(false));
     }
 
     @Test
-    public void testHasActiveLoanAccountsForProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts() throws Exception {
+    public void testIsDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts()
+            throws Exception {
 
         // setup
         client = new ClientBuilder().active().buildForUnitTests();
-        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111").buildForUnitTests();
+        LoanOfferingBO loanProduct1 = new LoanProductBuilder().withGlobalProductNumber("xxxx-111")
+                .withoutLoanAmountSameForAllLoans().buildForUnitTests();
         client.addAccount(loanAccount);
 
         // stubbing
         when(loanAccount.isActiveLoanAccount()).thenReturn(false);
 
         // exercise
-        boolean hasActiveAccounts = client.hasActiveLoanAccountsForProduct(loanProduct1);
+        boolean isDisbursalPrevented = client
+                .isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(loanProduct1);
 
-        assertThat(hasActiveAccounts, is(false));
+        assertThat(isDisbursalPrevented, is(false));
     }
 
     @Test
@@ -117,7 +162,7 @@ public class ClientBoTest {
         Assert.assertEquals("Expecting no attendance entries on a new object", 0, client.getClientAttendances().size());
         DateTime meetingDate = new DateTimeService().getCurrentDateTime();
         client.addClientAttendance(buildClientAttendance(meetingDate.toDate()));
-        Assert.assertEquals("Expecting no attendance entries on a new object", 1, client.getClientAttendances().size());
+        Assert.assertEquals("Expecting one attendance entry", 1, client.getClientAttendances().size());
     }
 
     @Test
