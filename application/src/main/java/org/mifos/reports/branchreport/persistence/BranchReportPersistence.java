@@ -278,12 +278,10 @@ public class BranchReportPersistence extends Persistence {
             staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(1,
                     titleName, staffCountForThisTitle));
         }
-        List<BranchReportStaffingLevelSummaryBO> staffingLevelSummariesWithTotal = new ArrayList<BranchReportStaffingLevelSummaryBO>();
-        staffingLevelSummariesWithTotal.add(new BranchReportStaffingLevelSummaryBO(1,
+        staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(TOTAL_STAFF_ROLE_ID,
                 "Total Staff", totalStaff));
-        staffingLevelSummariesWithTotal.addAll(staffingLevelSummaries);
 
-        return staffingLevelSummariesWithTotal;
+        return staffingLevelSummaries;
     }
 
     public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)

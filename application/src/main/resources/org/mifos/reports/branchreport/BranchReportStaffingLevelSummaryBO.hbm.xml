@@ -86,7 +86,9 @@ explanation of the license and how it is applied.
 		<![CDATA[select count(*) as personnelCount, lv.lookup_name as titleKey, lvl.lookup_value as titleValueOverride
 			from personnel p left join lookup_value lv on p.title = lv.lookup_id  
 			left join lookup_value_locale lvl on lvl.lookup_value_id = lv.lookup_id 
-			where p.office_id = :officeId group by title;
+			where p.office_id = :officeId 
+			and p.personnel_status=1
+			group by title;
 		]]>
 	</sql-query>			
 </hibernate-mapping>
