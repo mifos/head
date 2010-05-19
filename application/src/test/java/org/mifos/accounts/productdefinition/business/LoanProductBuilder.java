@@ -20,6 +20,8 @@
 package org.mifos.accounts.productdefinition.business;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -63,11 +65,11 @@ public class LoanProductBuilder {
     private Double defaultInterestRate = Double.valueOf("3.0");
     private final Short interestPaidAtDisbursement = Constants.NO;
     private final Short principalDueLastInstallment = Constants.NO;
-    private final Short minNoOfInstallmentsForLoan = Short.valueOf("1");
-    private final Short maxNoOfInstallmentsForLoan = Short.valueOf("11");
-    private final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
     private PrdStatus productStatus = PrdStatus.LOAN_ACTIVE;
     private PrdStatusEntity productStatusEntity;
+
+    private Boolean useLoanAmountSameForAllLoans = true;
+    private Boolean useNoOfInstallSameForAllLoans = true;
 
     public LoanOfferingBO buildForUnitTests() {
 
@@ -80,15 +82,27 @@ public class LoanProductBuilder {
 
         final LoanOfferingBO loanProduct = new LoanOfferingBO(depositGLCode, interesetGLCode, interestType,
                 minInterestRate, maxInterestRate, defaultInterestRate, interestPaidAtDisbursement,
-                principalDueLastInstallment, new NoOfInstallSameForAllLoanBO(), name, shortName, globalProductNumber,
-                startDate, applicableToCustomer, category, productStatusEntity, createdDate, createdByUserId);
+                principalDueLastInstallment, name, shortName, globalProductNumber, startDate, applicableToCustomer,
+                category, productStatusEntity, createdDate, createdByUserId);
 
-        final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan = new NoOfInstallSameForAllLoanBO(
-                minNoOfInstallmentsForLoan, maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct);
+        if (useLoanAmountSameForAllLoans) {
+            final Double minLoanAmount = Double.valueOf("100.0");
+            final Double maxLoanAmount = Double.valueOf("100000.0");
+            final Double defaultLoanAmount = Double.valueOf("1000.0");
+            loanProduct.setLoanAmountSameForAllLoan(new LoanAmountSameForAllLoanBO(minLoanAmount, maxLoanAmount,
+                    defaultLoanAmount, loanProduct));
+        }
+        if (useNoOfInstallSameForAllLoans) {
+            final Short minNoOfInstallmentsForLoan = Short.valueOf("1");
+            final Short maxNoOfInstallmentsForLoan = Short.valueOf("11");
+            final Short defaultNoOfInstallmentsForLoan = Short.valueOf("6");
+            loanProduct.setNoOfInstallSameForAllLoan(new NoOfInstallSameForAllLoanBO(minNoOfInstallmentsForLoan,
+                    maxNoOfInstallmentsForLoan, defaultNoOfInstallmentsForLoan, loanProduct));
+        }
 
-        loanProduct.setNoOfInstallSameForAllLoan(noOfInstallSameForAllLoan);
         loanProduct.setGracePeriodType(new GracePeriodTypeEntity(graceType));
-        loanProduct.setLoanOfferingMeeting(new PrdOfferingMeetingEntity(meeting, loanProduct, MeetingType.LOAN_INSTALLMENT));
+        loanProduct.setLoanOfferingMeeting(new PrdOfferingMeetingEntity(meeting, loanProduct,
+                MeetingType.LOAN_INSTALLMENT));
 
         return loanProduct;
     }
@@ -98,8 +112,8 @@ public class LoanProductBuilder {
         category = (ProductCategoryBO) StaticHibernateUtil.getSessionTL().get(ProductCategoryBO.class,
                 Short.valueOf("2"));
 
-        productStatusEntity = (PrdStatusEntity) StaticHibernateUtil.getSessionTL().get(
-                PrdStatusEntity.class, this.productStatus.getValue());
+        productStatusEntity = (PrdStatusEntity) StaticHibernateUtil.getSessionTL().get(PrdStatusEntity.class,
+                this.productStatus.getValue());
 
         LoanOfferingBO loanProduct = build();
 
@@ -163,6 +177,16 @@ public class LoanProductBuilder {
 
     public LoanProductBuilder withDefaultInterest(double withDefaultInterestRate) {
         this.defaultInterestRate = withDefaultInterestRate;
+        return this;
+    }
+
+    public LoanProductBuilder withoutLoanAmountSameForAllLoans() {
+        this.useLoanAmountSameForAllLoans = false;
+        return this;
+    }
+
+    public LoanProductBuilder withoutNoInstallSameForAllLoans() {
+        this.useNoOfInstallSameForAllLoans = false;
         return this;
     }
 }

@@ -120,13 +120,13 @@ public class GroupAtTopOfCustomerHierarchyIntegrationTest {
                                             .formedBy(existingUser).buildAsTopOfHierarchy();
         IntegrationTestObjectMother.createGroup(existingGroup, existingMeeting);
 
-        existingActiveClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_ACTIVE).withParentCustomer(existingGroup).buildForIntegrationTests();
+        existingActiveClient = new ClientBuilder().withName("activeClient").withStatus(CustomerStatus.CLIENT_ACTIVE).withParentCustomer(existingGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingActiveClient, existingMeeting);
 
-        existingOnHoldClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_HOLD).withParentCustomer(existingGroup).buildForIntegrationTests();
+        existingOnHoldClient = new ClientBuilder().withName("onHoldClient").withStatus(CustomerStatus.CLIENT_HOLD).withParentCustomer(existingGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingOnHoldClient, existingMeeting);
 
-        existingCancelledClient = new ClientBuilder().withStatus(CustomerStatus.CLIENT_CANCELLED).withParentCustomer(existingGroup).buildForIntegrationTests();
+        existingCancelledClient = new ClientBuilder().withName("cancelledClient").withStatus(CustomerStatus.CLIENT_CANCELLED).withParentCustomer(existingGroup).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingCancelledClient, existingMeeting);
     }
 

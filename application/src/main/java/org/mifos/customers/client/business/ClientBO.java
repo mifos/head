@@ -48,11 +48,12 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
+import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -76,7 +77,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -126,6 +126,9 @@ public class ClientBO extends CustomerBO {
                 clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(group);
+        client.childAddedForParent(client.getParentCustomer());
+
+        client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -157,13 +160,17 @@ public class ClientBO extends CustomerBO {
             DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
             String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
             ClientDetailEntity clientDetailEntity, Blob pictureAsBlob,
-            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address) {
+            List<ClientInitialSavingsOfferingEntity> associatedOfferings, String externalId, Address address, int numberOfCustomersInOfficeAlready) {
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                 clientFirstName, clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(null);
+
+        int searchIdCustomerCount = numberOfCustomersInOfficeAlready + 1;
+        final String searchId = GroupConstants.PREFIX_SEARCH_STRING + searchIdCustomerCount;
+        client.setSearchId(searchId);
         client.updateAddress(address);
         client.setExternalId(externalId);
         client.addNameDetailSet(clientNameDetailEntity);
@@ -285,7 +292,7 @@ public class ClientBO extends CustomerBO {
         super(userContext, displayName, CustomerLevel.CLIENT, customerStatus, externalId, mfiJoiningDate, address,
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
         validateOffice(office);
-        validateOfferings(offeringsSelected);
+        validateNoDuplicateSavings(offeringsSelected);
         nameDetailSet = new HashSet<ClientNameDetailEntity>();
         clientAttendances = new HashSet<ClientAttendanceBO>();
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
@@ -313,7 +320,6 @@ public class ClientBO extends CustomerBO {
         this.customerDetail = new ClientDetailEntity(this, clientPersonalDetailDto);
         createPicture(picture);
         createAssociatedOfferings(offeringsSelected);
-//        validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
         if (parentCustomer != null) {
             checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer.getStatus().getValue());
@@ -491,7 +497,7 @@ public class ClientBO extends CustomerBO {
 
     // when this method is called from Bulk Entry preview persist will be false
     public void handleAttendance(final Date meetingDate, final Short attendance, final boolean persist)
-            throws ServiceException, CustomerException {
+            throws CustomerException {
         ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
         if (clientAttendance == null) {
             clientAttendance = new ClientAttendanceBO();
@@ -508,8 +514,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void handleAttendance(final Date meetingDate, final AttendanceType attendance) throws ServiceException,
-            CustomerException {
+    public void handleAttendance(final Date meetingDate, final AttendanceType attendance) throws CustomerException {
         boolean persist = true;
         handleAttendance(meetingDate, attendance.getValue(), persist);
     }
@@ -540,10 +545,14 @@ public class ClientBO extends CustomerBO {
                 && newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue());
     }
 
-    public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws InvalidDateException {
+    public void updatePersonalInfo(ClientPersonalInfoUpdate personalInfo) throws CustomerException {
 
         this.governmentId = personalInfo.getGovernmentId();
-        this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+        try {
+            this.dateOfBirth = DateUtils.getDateAsSentFromBrowser(personalInfo.getDateOfBirth());
+        } catch (InvalidDateException e) {
+            throw new CustomerException(ClientConstants.INVALID_DOB_EXCEPTION);
+        }
         ClientNameDetailDto clientName = personalInfo.getClientNameDetails();
         this.getClientName().updateNameDetails(clientName);
         this.firstName = clientName.getFirstName();
@@ -555,7 +564,6 @@ public class ClientBO extends CustomerBO {
 
         setDisplayName(personalInfo.getClientDisplayName());
         updateAddress(personalInfo.getAddress());
-        setUpdateDetails();
     }
 
     /**
@@ -594,17 +602,27 @@ public class ClientBO extends CustomerBO {
 
         for (int key = 0; key < primaryKeys.size(); key++) {
             if (primaryKeys.get(key) != null) {
+
                 List<ClientNameDetailDto> clientNameDetailDto = clientFamilyInfoUpdate.getFamilyNames();
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
+
                         clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
+
+                        // if switched from familyDetailsRequired=false to true then migrate data to family details table.
+                        if (familyDetailSet.isEmpty() && ClientRules.isFamilyDetailsRequired()) {
+                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
+                            for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
+                                ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this, clientNameDetailEntity, clientFamilyDetail);
+                                familyDetailSet.add(clientFamilyEntity);
+                            }
+                        }
                     }
                 }
 
                 List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate.getFamilyDetails();
                 for (ClientFamilyDetailEntity clientFamilyDetailEntity : familyDetailSet) {
-                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key)
-                            .intValue()) {
+                    if (clientFamilyDetailEntity.getClientName().getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
                         clientFamilyDetailEntity.updateClientFamilyDetails(clientFamilyDetailDto.get(key));
                     }
                 }
@@ -667,11 +685,17 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void updateMfiInfo(final PersonnelBO personnel) throws CustomerException {
-        if (isActive() || isOnHold()) {
-            validateLO(personnel);
-        }
+    public void updateMfiInfo(final PersonnelBO personnel, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException {
+
+        setExternalId(clientMfiInfoUpdate.getExternalId());
+        setTrained(clientMfiInfoUpdate.isTrained());
+        setTrainedDate(clientMfiInfoUpdate.getTrainedDate().toDate());
+
         setPersonnel(personnel);
+        if (isActive() || isOnHold()) {
+            validateLoanOfficer();
+        }
+
         for (AccountBO account : this.getAccounts()) {
             account.setPersonnel(this.getPersonnel());
         }
@@ -748,10 +772,6 @@ public class ClientBO extends CustomerBO {
         return null;
     }
 
-    /**
-     * @deprecated -
-     */
-    @Deprecated
     public void updateClientDetails(final ClientPersonalDetailDto clientPersonalDetailDto) {
         customerDetail.updateClientDetails(clientPersonalDetailDto);
     }
@@ -824,7 +844,6 @@ public class ClientBO extends CustomerBO {
 
     private void validateForGroupStatus(final CustomerStatus groupStatus) throws CustomerException {
         if (isGroupStatusLower(getStatus(), groupStatus)) {
-            MifosConfiguration labelConfig = MifosConfiguration.getInstance();
             throw new CustomerException(ClientConstants.ERRORS_LOWER_GROUP_STATUS, new Object[] {
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP, userContext),
                     MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT, userContext) });
@@ -856,7 +875,7 @@ public class ClientBO extends CustomerBO {
     public void validateFieldsForActiveClient() throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
-                validateLO(this.getPersonnel());
+                validateLoanOfficer();
                 validateMeetingEntity(this.getCustomerMeeting());
             }
         }
@@ -866,7 +885,7 @@ public class ClientBO extends CustomerBO {
      *
      */
     @Deprecated
-    public void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting)
+    private void validateFieldsForActiveClient(final PersonnelBO loanOfficer, final MeetingBO meeting)
             throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {
@@ -971,8 +990,7 @@ public class ClientBO extends CustomerBO {
         return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId), CustomerStatus.fromInt(parentStatus));
     }
 
-    @Deprecated
-    private void validateOfferings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
+    public void validateNoDuplicateSavings(final List<SavingsOfferingBO> offeringsSelected) throws CustomerException {
         if (offeringsSelected != null) {
             for (int i = 0; i < offeringsSelected.size() - 1; i++) {
                 for (int j = i + 1; j < offeringsSelected.size(); j++) {
@@ -1010,7 +1028,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void updateClientFlag() throws CustomerException, PersistenceException {
+    public void updateClientFlag() throws CustomerException {
         this.groupFlag = YesNoFlag.NO.getValue();
         update();
     }
@@ -1027,7 +1045,7 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    private boolean isClientCancelledOrClosed() throws CustomerException {
+    private boolean isClientCancelledOrClosed() {
         return getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED ? true
                 : false;
     }
@@ -1218,5 +1236,13 @@ public class ClientBO extends CustomerBO {
 
     public boolean isStatusValidationRequired() {
         return getParentCustomer() != null;
+    }
+
+    @Override
+    public void validate() throws CustomerException {
+        super.validate();
+        if (isStatusValidationRequired()) {
+            this.validateClientStatus();
+        }
     }
 }
