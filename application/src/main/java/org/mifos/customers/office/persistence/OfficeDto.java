@@ -20,7 +20,9 @@
 
 package org.mifos.customers.office.persistence;
 
-public class OfficeDto {
+import org.mifos.framework.business.service.DataTransferObject;
+
+public class OfficeDto implements DataTransferObject{
 
     private final Short id;
     private final String name;
@@ -41,6 +43,10 @@ public class OfficeDto {
     }
 
     public String getName() {
+        return this.name.trim();
+    }
+
+    public String getText() {
         return this.name.trim();
     }
 }
