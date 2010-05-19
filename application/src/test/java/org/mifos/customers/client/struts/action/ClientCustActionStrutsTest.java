@@ -1248,47 +1248,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
     }
 
-    public void testUpdateMfiInfo_AuditLog() throws Exception {
-        createClientForAuditLog();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "editMfiInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "previewEditMfiInfo");
-        addRequestParameter("trained", "0");
-        addRequestParameter("externalId", "123");
-        addRequestParameter("loanOfficerId", "1");
-
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "updateMfiInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.updateMfiInfo_success.toString());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals("123", client.getExternalId());
-
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        Assert.assertEquals(1, auditLogList.size());
-        Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
-
-        for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")) {
-                matchValues(auditLogRecord, "loan officer", "mifos");
-            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("External Id")) {
-                matchValues(auditLogRecord, "-", "123");
-            } else {
-                Assert.fail("did not expect record " + auditLogRecord.getFieldName());
-            }
-        }
-        TestObjectFactory.cleanUpChangeLog();
-    }
-
     public void testEditMfiInfoForClientInBranch() throws Exception {
 
         createAndSetClientInSession();
@@ -1345,33 +1304,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    public void testUpdateMfiInfo() throws Exception {
-
-        createClientWithGroupAndSetInSession();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "editMfiInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "previewEditMfiInfo");
-        addRequestParameter("trained", "0");
-        addRequestParameter("externalId", "3");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "updateMfiInfo");
-
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.updateMfiInfo_success.toString());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        Assert.assertEquals("3", client.getExternalId());
-        Assert.assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
-    }
-
     public void testUpdateMfiInfoWithoutTrained_ClientInBranch() throws Exception {
         createAndSetClientInSession();
         setRequestPathInfo("/clientCustAction.do");
@@ -1395,33 +1327,6 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals("3", client.getExternalId());
         Assert.assertFalse(client.isTrained());
-    }
-
-    public void testUpdateMfiInfoWithTrained() throws Exception {
-        createClientWithGroupAndSetInSession();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "editMfiInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("method", "previewEditMfiInfo");
-        addRequestParameter("trained", "1");
-        addRequestParameter("trainedDate", "03/2/2006"); // a valid date
-        addRequestParameter("externalId", "3");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        setRequestPathInfo("/clientCustAction.do");
-        addRequestParameter("loanOfficerId", "3");
-        addRequestParameter("groupFlag", "1");
-        addRequestParameter("method", "updateMfiInfo");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward(ActionForwards.updateMfiInfo_success.toString());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals("3", client.getExternalId());
-        Assert.assertTrue(client.isTrained());
     }
 
     public void testUpdateMfiInfoWithTrainedDateValidation() throws Exception {

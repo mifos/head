@@ -2707,7 +2707,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 accountActionDateEntity.setMiscFee(new Money(getCurrency(), "20.3"));
             }
         }
-        ((LoanBO) accountBO).applyRounding();
+        ((LoanBO) accountBO).applyRounding_v2();
         TestObjectFactory.updateObject(accountBO);
         TestObjectFactory.flushandCloseSession();
 

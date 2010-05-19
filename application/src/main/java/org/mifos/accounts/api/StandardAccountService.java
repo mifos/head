@@ -34,6 +34,8 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -229,5 +231,11 @@ public class StandardAccountService implements AccountService {
     public BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception {
         AccountBO accountBo = getAccountPersistence().getAccount(account.getAccountId());
         return accountBo.getTotalAmountDue().getAmount();
+    }
+
+    @Override
+    public Object getMifosConfiguration(String propertyKey) {
+        ConfigurationManager cfgMng = ConfigurationManager.getInstance();
+        return cfgMng.getProperty(propertyKey);
     }
 }

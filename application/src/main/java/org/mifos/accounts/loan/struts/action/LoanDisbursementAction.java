@@ -186,10 +186,6 @@ public class LoanDisbursementAction extends BaseAction {
             throw new AccountException("errors.invalidTxndate");
         }
 
-        if (loan.getCustomer().hasActiveLoanAccountsForProduct(loan.getLoanOffering())) {
-            throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
-        }
-
         String modeOfPayment = actionForm.getPaymentModeOfPayment();
         Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH.getValue() : Short
                 .valueOf(modeOfPayment);
@@ -198,6 +194,9 @@ public class LoanDisbursementAction extends BaseAction {
                     personnel, receiptDate, modeOfPaymentId);
 
         } catch (Exception e) {
+            if (e.getMessage().equals("errors.cannotDisburseLoan.because.otherLoansAreActive")) {
+                throw e;
+            }
             throw new AccountException("errors.cannotDisburseLoan.because.disburseFailed");
         }
 

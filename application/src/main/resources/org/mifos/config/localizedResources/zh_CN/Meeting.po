@@ -1,254 +1,251 @@
-# extracted from Meeting.properties
-#. extracted from Meeting.properties
-#, fuzzy
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/Meeting.properties, zh/Meeting_zh_CN.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-05 15:47-0500\n"
+"POT-Creation-Date: 2010-05-18 14:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.5.3\n"
-"X-Accelerator-Marker: &\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: error.activity.not.allowed
 msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you the required permissions and try again."
-msgstr ""
+msgstr "您没有进行该操作的权限。请您在请求系统管理员授予您权限后重试。"
 
 #: errors.Meeting.invalidDayNumber
 msgid "Please specify the valid day number in the range of 1 to 31."
-msgstr ""
+msgstr "请填写介于1－31之间的有效日期。"
 
 #: errors.Meeting.invalidMeetingPlace
 msgid "Please specify a Meeting location."
-msgstr ""
+msgstr "请填写会议地点。"
 
 #: errors.Meeting.invalidRecurAfter
 msgid "Please Specify the valid recurrence pattern."
-msgstr ""
+msgstr "请填写有效的定期模式。"
 
 #: errors.Meeting.invalidRecurrenceType
 msgid "Please specify the value for Meeting frequency."
-msgstr ""
+msgstr "请填写会议次数。"
 
 #: errors.Meeting.specifyDayNumAndRecurAfter
 msgid "Please ensure that both day and month are specified."
-msgstr ""
+msgstr "请确认已填写了日期和月份。"
 
 #: errors.Meeting.specifyMonthlyMeetingOnWeekDay
 msgid ""
 "Please ensure that all the recurrence details of the month are specified."
-msgstr ""
+msgstr "请确认已指定了该月所有定期详情。"
 
 #: errors.Meeting.specifyWeekDayAndRecurAfter
 msgid ""
 "Please ensure that the recurrence pattern has both week and day specified."
-msgstr ""
+msgstr "请确认定期模式中指定了星期和日期。"
 
 #: errors.prefix
 msgid "<li>"
-msgstr ""
+msgstr "<li>"
 
 #: errors.suffix
 msgid "</li>"
-msgstr ""
+msgstr "</li>"
 
 #: meeting.labelFrequencyOfMeeting
 msgid "Frequency of Meetings:"
-msgstr ""
+msgstr "会议次数："
 
 #: meeting.button.create
 msgid "Create"
-msgstr ""
+msgstr "创建"
 
 #: meeting.button.save
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: meeting.daySchedule
 msgid "Recur on day {0} of every {1} month(s)"
-msgstr ""
+msgstr "每{1}月的{0}号重复"
 
 #: meeting.daySchedule.change
 msgid ""
 "(Meetings will be changed to recur on day {0} of every {1} month(s) after "
 "the batch jobs run)"
-msgstr ""
+msgstr "（批处理作业执行后，会议会改为在每{1}月的{0}号重复。）"
 
 #: meeting.error.creationFailed
 msgid ""
 "An unexpected exception occurred while creating the meeting. Please try "
 "again later or contact the system administrator."
-msgstr ""
+msgstr "新建会议时发生未知异常。请稍后重试或联系系统管理员。"
 
 #: meeting.error.invalidMomthDay
 msgid "Please specify a value between 1 and 31 for Day of Month."
-msgstr ""
+msgstr "请填写介于1－31之间的日期。"
 
 #: meeting.error.invalidRecurAfter
 msgid "Please specify a valid value for recurrence pattern."
-msgstr ""
+msgstr "请填写定期模式的有效值。"
 
 #: meeting.error.loadFailed
 msgid ""
 "The application could not load the meeting details. Please try again later "
 "or contact the system administrator."
-msgstr ""
+msgstr "程序无法读取会议详情。请稍后重试或联系系统管理员。"
 
 #: meeting.error.updateFailed
 msgid ""
 "An unexpected exception occurred while updating the meeting. Please try "
 "again later or contact the system administrator."
-msgstr ""
+msgstr "更新会议时发生未知异常。请稍后重试或联系系统管理员。"
 
 #: meeting.labelCreateInstruction
 msgid "Fields marked with an asterisk are required."
-msgstr ""
+msgstr "加星号的栏位为必填项。"
 
 #: meeting.labelDay
 msgid "Day"
-msgstr ""
+msgstr "日"
 
 #: meeting.labelDays
 msgid "day(s)"
-msgstr ""
+msgstr "天"
 
 #: meeting.labelMeetingSchedule
 msgid "Meeting schedule"
-msgstr ""
+msgstr "会议日程"
 
 #: meeting.labelMeetingScheduleFor
 msgid "Meeting schedule for"
-msgstr ""
+msgstr "会议日程 "
 
 #: meeting.labelMonths
 msgid "month(s)"
-msgstr ""
+msgstr "月"
 
 #: meeting.labelOfEvery
 msgid "of every"
-msgstr ""
+msgstr "每"
 
 #: meeting.labelPlaceOfMeeting
 msgid "Location of meeting:"
-msgstr ""
+msgstr "会议地点："
 
 #: meeting.labelRecurDays
 msgid "If days, specify the recurrence:"
-msgstr ""
+msgstr "如果为天，请指定定期周期："
 
 #: meeting.labelRecurEvery
 msgid "Recur every"
-msgstr ""
+msgstr "循环于每"
 
 #: meeting.labelRecurMonths
 msgid "If months, select between the following:"
-msgstr ""
+msgstr "如果为月，从下列中选择："
 
 #: meeting.labelRecurWeeks
 msgid "If weeks, specify the following:"
-msgstr ""
+msgstr "如果为周，在下面指定："
 
 #: meeting.labelRepaymentDay
 msgid "Repayment day:"
-msgstr ""
+msgstr "还款日："
 
 #: meeting.labelThe
 msgid "The"
-msgstr ""
+msgstr "该"
 
 #: meeting.labelWeeks
 msgid "week(s) on"
-msgstr ""
+msgstr "周"
 
 #: meeting.labelmeetingschedule&groupMembership
 msgid "Meeting schedule & Group Membership:"
-msgstr ""
+msgstr "会议日程及组成员："
 
 #: meeting.monthDay.number
 msgid "Please specify a number for Month {0}."
-msgstr ""
+msgstr "请为{0}月指定一个数字。"
 
 #: meeting.monthDay.range
 msgid "Please specify a number in the range {1} to {2} for month {0}."
-msgstr ""
+msgstr "请为{0}月指定一个介于{1}和{2}之间的数字。"
 
 #: meeting.monthFrequency
 msgid "{0} month(s)"
-msgstr ""
+msgstr "{0}月"
 
 #: meeting.monthMonth.number
 msgid "Please specify a number for the Month."
-msgstr ""
+msgstr "请为月份指定一个数字。"
 
 #: meeting.monthMonth.required
 msgid "Please specify a value for Month."
-msgstr ""
+msgstr "请为月份指定一个值。"
 
 #: meeting.monthMonthRank.requiredmsg
 msgid ""
 "Please specify the recurrence pattern of the month if the month option is "
 "selected."
-msgstr ""
+msgstr "如果选择了“月”选项，请指定月的定期模式。"
 
 #: meeting.monthSchedule
 msgid "Recur on {0} {1} of every {2} month(s)"
-msgstr ""
+msgstr "每{2}月的{0}号、{1}重复"
 
 #: meeting.monthSchedule.change
 msgid ""
 "(Meetings will be changed to recur on {0} {1} of every {2} month(s) after "
 "the batch jobs run)"
-msgstr ""
+msgstr "（批处理作业执行后，会议会改为在每{2}月的{0}号、{1}号重复。）"
 
 #: meeting.monthScheduleShort
 msgid "Recur every {0} month(s)"
-msgstr ""
+msgstr "每{0}月重复"
 
 #: meeting.monthType.requiredmsgPlease
 msgid "ensure that the recurrence pattern has both day and month specified."
-msgstr ""
+msgstr "确认定期模式中指定了日期和月份。"
 
 #: meeting.monthWeek.requiredmsg
 msgid ""
 "Please specify the recurrence details of the week if the week option is "
 "selected."
-msgstr ""
+msgstr "如果选择了“周”选项，请指定周的定期模式详情。"
 
 #: meeting.msgUpdateMeeting
 msgid ""
 "If meeting is edited, changes do not show up immediately. The change to "
 "meeting schedule will not be reflected until after the batch jobs run."
-msgstr ""
+msgstr "对会议做出的编辑修改不会立即显示。对会议日程做出的修改只有在批处理作业执行之后才会生效。"
 
 #: meeting.reurweek.number
 msgid "Please specify a Weekly recurrence pattern value."
-msgstr ""
+msgstr "请指定按周定期模式的值。"
 
 #: meeting.weekDay.requiredmsg
 msgid "Please select the Weekday if week is selected."
-msgstr ""
+msgstr "如果选择了“周”，请指定是星期几。"
 
 #: meeting.weekFrequency
 msgid "{0} week(s)"
-msgstr ""
+msgstr "{0}周"
 
 #: meeting.weekSchedule
 msgid "Recur every {0} Week(s) on {1}"
-msgstr ""
+msgstr "每{0}周的{1}重复"
 
 #: meeting.weekSchedule.change
 msgid ""
 "(Meetings will be changed to recur every {0} Week(s) on {1} after the batch "
 "jobs run)"
-msgstr ""
+msgstr "（批处理作业执行后，会议会改为在每{0}月的{1}重复。）"
 
 #: meeting.weekScheduleShort
 msgid "Recur every {0} week(s)"
-msgstr ""
+msgstr "每{0}周重复"
