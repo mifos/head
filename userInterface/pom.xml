@@ -23,18 +23,18 @@
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
             <version>1.6-SNAPSHOT</version>
-        </dependency>      
+        </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
             <version>1.6-SNAPSHOT</version>
-        </dependency>      
+        </dependency>
 
         <!-- from parent pom -->
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-testFramework</artifactId>
-        </dependency>      
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
@@ -165,7 +165,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>         
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -202,7 +202,7 @@
                     <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <targetJdk>1.6</targetJdk>
-                    <includeTests>true</includeTests>               
+                    <includeTests>true</includeTests>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>
@@ -215,7 +215,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>         
+            </plugin>
         </plugins>
     </reporting>
 </project>

@@ -10,7 +10,7 @@
     <issueManagement>
         <system>JIRA</system>
         <url>http://mifosforge.jira.com/</url>
-    </issueManagement>	
+    </issueManagement>
     <ciManagement>
         <system>Hudson</system>
         <url>https://ci.mifos.org/hudson/</url>
@@ -22,15 +22,15 @@
         </license>
     </licenses>
     <distributionManagement>
-	    <site>
-	      <id>maven-site</id>
-	      <url>file:/var/www/mifos</url>
-	    </site>
+        <site>
+            <id>maven-site</id>
+            <url>file:/var/www/mifos</url>
+        </site>
     </distributionManagement>
-    
+
     <properties>
-    	<hibernate.version>3.5.1-Final</hibernate.version>
-    	<spring.version>3.0.2.RELEASE</spring.version>
+        <hibernate.version>3.5.1-Final</hibernate.version>
+        <spring.version>3.0.2.RELEASE</spring.version>
     </properties>
     <modules>
         <module>common</module>
@@ -43,10 +43,12 @@
         <module>api</module>
     </modules>
 
-    <!-- Only mention our repository, following "open source" guidance at
-         http://www.sonatype.com/people/2009/02/why-putting-repositories-in-your-poms-is-a-bad-idea/
-         "If you are exposing your source and want to make it easy for others
-         to build, then consider adding a repository entry to your POM..." -->
+    <!--
+        Only mention our repository, following "open source" guidance at
+        http://www.sonatype.com/people/2009/02/why-putting-repositories-in-your-poms-is-a-bad-idea/ "If you are exposing
+        your source and want to make it easy for others to build, then consider adding a repository entry to your
+        POM..."
+    -->
     <repositories>
         <repository>
             <id>maven-repository.mifos.org</id>
@@ -231,7 +233,7 @@
                 <artifactId>hibernate-envers</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-jmx</artifactId>
                 <version>${hibernate.version}</version>
@@ -246,7 +248,7 @@
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
- <!-- #### #### Hibernate Validator #### #### -->
+            <!-- #### #### Hibernate Validator #### #### -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
@@ -257,7 +259,7 @@
                 <artifactId>validation-api</artifactId>
                 <version>1.0.0.GA</version>
             </dependency>
- <!-- #### #### Hibernate Validator #### #### -->
+            <!-- #### #### Hibernate Validator #### #### -->
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
@@ -307,10 +309,10 @@
                 </exclusions>
             </dependency>
             <dependency>
-            	<groupId>org.mockito</groupId>
-            	<artifactId>mockito-all</artifactId>
-            	<version>1.8.0</version>
-            	<scope>test</scope>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.8.0</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -335,35 +337,35 @@
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.3</version>
                     <configuration>
-                    	 <encoding>UTF-8</encoding>
+                        <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
                 <plugin>
-		            <artifactId>maven-site-plugin</artifactId>
-		            <version>2.0.1</version>
-		        </plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>2.0.1</version>
+                </plugin>
             </plugins>
-		</pluginManagement>
-	</build>
+        </pluginManagement>
+    </build>
     <reporting>
-	<plugins>
-	    <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-jxr-plugin</artifactId>
-	    </plugin>
-	    <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-                 <additionalJOption>-J-Xmx256m</additionalJOption>
-            	 <encoding>UTF-8</encoding>
-            </configuration>
-	    </plugin>
-	    <plugin>
-	       <groupId>org.apache.maven.plugins</groupId>
-	       <artifactId>maven-project-info-reports-plugin</artifactId>
-	       <version>2.1.1</version>
-	    </plugin>
-	</plugins>
-     </reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalJOption>-J-Xmx256m</additionalJOption>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.1.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
