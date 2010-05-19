@@ -218,20 +218,18 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public List<FeeEntity> retrieveCustomerFees() {
-        // TODO Auto-generated method stub
-        return null;
+        return feeDao.retrieveCustomerFees();
     }
 
     @Override
     public FeeEntity findFeeById(Short feeId) {
-        // TODO Auto-generated method stub
-        return null;
+        return feeDao.getDetails(feeId);
     }
 
     @Override
     public List<FeeEntity> retrieveProductFees() {
         // TODO Auto-generated method stub
-        return null;
+        return null; //feeDao.retrieveProductFees();
     }
 
 

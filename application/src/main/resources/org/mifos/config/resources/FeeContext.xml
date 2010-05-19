@@ -11,7 +11,7 @@
       http://www.springframework.org/schema/aop
       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
       
-  	<import resource="mainPropertyConfigurer.xml" />
+  	<import resource="integrationPropertyConfigurer.xml" />
   	<!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="/integrationDatabase.properties"/>
     </bean>
@@ -116,13 +116,25 @@
 		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*ServiceFacade.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
 	</aop:config>
-
+	<bean id="queryInterceptor" class="org.mifos.accounts.fees.servicefacade.QueryIntroductionInterceptor" />
+	<bean id="queryIntroductionAdvisor" class="org.mifos.accounts.fees.servicefacade.QueryIntroductionAdvisor">
+		<constructor-arg ref="queryInterceptor"/>
+	</bean>
 	<bean id="abstractDaoTarget"
         class="org.mifos.accounts.fees.servicefacade.GenericDaoHibernateImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true">
+    	<property name="interceptorNames">
+            <list>
+                <value>queryIntroductionAdvisor</value>
+            </list>
+        </property>
     </bean>
+
+
+
+
     <bean id="feeDao" parent="abstractDao">
        <property name="proxyInterfaces" value="org.mifos.accounts.fees.servicefacade.FeeDao"/>
        <property name="target">
@@ -134,11 +146,8 @@
 	<bean id="masterEntityDao" class="org.mifos.accounts.fees.servicefacade.MasterEntityDaoHibernateImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-
-
-	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
-	
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
+	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
 
     <!--<context:component-scan base-package="org.mifos.application.importexport" />
     <tx:annotation-driven transaction-manager="transactionManager" />

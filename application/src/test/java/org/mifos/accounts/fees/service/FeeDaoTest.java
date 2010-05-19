@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
@@ -83,132 +84,106 @@ public class FeeDaoTest {
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldRetrieveCustomerFees() {
+    public void shouldRetrieveCustomerFees() throws Exception {
+
+        FeeEntity fee = createPeriodicFee(true);
         List<FeeEntity> fees = feeDao.retrieveCustomerFees();
         Assert.assertTrue(!fees.isEmpty());
-        //Assert.assertEquals(16, fees.size());
     }
 
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldCreateOnetimeUpfrontAmountFee() {
+    public void shouldCreateOnetimeUpfrontAmountFee() throws Exception {
         /*GenericDaoHibernateImpl<FeeEntity, Short> dao = new GenericDaoHibernateImpl<FeeEntity, Short>(FeeEntity.class);
         dao.setSessionFactory(sessionFactory);*/
-        try {
-            boolean isCustomerDefaultFee = false;
-            FeeEntity fee =
-                new AmountFeeEntity(
-                        "test.shouldCreateOnetimeUpfrontAmountFee",
-                        getCategoryTypeEntity(userCtx, FeeCategory.CENTER),
-                        glCode,
-                        new Money(TestUtils.RUPEE, "100"),
-                        isCustomerDefaultFee,
-                        TestObjectFactory.getHeadOffice());
-            FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
-            FeePaymentEntity feePayment = getFeePaymentEntiry(userCtx, FeePayment.UPFRONT);
-            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
-                    new FeeFrequencyEntity(feeFrequencyType, fee, feePayment, null));
-            getFeeDao().create(fee);
-            Assert.assertTrue( fee.getFeeId() != null);
-        } catch (FeeException e) {
-            Assert.fail(String.format("FeeException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
-        } catch (PersistenceException pe) {
-            Assert.fail(String.format("PersistenceException occurred. key %s. Error: %s", pe.getKey(), pe.getMessage()));
-        }
-    }
-
-
-
-    @Test
-    @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldCreateOneTimeUpfrontRateFee() {
-        try {
-            boolean isCustomerDefaultFee = false;
-            FeeEntity rateFee =
-                new RateFeeEntity("test.shouldCreateOneTimeUpfrontRateFee",
-                    new CategoryTypeEntity(FeeCategory.CENTER),
-                    glCode,
-                    2.0,
-                    getFeeFormulaEntity(userCtx, FeeFormula.AMOUNT),
-                    isCustomerDefaultFee,
-                    TestObjectFactory.getHeadOffice());
-            FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
-            setFeeAttributesBeforeCreate(isCustomerDefaultFee, rateFee, FeeStatus.ACTIVE,
-                    new FeeFrequencyEntity(feeFrequencyType, rateFee, new FeePaymentEntity(FeePayment.UPFRONT), null));
-            getFeeDao().create(rateFee);
-            Assert.assertTrue( rateFee.getFeeId() != null);
-        } catch (FeeException e) {
-            Assert.fail(String.format("FeeException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
-        } catch (PersistenceException pe) {
-            Assert.fail(String.format("PersistenceException occurred. key %s. Error: %s", pe.getKey(), pe.getMessage()));
-        }
-    }
-
-
-
-    @Test
-    @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldCreatePeriodicAmountFee() {
-        try {
-            MeetingBO feefrequencyMeeting = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
-            boolean isCustomerDefaultFee = false;
-            FeeEntity fee =
-                new AmountFeeEntity("test.shouldCreatePeriodicAmountFee",
-                    new CategoryTypeEntity(FeeCategory.CENTER),
+        boolean isCustomerDefaultFee = false;
+        FeeEntity fee =
+            new AmountFeeEntity(
+                    "test.shouldCreateOnetimeUpfrontAmountFee",
+                    getCategoryTypeEntity(userCtx, FeeCategory.CENTER),
                     glCode,
                     new Money(TestUtils.RUPEE, "100"),
                     isCustomerDefaultFee,
                     TestObjectFactory.getHeadOffice());
-            FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.PERIODIC);
-            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
-                    new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
-            getFeeDao().create(fee);
-            Assert.assertTrue( fee.getFeeId() != null);
-        } catch (FeeException e) {
-            e.printStackTrace();
-            Assert.fail(String.format("FeeException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
-        } catch (MeetingException me) {
-            Assert.fail(String.format("MeetingException occurred. key %s. Error: %s", me.getKey(), me.getMessage()));
-        } catch (PersistenceException pe) {
-            Assert.fail(String.format("PersistenceException occurred. key %s. Error: %s", pe.getKey(), pe.getMessage()));
-        }
+        FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
+        FeePaymentEntity feePayment = getFeePaymentEntiry(userCtx, FeePayment.UPFRONT);
+        setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                new FeeFrequencyEntity(feeFrequencyType, fee, feePayment, null));
+        getFeeDao().create(fee);
+        Assert.assertTrue( fee.getFeeId() != null);
+    }
+
+
+
+    @Test
+    @Transactional(rollbackFor=DataAccessException.class)
+    public void shouldCreateOneTimeUpfrontRateFee() throws Exception {
+        boolean isCustomerDefaultFee = false;
+        FeeEntity rateFee =
+            new RateFeeEntity("test.shouldCreateOneTimeUpfrontRateFee",
+                new CategoryTypeEntity(FeeCategory.CENTER),
+                glCode,
+                2.0,
+                getFeeFormulaEntity(userCtx, FeeFormula.AMOUNT),
+                isCustomerDefaultFee,
+                TestObjectFactory.getHeadOffice());
+        FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.ONETIME);
+        setFeeAttributesBeforeCreate(isCustomerDefaultFee, rateFee, FeeStatus.ACTIVE,
+                new FeeFrequencyEntity(feeFrequencyType, rateFee, new FeePaymentEntity(FeePayment.UPFRONT), null));
+        getFeeDao().create(rateFee);
+        Assert.assertTrue( rateFee.getFeeId() != null);
+    }
+
+
+
+    @Test
+    @Transactional(rollbackFor=DataAccessException.class)
+    public void shouldCreatePeriodicAmountFee() throws Exception {
+        MeetingBO feefrequencyMeeting = new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
+        boolean isCustomerDefaultFee = false;
+        FeeEntity fee =
+            new AmountFeeEntity("test.shouldCreatePeriodicAmountFee",
+                new CategoryTypeEntity(FeeCategory.CENTER),
+                glCode,
+                new Money(TestUtils.RUPEE, "100"),
+                isCustomerDefaultFee,
+                TestObjectFactory.getHeadOffice());
+        FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userCtx, FeeFrequencyType.PERIODIC);
+        setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
+        getFeeDao().create(fee);
+        Assert.assertTrue( fee.getFeeId() != null);
     }
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
-    public void shouldCreatePeriodicRateFee() {
-        try {
-            MeetingBO feefrequencyMeeting =
-                new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
-            boolean isCustomerDefaultFee = false;
-            FeeEntity fee = new RateFeeEntity("test.shouldCreatePeriodicRateFee",
-                    new CategoryTypeEntity(FeeCategory.CENTER),
-                    glCode, 100.0,
-                    new FeeFormulaEntity(FeeFormula.AMOUNT),
-                    isCustomerDefaultFee,
-                    TestObjectFactory.getHeadOffice());
-            FeeFrequencyTypeEntity feeFrequencyType = new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC);
-            setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
-                    new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
-            getFeeDao().create(fee);
-            Assert.assertTrue( fee.getFeeId() != null);
-        } catch (FeeException e) {
-            Assert.fail(String.format("FeeException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
-        } catch (MeetingException e) {
-            Assert.fail(String.format("MeetingException occurred. key %s. Error: %s", e.getKey(), e.getMessage()));
-        } catch (PersistenceException pe) {
-            Assert.fail(String.format("PersistenceException occurred. key %s. Error: %s", pe.getKey(), pe.getMessage()));
-        }
-
+    public void shouldCreatePeriodicRateFee() throws Exception {
+        MeetingBO feefrequencyMeeting =
+            new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
+        boolean isCustomerDefaultFee = false;
+        FeeEntity fee = new RateFeeEntity("test.shouldCreatePeriodicRateFee",
+                new CategoryTypeEntity(FeeCategory.CENTER),
+                glCode, 100.0,
+                new FeeFormulaEntity(FeeFormula.AMOUNT),
+                isCustomerDefaultFee,
+                TestObjectFactory.getHeadOffice());
+        FeeFrequencyTypeEntity feeFrequencyType = new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC);
+        setFeeAttributesBeforeCreate(isCustomerDefaultFee, fee, FeeStatus.ACTIVE,
+                new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
+        getFeeDao().create(fee);
+        Assert.assertTrue( fee.getFeeId() != null);
     }
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     //@Rollback(false)
-    public void shouldCreatePeriodicDefaultFee() throws Exception {
+    public void shouldCreatePeriodicCustomerDefaultFee() throws Exception {
         //with customer default fee
-        boolean isCustomerDefaultFee = true;
+        createPeriodicFee(true);
+    }
+
+    private FeeEntity createPeriodicFee(boolean isCustomerDefaultFee) throws Exception {
         MeetingBO feefrequencyMeeting =
             new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
         FeeEntity fee =
@@ -228,6 +203,7 @@ public class FeeDaoTest {
         Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), newFee.getCategoryType().getId());
         Assert.assertEquals(true, newFee.isCustomerDefaultFee());
         Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
+        return fee;
     }
 
 
