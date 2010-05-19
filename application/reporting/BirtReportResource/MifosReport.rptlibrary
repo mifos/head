@@ -154,8 +154,8 @@ try {
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="MifosJDBCDataSource" id="39">
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost:3306/mifos?useUnicode=true&amp;characterEncoding=UTF-8</property>
-            <property name="odaUser">root</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">bXlzcWw=</encrypted-property>
+            <property name="odaUser">mifos</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">bWlmb3M=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>

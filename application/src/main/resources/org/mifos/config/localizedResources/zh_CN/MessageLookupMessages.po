@@ -1,19 +1,16 @@
-# extracted from MessageLookupMessages.properties
-#. extracted from MessageLookupMessages.properties
-#, fuzzy
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/MessageLookupMessages.properties, zh/MessageLookupMessages_zh_CN.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-05 15:47-0500\n"
+"POT-Creation-Date: 2010-05-18 14:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.5.3\n"
-"X-Accelerator-Marker: &\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #. # Key value pairs in this file are for LOOKUP_ENTRY entries
 #. # defined in latest-data.sql and for enumerated type
@@ -22,348 +19,348 @@ msgstr ""
 #. # enumerated type name lookup) should not be added to this file.
 #: AccountAction.Label
 msgid "Account Action"
-msgstr ""
+msgstr "账户操作"
 
 #: AccountActionTypes.DEPOSIT
 msgid "Deposit"
-msgstr ""
+msgstr "Deposit"
 
 #: AccountActionTypes.DISBURSAL
 msgid "Disbursal"
-msgstr ""
+msgstr "Disbursal"
 
 #: AccountActionTypes.FEE_REPAYMENT
 msgid "Fee"
-msgstr ""
+msgstr "Fee"
 
 #: AccountActionTypes.LOAN_REPAYMENT
 msgid "Loan Repayment"
-msgstr ""
+msgstr "Loan Repayment"
 
 #: AccountActionTypes.WITHDRAWAL
 msgid "Withdrawal"
-msgstr ""
+msgstr "Withdrawal"
 
 #: AccountFlags.Label
 msgid "AccountFlags"
-msgstr ""
+msgstr "AccountFlags"
 
 #: AccountState.Label
 msgid "Loan Status"
-msgstr ""
+msgstr "贷款状态"
 
 #: AccountType.Label
 msgid "Account Type"
-msgstr ""
+msgstr "账户类型"
 
 #: Address1.Label
 msgid "Address1"
-msgstr ""
+msgstr "地址1"
 
 #: Address2.Label
 msgid "Address2"
-msgstr ""
+msgstr "地址2"
 
 #: Address3.Label
 msgid "Address 3"
-msgstr ""
+msgstr "地址3"
 
 #: Amount.Label
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #: BulkEntry.Label
 msgid "Bulk entry"
-msgstr ""
+msgstr "批量汇入"
 
 #: BusinessActivities.Label
 msgid "Occupation"
-msgstr ""
+msgstr "职业"
 
 #: CategoryType.Label
 msgid "CategoryTypes"
-msgstr ""
+msgstr "CategoryTypes"
 
 #: Center.Label
 msgid "Center"
-msgstr ""
+msgstr "行政村"
 
 #: CenterStatus.Label
 msgid "Center Status"
-msgstr ""
+msgstr "行政村状态"
 
 #: Citizenship.Label
 msgid "Citizenship"
-msgstr ""
+msgstr "国籍"
 
 #: City.Label
 msgid "City/District"
-msgstr ""
+msgstr "城市/区域"
 
 #: Client.Label
 msgid "Client"
-msgstr ""
+msgstr "客户"
 
 #: ClientStatus.Label
 msgid "Client Status"
-msgstr ""
+msgstr "客户状态"
 
 #: CollateralTypes.Label
 msgid "CollateralTypes"
-msgstr ""
+msgstr "CollateralTypes"
 
 #: CustomFieldType.ALPHA_NUMERIC
 msgid "Alpha Numeric"
-msgstr ""
+msgstr "Alpha Numeric"
 
 #: CustomFieldType.DATE
 msgctxt "CustomFieldType.DATE"
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: CustomFieldType.NUMERIC
 msgid "Numeric"
-msgstr ""
+msgstr "Numeric"
 
 #: CustomerAttendance.Label
 msgid "CustomerAttendance"
-msgstr ""
+msgstr "CustomerAttendance"
 
 #: CustomerStatus.Label
 msgid "Customer Status"
-msgstr ""
+msgstr "客户状态"
 
 #: Date.Label
 msgctxt "Date.Label"
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: DayRank.Label
 msgid "Days Rank"
-msgstr ""
+msgstr "日排名"
 
 #: Description.Label
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: DistanceFromBoToCenter.Label
 msgid "Distance from BO to Center"
-msgstr ""
+msgstr "BO到行政村的距离"
 
 #: DistanceFromHoToBO.Label
 msgid "Distance from HO to BO for office"
-msgstr ""
+msgstr "HO到机构BO的距离"
 
 #: EducationLevel.Label
 msgid "EducationLevel"
-msgstr ""
+msgstr "教育程度"
 
 #: Ethinicity.Label
 msgid "Ethnicity"
-msgstr ""
+msgstr "种族"
 
 #: ExternalId.Label
 msgid "External Id"
-msgstr ""
+msgstr "外部ID"
 
 #: ExternalLoanId.Label
 msgid "External Loan Id"
-msgstr ""
+msgstr "外部贷款ID"
 
 #: ExternalSavingsId
 msgctxt "ExternalSavingsId"
 msgid "External Savings Id"
-msgstr ""
+msgstr "外部储蓄ID"
 
 #: ExternalSavingsId.Label
 msgctxt "ExternalSavingsId.Label"
 msgid "External Savings Id"
-msgstr ""
+msgstr "外部储蓄ID"
 
 #: FeeFormulaMaster.Label
 msgid "Fee Formula Master"
-msgstr ""
+msgstr "成本计算公式"
 
 #: FeePayment.Label
 msgid "Fee Payment"
-msgstr ""
+msgstr "费用支付"
 
 #: FeeStatus.Label
 msgid "Fee Status"
-msgstr ""
+msgstr "费用状态"
 
 #: FeeType.Label
 msgid "Fee Type"
-msgstr ""
+msgstr "费用类型"
 
 #: Field.Label
 msgid "Field"
-msgstr ""
+msgstr "栏位"
 
 #: FinancialAction.Label
 msgid "Financial Action"
-msgstr ""
+msgstr "金融业务"
 
 #: GRTStaffId.Label
 msgid "GRT Staff Id"
-msgstr ""
+msgstr "GRT员工ID"
 
 #: Gender.Label
 msgid "Gender"
-msgstr ""
+msgstr "性别"
 
 #: GovernmentId.Label
 msgid "Government ID"
-msgstr ""
+msgstr "政府ID"
 
 #: GracePeriodTypes.Label
 msgid "GracePeriodTypes"
-msgstr ""
+msgstr "宽限期类型"
 
 #: Group.Label
 msgid "Group"
-msgstr ""
+msgstr "组"
 
 #: GroupFlag.Label
 msgid "Group Flag"
-msgstr ""
+msgstr "组标志"
 
 #: GroupStatus.Label
 msgid "Group Status"
-msgstr ""
+msgstr "组状态"
 
 #: Handicapped.Label
 msgid "Handicapped"
-msgstr ""
+msgstr "残疾"
 
 #: IntCalTypes.Label
 msgid "INT CALC TYPES"
-msgstr ""
+msgstr "利息计算类型"
 
 #: Interest.Label
 msgctxt "Interest.Label"
 msgid "Interest"
-msgstr ""
+msgstr "利息"
 
 #: InterestCalcRule.Label
 msgid "InterestCalcRule"
-msgstr ""
+msgstr "利息计算规则"
 
 #: InterestTypes.Label
 msgid "InterestTypes"
-msgstr ""
+msgstr "利息类型"
 
 #: Language.Label
 msgid "Language"
-msgstr ""
+msgstr "语言"
 
 #: Loan.Label
 msgid "Loan"
-msgstr ""
+msgstr "贷款"
 
 #: LoanPurposes.Label
 msgid "Loan Purposes"
-msgstr ""
+msgstr "贷款用途"
 
 #: MaritalStatus.Label
 msgid "MartialStatus"
-msgstr ""
+msgstr "婚姻状况"
 
 #: MeetingTime.Label
 msgid "Meeting Time"
-msgstr ""
+msgstr "会议时间"
 
 #: NewValue.Label
 msgid "New Value"
-msgstr ""
+msgstr "新值"
 
 #: NoOfClientsPerCenter.Label
 msgid "Number of Clients per Center"
-msgstr ""
+msgstr "每个行政村的客户数量"
 
 #: NoOfClientsPerGroup.Label
 msgid "Number of Clients per Group"
-msgstr ""
+msgstr "每个组的客户数目"
 
 #: Office.Label
 msgid "Office"
-msgstr ""
+msgstr "机构"
 
 #: OfficeCode.Label
 msgid "Office Code"
-msgstr ""
+msgstr "机构代码"
 
 #: OfficeLevels.Label
 msgid "OfficeLevel"
-msgstr ""
+msgstr "机构级别"
 
 #: OfficeStatus.Label
 msgid "Office Status"
-msgstr ""
+msgstr "机构状态"
 
 #: OldValue.Label
 msgid "Old Value"
-msgstr ""
+msgstr "旧值"
 
 #: PaymentType.Label
 msgid "PaymentType"
-msgstr ""
+msgstr "付款方式"
 
 #: PaymentTypes.CASH
 msgid "Cash"
-msgstr ""
+msgstr "现金"
 
 #: PaymentTypes.CHEQUE
 msgid "Check"
-msgstr ""
+msgstr "支票"
 
 #: PaymentTypes.VOUCHER
 msgid "Voucher"
-msgstr ""
+msgstr "代金券"
 
 #: Permissions.Label
 msgid "Permissions"
-msgstr ""
+msgstr "权限"
 
 #: Personnel.Label
 msgid "Personnel"
-msgstr ""
+msgstr "人员"
 
 #: PersonnelLevels.Label
 msgid "User Hierarchy"
-msgstr ""
+msgstr "用户层级"
 
 #: PersonnelStatus.Label
 msgid "Personnel Status"
-msgstr ""
+msgstr "人员状态"
 
 #: PersonnelTitles.Label
 msgid "User Title"
-msgstr ""
+msgstr "用户头衔"
 
 #: PostalCode.Label
 msgid "Postal Code"
-msgstr ""
+msgstr "邮编"
 
 #: PovertyStatus.Label
 msgid "Poverty Status"
-msgstr ""
+msgstr "贫困状况"
 
 #: PrdApplicableMaster.Label
 msgid "PrdApplicableMaster"
-msgstr ""
+msgstr "PrdApplicableMaster"
 
 #: ProductCategoryStatus.Label
 msgid "Product Category Status"
-msgstr ""
+msgstr "产品分类状态"
 
 #: ProductState.Label
 msgid "Product State"
-msgstr ""
+msgstr "产品状态"
 
 #: ProductStatus.Label
 msgid "Product Status"
-msgstr ""
+msgstr "产品状态"
 
 #: RankOfDay.FIRST
 msgid "First"
@@ -387,89 +384,89 @@ msgstr ""
 
 #: RecommendedAmtUnit.Label
 msgid "REC AMNT UNIT"
-msgstr ""
+msgstr "REC AMNT UNIT"
 
 #: ReplacementStatus.Label
 msgid "Replacement Status"
-msgstr ""
+msgstr "替换状态"
 
 #: Salutation.Label
 msgid "Salutation"
-msgstr ""
+msgstr "称呼"
 
 #: Savings.Label
 msgid "Savings"
-msgstr ""
+msgstr "储蓄"
 
 #: SavingsStatus.Label
 msgid "Savings Status"
-msgstr ""
+msgstr "储蓄状态"
 
 #: SavingsType.Label
 msgid "SAVINGS TYPE"
-msgstr ""
+msgstr "储蓄类型"
 
 #: ServiceCharge.Label
 msgctxt "ServiceCharge.Label"
 msgid "Interest"
-msgstr ""
+msgstr "利息"
 
 #: SpouseFather.Label
 msgid "Spouse/Father"
-msgstr ""
+msgstr "配偶/父亲"
 
 #: State.Label
 msgid "State"
-msgstr ""
+msgstr "省"
 
 #: Titles.Label
 msgid "Titles"
-msgstr ""
+msgstr "头衔"
 
 #: User.Label
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #: WeekDay.FRIDAY
 msgid "Friday"
-msgstr ""
+msgstr "周五"
 
 #: WeekDay.MONDAY
 msgid "Monday"
-msgstr ""
+msgstr "周一"
 
 #: WeekDay.SATURDAY
 msgid "Saturday"
-msgstr ""
+msgstr "周六"
 
 #: WeekDay.SUNDAY
 msgid "Sunday"
-msgstr ""
+msgstr "周日"
 
 #: WeekDay.THURSDAY
 msgid "Thursday"
-msgstr ""
+msgstr "周四"
 
 #: WeekDay.TUESDAY
 msgid "Tuesday"
-msgstr ""
+msgstr "周二"
 
 #: WeekDay.WEDNESDAY
 msgid "Wednesday"
-msgstr ""
+msgstr "周三"
 
 #: WeekDays.Label
 msgid "Week Days"
-msgstr ""
+msgstr "平日"
 
 #: YESNO.Label
 msgid "YES/NO"
-msgstr ""
+msgstr "是/否"
 
 #: YesNoFlag.NO
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: YesNoFlag.YES
 msgid "Yes"
-msgstr ""
+msgstr "是"

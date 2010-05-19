@@ -66,13 +66,11 @@ import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 
 /**
- * A loan product is a set of rules (interest rate, number of installments,
- * maximum amount, etc) which describes a particular kind of loan that an MFI
- * offers.
+ * A loan product is a set of rules (interest rate, number of installments, maximum amount, etc) which describes a
+ * particular kind of loan that an MFI offers.
  *
- * Although we may sometimes call these "offerings", it is probably better to
- * call them "loan products" (as that seems to be the terminology in the
- * functional spec and elsewhere).
+ * Although we may sometimes call these "offerings", it is probably better to call them "loan products" (as that seems
+ * to be the terminology in the functional spec and elsewhere).
  */
 public class LoanOfferingBO extends PrdOfferingBO {
 
@@ -114,10 +112,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public LoanOfferingBO(final GLCodeEntity principalGLcode, final GLCodeEntity interestGLCode,
             final InterestType interestType, final Double minInterestRate, final Double maxInterestRate,
             final Double defaultInterestRate, final Short interestPaidAtDisbursement,
-            final Short principalDueLastInstallment, final NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO,
-            final String name, final String shortName, final String globalProductNumber, final Date startDate,
-            final ApplicableTo applicableToCustomer, final ProductCategoryBO category,
-            final PrdStatusEntity productStatus, final Date createdDate, final Short createdByUserId) {
+            final Short principalDueLastInstallment, final String name, final String shortName,
+            final String globalProductNumber, final Date startDate, final ApplicableTo applicableToCustomer,
+            final ProductCategoryBO category, final PrdStatusEntity productStatus, final Date createdDate,
+            final Short createdByUserId) {
 
         super(name, shortName, globalProductNumber, startDate, applicableToCustomer, category, productStatus,
                 createdDate, createdByUserId);
@@ -130,19 +128,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
         this.intDedDisbursement = interestPaidAtDisbursement;
         this.prinDueLastInst = principalDueLastInstallment;
         this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
-        this.noOfInstallSameForAllLoan.add(noOfInstallSameForAllLoanBO);
         this.noOfInstallFromLoanCycle = null;
         this.noOfInstallFromLastLoan = null;
         this.loanOfferingFunds = null;
         this.loanOfferingFees = null;
         this.loanAmountFromLastLoan = null;
-        this.loanAmountSameForAllLoan = null;
+        this.loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
         this.loanAmountFromLoanCycle = null;
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal
-     *             {@link LoanOfferingBO}'s for tests.
+     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -161,8 +157,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal
-     *             {@link LoanOfferingBO}'s for tests.
+     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -184,8 +179,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal
-     *             {@link LoanOfferingBO}'s for tests.
+     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -304,8 +298,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal
-     *             {@link LoanOfferingBO}'s for tests.
+     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     protected LoanOfferingBO() {
@@ -340,8 +333,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal
-     *             {@link LoanOfferingBO}'s for tests.
+     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public static LoanOfferingBO createInstanceForTest(final Short prdOfferingId) {
@@ -651,20 +643,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final MeetingBO meeting,
             final GLCodeEntity principalGLcode, final GLCodeEntity interestGLcode) throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering ");
-        if (interestTypes == null
-                || minLoanAmount == null
-                || maxLoanAmount == null
-                || maxInterestRate == null
-                || minInterestRate == null
-                || defInterestRate == null
-                || maxNoInstallments == null
-                || minNoInstallments == null
-                || defNoInstallments == null
-                || meeting == null
-                || principalGLcode == null
-                || interestGLcode == null
-                || minLoanAmount.isGreaterThan(maxLoanAmount)
-                || defaultLoanAmount != null
+        if (interestTypes == null || minLoanAmount == null || maxLoanAmount == null || maxInterestRate == null
+                || minInterestRate == null || defInterestRate == null || maxNoInstallments == null
+                || minNoInstallments == null || defNoInstallments == null || meeting == null || principalGLcode == null
+                || interestGLcode == null || minLoanAmount.isGreaterThan(maxLoanAmount) || defaultLoanAmount != null
                 && (defaultLoanAmount.isLessThan(minLoanAmount) || defaultLoanAmount.isGreaterThan(maxLoanAmount))
                 || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
                 || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
@@ -741,18 +723,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
             final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter)
             throws ProductDefinitionException {
         prdLogger.debug("validating fields in Loan offering for update");
-        if (interestTypes == null
-                || minLoanAmount == null
-                || maxLoanAmount == null
-                || maxInterestRate == null
-                || minInterestRate == null
-                || defInterestRate == null
-                || maxNoInstallments == null
-                || minNoInstallments == null
-                || defNoInstallments == null
-                || recurAfter == null
-                || minLoanAmount.isGreaterThan(maxLoanAmount)
-                || defaultLoanAmount != null
+        if (interestTypes == null || minLoanAmount == null || maxLoanAmount == null || maxInterestRate == null
+                || minInterestRate == null || defInterestRate == null || maxNoInstallments == null
+                || minNoInstallments == null || defNoInstallments == null || recurAfter == null
+                || minLoanAmount.isGreaterThan(maxLoanAmount) || defaultLoanAmount != null
                 && (defaultLoanAmount.isLessThan(minLoanAmount) || defaultLoanAmount.isGreaterThan(maxLoanAmount))
                 || minInterestRate > maxInterestRate || defInterestRate < minInterestRate
                 || defInterestRate > maxInterestRate || minNoInstallments > maxNoInstallments
@@ -778,8 +752,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * This method will return the max min def loan amount in array list for
-     * customer based on last loan amount
+     * This method will return the max min def loan amount in array list for customer based on last loan amount
      */
     public LoanAmountOption eligibleLoanAmount(final Money maxLoanAmount, final Short customerLastLoanCycleCount) {
         // if loan amount type is same for all loan, send one of the
@@ -933,11 +906,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * this method will update the variable for save and update as input from
-     * loanprdactionform it will first clear all sets of amount/install type
-     * than update one of them according to input this will make them mutually
-     * exclusive as earlier data will be deleted using the delete-orphan
-     * property of hibernate
+     * this method will update the variable for save and update as input from loanprdactionform it will first clear all
+     * sets of amount/install type than update one of them according to input this will make them mutually exclusive as
+     * earlier data will be deleted using the delete-orphan property of hibernate
      */
     private void populateLoanAmountAndInstall(final LoanPrdActionForm loanPrdActionForm) {
         if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTFROMLASTLOAN) {
@@ -1069,8 +1040,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * Reveals method used to determine loan amount. For instance: same for all
-     * loans, based on last loan, or based on loan cycle.
+     * Reveals method used to determine loan amount. For instance: same for all loans, based on last loan, or based on
+     * loan cycle.
      */
     public Short checkLoanAmountType() {
         if (!getLoanAmountSameForAllLoan().isEmpty()) {
@@ -1084,8 +1055,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * Reveals method used to determine number of loan installments. For
-     * instance: same for all loans, based on last loan, or based on loan cycle.
+     * Reveals method used to determine number of loan installments. For instance: same for all loans, based on last
+     * loan, or based on loan cycle.
      */
     public Short checkNoOfInstallType() {
         if (!getNoOfInstallSameForAllLoan().isEmpty()) {

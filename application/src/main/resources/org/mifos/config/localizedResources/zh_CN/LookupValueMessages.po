@@ -1,19 +1,16 @@
-# extracted from LookupValueMessages.properties
-#. extracted from LookupValueMessages.properties
-#, fuzzy
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties, zh/LookupValueMessages_zh_CN.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-05 15:47-0500\n"
+"POT-Creation-Date: 2010-05-18 14:06-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.5.3\n"
-"X-Accelerator-Marker: &\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #. # Key value pairs in this file are for LOOKUP_VALUE entries
 #. # defined in latest-data.sql.
@@ -21,981 +18,988 @@ msgstr ""
 #. # should not be added to this file.
 #: AccountAction-Adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "调整"
 
 #: AccountAction-CustomerAccountRepayment
 msgid "Customer Account Repayment"
-msgstr ""
+msgstr "客户账户还款"
 
 #: AccountAction-CustomerAdjustment
 msgctxt "AccountAction-CustomerAdjustment"
 msgid "Customer Adjustment"
-msgstr ""
+msgstr "客户调整"
 
 #: AccountAction-Deposit
 msgid "Deposit"
-msgstr ""
+msgstr "存款"
 
 #: AccountAction-Disbursal
 msgid "Disbursal"
-msgstr ""
+msgstr "支出"
 
 #: AccountAction-DisrbursalAmountReversal
 msgid "Disrbursal amount Reversal"
-msgstr ""
+msgstr "撤销的支出金额"
 
 #: AccountAction-Fee
 msgid "Fee"
-msgstr ""
+msgstr "收费"
 
 #: AccountAction-Interest_posting
 msgctxt "AccountAction-Interest_posting"
 msgid "Interest_Posting"
-msgstr ""
+msgstr "入账利息"
 
 #: AccountAction-LoanRepayment
 msgid "Loan Repayment"
-msgstr ""
+msgstr "贷款偿还"
 
 #: AccountAction-LoanRescheduled
 msgctxt "AccountAction-LoanRescheduled"
 msgid "Loan Rescheduled"
-msgstr ""
+msgstr "重置贷款"
 
 #: AccountAction-LoanReversal
 msgid "Loan Reversal"
-msgstr ""
+msgstr "撤销贷款"
 
 #: AccountAction-LoanWrittenOff
 msgctxt "AccountAction-LoanWrittenOff"
 msgid "Loan Written Off"
-msgstr ""
+msgstr "注销贷款"
 
 #: AccountAction-MiscellenousFee
 msgid "Miscellenous Fee"
-msgstr ""
+msgstr "杂费"
 
 #: AccountAction-MiscellenousPenalty
 msgid "Miscellenous Penalty"
-msgstr ""
+msgstr "其它罚款"
 
 #: AccountAction-Payment
 msgid "Payment"
-msgstr ""
+msgstr "还款"
 
 #: AccountAction-Penalty
 msgctxt "AccountAction-Penalty"
 msgid "Penalty"
-msgstr ""
+msgstr "罚款"
 
 #: AccountAction-SavingsAdjustment
 msgid "Savings Adjustment"
-msgstr ""
+msgstr "储蓄调整"
 
 #: AccountAction-WaiveOffDue
 msgid "Waive Off Due"
-msgstr ""
+msgstr "Waive Off Due"
 
 #: AccountAction-WaiveOffOverDue
 msgid "Waive Off Over Due"
-msgstr ""
+msgstr "Waive Off Over Due"
 
 #: AccountAction-Withdrawal
 msgid "Withdrawal"
-msgstr ""
+msgstr "取款"
 
 #: AccountFlags-LoanReversal
 msgid "Loan reversal"
-msgstr ""
+msgstr "撤销贷款"
 
 #: AccountFlags-Other
 msgctxt "AccountFlags-Other"
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 #: AccountFlags-Rejected
 msgctxt "AccountFlags-Rejected"
 msgid "Rejected"
-msgstr ""
+msgstr "已拒绝"
 
 #: AccountFlags-Withdraw
 msgctxt "AccountFlags-Withdraw"
 msgid "Withdraw"
-msgstr ""
+msgstr "撤销"
 
 #: AccountState-ActiveInBadStanding
 msgid "Active in Bad Standing"
-msgstr ""
+msgstr "活动的－信誉不佳"
 
 #: AccountState-ActiveInGoodStanding
 msgid "Active in Good Standing"
-msgstr ""
+msgstr "活动的－信誉良好"
 
 #: AccountState-ApplicationApproved
 msgid "Application Approved"
-msgstr ""
+msgstr "申请已核准"
 
 #: AccountState-ApplicationPendingApproval
 msgctxt "AccountState-ApplicationPendingApproval"
 msgid "Application Pending Approval"
-msgstr ""
+msgstr "申请待审批"
 
 #: AccountState-Cancel
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: AccountState-ClosedObligationMet
 msgid "Closed- Obligation met"
-msgstr ""
+msgstr "已关闭－债务已清"
 
 #: AccountState-ClosedRescheduled
 msgid "Closed- Rescheduled"
-msgstr ""
+msgstr "已关闭－重新安排"
 
 #: AccountState-ClosedWrittenOff
 msgid "Closed- Written Off"
-msgstr ""
+msgstr "已关闭－已注销"
 
 #: AccountState-DisbursedToLo
 msgid "Disbursed to LO"
-msgstr ""
+msgstr "发放给LO"
 
 #: AccountState-PartialApplication
 msgctxt "AccountState-PartialApplication"
 msgid "Partial Application"
-msgstr ""
+msgstr "部分申请"
 
 #: AccountType-Customer
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #: AccountType-Loan
 msgctxt "AccountType-Loan"
 msgid "Loan"
-msgstr ""
+msgstr "贷款"
 
 #: AccountType-Saving
 msgid "Saving"
-msgstr ""
+msgstr "储蓄"
 
 #: BusinessActivities-Agriculture
 msgid "Agriculture"
-msgstr ""
+msgstr "农业"
 
 #: BusinessActivities-AnimalHusbandry
 msgid "Animal Husbandry"
-msgstr ""
+msgstr "畜牧业"
 
 #: BusinessActivities-DailyLabour
 msgid "Daily Labour"
-msgstr ""
+msgstr "劳动报"
 
 #: BusinessActivities-MicroEnterprise
 msgid "Micro Enterprise"
-msgstr ""
+msgstr "微型企业"
 
 #: BusinessActivities-Production
 msgid "Production"
-msgstr ""
+msgstr "生产"
 
 #: BusinessActivities-Trading
 msgid "Trading"
-msgstr ""
+msgstr "交易"
 
 #: CategoryType-AllCustomers
 msgid "All Customers"
-msgstr ""
+msgstr "所有客户"
 
 #: CategoryType-AllProductTypes
 msgid "All Product Types"
-msgstr ""
+msgstr "所有产品类型"
 
 #: CategoryType-Center
 msgctxt "CategoryType-Center"
 msgid "Center"
-msgstr ""
+msgstr "行政村"
 
 #: CategoryType-Client
 msgid "Client"
-msgstr ""
+msgstr "客户"
 
 #: CategoryType-Group
 msgid "Group"
-msgstr ""
+msgstr "组"
 
 #: CategoryType-Loans
 msgid "Loans"
-msgstr ""
+msgstr "贷款"
 
 #: CategoryType-Savings
 msgctxt "CategoryType-Savings"
 msgid "Savings"
-msgstr ""
+msgstr "储蓄"
 
 #: CenterStatus-Active
 msgctxt "CenterStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #: CenterStatus-Inactive
 msgctxt "CenterStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动的"
 
 #: ClientFlag-Blacklisted
 msgctxt "ClientFlag-Blacklisted"
 msgid "Blacklisted"
-msgstr ""
+msgstr "已列入黑名单"
 
 #: ClientFlag-Duplicate
 msgctxt "ClientFlag-Duplicate"
 msgid "Duplicate"
-msgstr ""
+msgstr "副本"
 
 #: ClientFlag-Other
 msgctxt "ClientFlag-Other"
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 #: ClientFlag-Rejected
 msgctxt "ClientFlag-Rejected"
 msgid "Rejected"
-msgstr ""
+msgstr "已拒绝"
 
 #: ClientFlag-Withdraw
 msgctxt "ClientFlag-Withdraw"
 msgid "Withdraw"
-msgstr ""
+msgstr "撤销"
 
 #: ClientStatus-Active
 msgctxt "ClientStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #: ClientStatus-ApplicationPendingApproval
 msgctxt "ClientStatus-ApplicationPendingApproval"
 msgid "Application Pending Approval"
-msgstr ""
+msgstr "申请待审批"
 
 #: ClientStatus-Cancelled
 msgctxt "ClientStatus-Cancelled"
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #: ClientStatus-Closed
 msgctxt "ClientStatus-Closed"
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #: ClientStatus-OnHold
 msgctxt "ClientStatus-OnHold"
 msgid "On Hold"
-msgstr ""
+msgstr "搁置"
 
 #: ClientStatus-PartialApplication
 msgctxt "ClientStatus-PartialApplication"
 msgid "Partial Application"
-msgstr ""
+msgstr "部分申请"
 
 #: CollateralTypes-Type1
 msgid "Type 1"
-msgstr ""
+msgstr "类型1"
 
 #: CollateralTypes-Type2
 msgid "Type 2"
-msgstr ""
+msgstr "类型2"
 
 #: CustomerAttendance-Ab
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #: CustomerAttendance-Al
 msgid "AA"
-msgstr ""
+msgstr "AA"
 
 #: CustomerAttendance-L
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #: CustomerAttendance-P
 msgid "P"
-msgstr ""
+msgstr "P"
 
 #: CustomerStatus-CustomerAccountActive
 msgid "Customer Account Active"
-msgstr ""
+msgstr "活动的客户账户"
 
 #: CustomerStatus-CustomerAccountInactive
 msgid "Customer Account InActive"
-msgstr ""
+msgstr "非活动的客户账户"
 
 #: DayRank-First
 msgid "First"
-msgstr ""
+msgstr "第一"
 
 #: DayRank-Fourth
 msgid "Fourth"
-msgstr ""
+msgstr "第四"
 
 #: DayRank-Last
 msgid "Last"
-msgstr ""
+msgstr "最后"
 
 #: DayRank-Second
 msgid "Second"
-msgstr ""
+msgstr "第二"
 
 #: DayRank-Third
 msgid "Third"
-msgstr ""
+msgstr "第三"
 
 #: Mother
 msgid "Mother"
-msgstr ""
+msgstr "母亲"
 
 #: Child
 msgid "Child"
-msgstr ""
+msgstr "子女"
 
 #: FeeFormulaMaster-Interest
 msgctxt "FeeFormulaMaster-Interest"
 msgid "Interest"
-msgstr ""
+msgstr "利息"
 
 #: FeeFormulaMaster-LoanAmount
 msgid "Loan Amount"
-msgstr ""
+msgstr "贷款金额"
 
 #: FeeFormulaMaster-LoanAmountInterest
 msgid "Loan Amount+Interest"
-msgstr ""
+msgstr "贷款金额+利息"
 
 #: FeeFrequency-OneTime
 msgid "One Time"
-msgstr ""
+msgstr "一次性"
 
 #: FeeFrequency-Periodic
 msgid "Periodic"
-msgstr ""
+msgstr "周期"
 
 #: FeePayment-TimeOfDisburstment
 msgid "Time Of Disburstment"
-msgstr ""
+msgstr "拨款时间"
 
 #: FeePayment-TimeOfFirstLoanRepayment
 msgid "Time of First Loan Repayment "
-msgstr ""
+msgstr "第一次还款时间"
 
 #: FeePayment-Upfront
 msgid "Upfront"
-msgstr ""
+msgstr "预付"
 
 #: FeeStatus-Active
 msgctxt "FeeStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #: FeeStatus-Inactive
 msgid "InActive"
-msgstr ""
+msgstr "非活动的"
 
 #: FeeType-ConsultancyFee
 msgid "Consultancy Fee"
-msgstr ""
+msgstr "咨询费"
 
 #: FeeType-MaintenanceFee
 msgid "Maintenance Fee"
-msgstr ""
+msgstr "维护费"
 
 #: FeeType-MeetingCharges
 msgid "Meeting Charges"
-msgstr ""
+msgstr "会议开支"
 
 #: FeeType-TrainingFee
 msgid "Training Fee"
-msgstr ""
+msgstr "培训费"
 
 #: FinancialAction-CustomerAccountFeesPosting
 msgid "Customer Account Fees Posting"
-msgstr ""
+msgstr "客户会员费入账"
 
 #: FinancialAction-CustomerAdjustment
 msgctxt "FinancialAction-CustomerAdjustment"
 msgid "Customer Adjustment"
-msgstr ""
+msgstr "客户调整"
 
 #: FinancialAction-Fees
 msgctxt "FinancialAction-Fees"
 msgid "Fees"
-msgstr ""
+msgstr "费用"
 
 #: FinancialAction-Interest
 msgctxt "FinancialAction-Interest"
 msgid "Interest"
-msgstr ""
+msgstr "利息"
 
 #: FinancialAction-Interest_posting
 msgctxt "FinancialAction-Interest_posting"
 msgid "Interest_Posting"
-msgstr ""
+msgstr "入账利息"
 
 #: FinancialAction-LoanDisbursement
 msgid "Loan Disbursement"
-msgstr ""
+msgstr "贷款发放"
 
 #: FinancialAction-LoanRescheduled
 msgctxt "FinancialAction-LoanRescheduled"
 msgid "Loan Rescheduled"
-msgstr ""
+msgstr "重置贷款"
 
 #: FinancialAction-LoanWrittenOff
 msgctxt "FinancialAction-LoanWrittenOff"
 msgid "Loan Written Off"
-msgstr ""
+msgstr "注销贷款"
 
 #: FinancialAction-MandatoryDeposit
 msgid "Mandatory Deposit"
-msgstr ""
+msgstr "强制性交存"
 
 #: FinancialAction-MandatoryDepositAdjustment
 msgid "Mandatory Deposit Adjustment"
-msgstr ""
+msgstr "强制性交存调整"
 
 #: FinancialAction-MandatoryWithdrawal
 msgid "Mandatory Withdrawal"
-msgstr ""
+msgstr "强制性取兑"
 
 #: FinancialAction-MandatoryWithdrawalAdjustment
 msgid "Mandatory Withdrawal Adjustment"
-msgstr ""
+msgstr "强制性取兑调整"
 
 #: FinancialAction-MiscFee
 msgid "Misc Fee"
-msgstr ""
+msgstr "杂费"
 
 #: FinancialAction-MiscPenalty
 msgid "Misc Penalty"
-msgstr ""
+msgstr "其它罚款"
 
 #: FinancialAction-Penalty
 msgctxt "FinancialAction-Penalty"
 msgid "Penalty"
-msgstr ""
+msgstr "罚款"
 
 #: FinancialAction-Principal
 msgid "Principal"
-msgstr ""
+msgstr "本金"
 
 #: FinancialAction-ReversalAdjustment
 msgid "Reversal Adjustment"
-msgstr ""
+msgstr "撤销调整"
 
 #: FinancialAction-RoundingAdjustments
 msgid "Rounding Adjustments"
-msgstr ""
+msgstr "舍入调整"
 
 #: FinancialAction-SavingsInterestPosting
 msgid "Savings Interest Posting"
-msgstr ""
+msgstr "入账存款利息"
 
 #: FinancialAction-VoluntoryDeposit
 msgid "Voluntory Deposit"
-msgstr ""
+msgstr "自愿交存"
 
 #: FinancialAction-VoluntoryDepositAdjustment
 msgid "Voluntory Deposit Adjustment"
-msgstr ""
+msgstr "自愿交存调整"
 
 #: FinancialAction-VoluntoryWithdrawal
 msgid "Voluntory Withdrawal"
-msgstr ""
+msgstr "自愿取兑"
 
 #: FinancialAction-VoluntoryWithdrawalAdjustment
 msgid "Voluntory Withdrawal Adjustment"
-msgstr ""
+msgstr "自愿取兑调整"
 
 #: Gender-Female
 msgid "Female"
-msgstr ""
+msgstr "女性"
 
 #: Gender-Male
 msgid "Male"
-msgstr ""
+msgstr "男性"
 
 #: GracePeriodTypes-GraceOnAllRepayments
 msgid "Grace on all repayments"
-msgstr ""
+msgstr "所有还款宽限期"
 
 #: GracePeriodTypes-None
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: GracePeriodTypes-PrincipalOnlyGrace
 msgid "Principal only grace"
-msgstr ""
+msgstr "本金宽限期"
 
 #: GroupFlag-Blacklisted
 msgctxt "GroupFlag-Blacklisted"
 msgid "Blacklisted"
-msgstr ""
+msgstr "已列入黑名单"
 
 #: GroupFlag-Duplicate
 msgctxt "GroupFlag-Duplicate"
 msgid "Duplicate"
-msgstr ""
+msgstr "副本"
 
 #: GroupFlag-LeftProgram
 msgid "Left Program"
-msgstr ""
+msgstr "已离开计划"
 
 #: GroupFlag-Other
 msgctxt "GroupFlag-Other"
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 #: GroupFlag-Rejected
 msgctxt "GroupFlag-Rejected"
 msgid "Rejected"
-msgstr ""
+msgstr "已拒绝"
 
 #: GroupFlag-Transferred
 msgid "Transferred"
-msgstr ""
+msgstr "已调动"
 
 #: GroupFlag-Withdraw
 msgctxt "GroupFlag-Withdraw"
 msgid "Withdraw"
-msgstr ""
+msgstr "取款"
 
 #: GroupStatus-Active
 msgctxt "GroupStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #: GroupStatus-ApplicationPendingApproval
 msgctxt "GroupStatus-ApplicationPendingApproval"
 msgid "Application Pending Approval"
-msgstr ""
+msgstr "申请待审批"
 
 #: GroupStatus-Cancelled
 msgctxt "GroupStatus-Cancelled"
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #: GroupStatus-Closed
 msgctxt "GroupStatus-Closed"
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #: GroupStatus-OnHold
 msgctxt "GroupStatus-OnHold"
 msgid "On Hold"
-msgstr ""
+msgstr "搁置"
 
 #: GroupStatus-PartialApplication
 msgctxt "GroupStatus-PartialApplication"
 msgid "Partial Application"
-msgstr ""
+msgstr "部分申请"
 
 #: IntCalTypes-AverageBalance
 msgid "Average Balance"
-msgstr ""
+msgstr "平均余额"
 
 #: IntCalTypes-MinimumBalance
 msgid "Minimum Balance"
-msgstr ""
+msgstr "最低余额"
 
 #: InterestCalcRule-AlwaysRecalculate
 msgid "Always Recalculate"
-msgstr ""
+msgstr "始终重新计算"
 
 #: InterestCalcRule-NeverRecalculate
 msgid "Never Recalculate"
-msgstr ""
+msgstr "从不重新计算"
 
 #: InterestTypes-DecliningBalance
 msgid "Declining Balance"
-msgstr ""
+msgstr "余额递减"
 
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
-msgstr ""
+msgstr "余额递减－等额本金分期付款"
 
 #: InterestTypes-Flat
 msgid "Flat"
-msgstr ""
+msgstr "固定"
 
 #: Language-English
 msgid "English"
-msgstr ""
+msgstr "英语"
 
 #: Language-French
 msgid "French"
-msgstr ""
+msgstr "法语"
 
 #: Language-Icelandic
 msgid "Icelandic"
-msgstr ""
+msgstr "冰岛语"
 
 #: Language-Spanish
 msgid "Spanish"
-msgstr ""
+msgstr "西班牙语"
 
 #: Language-Arabic
 msgid "Arabic"
-msgstr ""
+msgstr "阿拉伯语"
 
 #: Language-Chinese
 msgid "Chinese"
-msgstr ""
+msgstr "汉语"
 
 #: Language-Swahili
 msgid "Swahili"
-msgstr ""
+msgstr "斯瓦希里语"
 
 #: Language-Portuguese
 msgid "Portuguese"
-msgstr ""
+msgstr "葡萄牙语"
 
 #: Language-Khmer
 msgid "Khmer"
-msgstr ""
+msgstr "柬埔寨语"
 
 #: Language-Lao
 msgid "Lao"
-msgstr ""
+msgstr "老挝语"
 
 #: Language-Hungarian
 msgid "Hungarian"
-msgstr ""
+msgstr "匈牙利语"
 
 #: Together
 msgid "Together"
-msgstr ""
+msgstr "一起"
 
 #: NotTogether
 msgid "Not Together"
-msgstr ""
+msgstr "并非一起"
 
 #: Loan-Loan
 msgctxt "Loan-Loan"
 msgid "Loan"
-msgstr ""
+msgstr "贷款"
 
 #: MaritalStatus-Married
 msgid "Married"
-msgstr ""
+msgstr "已婚"
 
 #: MaritalStatus-Unmarried
 msgid "Unmarried"
-msgstr ""
+msgstr "未婚"
 
 #: MaritalStatus-Widowed
 msgid "Widowed"
-msgstr ""
+msgstr "离异"
 
 #: OfficeCode-Code1
 msgid "Code 1"
-msgstr ""
+msgstr "代码1"
 
 #: OfficeCode-Code2
 msgid "Code 2"
-msgstr ""
+msgstr "代码2"
 
 #: OfficeLevels-AreaOffice
 msgid "Area Office"
-msgstr ""
+msgstr "地区机构"
 
 #: OfficeLevels-BranchOffice
 msgid "Branch Office"
-msgstr ""
+msgstr "分支机构"
 
 #: OfficeLevels-DivisionalOffice
 msgid "Divisional Office"
-msgstr ""
+msgstr "分区机构"
 
 #: OfficeLevels-HeadOffice
 msgid "Head Office"
-msgstr ""
+msgstr "顶级机构"
 
 #: OfficeLevels-RegionalOffice
 msgid "Regional Office"
-msgstr ""
+msgstr "区域机构"
 
 #: OfficeStatus-Active
 msgctxt "OfficeStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动的"
 
 #: OfficeStatus-Inactive
 msgctxt "OfficeStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动的"
 
 #: PaymentType-Cash
 msgid "Cash"
-msgstr ""
+msgstr "现金"
 
 #: PaymentType-Cheque
 msgid "Cheque"
-msgstr ""
+msgstr "支票"
 
 #: PaymentType-Voucher
 msgid "Voucher"
-msgstr ""
+msgstr "代金券"
 
 #: Permissions-Analysis
 msgid "Analysis"
-msgstr ""
+msgstr "分析"
 
 #: Permissions-Bulk
 msgid "Bulk"
-msgstr ""
+msgstr "批量"
 
 #: Permissions-CanAddNotesToLoanAccount
 msgid "Can add notes to loan account"
-msgstr ""
+msgstr "可以为贷款账户添加注释"
 
 #: Permissions-CanAddNotesToPersonnel
 msgid "Can Add Notes to Personnel"
-msgstr ""
+msgstr "可以为人员添加注释"
 
 #: Permissions-CanAddNotesToSavingsAccount
 msgid "Can add notes to Savings account"
-msgstr ""
+msgstr "可以为储蓄账户添加注释"
 
 #: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
 msgid "Can adjust payment when account status is \"closed-obligation met\""
-msgstr ""
+msgstr "当账户状态为“已关闭－债务已清”时，可以调整还款"
 
 #: Permissions-CanAdministerReports
 msgid "Can Administer Reports"
-msgstr ""
+msgstr "可以管理报表"
 
 #: Permissions-CanApplyChargesToLoans
 msgid "Can apply charges to loans "
-msgstr ""
+msgstr "可以对贷款申请缴费"
 
 #: Permissions-CanApproveLoansInBulk
 msgid "Can approve loans in bulk "
-msgstr ""
+msgstr "可以批量审批贷款"
 
 #: Permissions-CanBlacklistSavingsAccount
 msgid "Can blacklist Savings account"
-msgstr ""
+msgstr "可以管理储蓄账户的黑名单"
 
 #: Permissions-CanChangeStateToPartialApplication
 msgctxt "Permissions-CanChangeStateToPartialApplication"
+"Permissions-CanChangeStateToPartialApplication"
+"Permissions-CanChangeStateToPartialApplication"
+"Permissions-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
-msgstr ""
+msgstr "可以修改部分申请的状态"
 
 #: Permissions-CanCloseSavingsAccount
 msgid "Can close Savings account"
-msgstr ""
+msgstr "可以关闭储蓄账户"
 
 #: Permissions-CanCreateFunds
 msgid "Can create funds"
-msgstr ""
+msgstr "可以创建资金"
 
 #: Permissions-CanCreateMultipleLoanAccounts
 msgid "Can create multiple Loan accounts"
-msgstr ""
+msgstr "可以创建多个贷款账户"
 
 #: Permissions-CanCreateNewLoanAccountInSaveForLaterState
 msgid "Can create new loan account in Save for later state"
-msgstr ""
+msgstr "可以从“暂时保存”状态中新建贷款账户"
 
 #: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
 msgid "Can create new loan account in Submit for approval state"
-msgstr ""
+msgstr "可以从“提交并等待审批”状态中新建贷款账户"
 
 #: Permissions-CanCreateNewOffice
 msgid "Can create new office"
-msgstr ""
+msgstr "可以新建机构"
 
 #: Permissions-CanCreateNewRole
 msgid "Can create new role"
-msgstr ""
+msgstr "可以新建角色"
 
 #: Permissions-CanCreateNewSavingsAccountInSaveForLaterState
 msgid "Can create new Savings account in Save for later state"
-msgstr ""
+msgstr "可以从“暂时保存”状态中新建储蓄账户"
 
 #: Permissions-CanCreateNewSavingsAccountInSubmitForApprovalState
 msgid "Can create new Savings account in submit for approval state"
-msgstr ""
+msgstr "可以从“提交并等待审批”状态中新建储蓄账户"
 
 #: Permissions-CanCreateNewSystemUsers
 msgid "Can create new system users"
-msgstr ""
+msgstr "可以添加系统用户"
 
 #: Permissions-CanDefineAcceptedPaymentType
 msgid "Can define Accepted Payment Type"
-msgstr ""
+msgstr "可以定义可接受的付款方式"
 
 #: Permissions-CanDefineCustomFields
 msgid "Can define custom fields"
-msgstr ""
+msgstr "可以定义自定义栏位"
 
 #: Permissions-CanDefineHiddenMandatoryFields
 msgid "Can define hidden/mandatory fields"
+msgstr "可以定义必填/隐藏栏位"
+
+#: Permissions-CanDefineHoliday
+msgid "Can define holiday"
 msgstr ""
 
 #: Permissions-CanDefineLabels
 msgid "Can define labels"
-msgstr ""
+msgstr "可以定义标签"
 
 #: Permissions-CanDefineLookupValues
 msgid "Can Define Lookup Values"
-msgstr ""
+msgstr "可以定义下拉列表值"
 
 #: Permissions-CanDefineNewChecklistType
 msgid "Can define new checklist type"
-msgstr ""
+msgstr "可以定义新清单类型"
 
 #: Permissions-CanDefineNewFeeType
 msgid "Can define new fee type"
-msgstr ""
+msgstr "可以定义新的费用类型"
 
 #: Permissions-CanDefineNewLoanProductInstance
 msgid "Can define new loan product instance"
-msgstr ""
+msgstr "可以定义新贷款产品实例"
 
 #: Permissions-CanDefineNewProductCategories
 msgid "Can define new product categories"
-msgstr ""
+msgstr "可以定义新产品分类"
 
 #: Permissions-CanDefineNewReportCategory
 msgid "Can define new report category"
-msgstr ""
+msgstr "可以定义新报表分类"
 
 #: Permissions-CanDefineNewSavingsProductInstance
 msgid "Can define new Savings product instance"
-msgstr ""
+msgstr "可以定义新储蓄产品实例"
 
 #: Permissions-CanDefineProductMix
 msgid "Can define product mix"
-msgstr ""
+msgstr "可以定义混合产品"
 
 #: Permissions-CanDeleteARole
 msgid "Can delete a role"
-msgstr ""
+msgstr "可以删除角色"
 
 #: Permissions-CanDeleteReportCategory
 msgid "Can delete report category"
-msgstr ""
+msgstr "可以删除报表分类"
 
 #: Permissions-CanDisburseLoan
 msgid "Can disburse loan"
-msgstr ""
+msgstr "可以发放贷款"
 
 #: Permissions-CanDoAdjustmentsForSavingsAccount
 msgid "Can do adjustments for savings account"
-msgstr ""
+msgstr "可以对储蓄账户做出调整"
 
 #: Permissions-CanDownloadReportTemplate
 msgid "Can download report template"
-msgstr ""
+msgstr "可以下载报表模板"
 
 #: Permissions-CanEditLoanAccountInformation
 msgid "Can edit Loan account information"
-msgstr ""
+msgstr "可以编辑贷款账户信息"
 
 #: Permissions-CanEditLoanProductInstances
 msgid "Can edit loan product instances"
-msgstr ""
+msgstr "可以编辑贷款产品实例"
 
 #: Permissions-CanEditProductCategoryInformation
 msgid "Can edit product category information"
-msgstr ""
+msgstr "可以编辑产品分类信息"
 
 #: Permissions-CanEditProductMix
 msgid "Can edit product mix"
-msgstr ""
+msgstr "可以编辑混合产品"
 
 #: Permissions-CanEditReportInformation
 msgid "Can edit report information"
-msgstr ""
+msgstr "可以编辑报表信息"
 
 #: Permissions-CanEditSavingsProductInstances
 msgid "Can edit Savings product instances"
-msgstr ""
+msgstr "可以编辑储蓄产品实例"
 
 #: Permissions-CanEditSelfInformation
 msgid "Can edit self information"
-msgstr ""
+msgstr "可以编辑自己的信息"
 
 #: Permissions-CanEnterCollectionSheetData
 msgid "Can Enter Collection Sheet Data"
-msgstr ""
+msgstr "可以输入收集单数据"
 
 #: Permissions-CanImportTransactions
 msgid "Can import transactions"
-msgstr ""
+msgstr "可以导入交易"
 
 #: Permissions-CanMakeAdjustmentEntryToTheAccount
 msgid "Can make adjustment entry to the account"
-msgstr ""
+msgstr "可以调整账户登记"
 
 #: Permissions-CanMakeDepositWithdrawalToSavingsAccount
 msgid "Can make deposit/withdrawal to savings account"
-msgstr ""
+msgstr "可以对储蓄账户进行存款/取款"
 
 #: Permissions-CanMakePaymentToTheAccount
 msgid "Can make payment to the account"
-msgstr ""
+msgstr "可以为账户进行还款"
 
 #: Permissions-CanModifyARole
 msgid "Can modify a role"
-msgstr ""
+msgstr "可以修改角色"
 
 #: Permissions-CanModifyChecklistInformation
 msgid "Can modify checklist information"
-msgstr ""
+msgstr "可以修改清单信息"
 
 #: Permissions-CanModifyFeeInformation
 msgid "Can modify fee information"
-msgstr ""
+msgstr "可以修改费用信息"
 
 #: Permissions-CanModifyFunds
 msgid "Can modify funds"
-msgstr ""
+msgstr "可以修改资金"
 
 #: Permissions-CanModifyLatenessDormancyDefinition
 msgid "Can modify lateness/dormancy definition"
-msgstr ""
+msgstr "可以修改逾期、冻结的定义"
 
 #: Permissions-CanModifyOfficeHierarchy
 msgid "Can modify office hierarchy"
-msgstr ""
+msgstr "可以修改机构层次"
 
 #: Permissions-CanModifyOfficeInformation
 msgid "Can modify office information"
-msgstr ""
+msgstr "可以修改机构信息"
 
 #: Permissions-CanModifyUserInformation
 msgid "Can modify user information"
-msgstr ""
+msgstr "可以修改用户信息"
 
 #: Permissions-CanPreviewReports
 msgid "Can Preview Reports"
-msgstr ""
+msgstr "可以预览报表"
 
 #: Permissions-CanRedoLoanDisbursals
 msgid "Can redo Loan disbursals"
-msgstr ""
+msgstr "可以重做贷款发放"
 
 #: Permissions-CanRemoveFeeTypesAttachedToTheAccount
 msgid "Can remove fee types attached to the account"
-msgstr ""
+msgstr "可以删除附加在账户上的费用类型"
 
 #: Permissions-CanRepayLoan
 msgid "Can repay loan"
-msgstr ""
+msgstr "可以偿还贷款"
 
 #: Permissions-CanReverseLoanDisbursals
 msgid "Can reverse Loan disbursals"
-msgstr ""
+msgstr "可以撤销贷款发放"
 
 #: Permissions-CanShutdownMifos
 msgid "Can shut down Mifos"
@@ -1003,759 +1007,759 @@ msgstr ""
 
 #: Permissions-CanUnlockAUser
 msgid "Can unlock a user"
-msgstr ""
+msgstr "可以为用户解锁"
 
 #: Permissions-CanUpdateSavingsAccount
 msgid "Can update Savings account"
-msgstr ""
+msgstr "可以更新储蓄账户"
 
 #: Permissions-CanUploadAdminDocuments
 msgid "Can upload admin documents"
-msgstr ""
+msgstr "可以上传管理文件"
 
 #: Permissions-CanUploadNewReports
 msgid "Can upload new reports"
-msgstr ""
+msgstr "可以上传新报表"
 
 #: Permissions-CanUploadReportTemplate
 msgid "Can upload report template"
-msgstr ""
+msgstr "可以上传报表模板"
 
 #: Permissions-CanViewActiveLoansByLoanOfficer
 msgid "Can view Active Loans By Loan Officer"
-msgstr ""
+msgstr "可以查看信贷员的活动贷款"
 
 #: Permissions-CanViewAdminDocuments
 msgid "Can view admin documents"
-msgstr ""
+msgstr "可以查看管理文件"
 
 #: Permissions-CanViewAreaPerformanceStatusReport
 msgid "Can view Area Performance Status Report"
-msgstr ""
+msgstr "可以查看区域性能状态报表"
 
 #: Permissions-CanViewBranchDueDisbursementReport
 msgid "Can view Branch Due disbursement Report"
-msgstr ""
+msgstr "可以查看部门应付款报表"
 
 #: Permissions-CanViewBranchPerformanceStatusReport
 msgid "Can view Branch Performance Status Report"
-msgstr ""
+msgstr "可以查看部门表现状态报表"
 
 #: Permissions-CanViewCenterMeetingSchedule
 msgid "Can view Center Meeting Schedule"
-msgstr ""
+msgstr "可以查看行政村会议日程"
 
 #: Permissions-CanViewCenterSummaryReport
 msgid "Can view Center Summary Report"
-msgstr ""
+msgstr "可以查看行政村综合报表"
 
 #: Permissions-CanViewClientFeesChargesAndPenaltiesReport
 msgid "Can view Client Fees, Charges and Penalties report"
-msgstr ""
+msgstr "可以查看客户费用、缴费及罚款报表"
 
 #: Permissions-CanViewClientLoanRepaymentSchedule
 msgid "Can view Client Loan repayment schedule"
-msgstr ""
+msgstr "可以查看客户还款计划"
 
 #: Permissions-CanViewClientPendingApprovalReport
 msgid "Can view Client pending approval report"
-msgstr ""
+msgstr "可以查看客户待审批报表"
 
 #: Permissions-CanViewClientProductWiseHistoryReport
 msgid "Can view Client Product Wise History Report"
-msgstr ""
+msgstr "可以查看客户历史产品报表"
 
 #: Permissions-CanViewClientSettlementInfoReport
 msgid "Can view Client Settlement info Report"
-msgstr ""
+msgstr "可以查看客户结算信息报表"
 
 #: Permissions-CanViewClientSummaryHistoryReport
 msgid "Can view Client Summary-& History Report"
-msgstr ""
+msgstr "可以查看客户概要及历史报表"
 
 #: Permissions-CanViewClientsWithoutSavingsAccount
 msgid "Can view Clients without Savings Account"
-msgstr ""
+msgstr "可以查看无储蓄账户的客户"
 
 #: Permissions-CanViewCollectionSheet
 msgid "Can view Collection sheet"
-msgstr ""
+msgstr "可以查看收集单"
 
 #: Permissions-CanViewCollectionSheetReport
 msgid "Can view Collection Sheet Report"
-msgstr ""
+msgstr "可以查看收集单报表"
 
 #: Permissions-CanViewDailyCashConfirmationReportStaffWise
 msgid "Can view Daily Cash Confirmation Report - Staff Wise"
-msgstr ""
+msgstr "可以查看每日现金确认报表－Staff Wise"
 
 #: Permissions-CanViewDailyCashFlowReportBranch
 msgid "Can view Daily Cash Flow Report - Branch"
-msgstr ""
+msgstr "可以查看每日现金流浪报表－部门"
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
-msgstr ""
+msgstr "可以查看每日投资组合质量数据报表－账龄分析"
 
 #: Permissions-CanViewDailyTransactionSummaryReport
 msgid "Can view Daily Transaction Summary report"
-msgstr ""
+msgstr "可以查看每日交易概要报表"
 
 #: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
 msgid "Can view Detailed Aging of Portfolio at Risk"
-msgstr ""
+msgstr "可以查看投资组合风险的详细账龄"
 
 #: Permissions-CanViewDivisionPerformanceStatusReport
 msgid "Can view Division Performance Status Report"
-msgstr ""
+msgstr "可以查看部门行为状态报表"
 
 #: Permissions-CanViewFundRequirementReport
 msgid "Can view Fund Requirement Report"
-msgstr ""
+msgstr "可以查看资金需求报表"
 
 #: Permissions-CanViewGrameenKootaPerformanceStatusReport
 msgid "Can view Grameen Koota Performance Status Report"
-msgstr ""
+msgstr "可以查看Grameen Koota行为状态报表"
 
 #: Permissions-CanViewLoanAccountsReports
 msgid "Can view Loan Accounts reports"
-msgstr ""
+msgstr "可以查看贷款账户报表"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
 msgid ""
 "Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
 "Sequency Wise"
-msgstr ""
+msgstr "可以查看贷款产品分配－Activity Wise, Size Wize, Product Wise, Sequency Wise"
 
 #: Permissions-CanViewLoansPendingApprovalReport
 msgid "Can view Loans pending approval report"
-msgstr ""
+msgstr "可以查看贷款待审批报表"
 
 #: Permissions-CanViewOrganizationSettings
 msgid "Can view organization settings"
-msgstr ""
+msgstr "可以查看组织设定"
 
 #: Permissions-CanViewOutreachReport
 msgid "Can view Outreach Report"
-msgstr ""
+msgstr "可以查看外联报表"
 
 #: Permissions-CanViewRegionPerformanceStatusReport
 msgid "Can view Region Performance Status Report"
-msgstr ""
+msgstr "可以查看区域行为状态报表"
 
 #: Permissions-CanViewReportCategory
 msgid "Can view report category"
-msgstr ""
+msgstr "可以查看报表分类"
 
 #: Permissions-CanViewReports
 msgid "Can view reports"
-msgstr ""
+msgstr "可以查看报表"
 
 #: Permissions-CanViewStaffPerformanceReport
 msgid "Can view Staff Performance Report"
-msgstr ""
+msgstr "可以查看员工行为报表"
 
 #: Permissions-CanViewSystemInformation
 msgid "Can view system information"
-msgstr ""
+msgstr "可以查看系统信息"
 
 #: Permissions-CanWaiveAFeeInstallment
 msgid "Can waive a fee installment"
-msgstr ""
+msgstr "可以免除分期费用"
 
 #: Permissions-CanWaiveDueDepositsForSavingsAccount
 msgid "Can waive due deposits for Savings account"
-msgstr ""
+msgstr "可以免除储蓄账户的存款"
 
 #: Permissions-CanWaiveOverDueDepositsForSavingsAccount
 msgid "Can waive over due deposits for Savings account"
-msgstr ""
+msgstr "可以免除储蓄账户的逾期存款"
 
 #: Permissions-CanWaivePenalty
 msgid "Can waive penalty"
-msgstr ""
+msgstr "可以免除罚款"
 
 #: Permissions-Center
 msgctxt "Permissions-Center"
 msgid "Center"
-msgstr ""
+msgstr "行政村"
 
 #: Permissions-Centers
 msgctxt "Permissions-Centers"
 msgid "Centers"
-msgstr ""
+msgstr "行政村"
 
 #: Permissions-Centers-CanAddNotesToCenterRecords
 msgid "Can add notes to Center records"
-msgstr ""
+msgstr "可以为行政村记录添加注释"
 
 #: Permissions-Centers-CanApplyChargesToCenterAccounts
 msgid "Can apply charges to Center accounts"
-msgstr ""
+msgstr "可以为行政村账户申请缴费"
 
 #: Permissions-Centers-CanCreateNewCenter
 msgid "Can create new Center "
-msgstr ""
+msgstr "可以新建行政村"
 
 #: Permissions-Centers-CanEditCenterStatus
 msgid "Can edit Center status"
-msgstr ""
+msgstr "可以编辑行政村状态"
 
 #: Permissions-Centers-CanEditFeeAmountAttachedToTheAccount
 msgctxt "Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
 msgid "Can edit fee amount attached to the account"
-msgstr ""
+msgstr "可以编辑附加于账户上的费用金额"
 
 #: Permissions-Centers-CanEditMeetingSchedule
 msgid "Can edit meeting schedule "
-msgstr ""
+msgstr "可以编辑会议日程"
 
 #: Permissions-Centers-CanMakeAdjustmentEntriesToCenterAccount
 msgid "Can make adjustment entries to Center account"
-msgstr ""
+msgstr "可以对行政村账户进行调整"
 
 #: Permissions-Centers-CanMakePaymentsToCenterAccounts
 msgid "Can make payments to Center accounts"
-msgstr ""
+msgstr "可以对行政村账户进行付款"
 
 #: Permissions-Centers-CanModifyCenterInformation
 msgid "Can modify Center information "
-msgstr ""
+msgstr "可以修改行政村信息"
 
 #: Permissions-Centers-CanRemoveFeeTypesFromCenterAccount
 msgid "Can remove fee types from Center account"
-msgstr ""
+msgstr "可以从行政村账户中删除费用类型"
 
 #: Permissions-Centers-CanSpecifyMeetingSchedule
 msgctxt "Permissions-Centers-CanSpecifyMeetingSchedule"
 msgid "Can specify meeting schedule"
-msgstr ""
+msgstr "可以指定会议日程"
 
 #: Permissions-Centers-CanWaiveADueAmount
 msgctxt "Permissions-Centers-CanWaiveADueAmount"
 msgid "Can waive a due amount"
-msgstr ""
+msgstr "可以免除应缴款"
 
 #: Permissions-Checklists
 msgid "Checklists"
-msgstr ""
+msgstr "清单"
 
 #: Permissions-ClientDetail
 msgid "Client Detail"
-msgstr ""
+msgstr "客户详情"
 
 #: Permissions-ClientManagement
 msgid "Client management"
-msgstr ""
+msgstr "客户管理"
 
 #: Permissions-Clients
 msgctxt "Permissions-Clients"
 msgid "Clients"
-msgstr ""
+msgstr "客户"
 
 #: Permissions-Clients-CanAddAnExistingClientToAGroup
 msgid "Can add an existing client to a group"
-msgstr ""
+msgstr "可以为组添加已存在的客户"
 
 #: Permissions-Clients-CanAddEditHistoricalData
 msgctxt "Permissions-Clients-CanAddEditHistoricalData"
 msgid "Can add/edit historical data"
-msgstr ""
+msgstr "可以添加/编辑历史数据"
 
 #: Permissions-Clients-CanAddNotesToClient
 msgid "Can add notes to Client"
-msgstr ""
+msgstr "可以为客户添加注释"
 
 #: Permissions-Clients-CanApplyChargesToClientAccounts
 msgid "Can apply charges to Client accounts"
-msgstr ""
+msgstr "可以为客户账户申请缴费"
 
 #: Permissions-Clients-CanBlacklistAClient
 msgid "Can Blacklist a Client"
-msgstr ""
+msgstr "可以将客户加入黑名单"
 
 #: Permissions-Clients-CanChangeStateToActive
 msgctxt "Permissions-Clients-CanChangeStateToActive"
 msgid "Can change state to active"
-msgstr ""
+msgstr "可以更改状态为活动"
 
 #: Permissions-Clients-CanChangeStateToApplicationPendingApproval
 msgctxt "Permissions-Clients-CanChangeStateToApplicationPendingApproval"
 msgid "Can change state to application pending approval"
-msgstr ""
+msgstr "可以更改状态为申请待审批"
 
 #: Permissions-Clients-CanChangeStateToCancelled
 msgctxt "Permissions-Clients-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr ""
+msgstr "可以更改状态为已取消"
 
 #: Permissions-Clients-CanChangeStateToClosed
 msgctxt "Permissions-Clients-CanChangeStateToClosed"
 msgid "Can change state to Closed"
-msgstr ""
+msgstr "可以更改状态为已关闭"
 
 #: Permissions-Clients-CanChangeStateToOnHold
 msgctxt "Permissions-Clients-CanChangeStateToOnHold"
 msgid "Can change state to On Hold"
-msgstr ""
+msgstr "可以更改状态为搁置"
 
 #: Permissions-Clients-CanChangeStateToPartialApplication
 msgctxt "Permissions-Clients-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
-msgstr ""
+msgstr "可以更改状态为部分申请"
 
 #: Permissions-Clients-CanCreateNewClientInSaveForLaterState
 msgid "Can create new Client in save for later state"
-msgstr ""
+msgstr "可以从“暂时保存”状态中新建客户"
 
 #: Permissions-Clients-CanCreateNewClientInSubmitForApprovalState
 msgid "Can create new Client in submit for approval state"
-msgstr ""
+msgstr "可以从“提交并等待审批”状态中新建客户"
 
 #: Permissions-Clients-CanEditFeeAmountAttachedToTheAccount
 msgctxt "Permissions-Clients-CanEditFeeAmountAttachedToTheAccount"
 msgid "Can edit fee amount attached to the account"
-msgstr ""
+msgstr "可以编辑附加于账户上的费用金额"
 
 #: Permissions-Clients-CanEditGroupMembership
 msgid "Can edit group membership"
-msgstr ""
+msgstr "可以编辑组成员"
 
 #: Permissions-Clients-CanEditMeetingSchedule
 msgctxt "Permissions-Clients-CanEditMeetingSchedule"
 msgid "Can edit meeting schedule"
-msgstr ""
+msgstr "可以编辑会议日程"
 
 #: Permissions-Clients-CanEditMfiInformation
 msgid "Can edit MFI information"
-msgstr ""
+msgstr "可以编辑小额信贷机构信息"
 
 #: Permissions-Clients-CanEditOfficeMembership
 msgctxt "Permissions-Clients-CanEditOfficeMembership"
 msgid "Can edit office membership"
-msgstr ""
+msgstr "可以编辑机构成员"
 
 #: Permissions-Clients-CanEditPersonalInformation
 msgid "Can edit personal information"
-msgstr ""
+msgstr "可以编辑个人信息"
 
 #: Permissions-Clients-CanMakeAdjustmentEntriesToClientAccount
 msgid "Can make adjustment entries to Client account"
-msgstr ""
+msgstr "可以对客户账户进行调整"
 
 #: Permissions-Clients-CanMakePaymentsToClientAccounts
 msgid "Can make payments to Client accounts"
-msgstr ""
+msgstr "可以对客户账户进行付款"
 
 #: Permissions-Clients-CanRemoveClientsFromGroups
 msgid "Can remove clients from groups"
-msgstr ""
+msgstr "可以从组中删除客户"
 
 #: Permissions-Clients-CanRemoveFeeTypesFromClientAccount
 msgid "Can remove fee types from Client account"
-msgstr ""
+msgstr "可以从中心账户中删除费用类型"
 
 #: Permissions-Clients-CanSpecifyMeetingSchedule
 msgctxt "Permissions-Clients-CanSpecifyMeetingSchedule"
 msgid "Can specify meeting schedule"
-msgstr ""
+msgstr "可以指定会议日程"
 
 #: Permissions-Clients-CanWaiveADueAmount
 msgctxt "Permissions-Clients-CanWaiveADueAmount"
 msgid "Can waive a due amount"
-msgstr ""
+msgstr "可以免除应缴款"
 
 #: Permissions-ConfigurationManagement
 msgid "Configuration Management"
-msgstr ""
+msgstr "配置管理"
 
 #: Permissions-Fees
 msgctxt "Permissions-Fees"
 msgid "Fees"
-msgstr ""
+msgstr "费用"
 
 #: Permissions-Funds
 msgid "Funds"
-msgstr ""
+msgstr "资金"
 
 #: Permissions-Groups
 msgctxt "Permissions-Groups"
 msgid "Groups"
-msgstr ""
+msgstr "组"
 
 #: Permissions-Groups-CanAddEditHistoricalData
 msgctxt "Permissions-Groups-CanAddEditHistoricalData"
 msgid "Can add/edit historical data"
-msgstr ""
+msgstr "可以添加/编辑历史数据"
 
 #: Permissions-Groups-CanAddNotesToGroup
 msgid "Can add notes to group"
-msgstr ""
+msgstr "可以为组添加注释"
 
 #: Permissions-Groups-CanApplyChargesToGroupAccounts
 msgid "Can apply charges to group accounts"
-msgstr ""
+msgstr "可以为组账户申请缴费"
 
 #: Permissions-Groups-CanBlacklistAGroup
 msgid "Can Blacklist a group"
-msgstr ""
+msgstr "可以将组加入黑名单"
 
 #: Permissions-Groups-CanChangeStateToActive
 msgctxt "Permissions-Groups-CanChangeStateToActive"
 msgid "Can change state to active"
-msgstr ""
+msgstr "可以更改状态为活动"
 
 #: Permissions-Groups-CanChangeStateToApplicationPendingApproval
 msgctxt "Permissions-Groups-CanChangeStateToApplicationPendingApproval"
 msgid "Can change state to application pending approval"
-msgstr ""
+msgstr "可以更改状态为申请待审批"
 
 #: Permissions-Groups-CanChangeStateToCancelled
 msgctxt "Permissions-Groups-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr ""
+msgstr "可以更改状态为已取消"
 
 #: Permissions-Groups-CanChangeStateToClosed
 msgctxt "Permissions-Groups-CanChangeStateToClosed"
 msgid "Can change state to Closed"
-msgstr ""
+msgstr "可以更改状态为已关闭"
 
 #: Permissions-Groups-CanChangeStateToOnHold
 msgctxt "Permissions-Groups-CanChangeStateToOnHold"
 msgid "Can change state to On Hold"
-msgstr ""
+msgstr "可以修改状态为搁置"
 
 #: Permissions-Groups-CanChangeStateToPartialApplication
 msgctxt "Permissions-Groups-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
-msgstr ""
+msgstr "可以更改状态为部分申请"
 
 #: Permissions-Groups-CanCreateNewGroupInSaveForLaterState
 msgid "Can create new group in save for later state"
-msgstr ""
+msgstr "可以从“暂时保存”状态中新建组"
 
 #: Permissions-Groups-CanCreateNewGroupInSubmitForApprovalState
 msgid "Can create new group in submit for approval state"
-msgstr ""
+msgstr "可以从“提交并等待审批”状态中新建组"
 
 #: Permissions-Groups-CanEditCenterClientship
 msgid "Can edit Center Clientship"
-msgstr ""
+msgstr "可以编辑行政村成员"
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
 msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"
 msgid "Can edit fee amount attached to the account"
-msgstr ""
+msgstr "可以编辑附加于账户上的费用金额"
 
 #: Permissions-Groups-CanEditGroupInformation
 msgid "Can edit Group information"
-msgstr ""
+msgstr "可以编辑组信息"
 
 #: Permissions-Groups-CanEditMeetingSchedule
 msgctxt "Permissions-Groups-CanEditMeetingSchedule"
 msgid "Can edit meeting schedule"
-msgstr ""
+msgstr "可以编辑会议日程"
 
 #: Permissions-Groups-CanEditOfficeMembership
 msgctxt "Permissions-Groups-CanEditOfficeMembership"
 msgid "Can edit office membership"
-msgstr ""
+msgstr "可以编辑机构成员"
 
 #: Permissions-Groups-CanMakeAdjustmentEntriesToGroupAccount
 msgid "Can make adjustment entries to group account"
-msgstr ""
+msgstr "可以对组账户进行调整"
 
 #: Permissions-Groups-CanMakePaymentsToGroupAccounts
 msgid "Can make payments to group accounts"
-msgstr ""
+msgstr "可以对组账户进行付款"
 
 #: Permissions-Groups-CanRemoveFeeTypesFromGroupAccount
 msgid "Can remove fee types from group account"
-msgstr ""
+msgstr "可以从组账户中删除费用类型"
 
 #: Permissions-Groups-CanSpecifyMeetingSchedule
 msgctxt "Permissions-Groups-CanSpecifyMeetingSchedule"
 msgid "Can specify meeting schedule"
-msgstr ""
+msgstr "可以指定会议日程"
 
 #: Permissions-Groups-CanWaiveADueAmount
 msgctxt "Permissions-Groups-CanWaiveADueAmount"
 msgid "Can waive a due amount"
-msgstr ""
+msgstr "可以免除应缴款"
 
 #: Permissions-LoanManagement
 msgid "Loan management"
-msgstr ""
+msgstr "贷款管理"
 
 #: Permissions-LoanProcessing
 msgid "Loan Processing"
-msgstr ""
+msgstr "贷款进程"
 
 #: Permissions-LoanProcessing-CanChangeStateToApproved
 msgid "Can change state to Approved"
-msgstr ""
+msgstr "可以更改状态为已审批"
 
 #: Permissions-LoanProcessing-CanChangeStateToCancelled
 msgctxt "Permissions-LoanProcessing-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr ""
+msgstr "可以更改状态为已取消"
 
 #: Permissions-LoanProcessing-CanChangeStateToClosedRescheduled
 msgid "Can change state to Closed-rescheduled"
-msgstr ""
+msgstr "可以更改状态为已关闭－重新规划"
 
 #: Permissions-LoanProcessing-CanChangeStateToClosedWrittenOff
 msgid "Can change state to Closed- Written off"
-msgstr ""
+msgstr "可以更改状态为已关闭－已注销"
 
 #: Permissions-LoanProcessing-CanChangeStateToDisbursedToLo
 msgid "Can change state to Disbursed to LO"
-msgstr ""
+msgstr "可以更改状态为发放给LO"
 
 #: Permissions-LoanProcessing-CanChangeStateToPartialApplication
 msgctxt "Permissions-LoanProcessing-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
-msgstr ""
+msgstr "可以更改状态为部分申请"
 
 #: Permissions-LoanProcessing-CanChangeStateToPendingApproval
 msgctxt "Permissions-LoanProcessing-CanChangeStateToPendingApproval"
 msgid "Can change state to pending approval"
-msgstr ""
+msgstr "可以更改状态为待审批"
 
 #: Permissions-LoanProductDetail
 msgid "Loan Product Detail"
-msgstr ""
+msgstr "贷款产品详情"
 
 #: Permissions-LoanProducts
 msgid "Loan Products"
-msgstr ""
+msgstr "贷款产品"
 
 #: Permissions-LoanTransactions
 msgid "Loan Transactions"
-msgstr ""
+msgstr "贷款交易"
 
 #: Permissions-Miscellaneous
 msgid "Miscellaneous"
-msgstr ""
+msgstr "杂项"
 
 #: Permissions-NotImplemented
 msgid "Not implemented"
-msgstr ""
+msgstr "未实施"
 
 #: Permissions-OfficeManagement
 msgid "Office management"
-msgstr ""
+msgstr "机构管理"
 
 #: Permissions-Offices
 msgid "Offices"
-msgstr ""
+msgstr "机构"
 
 #: Permissions-OrganizationManagement
 msgid "Organization Management"
-msgstr ""
+msgstr "组织管理"
 
 #: Permissions-Performance
 msgid "Performance"
-msgstr ""
+msgstr "行为"
 
 #: Permissions-Personnel
 msgctxt "Permissions-Personnel"
 msgid "Personnel"
-msgstr ""
+msgstr "人员"
 
 #: Permissions-ProductCategories
 msgid "Product Categories"
-msgstr ""
+msgstr "产品分类"
 
 #: Permissions-ProductDefinition
 msgid "Product definition"
-msgstr ""
+msgstr "产品定义"
 
 #: Permissions-ProductMix
 msgid "Product Mix"
-msgstr ""
+msgstr "混合产品"
 
 #: Permissions-ReportsManagement
 msgid "Reports Management"
-msgstr ""
+msgstr "报表管理"
 
 #: Permissions-Roles
 msgid "Roles"
-msgstr ""
+msgstr "角色"
 
 #: Permissions-SavingsManagement
 msgid "Savings Management"
-msgstr ""
+msgstr "储蓄管理"
 
 #: Permissions-SavingsManagement-CanChangeStateToActive
 msgctxt "Permissions-SavingsManagement-CanChangeStateToActive"
 msgid "Can change state to active"
-msgstr ""
+msgstr "可以更改状态为活动"
 
 #: Permissions-SavingsManagement-CanChangeStateToCancel
 msgid "Can change state to cancel"
-msgstr ""
+msgstr "可以更改状态为取消"
 
 #: Permissions-SavingsManagement-CanChangeStateToInactive
 msgid "Can change state to inactive"
-msgstr ""
+msgstr "可以更改状态为非活动"
 
 #: Permissions-SavingsManagement-CanChangeStateToPartialApplication
 msgctxt "Permissions-SavingsManagement-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
-msgstr ""
+msgstr "可以更改状态为部分申请"
 
 #: Permissions-SavingsManagement-CanChangeStateToPendingApproval
 msgctxt "Permissions-SavingsManagement-CanChangeStateToPendingApproval"
 msgid "Can change state to pending approval"
-msgstr ""
+msgstr "可以更改状态为待审批"
 
 #: Permissions-SavingsProducts
 msgid "Savings Products"
-msgstr ""
+msgstr "储蓄产品"
 
 #: Permissions-Status
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #: Permissions-SystemInformation
 msgid "System information"
-msgstr ""
+msgstr "系统信息"
 
 #: Permissions-UserManagement
 msgid "User management"
-msgstr ""
+msgstr "用户管理"
 
 #: Personnel-Personnel
 msgctxt "Personnel-Personnel"
 msgid "Personnel"
-msgstr ""
+msgstr "人员"
 
 #: PersonnelLevels-LoanOfficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "信贷员"
 
 #: PersonnelLevels-NonLoanOfficer
 msgid "Non Loan Officer"
-msgstr ""
+msgstr "非信贷员"
 
 #: PersonnelStatus-Active
 msgctxt "PersonnelStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: PersonnelStatus-Inactive
 msgctxt "PersonnelStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: PersonnelStatusUnused-Active
 msgctxt "PersonnelStatusUnused-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: PersonnelStatusUnused-Inactive
 msgctxt "PersonnelStatusUnused-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: Position-CenterLeader
 msgid "Center Leader"
-msgstr ""
+msgstr "行政村负责人"
 
 #: Position-CenterSecretary
 msgid "Center Secretary"
-msgstr ""
+msgstr "行政村秘书"
 
 #: Position-GroupLeader
 msgid "Group Leader"
-msgstr ""
+msgstr "组负责人"
 
 #: Position-GroupSecretary
 msgid "Group Secretary"
-msgstr ""
+msgstr "组秘书"
 
 #: PovertyStatus-NonPoor
 msgid "Non-poor"
-msgstr ""
+msgstr "非贫困人口"
 
 #: PovertyStatus-Poor
 msgid "Poor"
-msgstr ""
+msgstr "贫困"
 
 #: PovertyStatus-VeryPoor
 msgid "Very poor"
-msgstr ""
+msgstr "非常贫困"
 
 #: PrdApplicableMaster-Centers
 msgctxt "PrdApplicableMaster-Centers"
 msgid "Centers"
-msgstr ""
+msgstr "行政村"
 
 #: PrdApplicableMaster-Clients
 msgctxt "PrdApplicableMaster-Clients"
 msgid "Clients"
-msgstr ""
+msgstr "客户"
 
 #: PrdApplicableMaster-Groups
 msgctxt "PrdApplicableMaster-Groups"
 msgid "Groups"
-msgstr ""
+msgstr "组"
 
 #: ProductCategoryStatus-Active
 msgctxt "ProductCategoryStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: ProductCategoryStatus-Inactive
 msgctxt "ProductCategoryStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: ProductState-Active
 msgctxt "ProductState-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: ProductState-Close
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: ProductState-Inactive
 msgctxt "ProductState-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: ProductStatus-Active
 msgctxt "ProductStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: ProductStatus-Closed
 msgctxt "ProductStatus-Closed"
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #: ProductStatus-Inactive
 msgctxt "ProductStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: RecommendedAmtUnit-CompleteGroup
 msgid "Complete Group"
-msgstr ""
+msgstr "完整组"
 
 #: RecommendedAmtUnit-PerIndividual
 msgid "Per Individual"
-msgstr ""
+msgstr "没人"
 
 #: RepaymentRule-NextMeetingRepayment
 msgid "Next Meeting/Repayment"
-msgstr ""
+msgstr "下一次会议/还款"
 
 #: RepaymentRule-NextWorkingDay
 msgid "Next Working Day"
-msgstr ""
+msgstr "下一个工作日"
 
 #: RepaymentRule-RepaymentMoratorium
 msgid "Moratorium"
@@ -1763,126 +1767,126 @@ msgstr ""
 
 #: RepaymentRule-SameDay
 msgid "Same Day"
-msgstr ""
+msgstr "同一天"
 
 #: Salutation-Mr
 msgid "Mr"
-msgstr ""
+msgstr "先生"
 
 #: Salutation-Mrs
 msgid "Mrs"
-msgstr ""
+msgstr "夫人"
 
 #: Salutation-Ms
 msgid "Ms"
-msgstr ""
+msgstr "女士"
 
 #: Savings-Savings
 msgctxt "Savings-Savings"
 msgid "Savings"
-msgstr ""
+msgstr "储蓄"
 
 #: SavingsAccountFlag-Blacklisted
 msgctxt "SavingsAccountFlag-Blacklisted"
 msgid "Blacklisted"
-msgstr ""
+msgstr "已列入黑名单"
 
 #: SavingsAccountFlag-Rejected
 msgctxt "SavingsAccountFlag-Rejected"
 msgid "Rejected"
-msgstr ""
+msgstr "已拒绝"
 
 #: SavingsAccountFlag-Withdraw
 msgctxt "SavingsAccountFlag-Withdraw"
 msgid "Withdraw"
-msgstr ""
+msgstr "撤销"
 
 #: SavingsStatus-Active
 msgctxt "SavingsStatus-Active"
 msgid "Active"
-msgstr ""
+msgstr "活动"
 
 #: SavingsStatus-ApplicationPendingApproval
 msgctxt "SavingsStatus-ApplicationPendingApproval"
 msgid "Application Pending Approval"
-msgstr ""
+msgstr "申请待审批"
 
 #: SavingsStatus-Cancelled
 msgctxt "SavingsStatus-Cancelled"
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #: SavingsStatus-Closed
 msgctxt "SavingsStatus-Closed"
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #: SavingsStatus-Inactive
 msgctxt "SavingsStatus-Inactive"
 msgid "Inactive"
-msgstr ""
+msgstr "非活动"
 
 #: SavingsStatus-PartialApplication
 msgctxt "SavingsStatus-PartialApplication"
 msgid "Partial Application"
-msgstr ""
+msgstr "部分申请"
 
 #: SavingsType-Mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "强制"
 
 #: SavingsType-Voluntary
 msgid "Voluntary"
-msgstr ""
+msgstr "自愿"
 
 #: SpouseFather-Father
 msgid "Father"
-msgstr ""
+msgstr "父亲"
 
 #: SpouseFather-Spouse
 msgid "Spouse"
-msgstr ""
+msgstr "配偶"
 
 #: WeekDays-Friday
 msgid "Friday"
-msgstr ""
+msgstr "周五"
 
 #: WeekDays-Monday
 msgid "Monday"
-msgstr ""
+msgstr "周一"
 
 #: WeekDays-Saturday
 msgid "Saturday"
-msgstr ""
+msgstr "周六"
 
 #: WeekDays-Sunday
 msgid "Sunday"
-msgstr ""
+msgstr "周日"
 
 #: WeekDays-Thursday
 msgid "Thursday"
-msgstr ""
+msgstr "周四"
 
 #: WeekDays-Tuesday
 msgid "Tuesday"
-msgstr ""
+msgstr "周二"
 
 #: WeekDays-Wednesday
 msgid "Wednesday"
-msgstr ""
+msgstr "周三"
 
 #: YESNO-No
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: YESNO-Yes
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #: feeUpdationType-AppliesToExistingFutureAccounts
 msgid "Applies to existing & future accounts"
-msgstr ""
+msgstr "适用于现有及未来账户"
 
 #: feeUpdationType-AppliesToFutureAccounts
 msgid "Applies to future accounts"
-msgstr ""
+msgstr "适用于未来账户"

@@ -7,7 +7,7 @@ set -o errexit
 deployNickname=$1
 if [ -z "$deployNickname" ]
 then
-    echo "ERROR: Must provide a deployment nickname like 'trunk' or 'v1.3.x' to proceed"
+    echo "ERROR: Must provide a deployment nickname like 'head-master' to proceed"
     echo "Usage: $0 NICKNAME"
     exit 1
 fi
@@ -19,7 +19,7 @@ then
     exit 1
 fi
 
-ciResources=$HOME/hudson-home/jobs/trunk/workspace/resources/continuous-integration
+ciResources=$HOME/hudson-home/jobs/head-master/workspace/resources/continuous-integration
 
 set -x
 mkdir $deployRoot

@@ -244,7 +244,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
         actionPerform();
         loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
-       Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), loan.getAccountState().getId());
+        Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(), loan.getAccountState().getId());
         verifyForward("applyadj_success");
     }
 
