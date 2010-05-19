@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -224,13 +225,13 @@ public class CustHistoricalDataAction extends BaseAction {
 
     private void setCustomerHistoricalDataEntity(CustomerBO customerBO,
             CustHistoricalDataActionForm historicalActionForm, CustomerHistoricalDataEntity historicalDataEntity) throws InvalidDateException {
-        historicalDataEntity.setInterestPaid(new Money(Money.getDefaultCurrency(), historicalActionForm.getInterestPaid()));
-        historicalDataEntity.setLoanAmount(new Money(Money.getDefaultCurrency(), historicalActionForm.getLoanAmount()));
+        historicalDataEntity.setInterestPaid(StringUtils.isBlank(historicalActionForm.getInterestPaid()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getInterestPaid()));
+        historicalDataEntity.setLoanAmount(StringUtils.isBlank(historicalActionForm.getLoanAmount()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getLoanAmount()));
         historicalDataEntity.setLoanCycleNumber(historicalActionForm.getLoanCycleNumberValue());
         historicalDataEntity.setMissedPaymentsCount(historicalActionForm.getMissedPaymentsCountValue());
         historicalDataEntity.setNotes(historicalActionForm.getCommentNotes());
         historicalDataEntity.setProductName(historicalActionForm.getProductName());
-        historicalDataEntity.setTotalAmountPaid(new Money(Money.getDefaultCurrency(), historicalActionForm.getTotalAmountPaid()));
+        historicalDataEntity.setTotalAmountPaid(StringUtils.isBlank(historicalActionForm.getTotalAmountPaid()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getTotalAmountPaid()));
         historicalDataEntity.setTotalPaymentsCount(historicalActionForm.getTotalPaymentsCountValue());
         historicalDataEntity.setMfiJoiningDate(getDateFromString(historicalActionForm.getMfiJoiningDate(), customerBO
                 .getUserContext().getPreferredLocale()));

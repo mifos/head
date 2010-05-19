@@ -20,7 +20,7 @@
 
 package org.mifos.customers.util.helpers;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -67,5 +67,4 @@ public class ClientFamilyDetailDto {
         }
         return null;
     }
-
 }

@@ -48,7 +48,7 @@ import org.mifos.security.util.UserContext;
 public class ClientBuilder {
 
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
-    private String name = "Test Center";
+    private String name = "TestBuilderClient";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
     private PersonnelBO loanOfficer;
@@ -106,9 +106,10 @@ public class ClientBuilder {
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto();
         this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailDto);
 
-        CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).with(meeting).with(office)
-                .build();
-        parentCustomer = new GroupBuilder().withParentCustomer(center).build();
+        if (parentCustomer == null) {
+            CenterBO center = new CenterBuilder().withLoanOfficer(loanOfficer).with(meeting).with(office).build();
+            parentCustomer = new GroupBuilder().withParentCustomer(center).build();
+        }
 
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
                 parentCustomer, formedBy, customerCustomFields, clientNameDetailEntity, dateOfBirth, governmentId,
@@ -155,16 +156,6 @@ public class ClientBuilder {
         return this;
     }
 
-    public ClientBuilder active() {
-        this.customerStatus = CustomerStatus.CLIENT_ACTIVE;
-        return this;
-    }
-
-    public ClientBuilder inActive() {
-        this.customerStatus = CustomerStatus.CENTER_INACTIVE;
-        return this;
-    }
-
     public ClientBuilder withSearchId(String withSearchId) {
         this.searchId = withSearchId;
         return this;
@@ -182,6 +173,16 @@ public class ClientBuilder {
 
     public ClientBuilder withCustomerActivationDate(DateTime withActivationDate) {
         this.activationDate = withActivationDate;
+        return this;
+    }
+
+    public ClientBuilder pendingApproval() {
+        this.customerStatus = CustomerStatus.CLIENT_PENDING;
+        return this;
+    }
+
+    public ClientBuilder active() {
+        this.customerStatus = CustomerStatus.CLIENT_ACTIVE;
         return this;
     }
 

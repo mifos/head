@@ -27,14 +27,26 @@ import org.mifos.customers.client.business.ClientNameDetailDto;
 
 public class ClientFamilyInfoUpdate {
 
+    private final Integer customerId;
+    private final Integer oldVersionNum;
     private final List<Integer> familyPrimaryKey;
     private final List<ClientNameDetailDto> familyNames;
     private final List<ClientFamilyDetailDto> familyDetails;
 
-    public ClientFamilyInfoUpdate(List<Integer> familyPrimaryKey, List<ClientNameDetailDto> familyNames, List<ClientFamilyDetailDto> familyDetails) {
+    public ClientFamilyInfoUpdate(Integer customerId, Integer oldVersionNum, List<Integer> familyPrimaryKey, List<ClientNameDetailDto> familyNames, List<ClientFamilyDetailDto> familyDetails) {
+        this.customerId = customerId;
+        this.oldVersionNum = oldVersionNum;
         this.familyPrimaryKey = familyPrimaryKey;
         this.familyNames = familyNames;
         this.familyDetails = familyDetails;
+    }
+
+    public Integer getCustomerId() {
+        return this.customerId;
+    }
+
+    public Integer getOldVersionNum() {
+        return this.oldVersionNum;
     }
 
     public List<Integer> getFamilyPrimaryKey() {

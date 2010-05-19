@@ -1,4 +1,5 @@
-	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
@@ -28,13 +29,12 @@
         <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
         <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
         <!-- mimics ConfigurationLocator directory search behavior -->
-        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf> 
+        <mifos.overrides.conf>${mifos.conf}/local.properties</mifos.overrides.conf>
         <mifos.overrides.env>${env.MIFOS_CONF}/local.properties</mifos.overrides.env>
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <!--
-        Don't search System.getProperty("conf.dir") for local.properties; no
-        need. It is only used to override settings in
-        acceptanceDatabase.properties.
+            Don't search System.getProperty("conf.dir") for local.properties; no need. It is only used to override
+            settings in acceptanceDatabase.properties.
         -->
         <acceptanceTest.settings>${basedir}/src/test/resources/org/mifos/config/resources/acceptanceTest.properties</acceptanceTest.settings>
         <acceptanceTest.groups.to.run>smoke</acceptanceTest.groups.to.run>
@@ -166,8 +166,8 @@
             </activation>
             <properties>
                 <tomcat.container.url>file:///home/hudson/arc/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
-        		<!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
-        		<acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
+                <!-- leaving <acceptanceTest.groups.to.run> empty means to run everything -->
+                <acceptanceTest.groups.to.run></acceptanceTest.groups.to.run>
             </properties>
             <build>
                 <plugins>
@@ -253,9 +253,9 @@
             <version>1.6</version>
         </dependency>
         <dependency>
-        	<groupId>junit</groupId>
-        	<artifactId>junit</artifactId>
-        	<scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -273,7 +273,7 @@
                 <filtering>true</filtering>
                 <targetPath>sql</targetPath>
             </resource>
-        </resources> 
+        </resources>
 
         <plugins>
             <plugin>
@@ -319,7 +319,7 @@
                     <skip>${maven.test.skip}</skip>
                 </configuration>
                 <executions>
-                        <execution>
+                    <execution>
                         <id>drop_db</id>
                         <phase>pre-integration-test</phase>
                         <goals>
@@ -355,8 +355,8 @@
                             </srcFiles>
                         </configuration>
                     </execution>
-                </executions>           
-            </plugin>   
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -395,8 +395,7 @@
                     <groups>${acceptanceTest.groups.to.run}</groups>
                     <excludedGroups>workInProgress</excludedGroups>
                     <!--
-                    Skip the normal tests, we'll run them in the integration-test
-                    phase
+                        Skip the normal tests, we'll run them in the integration-test phase
                     -->
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <skip>true</skip>

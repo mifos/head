@@ -3,7 +3,7 @@ set -o errexit
 
 DATABASE_VERSION=`echo 'select database_version from database_version' | mysql --skip-column-names -u hudson -phudson hudson_mifos_gazelle_trunk`
 tempDir=`mktemp -d`
-outputDir=/var/www/schema/trunk/$DATABASE_VERSION
+outputDir=/var/www/schema/head/$DATABASE_VERSION
 
 if [ -d $outputDir ]
 then
@@ -20,5 +20,10 @@ java -jar $HOME/arc/schemaSpy_4.1.1.jar -t mysql -host localhost -u hudson -p hu
 # FIXME: this won't work unless schemaSpy is modified to return exit codes that make sense... currently it appears to always return "success"
 mv $tempDir $outputDir
 
-# without this permission http://ci.mifos.org/schema/trunk/ will not list new directory
+# without this permission http://ci.mifos.org/schema/head/ will not list new directory
+# (When Hudson runs this script, umask might not be 0022)
 chmod 755 $outputDir
+
+cd $outputDir/..
+rm latest
+ln -s $DATABASE_VERSION latest

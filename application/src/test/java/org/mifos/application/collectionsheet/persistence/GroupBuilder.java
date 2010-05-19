@@ -175,4 +175,9 @@ public class GroupBuilder {
         this.versionNumber = withVersionNumber;
         return this;
     }
+
+    public GroupBuilder pendingApproval() {
+        this.customerStatus = CustomerStatus.GROUP_PENDING;
+        return this;
+    }
 }

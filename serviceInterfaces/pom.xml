@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
-        </dependency>      
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -78,7 +78,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>         
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -115,7 +115,7 @@
                     <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <targetJdk>1.6</targetJdk>
-                    <includeTests>true</includeTests>               
+                    <includeTests>true</includeTests>
                     <rulesets>
                         <ruleset>${modules.root.dir}/.ruleset</ruleset>
                     </rulesets>
@@ -128,7 +128,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>         
+            </plugin>
         </plugins>
     </reporting>
 </project>
