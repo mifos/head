@@ -80,7 +80,4 @@ public class BranchReportBOFixture {
                 clientsFormedByThisMonth, createMoney(DEFAULT_CURRENCY, loanArrearsAmount));
     }
 
-    public static BranchReportStaffingLevelSummaryBO createStaffingLevelBO(Integer roleId) {
-        return BranchReportStaffingLevelSummaryBO.createInstanceForTest(roleId);
-    }
 }

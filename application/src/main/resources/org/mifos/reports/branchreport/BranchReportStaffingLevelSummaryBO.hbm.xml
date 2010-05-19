@@ -30,8 +30,8 @@ explanation of the license and how it is applied.
 			type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="roleId" column="ROLE_ID" type="integer" access="field" />
-		<property name="roleName" column="ROLE_NAME" type="string" access="field" />
+		<property name="isTotal" column="ROLE_ID" type="integer" access="field" />
+		<property name="titleName" column="ROLE_NAME" type="string" access="field" />
 		<property name="personnelCount" column="PERSONNEL_COUNT" type="integer" access="field" />		 
 		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
@@ -48,37 +48,8 @@ explanation of the license and how it is applied.
 			AND branchReport.RUN_DATE=:RUN_DATE 
 			AND branchReport.BRANCH_ID=:BRANCH_ID
 		]]>
-	</sql-query>	
+	</sql-query>			
 
-	<sql-query name="branchReport.extractStaffingLevelSummaryForBranch">
-	    <return-scalar column="roleId" type="integer"/> 	    
-	    <return-scalar column="roleName" type="string"/> 	    
-		<return-scalar column="personnelCount" type="integer"/>
-		<![CDATA[select r.role_id as roleId, role_name as roleName, count(office_personnel_role.personnel_id) as personnelCount 
-				from role r inner join 
-				    (select p.personnel_id, prole.role_id 
-				     from personnel p, personnel_role prole 
-				     where p.personnel_id = prole.personnel_id
-				     and p.office_id=:officeId
-				     and p.personnel_status = 1
-				     ) as office_personnel_role
-				on r.role_id = office_personnel_role.role_id
-				group by r.role_id
-		]]>
-	</sql-query>		
-	<sql-query name="branchReport.extractTotalStaffingLevelSummaryForBranch">
-	    <return-scalar column="roleId" type="integer"/> 	    
-	    <return-scalar column="roleName" type="string"/> 	    
-		<return-scalar column="personnelCount" type="integer"/>
-		<![CDATA[select :TOTAL_STAFF_ROLE_ID as roleId, :TOTAL_STAFF_ROLE_NAME as roleName, 
-					count(distinct prole.personnel_id) as personnelCount 
-				    from role r,personnel_role prole, personnel p where prole.personnel_id=p.personnel_id
-				    and prole.role_id=r.role_id
-				    and p.office_id=:officeId
-				    and p.personnel_status=1
-		]]>
-	</sql-query>
-	
 	<sql-query name="branchReport.extractStaffingLevelSummaryForBranchByTitle">
 		<return-scalar column="personnelCount" type="integer"/>
 	    <return-scalar column="titleKey" type="string"/> 	    

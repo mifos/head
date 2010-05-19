@@ -27,12 +27,10 @@ import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LO
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOAN_ARREARS_IN_PERIOD;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOAN_DETAILS;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOAN_PROFILE_CLIENTS_AT_RISK;
-import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_ACTIVE_BORROWERS_LOANS;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_CENTER_AND_CLIENT_COUNT;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_LOAN_AMOUNT_OUTSTANDING;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_PAR;
-import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_TOTAL_STAFFING_LEVEL_SUMMARY;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_CLIENT_SUMMARY_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_FOR_DATE;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_FOR_DATE_AND_BRANCH;
@@ -56,7 +54,8 @@ import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_R
 import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_NAME_PARAM;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
 import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME;
 
 import java.math.BigDecimal;
@@ -239,24 +238,6 @@ public class BranchReportPersistence extends Persistence {
         return getCalculateValueFromQueryResult(executeNamedQuery(EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR, params));
     }
 
-    /*
-    public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummary(Short branchId)
-            throws PersistenceException {
-        List<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = new ArrayList<BranchReportStaffingLevelSummaryBO>();
-        List<Object[]> resultSet = executeNamedQuery(EXTRACT_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY,
-                populateQueryParams(branchId));
-        HashMap<String, Object> params = populateQueryParams(branchId);
-        params.put(TOTAL_STAFF_ROLE_ID_PARAM, TOTAL_STAFF_ROLE_ID);
-        params.put(TOTAL_STAFF_ROLE_NAME_PARAM, TOTAL_STAFF_ROLE_NAME);
-        resultSet.addAll(executeNamedQuery(EXTRACT_BRANCH_REPORT_TOTAL_STAFFING_LEVEL_SUMMARY, params));
-        for (Object[] result : resultSet) {
-            staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO((Integer) result[0], (String) result[1],
-                    (Integer) result[2]));
-        }
-        return staffingLevelSummaries;
-    }
-    */
-
     public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummary(Short branchId)
     throws PersistenceException {
         List<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = new ArrayList<BranchReportStaffingLevelSummaryBO>();
@@ -275,11 +256,11 @@ public class BranchReportPersistence extends Persistence {
                 titleName = MessageLookup.getInstance().lookup(messageKeyForTitleName);
             }
             totalStaff += staffCountForThisTitle;
-            staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(1,
+            staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL,
                     titleName, staffCountForThisTitle));
         }
-        staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(TOTAL_STAFF_ROLE_ID,
-                "Total Staff", totalStaff));
+        staffingLevelSummaries.add(new BranchReportStaffingLevelSummaryBO(IS_TOTAL,
+                TOTAL_STAFF_ROLE_NAME, totalStaff));
 
         return staffingLevelSummaries;
     }
