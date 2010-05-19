@@ -977,7 +977,7 @@ public class TestObjectFactory {
      * createPeriodicAmountFee.
      *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link CustomerAccountBOIntegrationTest#testApplyPeriodicFee} (and about 163 other tests).
+     * CustomerAccountBOIntegrationTest#testApplyPeriodicFee (and about 163 other tests).
      */
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter) {
@@ -1085,7 +1085,7 @@ public class TestObjectFactory {
      * createOneTimeAmountFee.
      *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
-     * {@link CustomerAccountBOIntegrationTest#testApplyUpfrontFee} (and other tests).
+     * CustomerAccountBOIntegrationTest#testApplyUpfrontFee (and other tests).
      */
     public static FeeBO createOneTimeAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final FeePayment feePayment) {

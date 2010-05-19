@@ -617,8 +617,20 @@ public class ActivityMapper {
 
     public boolean isSavePermittedForCustomer(short newSate, UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(userContext,
-                new ActivityContext(getActivityIdForCustomerState(newSate), recordOfficeId, recordLoanOfficerId));
+
+        final short activityId = getActivityIdForCustomerState(newSate);
+
+        if (recordOfficeId == null) {
+            recordOfficeId = userContext.getBranchId();
+        }
+
+        if (recordLoanOfficerId == null) {
+            recordLoanOfficerId = userContext.getId();
+        }
+
+        ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
+
+        return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
     }
 
     public boolean isAddingNotesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,

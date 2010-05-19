@@ -67,6 +67,7 @@ import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
@@ -122,8 +123,7 @@ public class CenterStatusChangeIntegrationTest {
 
     @Before
     public void cleanDatabaseTables() throws Exception {
-        databaseCleaner.clean();
-
+        StaticHibernateUtil.getSessionTL().clear();
         Locale locale = Localization.getInstance().getMainLocale();
         AuditConfigurtion.init(locale);
 
@@ -137,7 +137,6 @@ public class CenterStatusChangeIntegrationTest {
 
     @Test
     public void auditLogingTracksStatusChangeOfCenterFromActiveToInactive() throws Exception {
-
         // setup
         CenterBO existingCenter = new CenterBuilder().withName("Center-IntegrationTest")
                                             .with(existingMeeting)

@@ -44,6 +44,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -74,6 +75,7 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.getSessionTL().clear();
         groupBusinessService = (GroupBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.Group);
     }

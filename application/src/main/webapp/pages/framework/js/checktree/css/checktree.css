@@ -1,0 +1,53 @@
+/** vim: ts=4:sw=4:nu:fdc=4:nospell
+ *
+ * checktree css file
+ *
+ * @author    Ing.Jozef Sakáloš
+ * @copyright (c) 2008, by Ing. Jozef Sakáloš
+ * @date      2. January 2009
+ * @version   $Id: checktree.css 109 2009-01-15 17:43:38Z jozo $
+ */
+
+#west-content a {
+	text-decoration:none;
+}
+#west-content a:hover {
+	text-decoration:underline;
+}
+#west {
+	width:280px;
+}
+#center {
+	width:640px;
+}
+#adsense-top {
+	margin: 10px 0 10px 0;
+}
+#west-content {
+	font-family:arial, sans-serif;
+}
+#description {
+	color:#777777;
+	text-align:justify;
+	margin:0 10px 0 0;
+}
+#description em {
+	font-style:italic;
+	font-weight:bold;
+}
+#description p {
+	margin: 2px 0 8px 0;
+}
+.tree-ct {
+	float:left;
+	margin:20px 10px 10px 10px;
+}
+#change-log {
+	margin: 0 10px 0 10px;
+}
+#change-log ul {
+	list-style-type: disc;
+	margin:8px 0 0 1.1em;
+}
+/* eof */
+

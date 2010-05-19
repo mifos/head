@@ -795,6 +795,7 @@
 	        	              and (c.firstName like :SEARCH_STRING 
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
+	        	              or c.displayName like :SEARCH_STRING
 	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
 	        	              
 	        	              )
@@ -820,6 +821,7 @@
 	        	              and (c.firstName like :SEARCH_STRING 
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
+	        	              or c.displayName like :SEARCH_STRING
 	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
 	        	              )
 	        	               )
@@ -837,7 +839,9 @@
                          and (off.searchId like :OFFICE_SEARCH_ID) 
                          and (
                                (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+                    		   or (c.customerLevel.id =:LEVELID and 
+                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+	        	              			or c.displayName like :SEARCH_STRING
                     		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
                     		   ))
                     		   )
@@ -855,7 +859,9 @@
                          and (off.searchId like :OFFICE_SEARCH_ID) 
                          and (
                                (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+                    		   or (c.customerLevel.id =:LEVELID and 
+                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+	        	              			or c.displayName like :SEARCH_STRING
                     		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
                     		   ))
                     		   )

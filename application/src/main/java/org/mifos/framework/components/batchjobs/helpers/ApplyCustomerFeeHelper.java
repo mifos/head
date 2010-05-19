@@ -89,7 +89,7 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
                 List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
 
-                customerAccount.applyPeriodicFees(workingDays, holidays);
+                customerAccount.applyPeriodicFeesToNextSetOfMeetingDates();
 
                 StaticHibernateUtil.startTransaction();
                 CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();

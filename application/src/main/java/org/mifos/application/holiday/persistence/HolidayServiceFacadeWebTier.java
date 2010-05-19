@@ -20,8 +20,14 @@
 
 package org.mifos.application.holiday.persistence;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -53,16 +59,24 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
             throw new ServiceException(e);
         }
     }
+
     @Override
-    public void createHoliday(HolidayDetails holidayDetails) throws ServiceException {
-        try {
-            holidayDetails.validate();
-            HolidayBO holiday = new HolidayBO(holidayDetails);
-            officePersistence.createOrUpdate(holiday);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        } catch (ValidationException e) {
-            throw new ServiceException(e);
+    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException{
+        HolidayDaoHibernate holidayDaoHibernate = new HolidayDaoHibernate(new GenericDaoHibernate());
+        List<HolidayBO> holidays = holidayDaoHibernate.findAllHolidays();
+        Map<String, List<OfficeHoliday>> holidaysByYear = new TreeMap<String, List<OfficeHoliday>>();
+        for (HolidayBO holiday : holidays) {
+            HolidayDetails holidayDetail = new HolidayDetails(holiday.getHolidayName(), holiday.getHolidayFromDate(), holiday
+                    .getHolidayThruDate(), holiday.getRepaymentRuleType());
+            int year = holiday.getThruDate().getYear();
+            List<OfficeHoliday> holidaysInYear = holidaysByYear.get(Integer.toString(year));
+            if (holidaysInYear == null) {
+                holidaysInYear = new LinkedList<OfficeHoliday>();
+            }
+            holidaysInYear.add(new OfficeHoliday(holidayDetail,holidayDaoHibernate.applicableOffices(holiday.getId())));
+            holidaysByYear.put(Integer.toString(year), holidaysInYear);
         }
+        return holidaysByYear;
     }
+
 }

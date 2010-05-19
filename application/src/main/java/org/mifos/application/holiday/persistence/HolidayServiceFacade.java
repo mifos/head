@@ -21,11 +21,12 @@
 package org.mifos.application.holiday.persistence;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.framework.exceptions.ServiceException;
 
 public interface HolidayServiceFacade {
     void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds) throws ServiceException;
 
-    void createHoliday(HolidayDetails holidayDetails) throws ServiceException;
+    Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException;
 }
