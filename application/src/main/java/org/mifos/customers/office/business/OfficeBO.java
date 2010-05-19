@@ -679,4 +679,8 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
         return isParent;
     }
+
+    public void addHoliday(HolidayBO holiday){
+        getHolidays().add(holiday);
+    }
 }

@@ -395,6 +395,9 @@ public interface NamedQueryConstants {
 
     // holiday handling
     public String GET_HOLIDAYS = "holiday.getHolidays";
+    public String GET_ALL_HOLIDAYS = "holiday.getAll";
+    public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
+    public String GET_OFFICE_NAMES = "holiday.officeNames";
     public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
     public String GET_REPAYMENT_RULE = "holiday.getRepaymentRule";
     public String SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS = "savingsScheduleEntity.getScheduleForIds";

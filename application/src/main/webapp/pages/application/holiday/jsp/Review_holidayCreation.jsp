@@ -66,7 +66,7 @@ explanation of the license and how it is applied.
           			</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-					<html-el:link action="holidayAction.do?method=getHolidays&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+					<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
           				<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
           			</html-el:link>
           	     </span>
@@ -102,31 +102,36 @@ explanation of the license and how it is applied.
                 <td width="11%" class="drawtablehd">
                		 <mifos:mifoslabel name="holiday.HolidayThruDate" bundle="HolidayUIResources"/>
                 </td>
-                <td width="28%" class="drawtablehd">
+                <td width="20%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayName" bundle="HolidayUIResources"/>
 				</td>
-				<td width="50%" class="drawtablehd">
+				<td width="20%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayRepaymentRule" bundle="HolidayUIResources"/>
+				</td>
+				<td width="38%" class="drawtablehd">
+                	<mifos:mifoslabel name="holiday.ApplicableOffices" bundle="HolidayUIResources"/>
 				</td>
               </tr>
 	          <tr>
 	          	<td width="11%" class="drawtablerow">${holidayActionForm.holidayFromDate}</td>
 	            	<td width="11%" class="drawtablerow">${holidayActionForm.holidayThruDate}</td>
-	                <td width="28%" class="drawtablerow">${holidayActionForm.holidayName}</td>
-	                <td width="50%" class="drawtablerow">
+	                <td width="20%" class="drawtablerow">${holidayActionForm.holidayName}</td>
+	                <td width="20%" class="drawtablerow">
 	                	<c:forEach var="RRT" items="${RepaymentRuleType}" >
 							<c:if
 								  test="${RRT.key == sessionScope.holidayActionForm.repaymentRuleId}">
 									<c:out value="${RRT.value}" />
 							</c:if>
 						</c:forEach>
-				</td>
+					</td>
+					<td width="38%" class="drawtablerow">${SelectedOfficeNames}</td>
 	          </tr>          
               <tr>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
-                <td width="28%" class="drawtablerow">&nbsp;</td>
-                <td width="50%" class="drawtablerow">&nbsp;</td>
+                <td width="20%" class="drawtablerow">&nbsp;</td>
+                <td width="20%" class="drawtablerow">&nbsp;</td>
+                <td width="38%" class="drawtablerow">&nbsp;</td>
               </tr>
              
             </table>

@@ -112,6 +112,7 @@ public class HolidayTest extends UiTestCaseBase {
         params.setThruDateMM("06");
         params.setThruDateYYYY("2009");
         params.setRepaymentRule(CreateHolidaySubmitParameters.NEXT_WORKING_DAY);
+        params.setSelectedOfficeIds("1");
         return params;
     }
 

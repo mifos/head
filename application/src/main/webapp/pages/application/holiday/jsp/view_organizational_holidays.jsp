@@ -73,10 +73,7 @@ explanation of the license and how it is applied.
             </tr>    
           </table>
           
-           <c:forEach var="item" begin="1" end="<%= Integer.parseInt(request.getSession().getAttribute(HolidayConstants.NO_OF_YEARS).toString())%>">
-	        <%pageContext.setAttribute(HolidayConstants.HOLIDAY_LIST, HolidayConstants.HOLIDAY_LIST + pageContext.getAttribute("item"));%>
-	        
-	        
+           <c:forEach var="item" begin="1" end="${noOfYears}">
             <span class="fontnormalbold">
 			  <mifos:mifoslabel name="holiday.labelHolidaysForYear" bundle="HolidayUIResources"/>
 			  <%= request.getSession().getAttribute(HolidayConstants.YEAR + pageContext.getAttribute("item")) %>
@@ -93,26 +90,31 @@ explanation of the license and how it is applied.
                 <td width="11%" class="drawtablehd">
                		 <mifos:mifoslabel name="holiday.HolidayThruDate" bundle="HolidayUIResources"/>
                 </td>
-                <td width="28%" class="drawtablehd">
+                <td width="20%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayName" bundle="HolidayUIResources"/>
 				</td>
-				<td width="50%" class="drawtablehd">
+				<td width="15%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayRepaymentRule" bundle="HolidayUIResources"/>
 				</td>
+				<td width="43%" class="drawtablehd">
+                	<mifos:mifoslabel name="holiday.ApplicableOffices" bundle="HolidayUIResources"/>
+				</td>
               </tr>
-              <c:forEach var="holidayItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey, holidayList)}" >
+              <c:forEach var="holidayItem" items='<%= request.getSession().getAttribute(HolidayConstants.HOLIDAY_LIST + pageContext.getAttribute("item")) %>' >
 	              <tr>
-	                <td width="11%" class="drawtablerow">${holidayItem.holidayFromDate}</td>
-	                <td width="11%" class="drawtablerow">${holidayItem.holidayThruDate}&nbsp;</td>
-	                <td width="28%" class="drawtablerow">${holidayItem.holidayName}</td>
-	                <td width="50%" class="drawtablerow">${holidayItem.repaymentRuleType.name}</td>
+	                <td width="11%" class="drawtablerow">${holidayItem.holidayDetails.fromDate}</td>
+	                <td width="11%" class="drawtablerow">${holidayItem.holidayDetails.thruDate}&nbsp;</td>
+	                <td width="20%" class="drawtablerow">${holidayItem.holidayDetails.name}</td>
+	                <td width="15%" class="drawtablerow">${holidayItem.holidayDetails.repaymentRuleName}</td>
+	                <td width="43%" class="drawtablerow">${holidayItem.officeNamesAsString}</td>
 	              </tr>
               </c:forEach>           
               <tr>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
-                <td width="28%" class="drawtablerow">&nbsp;</td>
-                <td width="50%" class="drawtablerow">&nbsp;</td>
+                <td width="20%" class="drawtablerow">&nbsp;</td>
+                <td width="15%" class="drawtablerow">&nbsp;</td>
+                <td width="43%" class="drawtablerow">&nbsp;</td>
               </tr>
              
             </table>            
