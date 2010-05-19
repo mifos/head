@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
@@ -50,6 +51,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class WebTierFeeServiceFacadeTest {
     @Mock
     FeeBusinessService feeBusinessService;

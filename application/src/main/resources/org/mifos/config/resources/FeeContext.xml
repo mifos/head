@@ -11,24 +11,24 @@
       http://www.springframework.org/schema/aop
       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
       
-  	<import resource="integrationPropertyConfigurer.xml" />
+  	<import resource="mainPropertyConfigurer.xml" />
   	<!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="/integrationDatabase.properties"/>
+		<property name="location" value="/mainDatabase.properties"/>
     </bean>
     -->
     
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-    	<property name="driverClass" value="${integration.database.driver}"/> 
-    	<property name="jdbcUrl" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}?${integration.database.params.spring}" />
-    	<property name="user" value="${integration.database.user}"/>
-    	<property name="password" value="${integration.database.password}"/>
+    	<property name="driverClass" value="${main.database.driver}"/> 
+    	<property name="jdbcUrl" value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}" />
+    	<property name="user" value="${main.database.user}"/>
+    	<property name="password" value="${main.database.password}"/>
     	<property name="initialPoolSize" value="5"></property>
-    	<property name="minPoolSize" value="${integration.database.hibernate.c3p0.min_size}"/>
-    	<property name="maxPoolSize" value="${integration.database.hibernate.c3p0.max_size}"/>
-    	<property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/> 
-    	<property name="maxStatements" value="${integration.database.hibernate.c3p0.max_statements}"></property>
-    	<property name="testConnectionOnCheckin" value="true"></property>
-    	<property name="idleConnectionTestPeriod" value="${integration.database.hibernate.c3p0.idle_test_period}"></property> 
+    	<property name="minPoolSize" value="${main.database.hibernate.c3p0.min_size}"/>
+    	<property name="maxPoolSize" value="${main.database.hibernate.c3p0.max_size}"/>
+    	<property name="checkoutTimeout" value="${main.database.hibernate.c3p0.timeout}"/> 
+    	<property name="maxStatements" value="${main.database.hibernate.c3p0.max_statements}"></property>
+    	<property name="testConnectionOnCheckout" value="false"/>
+    	<property name="idleConnectionTestPeriod" value="${main.database.hibernate.c3p0.idle_test_period}"></property> 
    	</bean>
     
     <!--  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  -->
@@ -81,13 +81,14 @@
 		<!--  <property name = "packagesToScan" value="org.mifos.accounts.fees.servicefacade.entities" />  -->
 		<property name="hibernateProperties">
 			<value>
-				hibernate.dialect=${integration.database.hibernate.dialect}
-				hibernate.show_sql=${integration.database.hibernate.show_sql}
-				hibernate.generate_statistics=true
-				hibernate.format_sql=${integration.database.hibernate.format_sql}
+				hibernate.dialect=${main.database.hibernate.dialect}
+				hibernate.show_sql=${main.database.hibernate.show_sql}
+				hibernate.generate_statistics=false
+				hibernate.format_sql=false
 				hibernate.use_sql_comments=false
-				hibernate.cache.use_query_cache=${integration.database.hibernate.cache.use_query_cache}
-				hibernate.cache.use_second_level_cache=${integration.database.hibernate.cache.use_second_level_cache}
+				hibernate.cache.use_query_cache=${main.database.hibernate.cache.use_query_cache}
+				hibernate.cache.use_second_level_cache=${main.database.hibernate.cache.use_second_level_cache}
+				hibernate.connection.provider_class=${main.database.hibernate.connection.provider_class}
 			</value>
 	  </property>
     </bean>
@@ -146,6 +147,7 @@
 	<bean id="masterEntityDao" class="org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
+	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
 	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade"/>
 

@@ -11,8 +11,8 @@ public class QueryIntroductionInterceptor extends DelegatingIntroductionIntercep
         if (mi.getThis() instanceof QueryExecutor) {
             QueryExecutor qryExec = (QueryExecutor) mi.getThis();
             String methodName = mi.getMethod().getName();
-            //TODO: introduce a @noIntercept() annotation, and check with mi.getMethod().getAnnotations()??
-            if(methodName.startsWith("find") || methodName.startsWith("retrieve")) {
+            //TODO: introduce a @InceptFindQuery, @noInterceptFindQuery() annotation, and check with mi.getMethod().getAnnotations()??
+            if(methodName.startsWith("retrieve")) {
                 Object[] arguments = mi.getArguments();
                 return qryExec.execFindQuery(methodName, arguments);
             }

@@ -2,11 +2,13 @@ package org.mifos.accounts.fees.servicefacade;
 
 import java.util.List;
 
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.customers.office.business.OfficeBO;
@@ -27,4 +29,5 @@ public interface FeeService {
     public List<FeeEntity> retrieveCustomerFees();
     public List<FeeEntity> retrieveProductFees();
     public FeeEntity findFeeById(Short feeId);
+    public FeeEntity updateFee(UserContext userContext, Short feeId, Money feeMoney, Double rate, FeeStatus feeStatus) throws PersistenceException;
 }

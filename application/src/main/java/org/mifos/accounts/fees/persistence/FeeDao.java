@@ -8,5 +8,5 @@ import org.mifos.accounts.fees.persistence.GenericDao;
 
 public interface FeeDao extends GenericDao<FeeEntity, Short> {
     List<FeeEntity> retrieveCustomerFees();
-
+    List<FeeEntity> retrieveProductFees();
 }

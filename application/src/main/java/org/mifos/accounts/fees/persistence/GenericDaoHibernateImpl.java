@@ -64,7 +64,7 @@ public class GenericDaoHibernateImpl<T, ID extends Serializable>
 
     protected Query prepareQuery(String qryMethodName, Object[] queryArgs) {
         final String queryName = type.getSimpleName() + "." + qryMethodName;
-        final Query namedQuery = getSession().getNamedQuery(queryName);
+        final Query namedQuery = getHibernateTemplate().getSessionFactory().getCurrentSession().getNamedQuery(queryName);
         String[] namedParameters = namedQuery.getNamedParameters();
         if (namedParameters.length==0) {
             if(queryArgs != null) {

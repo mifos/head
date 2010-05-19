@@ -32,6 +32,7 @@ import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -172,10 +173,6 @@ public abstract class FeeEntity extends org.mifos.framework.business.AbstractEnt
         return this.updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
     public Short getUpdatedBy() {
         return this.updatedBy;
     }
@@ -263,6 +260,14 @@ public abstract class FeeEntity extends org.mifos.framework.business.AbstractEnt
 
     public void setFeeStatus(FeeStatusEntity feeStatus) {
         this.feeStatus = feeStatus;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public void setUpdatedBy(Short updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public boolean isCustomerDefaultFee() {

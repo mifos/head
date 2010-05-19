@@ -83,9 +83,17 @@ public class FeeDaoTest {
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
     public void shouldRetrieveCustomerFees() throws Exception {
-
-        FeeEntity fee = createPeriodicFee(true);
+        FeeEntity fee = createPeriodicFee(true, "shouldRetrieveCustomerFees", FeeCategory.ALLCUSTOMERS);
         List<FeeEntity> fees = feeDao.retrieveCustomerFees();
+        Assert.assertTrue(!fees.isEmpty());
+    }
+
+    @Test
+    @Transactional(rollbackFor=DataAccessException.class)
+    //@Rollback(false)
+    public void shouldRetrieveProductFees() throws Exception {
+        FeeEntity fee = createPeriodicFee(false, "shouldRetrieveProductFees", FeeCategory.LOAN);
+        List<FeeEntity> fees = feeDao.retrieveProductFees();
         Assert.assertTrue(!fees.isEmpty());
     }
 
@@ -178,15 +186,21 @@ public class FeeDaoTest {
     //@Rollback(false)
     public void shouldCreatePeriodicCustomerDefaultFee() throws Exception {
         //with customer default fee
-        createPeriodicFee(true);
+        FeeEntity fee = createPeriodicFee(true, "FeeDaoTest.shouldCreatePeriodicCustomerDefaultFee", FeeCategory.ALLCUSTOMERS);
+        sessionFactory.getCurrentSession().flush();
+        FeeEntity newFee = getFeeDao().getDetails(fee.getFeeId());
+        Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), newFee.getCategoryType().getId());
+        Assert.assertEquals(true, newFee.isCustomerDefaultFee());
+        Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
+
     }
 
-    private FeeEntity createPeriodicFee(boolean isCustomerDefaultFee) throws Exception {
+    private FeeEntity createPeriodicFee(boolean isCustomerDefaultFee, String feeName, FeeCategory category) throws Exception {
         MeetingBO feefrequencyMeeting =
             new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
         FeeEntity fee =
-           new RateFeeEntity("test.ShouldCreatePeriodicDefaultFee",
-                new CategoryTypeEntity(FeeCategory.ALLCUSTOMERS), glCode, 100.0,
+           new RateFeeEntity(feeName,
+                new CategoryTypeEntity(category), glCode, 100.0,
                 new FeeFormulaEntity(FeeFormula.AMOUNT), isCustomerDefaultFee,
                 TestObjectFactory.getHeadOffice());
         FeeFrequencyTypeEntity feeFrequencyType = new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC);
@@ -194,13 +208,6 @@ public class FeeDaoTest {
                 new FeeFrequencyEntity(feeFrequencyType, fee, null, feefrequencyMeeting));
         getFeeDao().create(fee);
         Assert.assertTrue( fee.getFeeId() != null);
-
-        sessionFactory.getCurrentSession().flush();
-
-        FeeEntity newFee = getFeeDao().getDetails(fee.getFeeId());
-        Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), newFee.getCategoryType().getId());
-        Assert.assertEquals(true, newFee.isCustomerDefaultFee());
-        Assert.assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
         return fee;
     }
 

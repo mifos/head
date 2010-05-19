@@ -18,12 +18,14 @@ import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.persistence.MasterEntityDao;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -33,6 +35,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,8 +233,55 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public List<FeeEntity> retrieveProductFees() {
-        // TODO Auto-generated method stub
-        return null; //feeDao.retrieveProductFees();
+        return feeDao.retrieveProductFees();
+    }
+
+    @Override
+    public FeeEntity updateFee(UserContext userContext, Short feeId, Money feeMoney, Double rate, FeeStatus feeStatus) throws PersistenceException {
+        FeeEntity fee = feeDao.getDetails(feeId);
+        FeeChangeType feeChangeType;
+        if (fee instanceof AmountFeeEntity) {
+            AmountFeeEntity amountFee = (AmountFeeEntity) fee;
+            feeChangeType = calculateNewAmountFeeChangeType(amountFee, feeMoney, feeStatus);
+            amountFee.setFeeAmount(feeMoney);
+        }
+        else {
+            RateFeeEntity rateFee = (RateFeeEntity) fee;
+            feeChangeType = calculateNewRateFeeChangeType(rateFee, rate, feeStatus);
+            rateFee.setRate(rate);
+        }
+        fee.setFeeStatus(retrieveFeeStatusEntity(feeStatus, userContext.getLocaleId()));
+        fee.updateFeeChangeType(feeChangeType);
+        fee.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+        fee.setUpdatedBy(userContext.getId());
+        feeDao.update(fee);
+        return fee;
+    }
+
+    private FeeChangeType calculateNewAmountFeeChangeType(AmountFeeEntity fee, Money newAmount, FeeStatus newStatus) {
+        if (!fee.getFeeAmount().equals(newAmount)) {
+            if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
+                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+            }
+            return FeeChangeType.AMOUNT_UPDATED;
+        } else if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
+            return FeeChangeType.STATUS_UPDATED;
+        } else {
+            return FeeChangeType.NOT_UPDATED;
+        }
+    }
+
+    private FeeChangeType calculateNewRateFeeChangeType(RateFeeEntity fee, Double newRate, FeeStatus newStatus) {
+        if (!fee.getRate().equals(newRate)) {
+            if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
+                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+            }
+            return FeeChangeType.AMOUNT_UPDATED;
+        } else if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
+            return FeeChangeType.STATUS_UPDATED;
+        } else {
+            return FeeChangeType.NOT_UPDATED;
+        }
     }
 
 

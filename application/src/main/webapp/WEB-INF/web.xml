@@ -10,6 +10,7 @@
 		    WEB-INF\classes\org\mifos\config\resources\applicationContext.xml
 		    WEB-INF\classes\org\mifos\config\resources\services.xml
 		    WEB-INF\classes\org\mifos\config\resources\hibernate-daos.xml
+		    WEB-INF\classes\org\mifos\config\resources\FeeContext.xml		    
         </param-value>
     </context-param>
 
