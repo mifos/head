@@ -45,4 +45,8 @@ public class OfficeDto implements DataTransferObject{
     public String getName() {
         return this.name.trim();
     }
+
+    public String getText() {
+        return this.name.trim();
+    }
 }

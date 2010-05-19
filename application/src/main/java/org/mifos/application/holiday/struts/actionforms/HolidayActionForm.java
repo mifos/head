@@ -64,14 +64,14 @@ public class HolidayActionForm extends BaseActionForm {
 
     private String holidayName;
 
-    private String[] applicableOffices;
+    private String selectedOfficeIds;
 
-    public String[] getApplicableOffices() {
-        return this.applicableOffices;
+    public String getSelectedOfficeIds() {
+        return this.selectedOfficeIds;
     }
 
-    public void setApplicableOffices(String[] applicableOffices) {
-        this.applicableOffices = applicableOffices;
+    public void setSelectedOfficeIds(String selectedOfficeIds) {
+        this.selectedOfficeIds = selectedOfficeIds;
     }
 
     public HolidayActionForm() {
@@ -152,6 +152,11 @@ public class HolidayActionForm extends BaseActionForm {
         if (repaymentRuleId == null || repaymentRuleId.equals("")) {
             actionErrors.add(HolidayConstants.REPAYMENT_RULE, new ActionMessage(HolidayConstants.ERRORMANDATORYFIELD,
                     getLocaleString(HolidayConstants.HOLIDAYREPAYMENTRULE, userContext)));
+        }
+
+        if (selectedOfficeIds == null || selectedOfficeIds.equals("")) {
+            actionErrors.add(HolidayConstants.SELECTED_OFFICE_NAMES, new ActionMessage(HolidayConstants.ERRORMANDATORYFIELD,
+                    getLocaleString(HolidayConstants.HOLIDAY_APPLICABLE_OFFICES, userContext)));
         }
 
     }

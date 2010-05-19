@@ -20,9 +20,12 @@
 
 package org.mifos.customers.office.persistence;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -312,5 +315,11 @@ public class OfficePersistence extends Persistence {
         List<OfficeBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES_FOR_CUSTOM_FIELD,
                 queryParameters);
         return queryResult;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> officeName(Collection<Short> ids) {
+        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_OFFICE_NAMES);
+        return namedQuery.setParameterList("OFFICE_IDS", ids).list();
     }
 }

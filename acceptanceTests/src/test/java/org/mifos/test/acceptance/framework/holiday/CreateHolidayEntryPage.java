@@ -53,6 +53,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         private String thruDateMM;
         private String thruDateYYYY;
         private String repaymentRule;
+        private String selectedOfficeIds;
 
         public String getName() {
             return this.name;
@@ -128,6 +129,14 @@ public class CreateHolidayEntryPage extends MifosPage {
             return -1;
         }
 
+        public void setSelectedOfficeIds(String selectedOfficeIds) {
+            this.selectedOfficeIds = selectedOfficeIds;
+        }
+
+        public String getSelectedOfficeIds() {
+            return selectedOfficeIds;
+        }
+
     }
 
     public CreateHolidayConfirmationPage submitAndNavigateToHolidayConfirmationPage(CreateHolidaySubmitParameters formParameters) {
@@ -135,6 +144,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         selenium.type("holidayFromDateDD", formParameters.getFromDateDD());
         selenium.type("holidayFromDateMM", formParameters.getFromDateMM());
         selenium.type("holidayFromDateYY", formParameters.getFromDateYYYY());
+        selenium.type("selectedOfficeIds",formParameters.getSelectedOfficeIds());
         this.typeTextIfNotEmpty("holidayThruDateDD", formParameters.getThruDateDD());
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());

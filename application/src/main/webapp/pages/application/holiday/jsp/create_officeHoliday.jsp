@@ -26,8 +26,11 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-<tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/extjs/resources/css/ext-all.css">
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/Ext.ux.tree.CheckTreePanel.css">
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/checktree.css">
+<tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="create_officeHoliday" />
 		<SCRIPT>
@@ -46,7 +49,12 @@ explanation of the license and how it is applied.
 		//form.submit();
 	}
 </SCRIPT>
-		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	  <script type="text/javascript" src="pages/framework/js/extjs/adapter/ext/ext-base.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/extjs/ext-all.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/checktree/js/Ext.ux.tree.CheckTreePanel.js"></script>
+	  <script type="text/javascript" src="pages/application/holiday/js/WebPage.js"></script>
+  	  <script type="text/javascript" src="pages/application/holiday/js/officetree.js"></script>
 		<html-el:form method="post"
 			action="/holidayAction.do?method=preview"
 			onsubmit="return (validateMyForm(holidayFromDate,holidayFromDateFormat,holidayFromDateYY) &&
@@ -87,7 +95,7 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-					<table width="95%" border="0" cellspacing="0" cellpadding="3">
+					<table width="95%" border="0" cellspacing="4" cellpadding="4">
 						<tr>
 							<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
 								bundle="HolidayUIResources" /> </font></td>
@@ -126,6 +134,16 @@ explanation of the license and how it is applied.
 								</c:forEach>
 							</mifos:select></td>
 							
+						</tr>
+						<tr>
+							<td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
+								name="holiday.ApplicableOffices" mandatory="yes" isColonRequired="Yes" bundle="HolidayUIResources"/>
+							</td>
+							<td>
+								<div id="center-content" class="x-hidden">
+										<div id="officeTree"></div>							
+								</div>
+							</td>
 						</tr>
 					</table>
 					

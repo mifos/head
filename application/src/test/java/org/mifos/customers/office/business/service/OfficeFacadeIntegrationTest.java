@@ -19,8 +19,13 @@
  */
 package org.mifos.customers.office.business.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -44,15 +49,30 @@ public class OfficeFacadeIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testShouldReturnOfficeHierarchyList() throws ServiceException {
-        List<OfficeDto> officeHierarchy = officeFacade.depthFirstHeadOfficeHierarchy();
+    public void testShouldReturnOfficeHierarchyList() throws ServiceException, JsonGenerationException, JsonMappingException, IOException {
+        OfficeHierarchyDto officeHierarchy = officeFacade.headOfficeHierarchy();
         assertNotNull(officeHierarchy);
-        assertEquals(3, officeHierarchy.size());
-        assertEquals("Mifos HO", officeHierarchy.get(0).getName());
-        assertEquals(new Short((short) 1), officeHierarchy.get(0).getId());
-        assertEquals("TestAreaOffice", officeHierarchy.get(1).getName());
-        assertEquals(new Short((short) 2), officeHierarchy.get(1).getId());
-        assertEquals("TestBranchOffice", officeHierarchy.get(2).getName());
-        assertEquals(new Short((short) 3), officeHierarchy.get(2).getId());
+        assertEquals("Mifos HO ",officeHierarchy.getText());
+        assertEquals("1",officeHierarchy.getId());
+        assertNotNull(officeHierarchy.getChildren());
+        assertEquals(1,officeHierarchy.getChildren().size());
+        OfficeHierarchyDto areaOfficeHierarchy = officeHierarchy.getChildren().get(0);
+        assertNotNull(areaOfficeHierarchy);
+        assertEquals("2",areaOfficeHierarchy.getId());
+        assertEquals("TestAreaOffice",areaOfficeHierarchy.getText());
+        assertNotNull(areaOfficeHierarchy.getChildren());
+        assertEquals(1,areaOfficeHierarchy.getChildren().size());
+        OfficeHierarchyDto branchOficeHierarchy = areaOfficeHierarchy.getChildren().get(0);
+        assertNotNull(branchOficeHierarchy);
+        assertEquals("3",branchOficeHierarchy.getId());
+        assertEquals("TestBranchOffice",branchOficeHierarchy.getText());
+        assertNotNull(branchOficeHierarchy.getChildren());
+        assertEquals(0,branchOficeHierarchy.getChildren().size());
     }
+
+    public void testShouldReturnOfficeNames() {
+        String officeNames = officeFacade.officeNames("2,1");
+        assertEquals("Mifos HO , TestAreaOffice", officeNames);
+    }
+
 }

@@ -20,7 +20,7 @@
 
 package org.mifos.application.holiday.struts.action;
 
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
@@ -44,7 +43,6 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.business.service.OfficeFacade;
-import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -80,6 +78,7 @@ public class HolidayAction extends BaseAction {
         security.allow("getHolidays", SecurityConstants.VIEW);
         security.allow("addHoliday", SecurityConstants.VIEW);
         security.allow("previous", SecurityConstants.VIEW);
+        security.allow("officeHierarchy", SecurityConstants.VIEW);
         security.allow("update", SecurityConstants.CAN_DEFINE_HOLIDAY);
         return security;
     }
@@ -115,10 +114,11 @@ public class HolidayAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
+        request.getSession().setAttribute(
+                HolidayConstants.SELECTED_OFFICE_NAMES,
+                new OfficeFacade(new OfficeBusinessService()).officeNames(((HolidayActionForm) form)
+                        .getSelectedOfficeIds()));
 
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
@@ -188,10 +188,10 @@ public class HolidayAction extends BaseAction {
         HolidayDetails holidayDetails = new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm
                 .getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
         List<Short> officeIds = new LinkedList<Short>();
-        // TODO as of now all holidays are associated to head office
-        // this should be a list of office id(s) in the action form
-        // when branch level holiday is implemented.
-        officeIds.add(new Short((short) 1));
+        String[] selectedOfficeIds = ((HolidayActionForm)form).getSelectedOfficeIds().split(",");
+        for (String selectedOfficeId : selectedOfficeIds) {
+            officeIds.add(new Short(selectedOfficeId));
+        }
         // TODO HolidayServiceFacadeWebTier and OfficePersistence to be injected
         new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
 
@@ -219,5 +219,15 @@ public class HolidayAction extends BaseAction {
 
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
+    }
+
+
+    public ActionForward officeHierarchy(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse httpservletresponse) throws Exception {
+        httpservletresponse.setContentType("text/html");
+        PrintWriter out = httpservletresponse.getWriter();
+        out.println(new OfficeFacade(new OfficeBusinessService()).headOfficeHierarchy().toJSONString());
+        out.flush();
+        return null;
     }
 }

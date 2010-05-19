@@ -19,11 +19,14 @@
  */
 package org.mifos.customers.office.business.service;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.mifos.customers.office.persistence.OfficeDto;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.framework.exceptions.ServiceException;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class OfficeFacade {
 
@@ -33,7 +36,24 @@ public class OfficeFacade {
         this.officeBusinessService = officeBusinessService;
     }
 
-    public List<OfficeDto> depthFirstHeadOfficeHierarchy() throws ServiceException {
-        return officeBusinessService.depthFirstHeadOfficeHierarchy();
+    public OfficeHierarchyDto headOfficeHierarchy() throws ServiceException {
+        return officeBusinessService.headOfficeHierarchy();
+    }
+
+    public String officeNames(String ids) {
+        String[] idArray = ids.split(",");
+        List<Short> idList = new LinkedList<Short>();
+        for (String id : idArray) {
+            idList.add(new Short(id));
+        }
+        List<String> topLevelOffices = officeBusinessService.officeNames(idList);
+        StringBuffer stringBuffer = new StringBuffer();
+        for (Iterator<String> iterator = topLevelOffices.iterator(); iterator.hasNext();) {
+            stringBuffer.append(iterator.next());
+            if (iterator.hasNext()) {
+                stringBuffer.append(", ");
+            }
+        }
+        return stringBuffer.toString();
     }
 }

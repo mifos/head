@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficeDto;
@@ -35,6 +36,8 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class OfficeBusinessService implements BusinessService {
 
@@ -118,18 +121,20 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeDto> depthFirstHeadOfficeHierarchy() throws ServiceException {
+    public OfficeHierarchyDto headOfficeHierarchy() throws ServiceException {
         OfficeBO headOffice = getHeadOffice();
-        return depthFirstHierarchy(headOffice);
+        return officeHierarchy(headOffice);
     }
 
-    private List<OfficeDto> depthFirstHierarchy(OfficeBO office) {
-        LinkedList<OfficeDto> hierarchy = new LinkedList<OfficeDto>();
-        hierarchy.add(new OfficeDto(office.getOfficeId(), office.getOfficeName(), office.getSearchId()));
+    private OfficeHierarchyDto officeHierarchy(OfficeBO office) {
+        List<OfficeHierarchyDto> childOfficeList = new LinkedList<OfficeHierarchyDto>();
         Set<OfficeBO> children = office.getChildren();
         for (OfficeBO child : children) {
-            hierarchy.addAll(depthFirstHierarchy(child));
+            childOfficeList.add(officeHierarchy(child));
         }
+        Collections.sort(childOfficeList);
+        OfficeHierarchyDto hierarchy = new OfficeHierarchyDto(office.getOfficeId(), office.getOfficeName(), office
+                .getSearchId(), office.isActive(), childOfficeList);
         return hierarchy;
     }
 
@@ -139,5 +144,9 @@ public class OfficeBusinessService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
+    }
+
+    public List<String> officeNames(List<Short> ids) {
+        return officePersistence.officeName(ids);
     }
 }
