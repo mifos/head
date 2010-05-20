@@ -876,24 +876,6 @@ public class ClientBO extends CustomerBO {
 
     }
 
-    @Override
-    public void generateSearchId() throws CustomerException {
-        int count;
-        if (getParentCustomer() != null) {
-            childAddedForParent(getParentCustomer());
-            this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
-        } else {
-            try {
-                count = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT,
-                        getOffice().getOfficeId());
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++count;
-            this.setSearchId(searchId);
-        }
-    }
-
     public void validateFieldsForActiveClient() throws CustomerException {
         if (isActive()) {
             if (!isClientUnderGroup()) {

@@ -32,7 +32,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Upgrade;
 
 /**
@@ -79,16 +78,14 @@ public class Upgrade240 extends Upgrade {
         for (int customerId: customerIdList) {
             try {
                 updateGroupSearchId(customerId);
-            } catch (PersistenceException e) {
-                throw new MifosRuntimeException("Unable to update group searchId", e);
             } catch (CustomerException e) {
                 throw new MifosRuntimeException("Unable to update group searchId", e);
             }
         }
     }
 
-    private void updateGroupSearchId(int customerId) throws PersistenceException, CustomerException {
-        GroupBO group = (GroupBO)new GroupPersistence().loadPersistentObject(GroupBO.class, new Integer(customerId));
+    private void updateGroupSearchId(int customerId) throws CustomerException {
+        GroupBO group = (GroupBO) new GroupPersistence().loadPersistentObject(GroupBO.class, new Integer(customerId));
         group.updateSearchId();
     }
 }

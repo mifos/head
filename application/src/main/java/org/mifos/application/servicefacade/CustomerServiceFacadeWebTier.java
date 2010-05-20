@@ -326,8 +326,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerIdValue());
             OfficeBO centerOffice = this.officeDao.findOfficeById(actionForm.getOfficeIdValue());
 
-            int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(
-                    CustomerLevel.CENTER, actionForm.getOfficeIdValue());
+            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(actionForm.getOfficeIdValue());
 
             List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
                     .fromDto(customFields, null);
@@ -415,8 +414,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeIdValue());
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerIdValue());
 
-                int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(
-                        CustomerLevel.GROUP, officeId);
+                int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
 
                 group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, groupName, formedBy, groupMeeting,
                         loanOfficer, office, customerCustomFields, address, externalId, trained, trainedOn,
@@ -427,8 +425,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
         } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
-        } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }
@@ -555,13 +551,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
 
-                int numberOfCustomersInOfficeAlready = new CustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT, officeId);
+                int lastSearchIdCustomerValue = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
 
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientName, clientStatus, new DateTime(
                         mfiJoiningDate), office, loanOfficer, meeting, formedBy, customerCustomFields,
                         clientNameDetailEntity, dob, governmentId, trainedBool, trainedDateTime, groupFlagValue,
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address, numberOfCustomersInOfficeAlready);
+                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, externalId, address, lastSearchIdCustomerValue);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
                     client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
