@@ -82,19 +82,19 @@ public class LoanServiceIntegrationTest {
 
     @Test
     public void validateDisbursementDateShouldReturnNormally() throws Exception {
-        new LoanService().validateDisbursementDateForNewLoan(new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.monday()));
+        new LoanService().validateDisbursementDateForNewLoan((short)1,new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.monday()));
     }
 
     @Test(expected=ApplicationException.class)
     public void validateDisbursementDateOnWeekendShouldThrowException () throws Exception {
-        new LoanService().validateDisbursementDateForNewLoan(new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.sunday()));
+        new LoanService().validateDisbursementDateForNewLoan((short)1, new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.sunday()));
     }
 
     @Test(expected=ApplicationException.class)
     public void validateDisbursementDateInHolidayShouldThrowException () throws Exception {
         DateTime disbursementDate = new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.monday());
         buildAndPersistHoliday(disbursementDate.minusDays(1), disbursementDate.plusDays(1), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
-        new LoanService().validateDisbursementDateForNewLoan(new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.sunday()));
+        new LoanService().validateDisbursementDateForNewLoan((short)1, new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.sunday()));
     }
 
     private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {

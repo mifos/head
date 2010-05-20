@@ -868,7 +868,7 @@ public class TestObjectFactory {
         savings.setUserContext(TestObjectFactory.getContext());
         savings.changeStatus(accountStateId, null, "");
         SavingBOTestUtils.setActivationDate(savings, new Date(System.currentTimeMillis()));
-        List<Date> meetingDates = getMeetingDates(meeting, 3);
+        List<Date> meetingDates = getMeetingDates(customer.getOfficeId(), meeting, 3);
         short installment = 0;
         for (Date date : meetingDates) {
             SavingsScheduleEntity actionDate = new SavingsScheduleEntity(savings, customer, ++installment,
@@ -935,9 +935,9 @@ public class TestObjectFactory {
         return meetingToReturn;
     }
 
-    public static List<Date> getMeetingDates(final MeetingBO meeting, final int occurrences) {
+    public static List<Date> getMeetingDates(short officeId, final MeetingBO meeting, final int occurrences) {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());
@@ -953,10 +953,10 @@ public class TestObjectFactory {
         return dates;
     }
 
-    public static List<Date> getMeetingDatesThroughTo(final MeetingBO meeting, Date endDate) {
+    public static List<Date> getMeetingDatesThroughTo(short officeId, final MeetingBO meeting, Date endDate) {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext();
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());

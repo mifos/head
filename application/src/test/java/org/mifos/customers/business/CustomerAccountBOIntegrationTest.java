@@ -127,21 +127,22 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         createInitialObjects();
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        int lastInstallmentId = center.getCustomerAccount().getAccountActionDates().size();
-        AccountActionDateEntity accountActionDateEntity = center.getCustomerAccount().getAccountActionDate(
+        CustomerAccountBO customerAccount = center.getCustomerAccount();
+        int lastInstallmentId = customerAccount.getAccountActionDates().size();
+        AccountActionDateEntity accountActionDateEntity = customerAccount.getAccountActionDate(
                 (short) lastInstallmentId);
 
         // exercise test
-        center.getCustomerAccount().generateNextSetOfMeetingDates(workingDays, holidays);
+        customerAccount.generateNextSetOfMeetingDates(workingDays, holidays);
 
         MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
         meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
 
         Date endDate = new Date(DateUtils.getLastDayOfYearAfterNextYear().getTime().getTime());
-        List<java.util.Date> meetingDates = TestObjectFactory.getMeetingDatesThroughTo(meetingBO, endDate);
+        List<java.util.Date> meetingDates = TestObjectFactory.getMeetingDatesThroughTo(customerAccount.getOffice().getOfficeId(), meetingBO, endDate);
 
         meetingDates.remove(0);
-        Date date = center.getCustomerAccount().getAccountActionDate((short) (lastInstallmentId + 1)).getActionDate();
+        Date date = customerAccount.getAccountActionDate((short) (lastInstallmentId + 1)).getActionDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         Calendar calendar2 = Calendar.getInstance();
@@ -530,7 +531,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         meeting.setMeetingStartDate(nextInstallment.getActionDate());
         List<java.util.Date> meetingDates = null;
 
-        meetingDates = TestObjectFactory.getMeetingDates(meeting, 10);
+        meetingDates = TestObjectFactory.getMeetingDates(center.getOfficeId(), meeting, 10);
         meetingDates.remove(0);
         center.getCustomerAccount().regenerateFutureInstallments(nextInstallment, workingDays, holidays);
         TestObjectFactory.updateObject(center);

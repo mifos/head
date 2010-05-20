@@ -47,6 +47,7 @@ import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -129,13 +130,15 @@ public class GroupCreationTest {
     public void createsGroupWithCustomerAccount() throws Exception {
 
         // setup
-        CenterBO parent = new CenterBuilder().withLoanOfficer(anyLoanOfficer()).build();
+        OfficeBO withOffice = new OfficeBO(new Short("1"), "testOffice",new Integer("1"),new Short("1"));
+        CenterBO parent = new CenterBuilder().withLoanOfficer(anyLoanOfficer()).with(withOffice).build();
+
         GroupBO stubbedGroup = new GroupBuilder().withName("group").withParentCustomer(parent).formedBy(anyLoanOfficer()).build();
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
         // stub
         CalendarEvent upcomingCalendarEvents = new CalendarEventBuilder().build();
-        when(holidayDao.findCalendarEventsForThisYearAndNext()).thenReturn(upcomingCalendarEvents);
+        when(holidayDao.findCalendarEventsForThisYearAndNext((short)1)).thenReturn(upcomingCalendarEvents);
         when(customerAccountFactory.create(stubbedGroup, accountFees, meeting, upcomingCalendarEvents)).thenReturn(customerAccount);
         when(customerAccount.getType()).thenReturn(AccountTypes.CUSTOMER_ACCOUNT);
 

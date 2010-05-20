@@ -27,6 +27,7 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -52,6 +53,8 @@ import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -63,8 +66,11 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -690,14 +696,16 @@ public class LoanScheduleGenerationIntegrationTest {
 
     }
 
-    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
-        HolidayBO holiday = (HolidayBO) new HolidayBuilder().from(start)
-                                                               .to(through)
-                                                               .withRepaymentRule(rule).build();
-        IntegrationTestObjectMother.saveHoliday(holiday);
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
+        StaticHibernateUtil.flushAndClearSession();
+        StaticHibernateUtil.commitTransaction();
     }
 
-    private void buildAndPersistMoratorium (DateTime start, DateTime through) {
+    private void buildAndPersistMoratorium (DateTime start, DateTime through) throws ServiceException {
         buildAndPersistHoliday(start, through, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
     }
 

@@ -25,7 +25,16 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -210,11 +219,9 @@ public class CustomerApplyFeesIntegrationTest {
     public void applyPeriodicFeeOnSecondMeetingDateFallsInMoratorium() throws Exception {
 
         // setup with moratorium
-        Holiday moratorium = new HolidayBuilder().from(firstTuesdayInstallmentDate.plusWeeks(1))
-                                                 .to(new DateTime().plusWeeks(2).minusDays(1))
-                                                 .withRepaymentMoratoriumRule()
-                                                 .build();
-        IntegrationTestObjectMother.saveHoliday(moratorium);
+        buildAndPersistHoliday(firstTuesdayInstallmentDate.plusWeeks(1), new DateTime().plusWeeks(2)
+                .minusDays(1), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+
         createCenterWithFeeStartingNextTuesday(weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
 
         // Exercise test, applying fee on the day after the first meeting
@@ -227,17 +234,17 @@ public class CustomerApplyFeesIntegrationTest {
         //verification
         verifyDatesAdjustedForMoratorium();
         verifyAppliedPeriodicFeeToWeeklyMeeting(weeklyAppliedPeriodicFeeForCenterOnly, 15.0);
+
+        deleteHolidays();
     }
 
     @Test
     public void applyPeriodicBiWeeklyFeeOnSecondMeetingDateFallsInMoratorium() throws Exception {
 
         // setup with moratorium
-        Holiday moratorium = new HolidayBuilder().from(firstTuesdayInstallmentDate.plusWeeks(1))
-                                                 .to(new DateTime().plusWeeks(2).minusDays(1))
-                                                 .withRepaymentMoratoriumRule()
-                                                 .build();
-        IntegrationTestObjectMother.saveHoliday(moratorium);
+        buildAndPersistHoliday(firstTuesdayInstallmentDate.plusWeeks(1), new DateTime().plusWeeks(2).minusDays(1),
+                RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+
         createCenterWithFeeStartingNextTuesday(weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
 
         // Exercise test, applying fee on the day after the first meeting
@@ -250,6 +257,8 @@ public class CustomerApplyFeesIntegrationTest {
         //verification. Fee should be applied to second installment meeting
         verifyDatesAdjustedForMoratorium();
         verifyAppliedPeriodicFeeToWeeklyMeeting(biWeeklyAppliedPeriodicFeeForCenterOnly, 1.0);
+
+        deleteHolidays();
     }
 
     /********************************
@@ -363,5 +372,30 @@ private void createCenterWithFeeStartingNextTuesday(MeetingBO centerMeeting, Amo
         }
 
 
+    }
+
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
+    }
+
+    private void deleteHolidays() throws PersistenceException {
+        OfficePersistence officePersistence = new OfficePersistence();
+        Set<HolidayBO> holidays = officePersistence.getOffice(new Short("1")).getHolidays();
+        HolidayBO holidayBOToDelete = null;
+        for (HolidayBO holidayBO : holidays) {
+            holidayBOToDelete = holidayBO;
+        }
+        holidays.clear();
+        officePersistence.getOffice(new Short("2")).getHolidays().clear();
+        officePersistence.getOffice(new Short("3")).getHolidays().clear();
+        if (holidayBOToDelete != null) {
+            StaticHibernateUtil.getSessionTL().delete(holidayBOToDelete);
+        }
+        StaticHibernateUtil.commitTransaction();
     }
 }

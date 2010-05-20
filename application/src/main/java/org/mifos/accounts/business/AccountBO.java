@@ -1210,7 +1210,7 @@ public class AccountBO extends AbstractBusinessObject {
 
             if (adjustForHolidays) {
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                holidays = holidayDao.findAllHolidaysThisYearAndNext();
+                holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
             }
 
             final int occurrences = noOfInstallments + installmentToSkip;
@@ -1296,7 +1296,7 @@ public class AccountBO extends AbstractBusinessObject {
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
         List<Holiday> holidays;
         if (adjustForHolidays) {
-            holidays = holidayDao.findAllHolidaysThisYearAndNext();
+            holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
         } else {
             holidays = new ArrayList<Holiday>();
         }
