@@ -229,6 +229,9 @@ public class WebFeeServiceFacade implements FeeServiceFacade {
     }
 
     private List<FeeDto> mapFeeEnttitesToFeeDtos(List<FeeEntity> feeEntities) throws PropertyNotFoundException {
+        if (feeEntities == null) {
+            return new ArrayList<FeeDto>();
+        }
         List<FeeDto> fees = new ArrayList<FeeDto>();
         for (FeeEntity fee : feeEntities) {
             fees.add(mapFeeDto(fee));
