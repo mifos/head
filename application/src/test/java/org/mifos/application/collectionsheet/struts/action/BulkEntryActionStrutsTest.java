@@ -334,7 +334,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CollectionSheetEntryConstants.COLLECTION_SHEET_ENTRY_FORM_DTO,
                 createDefaultCollectionSheetDto(), request);
-
+        Short officeId = center.getOfficeId();
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -343,16 +343,16 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         if (AccountingRules.isBackDatedTxnAllowed()) {
             Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.YES);
-            Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
+            Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(officeId, meeting).getTime())
                     .getTime()).toString(), SessionUtils.getAttribute("LastMeetingDate", request).toString());
             Assert.assertEquals(new java.util.Date(DateUtils
-                    .getDateWithoutTimeStamp(getMeetingDates(meeting).getTime()).getTime()), DateUtils
+                    .getDateWithoutTimeStamp(getMeetingDates(officeId, meeting).getTime()).getTime()), DateUtils
                     .getDate(((BulkEntryActionForm) request.getSession().getAttribute(
                             CollectionSheetEntryConstants.BULKENTRYACTIONFORM)).getTransactionDate()));
         } else {
             Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.NO);
-            Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(meeting).getTime())
+            Assert.assertEquals(new java.sql.Date(DateUtils.getDateWithoutTimeStamp(getMeetingDates(officeId, meeting).getTime())
                     .getTime()).toString(), SessionUtils.getAttribute("LastMeetingDate", request).toString());
             Assert
                     .assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils
@@ -408,7 +408,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
         Calendar meetinDateCalendar = new GregorianCalendar();
-        meetinDateCalendar.setTime(getMeetingDates(meeting));
+        meetinDateCalendar.setTime(getMeetingDates(account.getOffice().getOfficeId(), meeting));
         int year = meetinDateCalendar.get(Calendar.YEAR);
         int month = meetinDateCalendar.get(Calendar.MONTH);
         int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
@@ -817,9 +817,9 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
-    private static java.util.Date getMeetingDates(final MeetingBO meeting) {
+    private static java.util.Date getMeetingDates(short officeId, final MeetingBO meeting) {
         java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(meeting, currentDate);
+        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(officeId, meeting, currentDate);
         return dates.get(dates.size() - 1);
     }
 

@@ -53,7 +53,6 @@ public class RegenerateScheduleHelper extends TaskHelper {
         List<String> errorList = new ArrayList<String>();
         accountList = new ArrayList<Integer>();
 
-        List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 
         List<Integer> customerIds;
@@ -63,9 +62,12 @@ public class RegenerateScheduleHelper extends TaskHelper {
             throw new BatchJobException(e);
         }
         if (customerIds != null && !customerIds.isEmpty()) {
+            CustomerPersistence customerPersistence = new CustomerPersistence();
             for (Integer customerId : customerIds) {
                 try {
-                    handleChangeInMeetingSchedule(customerId, workingDays, orderedUpcomingHolidays);
+                    CustomerBO customer = customerPersistence.getCustomer(customerId);
+                    List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(customer.getOfficeId());
+                    handleChangeInMeetingSchedule(customer, workingDays, orderedUpcomingHolidays);
                     StaticHibernateUtil.commitTransaction();
                 } catch (Exception e) {
                     StaticHibernateUtil.rollbackTransaction();
@@ -86,10 +88,8 @@ public class RegenerateScheduleHelper extends TaskHelper {
         return true;
     }
 
-    private void handleChangeInMeetingSchedule(final Integer customerId, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
+    private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
         CustomerPersistence customerPersistence = new CustomerPersistence();
-        CustomerBO customer = customerPersistence.getCustomer(customerId);
-
         Set<AccountBO> accounts = customer.getAccounts();
         if (accounts != null && !accounts.isEmpty()) {
             for (AccountBO account : accounts) {
@@ -103,7 +103,8 @@ public class RegenerateScheduleHelper extends TaskHelper {
                 .getOffice().getOfficeId());
         if (customerIds != null && !customerIds.isEmpty()) {
             for (Integer childCustomerId : customerIds) {
-                handleChangeInMeetingSchedule(childCustomerId, workingDays, orderedUpcomingHolidays);
+                handleChangeInMeetingSchedule(customerPersistence.getCustomer(childCustomerId), workingDays,
+                        orderedUpcomingHolidays);
             }
         }
     }

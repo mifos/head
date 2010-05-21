@@ -166,6 +166,8 @@ public interface CustomerDao {
 
     int countOfGroups();
 
+    int retrieveLastSearchIdValueForNonParentCustomersInOffice(Short officeIdValue);
+
     List<FieldConfigurationEntity> findMandatoryConfigurableFieldsApplicableToCenter();
 
     void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);

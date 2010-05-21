@@ -31,7 +31,10 @@ public interface HolidayDao {
 
     List<Holiday> findAllHolidaysThisYearAndNext();
 
+
     List<Holiday> getUnAppliedHolidays();
+
+    List<Holiday> findAllHolidaysThisYearAndNext(short officeId);
 
     void save(Holiday holiday) throws PersistenceException;
 
@@ -39,6 +42,7 @@ public interface HolidayDao {
 
     List<String> applicableOffices(Integer id);
 
-    CalendarEvent findCalendarEventsForThisYearAndNext();
+    CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
+
 
 }
