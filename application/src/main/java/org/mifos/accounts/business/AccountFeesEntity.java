@@ -185,10 +185,8 @@ public class AccountFeesEntity extends AbstractEntity {
     }
 
     /**
-     * Count the number of fee installments due after this periodic fee's last-applied date, up to and
-     * including the given date. The fees' installment dates are calculated using the customer's meeting
-     * schedule (weekly, monthly) but the periodic fee's recurrence rate (every, every second, etc), and
-     * starting with the fee's last applied date.
+     * Count the number of fee installments in the list that occur after this periodic fee's last-applied date. If the
+     * lastApplieDate is null, return zero.
      */
     public Integer getApplicableDatesCount(final List<DateTime> installmentDates) {
 
@@ -198,9 +196,7 @@ public class AccountFeesEntity extends AbstractEntity {
 
             for (DateTime installmentDate : installmentDates) {
                 if (DateUtils.getDateWithoutTimeStamp(installmentDate.toDate().getTime()).compareTo(
-                        DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) == 0) {
-                    // is not applicable
-                } else {
+                        DateUtils.getDateWithoutTimeStamp(getLastAppliedDate().getTime())) > 0) {
                     applicableDates.add(installmentDate);
                 }
             }

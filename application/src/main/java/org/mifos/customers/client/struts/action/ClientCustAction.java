@@ -293,6 +293,7 @@ public class ClientCustAction extends CustAction {
         String fromPage = actionForm.getInput();
         if (ClientConstants.INPUT_PERSONAL_INFO.equals(fromPage) || ClientConstants.INPUT_MFI_INFO.equals(fromPage)
                 || CenterConstants.INPUT_CREATE.equals(fromPage)) {
+            actionForm.setEditFamily("notEdit");
             forward = ActionForwards.cancelCreate_success.toString();
         } else if (ClientConstants.INPUT_EDIT_PERSONAL_INFO.equals(fromPage)
                 || ClientConstants.INPUT_EDIT_MFI_INFO.equals(fromPage)
@@ -585,6 +586,7 @@ public class ClientCustAction extends CustAction {
         // client family specific
         int familyMemberCount = 0;
         for (ClientNameDetailDto familyMember : clientFamilyInfo.getFamilyMembers()) {
+
             actionForm.addFamilyMember();
             actionForm.setFamilyPrimaryKey(familyMemberCount, familyMember.getCustomerNameId());
             actionForm.setFamilyFirstName(familyMemberCount, familyMember.getFirstName());
@@ -596,6 +598,7 @@ public class ClientCustAction extends CustAction {
 
             Integer key = Integer.valueOf(familyMemberCount);
             List<ClientFamilyDetailDto> clientFamilyDetails = clientFamilyDetailsMap.get(key);
+
             if (clientFamilyDetails != null) {
                 for (ClientFamilyDetailDto clientFamilyDetailDto : clientFamilyDetails) {
                     Calendar cal = Calendar.getInstance();
@@ -612,7 +615,10 @@ public class ClientCustAction extends CustAction {
                     actionForm.setFamilyGender(familyMemberCount, clientFamilyDetailDto.getGender());
                     actionForm.setFamilyLivingStatus(familyMemberCount, clientFamilyDetailDto.getLivingStatus());
                 }
+
             }
+
+            familyMemberCount++;
         }
 
         ClientBO client = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());

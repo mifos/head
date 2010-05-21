@@ -132,7 +132,7 @@ public class AccountBO extends AbstractBusinessObject {
     private CustomerPersistence customerPersistence = null;
     private FeePersistence feePersistence = null;
     private MasterPersistence masterPersistence = null;
-    private PersonnelPersistence personnelPersistence = null;
+    protected PersonnelPersistence personnelPersistence = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
 
@@ -349,6 +349,16 @@ public class AccountBO extends AbstractBusinessObject {
 
     public Set<AccountActionDateEntity> getAccountActionDates() {
         return accountActionDates;
+    }
+
+    public List<AccountActionDateEntity> getAccountActionDatesSortedByInstallmentId() {
+        List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>(getAccountActionDates());
+        Collections.sort(sortedList, new Comparator<AccountActionDateEntity>() {
+            public int compare (AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
+                return new Integer(entity1.getInstallmentId()).compareTo(new Integer(entity2.getInstallmentId()));
+            }
+        });
+        return sortedList;
     }
 
     public List<AccountActionDateEntity> getActionDatesSortedByDate() {
@@ -1094,9 +1104,8 @@ public class AccountBO extends AbstractBusinessObject {
     /**
      * Returns the next {@link AccountActionDateEntity} occuring after today, if any, otherwise
      * return null.
-     * <p>If more than one installment occurs on the next closest installment date, the method chooses one
-     * arbitrarily. This could happen, say, if the next normally scheduled installment falls in a holiday
-     * with repayment rule "Next Meeting Date/Repayment".
+     * <p>If more than one installment occurs on the next closest installment date, the method returns the entity
+     * with the lowest installment id.
      */
     public AccountActionDateEntity getDetailsOfUpcomigInstallment() {
         AccountActionDateEntity nextAccountAction = null;
@@ -1242,22 +1251,22 @@ public class AccountBO extends AbstractBusinessObject {
         return installmentDates;
     }
 
-    @Deprecated
-    protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
-            throws AccountException {
-        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-        for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-            if (accountFeesEntity.isActive()) {
-                Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
-                if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-                    feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
-                } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
-                    feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
-                }
-            }
-        }
-        return feeInstallmentList;
-    }
+//    @Deprecated
+//    protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
+//            throws AccountException {
+//        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
+//        for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+//            if (accountFeesEntity.isActive()) {
+//                Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
+//                if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
+//                    feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
+//                } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
+//                    feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
+//                }
+//            }
+//        }
+//        return feeInstallmentList;
+//    }
 
     /**
      *
@@ -1375,7 +1384,8 @@ public class AccountBO extends AbstractBusinessObject {
         List<AccountFeesEntity> periodicFeeList = new ArrayList<AccountFeesEntity>();
         for (AccountFeesEntity accountFee : getAccountFees()) {
             if (accountFee.getFees().isPeriodic()) {
-                getFeePersistence().getFee(accountFee.getFees().getFeeId());
+                // Why? Doesn't appear to do anything with the retrieved FeeBO
+//                getFeePersistence().getFee(accountFee.getFees().getFeeId());
                 periodicFeeList.add(accountFee);
             }
         }
