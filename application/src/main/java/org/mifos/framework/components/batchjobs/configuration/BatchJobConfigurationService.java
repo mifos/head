@@ -18,30 +18,18 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.business;
+/**
+ * These methods return values that control how the main loop of the
+ * batch job proceeds.
+ */
+package org.mifos.framework.components.batchjobs.configuration;
 
-import java.util.Date;
-import java.util.List;
+public interface BatchJobConfigurationService {
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.schedule.ScheduledEvent;
+    int getBatchSizeForBatchJobs();
 
-public interface Holiday {
+    int getRecordCommittingSizeForBatchJobs();
 
-    boolean encloses(Date date);
-
-    boolean encloses(final DateTime dateTime);
-
-    DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
-
-    RepaymentRuleTypes getRepaymentRuleType();
-
-    DateTime getFromDate();
-
-    DateTime getThruDate();
-
-    void markAsApplied();
+    int getOutputIntervalForBatchJobs();
 
 }
