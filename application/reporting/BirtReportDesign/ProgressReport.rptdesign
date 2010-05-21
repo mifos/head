@@ -857,7 +857,7 @@ return true;]]></method>
 	    return false;
 	    
 	var staffingLevelSummary = staffingLevelSummaryIterator.next();
-	row["role_name"] = staffingLevelSummary.getRolename();
+	row["role_name"] = staffingLevelSummary.getTitleName();
 	row["personnel_count"] = staffingLevelSummary.getPersonnelCount();
 	return true;
 }catch(e){
