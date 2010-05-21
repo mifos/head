@@ -22,7 +22,6 @@ import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.GLCodeEntity;
@@ -66,18 +65,10 @@ public class FeeServiceImpl implements FeeService {
         FeeEntity fee = null;
         if (isRateFee) {
             FeeFormulaEntity feeFormulaEntity = getFeeFormulaEntity(userContext, feeFormula);
-            /*
-             * new RateFeeBO(userContext, feeName, feeCategoryType, feeFrequencyType, glCode, rate, feeFormulaEntity,
-             * isCustomerDefaultFee, feePaymentEntity, office);
-             */
             validateRate(rate, feeFormulaEntity);
             fee = new RateFeeEntity(feeName, feeCategoryType, glCode, rate, feeFormulaEntity, isCustomerDefaultFee,
                     getFeeOffice(office));
         } else {
-            /*
-             * new AmountFeeBO(userContext, feeName, feeCategoryType, feeFrequencyType, glCode, feeMoney,
-             * isCustomerDefaultFee, feePaymentEntity, office);
-             */
             validateAmount(feeMoney);
             fee = new AmountFeeEntity(feeName, feeCategoryType, glCode, feeMoney, isCustomerDefaultFee,
                     getFeeOffice(office));
@@ -98,8 +89,7 @@ public class FeeServiceImpl implements FeeService {
         CategoryTypeEntity feeCategoryType = getFeeCategoryTypeEntity(userContext, category);
         MeetingBO feeMeeting;
         try {
-            feeMeeting = new MeetingBO(feeRecurrenceType, recurAfter, getCreateDate(),
-                    MeetingType.PERIODIC_FEE);
+            feeMeeting = new MeetingBO(feeRecurrenceType, recurAfter, getCreateDate(), MeetingType.PERIODIC_FEE);
         } catch (MeetingException e) {
             //FIXME: Should introduce constant for INVALID_MEETING
             throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY, e);
@@ -109,20 +99,12 @@ public class FeeServiceImpl implements FeeService {
         if (isRateFee) {
             FeeFormulaEntity feeFormulaEntity = getFeeFormulaEntity(userContext, feeFormula);
             validateRate(rate, feeFormulaEntity);
-            /*
-             * new RateFeeBO(userContext, feeName, categoryType, feeFrequencyType, glCode, rate, feeFormulaEntity,
-             * isCustomerDefaultFee, feeMeeting, getFeeOffice(office));
-             */
-            fee = new RateFeeEntity(feeName, feeCategoryType, glCode, rate, feeFormulaEntity, isCustomerDefaultFee,
-                    getFeeOffice(office));
+            fee = new RateFeeEntity(feeName, feeCategoryType, glCode,
+                    rate, feeFormulaEntity, isCustomerDefaultFee, getFeeOffice(office));
         } else {
             validateAmount(feeMoney);
-            /*
-             * new AmountFeeBO(userContext, feeName, categoryType, feeFrequencyType, glCode, feeMoney,
-             * isCustomerDefaultFee, feeMeeting, getFeeOffice(office));
-             */
-            fee = new AmountFeeEntity(feeName, feeCategoryType, glCode, feeMoney, isCustomerDefaultFee,
-                    getFeeOffice(office));
+            fee = new AmountFeeEntity(feeName, feeCategoryType, glCode,
+                    feeMoney, isCustomerDefaultFee, getFeeOffice(office));
 
         }
         FeeFrequencyTypeEntity feeFrequencyType = getFeeFrequencyTypeEntity(userContext, FeeFrequencyType.PERIODIC);
@@ -139,7 +121,14 @@ public class FeeServiceImpl implements FeeService {
         fee.setFeeFrequency(feeFrequency);
         setCreateDetails(userContext, fee);
         fee.setFeeStatus(retrieveFeeStatusEntity(FeeStatus.ACTIVE, userContext.getLocaleId()));
-        makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+        if (isCustomerDefaultFee) {
+            try {
+                fee.defaultToCustomer();
+            } catch (PropertyNotFoundException e) {
+                //FIXME: Introduce new error constant
+                throw new FeeException(FeeConstants.INVALID_FEE,e);
+            }
+        }
     }
 
 
@@ -197,29 +186,6 @@ public class FeeServiceImpl implements FeeService {
         }
     }
 
-    private void makeFeeDefaultToCustomer(FeeEntity fee, boolean isCustomerDefaultFee) throws FeeException {
-        if (!isCustomerDefaultFee) {
-            return;
-        }
-        FeeCategory feeCategory;
-        try {
-            feeCategory = fee.getCategoryType().getFeeCategory();
-        } catch (PropertyNotFoundException pnfe) {
-            throw new FeeException(pnfe);
-        }
-        if (feeCategory.equals(FeeCategory.CLIENT)) {
-            fee.addFeeLevel(FeeLevel.CLIENTLEVEL);
-        } else if (feeCategory.equals(FeeCategory.GROUP)) {
-            fee.addFeeLevel(FeeLevel.GROUPLEVEL);
-        } else if (feeCategory.equals(FeeCategory.CENTER)) {
-            fee.addFeeLevel(FeeLevel.CENTERLEVEL);
-        } else if (feeCategory.equals(FeeCategory.ALLCUSTOMERS)) {
-            fee.addFeeLevel(FeeLevel.CLIENTLEVEL);
-            fee.addFeeLevel(FeeLevel.GROUPLEVEL);
-            fee.addFeeLevel(FeeLevel.CENTERLEVEL);
-        }
-    }
-
     @Override
     public List<FeeEntity> retrieveCustomerFees() {
         return feeDao.retrieveCustomerFees();
@@ -241,12 +207,12 @@ public class FeeServiceImpl implements FeeService {
         FeeChangeType feeChangeType;
         if (fee instanceof AmountFeeEntity) {
             AmountFeeEntity amountFee = (AmountFeeEntity) fee;
-            feeChangeType = calculateNewAmountFeeChangeType(amountFee, feeMoney, feeStatus);
+            feeChangeType = amountFee.calculateChangeType(feeMoney, feeStatus);
             amountFee.setFeeAmount(feeMoney);
         }
         else {
             RateFeeEntity rateFee = (RateFeeEntity) fee;
-            feeChangeType = calculateNewRateFeeChangeType(rateFee, rate, feeStatus);
+            feeChangeType = rateFee.calculateChangeType(rate, feeStatus);
             rateFee.setRate(rate);
         }
         fee.setFeeStatus(retrieveFeeStatusEntity(feeStatus, userContext.getLocaleId()));
@@ -256,32 +222,5 @@ public class FeeServiceImpl implements FeeService {
         feeDao.update(fee);
         return fee;
     }
-
-    private FeeChangeType calculateNewAmountFeeChangeType(AmountFeeEntity fee, Money newAmount, FeeStatus newStatus) {
-        if (!fee.getFeeAmount().equals(newAmount)) {
-            if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
-                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
-            }
-            return FeeChangeType.AMOUNT_UPDATED;
-        } else if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
-            return FeeChangeType.STATUS_UPDATED;
-        } else {
-            return FeeChangeType.NOT_UPDATED;
-        }
-    }
-
-    private FeeChangeType calculateNewRateFeeChangeType(RateFeeEntity fee, Double newRate, FeeStatus newStatus) {
-        if (!fee.getRate().equals(newRate)) {
-            if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
-                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
-            }
-            return FeeChangeType.AMOUNT_UPDATED;
-        } else if (!fee.getFeeStatus().getId().equals(newStatus.getValue())) {
-            return FeeChangeType.STATUS_UPDATED;
-        } else {
-            return FeeChangeType.NOT_UPDATED;
-        }
-    }
-
 
 }

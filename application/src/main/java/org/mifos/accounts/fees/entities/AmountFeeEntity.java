@@ -11,6 +11,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.util.helpers.Money;
@@ -46,6 +48,19 @@ public class AmountFeeEntity extends FeeEntity {
 
     public void setFeeAmount(Money feeAmount) {
         this.feeAmount = feeAmount;
+    }
+
+    public FeeChangeType calculateChangeType(Money newAmount, FeeStatus newStatus) {
+        if (!feeAmount.equals(newAmount)) {
+            if (!getFeeStatus().getId().equals(newStatus.getValue())) {
+                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+            }
+            return FeeChangeType.AMOUNT_UPDATED;
+        } else if (!getFeeStatus().getId().equals(newStatus.getValue())) {
+            return FeeChangeType.STATUS_UPDATED;
+        } else {
+            return FeeChangeType.NOT_UPDATED;
+        }
     }
 
 }

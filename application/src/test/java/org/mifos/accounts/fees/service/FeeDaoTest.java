@@ -221,12 +221,14 @@ public class FeeDaoTest {
             boolean isCustomerDefaultFee,
             FeeEntity fee,
             FeeStatus feeStatus,
-            FeeFrequencyEntity feeFrequency) throws FeeException, PersistenceException {
+            FeeFrequencyEntity feeFrequency) throws PersistenceException, PropertyNotFoundException {
         fee.setFeeFrequency(feeFrequency);
         fee.setCreatedDate(new Date());
         fee.setCreatedBy(userCtx.getId());
         fee.setFeeStatus(getFeeStatusEntity(userCtx, feeStatus));
-        makeFeeDefaultToCustomer(fee, isCustomerDefaultFee);
+        if (isCustomerDefaultFee) {
+            fee.defaultToCustomer();
+        }
     }
 
     /*private GenericDaoHibernateImpl<FeeEntity, Short> getGenericFeeDao() {
@@ -267,28 +269,6 @@ public class FeeDaoTest {
         return masterEntityDao.retrieveGLCodeEntity(Short.valueOf(glCode));
     }*/
 
-    private void makeFeeDefaultToCustomer(FeeEntity fee, boolean isCustomerDefaultFee) throws FeeException {
-        if (!isCustomerDefaultFee) {
-            return;
-        }
-        FeeCategory feeCategory;
-        try {
-            feeCategory = fee.getCategoryType().getFeeCategory();
-        } catch (PropertyNotFoundException pnfe) {
-            throw new FeeException(pnfe);
-        }
-        if (feeCategory.equals(FeeCategory.CLIENT)) {
-            fee.addFeeLevel(FeeLevel.CLIENTLEVEL);
-        } else if (feeCategory.equals(FeeCategory.GROUP)) {
-            fee.addFeeLevel(FeeLevel.GROUPLEVEL);
-        } else if (feeCategory.equals(FeeCategory.CENTER)) {
-            fee.addFeeLevel(FeeLevel.CENTERLEVEL);
-        } else if (feeCategory.equals(FeeCategory.ALLCUSTOMERS)) {
-            fee.addFeeLevel(FeeLevel.CLIENTLEVEL);
-            fee.addFeeLevel(FeeLevel.GROUPLEVEL);
-            fee.addFeeLevel(FeeLevel.CENTERLEVEL);
-        }
-    }
 
     private boolean vaidateDefaultCustomerFee(Set<FeeLevelEntity> defaultCustomers, FeeCategory feeCategory) {
         //BIND Copy paste from FeeBOIntegrationTest!
