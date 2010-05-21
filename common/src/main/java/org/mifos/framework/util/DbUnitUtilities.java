@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.framework.util;
+package org.mifos.framework.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -53,6 +53,7 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
+import org.joda.time.DateTime;
 import org.mifos.core.MifosRuntimeException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -286,6 +287,14 @@ public class DbUnitUtilities {
         IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
         IDataSet fullDataSet = connection.createDataSet();
         FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
+    }
+
+    public void dumpDatabaseToTimestampedFileInConfigurationDirectory(DriverManagerDataSource dataSource) throws FileNotFoundException, SQLException, DatabaseUnitException, IOException {
+        String configurationDirectory = new ConfigurationLocator().getConfigurationDirectory();
+        DateTime currentTime = new DateTimeService().getCurrentDateTime();
+        String timeStamp = currentTime.toString().replace(":", "_");
+        String databaseDumpPathName = configurationDirectory + '/' + "databaseDump-" + timeStamp;
+        dumpDatabase(databaseDumpPathName, dataSource);
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OS_OPEN_STREAM_EXCEPTION_PATH" }, justification = "buffered streams close streams they wrap")
