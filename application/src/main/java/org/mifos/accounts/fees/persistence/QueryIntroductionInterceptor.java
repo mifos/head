@@ -14,6 +14,8 @@ public class QueryIntroductionInterceptor extends DelegatingIntroductionIntercep
             //TODO: introduce a @InceptFindQuery, @noInterceptFindQuery() annotation, and check with mi.getMethod().getAnnotations()??
             if(methodName.startsWith("retrieve")) {
                 Object[] arguments = mi.getArguments();
+                //mi.getMethod().getGenericReturnType()
+                //TODO check if return type is of collection or not. and return accordingly
                 return qryExec.execFindQuery(methodName, arguments);
             }
         }

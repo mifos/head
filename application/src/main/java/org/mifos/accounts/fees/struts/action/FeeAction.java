@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -128,6 +129,8 @@ public class FeeAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         FeeActionForm actionForm = (FeeActionForm) form;
         UserContext userCtx = getUserContext(request);
+        feeLogger.debug("fee formula = " + actionForm.getFeeFormula());
+        //System.out.println("fee formula = " + actionForm.getFeeFormula());
         FeeCreateRequest feeCreateRequest = new FeeCreateRequest(actionForm.getCategoryTypeValue(), actionForm
                 .getFeeFrequencyTypeValue(), actionForm.getGlCodeValue(), actionForm.getFeePaymentTypeValue(),
                 actionForm.getFeeFormulaValue(), actionForm.getFeeName(), actionForm.isRateFee(), actionForm
@@ -215,7 +218,8 @@ public class FeeAction extends BaseAction {
 
     private FeeServiceFacade getFeeServiceFacade() {
         Object svcFacade = MifosApplicationContext.getBean("feeServiceFacade");
-        feeLogger.debug("feeFacadeLoaded:" + svcFacade);
+        feeLogger.debug("feeFacadeLoaded:" + svcFacade.getClass().getName());
+        //System.out.println("feeFacadeLoaded:" + svcFacade.getClass().getName());
         return (svcFacade != null) ? (FeeServiceFacade) svcFacade : feeServiceFacade;
     }
 

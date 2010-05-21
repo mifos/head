@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContextAware;
 
 public class MifosApplicationContext implements ApplicationContextAware {
 
-    private static ApplicationContext ctx;
+    private static ApplicationContext ctx = null;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         ctx = applicationContext;

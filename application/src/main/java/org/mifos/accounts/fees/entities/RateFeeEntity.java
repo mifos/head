@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.customers.office.business.OfficeBO;
 
@@ -57,6 +59,19 @@ public class RateFeeEntity extends FeeEntity {
 
     public void setFeeFormula(FeeFormulaEntity feeFormula) {
         this.feeFormula = feeFormula;
+    }
+
+    public FeeChangeType calculateChangeType(Double newRate, FeeStatus newStatus) {
+        if (!this.rate.equals(newRate)) {
+            if (!getFeeStatus().getId().equals(newStatus.getValue())) {
+                return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+            }
+            return FeeChangeType.AMOUNT_UPDATED;
+        } else if (!getFeeStatus().getId().equals(newStatus.getValue())) {
+            return FeeChangeType.STATUS_UPDATED;
+        } else {
+            return FeeChangeType.NOT_UPDATED;
+        }
     }
 
 }

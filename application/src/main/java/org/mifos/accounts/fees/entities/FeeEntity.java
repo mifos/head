@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.accounts.fees.util.helpers.FeeLevel;
@@ -153,13 +154,9 @@ public abstract class FeeEntity extends org.mifos.framework.business.AbstractEnt
     }
 
 
-    public void addFeeLevel(FeeLevel level) {
-        feeLevels.add(new FeeLevelEntity(this, level));
-    }
-
-    public Short getChangeType() {
+    /*public Short getChangeType() {
         return this.changeType;
-    }
+    }*/
 
     public Date getCreatedDate() {
         return this.createdDate;
@@ -274,6 +271,24 @@ public abstract class FeeEntity extends org.mifos.framework.business.AbstractEnt
         //FIXME: What is the need for Feelevel?
         //return this.customerDefaultFee;
         return (feeLevels != null) ? (feeLevels.size() > 0) : false;
+    }
+
+    private void addFeeLevel(FeeLevel level) {
+        feeLevels.add(new FeeLevelEntity(this, level));
+    }
+
+    public void defaultToCustomer() throws PropertyNotFoundException {
+        if (categoryType.getFeeCategory().equals(FeeCategory.CLIENT)) {
+            addFeeLevel(FeeLevel.CLIENTLEVEL);
+        } else if (categoryType.getFeeCategory().equals(FeeCategory.GROUP)) {
+            addFeeLevel(FeeLevel.GROUPLEVEL);
+        } else if (categoryType.getFeeCategory().equals(FeeCategory.CENTER)) {
+            addFeeLevel(FeeLevel.CENTERLEVEL);
+        } else if (categoryType.getFeeCategory().equals(FeeCategory.ALLCUSTOMERS)) {
+            addFeeLevel(FeeLevel.CLIENTLEVEL);
+            addFeeLevel(FeeLevel.GROUPLEVEL);
+            addFeeLevel(FeeLevel.CENTERLEVEL);
+        }
     }
 
 }

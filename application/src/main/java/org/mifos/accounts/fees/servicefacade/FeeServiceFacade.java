@@ -40,7 +40,4 @@ public interface FeeServiceFacade {
 
     public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ServiceException;
 
-    public FeeDto createFeeSpike(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
-    public void updateFeeSpike(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ServiceException;
-
 }
