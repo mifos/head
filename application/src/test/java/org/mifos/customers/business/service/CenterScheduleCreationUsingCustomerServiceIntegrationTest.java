@@ -27,6 +27,8 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampl
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +49,8 @@ import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -55,9 +59,11 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -159,6 +165,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(date(2010, 4, 19), date(2010, 4, 23), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -186,6 +194,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -213,6 +223,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(date(2010, 4, 19), date(2010, 4, 23), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -226,6 +238,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // exercise test
         customerService.createCenter(center, weeklyMeeting, noAccountFees);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
 
         validateDates(center.getGlobalCustNum(), startDate, startDate.plusWeeks(1), startDate.plusWeeks(3), startDate.plusWeeks(3),
                 startDate.plusWeeks(4), startDate.plusWeeks(5), startDate.plusWeeks(6), startDate.plusWeeks(7),
@@ -240,6 +254,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -322,6 +338,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(2), RepaymentRuleTypes.NEXT_WORKING_DAY);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -349,6 +367,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(2).plusDays(4), RepaymentRuleTypes.NEXT_WORKING_DAY);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -487,7 +507,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
@@ -597,6 +618,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
         // setup
         saveHoliday(startDate.plusWeeks(4), startDate.plusWeeks(4).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO biWeeklyMeeting = new MeetingBuilder().customerMeeting()
                                                       .weekly()
                                                       .every(2)
@@ -627,6 +650,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         // setup
         saveHoliday(startDate.plusWeeks(4), startDate.plusWeeks(4).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
         saveHoliday(startDate.plusWeeks(8), startDate.plusWeeks(8).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
+        StaticHibernateUtil.getSessionTL().flush();
+        StaticHibernateUtil.commitTransaction();
         MeetingBO biWeeklyMeeting = new MeetingBuilder().customerMeeting()
                                                       .weekly()
                                                       .every(2)
@@ -682,7 +707,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         Assert.assertEquals(expectedDates.length, actualDates.size());
         for (short i = 0; i < actualDates.size(); i++) {
 
-            Assert.assertEquals("Date " + i+1 + "'s date is wrong.",
+            Assert.assertEquals("Date " + (i+1) + "'s date is wrong.",
                                 expectedDates[i], actualDates.get(i));
         }
     }
@@ -720,11 +745,12 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         }
     }
 
-    private void saveHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
-        HolidayBO holiday = (HolidayBO) new HolidayBuilder().from(start)
-                                                               .to(through)
-                                                               .withRepaymentRule(rule).build();
-        IntegrationTestObjectMother.saveHoliday(holiday);
+    private void saveHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
     }
 
     private List<AccountActionDateEntity> getActionDatesSortedByDate(CustomerAccountBO customerAccount) {

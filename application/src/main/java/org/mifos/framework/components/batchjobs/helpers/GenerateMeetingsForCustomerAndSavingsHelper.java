@@ -89,8 +89,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         Integer currentAccountId = null;
         int updatedRecordCount = 0;
 
-        List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 
         try {
@@ -100,7 +98,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 currentRecordNumber++;
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
-
+                List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(accountBO.getOffice().getOfficeId());
                 if (accountBO instanceof CustomerAccountBO) {
                     ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;

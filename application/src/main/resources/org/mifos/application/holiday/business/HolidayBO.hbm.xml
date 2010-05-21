@@ -26,6 +26,16 @@
                        order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
+	
+	<query name="holiday.getOfficeHolidays">
+   	       <![CDATA[select holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       			   join office.holidays holidayBO
+                       where office.officeId = :OFFICE_ID and
+                       (holidayBO.holidayThruDate >= :START_OF_YEAR  and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
+		               or (holidayBO.holidayFromDate >= :START_OF_YEAR and  holidayBO.holidayFromDate <= :END_OF_YEAR)
+                       order by holidayBO.holidayFromDate
+   	       ]]>
+	</query>
 	<query name="holiday.getHoildaysByFlag">
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
 	                  where holidayBO.holidayChangesAppliedFlag = :FLAG

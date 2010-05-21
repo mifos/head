@@ -509,7 +509,7 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         CustomerBO customer = getCustomer(request);
-        loanService.validateDisbursementDateForNewLoan (getDisbursementDate(loanActionForm, request));
+        loanService.validateDisbursementDateForNewLoan (customer.getOfficeId(), getDisbursementDate(loanActionForm, request));
         if (configService.isGlimEnabled() && customer.isGroup()) {
             setGlimEnabledSessionAttributes(request, customer);
             double totalAmount = calculateTotalAmountForGlim(loanActionForm.getClients(), loanActionForm

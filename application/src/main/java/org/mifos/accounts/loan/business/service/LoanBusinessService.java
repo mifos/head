@@ -47,7 +47,7 @@ public class LoanBusinessService implements BusinessService {
     private AccountBusinessService accountBusinessService;
 
     public LoanPersistence getLoanPersistence() {
-        if(loanPersistence == null) {
+        if (loanPersistence == null) {
             loanPersistence = new LoanPersistence();
         }
         return loanPersistence;
@@ -58,7 +58,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     public ConfigurationBusinessService getConfigService() {
-        if(configService == null) {
+        if (configService == null) {
             configService = new ConfigurationBusinessService();
         }
         return configService;
@@ -69,7 +69,7 @@ public class LoanBusinessService implements BusinessService {
     }
 
     public AccountBusinessService getAccountBusinessService() {
-        if(accountBusinessService == null){
+        if (accountBusinessService == null) {
             accountBusinessService = new AccountBusinessService();
         }
         return accountBusinessService;
@@ -113,8 +113,7 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
-    public List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber)
-            throws ServiceException {
+    public List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
         List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
@@ -129,8 +128,7 @@ public class LoanBusinessService implements BusinessService {
         return recentActivityView;
     }
 
-    public List<LoanActivityDto> getAllActivityView(final String globalAccountNumber)
-            throws ServiceException {
+    public List<LoanActivityDto> getAllActivityView(final String globalAccountNumber) throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
         List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
@@ -220,11 +218,12 @@ public class LoanBusinessService implements BusinessService {
     public List<LoanBO> getActiveLoansForAllClientsAssociatedWithGroupLoan(final LoanBO loan) throws ServiceException {
         List<LoanBO> activeLoans = new ArrayList<LoanBO>();
         Collection<CustomerBO> clients = getClientsAssociatedWithGroupLoan(loan);
-
-        for (CustomerBO customerBO : clients) {
-            for (AccountBO accountBO : customerBO.getAccounts()) {
-                if (accountBO.isActiveLoanAccount()) {
-                    activeLoans.add((LoanBO) accountBO);
+        if (clients != null && clients.size() > 0) {
+            for (CustomerBO customerBO : clients) {
+                for (AccountBO accountBO : customerBO.getAccounts()) {
+                    if (accountBO.isActiveLoanAccount()) {
+                        activeLoans.add((LoanBO) accountBO);
+                    }
                 }
             }
         }

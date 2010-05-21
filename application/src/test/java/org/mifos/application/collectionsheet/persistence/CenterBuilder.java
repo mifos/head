@@ -41,7 +41,7 @@ public class CenterBuilder {
     private CenterBO center;
     private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
     private String name = "Test Center";
-    private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").build();
+    private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").withOfficeId(new Short("1")).build();
     private PersonnelBO loanOfficer;
     private UserContext userContext = new UserContext();
     private DateTime mfiJoiningDate = new DateTime();

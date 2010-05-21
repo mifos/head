@@ -913,7 +913,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 1, InterestType.FLAT, meeting);
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(group.getOfficeId(), meeting, 1);
         try {
 
             LoanBO.createIndividualLoan(userContext, loanOffering, group, AccountState.LOAN_PARTIAL_APPLICATION,
@@ -5255,7 +5255,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         //setup
         DateTime startDate = new DateTime().withDate(2010, 10, 15).toDateMidnight().toDateTime(); // Friday
         MeetingBO meeting = new MeetingBuilder().weekly().withStartDate(startDate).build();
-        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
+        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").withOfficeId(new Short("1")).build();
         CenterBO center = new CenterBuilder().with(meeting).with(office).build();
         GroupBO group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         LoanOfferingBO loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();
