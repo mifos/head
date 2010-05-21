@@ -461,6 +461,7 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
