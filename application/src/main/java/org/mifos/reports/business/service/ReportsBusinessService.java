@@ -27,15 +27,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.util.JRSaver;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -194,19 +185,7 @@ public class ReportsBusinessService implements BusinessService {
                     conn = reportsPersistence.getJasperConnection();
 
                     String fullpath = applPath + jaspername;
-                    JasperDesign jasperDesign = JRXmlLoader.load(fullpath);
-                    JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                    jaspername = jaspername.replaceAll(".jrxml", ".jasper");
-                    fullpath = applPath + jaspername;
-                    JRSaver.saveObject(jasperReport, fullpath);
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
-                    if (exportType.equalsIgnoreCase(PDF)) {
-                        exportFileName = "Rep" + reportId + "_" + jaspername.replaceAll(".jasper", ".pdf");
-                        JasperExportManager.exportReportToPdfFile(jasperPrint, applPath + exportFileName);
-                    } else {
-                        exportFileName = "Rep" + reportId + "_" + jaspername.replaceAll(".jasper", ".html");
-                        JasperExportManager.exportReportToHtmlFile(jasperPrint, applPath + exportFileName);
-                    }
+
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -233,19 +212,7 @@ public class ReportsBusinessService implements BusinessService {
                 conn = reportsPersistence.getJasperConnection();
 
                 String fullpath = applPath + jaspername;
-                JasperDesign jasperDesign = JRXmlLoader.load(fullpath);
-                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                jaspername = jaspername.replaceAll(".jrxml", ".jasper");
-                fullpath = applPath + jaspername;
-                JRSaver.saveObject(jasperReport, fullpath);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
-                if (exportType.equalsIgnoreCase(PDF)) {
-                    exportFileName = "Rep" + reportId + "_" + jaspername.replaceAll(".jasper", ".pdf");
-                    JasperExportManager.exportReportToPdfFile(jasperPrint, applPath + exportFileName);
-                } else {
-                    exportFileName = "Rep" + reportId + "_" + jaspername.replaceAll(".jasper", ".html");
-                    JasperExportManager.exportReportToHtmlFile(jasperPrint, applPath + exportFileName);
-                }
+
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
