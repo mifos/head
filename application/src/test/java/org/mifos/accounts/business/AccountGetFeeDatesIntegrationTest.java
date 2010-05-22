@@ -76,7 +76,6 @@ public class AccountGetFeeDatesIntegrationTest {
     private MeetingBO weeklyMeeting;
     private AmountFeeBO weeklyPeriodicFeeForCenterOnly;
     private CenterBO center;
-    private final DateTime yesterday = new DateTime().minusDays(1);
 
     @BeforeClass
     public static void initialiseHibernateUtil() {

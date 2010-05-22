@@ -684,9 +684,9 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
 
-            setInitialObjectForAuditLogging(client);
             client.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
 
             client.updateCustomerStatus(newStatus);
@@ -699,12 +699,13 @@ public class CustomerServiceImpl implements CustomerService {
             this.handleChangeOfClientStatusToClosedOrCancelled(client, customerStatusFlag, customerNote);
 
             customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -872,63 +873,26 @@ public class CustomerServiceImpl implements CustomerService {
         group.validateNewCenter(receivingCenter);
         group.validateForActiveAccounts();
 
-        setInitialObjectForAuditLogging(group);
-
-        OfficeBO centerOffice = receivingCenter.getOffice();
-        if (group.isDifferentBranch(centerOffice)) {
-            group.makeCustomerMovementEntries(centerOffice);
-            if (group.isActive()) {
-                group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-            }
+        if (group.isDifferentBranch(receivingCenter.getOffice())) {
+            customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), receivingCenter.getOfficeId());
         }
 
         CustomerBO oldParent = group.getParentCustomer();
-        group.setParentCustomer(receivingCenter);
 
-        CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
-        if (null != currentHierarchy) {
-            currentHierarchy.makeInactive(group.getUserContext().getId());
-        }
-        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, receivingCenter));
-
-        // handle parent
-        group.setPersonnel(receivingCenter.getPersonnel());
-
-        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
-        MeetingBO groupMeeting = group.getCustomerMeetingValue();
-        if (centerMeeting != null) {
-            if (groupMeeting != null) {
-                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
-                    // FIXME - #000002 - this will store meeting waiting for batch job to come along and update schedules to match updated meeting frequency
-                    group.setUpdatedMeeting(centerMeeting);
-                }
-            } else {
-                CustomerMeetingEntity customerMeeting = group.createCustomerMeeting(centerMeeting);
-                group.setCustomerMeeting(customerMeeting);
-            }
-        } else if (groupMeeting != null) {
-            group.setCustomerMeeting(null);
-        }
-
-        if (oldParent != null) {
-            oldParent.setUserContext(group.getUserContext());
-        }
-
-        receivingCenter.incrementChildCount();
-        group.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
-
-        receivingCenter.setUserContext(group.getUserContext());
+        group.transferTo(receivingCenter);
 
         try {
-            StaticHibernateUtil.startTransaction();
-
-            group.setUpdateDetails();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
 
             if (oldParent != null) {
+                oldParent.updateDetails(group.getUserContext());
                 customerDao.save(oldParent);
             }
+            receivingCenter.updateDetails(group.getUserContext());
             customerDao.save(receivingCenter);
 
+            group.updateDetails(group.getUserContext());
             customerDao.save(group);
 
             Set<CustomerBO> clients = group.getChildren();
@@ -941,16 +905,15 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDao.save(client);
                 }
             }
-            StaticHibernateUtil.commitTransaction();
+            hibernateTransactionHelper.commitTransaction();
 
             return group;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
-
     }
 
     @Override
@@ -1014,10 +977,5 @@ public class CustomerServiceImpl implements CustomerService {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-    }
-
-    private void setInitialObjectForAuditLogging(Object object) {
-        StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
     }
 }
