@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,10 +44,15 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -54,11 +60,13 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
@@ -66,6 +74,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.UserContext;
 
 public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestCase {
@@ -80,7 +89,6 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
     private CustomerBO center = null;
     private CustomerBO group = null;
     private CustomerBO client = null;
-    private Holiday holiday;
     private DateTimeService dateTimeService = new DateTimeService();
     private FeeBO periodicFee;
 
@@ -112,9 +120,8 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             TestObjectFactory.cleanUp(client);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
-            if (holiday != null) {
-                deleteHoliday((HolidayBO) holiday);
-            }
+            deleteHolidays();
+//            new OfficePersistence().getOffice((short)1).getHolidays().clear();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
@@ -135,7 +142,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.flushandCloseSession();
 
         // create holiday on first installment date
-        holiday = buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
+        buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
                 RepaymentRuleTypes.NEXT_WORKING_DAY);
 
         StaticHibernateUtil.getSessionTL();
@@ -216,7 +223,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.flushandCloseSession();
 
         // create holiday on first installment date
-        holiday = buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
+        buildAndPersistHoliday(startDate.plusWeeks(1), startDate.plusWeeks(1),
                 RepaymentRuleTypes.REPAYMENT_MORATORIUM);
 
             StaticHibernateUtil.getSessionTL();
@@ -378,7 +385,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             TestObjectFactory.flushandCloseSession();
 
             // create that pushes fourth and later installments out three weeks
-            holiday = buildAndPersistHoliday(startDate.plusWeeks(4), startDate.plusWeeks(6),
+            buildAndPersistHoliday(startDate.plusWeeks(4), startDate.plusWeeks(6),
                     RepaymentRuleTypes.REPAYMENT_MORATORIUM);
 
                 StaticHibernateUtil.getSessionTL();
@@ -484,10 +491,6 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
                 CustomerStatus.GROUP_ACTIVE, center);
     }
 
-    private void deleteHoliday(final HolidayBO holiday) throws PersistenceException {
-        new HolidayPersistence().delete(holiday);
-        StaticHibernateUtil.commitTransaction();
-    }
 
     private void checkFees(final Map<String, String> expected, final LoanScheduleEntity loanScheduleEntity,
             final boolean checkPaid) {
@@ -527,12 +530,27 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
     }
 
 
-    private Holiday buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) {
-        Holiday holiday = new HolidayBuilder().from(start)
-                                              .to(through)
-                                              .withRepaymentRule(rule).build();
-        IntegrationTestObjectMother.saveHoliday(holiday);
-        return holiday;
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
+    }
+
+    private void deleteHolidays() throws PersistenceException {
+        OfficePersistence officePersistence = new OfficePersistence();
+        Set<HolidayBO> holidays = officePersistence.getOffice(new Short("1")).getHolidays();
+        HolidayBO holidayBOToDelete = null;
+        for (HolidayBO holidayBO : holidays) {
+            holidayBOToDelete = holidayBO;
+        }
+        holidays.clear();
+        officePersistence.getOffice(new Short("2")).getHolidays().clear();
+        officePersistence.getOffice(new Short("3")).getHolidays().clear();
+        if (holidayBOToDelete != null) {
+            StaticHibernateUtil.getSessionTL().delete(holidayBOToDelete);
+        }
+        StaticHibernateUtil.getTransaction().commit();
     }
 
 

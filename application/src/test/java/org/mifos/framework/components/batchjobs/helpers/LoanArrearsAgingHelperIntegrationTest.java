@@ -136,7 +136,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         userContext.setLocaleId(null);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numInstallments);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, numInstallments);
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.RUPEE, loan_amount),

@@ -31,6 +31,7 @@ import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.NextScheduledEventStrategy;
 import org.mifos.calendar.NextWorkingDayStrategy;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -208,5 +209,9 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     private boolean containsDate (DateTime date) {
         return !(date.isBefore(new DateTime(this.getHolidayFromDate()))
                  || date.isAfter(new DateTime(this.getHolidayThruDate())));
+    }
+
+    public void markAsApplied() {
+        this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
     }
 }

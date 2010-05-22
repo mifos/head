@@ -349,7 +349,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         account = getLoanAccount(group, meeting, "adsfdsfsd", "3saf");
         // Date actionDate = new Date(2006,03,13);
         Date meetingDate = customerPersistence.getLastMeetingDateForCustomer(center.getCustomerId());
-        Assert.assertEquals(new Date(getMeetingDates(meeting).getTime()).toString(), meetingDate.toString());
+        Assert.assertEquals(new Date(getMeetingDates(account.getOffice().getOfficeId(), meeting).getTime()).toString(), meetingDate.toString());
 
     }
 
@@ -1169,10 +1169,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         client = TestObjectFactory.createClient("Client", clientStatus, group);
     }
 
-    private static java.util.Date getMeetingDates(final MeetingBO meeting) {
+    private static java.util.Date getMeetingDates(short officeId, final MeetingBO meeting) {
 
         java.util.Date endDate = new java.util.Date();
-        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(meeting, endDate);
+        List<java.util.Date> dates = TestObjectFactory.getMeetingDatesThroughTo(officeId, meeting, endDate);
         return dates.get(dates.size() - 1);
     }
 

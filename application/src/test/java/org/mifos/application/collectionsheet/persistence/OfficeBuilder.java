@@ -35,14 +35,20 @@ public class OfficeBuilder {
     private String searchId = "1.1.1.1.";
     private String shortName = "bf1";
     private OfficeStatus status = OfficeStatus.ACTIVE;
+    private Short officeId;
 
     public OfficeBO build() {
-        final OfficeBO office = new OfficeBO(name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId, status);
+        final OfficeBO office = new OfficeBO(officeId, name, shortName, globalOfficeNum, parentOffice, officeLevel, searchId, status);
         return office;
     }
 
     public OfficeBuilder withName(final String withName) {
         this.name = withName;
+        return this;
+    }
+
+    public OfficeBuilder withOfficeId(final Short officeId) {
+        this.officeId = officeId;
         return this;
     }
 
