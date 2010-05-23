@@ -38,8 +38,7 @@ explanation of the license and how it is applied.
 					<mifos:mifoslabel name="holiday.labelLinkAdmin" bundle="HolidayUIResources"/>	
 				</html-el:link> /
 	          </span><span class="fontnormal8ptbold">
-          			<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/> -
-          			<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>          			        			
+          			<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
           	   </span>
           </td>
         </tr>
@@ -51,10 +50,7 @@ explanation of the license and how it is applied.
               <td width="35%">
 	            <span class="heading">
     	          	<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
-    	        </span> - 
-              	<span class="headingorange">
-              	   <mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
-              	</span>
+    	        </span>
               </td>
             </tr>
             

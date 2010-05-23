@@ -14,8 +14,8 @@
  * nested "children" array. 
  * </p>
  *
- * @author   Ing. Jozef Sak√°lo≈°
- * @copyright (c) 2009, by Ing. Jozef Sak√°lo≈°
+ * @author   Ing. Jozef Sak·loö
+ * @copyright (c) 2009, by Ing. Jozef Sak·loö
  * @version  1.0
  * @date     9. January 2009
  * @revision $Id: Ext.ux.tree.CheckTreePanel.js 593 2009-02-24 10:17:11Z jozo $
@@ -362,8 +362,8 @@ Ext.override(Ext.tree.TreeNode, {
  * Adds checkbox to the tree node UI. This class is not intended
  * to be instantiated explicitly; it is used internally in CheckTreePanel.
  *
- * @author   Ing. Jozef Sak√°lo≈°
- * @copyright (c) 2009, by Ing. Jozef Sak√°lo≈°
+ * @author   Ing. Jozef Sak·loö
+ * @copyright (c) 2009, by Ing. Jozef Sak·loö
  * @version  1.0
  * @date     9. January 2009
  *
@@ -400,7 +400,7 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 		
 		this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() :'';
 		var checked = n.attributes.checked;
-		var href = a.href ? a.href : Ext.isGecko ? "" :"#";
+		var href = a.href ? a.href : Ext.isGecko ? "#" :"#";
         var buf = [
 			 '<li class="x-tree-node"><div ext:tree-node-id="',n.id,'" class="x-tree-node-el x-tree-node-leaf x-unselectable ', a.cls,'" unselectable="on">'
 			,'<span class="x-tree-node-indent">',this.indentMarkup,"</span>"
@@ -464,11 +464,12 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 			this.updateParent(checked);
 		}
 		if('all' === cascade || (checked && 'checked' === cascade) || (!checked && 'unchecked' === cascade)) {
-			this.updateChildren(checked);
+            this.updateChildren(checked);
 		}
 
 		tree.updateHidden();
 		this.fireEvent('checkchange', this.node, checked);
+        this.updateParentSelectively(checked);
 	} // eo function onCheckChange
 	// }}}
 	// {{{
@@ -484,7 +485,6 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 			true === checked ? cb.addClass('x-tree-node-checked') : cb.removeClass('x-tree-node-checked');
 		}
 		this.node.attributes.checked = checked;
-		this.onCheckChange();
 		return checked;
 	} // eo function setChecked
 	// }}}
@@ -496,6 +496,7 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 	,toggleCheck:function() {
 		var checked = !this.isChecked();
 		this.setChecked(checked);
+		this.onCheckChange();
 		return checked;
 	} // eo function toggleCheck
 	// }}}
@@ -508,9 +509,32 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 	,updateParent:function(checked) {
 		var p = this.node.parentNode;
 		var ui = p ? p.getUI() : false;
-		
 		if(ui && ui.setChecked) {
-			ui.setChecked(checked);
+            ui.setChecked(checked);
+            ui.updateParent(checked);
+		}
+	} // eo function updateParent
+	// }}}
+	// {{{
+	/**
+	 * Sets parents checked/unchecked based on collective state of siblings. 
+     * Used if updateParentSelectively is 'true' and cascade is not none
+	 * @param {Boolean} checked
+	 * @private
+	 */
+	,updateParentSelectively:function(checked) {
+		var p = this.node.parentNode;
+        var children = p.childNodes;
+        var i=0;
+        for (i=0;i<children.length;i++)
+        {
+            if(checked && (children[i].attributes.checked != checked))
+                return;
+        }
+		var ui = p ? p.getUI() : false;
+		if(ui && ui.setChecked) {
+            ui.setChecked(checked);
+            ui.updateParentSelectively(checked);
 		}
 	} // eo function updateParent
 	// }}}
@@ -524,7 +548,8 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 		this.node.eachChild(function(n) {
 			var ui = n.getUI();
 			if(ui && ui.setChecked) {
-				ui.setChecked(checked);
+                ui.setChecked(checked);
+                ui.updateChildren(checked);
 			}
 		});
 	} // eo function updateChildren
@@ -588,8 +613,8 @@ Ext.ux.tree.CheckTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
  * This class is not intended to be instantiated explicitly by a user
  * but it is used internally by CheckTreePanel.
  *
- * @author   Ing. Jozef Sak√°lo≈°
- * @copyright (c) 2009, by Ing. Jozef Sak√°lo≈°
+ * @author   Ing. Jozef Sak·loö
+ * @copyright (c) 2009, by Ing. Jozef Sak·loö
  * @version  1.0
  * @date     9. January 2009
  *

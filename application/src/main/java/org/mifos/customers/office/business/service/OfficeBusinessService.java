@@ -146,7 +146,7 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<String> officeNames(List<Short> ids) {
-        return officePersistence.officeName(ids);
+    public List<String> topLevelOfficeNames(List<Short> ids) {
+        return officePersistence.topLevelOfficeName(ids);
     }
 }
