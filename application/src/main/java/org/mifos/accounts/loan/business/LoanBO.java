@@ -2704,7 +2704,9 @@ public class LoanBO extends AccountBO {
 
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
 
-            loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            }
         }
     }
 
@@ -2731,7 +2733,9 @@ public class LoanBO extends AccountBO {
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
 
             loanSummary.decreaseBy(null, interest, penalty, fees);
-            loanSummary.updatePaymentDetails(principal, null, null, null);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, null, null, null);
+            }
 
         }
 
@@ -4042,5 +4046,13 @@ public class LoanBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getLoanMeeting();
+    }
+
+    private boolean accountActionTypeIsWrittenOffOrRescheduled(AccountActionTypes accountActionType) {
+        if (accountActionType.getValue().equals(AccountActionTypes.WRITEOFF.getValue())
+                || accountActionType.getValue().equals(AccountActionTypes.LOAN_RESCHEDULED.getValue())) {
+            return true;
+        }
+        return false;
     }
 }
