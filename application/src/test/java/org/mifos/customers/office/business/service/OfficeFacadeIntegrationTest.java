@@ -73,11 +73,11 @@ public class OfficeFacadeIntegrationTest extends MifosIntegrationTestCase {
     public void testShouldReturnTopLevelOfficeNames() {
         String officeNames = officeFacade.topLevelOfficeNames("3,2,1");
         assertEquals("Mifos HO ", officeNames);
-        officeFacade.topLevelOfficeNames("1");
+        officeNames = officeFacade.topLevelOfficeNames("1");
         assertEquals("Mifos HO ", officeNames);
-        officeFacade.topLevelOfficeNames("2,3");
+        officeNames = officeFacade.topLevelOfficeNames("2,3");
         assertEquals("TestAreaOffice", officeNames);
-        officeFacade.topLevelOfficeNames("3");
+        officeNames = officeFacade.topLevelOfficeNames("3");
         assertEquals("TestBranchOffice", officeNames);
     }
 
