@@ -35,6 +35,7 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
@@ -111,6 +112,15 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
         }
         return (List<HolidayBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_OFFICE_HOLIDAYS, queryParameters);
     }
+
+
+    @SuppressWarnings("unchecked")
+   public List<Holiday> getUnAppliedHolidays() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("FLAG", YesNoFlag.NO.getValue());
+        return (List<Holiday>) genericDao.executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS_BY_FLAG, queryParameters);
+    }
+
 
 
     @Override

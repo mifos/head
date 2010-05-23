@@ -675,6 +675,97 @@ public class CustomerAccountBOTest {
         verifyOneFeeOnlyForInstallments(pentaWeeklyAccountFee, 1, 4, 6, 9, 11, 14, 16, 19);
     }
 
+    /*******************************
+     * Test regenerateDatesForNewHolidays
+     *******************************/
+
+    @Test
+    public void regeneratingDatesFromFirstInstallmentWithNoNewHolidaysDoesNothing() {
+
+        // default setup -- no holidays
+
+        // exercise test
+        createCustomerAccount();
+        customerAccount.rescheduleDatesForNewHolidays(workingDays, holidays, holidays);
+
+        // verify dates have not changed
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 10, firstInstallmentDate);
+    }
+
+    @Test
+    public void regeneratingDatesFromFirstInstallmentWithMoratoriumShouldPushOutThirdAndLaterMeetings() {
+
+        // setup
+        List<Holiday> unappliedHolidays = new ArrayList<Holiday>();
+        unappliedHolidays.add(moratorium);
+
+        // exercise test
+        createCustomerAccount();
+        holidays.add(moratorium);
+        customerAccount.rescheduleDatesForNewHolidays(workingDays, holidays, unappliedHolidays);
+
+        // verify dates have pushed out, starting with 3rd meeting
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 2, firstInstallmentDate);
+        verifyWeeklyMeetingDatesForInstallmentsInRange(3, 10, firstInstallmentDate.plusWeeks(3));
+    }
+
+    @Test
+    public void regeneratingDatesFromFirstInstallmentWithMoratoriumHittingNoDatesShouldNotAlterSchedule() {
+
+        // setup
+        List<Holiday> unappliedHolidays = new ArrayList<Holiday>();
+        Holiday moratoriumBetweenSecondAndThirdMeetings
+                    =  new HolidayBuilder().from(firstInstallmentDate.plusWeeks(1).plusDays(1))
+                                           .to(new DateTime().plusWeeks(1).plusDays(6))
+                                           .withRepaymentMoratoriumRule()
+                                           .build();
+
+        unappliedHolidays.add(moratoriumBetweenSecondAndThirdMeetings);
+
+        // exercise test
+        createCustomerAccount();
+
+        // Verify schedule is not adjusted
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 10, firstInstallmentDate);
+
+        holidays.add(moratoriumBetweenSecondAndThirdMeetings);
+        customerAccount.rescheduleDatesForNewHolidays(workingDays, holidays, unappliedHolidays);
+
+        // verify dates have not changed
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 10, firstInstallmentDate);
+    }
+
+    @Test
+    public void initialSchedulePushedOutByMoratoriumThenExtendMoratoriumShouldPushOutDatesAnotherWeek() {
+
+        // setup
+        List<Holiday> unappliedHolidays = new ArrayList<Holiday>();
+
+        holidays.add(moratorium);
+        Holiday extendMoratoriumAnotherWeek
+                    =  new HolidayBuilder().from(firstInstallmentDate.plusWeeks(3))
+                                           .to(new DateTime().plusWeeks(3).plusDays(6))
+                                           .withRepaymentMoratoriumRule()
+                                           .build();
+
+        unappliedHolidays.add(extendMoratoriumAnotherWeek);
+
+        // exercise test
+        createCustomerAccount();
+
+        // verify dates have pushed out, starting with 3rd meeting
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 2, firstInstallmentDate);
+        verifyWeeklyMeetingDatesForInstallmentsInRange(3, 10, firstInstallmentDate.plusWeeks(3));
+
+        // Now extend the moratorium and reschedule
+        holidays.add(extendMoratoriumAnotherWeek);
+        customerAccount.rescheduleDatesForNewHolidays(workingDays, holidays, unappliedHolidays);
+
+        // verify dates starting with date in first moratorium are pushed out a total of two weeks
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 2, firstInstallmentDate);
+        verifyWeeklyMeetingDatesForInstallmentsInRange(3, 10, firstInstallmentDate.plusWeeks(4));
+    }
+
     /**************************************
      * Helper methods
      *************************************/

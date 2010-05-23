@@ -18,30 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.business;
+/**
+ * The default implementation of BatchJobConfigurationService delegates to {@link GeneralConfig}. That class
+ * should be removed and responsiblity moved back to this class.
+ */
+package org.mifos.framework.components.batchjobs.configuration;
 
-import java.util.Date;
-import java.util.List;
+import org.mifos.config.GeneralConfig;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.schedule.ScheduledEvent;
+public class StandardBatchJobConfigurationService implements BatchJobConfigurationService {
 
-public interface Holiday {
+    public int getBatchSizeForBatchJobs() {
+        return GeneralConfig.getBatchSizeForBatchJobs();
+    }
 
-    boolean encloses(Date date);
+    public int getRecordCommittingSizeForBatchJobs() {
+        return GeneralConfig.getRecordCommittingSizeForBatchJobs();
+    }
 
-    boolean encloses(final DateTime dateTime);
-
-    DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
-
-    RepaymentRuleTypes getRepaymentRuleType();
-
-    DateTime getFromDate();
-
-    DateTime getThruDate();
-
-    void markAsApplied();
+    public int getOutputIntervalForBatchJobs() {
+        return GeneralConfig.getOutputIntervalForBatchJobs();
+    }
 
 }

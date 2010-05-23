@@ -59,6 +59,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -109,6 +110,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -968,6 +970,12 @@ public class LoanBO extends AccountBO {
             throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
         }
 
+        try {
+            new ProductMixValidator().checkIfProductsOfferingCanCoexist(this);
+        } catch (ServiceException e1) {
+            throw new AccountException(e1.getMessage());
+        }
+
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
 
@@ -1626,8 +1634,8 @@ public class LoanBO extends AccountBO {
                 AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
                         .get(objectList.size() - 1);
                 if (accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
-                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) ||
-                        accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
+                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())
+                        || accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
                                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
                     statusChangeNeeded = true;
                 } else if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
@@ -1651,17 +1659,16 @@ public class LoanBO extends AccountBO {
                 updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
             }
             if (statusChangeNeeded) {
-                    if (getDaysInArrears(accountReOpened) == 0) {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
-                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-                        }
+                if (getDaysInArrears(accountReOpened) == 0) {
+                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
                     }
-                    else {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
-                        }
+                } else {
+                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
                     }
                 }
+            }
             PersonnelBO personnel;
             try {
                 personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
@@ -2697,7 +2704,9 @@ public class LoanBO extends AccountBO {
 
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
 
-            loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            }
         }
     }
 
@@ -2724,7 +2733,9 @@ public class LoanBO extends AccountBO {
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
 
             loanSummary.decreaseBy(null, interest, penalty, fees);
-            loanSummary.updatePaymentDetails(principal, null, null, null);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, null, null, null);
+            }
 
         }
 
@@ -4035,5 +4046,13 @@ public class LoanBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getLoanMeeting();
+    }
+
+    private boolean accountActionTypeIsWrittenOffOrRescheduled(AccountActionTypes accountActionType) {
+        if (accountActionType.getValue().equals(AccountActionTypes.WRITEOFF.getValue())
+                || accountActionType.getValue().equals(AccountActionTypes.LOAN_RESCHEDULED.getValue())) {
+            return true;
+        }
+        return false;
     }
 }
