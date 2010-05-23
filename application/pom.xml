@@ -611,10 +611,6 @@
                 <filtering>false</filtering>
             </testResource>
             <testResource>
-                <directory>src/test/testng</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
                 <directory>${test.sql.resources.src.directory}</directory>
                 <filtering>true</filtering>
                 <targetPath>sql</targetPath>
