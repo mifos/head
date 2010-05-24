@@ -22,15 +22,11 @@ package org.mifos.accounts.persistence;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -60,10 +56,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -74,7 +67,6 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.util.DateTimeService;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -133,25 +125,6 @@ public class AccountPersistence extends Persistence {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OPTIONAL_FLAG", optionalFlag);
         return executeNamedQuery(NamedQueryConstants.GET_ACCOUNT_STATES, queryParameters);
-    }
-
-    @SuppressWarnings({ "unchecked", "cast" })
-    public Set<Integer> getAccountsWithYesterdaysInstallment() throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        Calendar currentDateCalendar = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-        queryParameters.put("ACTIVE_CENTER_STATE", CustomerStatus.CENTER_ACTIVE.getValue());
-        queryParameters.put("ACTIVE_GROUP_STATE", CustomerConstants.GROUP_ACTIVE_STATE);
-        queryParameters.put("ACTIVE_CLIENT_STATE", CustomerConstants.CLIENT_APPROVED);
-        queryParameters.put("ONHOLD_CLIENT_STATE", CustomerConstants.CLIENT_ONHOLD);
-        queryParameters.put("ONHOLD_GROUP_STATE", GroupConstants.HOLD);
-        queryParameters.put("CURRENT_DATE", currentDateCalendar.getTime());
-        List<Integer> matchingAccounts = (List<Integer>) executeNamedQuery("getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate", queryParameters);
-
-        return new HashSet(matchingAccounts);
     }
 
     public QueryResult getAllAccountNotes(Integer accountId) throws PersistenceException {
