@@ -63,7 +63,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private long taskStartTime;
     private int accountCount;
     private int currentRecordNumber;
-    private List<Holiday> thisAndNextYearsHolidays;
     private List<Days> workingDays;
     private List<String> errorList;
     private List<Holiday> unappliedHolidays;
@@ -195,7 +194,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         for (Integer accountId : accountIds) {
             currentRecordNumber++;
             AccountBO account = accountBatch.getAccount(accountId);
-            account.rescheduleDatesForNewHolidays (workingDays, thisAndNextYearsHolidays, unappliedHolidays);
+            Short officeId = account.getOffice().getOfficeId();
+            account.rescheduleDatesForNewHolidays(workingDays, getHolidayDao().findAllHolidaysThisYearAndNext(
+                    officeId), unappliedHolidays);
             houseKeeping();
 
         }
@@ -218,13 +219,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         // Overriding default recordCommittingSize of 1000 because only accounts that need more schedules are returned
         recordCommittingSize = 500;
         errorList = new ArrayList<String>();
-        initializeHolidaysAndWorkingDays();
+        initializeWorkingDays();
         unappliedHolidays = getUnappliedHolidays();
     }
 
-    private void initializeHolidaysAndWorkingDays() {
+    private void initializeWorkingDays() {
         workingDays = getFiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        thisAndNextYearsHolidays = getHolidayDao().findAllHolidaysThisYearAndNext();
     }
 
     @Override

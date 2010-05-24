@@ -51,19 +51,6 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     }
 
     @Override
-    public List<Holiday> findAllHolidaysThisYearAndNext() {
-        DateTime today = new DateTime();
-
-        List<HolidayBO> holidaysThisYear = findAllHolidaysForYear(today.getYear());
-        List<HolidayBO> holidaysNextYear = findAllHolidaysForYear(today.plusYears(1).getYear());
-
-        List<Holiday> orderedHolidays = new ArrayList<Holiday>(holidaysThisYear);
-        orderedHolidays.addAll(holidaysNextYear);
-
-        return orderedHolidays;
-    }
-
-    @Override
     public final List<Holiday> findAllHolidaysThisYearAndNext(short officeId) {
         DateTime today = new DateTime();
 
@@ -83,23 +70,8 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
                 new HashMap<String, Object>());
     }
 
-
     @SuppressWarnings("unchecked")
-    private List<HolidayBO> findAllHolidaysForYear(final int year) {
-        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "GB"));
-        isoDateFormat.setLenient(false);
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        try {
-            queryParameters.put("START_OF_YEAR", isoDateFormat.parse(year + "-01-01"));
-            queryParameters.put("END_OF_YEAR", isoDateFormat.parse(year + "-12-31"));
-        } catch (ParseException e) {
-            throw new MifosRuntimeException(e);
-        }
-        return (List<HolidayBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<HolidayBO> findAllHolidaysForYear(short officeId, final int year) {
+    public List<HolidayBO> findAllHolidaysForYear(short officeId, final int year) {
         SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "GB"));
         isoDateFormat.setLenient(false);
         Map<String, Object> queryParameters = new HashMap<String, Object>();

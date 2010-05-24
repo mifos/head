@@ -31,6 +31,7 @@ import static org.mockito.Mockito.never;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -48,8 +49,10 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -73,6 +76,7 @@ public class ApplyHolidayChangesHelperTest {
     @Mock private LoanBusinessService mockLoanBusinessService;
     @Mock private Holiday mockHoliday;
     @Mock private LoanBO mockLoanBO;
+    @Mock private OfficeBO officeBO;
     @Mock private SavingsBO mockSavingsBO;
     @Mock private CustomerAccountBO mockCustomerAccountBO;
     @Mock private AccountBusinessService mockAccountBusinessService;
@@ -131,7 +135,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // tests should add holidays to these lists before executing the batch job
         when(mockHolidayDao.getUnAppliedHolidays()) .thenReturn (unappliedHolidays);
-        when(mockHolidayDao.findAllHolidaysThisYearAndNext()) .thenReturn(upcomingHolidays);
+        when(mockHolidayDao.findAllHolidaysThisYearAndNext(Matchers.anyShort())) .thenReturn(upcomingHolidays);
 
         // Don't care about working days, it's passed to the account for rescheduling
         when(mockFiscalCalendarRules.getWorkingDaysAsJodaTimeDays()) .thenReturn(workingDays);
@@ -144,6 +148,11 @@ public class ApplyHolidayChangesHelperTest {
                 .thenReturn(listOfSavingsAccountIdsInAnUnappliedHoliday);
         when(mockAccountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
                 .thenReturn(listOfCustomerAccountIdsInAnUnappliedHoliday);
+
+        when(mockLoanBO.getOffice()).thenReturn(officeBO);
+        when(mockSavingsBO.getOffice()).thenReturn(officeBO);
+        when(mockCustomerAccountBO.getOffice()).thenReturn(officeBO);
+        when(officeBO.getOfficeId()).thenReturn(new Short("1"));
 
         when(mockAccountBusinessService.getAccount(any(Integer.class))) .thenAnswer(new Answer<AccountBO>() {
             public AccountBO answer(InvocationOnMock invocation) {
@@ -160,6 +169,8 @@ public class ApplyHolidayChangesHelperTest {
             }
 
         });
+
+
 
     }
 

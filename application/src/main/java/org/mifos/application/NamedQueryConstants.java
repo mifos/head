@@ -393,7 +393,6 @@ public interface NamedQueryConstants {
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
 
     // holiday handling
-    public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
