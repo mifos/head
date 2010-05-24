@@ -206,4 +206,11 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         Assert.assertNotNull(officeList);
        Assert.assertEquals(3, officeList.size());
     }
+
+    public void testShouldReturnHeadOffice() throws ServiceException{
+        OfficeBO headOffice = officeBusinessService.getHeadOffice();
+        assertNotNull(headOffice);
+        assertNull(headOffice.getParentOffice());
+        assertEquals(OfficeLevel.HEADOFFICE,headOffice.getOfficeLevel());
+    }
 }

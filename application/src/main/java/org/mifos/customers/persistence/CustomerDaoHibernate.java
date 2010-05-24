@@ -72,6 +72,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -1289,6 +1290,23 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @SuppressWarnings("unchecked")
+    private int maxIdOfCustomersWithNoParentWithinOffice(Short officeIdValue) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_ID", officeIdValue);
+        queryParameters.put("PARENT_CUSTOMER", null);
+
+        List queryResult = this.genericDao.executeNamedQuery("maxIdOfCustomersWithNoParentWithinOffice", queryParameters);
+
+        Object result = queryResult.get(0);
+
+        if (result == null) {
+            return 0;
+        }
+
+        return ((Number)result).intValue();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public int countOfClients() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -1451,10 +1469,10 @@ public class CustomerDaoHibernate implements CustomerDao {
                 String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID, client.getUserContext());
                 throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId, label });
             }
-        } else {
-            if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-                throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
-            }
+        }
+
+        if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
+            throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
         }
     }
 
@@ -1478,5 +1496,17 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
         return ((Number) queryResult.get(0)).intValue() > 0;
+    }
+
+    @Override
+    public int retrieveLastSearchIdValueForNonParentCustomersInOffice(final Short officeId) {
+        final int maxCustomerId = maxIdOfCustomersWithNoParentWithinOffice(officeId);
+        int valueAssociatedWithLastEnteredCustomer = 0;
+        if (maxCustomerId > 0) {
+            final CustomerBO lastEnteredNonParentCustomerUnderOffice = findCustomerById(maxCustomerId);
+            final String searchId = lastEnteredNonParentCustomerUnderOffice.getSearchId();
+            valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(GroupConstants.PREFIX_SEARCH_STRING, ""));
+        }
+        return valueAssociatedWithLastEnteredCustomer;
     }
 }

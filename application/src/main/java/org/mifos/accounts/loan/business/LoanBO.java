@@ -59,6 +59,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -102,6 +103,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractEntity;
@@ -109,6 +111,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -964,6 +967,16 @@ public class LoanBO extends AccountBO {
             throw new AccountException("Loan not in a State to be Disbursed: " + this.getState().toString());
         }
 
+        if (this.getCustomer().isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(this.getLoanOffering())) {
+            throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
+        }
+
+        try {
+            new ProductMixValidator().checkIfProductsOfferingCanCoexist(this);
+        } catch (ServiceException e1) {
+            throw new AccountException(e1.getMessage());
+        }
+
         addLoanActivity(buildLoanActivity(this.loanAmount, loggedInUser, AccountConstants.LOAN_DISBURSAL,
                 transactionDate));
 
@@ -1031,7 +1044,7 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * This disburseLoan only used via saveCollectionSheet - JPW
+     * This disburseLoan only used via saveCollectionSheet - John W
      */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
@@ -1622,8 +1635,8 @@ public class LoanBO extends AccountBO {
                 AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
                         .get(objectList.size() - 1);
                 if (accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
-                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) ||
-                        accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
+                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())
+                        || accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
                                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
                     statusChangeNeeded = true;
                 } else if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
@@ -1636,7 +1649,20 @@ public class LoanBO extends AccountBO {
             if (accountReOpened && this.getCustomer().isClient()) {
                 final ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity) this
                         .getCustomer().getPerformanceHistory();
-                clientHistory.setNoOfActiveLoans(clientHistory.getNoOfActiveLoans() + 1);
+                clientHistory.incrementNoOfActiveLoans();
+                Money newLastLoanAmount = getLoanPersistence()
+                        .findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                                this.getCustomer().getCustomerId(), this.getAccountId());
+                clientHistory.setLastLoanAmount(newLastLoanAmount);
+            }
+
+            if (accountReOpened && this.getCustomer().isGroup()) {
+                final GroupPerformanceHistoryEntity groupHistory = (GroupPerformanceHistoryEntity) this.getCustomer()
+                        .getPerformanceHistory();
+                Money newLastGroupLoanAmount = getLoanPersistence()
+                        .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                                this.getCustomer().getCustomerId(), this.getAccountId());
+                groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
             }
 
             // Reverse just one payment when reopening an account
@@ -1647,17 +1673,16 @@ public class LoanBO extends AccountBO {
                 updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
             }
             if (statusChangeNeeded) {
-                    if (getDaysInArrears(accountReOpened) == 0) {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
-                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-                        }
+                if (getDaysInArrears(accountReOpened) == 0) {
+                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
                     }
-                    else {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                            setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
-                        }
+                } else {
+                    if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
+                        setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
                     }
                 }
+            }
             PersonnelBO personnel;
             try {
                 personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
@@ -1684,6 +1709,9 @@ public class LoanBO extends AccountBO {
 
     /**
      * This method checks if the loan account has been reopened because of payment adjustments made.
+     *
+     * John W - Can't see anyway of reopening LOAN_CLOSED_WRITTEN_OFF account, should take this out during refactoring
+     *
      */
     private boolean isAccountReOpened(final AccountStateEntity currentAccountState,
             final AccountStateEntity newAccountState) {
@@ -2334,7 +2362,7 @@ public class LoanBO extends AccountBO {
         if (getCustomer().isClient() && getCustomer().getPerformanceHistory() != null) {
             ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
                     .getPerformanceHistory();
-            clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans() - 1);
+            clientPerfHistory.decrementNoOfActiveLoans();
         }
     }
 
@@ -2365,15 +2393,10 @@ public class LoanBO extends AccountBO {
     private void updateCustomerHistoryOnReverseLoan() throws AccountException {
         Money lastLoanAmount = new Money(getCurrency());
         try {
-            lastLoanAmount = getLoanPersistence().getLastLoanAmountForCustomer(getCustomer().getCustomerId(),
-                    getAccountId());
             customer.updatePerformanceHistoryOnReversal(this, lastLoanAmount);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
         } catch (CustomerException e) {
             throw new AccountException(e);
         }
-
     }
 
     private void regeneratePaymentSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
@@ -2693,7 +2716,9 @@ public class LoanBO extends AccountBO {
 
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
 
-            loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, interest, penalty, fees);
+            }
         }
     }
 
@@ -2720,7 +2745,9 @@ public class LoanBO extends AccountBO {
             loanSchedule.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
 
             loanSummary.decreaseBy(null, interest, penalty, fees);
-            loanSummary.updatePaymentDetails(principal, null, null, null);
+            if (!accountActionTypeIsWrittenOffOrRescheduled(accountActionTypes)) {
+                loanSummary.updatePaymentDetails(principal, null, null, null);
+            }
 
         }
 
@@ -4031,5 +4058,13 @@ public class LoanBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getLoanMeeting();
+    }
+
+    private boolean accountActionTypeIsWrittenOffOrRescheduled(AccountActionTypes accountActionType) {
+        if (accountActionType.getValue().equals(AccountActionTypes.WRITEOFF.getValue())
+                || accountActionType.getValue().equals(AccountActionTypes.LOAN_RESCHEDULED.getValue())) {
+            return true;
+        }
+        return false;
     }
 }

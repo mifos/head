@@ -62,7 +62,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     public void testShouldSaveHoliday() throws Exception {
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext((short)1);
         assertTrue(holidays.isEmpty());
 
         HolidayDetails holidayDetails = new HolidayDetails("Test Holiday Dao", new Date(),null,RepaymentRuleTypes.fromInt(1));
@@ -71,7 +71,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         officeIds.add((short)1);
         new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
 
-        holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        holidays = holidayDao.findAllHolidaysThisYearAndNext((short)1);
         assertFalse(holidays.isEmpty());
     }
 

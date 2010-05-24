@@ -1043,45 +1043,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = new OfficePersistence().getOffice(office.getOfficeId());
     }
 
-    public void testUpdateClientDetails() throws Exception {
-        createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
-        Short povertyStatus = Short.valueOf("41");
-        Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
-        Assert.assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
-        Assert.assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(2, 2, 2, 2, 2, 2, Short.valueOf("1"), Short
-                .valueOf("1"), povertyStatus);
-        client.updateClientDetails(clientPersonalDetailDto);
-        Assert.assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
-        Assert.assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
-        Assert.assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
-        Assert.assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        office = new OfficePersistence().getOffice(office.getOfficeId());
-    }
-
-    public void ignore_testUpdateFailureIfLoanOffcierNotThereInActiveState() throws Exception {
-        createObjectsForClient("Client 1", CustomerStatus.CLIENT_ACTIVE);
-        try {
-            client.updateMfiInfo(null);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
-        }
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    public void ignore_testUpdateFailureIfLoanOffcierNotThereInHoldState() throws Exception {
-        createObjectsForClient("Client 1", CustomerStatus.CLIENT_HOLD);
-        try {
-            client.updateMfiInfo(null);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
-        }
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
     public void testUpdateWeeklyMeeting() throws Exception {
         client = TestObjectFactory.createClient("clientname", getMeeting(), CustomerStatus.CLIENT_PENDING);
         MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();

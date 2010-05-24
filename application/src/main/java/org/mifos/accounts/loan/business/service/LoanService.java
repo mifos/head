@@ -132,14 +132,14 @@ public class LoanService implements Service {
     }
 
 
-    public void validateDisbursementDateForNewLoan (final DateTime disbursementDate)
+    public void validateDisbursementDateForNewLoan (short officeId, final DateTime disbursementDate)
                     throws ApplicationException {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         validateDisbursementDateIsWorkingDay(disbursementDate, workingDays);
 
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(officeId);
         validateDisbursementDateIsNotInHoliday(disbursementDate, holidays);
     }
 

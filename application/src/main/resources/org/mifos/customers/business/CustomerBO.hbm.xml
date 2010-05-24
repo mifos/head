@@ -655,6 +655,10 @@
 	    <![CDATA[select count(*) from org.mifos.customers.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
 	</query>
 	
+    <query name="maxIdOfCustomersWithNoParentWithinOffice">
+	    <![CDATA[select max(c.customerId) from org.mifos.customers.business.CustomerBO as c where c.office.officeId=:OFFICE_ID and c.parentCustomer is null order by c.customerId]]>
+	</query>
+	
     <query name="countOfClients">
 	    <![CDATA[select count(*) from org.mifos.customers.client.business.ClientBO as client]]>
 	</query>
@@ -795,6 +799,7 @@
 	        	              and (c.firstName like :SEARCH_STRING 
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
+	        	              or c.displayName like :SEARCH_STRING
 	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
 	        	              
 	        	              )
@@ -820,6 +825,7 @@
 	        	              and (c.firstName like :SEARCH_STRING 
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
+	        	              or c.displayName like :SEARCH_STRING
 	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
 	        	              )
 	        	               )
@@ -837,7 +843,9 @@
                          and (off.searchId like :OFFICE_SEARCH_ID) 
                          and (
                                (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+                    		   or (c.customerLevel.id =:LEVELID and 
+                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+	        	              			or c.displayName like :SEARCH_STRING
                     		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
                     		   ))
                     		   )
@@ -855,7 +863,9 @@
                          and (off.searchId like :OFFICE_SEARCH_ID) 
                          and (
                                (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
-                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+                    		   or (c.customerLevel.id =:LEVELID and 
+                    		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
+	        	              			or c.displayName like :SEARCH_STRING
                     		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
                     		   ))
                     		   )

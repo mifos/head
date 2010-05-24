@@ -34,8 +34,7 @@
         <mifos.overrides.home>${user.home}/.mifos/local.properties</mifos.overrides.home>
         <maven.surefire.memory>-Xmx1024m</maven.surefire.memory>
         <!--
-            Don't search System.getProperty("conf.dir") for
-            local.properties; no need. It is only used to override
+            Don't search System.getProperty("conf.dir") for local.properties; no need. It is only used to override
             settings in acceptanceDatabase.properties.
         -->
 
@@ -279,7 +278,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
@@ -295,40 +294,40 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-ehcache</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-envers</artifactId>
-            </dependency>
-             <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-jmx</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-c3p0</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-            </dependency>
- <!-- #### #### Hibernate Validator #### #### -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-            </dependency>
- <!-- #### #### Hibernate Validator #### #### -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-envers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jmx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <!-- #### #### Hibernate Validator #### #### -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <!-- #### #### Hibernate Validator #### #### -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -381,9 +380,8 @@
         </dependency>
         <dependency>
             <!--
-                This dependency overrides the earlier version of Rhino
-                included by spring modules (?). The earlier version of
-                Rhino is incompatible with BIRT. - keithr@alum.mit.edu
+                This dependency overrides the earlier version of Rhino included by spring modules (?). The earlier
+                version of Rhino is incompatible with BIRT. - keithr@alum.mit.edu
             -->
             <groupId>rhino</groupId>
             <artifactId>js</artifactId>
@@ -463,7 +461,6 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>2.4.1</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -477,6 +474,7 @@
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
             <version>1.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -484,43 +482,13 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
-            <groupId>antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>2.7.6</version>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.1_3</version>
-        </dependency>
-        <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>c3p0</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.16</version>
-        </dependency>
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-            <version>1.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
@@ -538,11 +506,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache</groupId>
@@ -582,12 +545,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jetty</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5-6.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>junit-addons</groupId>
             <artifactId>junit-addons</artifactId>
             <version>1.4</version>
@@ -602,12 +559,6 @@
                     <artifactId>xmlParserAPIs</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-junit</artifactId>
-            <version>1.7.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -657,10 +608,6 @@
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/test/testng</directory>
                 <filtering>false</filtering>
             </testResource>
             <testResource>
@@ -862,28 +809,28 @@
                     </execution>
                 </executions>
             </plugin>
-	        <plugin>
-		      <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-surefire-report-plugin</artifactId>
-		           <version>2.4.3</version>
-		             <configuration>
-                         <linkXRef>false</linkXRef>
-                         <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
-                         <reportsDirectories>
-                            <reportsDirectories>${project.build.directory}/surefire-reports/unit</reportsDirectories>
-                            <reportsDirectories>${project.build.directory}/surefire-reports/integration</reportsDirectories>
-                        </reportsDirectories>
-		            </configuration>
-                    <executions>
-                        <execution>
-                            <phase>integration-test</phase>
-                            <goals>
-                                <goal>report-only</goal>
-                            </goals>
-                   </execution>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                    <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+                    <reportsDirectories>
+                        <reportsDirectories>${project.build.directory}/surefire-reports/unit</reportsDirectories>
+                        <reportsDirectories>${project.build.directory}/surefire-reports/integration</reportsDirectories>
+                    </reportsDirectories>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                        </goals>
+                    </execution>
                 </executions>
-	        </plugin>
-	         <plugin>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo.jspc</groupId>
                 <artifactId>jspc-maven-plugin</artifactId>
                 <version>2.0-alpha-3</version>
@@ -904,10 +851,8 @@
                 <configuration>
                     <includeInProject>false</includeInProject>
                     <!--
-                        we'll still catch noncompliance with taglibs
-                        even if this is false, and if it is true, the
-                        compiled JSPs are included in the project (even
-                        if includeInProject=false!)
+                        we'll still catch noncompliance with taglibs even if this is false, and if it is true, the
+                        compiled JSPs are included in the project (even if includeInProject=false!)
                     -->
                     <compile>false</compile>
                     <!-- makes output cleaner (less verbose) -->

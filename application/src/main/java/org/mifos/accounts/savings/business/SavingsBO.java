@@ -233,7 +233,7 @@ public class SavingsBO extends AccountBO {
         if (isActive()) {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             HolidayDao holidayDao = new HolidayDaoHibernate(new GenericDaoHibernate());
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
+            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext(customer.getOfficeId());
             setValuesForActiveState(workingDays, thisAndNextYearsHolidays);
         }
     }

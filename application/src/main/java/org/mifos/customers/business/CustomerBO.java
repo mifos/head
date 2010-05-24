@@ -50,6 +50,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.client.business.ClientBO;
@@ -178,8 +179,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     /**
      * minimal legal constructor for center, groups and clients.
      */
-    public CustomerBO(UserContext userContext, String customerName, CustomerLevel customerLevel, CustomerStatus customerStatus,
-            DateTime mfiJoiningDate, OfficeBO office, MeetingBO meeting, PersonnelBO loanOfficer, PersonnelBO formedBy) {
+    public CustomerBO(UserContext userContext, String customerName, CustomerLevel customerLevel,
+            CustomerStatus customerStatus, DateTime mfiJoiningDate, OfficeBO office, MeetingBO meeting,
+            PersonnelBO loanOfficer, PersonnelBO formedBy) {
         super(userContext);
         this.customerId = null;
         this.customerHierarchies = new HashSet<CustomerHierarchyEntity>();
@@ -306,7 +308,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.customerStatus = new CustomerStatusEntity(newCustomerStatus);
     }
 
-    public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote, CustomerStatusFlagEntity customerStatusFlagEntity) {
+    public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote,
+            CustomerStatusFlagEntity customerStatusFlagEntity) {
         this.customerStatus = new CustomerStatusEntity(newStatus);
         addCustomerNotes(customerNote);
         if (customerStatusFlagEntity != null) {
@@ -714,6 +717,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     /**
      * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
+     *
      * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
      */
     @Deprecated
@@ -721,6 +725,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     /**
      * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
+     *
      * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
      */
     @Deprecated
@@ -1201,28 +1206,41 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return false;
     }
 
-    public boolean hasActiveLoanAccountsForProduct(final LoanOfferingBO loanOffering) {
+    public boolean isDisbursalPreventedDueToAnyExistingActiveLoansForTheSameProduct(final LoanOfferingBO loanOffering) {
+        if (definedAsSameForAllLoan(loanOffering)) {
+            return false;
+        }
+
         for (AccountBO account : getAccounts()) {
-            if (account.isActiveLoanAccount() && ((LoanBO) account).getLoanOffering().isOfSameOffering(loanOffering)) {
-                return true;
+            if (account.isActiveLoanAccount()) {
+                LoanOfferingBO compareLoanOffering = ((LoanBO) account).getLoanOffering();
+                if (compareLoanOffering.isOfSameOffering(loanOffering)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    protected void generateSearchId() throws CustomerException {
-        int count;
+    private boolean definedAsSameForAllLoan(LoanOfferingBO loanOffering) {
+        if (loanOffering.getLoanAmountSameForAllLoan() == null || loanOffering.getLoanAmountSameForAllLoan().size() == 0) {
+            return false;
+        }
+        if (loanOffering.getNoOfInstallSameForAllLoan() == null || loanOffering.getNoOfInstallSameForAllLoan().size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    protected void generateSearchId() {
         if (getParentCustomer() != null) {
             childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            try {
-                count = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT,
-                        getOffice().getOfficeId());
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++count;
+            CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
+
+            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
             this.setSearchId(searchId);
         }
     }
@@ -1351,7 +1369,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.accounts.add(customerAccount);
     }
 
-
     public CustomerPersistence getCustomerPersistence() {
         if (null == customerPersistence) {
             customerPersistence = new CustomerPersistence();
@@ -1426,7 +1443,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public boolean hasSameIdentityAs(CustomerBO customer) {
-        if ((this.customerId == null && customer.getCustomerId() == null) && (this.globalCustNum == null && customer.getGlobalCustNum() == null)) {
+        if ((this.customerId == null && customer.getCustomerId() == null)
+                && (this.globalCustNum == null && customer.getGlobalCustNum() == null)) {
             return this.displayName.equals(customer.displayName);
         }
         return this.globalCustNum.equals(customer.getGlobalCustNum());
@@ -1442,7 +1460,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return !this.displayName.equalsIgnoreCase(nameToCheck);
     }
 
-    public void validateMandatoryCustomFields(List<CustomFieldDefinitionEntity> allCustomFieldsApplicable) throws CustomerException {
+    public void validateMandatoryCustomFields(List<CustomFieldDefinitionEntity> allCustomFieldsApplicable)
+            throws CustomerException {
 
         for (CustomFieldDefinitionEntity customFieldDefinition : allCustomFieldsApplicable) {
 
