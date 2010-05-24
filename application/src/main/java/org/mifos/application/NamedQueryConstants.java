@@ -391,7 +391,6 @@ public interface NamedQueryConstants {
 
     public String ACTIVE_CLIENTS_UNDER_PARENT = "Customer.getActiveClientsUnderParent";
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
-    public String LAST_LOAN_AMOUNT_CUSTOMER = "account.lastLoanAmountForCustomer";
 
     // holiday handling
     public String GET_HOLIDAYS = "holiday.getHolidays";

@@ -103,6 +103,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractEntity;
@@ -1043,7 +1044,7 @@ public class LoanBO extends AccountBO {
     }
 
     /*
-     * This disburseLoan only used via saveCollectionSheet - JPW
+     * This disburseLoan only used via saveCollectionSheet - John W
      */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
@@ -1648,7 +1649,20 @@ public class LoanBO extends AccountBO {
             if (accountReOpened && this.getCustomer().isClient()) {
                 final ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity) this
                         .getCustomer().getPerformanceHistory();
-                clientHistory.setNoOfActiveLoans(clientHistory.getNoOfActiveLoans() + 1);
+                clientHistory.incrementNoOfActiveLoans();
+                Money newLastLoanAmount = getLoanPersistence()
+                        .findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                                this.getCustomer().getCustomerId(), this.getAccountId());
+                clientHistory.setLastLoanAmount(newLastLoanAmount);
+            }
+
+            if (accountReOpened && this.getCustomer().isGroup()) {
+                final GroupPerformanceHistoryEntity groupHistory = (GroupPerformanceHistoryEntity) this.getCustomer()
+                        .getPerformanceHistory();
+                Money newLastGroupLoanAmount = getLoanPersistence()
+                        .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                                this.getCustomer().getCustomerId(), this.getAccountId());
+                groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
             }
 
             // Reverse just one payment when reopening an account
@@ -1695,6 +1709,9 @@ public class LoanBO extends AccountBO {
 
     /**
      * This method checks if the loan account has been reopened because of payment adjustments made.
+     *
+     * John W - Can't see anyway of reopening LOAN_CLOSED_WRITTEN_OFF account, should take this out during refactoring
+     *
      */
     private boolean isAccountReOpened(final AccountStateEntity currentAccountState,
             final AccountStateEntity newAccountState) {
@@ -2345,7 +2362,7 @@ public class LoanBO extends AccountBO {
         if (getCustomer().isClient() && getCustomer().getPerformanceHistory() != null) {
             ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
                     .getPerformanceHistory();
-            clientPerfHistory.setNoOfActiveLoans(clientPerfHistory.getNoOfActiveLoans() - 1);
+            clientPerfHistory.decrementNoOfActiveLoans();
         }
     }
 
@@ -2376,15 +2393,10 @@ public class LoanBO extends AccountBO {
     private void updateCustomerHistoryOnReverseLoan() throws AccountException {
         Money lastLoanAmount = new Money(getCurrency());
         try {
-            lastLoanAmount = getLoanPersistence().getLastLoanAmountForCustomer(getCustomer().getCustomerId(),
-                    getAccountId());
             customer.updatePerformanceHistoryOnReversal(this, lastLoanAmount);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
         } catch (CustomerException e) {
             throw new AccountException(e);
         }
-
     }
 
     private void regeneratePaymentSchedule(final boolean isRepaymentIndepOfMeetingEnabled,
