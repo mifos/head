@@ -45,6 +45,13 @@ public interface AccountService {
     void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
 
     /**
+     * Make multiple loan account disbursements within a single transaction.
+     *
+     * @param accountPaymentParametersDtoList a list of loan payment parameters
+     */
+    void makeLoanDisbusrements(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
+
+    /**
      * Lookup a loan account reference for a loan with a matching primary key.
      *
      * @param id primary key of loan account
@@ -112,6 +119,16 @@ public interface AccountService {
      * @return a list of invalid payment reasons
      */
     List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws Exception;
+
+    /**
+     * Validate a disbursement by checking for any errors that would result from making a
+     * payment using the DTO being passed in.
+     *
+     * @param payment the payment parameters to validate
+     *
+     * @return a list of invalid payment reasons
+     */
+    List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception;
 
     /**
      * Gets the payment types that are valid for loans.

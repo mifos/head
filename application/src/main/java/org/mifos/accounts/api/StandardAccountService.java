@@ -22,20 +22,23 @@ package org.mifos.accounts.api;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -128,6 +131,27 @@ public class StandardAccountService implements AccountService {
 
     }
 
+
+    @Override
+    public void makeLoanDisbusrements(List<AccountPaymentParametersDto> accountPaymentParametersDtoList)
+            throws Exception {
+        for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
+            LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccount().getAccountId());
+
+            PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
+                    PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
+            Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
+            Date receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            Date transactionDate = accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate();
+            String receiptId = accountPaymentParametersDto.getReceiptId().toString();
+
+            AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
+                    paymentTypeEntity, transactionDate);
+
+            loan.disburseLoan(disbursalPayment);
+        }
+    }
+
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws PersistenceException {
         LoanBO loan = getLoanPersistence().getAccount(id);
@@ -144,6 +168,31 @@ public class StandardAccountService implements AccountService {
             throw new PersistenceException("loan not found for external id " + externalId);
         }
         return new AccountReferenceDto(loan.getAccountId());
+    }
+
+    @Override
+    public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
+        List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
+        LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccount().getAccountId());
+        if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
+                && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
+            throw new AccountException("Loan not in a State to be Disbursed: " + loanAccount.getState());
+        }
+        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
+            throw new AccountException("Loan Amount to be Disbursed Held on Database : "
+                    + loanAccount.getLoanAmount().getAmount()
+                    + " does not match the Input Loan Amount to be Disbursed: " + payment.getPaymentAmount());
+        }
+        if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
+            errors.add(InvalidPaymentReason.INVALID_DATE);
+        }
+        if (!getLoanDisbursementType().contains(payment.getPaymentType())) {
+            errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
+        }
+        if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
+            errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
+        }
+        return errors;
     }
 
     @Override
@@ -184,6 +233,10 @@ public class StandardAccountService implements AccountService {
     @Override
     public List<PaymentTypeDto> getLoanPaymentTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
+    }
+
+    public List<PaymentTypeDto> getLoanDisbursementType() throws PersistenceException {
+        return getPaymentTypes(TrxnTypes.loan_disbursement.getValue());
     }
 
     private List<PaymentTypeDto> getPaymentTypes(short transactionType) throws PersistenceException {

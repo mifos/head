@@ -134,6 +134,14 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
                 comment, groupLoan.getLastPmnt().getComment());
     }
 
+    public void testMakeLoanDisbursements() throws Exception {
+        Assert.fail("unimplemented");
+    }
+
+    public void testValidateDisbursement() throws Exception {
+        Assert.fail("unimplemented");
+    }
+
     public void testLookupLoanIdFromExternalId() throws Exception {
         String externalId = "ABC";
         groupLoan.setExternalId(externalId);
