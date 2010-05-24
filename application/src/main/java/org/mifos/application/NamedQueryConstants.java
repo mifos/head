@@ -141,7 +141,6 @@ public interface NamedQueryConstants {
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN = "Customer.getActiveAndOnHoldChildren";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT = "Customer.getActiveAndOnHoldChildrenCount";
     public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
-    public String GET_ALL_CUSTOMERS = "Customer.getAllCustomers";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";
     public String GET_SEARCH_IDS_FOR_OFFICE = "Customer.getSearchIdsForOffice";
     public String GET_SQL_CUSTOMER_COUNT_FOR_OFFICE = "Customer.Sql.getCustomerCountForOffice";
@@ -391,14 +390,13 @@ public interface NamedQueryConstants {
 
     public String ACTIVE_CLIENTS_UNDER_PARENT = "Customer.getActiveClientsUnderParent";
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
-    public String LAST_LOAN_AMOUNT_CUSTOMER = "account.lastLoanAmountForCustomer";
 
     // holiday handling
     public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
-    public String GET_OFFICE_NAMES = "holiday.officeNames";
+    public String GET_TOP_LEVEL_OFFICE_NAMES = "holiday.topLevelOfficeNames";
     public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
     public String GET_REPAYMENT_RULE = "holiday.getRepaymentRule";
     public String SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS = "savingsScheduleEntity.getScheduleForIds";

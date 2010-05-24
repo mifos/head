@@ -79,17 +79,6 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
     private AccountPersistence accountPersistence = new AccountPersistence();
-    private DateTimeService dateTimeService = new DateTimeService();
-
-
-    /*
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        dateTimeService.resetToCurrentSystemDateTime();
-    }
-    */
-
 
     public void testAddDuplicateGlAccounts() {
         String name = "New Account Name";
@@ -98,8 +87,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         String parentGlCode = ASSETS_GL_ACCOUNT_CODE;
 
         try {
-            COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
-            COABO coa2 = accountPersistence.addGeneralLedgerAccount(name2, glCode, parentGlCode, null);
+            accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
+            accountPersistence.addGeneralLedgerAccount(name2, glCode, parentGlCode, null);
             Assert.fail();
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("An account already exists with glcode"));
@@ -255,10 +244,6 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testAccountStatesInUse() throws Exception {
         Assert.assertEquals(17, accountPersistence.getAccountStates(Short.valueOf("1")).size());
-    }
-
-    public void testGetAccountsWithYesterdaysInstallment() throws PersistenceException {
-        Assert.assertEquals(0, accountPersistence.getAccountsWithYesterdaysInstallment().size());
     }
 
     public void testSearchAccount() throws Exception {

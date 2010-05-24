@@ -25,10 +25,6 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.design.JRJdtCompiler;
-import net.sf.jasperreports.engine.util.JRProperties;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -86,26 +82,6 @@ public class ReportsUploadAction extends BaseAction {
                 : request.getParameter("reportId");
         int reportId = Integer.parseInt(strreportId);
         File reportUploadFile = new File(filename);
-        String reportUploadFileName = reportUploadFile.getAbsolutePath();
-        if ((reportUploadFileName.endsWith(".xml")) || (reportUploadFileName.endsWith(".jrxml"))) {
-            try {
-                System.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
-                JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
-
-                JasperCompileManager.compileReportToFile(reportUploadFileName);
-            } catch (Exception e) {
-                // TODO: What kind of exception? This is awfully broad.
-                if (e.toString().indexOf("groovy") > -1) {
-                    System.setProperty(JRProperties.COMPILER_CLASS, "net.sf.jasperreports.compilers.JRGroovyCompiler");
-                    JRProperties.setProperty(JRProperties.COMPILER_CLASS,
-                            "net.sf.jasperreports.compilers.JRGroovyCompiler");
-
-                    JasperCompileManager.compileReportToFile(reportUploadFileName);
-                } else {
-                    throw e;
-                }
-            }
-        }
         String fname = reportUploadFile.getName();
         if (fname != null) {
             fname = fname.replaceAll(".jrxml", ".jasper");

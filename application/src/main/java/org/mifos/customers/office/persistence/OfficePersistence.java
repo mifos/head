@@ -318,8 +318,8 @@ public class OfficePersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> officeName(Collection<Short> ids) {
-        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_OFFICE_NAMES);
+    public List<String> topLevelOfficeName(Collection<Short> ids) {
+        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES);
         return namedQuery.setParameterList("OFFICE_IDS", ids).list();
     }
 }

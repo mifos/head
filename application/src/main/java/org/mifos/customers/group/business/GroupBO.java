@@ -39,7 +39,9 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
+import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -206,7 +208,7 @@ public class GroupBO extends CustomerBO {
             final PersonnelBO loanOfficer) throws CustomerException {
         super(userContext, displayName, CustomerLevel.GROUP, customerStatus, externalId, null, address, customFields,
                 fees, formedBy, office, parentCustomer, meeting, loanOfficer);
-        validateFields(displayName, formedBy, trained, trainedDate);
+        validateFields(formedBy, trained, trainedDate);
     }
 
     @Override
@@ -270,18 +272,6 @@ public class GroupBO extends CustomerBO {
         return oldStatus.isGroupPartialOrGroupPending() && newStatus.isGroupActive();
     }
 
-    protected void validateFieldsForUpdate(final String displayName, final Short loanOfficerId)
-            throws CustomerException {
-        if (getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue())
-                || getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue())) {
-            validateLO(loanOfficerId);
-        }
-        if (!getDisplayName().equals(displayName)) {
-//            validateForDuplicateName(displayName, getOffice().getOfficeId());
-        }
-
-    }
-
     public void validateNewCenter(final CenterBO toCenter) throws CustomerException {
         if (toCenter == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
@@ -342,7 +332,7 @@ public class GroupBO extends CustomerBO {
         validateTrained();
     }
 
-    private void validateFields(final String displayName, final PersonnelBO formedBy, final boolean trained,
+    private void validateFields(final PersonnelBO formedBy, final boolean trained,
             final Date trainedDate) throws CustomerException {
         validateFormedBy(formedBy);
         if (trained && trainedDate == null || !trained && trainedDate != null) {
@@ -546,5 +536,44 @@ public class GroupBO extends CustomerBO {
     public void updateCustomerStatus(CustomerStatus newStatus, CustomerNoteEntity customerNote, CustomerStatusFlagEntity customerStatusFlagEntity) {
         this.clearCustomerFlagsIfApplicable(getStatus(), newStatus);
         super.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
+    }
+
+    public void transferTo(CenterBO receivingCenter) {
+        OfficeBO centerOffice = receivingCenter.getOffice();
+        if (this.isDifferentBranch(centerOffice)) {
+            this.makeCustomerMovementEntries(centerOffice);
+            if (this.isActive()) {
+                this.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
+        }
+
+        this.setParentCustomer(receivingCenter);
+
+        CustomerHierarchyEntity currentHierarchy = this.getActiveCustomerHierarchy();
+        if (null != currentHierarchy) {
+            currentHierarchy.makeInactive(this.getUserContext().getId());
+        }
+        this.addCustomerHierarchy(new CustomerHierarchyEntity(this, receivingCenter));
+
+        // handle parent
+        this.setPersonnel(receivingCenter.getPersonnel());
+
+        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
+        MeetingBO groupMeeting = this.getCustomerMeetingValue();
+        if (centerMeeting != null) {
+            if (groupMeeting != null) {
+                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
+                    this.setUpdatedMeeting(centerMeeting);
+                }
+            } else {
+                CustomerMeetingEntity customerMeeting = this.createCustomerMeeting(centerMeeting);
+                this.setCustomerMeeting(customerMeeting);
+            }
+        } else if (groupMeeting != null) {
+            this.setCustomerMeeting(null);
+        }
+
+        receivingCenter.incrementChildCount();
+        this.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
     }
 }

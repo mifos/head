@@ -144,7 +144,7 @@ public class CreateHolidayEntryPage extends MifosPage {
         selenium.type("holidayFromDateDD", formParameters.getFromDateDD());
         selenium.type("holidayFromDateMM", formParameters.getFromDateMM());
         selenium.type("holidayFromDateYY", formParameters.getFromDateYYYY());
-        selenium.type("selectedOfficeIds", formParameters.getSelectedOfficeIds());
+        selenium.getEval("window.office_hierarchy.setValue('"+formParameters.getSelectedOfficeIds()+"');");
         this.typeTextIfNotEmpty("holidayThruDateDD", formParameters.getThruDateDD());
         this.typeTextIfNotEmpty("holidayThruDateMM", formParameters.getThruDateMM());
         this.typeTextIfNotEmpty("holidayThruDateYY", formParameters.getThruDateYYYY());

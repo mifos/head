@@ -103,6 +103,7 @@ public class HolidayAction extends BaseAction {
 
     public ActionForward addHoliday(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        ((HolidayActionForm)form).setSelectedOfficeIds("");
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
         return mapping.findForward(ActionForwards.load_success.toString());// "create_office_holiday");
     }
@@ -115,11 +116,9 @@ public class HolidayAction extends BaseAction {
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
-        request.getSession().setAttribute(
-                HolidayConstants.SELECTED_OFFICE_NAMES,
-                new OfficeFacade(new OfficeBusinessService()).officeNames(((HolidayActionForm) form)
-                        .getSelectedOfficeIds()));
-
+        String selectedOfficeIds = ((HolidayActionForm) form).getSelectedOfficeIds();
+        request.getSession().setAttribute(HolidayConstants.SELECTED_OFFICE_NAMES,
+                new OfficeFacade(new OfficeBusinessService()).topLevelOfficeNames(selectedOfficeIds));
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 

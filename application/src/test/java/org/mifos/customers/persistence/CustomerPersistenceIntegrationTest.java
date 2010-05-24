@@ -634,24 +634,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.cleanUp(center1);
     }
 
-    public void testGetCustomers() throws NumberFormatException, SystemException, ApplicationException {
-        center = createCenter("center");
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        CenterBO center1 = createCenter("center11");
-        GroupBO group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE,
-                center1);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
-        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
-        List<Integer> customerIds = customerPersistence.getCustomers(CustomerLevel.CENTER.getValue());
-        Assert.assertEquals(2, customerIds.size());
-
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center1);
-    }
-
     public void testGetCustomerChecklist() throws NumberFormatException, SystemException, ApplicationException,
             Exception {
 

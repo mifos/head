@@ -132,7 +132,7 @@
     <query name="office.getBranchParents">
 		<![CDATA[ select distinct o.parentOffice from org.mifos.customers.office.business.OfficeBO  o where o.level.id = :LEVEL_ID and o.status.id = :STATUS_ID and o.searchId like :SEARCH_ID order by o.parentOffice.officeName,o.officeName ]]>
     </query>
-    <query name="holiday.officeNames">
-		<![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO  o where o.officeId in (:OFFICE_IDS) order by o.level.id ]]>
+    <query name="holiday.topLevelOfficeNames">
+		<![CDATA[ select o.officeName from org.mifos.customers.office.business.OfficeBO  o left join o.parentOffice p where o.officeId in (:OFFICE_IDS) and (p is null or p.officeId not in (:OFFICE_IDS)) order by o.level.id, p.officeName, o.officeName]]>
     </query>
 </hibernate-mapping>
