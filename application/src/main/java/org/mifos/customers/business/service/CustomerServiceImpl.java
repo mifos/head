@@ -59,7 +59,6 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
@@ -87,7 +86,6 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
@@ -948,7 +946,7 @@ public class CustomerServiceImpl implements CustomerService {
         group.setSearchId(searchId);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
 
             group.setUpdateDetails();
 
@@ -968,14 +966,15 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDao.save(client);
                 }
             }
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
 
             return group;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 }
