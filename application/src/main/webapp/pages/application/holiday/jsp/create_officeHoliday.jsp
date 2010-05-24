@@ -26,27 +26,39 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-<tiles:insert definition=".clientsacclayoutsearchmenu">
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/extjs/resources/css/ext-all.css">
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/Ext.ux.tree.CheckTreePanel.css">
+  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/checktree.css">
+<tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="create_officeHoliday" />
 		<SCRIPT>
 	function ViewHolidays(){
 	    //alert("ViewHolidays() have been called");
-		holidayActionForm.action="holidayAction.do?method=getHolidays";
+		holidayActionForm.action="holidayAction.do?method=get";
 		//alert("ViewHolidays() will submit");
 		holidayActionForm.submit();
 	}
 
 	function ViewHolidays(form){
 		//alert("ViewHolidays(form) have been called");
-		holidayActionForm.action="holidayAction.do?method=getHolidays";
+		holidayActionForm.action="holidayAction.do?method=get";
 		holidayActionForm.submit();
-		//form.action="holidayAction.do?method=getHolidays";
+		//form.action="holidayAction.do?method=get";
 		//form.submit();
 	}
+	
+	function submitWithTreeValue(){
+		document.getElementById('selectedOfficeIds').value=office_hierarchy.getValue().join(',');
+		holidayActionForm.submit();
+	}
 </SCRIPT>
-		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	  <script type="text/javascript" src="pages/framework/js/extjs/adapter/ext/ext-base.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/extjs/ext-all.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/checktree/js/Ext.ux.tree.CheckTreePanel.js"></script>
+  	  <script type="text/javascript" src="pages/application/holiday/js/officetree.js"></script>
 		<html-el:form method="post"
 			action="/holidayAction.do?method=preview"
 			onsubmit="return (validateMyForm(holidayFromDate,holidayFromDateFormat,holidayFromDateYY) &&
@@ -63,7 +75,7 @@ explanation of the license and how it is applied.
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="holidayAction.do?method=getHolidays&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	              	<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
           				<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
           			</html-el:link> /
 	              </span>
@@ -80,14 +92,12 @@ explanation of the license and how it is applied.
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"></span><mifos:mifoslabel
-								name="holiday.labelAddHolidayNow" bundle="HolidayUIResources"/>
-								<span class="heading"> - <mifos:mifoslabel
-								name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/> 
+								name="holiday.labelAddHolidayNow" bundle="HolidayUIResources"/> 
 								</td>
 						</tr>
 					</table>
 					<br>
-					<table width="95%" border="0" cellspacing="0" cellpadding="3">
+					<table width="95%" border="0" cellspacing="4" cellpadding="4">
 						<tr>
 							<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
 								bundle="HolidayUIResources" /> </font></td>
@@ -127,6 +137,16 @@ explanation of the license and how it is applied.
 							</mifos:select></td>
 							
 						</tr>
+						<tr>
+							<td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
+								name="holiday.ApplicableOffices" mandatory="yes" isColonRequired="Yes" bundle="HolidayUIResources"/>
+							</td>
+							<td>
+								<div id="center-content" class="x-hidden">
+										<div id="officeTree"></div>							
+								</div>
+							</td>
+						</tr>
 					</table>
 					
 				   <table width="96%" border="0" cellpadding="0" cellspacing="0">
@@ -141,13 +161,13 @@ explanation of the license and how it is applied.
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) }"> <!--&& (holidayActionForm.amount == '0.0'||holidayActionForm.amount=='0')}"-->
 									<html-el:submit styleClass="buttn" styleId="holiday.button.preview"
-										property="Preview"> 
+										property="Preview" onclick="submitWithTreeValue()"> 
 										<mifos:mifoslabel name="holiday.button.preview" bundle="HolidayUIResources"><!--holiday.reviewtransaction"-->
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" styleId="holiday.button.preview" property="Preview">
+									<html-el:submit styleClass="buttn" styleId="holiday.button.preview" property="Preview" onclick="submitWithTreeValue()">
 										<mifos:mifoslabel name="holiday.reviewtransaction" bundle="HolidayUIResources">
 										</mifos:mifoslabel>
 									</html-el:submit>
@@ -179,6 +199,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="accountType" value="${BusinessKey.accountType.accountTypeId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="selectedOfficeIds" name="holidayActionForm" styleId="selectedOfficeIds"/>
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

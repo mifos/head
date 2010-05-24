@@ -257,7 +257,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
 
-            CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext();
+            CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
             CustomerAccountBO customerAccount = this.customerAccountFactory.create(customer, accountFees, meeting, applicableCalendarEvents);
             customer.addAccount(customerAccount);
 
@@ -789,7 +789,7 @@ public class CustomerServiceImpl implements CustomerService {
 
                 List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
                 List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao()
-                        .findAllHolidaysThisYearAndNext();
+                        .findAllHolidaysThisYearAndNext(customer.getOfficeId());
 
                 try {
                     if (client.getParentCustomer() != null) {

@@ -21,264 +21,210 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.GeneralConfig;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
+import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
+import org.mifos.framework.components.batchjobs.configuration.StandardBatchJobConfigurationService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.schedule.ScheduledDateGeneration;
-import org.mifos.schedule.ScheduledEvent;
-import org.mifos.schedule.ScheduledEventFactory;
-import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
-    private List<HolidayBO> unappliedHolidays;
-    private AccountPersistence accountPersistence = new AccountPersistence();
+    // injectable external dependencies
+    private AccountPersistence accountPersistence;
+    private BatchJobConfigurationService batchJobConfigurationService;
+    private HibernateUtil hibernateUtil;
+    private HolidayDao holidayDao;
+    private FiscalCalendarRules fiscalCalendarRules;
+    private LoanBusinessService loanBusinessService;
+    private AccountBusinessService accountBusinessService;
 
     private int outputIntervalForBatchJobs;
     private int batchSize;
     private int recordCommittingSize;
     private long rollingStartTime;
+    private long taskStartTime;
     private int accountCount;
     private int currentRecordNumber;
-    private ScheduledDateGeneration dateGeneration;
-
-    private enum ScheduleTypes {
-        CUSTOMER, LOAN, SAVINGS;
-    }
+    private List<Holiday> thisAndNextYearsHolidays;
+    private List<Days> workingDays;
+    private List<String> errorList;
+    private List<Holiday> unappliedHolidays;
 
     public ApplyHolidayChangesHelper(MifosTask mifosTask) {
         super(mifosTask);
     }
 
+    public BatchJobConfigurationService getBatchJobConfigurationService() {
+        if (batchJobConfigurationService == null) {
+            return new StandardBatchJobConfigurationService();
+        }
+        return this.batchJobConfigurationService;
+    }
+
+    public void setBatchJobConfigurationService(BatchJobConfigurationService batchJobConfigurationService) {
+        this.batchJobConfigurationService = batchJobConfigurationService;
+    }
+
+    public HibernateUtil getHibernateUtil() {
+        if (hibernateUtil == null) {
+            return new HibernateUtil();
+        }
+        return this.hibernateUtil;
+    }
+
+    public void setHibernateUtil(HibernateUtil hibernateUtil) {
+        this.hibernateUtil = hibernateUtil;
+    }
+
+    public AccountPersistence getAccountPersistence() {
+        if (accountPersistence == null) {
+            return new AccountPersistence();
+        }
+        return this.accountPersistence;
+    }
+
+    public void setAccountPersistence(AccountPersistence accountPersistence) {
+        this.accountPersistence = accountPersistence;
+    }
+
+    public HolidayDao getHolidayDao() {
+        if (holidayDao == null) {
+            return new HolidayDaoHibernate(new GenericDaoHibernate());
+        }
+        return this.holidayDao;
+    }
+
+    public void setHolidayDao(HolidayDao holidayDao) {
+        this.holidayDao = holidayDao;
+    }
+
+    public FiscalCalendarRules getFiscalCalendarRules() {
+        if (fiscalCalendarRules == null) {
+            fiscalCalendarRules = new FiscalCalendarRules();
+        }
+        return this.fiscalCalendarRules;
+    }
+
+    public void setFiscalCalendarRules(FiscalCalendarRules fiscalCalendarRules) {
+        this.fiscalCalendarRules = fiscalCalendarRules;
+    }
+
+    public LoanBusinessService getLoanBusinessService() {
+        if (loanBusinessService == null) {
+            return new LoanBusinessService();
+        }
+        return this.loanBusinessService;
+    }
+
+    public void setLoanBusinessService(LoanBusinessService loanBusinessService) {
+        this.loanBusinessService = loanBusinessService;
+    }
+
+    public AccountBusinessService getAccountBusinessService() {
+        if (accountBusinessService == null) {
+            return new AccountBusinessService();
+        }
+        return this.accountBusinessService;
+    }
+
+    public void setAccountBusinessService(AccountBusinessService accountBusinessService) {
+        this.accountBusinessService = accountBusinessService;
+    }
+
     @Override
     public void execute(long timeInMillis) throws BatchJobException {
 
-        long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
+        initializeTaskGlobalParameters(timeInMillis);
 
-        outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
-        batchSize = GeneralConfig.getBatchSizeForBatchJobs();
-        // int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
-        // jpw - hardcoded recordCommittingSize to 500 because only accounts that need more schedules are returned
-        recordCommittingSize = 500;
-
-        unappliedHolidays = new ArrayList<HolidayBO>();
-        try {
-            unappliedHolidays = new HolidayPersistence().getUnAppliedHolidays();
-        } catch (Exception e) {
-            throw new BatchJobException(e);
-        }
-
-        List<String> errorList = new ArrayList<String>();
         if (unappliedHolidays != null && !unappliedHolidays.isEmpty()) {
-
-            createDateGeneration();
-            for (HolidayBO holiday : unappliedHolidays) {
-                logMessage("Processing Holiday: " + holiday.getHolidayName() + " From: "
-                        + DateUtils.getLocalDateFromDate(holiday.getHolidayFromDate()) + " To: "
-                        + DateUtils.getLocalDateFromDate(holiday.getHolidayThruDate()));
-                try {
-                    handleHolidayApplication(holiday);
-                    String endHolidayMessage = "Completed Processing for Holiday: " + holiday.getHolidayName()
-                            + "  Time Taken: "
-                            + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime + " ms");
-                    logMessage(endHolidayMessage);
-                } catch (Exception e) {
-                    StaticHibernateUtil.rollbackTransaction();
-                    errorList.add(e.toString() + " - " + holiday.toString());
-                    e.printStackTrace();
-                    throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-                } finally {
-                    StaticHibernateUtil.closeSession();
-                }
+            try {
+                rescheduleDatesStartingFromUnappliedHolidays();
+            } catch (Exception e) {
+                getHibernateUtil().rollbackTransaction();
+                errorList.add("Failed to apply holiday changes: " + e.toString());
+                e.printStackTrace();
+                throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+            } finally {
+                getHibernateUtil().closeSession();
             }
-
             String finalMessage = "ApplyHolidayChanges task completed in "
-                    + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
+                + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
             logMessage(finalMessage);
         }
-
     }
 
-    private void handleHolidayApplication(HolidayBO holiday) throws Exception {
+    private void rescheduleDatesStartingFromUnappliedHolidays () throws ServiceException, PersistenceException {
 
-        List<Integer> accountIds = null;
+        reschedule (new LoanAccountBatch());
+        reschedule (new SavingsAccountBatch());
+        reschedule (new CustomerAccountBatch());
 
-        // HolidayUtils.rescheduleLoanRepaymentDates(holiday);
-        accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(holiday.getHolidayFromDate(),
-                holiday.getHolidayThruDate());
-        rescheduleDates(accountIds, ScheduleTypes.LOAN, holiday.getHolidayFromDate(), holiday.getHolidayThruDate());
-
-        // HolidayUtils.rescheduleSavingDates(holiday);
-        accountIds = accountPersistence.getListOfAccountIdsHavingSavingsSchedulesWithinDates(holiday
-                .getHolidayFromDate(), holiday.getHolidayThruDate());
-        rescheduleDates(accountIds, ScheduleTypes.SAVINGS, holiday.getHolidayFromDate(), holiday.getHolidayThruDate());
-
-        // HolidayUtils.rescheduleCustomerDates(holiday);
-        accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(holiday
-                .getHolidayFromDate(), holiday.getHolidayThruDate());
-        rescheduleDates(accountIds, ScheduleTypes.CUSTOMER, holiday.getHolidayFromDate(), holiday.getHolidayThruDate());
-
-        // Change flag for this holiday in the database
-        holiday.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
-        new HolidayPersistence().createOrUpdate(holiday);
-        StaticHibernateUtil.commitTransaction();
+        markHolidaysAsApplied();
     }
 
-    private void rescheduleDates(final List<Integer> accountIds, final ScheduleTypes scheduleType, final Date fromDate,
-            final Date thruDate) throws Exception {
+    private void reschedule (AccountBatch accountBatch) throws PersistenceException, ServiceException {
 
-        if (!(scheduleType.equals(ScheduleTypes.LOAN) || scheduleType.equals(ScheduleTypes.SAVINGS) || scheduleType
-                .equals(ScheduleTypes.CUSTOMER))) {
-            throw new RuntimeException("Invalid ScheduleType: " + scheduleType.toString());
-        }
-
-        long startTime = new DateTimeService().getCurrentDateTime().getMillis();
-        rollingStartTime = startTime;
+        rollingStartTime = taskStartTime;
         currentRecordNumber = 0;
-        accountCount = accountIds.size();
-        logMessage("No. of " + scheduleType.toString() + " Accounts to Process: " + accountCount);
 
-        StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.startTransaction();
+        List<Integer> accountIds = accountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
+        accountCount = accountIds.size();
+        logMessage("No. of loan Accounts to Process: " + accountCount);
+
+        getHibernateUtil().getSessionTL();
+        getHibernateUtil().startTransaction();
+
         for (Integer accountId : accountIds) {
             currentRecordNumber++;
-
-            if (scheduleType.equals(ScheduleTypes.LOAN)) {
-                rescheduleLoanRepaymentDates(accountId, fromDate, thruDate);
-            }
-            if (scheduleType.equals(ScheduleTypes.SAVINGS)) {
-                rescheduleSavingDates(accountId, fromDate, thruDate);
-            }
-            if (scheduleType.equals(ScheduleTypes.CUSTOMER)) {
-                rescheduleCustomerDates(accountId, fromDate, thruDate);
-            }
-
+            AccountBO account = accountBatch.getAccount(accountId);
+            account.rescheduleDatesForNewHolidays (workingDays, thisAndNextYearsHolidays, unappliedHolidays);
             houseKeeping();
 
         }
-        StaticHibernateUtil.commitTransaction();
+        getHibernateUtil().commitTransaction();
         long time = new DateTimeService().getCurrentDateTime().getMillis();
         String message = "" + currentRecordNumber + " updated, " + (accountCount - currentRecordNumber)
                 + " remaining, batch time: " + (time - rollingStartTime) + " ms";
         logMessage(message);
 
-        String finalMessage = scheduleType.toString() + " Accounts Processed in: "
-                + (new DateTimeService().getCurrentDateTime().getMillis() - startTime) + " ms";
+        String finalMessage = "Loan accounts Processed in: "
+                + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
-
     }
 
-    private void rescheduleLoanRepaymentDates(final Integer accountId, final Date fromDate, final Date thruDate)
-            throws RuntimeException {
-        try {
-            LoanBO loan = new LoanBusinessService().getAccount(accountId);
-            MeetingBO loadedMeeting = loan.getLoanMeeting();
+    private void initializeTaskGlobalParameters(long startTime) {
 
-            List<LoanScheduleEntity> affectedDates = accountPersistence.getLoanSchedulesForAccountThatAreWithinDates(
-                    accountId, fromDate, thruDate);
-            if (affectedDates == null || affectedDates.size() == 0) {
-                throw new RuntimeException("No Loan Schedules were affected.  There should have been at least one.");
-            }
-
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
-            for (LoanScheduleEntity loanScheduleEntity : affectedDates) {
-
-                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(loanScheduleEntity.getActionDate())
-                        .toDateMidnight().toDateTime();
-                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
-                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
-                loanScheduleEntity.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (PersistenceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        }
+        taskStartTime = startTime;
+        outputIntervalForBatchJobs = getBatchJobConfigurationService().getOutputIntervalForBatchJobs();
+        batchSize = getBatchJobConfigurationService().getBatchSizeForBatchJobs();
+        // Overriding default recordCommittingSize of 1000 because only accounts that need more schedules are returned
+        recordCommittingSize = 500;
+        errorList = new ArrayList<String>();
+        initializeHolidaysAndWorkingDays();
+        unappliedHolidays = getUnappliedHolidays();
     }
 
-    private void rescheduleSavingDates(final Integer accountId, final Date fromDate, final Date thruDate)
-            throws RuntimeException {
-        try {
-            SavingsBO saving = (SavingsBO) new AccountBusinessService().getAccount(accountId);
-            MeetingBO loadedMeeting = saving.getCustomer().getCustomerMeeting().getMeeting();
-            List<SavingsScheduleEntity> affectedDates = accountPersistence
-                    .getSavingsSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate);
-            if (affectedDates == null || affectedDates.size() == 0) {
-                throw new RuntimeException("No Savings Schedules were affected.  There should have been at least one.");
-            }
-
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
-            for (SavingsScheduleEntity savingScheduleEntity : affectedDates) {
-
-                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(savingScheduleEntity
-                        .getActionDate()).toDateMidnight().toDateTime();
-                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
-                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
-                savingScheduleEntity.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (PersistenceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        }
-    }
-
-    private void rescheduleCustomerDates(final Integer accountId, final Date fromDate, final Date thruDate)
-            throws RuntimeException {
-        try {
-            CustomerAccountBO customerAccount = (CustomerAccountBO) new AccountBusinessService().getAccount(accountId);
-            MeetingBO loadedMeeting = customerAccount.getCustomer().getCustomerMeeting().getMeeting();
-            List<CustomerScheduleEntity> affectedDates = accountPersistence
-                    .getCustomerSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate);
-            if (affectedDates == null || affectedDates.size() == 0) {
-                throw new RuntimeException("No Customer Schedules were affected.  There should have been at least one.");
-            }
-
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(loadedMeeting);
-            for (CustomerScheduleEntity customerSchedule : affectedDates) {
-
-                DateTime previousScheduledDateThatShouldFallInHoliday = new DateTime(customerSchedule.getActionDate())
-                        .toDateMidnight().toDateTime();
-                List<DateTime> installmentDates = dateGeneration.generateScheduledDates(1,
-                        previousScheduledDateThatShouldFallInHoliday, scheduledEvent);
-                // Date adjustedDate = HolidayUtils.adjustDate(getCalendar(customerSchedule.getActionDate()),
-                // loadedMeeting).getTime();
-                customerSchedule.setActionDate(new java.sql.Date(installmentDates.get(0).toDate().getTime()));
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        } catch (PersistenceException e) {
-            throw new RuntimeException("Account Id: " + accountId + " - " + e);
-        }
+    private void initializeHolidaysAndWorkingDays() {
+        workingDays = getFiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        thisAndNextYearsHolidays = getHolidayDao().findAllHolidaysThisYearAndNext();
     }
 
     @Override
@@ -286,23 +232,26 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         return true;
     }
 
-    private void createDateGeneration() {
+    private List<Holiday> getUnappliedHolidays() {
 
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-        dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, thisAndNextYearsHolidays);
+        return getHolidayDao().getUnAppliedHolidays();
+    }
+
+    private void markHolidaysAsApplied() {
+        for (Holiday holiday : unappliedHolidays) {
+            holiday.markAsApplied();
+        }
     }
 
     private void houseKeeping() {
 
         if (currentRecordNumber % batchSize == 0) {
-            StaticHibernateUtil.flushAndClearSession();
+            getHibernateUtil().flushAndClearSession();
         }
         if (currentRecordNumber % recordCommittingSize == 0) {
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.getSessionTL();
-            StaticHibernateUtil.startTransaction();
+            getHibernateUtil().commitTransaction();
+            getHibernateUtil().getSessionTL();
+            getHibernateUtil().startTransaction();
         }
 
         if (currentRecordNumber % outputIntervalForBatchJobs == 0) {
@@ -319,4 +268,70 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         getLogger().info(finalMessage);
     }
 
+    private interface AccountBatch {
+        List<Integer> getAccountIdsWithDatesIn(List<Holiday> holidays) throws PersistenceException;
+        AccountBO getAccount(Integer accountId) throws PersistenceException, ServiceException;
+    }
+
+    private abstract class AbstractAccountBatch implements AccountBatch {
+
+        public List<Integer> getAccountIdsWithDatesIn(List<Holiday> holidays) throws PersistenceException {
+            List<Integer> accountIds = new ArrayList<Integer>();
+            for (Holiday holiday : holidays) {
+                accountIds.addAll(getAccountIdsHavingSchedulesWithinHoliday(holiday));
+            }
+            return accountIds;
+        }
+
+        public abstract AccountBO getAccount(Integer accountId) throws PersistenceException, ServiceException;
+
+        protected abstract List<Integer> getAccountIdsHavingSchedulesWithinHoliday (Holiday holiday)
+                    throws PersistenceException;
+
+    }
+
+    private class LoanAccountBatch extends AbstractAccountBatch {
+
+        @Override
+        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
+            return getAccountPersistence().getListOfAccountIdsHavingLoanSchedulesWithinDates
+                                        (holiday.getFromDate(), holiday.getThruDate());
+            }
+
+        @Override
+        public AccountBO getAccount(Integer accountId) throws ServiceException {
+            return getAccountBusinessService().getAccount(accountId);
+        }
+    }
+
+    private class SavingsAccountBatch extends AbstractAccountBatch {
+
+        @Override
+        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
+
+            return getAccountPersistence().getListOfAccountIdsHavingSavingsSchedulesWithinDates
+            (holiday.getFromDate(), holiday.getThruDate());
+        }
+
+        @Override
+        public AccountBO getAccount(Integer accountId) throws ServiceException {
+            return getAccountBusinessService().getAccount(accountId);
+        }
+
+    }
+
+    private class CustomerAccountBatch extends AbstractAccountBatch {
+
+        @Override
+        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
+            return getAccountPersistence().getListOfAccountIdsHavingCustomerSchedulesWithinDates
+            (holiday.getFromDate(), holiday.getThruDate());
+        }
+
+        @Override
+        public AccountBO getAccount(Integer accountId) throws ServiceException {
+            return getAccountBusinessService().getAccount(accountId);
+        }
+
+    }
 }

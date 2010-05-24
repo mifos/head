@@ -44,7 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ClientPerformanceHistoryEntityTest {
 
-    private ClientPerformanceHistoryEntity clientgroupPerformanceHistoryEntity;
+    private ClientPerformanceHistoryEntity clientPerformanceHistoryEntity;
 
     @Mock
     private LoanBO loan;
@@ -72,15 +72,41 @@ public class ClientPerformanceHistoryEntityTest {
 
         Money loanAmount = new Money(Money.getDefaultCurrency(), "55.6");
         // setup
-        clientgroupPerformanceHistoryEntity = new ClientPerformanceHistoryEntity(client);
+        clientPerformanceHistoryEntity = new ClientPerformanceHistoryEntity(client);
 
         when(loan.getLoanAmount()).thenReturn(loanAmount);
 
         // exercise test
-        clientgroupPerformanceHistoryEntity.updateOnFullRepayment(loanAmount);
+        clientPerformanceHistoryEntity.updateOnFullRepayment(loanAmount);
 
         // verification
-        assertThat(clientgroupPerformanceHistoryEntity.getLastLoanAmount(), is(notNullValue()));
-        assertThat(clientgroupPerformanceHistoryEntity.getLastLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
+        assertThat(clientPerformanceHistoryEntity.getLastLoanAmount(), is(notNullValue()));
+        assertThat(clientPerformanceHistoryEntity.getLastLoanAmount().getAmountDoubleValue(), is(loanAmount.getAmountDoubleValue()));
+    }
+
+    @Test
+    public void shouldAddOneToNoOfActiveLoansWhenIncremented() throws Exception {
+
+        // setup
+        clientPerformanceHistoryEntity = new ClientPerformanceHistoryEntity(client);
+        clientPerformanceHistoryEntity.setNoOfActiveLoans(5);
+        // exercise test
+        clientPerformanceHistoryEntity.incrementNoOfActiveLoans();
+
+        // verification
+        assertThat(clientPerformanceHistoryEntity.getNoOfActiveLoans(), is(6));
+    }
+
+    @Test
+    public void shouldSubtractOneFromNoOfActiveLoansWhenDecremented() throws Exception {
+
+        // setup
+        clientPerformanceHistoryEntity = new ClientPerformanceHistoryEntity(client);
+        clientPerformanceHistoryEntity.setNoOfActiveLoans(5);
+        // exercise test
+        clientPerformanceHistoryEntity.decrementNoOfActiveLoans();
+
+        // verification
+        assertThat(clientPerformanceHistoryEntity.getNoOfActiveLoans(), is(4));
     }
 }

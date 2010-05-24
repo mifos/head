@@ -20,7 +20,13 @@
 
 package org.mifos.customers.center.struts.action;
 
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
 
@@ -43,12 +49,20 @@ public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
         return this.officeName;
     }
 
+    public String getText() {
+        return this.officeName;
+    }
+
     public List<OfficeHierarchyDto> getChildren() {
         return this.children;
     }
 
     public Short getOfficeId() {
         return this.officeId;
+    }
+
+    public String getId() {
+        return this.officeId.toString();
     }
 
     public String getSearchId() {
@@ -62,5 +76,12 @@ public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
     @Override
     public int compareTo(OfficeHierarchyDto other) {
         return officeName.compareTo(other.getOfficeName());
+    }
+
+    public String toJSONString() throws JsonGenerationException, JsonMappingException, IOException {
+        org.codehaus.jackson.map.ObjectMapper jsonMapper = new ObjectMapper();
+        LinkedList<OfficeHierarchyDto> officeHierarchyList = new LinkedList<OfficeHierarchyDto>();
+        officeHierarchyList.add(this);
+        return jsonMapper.writeValueAsString(officeHierarchyList.toArray());
     }
 }

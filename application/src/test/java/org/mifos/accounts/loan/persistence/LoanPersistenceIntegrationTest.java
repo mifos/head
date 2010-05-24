@@ -233,14 +233,6 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.removeObject(loanOfferingBO);
     }
 
-    public void testGetLastLoanAmountForCustomer() throws Exception {
-        Date startDate = new Date(System.currentTimeMillis());
-        loanAccountForDisbursement = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-        disburseLoan(startDate);
-        Assert.assertEquals(((LoanBO) loanAccountForDisbursement).getLoanAmount(), loanPersistence
-                .getLastLoanAmountForCustomer(group.getCustomerId(), loanAccountForDisbursement.getAccountId() + 1));
-    }
-
     @SuppressWarnings("deprecation")
     private void disburseLoan(final Date startDate) throws Exception {
         ((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate, Short.valueOf("1"),

@@ -43,12 +43,11 @@ explanation of the license and how it is applied.
 					
 			function fun_edit(form)
 					{
-						
 						form.action="holidayAction.do?method=previous";
 						form.submit();
 					}
 	</script>
-		<html-el:form action="holidayAction.do?method=update">
+		<html-el:form action="holidayAction.do?method=update" >
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		
@@ -61,13 +60,8 @@ explanation of the license and how it is applied.
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="/offAction.do?method=getAllOfficesHolidays&randomNUm=${sessionScope.randomNUm}">
+					<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
           				<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
-          			</html-el:link> /
-	              </span>
-	              <span class="fontnormal8pt">
-					<html-el:link action="holidayAction.do?method=getHolidays&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-          				<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
           			</html-el:link>
           	     </span>
     	       </td>
@@ -79,9 +73,6 @@ explanation of the license and how it is applied.
           <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="98%" border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td width="35%">
-	            <span class="heading">
-    	          	<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
-    	        </span> - 
               	<span class="headingorange">
               	   <mifos:mifoslabel name="holiday.labelPreviewHoliday" bundle="HolidayUIResources"/>
               	</span>
@@ -102,31 +93,36 @@ explanation of the license and how it is applied.
                 <td width="11%" class="drawtablehd">
                		 <mifos:mifoslabel name="holiday.HolidayThruDate" bundle="HolidayUIResources"/>
                 </td>
-                <td width="28%" class="drawtablehd">
+                <td width="20%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayName" bundle="HolidayUIResources"/>
 				</td>
-				<td width="50%" class="drawtablehd">
+				<td width="20%" class="drawtablehd">
                 	<mifos:mifoslabel name="holiday.HolidayRepaymentRule" bundle="HolidayUIResources"/>
+				</td>
+				<td width="38%" class="drawtablehd">
+                	<mifos:mifoslabel name="holiday.ApplicableOffices" bundle="HolidayUIResources"/>
 				</td>
               </tr>
 	          <tr>
 	          	<td width="11%" class="drawtablerow">${holidayActionForm.holidayFromDate}</td>
 	            	<td width="11%" class="drawtablerow">${holidayActionForm.holidayThruDate}</td>
-	                <td width="28%" class="drawtablerow">${holidayActionForm.holidayName}</td>
-	                <td width="50%" class="drawtablerow">
+	                <td width="20%" class="drawtablerow">${holidayActionForm.holidayName}</td>
+	                <td width="20%" class="drawtablerow">
 	                	<c:forEach var="RRT" items="${RepaymentRuleType}" >
 							<c:if
 								  test="${RRT.key == sessionScope.holidayActionForm.repaymentRuleId}">
 									<c:out value="${RRT.value}" />
 							</c:if>
 						</c:forEach>
-				</td>
+					</td>
+					<td width="38%" class="drawtablerow">${SelectedOfficeNames}</td>
 	          </tr>          
               <tr>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
                 <td width="11%" class="drawtablerow">&nbsp;</td>
-                <td width="28%" class="drawtablerow">&nbsp;</td>
-                <td width="50%" class="drawtablerow">&nbsp;</td>
+                <td width="20%" class="drawtablerow">&nbsp;</td>
+                <td width="20%" class="drawtablerow">&nbsp;</td>
+                <td width="38%" class="drawtablerow">&nbsp;</td>
               </tr>
              
             </table>
@@ -173,7 +169,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="holidayThruDate"
 				value="${holidayActionForm.holidayThruDate}" />
 			<html-el:hidden property="method" value="" />
-
 		</html-el:form>
 
 	</tiles:put>

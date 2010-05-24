@@ -57,6 +57,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -89,6 +90,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.getSessionTL().clear();
         LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
         loanArrearsAgingHelper = (LoanArrearsAgingHelper) loanArrearsAgingTask.getTaskHelper();
         dateTime = initializeToFixedDateTime();
@@ -134,7 +136,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         userContext.setLocaleId(null);
         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numInstallments);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, numInstallments);
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.RUPEE, loan_amount),

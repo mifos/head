@@ -53,6 +53,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
     @Override
     protected void tearDown() throws Exception {
         rollback();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 

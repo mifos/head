@@ -52,6 +52,7 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -143,12 +144,13 @@ public class CenterCreationTest {
     public void createsCenterWithCustomerAccount() throws Exception {
 
         // setup
-        CenterBO center = new CenterBuilder().withLoanOfficer(anyLoanOfficer()).build();
+        OfficeBO withOffice = new OfficeBO(new Short("1"), "testOffice",new Integer("1"),new Short("1"));
+        CenterBO center = new CenterBuilder().withLoanOfficer(anyLoanOfficer()).with(withOffice).build();
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
         // stub
         CalendarEvent upcomingCalendarEvents = new CalendarEventBuilder().build();
-        when(holidayDao.findCalendarEventsForThisYearAndNext()).thenReturn(upcomingCalendarEvents);
+        when(holidayDao.findCalendarEventsForThisYearAndNext((short)1)).thenReturn(upcomingCalendarEvents);
         when(customerAccountFactory.create(center, accountFees, meeting, upcomingCalendarEvents)).thenReturn(customerAccount);
         when(customerAccount.getType()).thenReturn(AccountTypes.CUSTOMER_ACCOUNT);
 
@@ -168,7 +170,7 @@ public class CenterCreationTest {
 
         // stub
         CalendarEvent upcomingCalendarEvents = new CalendarEventBuilder().build();
-        when(holidayDao.findCalendarEventsForThisYearAndNext()).thenReturn(upcomingCalendarEvents);
+        when(holidayDao.findCalendarEventsForThisYearAndNext((short)1)).thenReturn(upcomingCalendarEvents);
         when(customerAccountFactory.create(center, accountFees, meeting, upcomingCalendarEvents)).thenReturn(customerAccount);
         when(customerAccount.getType()).thenReturn(AccountTypes.CUSTOMER_ACCOUNT);
 

@@ -32,4 +32,27 @@
 		</set>
     </class>    
     
+	<sql-query name="ClientPerformanceHistory.getLastLoanAmountWhenRepaidLoanAdjusted">
+		<return-scalar column="loanAccountId" type="integer" />
+		<return-scalar column="lastLoanAmount" type="big_decimal" />
+	    <![CDATA[select la.account_id as loanAccountId, la.loan_amount as lastLoanAmount
+				from customer c
+				join client_perf_history cph on cph.customer_id = c.customer_id
+				left join account a on a.customer_id = c.customer_id and account_type_id = 1 and a.account_state_id = 6
+				left join loan_account la on la.account_id = a.account_id
+				left join account_status_change_history asch on asch.account_id = a.account_id and asch.new_status = 6
+
+				where ifnull(asch.account_status_change_id, -1) = 
+        					(select ifnull(max(asch2.account_status_change_id), -1) 
+        					from customer c2
+        					join account a2 on a2.customer_id = c2.customer_id and account_type_id = 1 and a2.account_state_id = 6
+        					join account_status_change_history asch2 on asch2.account_id = a2.account_id and asch2.new_status =6
+        					where c2.customer_id = :CLIENT_ID
+        					and a2.account_id <> :EXCLUDE_ACCOUNT_ID)
+        
+				and c.customer_id = :CLIENT_ID
+				and a.account_id <> :EXCLUDE_ACCOUNT_ID
+			]]>
+	</sql-query>
+	
 </hibernate-mapping>

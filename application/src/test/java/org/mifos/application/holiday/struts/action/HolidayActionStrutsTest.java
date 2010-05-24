@@ -72,7 +72,7 @@ public class HolidayActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testGetHolidays() throws Exception {
         setRequestPathInfo("/holidayAction");
-        addRequestParameter("method", "getHolidays");
+        addRequestParameter("method", "get");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyNoActionErrors();

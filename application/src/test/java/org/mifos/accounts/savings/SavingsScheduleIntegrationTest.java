@@ -26,7 +26,9 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampl
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -49,7 +51,10 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -60,8 +65,12 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -135,12 +144,8 @@ public class SavingsScheduleIntegrationTest {
 
     @Test
     public void createWeeklySavingScheduleSecondInstallmentFallsInMoratorium() throws Exception {
-
-        Holiday moratorium = new HolidayBuilder().from(expectedFirstDepositDate.plusWeeks(1))
-                                                 .to(expectedFirstDepositDate.plusWeeks(1))
-                                                 .withRepaymentMoratoriumRule()
-                                                 .build();
-        IntegrationTestObjectMother.saveHoliday(moratorium);
+        buildAndPersistHoliday(expectedFirstDepositDate.plusWeeks(1), expectedFirstDepositDate.plusWeeks(1),
+                RepaymentRuleTypes.REPAYMENT_MORATORIUM);
 
         createClientSavingsAccount();
 
@@ -164,16 +169,8 @@ public class SavingsScheduleIntegrationTest {
 
     @Test
     public void createWeeklySavingScheduleSecondInstallmentFallsInNextMeetingHoliday() throws Exception {
-
-        Holiday moratorium = new HolidayBuilder().from(expectedFirstDepositDate.plusWeeks(1))
-                                                 .to(expectedFirstDepositDate.plusWeeks(1))
-                                                 .withRepaymentRule(RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT)
-                                                 .build();
-        IntegrationTestObjectMother.saveHoliday(moratorium);
-
-        List<Holiday> holidays = new ArrayList<Holiday>();
-        holidays.add(moratorium);
-
+        buildAndPersistHoliday(expectedFirstDepositDate.plusWeeks(1), expectedFirstDepositDate.plusWeeks(1),
+                RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
         createClientSavingsAccount();
 
         short installmentId = 1;
@@ -198,14 +195,8 @@ public class SavingsScheduleIntegrationTest {
     public void createWeeklySavingScheduleSecondInstallmentFallsInNextWorkingDayHoliday() throws Exception {
 
         // One-day holiday on the second deposit date, Monday
-        Holiday holiday = new HolidayBuilder().from(expectedFirstDepositDate.plusWeeks(1))
-                                                 .to(expectedFirstDepositDate.plusWeeks(1))
-                                                 .withRepaymentRule(RepaymentRuleTypes.NEXT_WORKING_DAY)
-                                                 .build();
-        IntegrationTestObjectMother.saveHoliday(holiday);
-
-        List<Holiday> holidays = new ArrayList<Holiday>();
-        holidays.add(holiday);
+        buildAndPersistHoliday(expectedFirstDepositDate.plusWeeks(1), expectedFirstDepositDate.plusWeeks(1),
+                RepaymentRuleTypes.NEXT_WORKING_DAY);
 
         createClientSavingsAccount();
 
@@ -279,7 +270,7 @@ public class SavingsScheduleIntegrationTest {
 
 
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(client.getOfficeId());
 
         savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
                 .withCustomer(client).with(holidays).build();
@@ -292,4 +283,12 @@ public class SavingsScheduleIntegrationTest {
         Collections.sort(sortedList);
         return sortedList;
     }
+
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
+    }
+
 }

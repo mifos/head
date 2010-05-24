@@ -92,7 +92,7 @@ public class LoanBOTestUtils {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
         LoanBO loan;
         MifosCurrency currency = loanOffering.getCurrency();
@@ -141,7 +141,7 @@ public class LoanBOTestUtils {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
         LoanBO loan;
         try {
@@ -192,7 +192,7 @@ public class LoanBOTestUtils {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startDate);
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
         LoanBO loan;
         MifosCurrency currency = TestUtils.RUPEE;
@@ -231,7 +231,7 @@ public class LoanBOTestUtils {
         if (disbursalType == 2)// 2-Interest At Disbursement
         {
             loan.setInterestDeductedAtDisbursement(true);
-            meetingDates = TestObjectFactory.getMeetingDates(loan.getLoanMeeting(), 6);
+            meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), loan.getLoanMeeting(), 6);
             short i = 0;
             for (Date date : meetingDates) {
                 if (i == 0) {
@@ -279,7 +279,7 @@ public class LoanBOTestUtils {
 
         } else if (disbursalType == 1 || disbursalType == 3) {
             loan.setInterestDeductedAtDisbursement(false);
-            meetingDates = TestObjectFactory.getMeetingDates(loan.getLoanMeeting(), 6);
+            meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), loan.getLoanMeeting(), 6);
 
             short i = 0;
             for (Date date : meetingDates) {
@@ -335,7 +335,7 @@ public class LoanBOTestUtils {
                 RecurrenceType.WEEKLY, Short.valueOf("1"));
         feeViewList.add(new FeeDto(userContext, maintanenceFee));
         MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer.getCustomerMeeting().getMeeting());
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, 6);
 
         try {
             loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(loanOffering.getCurrency(),"300.0"),
