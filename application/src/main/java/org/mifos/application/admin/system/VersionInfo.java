@@ -23,18 +23,18 @@ package org.mifos.application.admin.system;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.core.io.ClassPathResource;
 
-public class SvnRevision extends Properties {
-    private static final String REVISION = "versioninfo.revision";
-    private static final String BRANCH = "versioninfo.branch";
+public class VersionInfo extends Properties {
+    private static final String COMMIT_IDENTIFIER = "versioninfo.commitIdentifier";
+    private static final String BUILD_NUMBER = "versioninfo.buildNumber";
+    private static final String BUILD_DATE = "versioninfo.buildDate";
 
-    public SvnRevision() {
-        this(FilePaths.SVN_REVISION_PROPERTYFILE);
+    public VersionInfo() {
+        this("org/mifos/config/resources/versionInfo.properties");
     }
 
-    public SvnRevision(String versionFile) {
+    public VersionInfo(String versionFile) {
         if (versionFile != null) {
             readVersionFile(versionFile);
         }
@@ -48,13 +48,15 @@ public class SvnRevision extends Properties {
         }
     }
 
-    public String getVersion() {
-        String revision = getProperty(REVISION);
-        return revision == null ? "unknown" : revision;
+    public String getCommitIdentifier() {
+        return getProperty(COMMIT_IDENTIFIER);
     }
 
-    public String getBranch() {
-        String branch = getProperty(BRANCH);
-        return branch == null ? "unknown" : branch;
+    public String getBuildNumber() {
+        return getProperty(BUILD_NUMBER);
+    }
+
+    public String getBuildDate() {
+        return getProperty(BUILD_DATE);
     }
 }

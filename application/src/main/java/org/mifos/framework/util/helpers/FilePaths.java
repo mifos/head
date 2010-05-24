@@ -118,7 +118,6 @@ public interface FilePaths {
     public static final String PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH
             + "ProductDefinitionResources";
     public static final String UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "UIResources";
-    public static final String SVN_REVISION_PROPERTYFILE = "org/mifos/config/resources/versionInfo.properties";
     public final String BULKENTRY_RESOURCE = LOCALIZED_RESOURCE_PATH + "BulkEntryUIResources";
     public final String CHECKLIST_RESOURCE = LOCALIZED_RESOURCE_PATH + "CheckListUIResources";
 
