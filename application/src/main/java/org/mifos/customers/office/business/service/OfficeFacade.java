@@ -40,13 +40,13 @@ public class OfficeFacade {
         return officeBusinessService.headOfficeHierarchy();
     }
 
-    public String officeNames(String ids) {
+    public String topLevelOfficeNames(String ids) {
         String[] idArray = ids.split(",");
         List<Short> idList = new LinkedList<Short>();
         for (String id : idArray) {
             idList.add(new Short(id));
         }
-        List<String> topLevelOffices = officeBusinessService.officeNames(idList);
+        List<String> topLevelOffices = officeBusinessService.topLevelOfficeNames(idList);
         StringBuffer stringBuffer = new StringBuffer();
         for (Iterator<String> iterator = topLevelOffices.iterator(); iterator.hasNext();) {
             stringBuffer.append(iterator.next());

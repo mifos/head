@@ -390,14 +390,13 @@ public interface NamedQueryConstants {
 
     public String ACTIVE_CLIENTS_UNDER_PARENT = "Customer.getActiveClientsUnderParent";
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
-    public String LAST_LOAN_AMOUNT_CUSTOMER = "account.lastLoanAmountForCustomer";
 
     // holiday handling
     public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
-    public String GET_OFFICE_NAMES = "holiday.officeNames";
+    public String GET_TOP_LEVEL_OFFICE_NAMES = "holiday.topLevelOfficeNames";
     public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
     public String GET_REPAYMENT_RULE = "holiday.getRepaymentRule";
     public String SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS = "savingsScheduleEntity.getScheduleForIds";

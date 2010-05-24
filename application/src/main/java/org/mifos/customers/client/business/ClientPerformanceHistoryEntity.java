@@ -234,12 +234,12 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     public void updateOnDisbursement(LoanOfferingBO loanOffering) {
         updateLoanCounter(loanOffering, YesNoFlag.YES);
-        setNoOfActiveLoans(getNoOfActiveLoans() + 1);
+        incrementNoOfActiveLoans();
     }
 
     public void updateOnWriteOff(LoanOfferingBO loanOffering) {
         updateLoanCounter(loanOffering, YesNoFlag.NO);
-        setNoOfActiveLoans(getNoOfActiveLoans() - 1);
+        decrementNoOfActiveLoans();
     }
 
     public void updateOnReversal(LoanOfferingBO loanOffering, Money lastLoanAmount) {
@@ -248,11 +248,19 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
     public void updateCommonHistoryOnReversal(LoanOfferingBO loanOffering) {
         updateLoanCounter(loanOffering, YesNoFlag.NO);
-        setNoOfActiveLoans(getNoOfActiveLoans() - 1);
+        decrementNoOfActiveLoans();
     }
 
     public void updateOnFullRepayment(Money totalAmount) {
         setLastLoanAmount(totalAmount);
+        decrementNoOfActiveLoans();
+    }
+
+    public void incrementNoOfActiveLoans(){
+        setNoOfActiveLoans(getNoOfActiveLoans() + 1);
+    }
+
+    public void decrementNoOfActiveLoans(){
         setNoOfActiveLoans(getNoOfActiveLoans() - 1);
     }
 }

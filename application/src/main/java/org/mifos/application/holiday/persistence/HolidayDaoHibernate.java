@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.hibernate.SQLQuery;
+import org.hibernate.Query;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -131,7 +131,7 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
-        SQLQuery sqlQuery = (SQLQuery) getSession().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
+        Query sqlQuery = getSession().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
         return sqlQuery.setInteger("HOLIDAY_ID", id).list();
     }
 

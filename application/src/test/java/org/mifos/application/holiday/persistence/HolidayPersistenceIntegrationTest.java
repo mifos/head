@@ -52,6 +52,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
     @Override
     protected void tearDown() throws Exception {
         rollback();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 

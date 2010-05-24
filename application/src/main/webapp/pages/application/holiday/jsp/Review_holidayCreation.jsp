@@ -43,12 +43,11 @@ explanation of the license and how it is applied.
 					
 			function fun_edit(form)
 					{
-						
 						form.action="holidayAction.do?method=previous";
 						form.submit();
 					}
 	</script>
-		<html-el:form action="holidayAction.do?method=update">
+		<html-el:form action="holidayAction.do?method=update" >
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		
@@ -61,13 +60,8 @@ explanation of the license and how it is applied.
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="/offAction.do?method=getAllOfficesHolidays&randomNUm=${sessionScope.randomNUm}">
-          				<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
-          			</html-el:link> /
-	              </span>
-	              <span class="fontnormal8pt">
 					<html-el:link action="holidayAction.do?method=get&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-          				<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
+          				<mifos:mifoslabel name="holiday.labelLinkViewHolidays" bundle="HolidayUIResources"/>
           			</html-el:link>
           	     </span>
     	       </td>
@@ -79,9 +73,6 @@ explanation of the license and how it is applied.
           <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="98%" border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td width="35%">
-	            <span class="heading">
-    	          	<mifos:mifoslabel name="holiday.labelLinkViewHolidaysOrganizationWide" bundle="HolidayUIResources"/>
-    	        </span> - 
               	<span class="headingorange">
               	   <mifos:mifoslabel name="holiday.labelPreviewHoliday" bundle="HolidayUIResources"/>
               	</span>
@@ -178,7 +169,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="holidayThruDate"
 				value="${holidayActionForm.holidayThruDate}" />
 			<html-el:hidden property="method" value="" />
-
 		</html-el:form>
 
 	</tiles:put>
