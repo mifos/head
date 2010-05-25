@@ -58,15 +58,10 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     }
 
     private CustomerBO group;
-
     private CustomerBO center;
-
     private CustomerBO client1;
-
     private CustomerBO client2;
-
     private SavingsBO savings;
-
     private SavingsOfferingBO savingsOffering;
 
     private UserContext userContext;
@@ -104,7 +99,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         StaticHibernateUtil.closeSession();
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
-        System.out.println(center.getCustomerAccount().getAccountActionDates().size());
         Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
     }
 

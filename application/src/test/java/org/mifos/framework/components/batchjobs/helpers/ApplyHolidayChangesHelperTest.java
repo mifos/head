@@ -29,7 +29,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -65,6 +64,7 @@ import org.mockito.stubbing.Answer;
 public class ApplyHolidayChangesHelperTest {
 
     private ApplyHolidayChangesHelper applyHolidayChangesHelper;
+
     @Mock private BatchJobConfigurationService mockBatchJobConfigurationService;
     @Mock private AccountPersistence mockAccountPersistence;
     @Mock private HibernateUtil mockHibernateUtil;
@@ -87,15 +87,8 @@ public class ApplyHolidayChangesHelperTest {
     private List<Integer> listOfSavingsAccountIdsInAnUnappliedHoliday;
     private List<Integer> listOfCustomerAccountIdsInAnUnappliedHoliday;
 
-
-
-
-
-
     @Before
     public void setupAndInjectMocks() throws Exception {
-
-        resetMocks();
 
         loanAccountId = new Integer(1);
         savingsAccountId = new Integer(2);
@@ -161,22 +154,6 @@ public class ApplyHolidayChangesHelperTest {
 
         });
 
-    }
-
-    private void resetMocks() {
-
-        mockBatchJobConfigurationService = mock(BatchJobConfigurationService.class);
-        mockAccountPersistence = mock(AccountPersistence.class);
-        mockHibernateUtil = mock(HibernateUtil.class);
-        mockHolidayDao = mock(HolidayDao.class);
-        mockFiscalCalendarRules = mock(FiscalCalendarRules.class);
-        mockLoanBusinessService = mock(LoanBusinessService.class);
-        mockAccountBusinessService = mock( AccountBusinessService.class);
-
-        mockHoliday = mock(Holiday.class);
-        mockLoanBO = mock (LoanBO.class);
-        mockSavingsBO = mock (SavingsBO.class);
-        mockCustomerAccountBO = mock (CustomerAccountBO.class);
     }
 
     @Test
