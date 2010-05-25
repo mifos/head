@@ -24,19 +24,15 @@ package org.mifos.framework.components.batchjobs.helpers;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.anyList;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -74,6 +70,7 @@ import org.mockito.stubbing.Answer;
 public class ApplyHolidayChangesHelperTest {
 
     private ApplyHolidayChangesHelper applyHolidayChangesHelper;
+
     @Mock private BatchJobConfigurationService mockBatchJobConfigurationService;
     @Mock private AccountPersistence mockAccountPersistence;
     @Mock private HibernateUtil mockHibernateUtil;
@@ -98,15 +95,9 @@ public class ApplyHolidayChangesHelperTest {
     private List<Integer> listOfSavingsAccountIdsInAnUnappliedHoliday;
     private List<Integer> listOfCustomerAccountIdsInAnUnappliedHoliday;
 
-
-
-
-
-
     @Before
     public void setupAndInjectMocks() throws Exception {
 
-        resetMocks();
         holiday = mockHolidayBO;
         loanAccountId = new Integer(1);
         savingsAccountId = new Integer(2);
@@ -183,22 +174,6 @@ public class ApplyHolidayChangesHelperTest {
 
 
 
-    }
-
-    private void resetMocks() {
-
-        mockBatchJobConfigurationService = mock(BatchJobConfigurationService.class);
-        mockAccountPersistence = mock(AccountPersistence.class);
-        mockHibernateUtil = mock(HibernateUtil.class);
-        mockHolidayDao = mock(HolidayDao.class);
-        mockFiscalCalendarRules = mock(FiscalCalendarRules.class);
-        mockLoanBusinessService = mock(LoanBusinessService.class);
-        mockAccountBusinessService = mock( AccountBusinessService.class);
-
-        holiday = mock(Holiday.class);
-        mockLoanBO = mock (LoanBO.class);
-        mockSavingsBO = mock (SavingsBO.class);
-        mockCustomerAccountBO = mock (CustomerAccountBO.class);
     }
 
     @Test

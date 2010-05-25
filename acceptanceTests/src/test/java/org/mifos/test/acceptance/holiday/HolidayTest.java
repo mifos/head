@@ -74,6 +74,7 @@ public class HolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createHoliday() throws Exception {
+        dbUnitUtilities.loadDataFromFile("acceptance_default_003_dbunit.xml.zip", dataSource);
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
