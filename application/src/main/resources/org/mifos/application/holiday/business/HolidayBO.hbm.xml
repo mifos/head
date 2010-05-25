@@ -19,20 +19,12 @@
 	</class>
 
 	<!-- Holiday Specific Queries  -->
-	<query name="holiday.getHolidays">
-   	       <![CDATA[select holidayBO from org.mifos.application.holiday.business.HolidayBO holidayBO
-                       where (holidayBO.holidayThruDate >= :START_OF_YEAR  and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
-		               or (holidayBO.holidayFromDate >= :START_OF_YEAR and  holidayBO.holidayFromDate <= :END_OF_YEAR)
-                       order by holidayBO.holidayFromDate
-   	       ]]>
-	</query>
-	
 	<query name="holiday.getOfficeHolidays">
-   	       <![CDATA[select holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
    	       			   join office.holidays holidayBO
-                       where office.officeId = :OFFICE_ID and
-                       (holidayBO.holidayThruDate >= :START_OF_YEAR  and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
-		               or (holidayBO.holidayFromDate >= :START_OF_YEAR and  holidayBO.holidayFromDate <= :END_OF_YEAR)
+                       where ((holidayBO.holidayThruDate between :START_OF_YEAR and :END_OF_YEAR) 
+		               	or (holidayBO.holidayFromDate between :START_OF_YEAR and :END_OF_YEAR))
+		               	and office.officeId = :OFFICE_ID
                        order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
