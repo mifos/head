@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -35,7 +36,8 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
@@ -57,7 +59,15 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     @Override
     protected void tearDown() throws Exception {
-        holidayDao.getSession().getTransaction().rollback();
+        StaticHibernateUtil.getSessionTL().clear();
+        rollback();
+    }
+
+    private void rollback() {
+        Transaction transaction = StaticHibernateUtil.getSessionTL().getTransaction();
+        if(transaction.isActive()){
+            transaction.rollback();
+        }
     }
 
     public void testShouldSaveHoliday() throws Exception {
@@ -75,7 +85,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertFalse(holidays.isEmpty());
     }
 
-    public void testShouldFindAllHolidaysWithinThisAndNextYear() throws PersistenceException {
+    public void testShouldFindAllHolidaysWithinThisAndNextYear() throws ServiceException {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
         DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
         DateTime secondOfJanTwoYears = secondOfJanNextYear.plusYears(1);
@@ -87,13 +97,13 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         insert(holidayNextYear);
         insert(holidayTwoYearsAway);
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
 
         assertFalse(holidays.isEmpty());
         assertThat(holidays.size(), is(2));
     }
 
-    public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws PersistenceException {
+    public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws ServiceException {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
         DateTime lastDayOfYear = secondlastDayOfYear.plusDays(1);
         DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
@@ -108,7 +118,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         insert(holiday1);
         insert(holiday4);
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
 
         assertThat(holidays.size(), is(4));
 
@@ -118,7 +128,10 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertTrue(holidays.get(3).encloses(thirdOfJanNextYear.toDate()));
     }
 
-    private void insert(final Holiday holiday) throws PersistenceException {
-        holidayDao.save(holiday);
+    private void insert(final Holiday holiday) throws ServiceException {
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holiday.getFromDate().toDate(), holiday.getThruDate().toDate(), holiday.getRepaymentRuleType());
+        List<Short> officeIds = new LinkedList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
     }
 }

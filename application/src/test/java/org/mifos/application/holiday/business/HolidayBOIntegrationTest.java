@@ -29,6 +29,9 @@ import junit.framework.Assert;
 
 import org.hibernate.Transaction;
 import org.joda.time.DateMidnight;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
@@ -52,6 +55,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        StaticHibernateUtil.getSessionTL().clear();
         rollback();
         StaticHibernateUtil.closeSession();
         super.tearDown();
@@ -89,7 +93,8 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holidayStartDate, null,
                 RepaymentRuleTypes.SAME_DAY);
         createHolidayForHeadOffice(holidayDetails);
-        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(holidayStartDate.getYear()+1900);
+        List<HolidayBO> holidays = new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1,
+                holidayStartDate.getYear() + 1900);
         assertEquals(1, holidays.size());
         assertNotNull(holidays.get(0).getRepaymentRuleType().getPropertiesKey());
     }
@@ -109,7 +114,8 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
                 .fromInt(1));
         createHolidayForHeadOffice(holidayDetails);
 
-        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(startDate.getYear()+1900);
+        List<HolidayBO> holidays =new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1,
+                startDate.getYear() + 1900);
         Assert.assertEquals(1, holidays.size());
 
         HolidayBO holiday = holidays.get(0);
@@ -154,8 +160,10 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", startDate, thruDate.getTime(),
                 RepaymentRuleTypes.fromInt(1));
         createHolidayForHeadOffice(holidayDetails);
+        List<HolidayBO> holidays = new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1,
+                startDate.getYear() + 1900);
 
-        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(startDate.getYear()+1900);
+
         Assert.assertEquals(1, holidays.size());
 
         HolidayBO holiday = holidays.get(0);
@@ -176,7 +184,8 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
                 RepaymentRuleTypes.fromInt(1));
         holidayDetails.disableValidation(true);
         createHolidayForHeadOffice(holidayDetails);
-        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(fromDate.getYear()+1900);
+        List<HolidayBO> holidays = new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1,
+                fromDate.getYear() + 1900);
         Assert.assertEquals(1, holidays.size());
         Assert.assertEquals(startDate, holidays.get(0).getHolidayThruDate().getTime());
     }

@@ -77,7 +77,7 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(2, listOfMandatoryFields.size());
 
         List<FieldConfigurationEntity> listOfFields = fieldConfig.getEntityFieldMap().get(Short.valueOf("22"));
-       Assert.assertEquals(6, listOfFields.size());
+       Assert.assertEquals(7, listOfFields.size());
 
         for (FieldConfigurationEntity fieldConfigurationEntity : listOfMandatoryFields) {
             Assert.assertTrue("PurposeOfLoan".equals(fieldConfigurationEntity.getFieldName()) ||

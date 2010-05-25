@@ -28,6 +28,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Transaction;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -42,8 +43,6 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         super();
     }
 
-    private HolidayBO holidayEntity;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -51,6 +50,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     @Override
     protected void tearDown() throws Exception {
+        StaticHibernateUtil.flushAndClearSession();
         rollback();
         StaticHibernateUtil.closeSession();
         super.tearDown();
@@ -75,13 +75,16 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         holidayDetails.disableValidation(true);
         createHolidayForHeadOffice(holidayDetails);
 
-        List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
+        List<HolidayBO> holidays = new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1,
+                Calendar.getInstance().get(Calendar.YEAR));
+
         Assert.assertNotNull(holidays);
         Assert.assertEquals(1, holidays.size());
 
-        rollback();
+        StaticHibernateUtil.getSessionTL().clear();
 
-        holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR) - 1);
+        holidays = new HolidayDaoHibernate(new GenericDaoHibernate()).findAllHolidaysForYear((short) 1, Calendar
+                .getInstance().get(Calendar.YEAR) - 1);
         Assert.assertNotNull(holidays);
         Assert.assertEquals(holidays.size(), 0);
     }

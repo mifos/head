@@ -1,9 +1,9 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoanUIResources.properties, zh/LoanUIResources_zh_CN.properties
+#. extracted from LoanUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-05-25 20:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,6 +200,11 @@ msgstr "请填写有效的{0}。只限于数字。"
 msgid "EMI type is not supported."
 msgstr "不支持的EMI类型。"
 
+#: errors.externalid
+#, fuzzy
+msgid "Please specify required external ID."
+msgstr "请填写必要的信息。"
+
 #: errors.feeschedule
 msgid "Fee schedule error."
 msgstr "收费表错误。"
@@ -233,8 +238,9 @@ msgid "Please specify loan purpose for the selected client(s)."
 msgstr "请为选中的客户指定贷款用途。"
 
 #: errors.individualsourceoffundfield
+#, fuzzy
 msgid "Please specify source of fund for the selected client(s)."
-msgstr ""
+msgstr "请为选中的客户指定贷款用途。"
 
 #: errors.integer
 msgctxt "errors.integer"
@@ -656,8 +662,9 @@ msgid "/"
 msgstr "/"
 
 #: loan.TimeOfDisbursementFees
+#, fuzzy
 msgid "Fee deducted at disbursement"
-msgstr ""
+msgstr "付款时扣除利息{0}"
 
 #: loan.a
 msgid "a "

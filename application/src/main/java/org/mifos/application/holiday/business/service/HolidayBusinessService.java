@@ -62,26 +62,12 @@ public class HolidayBusinessService implements BusinessService {
         }
     }
 
-    @Deprecated
-    public List<HolidayBO> getHolidays(final int year) throws ServiceException {
-        // HolidayBO.isWorkingDay(Calendar.getInstance());
-        try {
-            return new HolidayPersistence().getHolidays(year);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
     public List<HolidayBO> getDistinctYears() throws ServiceException {
         try {
             return new HolidayPersistence().getDistinctYears();
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
-    }
-
-    public HolidayBO getHolidayContaining (Date date) {
-        return HolidayUtils.inHoliday(DateUtils.getCalendarDate(date.getTime()));
     }
 
     public List<HolidayBO> getAllPushOutHolidaysContaining (Date date) {

@@ -100,6 +100,7 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -278,7 +279,7 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public void save(CustomerAccountBO customerAccount) {
+    public void save(AccountBO customerAccount) {
         this.genericDao.createOrUpdate(customerAccount);
     }
 
@@ -1508,5 +1509,34 @@ public class CustomerDaoHibernate implements CustomerDao {
             valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(GroupConstants.PREFIX_SEARCH_STRING, ""));
         }
         return valueAssociatedWithLastEnteredCustomer;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retrieveCustomerIdsOfCustomersWithUpdatedMeetings() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("updated", YesNoFlag.YES.getValue());
+        List<Integer> queryResult = (List<Integer>) this.genericDao.executeNamedQuery("getUpdatedMeetings", queryParameters);
+
+        if (queryResult == null) {
+            return new ArrayList<Integer>();
+        }
+
+        return queryResult;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Integer> retrieveCustomerIdsOfChildrenForParent(String searchId, Short officeId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        List<Integer> queryResult = (List<Integer>) this.genericDao.executeNamedQuery("Customer.getChildrenForParent",
+                queryParameters);
+
+        if (queryResult == null) {
+            queryResult = new ArrayList<Integer>();
+        }
+        return queryResult;
     }
 }

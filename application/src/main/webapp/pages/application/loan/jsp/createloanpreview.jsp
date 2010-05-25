@@ -338,9 +338,9 @@ explanation of the license and how it is applied.
 												&nbsp; <span class="fontnormal"><br> <c:out value="${BusinessKey.collateralNote}" /> </span>
 											</td>
 										</tr>
-                                        <tr id="accounts.externalId">
+                                        <tr id="Loan.ExternalId">
                                             <td class="fontnormalbold">
-                                                <mifos:mifoslabel name="accounts.externalId" keyhm="accounts.externalId" isColonRequired="yes" isManadatoryIndicationNotRequired="no" />
+                                                <mifos:mifoslabel name="accounts.externalId" keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
                                                 &nbsp; <span class="fontnormal"><c:out value="${BusinessKey.externalId}" /> </span>
                                             </td>
                                         </tr>
