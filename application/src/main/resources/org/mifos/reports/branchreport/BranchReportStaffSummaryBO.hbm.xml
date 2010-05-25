@@ -317,26 +317,54 @@ explanation of the license and how it is applied.
 	<sql-query name="branchReport.extractLoanArrearsAmountForPersonnel">
 		<return-scalar column="personnelId" type="short"/>	
 		<return-scalar column="loanArrearsAmount" type="big_decimal"/>	
-		<![CDATA[
+		<![CDATA[			
 			select 
 				c.loan_officer_id as personnelId, 
 				round(sum(laa.overdue_principal),2) as loanArrearsAmount 
 			from 
 				customer c, 
-				loan_arrears_aging laa 
+				loan_arrears_aging laa,
+				customer_state cs,
+			    account acc
+			where 		   
+				acc.account_id=laa.account_id 
+			and
+			    acc.account_state_id in (9)
+			and
+				laa.customer_id = c.customer_id 
+			and 
+				c.loan_officer_id in (:personnelIdList) 
+			and
+				c.customer_level_id = 1
+		    and cs.status_id=c.status_id
+		    and cs.description='Customer Was Active'
+			group by 
+				c.loan_officer_id				
+		]]>
+	</sql-query>	
+	<!--
+			select 
+				c.loan_officer_id as personnelId, 
+				round(sum(laa.overdue_principal),2) as loanArrearsAmount 
+			from 
+				customer c, 
+				loan_arrears_aging laa,
+				customer_state cs
 			left join
-			    account acc on acc.account_id=laa.account_id
+			    account acc on acc.account_id=laa.account_id				    
 			where 
 			    acc.account_state_id in (9)
 			and
 				laa.customer_id = c.customer_id 
 			and 
 				c.loan_officer_id in (:personnelIdList) 
+			and
+				c.customer_level_id = 1				
+		    and cs.status_id=c.status_id
+		    and cs.description='Customer Was Active'				
 			group by 
 				c.loan_officer_id
-		]]>
-	</sql-query>	
-	<!--
+	
 		select c.loan_officer_id as personnelId, round(sum(laa.overdue_balance),2) as loanArrearsAmount
 				from customer c, loan_arrears_aging laa
 				where laa.customer_id = c.customer_id

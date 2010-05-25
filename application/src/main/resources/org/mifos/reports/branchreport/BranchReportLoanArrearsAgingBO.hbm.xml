@@ -80,8 +80,12 @@ explanation of the license and how it is applied.
 			                customer cust on cust.customer_id=laa.customer_id
                         left join
                             customer_state cs on cs.status_id=cust.status_id
+                        LEFT JOIN 
+                        	ACCOUNT acc on acc.account_id=laa.account_id 
 			            where 
 			                cust.customer_level_id=:customerLevelId
+			            and 
+			            	acc.account_state_id in (9)
                         and
                             cs.description='Customer Was Active'
 			            and
@@ -112,10 +116,14 @@ explanation of the license and how it is applied.
 			    customer cust on cust.customer_id=la.customer_id
             left join
                 customer_state cs on cs.status_id=cust.status_id
+            LEFT JOIN 
+            	ACCOUNT acc on acc.account_id=la.account_id 
 			where 
 			    cust.customer_level_id=:customerLevelId
             and
                 cs.description='Customer Was Active'
+            and 
+            	acc.account_state_id in (9)
 			and
 			    la.days_in_arrears >=:MIN_DAYS 
 			and
