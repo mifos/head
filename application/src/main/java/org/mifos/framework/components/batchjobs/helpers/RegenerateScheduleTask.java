@@ -23,6 +23,9 @@ package org.mifos.framework.components.batchjobs.helpers;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
+/**
+ * Re-calculates future schedules for customers, savings, and loans when a meeting changes.
+ */
 public class RegenerateScheduleTask extends MifosTask {
 
     @Override
