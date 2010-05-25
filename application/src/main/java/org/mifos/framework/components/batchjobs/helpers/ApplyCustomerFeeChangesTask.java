@@ -24,7 +24,7 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 
 /**
- * Recalculates schedules when a fee’s status or amount changes.
+ * Recalculates schedules when a fee's status or amount changes.
  */
 public class ApplyCustomerFeeChangesTask extends MifosTask {
 
