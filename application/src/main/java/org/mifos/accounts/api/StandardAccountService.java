@@ -132,7 +132,8 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public void disburseLoan(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception {
+    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception {
+        StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccount().getAccountId());
 
@@ -148,6 +149,7 @@ public class StandardAccountService implements AccountService {
 
             loan.disburseLoan(disbursalPayment);
         }
+        StaticHibernateUtil.commitTransaction();
     }
 
     @Override

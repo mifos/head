@@ -49,7 +49,7 @@ public interface AccountService {
      *
      * @param accountPaymentParametersDtoList a list of loan payment parameters
      */
-    void disburseLoan(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
+    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
 
     /**
      * Lookup a loan account reference for a loan with a matching primary key.
