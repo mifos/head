@@ -57,7 +57,7 @@ public class SystemInfo implements Serializable {
     private String applicationServerInfo;
     private String javaVendor;
     private String javaVersion;
-    private SvnRevision svnRevision;
+    private VersionInfo versionInfo;
     private String osName;
     private String osArch;
     private String osVersion;
@@ -87,7 +87,7 @@ public class SystemInfo implements Serializable {
         setApplicationServerInfo(context.getServerInfo());
         setJavaVendor(System.getProperty("java.vendor"));
         setJavaVersion(System.getProperty("java.version"));
-        setSvnRevision(new SvnRevision());
+        setBuildInformation(new VersionInfo());
         setOsName(System.getProperty("os.name"));
         setOsArch(System.getProperty("os.arch"));
         setOsVersion(System.getProperty("os.version"));
@@ -146,12 +146,16 @@ public class SystemInfo implements Serializable {
         this.applicationServerInfo = applicationServerInfo;
     }
 
-    public String getSvnBranch() {
-        return svnRevision.getBranch();
+    public String getCommitIdentifier() {
+        return versionInfo.getCommitIdentifier();
     }
 
-    public String getSvnRevision() {
-        return svnRevision.getVersion();
+    public String getBuildNumber() {
+        return versionInfo.getBuildNumber();
+    }
+
+    public String getBuildDate() {
+        return versionInfo.getBuildDate();
     }
 
     public void setJavaVendor(String javaVendor) {
@@ -162,8 +166,8 @@ public class SystemInfo implements Serializable {
         this.javaVersion = javaVersion;
     }
 
-    public void setSvnRevision(SvnRevision svnRevision) {
-        this.svnRevision = svnRevision;
+    public void setBuildInformation(VersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
     }
 
     public void setCustomReportsDir(String dir) {
