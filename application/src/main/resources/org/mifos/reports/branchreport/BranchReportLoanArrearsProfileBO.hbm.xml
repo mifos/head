@@ -84,8 +84,14 @@ explanation of the license and how it is applied.
 				    ROUND(IFNULL(SUM(COALESCE(UNPAID_PRINCIPAL,0)),0),3) as unpaidBalance
 				    FROM 
 				    	LOAN_ARREARS_AGING la 
-				    WHERE 
+				    LEFT JOIN 
+				    	ACCOUNT acc on acc.account_id=la.account_id 
+			    	LEFT JOIN 
+			        	CUSTOMER cust on cust.customer_id=la.customer_id				    
+			        WHERE 
 				        la.OFFICE_ID=:officeId
+				        and acc.account_state_id in (9)
+				        and cust.customer_level_id = 1
 		]]>
 	</sql-query>
 	<!-- 
