@@ -20,7 +20,7 @@
 
 package org.mifos.application.admin.system;
 
-public class MockSvnRevision extends SvnRevision {
+public class MockSvnRevision extends VersionInfo {
 
     public MockSvnRevision() throws Exception {
         super(null);
