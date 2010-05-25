@@ -44,46 +44,32 @@ import org.mifos.framework.util.DateTimeService;
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
     private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    private final AccountPersistence accountPersistence = new AccountPersistence();
 
     public GenerateMeetingsForCustomerAndSavingsHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
 
     @Override
-    public void execute(final long timeInMillis) throws BatchJobException {
-        long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
-        AccountPersistence accountPersistence = new AccountPersistence();
-        List<Integer> customerAndSavingsAccountIds;
-        int accountCount = 0;
+    public void execute(@SuppressWarnings("unused") final long timeInMillis) throws BatchJobException {
 
-        try {
-            long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-            customerAndSavingsAccountIds = accountPersistence
-                    .getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
-            accountCount = customerAndSavingsAccountIds.size();
-            long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
-            getLogger().info("Time to execute the query " + duration + " . Got " + accountCount + " accounts.");
-            if (accountCount == 0) {
-                return;
-            }
-        } catch (PersistenceException e) {
-            throw new BatchJobException(e);
+        long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
+
+        List<Integer> customerAndSavingsAccountIds = findActiveCustomerAndSavingsAccountIdsThatRequiredMeetingsToBeGenerated();
+
+        int accountCount = customerAndSavingsAccountIds.size();
+        if (accountCount == 0) {
+            return;
         }
 
         List<String> errorList = new ArrayList<String>();
         int currentRecordNumber = 0;
         int outputIntervalForBatchJobs = GeneralConfig.getOutputIntervalForBatchJobs();
         int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
-        // int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
         // jpw - hardcoded recordCommittingSize to 500 because now only accounts that need more schedules are returned
         int recordCommittingSize = 500;
-        getLogger().info(
-                "Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
-                        + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
-                        + recordCommittingSize);
-        String initial_message = "" + accountCount + " accounts to process, results output every "
-                + outputIntervalForBatchJobs + " accounts";
-        getLogger().info(initial_message);
+
+        infoLogBatchParameters(accountCount, outputIntervalForBatchJobs, batchSize, recordCommittingSize);
 
         long startTime = new DateTimeService().getCurrentDateTime().getMillis();
         Integer currentAccountId = null;
@@ -94,11 +80,13 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
+
             for (Integer accountId : customerAndSavingsAccountIds) {
                 currentRecordNumber++;
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
                 List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(accountBO.getOffice().getOfficeId());
+
                 if (accountBO instanceof CustomerAccountBO) {
                     ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
                     updatedRecordCount++;
@@ -118,12 +106,12 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                         StaticHibernateUtil.startTransaction();
                     }
                 }
+
                 if (currentRecordNumber % outputIntervalForBatchJobs == 0) {
                     long time = System.currentTimeMillis();
                     String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
                             + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
                             + " ms";
-                    System.out.println(message);
                     getLogger().info(message);
                     startTime = time;
                 }
@@ -133,7 +121,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
             String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
                     + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
                     + " ms";
-            System.out.println(message);
             getLogger().info(message);
 
 
@@ -149,10 +136,35 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
+
         getLogger().info(
                 "GenerateMeetingsForCustomerAndSavings ran in "
                         + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime));
 
+    }
+
+    private void infoLogBatchParameters(int accountCount, int outputIntervalForBatchJobs, int batchSize,
+            int recordCommittingSize) {
+        getLogger().info(
+                "Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
+                        + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
+                        + recordCommittingSize);
+        String initial_message = "" + accountCount + " accounts to process, results output every "
+                + outputIntervalForBatchJobs + " accounts";
+        getLogger().info(initial_message);
+    }
+
+    private List<Integer> findActiveCustomerAndSavingsAccountIdsThatRequiredMeetingsToBeGenerated() throws BatchJobException {
+        List<Integer> customerAndSavingsAccountIds = new ArrayList<Integer>();
+        try {
+            long time1 = new DateTimeService().getCurrentDateTime().getMillis();
+            customerAndSavingsAccountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+            long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
+            getLogger().info("Time to execute the query " + duration + " . Got " + customerAndSavingsAccountIds.size() + " accounts.");
+        } catch (PersistenceException e) {
+            throw new BatchJobException(e);
+        }
+        return customerAndSavingsAccountIds;
     }
 
     @Override

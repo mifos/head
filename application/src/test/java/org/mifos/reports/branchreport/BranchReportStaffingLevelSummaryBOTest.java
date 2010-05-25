@@ -20,8 +20,8 @@
 
 package org.mifos.reports.branchreport;
 
-import static org.mifos.reports.branchreport.BranchReportBOFixture.createStaffingLevelBO;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,21 +33,21 @@ import junit.framework.TestCase;
 public class BranchReportStaffingLevelSummaryBOTest extends TestCase {
 
     public void testCompareToReturnsAnyBOGreaterThanTotalSummaryBO() {
-       Assert.assertEquals(-1, createStaffingLevelBO(1).compareTo(createStaffingLevelBO(TOTAL_STAFF_ROLE_ID)));
-       Assert.assertEquals(1, createStaffingLevelBO(TOTAL_STAFF_ROLE_ID).compareTo(createStaffingLevelBO(1)));
+        Assert.assertEquals(-1, new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1).compareTo(new BranchReportStaffingLevelSummaryBO(IS_TOTAL, "A", 1)));
+        Assert.assertEquals(1, new BranchReportStaffingLevelSummaryBO(IS_TOTAL, "A", 1).compareTo(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1)));
     }
 
     public void testCompareTo() throws Exception {
-       Assert.assertEquals(1, createStaffingLevelBO(2).compareTo(createStaffingLevelBO(1)));
-       Assert.assertEquals(-1, createStaffingLevelBO(1).compareTo(createStaffingLevelBO(2)));
-       Assert.assertEquals(0, createStaffingLevelBO(1).compareTo(createStaffingLevelBO(1)));
+        Assert.assertEquals(-1, new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1).compareTo(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "B", 1)));
+        Assert.assertEquals(1, new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "B", 1).compareTo(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1)));
+        Assert.assertEquals(0, new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1).compareTo(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1)));
     }
 
     public void testSortingBasedOnComparator() throws Exception {
-        BranchReportStaffingLevelSummaryBO one = createStaffingLevelBO(1);
-        BranchReportStaffingLevelSummaryBO two = createStaffingLevelBO(2);
-        BranchReportStaffingLevelSummaryBO three = createStaffingLevelBO(3);
-        BranchReportStaffingLevelSummaryBO total = createStaffingLevelBO(TOTAL_STAFF_ROLE_ID);
+        BranchReportStaffingLevelSummaryBO one = new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1);
+        BranchReportStaffingLevelSummaryBO two = new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "B", 1);
+        BranchReportStaffingLevelSummaryBO three = new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "C", 1);
+        BranchReportStaffingLevelSummaryBO total = new BranchReportStaffingLevelSummaryBO(IS_TOTAL, "A", 1);
         List<BranchReportStaffingLevelSummaryBO> list = new ArrayList<BranchReportStaffingLevelSummaryBO>();
         list.add(three);
         list.add(one);

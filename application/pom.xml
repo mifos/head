@@ -944,6 +944,32 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Fetch build version information, store for use in Mifos -->
+                            <source>
+                                def env = System.getenv()
+                                def gitcmd = "git"
+                                if (env['OS'] =~ /^Windows/)
+                                    gitcmd = "cmd /c ${gitcmd}"
+                                def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
+                                project.properties['mifosCommitIdentifier'] = gitShaProc.in.text
+                                project.properties['mifosBuildNumber'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
+                                project.properties['mifosBuildDate'] = "" + new Date()
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-3</version>
                 <executions>

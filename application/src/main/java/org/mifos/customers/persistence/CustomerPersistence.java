@@ -621,13 +621,6 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<Integer> getCustomers(final Short customerLevelId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("LEVEL_ID", customerLevelId);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
-        return queryResult;
-    }
-
     public List<CustomerCheckListBO> getStatusChecklist(final Short statusId, final Short customerLevelId)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -671,13 +664,6 @@ public class CustomerPersistence extends Persistence {
             }
         }
         return maxValue;
-    }
-
-    public List<Integer> getCustomerSearchIds(final Short customerLevelId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("LEVEL_ID", customerLevelId);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
-        return queryResult;
     }
 
     public List<CustomerStatusEntity> retrieveAllCustomerStatusList(final Short levelId) throws PersistenceException {

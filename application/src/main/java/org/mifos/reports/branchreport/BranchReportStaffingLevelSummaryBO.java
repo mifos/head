@@ -24,24 +24,28 @@ import org.mifos.framework.business.AbstractBusinessObject;
 
 public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject implements
         Comparable<BranchReportStaffingLevelSummaryBO> {
-    public static final Integer TOTAL_STAFF_ROLE_ID = Integer.valueOf(-1);
+    public static final Integer IS_TOTAL = Integer.valueOf(-1);
+    public static final Integer IS_NOT_TOTAL = Integer.valueOf(1);
     public static final String TOTAL_STAFF_ROLE_NAME = "Total Staff";
 
     @SuppressWarnings("unused")
     private BranchReportBO branchReport;
     @SuppressWarnings("unused")
     private Integer staffingLevelSummaryId;
-    private Integer roleId;
-    private String roleName;
+    // roleId has been repurposed to just be -1 if it is a total and 1 if not a total
+    // this is used to make sure the total sorts last (at the bottom of the list)
+    private Integer isTotal;
+    // roleName has been repurposed to be titleName since we're now using titles
+    private String titleName;
     private Integer personnelCount;
 
     protected BranchReportStaffingLevelSummaryBO() {
         super();
     }
 
-    public BranchReportStaffingLevelSummaryBO(Integer roleId, String roleName, Integer roleCount) {
-        this.roleId = roleId;
-        this.roleName = roleName;
+    public BranchReportStaffingLevelSummaryBO(Integer isTotal, String roleName, Integer roleCount) {
+        this.isTotal = isTotal;
+        this.titleName = roleName;
         this.personnelCount = roleCount;
     }
 
@@ -49,8 +53,8 @@ public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject i
         this.branchReport = branchReport;
     }
 
-    public String getRolename() {
-        return roleName;
+    public String getTitleName() {
+        return titleName;
     }
 
     public Integer getPersonnelCount() {
@@ -62,8 +66,8 @@ public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject i
         final int PRIME = 31;
         int result = 1;
         result = PRIME * result + ((personnelCount == null) ? 0 : personnelCount.hashCode());
-        result = PRIME * result + ((roleId == null) ? 0 : roleId.hashCode());
-        result = PRIME * result + ((roleName == null) ? 0 : roleName.hashCode());
+        result = PRIME * result + ((isTotal == null) ? 0 : isTotal.hashCode());
+        result = PRIME * result + ((titleName == null) ? 0 : titleName.hashCode());
         result = PRIME * result + ((staffingLevelSummaryId == null) ? 0 : staffingLevelSummaryId.hashCode());
         return result;
     }
@@ -87,18 +91,18 @@ public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject i
         } else if (!personnelCount.equals(other.personnelCount)) {
             return false;
         }
-        if (roleId == null) {
-            if (other.roleId != null) {
+        if (isTotal == null) {
+            if (other.isTotal != null) {
                 return false;
             }
-        } else if (!roleId.equals(other.roleId)) {
+        } else if (!isTotal.equals(other.isTotal)) {
             return false;
         }
-        if (roleName == null) {
-            if (other.roleName != null) {
+        if (titleName == null) {
+            if (other.titleName != null) {
                 return false;
             }
-        } else if (!roleName.equals(other.roleName)) {
+        } else if (!titleName.equals(other.titleName)) {
             return false;
         }
         if (staffingLevelSummaryId == null) {
@@ -112,21 +116,16 @@ public class BranchReportStaffingLevelSummaryBO extends AbstractBusinessObject i
     }
 
     public int compareTo(BranchReportStaffingLevelSummaryBO o) {
-        if (roleId.equals(o.roleId)) {
-            return 0;
-        }
-        if (roleId.equals(TOTAL_STAFF_ROLE_ID)) {
+        if (isTotal.equals(IS_TOTAL)) {
+            if (o.isTotal.equals(IS_TOTAL)) {
+                return 0;
+            }
             return 1;
         }
-        if (o.roleId.equals(TOTAL_STAFF_ROLE_ID)) {
+        if (o.isTotal.equals(IS_TOTAL)) {
             return -1;
         }
-        return roleId - o.roleId;
+        return titleName.compareTo(o.titleName);
     }
 
-    public static BranchReportStaffingLevelSummaryBO createInstanceForTest(Integer roleId) {
-        BranchReportStaffingLevelSummaryBO staffingLevelBO = new BranchReportStaffingLevelSummaryBO();
-        staffingLevelBO.roleId = roleId;
-        return staffingLevelBO;
-    }
 }

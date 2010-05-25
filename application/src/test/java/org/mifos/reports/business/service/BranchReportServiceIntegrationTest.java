@@ -31,6 +31,7 @@ import static org.mifos.reports.branchreport.BranchReportBOFixture.createBranchR
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_BORROWERS_COUNT;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.ACTIVE_CLIENTS_COUNT;
 import static org.mifos.reports.branchreport.BranchReportClientSummaryBO.CENTER_COUNT;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,7 +60,8 @@ import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
-
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
     public BranchReportServiceIntegrationTest() throws Exception {
@@ -172,11 +174,10 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
                 branchReportPersistenceMock);
         ArrayList<BranchReportStaffingLevelSummaryBO> staffingLevelResult = new ArrayList<BranchReportStaffingLevelSummaryBO>();
-        BranchReportStaffingLevelSummaryBO totalStaffSummaryBO = BranchReportBOFixture.createStaffingLevelBO(Integer
-                .valueOf(-1));
+        BranchReportStaffingLevelSummaryBO totalStaffSummaryBO = new BranchReportStaffingLevelSummaryBO(IS_TOTAL, "A", 1);
         staffingLevelResult.add(totalStaffSummaryBO);
-        staffingLevelResult.add(BranchReportBOFixture.createStaffingLevelBO(Integer.valueOf(2)));
-        staffingLevelResult.add(BranchReportBOFixture.createStaffingLevelBO(Integer.valueOf(1)));
+        staffingLevelResult.add(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "A", 1));
+        staffingLevelResult.add(new BranchReportStaffingLevelSummaryBO(IS_NOT_TOTAL, "B", 1));
         expect(branchReportPersistenceMock.getBranchReportStaffingLevelSummary(BRANCH_ID_SHORT, RUN_DATE)).andReturn(
                 staffingLevelResult);
         replay(branchReportPersistenceMock);

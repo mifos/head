@@ -141,7 +141,6 @@ public interface NamedQueryConstants {
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN = "Customer.getActiveAndOnHoldChildren";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT = "Customer.getActiveAndOnHoldChildrenCount";
     public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
-    public String GET_ALL_CUSTOMERS = "Customer.getAllCustomers";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";
     public String GET_SEARCH_IDS_FOR_OFFICE = "Customer.getSearchIdsForOffice";
     public String GET_SQL_CUSTOMER_COUNT_FOR_OFFICE = "Customer.Sql.getCustomerCountForOffice";
@@ -393,7 +392,6 @@ public interface NamedQueryConstants {
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
 
     // holiday handling
-    public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
@@ -472,8 +470,6 @@ public interface NamedQueryConstants {
     public String EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_LOAN_AMOUNT_OUTSTANDING = "branchReport.extractLoanAmountOutstanding";
     public String EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_PAR = "branchReport.extractPortfolioAtRisk";
     public String EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR = "branchReport.extractPortfolioAtRiskForBranch";
-    public String EXTRACT_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY = "branchReport.extractStaffingLevelSummaryForBranch";
-    public String EXTRACT_BRANCH_REPORT_TOTAL_STAFFING_LEVEL_SUMMARY = "branchReport.extractTotalStaffingLevelSummaryForBranch";
     public String EXTRACT_BRANCH_REPORT_LOAN_DETAILS = "branchReport.extractLoanDetailsForBranch";
     public String EXTRACT_BRANCH_REPORT_LOANS_IN_ARREARS = "branchReport.extractLoansInArrearsForBranch";
     public String EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK = "branchReport.extractLoansAndOutstandingAmountsAtRiskForBranch";
