@@ -94,7 +94,7 @@ explanation of the license and how it is applied.
 				        la.OFFICE_ID=:officeId
 				        and acc.account_state_id in (9)
 				        and cust.customer_level_id = 1
-				        and cs.description='Customer Was Active'
+				        and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 		]]>
 	</sql-query>
 
@@ -118,7 +118,7 @@ explanation of the license and how it is applied.
 			    AND laa.office_id = :officeId
 			    AND days_in_arrears >= :daysInArrears
 				AND acc.account_state_id in (9)
-		        AND cs.description='Customer Was Active'			        
+		        AND (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')			        
 		]]>
 	</sql-query>
 
@@ -134,7 +134,7 @@ explanation of the license and how it is applied.
 				AND c.branch_id = :officeId
 				AND days_in_arrears > :daysInArrears
 				AND acc.account_state_id in (9)
-		        AND cs.description='Customer Was Active'
+		        AND (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 		]]>
 	</sql-query>
 </hibernate-mapping>

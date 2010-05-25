@@ -87,7 +87,7 @@ explanation of the license and how it is applied.
 			            and 
 			            	acc.account_state_id in (9)
                         and
-                            cs.description='Customer Was Active'
+                            (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 			            and
 			                laa.days_in_arrears >=:MIN_DAYS
 			            and
@@ -121,7 +121,7 @@ explanation of the license and how it is applied.
 			where 
 			    cust.customer_level_id=:customerLevelId
             and
-                cs.description='Customer Was Active'
+                (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
             and 
             	acc.account_state_id in (9)
 			and
@@ -132,21 +132,5 @@ explanation of the license and how it is applied.
 			    la.office_id=:officeId
 	]]>
 	</sql-query>		
-	<!--
-			select (
-				select count(distinct laa.customer_id)
-					from loan_arrears_aging laa where laa.days_in_arrears >=:MIN_DAYS and
-					laa.days_in_arrears <= :MAX_DAYS and laa.customer_id not in (select distinct laa1.customer_id from
-					loan_arrears_aging laa1 where laa1.days_in_arrears >=:NOT_LESS_THAN_DAYS and laa1.office_id=:officeId) and
-					laa.office_id=:officeId
-				) as clientsAgingCount, 
-			count(*) as loansAgingCount, 
-			round(ifnull(sum(COALESCE(overdue_balance)),0),3) as amountAgingCount, 
-			round(ifnull(sum(COALESCE(unpaid_balance)),0),3) as amountOutstandingAgingCount
-			from loan_arrears_aging la where la.days_in_arrears >=:MIN_DAYS and
-			la.days_in_arrears <= :MAX_DAYS and la.office_id=:officeId
-			and la.overdue_balance_currency_id=:currencyId
-			and la.unpaid_balance_currency_id=:currencyId
-			group by la.overdue_balance_currency_id, la.unpaid_balance_currency_id
-	 -->
+
 </hibernate-mapping>
