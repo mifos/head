@@ -89,7 +89,7 @@ public class OfficeListTagTest extends TestCase {
 
     public void testBranches() throws Exception {
         createSomeOffices();
-       Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
+        Assert.assertEquals(2, regional.getBranchOnlyChildren().size());
         List<OfficeBO> officeList = new ArrayList<OfficeBO>();
         officeList.add(regional);
 
