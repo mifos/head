@@ -22,18 +22,20 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -63,7 +65,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private long taskStartTime;
     private int accountCount;
     private int currentRecordNumber;
-    private List<Holiday> thisAndNextYearsHolidays;
     private List<Days> workingDays;
     private List<String> errorList;
     private List<Holiday> unappliedHolidays;
@@ -195,7 +196,14 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         for (Integer accountId : accountIds) {
             currentRecordNumber++;
             AccountBO account = accountBatch.getAccount(accountId);
-            account.rescheduleDatesForNewHolidays (workingDays, thisAndNextYearsHolidays, unappliedHolidays);
+            OfficeBO office = account.getOffice();
+            Set<HolidayBO> officeHolidays = office.getHolidays();
+            officeHolidays.retainAll(unappliedHolidays);
+            if (!officeHolidays.isEmpty()) {
+                Short officeId = office.getOfficeId();
+                account.rescheduleDatesForNewHolidays(workingDays, getHolidayDao().findAllHolidaysThisYearAndNext(
+                        officeId), new ArrayList<Holiday>(officeHolidays));
+            }
             houseKeeping();
 
         }
@@ -218,13 +226,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         // Overriding default recordCommittingSize of 1000 because only accounts that need more schedules are returned
         recordCommittingSize = 500;
         errorList = new ArrayList<String>();
-        initializeHolidaysAndWorkingDays();
+        initializeWorkingDays();
         unappliedHolidays = getUnappliedHolidays();
     }
 
-    private void initializeHolidaysAndWorkingDays() {
+    private void initializeWorkingDays() {
         workingDays = getFiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        thisAndNextYearsHolidays = getHolidayDao().findAllHolidaysThisYearAndNext();
     }
 
     @Override
