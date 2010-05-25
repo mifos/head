@@ -957,9 +957,12 @@
                             <!-- Fetch build version information, store for use in Mifos -->
                             <source>
                                 def env = System.getenv()
-                                def gitShaProc = """git log --pretty=format:%H -n1""".execute()
+                                def gitcmd = "git"
+                                if (env['OS'] =~ /^Windows/)
+                                    gitcmd = "cmd /c ${gitcmd}"
+                                def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
                                 project.properties['mifosCommitIdentifier'] = gitShaProc.in.text
-                                project.properties['mifosBuildNumber'] = env['BUILD_TAG'] ?: 'dev build'
+                                project.properties['mifosBuildNumber'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
                                 project.properties['mifosBuildDate'] = "" + new Date()
                             </source>
                         </configuration>

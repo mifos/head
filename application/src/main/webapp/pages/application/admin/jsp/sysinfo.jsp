@@ -62,16 +62,16 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal" id="sysinfo.text.applicationVersion"><c:out value="${requestScope.systemInfo.applicationVersion}"/></span></td>
 					</tr>
 					<tr>
-						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.buildNumber" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.buildNumber"><c:out value="${requestScope.systemInfo.buildNumber}"/></span></td>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.commitIdentifier" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.commitIdentifier"><c:out value="${requestScope.systemInfo.commitIdentifier}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.buildDate" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal" id="sysinfo.text.buildDate"><c:out value="${requestScope.systemInfo.buildDate}"/></span></td>
 					</tr>
 					<tr>
-						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.commitIdentifier" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.commitIdentifier"><c:out value="${requestScope.systemInfo.commitIdentifier}"/></span></td>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.buildNumber" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.buildNumber"><c:out value="${requestScope.systemInfo.buildNumber}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.customreportsdir" bundle="adminUIResources" /></span></td>
