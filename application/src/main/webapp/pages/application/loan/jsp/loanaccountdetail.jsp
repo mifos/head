@@ -411,9 +411,9 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								document.getElementById("Loan.CollateralNotes").style.display=="none")
 									document.getElementById("collateral").style.display="none";
 						</script>
-                        <tr id="accounts.externalId">
+                        <tr id="Loan.ExternalId">
                             <td class="fontnormalbold"><mifos:mifoslabel name="accounts.externalId"
-                                keyhm="accounts.externalId" isColonRequired="yes" isManadatoryIndicationNotRequired="no" />
+                                keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
                             &nbsp; <span class="fontnormal"><c:out value="${BusinessKey.externalId}" /> </span></td>
                         </tr>
                         

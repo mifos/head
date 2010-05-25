@@ -573,11 +573,6 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
-            try {
-                getAccountPersistence().createOrUpdate(this);
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
-            }
         } else {
             resetUpdatedFlag();
         }
