@@ -1108,8 +1108,6 @@ public class LoanBO extends AccountBO {
 
             // Client performance entry
             updateCustomerHistoryOnRepayment();
-            this.delete(loanArrearsAgingEntity);
-            loanArrearsAgingEntity = null;
             getLoanPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1516,8 +1514,6 @@ public class LoanBO extends AccountBO {
                 this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
                 // Client performance entry
                 updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
-                this.delete(loanArrearsAgingEntity);
-                loanArrearsAgingEntity = null;
             }
             if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
                     && (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT) || loanPaymentTypes
@@ -1525,14 +1521,8 @@ public class LoanBO extends AccountBO {
                 changeLoanStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, paymentData.getPersonnel());
                 // Client performance entry
                 updateCustomerHistoryOnPayment();
-                this.delete(loanArrearsAgingEntity);
-                loanArrearsAgingEntity = null;
             }
 
-            if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                    && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
-                handleArrearsAging();
-            }
             LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
             accountAction.setPaymentDetails(loanPaymentData, paymentDate);
             accountPaymentData.setAccountActionDate(accountAction);

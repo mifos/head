@@ -31,7 +31,6 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
@@ -70,7 +69,7 @@ public interface CustomerDao {
 
     void save(CustomerBO customer);
 
-    void save(CustomerAccountBO customerAccount);
+    void save(AccountBO customerAccount);
 
     void save(CustomerStatusEntity cse);
 
@@ -174,6 +173,8 @@ public interface CustomerDao {
 
     void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException;
 
+    List<Integer> retrieveCustomerIdsOfCustomersWithUpdatedMeetings();
+
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
@@ -204,4 +205,6 @@ public interface CustomerDao {
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
 
     void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
+
+    List<Integer> retrieveCustomerIdsOfChildrenForParent(String searchId, Short officeId);
 }

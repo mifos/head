@@ -140,7 +140,6 @@ public interface NamedQueryConstants {
     public String GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL = "Customer.getAllChildrenForCustomerLevel";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN = "Customer.getActiveAndOnHoldChildren";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT = "Customer.getActiveAndOnHoldChildrenCount";
-    public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";
     public String GET_SEARCH_IDS_FOR_OFFICE = "Customer.getSearchIdsForOffice";
     public String GET_SQL_CUSTOMER_COUNT_FOR_OFFICE = "Customer.Sql.getCustomerCountForOffice";
@@ -234,7 +233,6 @@ public interface NamedQueryConstants {
     public String GET_ENTITY_MASTER = "getEntityMaster";
 
     public String CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS = "customerScheduleEntity.getScheduleForIds";
-    public String GET_UPDATED_CUSTOMER_MEETINGS = "getUpdatedMeetings";
     public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE = "accounts.countOfMissedDepositsPaidAfterDueDate";
     public String GET_CENTER_COUNT_BY_NAME = "Customer.getCenterCount";
     public String GET_GROUP_COUNT_BY_NAME = "Customer.getGroupCountByGroupNameAndOffice";
@@ -392,7 +390,6 @@ public interface NamedQueryConstants {
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
 
     // holiday handling
-    public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
