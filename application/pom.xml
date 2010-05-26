@@ -587,7 +587,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
