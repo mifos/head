@@ -45,7 +45,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +52,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.jfree.data.time.Week;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -98,11 +96,9 @@ import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
-import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
@@ -132,7 +128,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -272,16 +267,15 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return holiday;
     }
 
-    private void createHoliday(final Date holidayDate) throws PersistenceException, ApplicationException {
-        HolidayDetails holidayDetails = new HolidayDetails("a holiday", holidayDate, holidayDate, RepaymentRuleTypes.NEXT_WORKING_DAY);
-        holidayDetails.disableValidation(true);
-        List <Short> officeIds = new LinkedList<Short>();
-        officeIds.add((short)1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
-    }
-
     private void deleteHoliday(final HolidayBO holiday) throws PersistenceException {
-        new HolidayPersistence().delete(holiday);
+        OfficePersistence officePersistence = new OfficePersistence();
+        officePersistence.getOffice((short)1).getHolidays().clear();
+        officePersistence.getOffice((short)2).getHolidays().clear();
+        officePersistence.getOffice((short)3).getHolidays().clear();
+        HolidayPersistence holidayPersistence = new HolidayPersistence();
+        HolidayBO holiday2 = holidayPersistence.getHoliday(holiday.getId());
+        holidayPersistence.delete(holiday2);
+        StaticHibernateUtil.getSessionTL().flush();
         StaticHibernateUtil.commitTransaction();
     }
 
@@ -671,7 +665,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
 
         // create holiday on first installment date
-        createHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
+        HolidayBO holiday = createOneDayHoliday(DateUtils.getDate(2008, Calendar.MAY, 30),RepaymentRuleTypes.NEXT_WORKING_DAY);
 
         try {
             LoanBO loanBO = (LoanBO) accountBO;
@@ -687,8 +681,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             loanBO.setUserContext(uc);
             loanBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                     .getAmountDoubleValue());
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.getSessionTL().flush();
 
             Map<String, String> fees1 = new HashMap<String, String>();
             fees1.put("Mainatnence Fee", "100.0");
@@ -740,6 +733,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             // make sure that we don't leave any persistent changes that could
             // affect subsequent tests
+            deleteHoliday(holiday);
             new DateTimeService().resetToCurrentSystemDateTime();
         }
     }
@@ -844,8 +838,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
 
         // create holiday on first installment date
-        createHoliday(DateUtils.getDate(2008, Calendar.MAY, 30));
-
+        HolidayBO holiday = createOneDayHoliday(DateUtils.getDate(2008, Calendar.MAY, 30),RepaymentRuleTypes.NEXT_WORKING_DAY);
+        StaticHibernateUtil.getSessionTL().flush();
         try {
             LoanBO loanBO = (LoanBO) accountBO;
             loanBO.updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
@@ -901,6 +895,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         } finally {
             // make sure that we don't leave any persistent changes that could
             // affect subsequent tests
+            deleteHoliday(holiday);
             new DateTimeService().resetToCurrentSystemDateTime();
         }
     }
@@ -912,7 +907,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 1, InterestType.FLAT, meeting);
-        List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
+        List<Date> meetingDates = TestObjectFactory.getMeetingDates(group.getOfficeId(), meeting, 1);
         try {
 
             LoanBO.createIndividualLoan(userContext, loanOffering, group, AccountState.LOAN_PARTIAL_APPLICATION,
@@ -5254,7 +5249,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         //setup
         DateTime startDate = new DateTime().withDate(2010, 10, 15).toDateMidnight().toDateTime(); // Friday
         MeetingBO meeting = new MeetingBuilder().weekly().withStartDate(startDate).build();
-        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").build();
+        OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("12345").withOfficeId(new Short("1")).build();
         CenterBO center = new CenterBuilder().with(meeting).with(office).build();
         GroupBO group = new GroupBuilder().withParentCustomer(center).withOffice(office).withMeeting(meeting).build();
         LoanOfferingBO loanOffering = new LoanProductBuilder().withMeeting(meeting).buildForIntegrationTests();

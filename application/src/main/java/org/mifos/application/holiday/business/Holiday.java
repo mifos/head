@@ -42,4 +42,6 @@ public interface Holiday {
 
     DateTime getThruDate();
 
+    void markAsApplied();
+
 }

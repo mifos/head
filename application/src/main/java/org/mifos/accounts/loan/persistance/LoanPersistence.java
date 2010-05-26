@@ -36,6 +36,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -50,6 +51,7 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -109,11 +111,12 @@ public class LoanPersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Integer> getLoanAccountsInArrearsInGoodStanding(final Short latenessDays) throws PersistenceException, InvalidDateException {
+    public List<Integer> getLoanAccountsInArrearsInGoodStanding(final Short latenessDays) throws PersistenceException,
+            InvalidDateException {
 
         /*
-         * TODO: refactor to use Joda Time This code appears to be trying to
-         * just get a date that is "latenessDays" before the current date.
+         * TODO: refactor to use Joda Time This code appears to be trying to just get a date that is "latenessDays"
+         * before the current date.
          */
         String systemDate = DateUtils.getCurrentDate();
         Date localDate = DateUtils.getLocaleDate(systemDate);
@@ -229,20 +232,9 @@ public class LoanPersistence extends Persistence {
         return (LoanBO) obj1[0];
     }
 
-    public Money getLastLoanAmountForCustomer(final Integer customerId, final Integer excludeAccountId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("customerId", customerId);
-        queryParameters.put("excludeAccountId", excludeAccountId);
-        Object obj = execUniqueResultNamedQuery(NamedQueryConstants.LAST_LOAN_AMOUNT_CUSTOMER, queryParameters);
-        if (null != obj) {
-            return (Money) obj;
-        }
-        return null;
-    }
-
     @SuppressWarnings("unchecked")
-    public List<LoanBO> getLoanAccountsInActiveBadStanding(final Short branchId, final Short loanOfficerId, final Short loanProductId)
-            throws PersistenceException {
+    public List<LoanBO> getLoanAccountsInActiveBadStanding(final Short branchId, final Short loanOfficerId,
+            final Short loanProductId) throws PersistenceException {
         String activeBadAccountIdQuery = "from org.mifos.accounts.loan.business.LoanBO loan where loan.accountState.id = 9";
         StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId, activeBadAccountIdQuery);
         try {
@@ -295,8 +287,8 @@ public class LoanPersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(final Short branchId, final Short loanOfficerId,
-            final Short loanProductId) throws PersistenceException {
+    public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(final Short branchId,
+            final Short loanOfficerId, final Short loanProductId) throws PersistenceException {
 
         String activeLoansQuery = "from org.mifos.accounts.loan.business.LoanBO loan where loan.accountState.id in (5,9)";
         StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId, activeLoansQuery);
@@ -393,4 +385,40 @@ public class LoanPersistence extends Persistence {
         queryString.append(" and loan.office.officeId = " + branchId);
         return queryString;
     }
+
+    public Money findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(Integer clientId, Integer excludeAccountId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CLIENT_ID", clientId);
+        queryParameters.put("EXCLUDE_ACCOUNT_ID", excludeAccountId);
+        try {
+            final Object[] obj = (Object[]) execUniqueResultNamedQuery("ClientPerformanceHistory.getLastLoanAmountWhenRepaidLoanAdjusted", queryParameters);
+            if (obj == null || obj[1] == null) {
+                return null;
+            }
+            Integer loanAccountId = (Integer) obj[0];
+            BigDecimal lastLoanAmount = (BigDecimal) obj[1];
+            LoanBO loan = (LoanBO) getHibernateUtil().getSessionTL().get(LoanBO.class, loanAccountId);
+            return new Money(loan.getCurrency(), lastLoanAmount);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    public Money findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(Integer groupId, Integer excludeAccountId) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("GROUP_ID", groupId);
+        queryParameters.put("EXCLUDE_ACCOUNT_ID", excludeAccountId);
+        try {
+            final Object[] obj = (Object[]) execUniqueResultNamedQuery("GroupPerformanceHistory.getLastLoanAmountWhenRepaidLoanAdjusted", queryParameters);            if (obj == null || obj[1] == null) {
+                return null;
+            }
+            Integer loanAccountId = (Integer) obj[0];
+            BigDecimal lastLoanAmount = (BigDecimal) obj[1];
+            LoanBO loan = (LoanBO) getHibernateUtil().getSessionTL().get(LoanBO.class, loanAccountId);
+            return new Money(loan.getCurrency(), lastLoanAmount);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
 }

@@ -258,43 +258,50 @@ public class BulkEntryActionForm extends BaseActionForm {
             errors.add(CollectionSheetEntryConstants.INVALIDDATE, new ActionMessage(
                     CollectionSheetEntryConstants.INVALIDDATE));
         }
+
         java.sql.Date trxnDate = null;
         String customerLabel = isCenterHierarchyExists == Constants.YES ? ConfigurationConstants.CENTER
                 : ConfigurationConstants.GROUP;
+
         if (officeId == null || "".equals(officeId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYFIELDS, getMessageText(ConfigurationConstants.BRANCHOFFICE,
                             userContext)));
         }
+
         if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYFIELDS, loanOfficer));
         }
+
         if (customerId == null || "".equals(customerId.trim())) {
             errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYFIELDS, getLabel(customerLabel, userContext)));
         }
-        if (paymentId == null || "".equals(paymentId.trim())) {
-            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
-                    CollectionSheetEntryConstants.MANDATORYFIELDS, modeOfPayment));
-        }
+
         if (getTransactionDate() != null && !getTransactionDate().equals("")) {
             try {
                 trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
             } catch (InvalidDateException ide) {
-                errors.add(AccountConstants.ERROR_INVALID_TRXN, new ActionMessage(AccountConstants.ERROR_INVALID_TRXN));
+                errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(AccountConstants.ERROR_INVALID_TRXN));
             }
         } else {
-            errors.add(CollectionSheetEntryConstants.MANDATORYENTER, new ActionMessage(
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MANDATORYENTER, dateOfTransaction));
         }
+
         if (currentDate != null && meetingDate != null && trxnDate != null
                 && (meetingDate.compareTo(trxnDate) > 0 || trxnDate.compareTo(currentDate) > 0)) {
-            errors.add(CollectionSheetEntryConstants.INVALIDENDDATE, new ActionMessage(
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.INVALIDENDDATE, dateOfTransaction));
         } else if (meetingDate == null && trxnDate != null && trxnDate.compareTo(currentDate) != 0) {
-            errors.add(CollectionSheetEntryConstants.MEETINGDATEEXCEPTION, new ActionMessage(
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
                     CollectionSheetEntryConstants.MEETINGDATEEXCEPTION, dateOfTransaction));
+        }
+
+        if (paymentId == null || "".equals(paymentId.trim())) {
+            errors.add(CollectionSheetEntryConstants.MANDATORYFIELDS, new ActionMessage(
+                    CollectionSheetEntryConstants.MANDATORYFIELDS, modeOfPayment));
         }
 
         return errors;

@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.loan.business;
 
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -150,22 +152,38 @@ public class LoanSummaryEntity extends AbstractEntity {
     }
 
     public Money getPrincipalDue() {
+
+        if (loanIsWrittenOffOrRescheduled()) {
+            return new Money(this.getOriginalPrincipal().getCurrency());
+        }
         return getOriginalPrincipal().subtract(getPrincipalPaid());
     }
 
     public Money getInterestDue() {
+        if (loanIsWrittenOffOrRescheduled()) {
+            return new Money(this.getOriginalPrincipal().getCurrency());
+        }
         return getOriginalInterest().subtract(getInterestPaid());
     }
 
     public Money getPenaltyDue() {
+        if (loanIsWrittenOffOrRescheduled()) {
+            return new Money(this.getOriginalPrincipal().getCurrency());
+        }
         return getOriginalPenalty().subtract(getPenaltyPaid());
     }
 
     public Money getFeesDue() {
+        if (loanIsWrittenOffOrRescheduled()) {
+            return new Money(this.getOriginalPrincipal().getCurrency());
+        }
         return getOriginalFees().subtract(getFeesPaid());
     }
 
     public Money getTotalAmntDue() {
+        if (loanIsWrittenOffOrRescheduled()) {
+            return new Money(this.getOriginalPrincipal().getCurrency());
+        }
         return getPrincipalDue().add(getInterestDue()).add(getPenaltyDue()).add(getFeesDue());
     }
 
@@ -208,5 +226,13 @@ public class LoanSummaryEntity extends AbstractEntity {
 
     void updateOriginalPenalty(Money charge) {
         setOriginalPenalty(getOriginalPenalty().add(charge));
+    }
+
+    private boolean loanIsWrittenOffOrRescheduled() {
+        if ((this.loan.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))
+                || (this.loan.getAccountState().getId().equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue()))) {
+            return true;
+        }
+        return false;
     }
 }

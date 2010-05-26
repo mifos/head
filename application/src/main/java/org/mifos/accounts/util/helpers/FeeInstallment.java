@@ -89,7 +89,9 @@ public class FeeInstallment {
         return mergedFeeInstallments;
     }
 
-    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFee (ScheduledEvent masterEvent, AccountFeesEntity accountFeesEntity, int numberOfInstallments) {
+    public static List<FeeInstallment> createMergedFeeInstallmentsForOneFee (
+            ScheduledEvent masterEvent, AccountFeesEntity accountFeesEntity, int numberOfInstallments) {
+
         return createMergedFeeInstallmentsForOneFeeStartingWith(masterEvent, accountFeesEntity, numberOfInstallments, 1);
     }
 

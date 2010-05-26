@@ -29,6 +29,7 @@ import static org.junit.Assert.assertThat;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.AccountIntegrationTestCase;
@@ -286,10 +287,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {
 
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(23);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(23);
         List<CustomerScheduleEntity> affectedDates = accountPersistence
                 .getCustomerSchedulesForAccountThatAreWithinDates(center.getCustomerAccount().getAccountId(), fromDate,
                         thruDate);
@@ -300,10 +299,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetListOfAccountIdsHavingCustomerSchedulesWithinDates() throws Exception {
 
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
         List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(fromDate,
                 thruDate);
 
@@ -314,10 +311,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetLoanSchedulesForAccountThatAreWithinDates() throws Exception {
 
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(30);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(30);
         List<LoanScheduleEntity> affectedDates = accountPersistence.getLoanSchedulesForAccountThatAreWithinDates(
                 groupLoan.getAccountId(), fromDate, thruDate);
 
@@ -327,10 +322,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     public void testGetListOfAccountIdsHavingLoanSchedulesWithinDates() throws Exception {
 
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
         List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(fromDate,
                 thruDate);
 

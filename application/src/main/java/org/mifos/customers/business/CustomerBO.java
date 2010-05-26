@@ -50,6 +50,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.client.business.ClientBO;
@@ -1231,19 +1232,15 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return true;
     }
 
-    protected void generateSearchId() throws CustomerException {
-        int count;
+    protected void generateSearchId() {
         if (getParentCustomer() != null) {
             childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            try {
-                count = getCustomerPersistence().getCustomerCountForOffice(CustomerLevel.CLIENT,
-                        getOffice().getOfficeId());
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
-            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++count;
+            CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
+
+            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
             this.setSearchId(searchId);
         }
     }

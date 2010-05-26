@@ -26,6 +26,16 @@
                        order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
+	
+	<query name="holiday.getOfficeHolidays">
+   	       <![CDATA[select holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       			   join office.holidays holidayBO
+                       where office.officeId = :OFFICE_ID and
+                       (holidayBO.holidayThruDate >= :START_OF_YEAR  and  holidayBO.holidayThruDate <= :END_OF_YEAR) 
+		               or (holidayBO.holidayFromDate >= :START_OF_YEAR and  holidayBO.holidayFromDate <= :END_OF_YEAR)
+                       order by holidayBO.holidayFromDate
+   	       ]]>
+	</query>
 	<query name="holiday.getHoildaysByFlag">
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
 	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
@@ -39,4 +49,25 @@
 					order by holidayBO.holidayThruDate
    	       ]]>
 	</query>
+
+	<query name="holiday.getAll">
+			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO]]>
+	</query>
+	
+	<sql-query name="holiday.applicableOffices">
+	    <return-scalar column="office_name" type="string"/>
+			select
+			    office.display_name as office_name
+			from holiday 
+			    join office_holiday on holiday.holiday_id = office_holiday.holiday_id
+			    join office on office_holiday.office_id = office.office_id
+			    left join office as parent on office.parent_office_id = parent.office_id
+			    left join office_holiday as parent_office_holiday on parent.office_id = parent_office_holiday.office_id
+			    and parent_office_holiday.holiday_id = holiday.holiday_id
+			    left join holiday as parent_holiday on parent_office_holiday.holiday_id = parent_holiday.holiday_id
+			where
+			    holiday.holiday_id = :HOLIDAY_ID
+			    and
+			    holiday.holiday_name != IFNULL(parent_holiday.holiday_name, '')
+	</sql-query>
 </hibernate-mapping>

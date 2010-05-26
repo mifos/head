@@ -35,6 +35,7 @@ import java.util.List;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,6 +55,7 @@ import org.mifos.calendar.DayOfWeek;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.domain.builders.HolidayBuilder;
@@ -580,6 +582,69 @@ public class SavingsBOTest {
             assertThat(savingsScheduleEntity.getDepositPaid(), is(new Money(TestUtils.RUPEE, "0.0")));
             installmentDate = installmentDate.plusWeeks(1);
             installmentId++;
+        }
+    }
+
+    @Test
+    public void rescheduleDatesForNewHolidaysWhenNoNewHolidaysDoesNothing() throws Exception {
+
+        // setup
+        List<Holiday> holidays = new ArrayList<Holiday>();
+
+        when(savingsAccountCustomer.getCustomerMeeting()) .thenReturn(customerMeetingEntity);
+        when(customerMeetingEntity.getMeeting())          .thenReturn(defaultWeeklyCustomerMeeting);
+        when(savingsAccountCustomer.getCustomerLevel())   .thenReturn(customerLevelEntity);
+        when(customerLevelEntity.getId())                 .thenReturn(CustomerLevel.CLIENT.getValue());
+        when(savingsAccountCustomer.getCustomerMeetingValue()) .thenReturn(defaultWeeklyCustomerMeeting);
+
+        // exercise test
+        savingsAccount = savingsAccountBuilder.build();
+
+        Holiday moratoriumOnSecondMeetingDate = new HolidayBuilder().from(new DateMidnight().toDateTime().plusWeeks(1))
+                                                                    .to(new DateMidnight().toDateTime().plusWeeks(1))
+                                                                    .withRepaymentMoratoriumRule()
+                                                                    .build();
+        List<Holiday> unappliedHolidays = new ArrayList<Holiday>();
+        unappliedHolidays.add(moratoriumOnSecondMeetingDate);
+        holidays.add(moratoriumOnSecondMeetingDate);
+
+        savingsAccount.rescheduleDatesForNewHolidays(allWorkingDays, holidays, unappliedHolidays);
+
+        // verify
+        DateTime expectedFirstInstallmentDate = new DateTime();
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 1, expectedFirstInstallmentDate);
+        verifyWeeklyMeetingDatesForInstallmentsInRange(2, 10, expectedFirstInstallmentDate.plusWeeks(2));
+    }
+
+    @Test
+    public void rescheduleDatesForNewHolidaysWhenAddingMoratoriumPushedOutDates() throws Exception {
+
+        // setup
+        List<Holiday> holidays = new ArrayList<Holiday>();
+
+        when(savingsAccountCustomer.getCustomerMeeting()) .thenReturn(customerMeetingEntity);
+        when(customerMeetingEntity.getMeeting())          .thenReturn(defaultWeeklyCustomerMeeting);
+        when(savingsAccountCustomer.getCustomerLevel())   .thenReturn(customerLevelEntity);
+        when(customerLevelEntity.getId())                 .thenReturn(CustomerLevel.CLIENT.getValue());
+
+        // exercise test
+        savingsAccount = savingsAccountBuilder.build();
+        savingsAccount.rescheduleDatesForNewHolidays(allWorkingDays, holidays, holidays);
+
+        // verify
+        verifyWeeklyMeetingDatesForInstallmentsInRange(1, 10, new DateTime());
+    }
+
+
+    private void verifyWeeklyMeetingDatesForInstallmentsInRange
+                        (int startingWithInstallment, int throughInstallment, DateTime startingDate) {
+
+        DateTime installmentDate = startingDate;
+        List<SavingsScheduleEntity> accountActionDates = getSortedSavingsScheduleEntities ();
+        for (short installmentId = (short) startingWithInstallment; installmentId <= throughInstallment; installmentId++) {
+            SavingsScheduleEntity scheduleEntity = accountActionDates.get(installmentId-1);
+            assertThat("Installment " + installmentId, new LocalDate(scheduleEntity.getActionDate()), is(new LocalDate(installmentDate.toDate())));
+            installmentDate = installmentDate.plusWeeks(1);
         }
     }
 

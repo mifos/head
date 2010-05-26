@@ -36,6 +36,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,6 +176,13 @@ public class MasterDataRetrievalForCustomersIntegrationTest {
         assertThat(centerMandatoryFields.isEmpty(), is(true));
     }
 
+    @Test
+    public void countOfCustomersInOfficeWithNoParent() {
+
+        int count = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(IntegrationTestObjectMother.sampleBranchOffice().getOfficeId());
+
+        assertThat(count, is(0));
+    }
 
     @Test
     public void countOfClientsIsZero() {

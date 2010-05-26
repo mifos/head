@@ -194,7 +194,7 @@ public class LoanDisbursementAction extends BaseAction {
                     personnel, receiptDate, modeOfPaymentId);
 
         } catch (Exception e) {
-            if (e.getMessage().equals("errors.cannotDisburseLoan.because.otherLoansAreActive")) {
+            if (e.getMessage().startsWith("errors.")) {
                 throw e;
             }
             throw new AccountException("errors.cannotDisburseLoan.because.disburseFailed");

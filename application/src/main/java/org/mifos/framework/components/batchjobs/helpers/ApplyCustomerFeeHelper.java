@@ -87,9 +87,9 @@ public class ApplyCustomerFeeHelper extends TaskHelper {
                 List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext();
+                List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(customerAccount.getOffice().getOfficeId());
 
-                customerAccount.applyPeriodicFees(workingDays, holidays);
+                customerAccount.applyPeriodicFeesToNextSetOfMeetingDates();
 
                 StaticHibernateUtil.startTransaction();
                 CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
