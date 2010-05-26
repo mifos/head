@@ -288,6 +288,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public Object getMifosConfiguration(String propertyKey) {
+        // FIXME: only return configuration specific to the plugin in question (limit by convention: package/class/conf value, aka class.getCanonicalName())
         ConfigurationManager cfgMng = ConfigurationManager.getInstance();
         return cfgMng.getProperty(propertyKey);
     }

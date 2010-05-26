@@ -45,7 +45,7 @@ public interface AccountService {
     void makePayments(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
 
     /**
-     * Make multiple loan account disbursements within a single transaction.
+     * Disburse multiple loan accounts within a single transaction.
      *
      * @param accountPaymentParametersDtoList a list of loan payment parameters
      */
