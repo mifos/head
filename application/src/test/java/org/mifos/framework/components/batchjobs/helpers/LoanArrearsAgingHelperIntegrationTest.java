@@ -273,69 +273,6 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(Short.valueOf(daysOverdue), loanArrearsAgingEntity.getDaysInArrears());
     }
 
-    public void testLoanWithOnePaymentMadeAndNoOverduePayments() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
-
-        Assert.assertNull(loan.getLoanArrearsAgingEntity());
-
-        short daysPastPaymentDate = 3;
-
-        // advance time daysOverdue past the second repayment interval
-        dateTime = dateTime.plusDays(repaymentInterval + daysPastPaymentDate);
-        new DateTimeService().setCurrentDateTimeFixed(dateTime);
-
-        loanArrearsAgingHelper.execute(dummy);
-
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
-
-        Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
-
-        // make one payment, so we should still be one payment behind after that
-        PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration.getInstance().getSystemConfig()
-                .getCurrency(), "" + onePayment), loan.getPersonnel(), Short.valueOf("1"), dateTime.toDate());
-        loan.applyPaymentWithPersist(paymentData);
-
-        loanArrearsAgingHelper.execute(dummy);
-
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
-
-        Assert.assertNull(loan.getLoanArrearsAgingEntity());
-        Assert.assertTrue(loan.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
-
-    }
-
-    public void testLoanWithEarlyRepayment() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
-
-        Assert.assertNull(loan.getLoanArrearsAgingEntity());
-
-        short daysPastPaymentDate = 3;
-
-        // advance time daysOverdue past the second repayment interval
-        dateTime = dateTime.plusDays(repaymentInterval + daysPastPaymentDate);
-        new DateTimeService().setCurrentDateTimeFixed(dateTime);
-
-        loanArrearsAgingHelper.execute(dummy);
-
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
-
-        Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
-
-        Money totalAmount = new Money(Configuration.getInstance().getSystemConfig()
-                .getCurrency(), "" + loanAmount + totalInterest);
-        String receiptNumber = "1";
-        loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(),
-                PaymentTypes.CASH.getValue().toString(), loan.getPersonnel().getPersonnelId());
-
-        loanArrearsAgingHelper.execute(dummy);
-
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
-
-        Assert.assertNull(loan.getLoanArrearsAgingEntity());
-        Assert.assertTrue(loan.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
-
-    }
-
     public void testLoanWithOnePartialPayment() throws Exception {
         LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
