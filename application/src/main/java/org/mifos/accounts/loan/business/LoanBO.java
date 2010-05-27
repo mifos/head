@@ -1108,6 +1108,8 @@ public class LoanBO extends AccountBO {
 
             // Client performance entry
             updateCustomerHistoryOnRepayment();
+            this.delete(loanArrearsAgingEntity);
+            loanArrearsAgingEntity = null;
             getLoanPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1425,24 +1427,6 @@ public class LoanBO extends AccountBO {
         return daysInArrears;
     }
 
-    public void handleArrearsAging() throws AccountException {
-        if (this.loanArrearsAgingEntity == null) {
-            this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this, getDaysInArrears(), getLoanSummary()
-                    .getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(),
-                    getTotalInterestAmountInArrears());
-        } else {
-            this.loanArrearsAgingEntity.update(getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary()
-                    .getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears(),
-                    getCustomer());
-        }
-
-        try {
-            getLoanPersistence().createOrUpdate(this);
-        } catch (PersistenceException pe) {
-            throw new AccountException(pe);
-        }
-    }
-
     public final void reverseLoanDisbursal(final PersonnelBO loggedInUser, final String note) throws AccountException {
         changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_REVERSAL.getValue(), note);
         if (getAccountPayments() != null && getAccountPayments().size() > 0) {
@@ -1514,6 +1498,8 @@ public class LoanBO extends AccountBO {
                 this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
                 // Client performance entry
                 updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
+                this.delete(loanArrearsAgingEntity);
+                loanArrearsAgingEntity = null;
             }
             if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
                     && (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT) || loanPaymentTypes
@@ -1521,6 +1507,8 @@ public class LoanBO extends AccountBO {
                 changeLoanStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, paymentData.getPersonnel());
                 // Client performance entry
                 updateCustomerHistoryOnPayment();
+                this.delete(loanArrearsAgingEntity);
+                loanArrearsAgingEntity = null;
             }
 
             LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
@@ -1540,6 +1528,12 @@ public class LoanBO extends AccountBO {
                 performanceHistory.setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
             }
         }
+
+        if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
+                && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
+            handleArrearsAging();
+        }
+
         addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(),
                 AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
         return accountPayment;
@@ -1670,6 +1664,7 @@ public class LoanBO extends AccountBO {
                 } else {
                     if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
                         setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+                        handleArrearsAging();
                     }
                 }
             }
@@ -4048,6 +4043,24 @@ public class LoanBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getLoanMeeting();
+    }
+
+    private void handleArrearsAging() throws AccountException {
+        if (this.loanArrearsAgingEntity == null) {
+            this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this, getDaysInArrears(), getLoanSummary()
+                    .getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(),
+                    getTotalInterestAmountInArrears());
+        } else {
+            this.loanArrearsAgingEntity.update(getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary()
+                    .getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears(),
+                    getCustomer());
+        }
+
+        try {
+            getLoanPersistence().createOrUpdate(this);
+        } catch (PersistenceException pe) {
+            throw new AccountException(pe);
+        }
     }
 
     private boolean accountActionTypeIsWrittenOffOrRescheduled(AccountActionTypes accountActionType) {
