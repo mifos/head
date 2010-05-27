@@ -404,7 +404,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         CustomerAccountBO customerAccountBO = group.getCustomerAccount();
         for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
             FeeBO feesBO = accountFeesEntity.getFees();
-            customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
+            customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
@@ -437,7 +437,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO.setUserContext(uc);
         for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
             FeeBO feesBO = accountFeesEntity.getFees();
-            customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
+            customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
         checkActivity(null, customerAccountBO);
@@ -670,7 +670,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
         Assert.assertEquals(1, customerAccountBO.getCustomerActivitDetails().size());
 
-        customerAccountBO.removeFees(periodicFee.getFeeId(), Short.valueOf("1"));
+        customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(periodicFee.getFeeId(), Short.valueOf("1"));
         StaticHibernateUtil.commitTransaction();
         Assert.assertEquals(2, customerAccountBO.getCustomerActivitDetails().size());
         Assert.assertEquals(2, customerAccountBO.getAccountFees().size());

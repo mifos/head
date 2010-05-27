@@ -1159,7 +1159,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
     protected void removeAccountFee(LoanBO loan) throws Exception {
         for (AccountFeesEntity accountFeesEntity : loan.getAccountFees()) {
-            loan.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
+            loan.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
     }
 

@@ -785,7 +785,7 @@ public class LoanBO extends AccountBO {
      * Remove the fee from all unpaid current or future installments, and update the loan accordingly.
      */
     @Override
-    public final void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
         Money totalFeeAmount = new Money(getCurrency());
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {

@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateMidnight;
@@ -49,7 +48,6 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -59,6 +57,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -67,7 +66,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
-import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -99,6 +97,7 @@ public class CustomerAccountBOTest {
     private MeetingBO feeMeetingEveryWeek;
     private MeetingBO biWeeklyFeeMeeting;
 
+    private CalendarEvent calendarEvent;
     private List<Days> workingDays;
     private List<Holiday> holidays;
     private List<AccountFeesEntity> accountFees;
@@ -656,10 +655,10 @@ public class CustomerAccountBOTest {
         AccountFeesEntity pentaWeeklyAccountFee = createAccountFeesEntity(pentaWeeklyFee, 25.0);
 
         accountFees.add(pentaWeeklyAccountFee);
+        calendarEvent = new CalendarEvent(workingDays, holidays);
 
         // Exercise test
-        customerAccount = CustomerAccountBO.createNew(customer, accountFees, biWeeklyCustomerMeeting,
-                workingDays, holidays);
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, biWeeklyCustomerMeeting, calendarEvent);
 
         //verify initial meeting dates and fees
         verifyBiWeeklyMeetingDatesForInstallmentsInRange(1, 10, firstInstallmentDate);
@@ -772,8 +771,8 @@ public class CustomerAccountBOTest {
 
     private void createCustomerAccount() {
 
-        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting,
-                workingDays, holidays);
+        calendarEvent = new CalendarEvent(workingDays, holidays);
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, defaultWeeklyCustomerMeeting, calendarEvent);
         customerAccount.setPersonnelPersistence(personnelPersistence);
         customerAccount.setFeePersistence(feePersistence);
     }

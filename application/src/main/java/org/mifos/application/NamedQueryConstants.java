@@ -237,7 +237,6 @@ public interface NamedQueryConstants {
     public String GET_GROUP_COUNT_BY_NAME = "Customer.getGroupCountByGroupNameAndOffice";
 
     // fee related m2
-    public String GET_UPDATED_FEES_FOR_CUSTOMERS = "getUpdatedFeesForCustomers";
     public String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
 
     // Seems not to be used by anything
