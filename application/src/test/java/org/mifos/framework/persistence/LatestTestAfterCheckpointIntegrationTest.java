@@ -109,11 +109,12 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
-        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(System.getProperty("java.io.tmpdir")
-                + "/latestDataDump.xml"));
-        latestDataDump = new FlatXmlDataSet(new File(System.getProperty("java.io.tmpdir") + "/latestDataDump.xml"));
+        final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
+        FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
+        latestDataDump = new FlatXmlDataSet(latestDumpFile);
+        assert latestDumpFile.delete();
 
-        String latestDump = TestDatabase.getAllTablesStructureDump();
+        final String latestDumpAsString = TestDatabase.getAllTablesStructureDump();
         dropLatestDatabase();
         createLatestCheckPointDatabaseWithLatestData();
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
@@ -121,11 +122,12 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
         IDataSet upgradeDataDump = new DatabaseConnection(connection).createDataSet();
 
-        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(System.getProperty("java.io.tmpdir")
-                + "/upgradeDataDump.xml"));
-        upgradeDataDump = new FlatXmlDataSet(new File(System.getProperty("java.io.tmpdir") + "/upgradeDataDump.xml"));
+        final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
+        FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
+        upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
+        assert upgradeDumpFile.delete();
 
-        Assert.assertEquals(latestDump, upgradeDump);
+        Assert.assertEquals(latestDumpAsString, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
     }
 
