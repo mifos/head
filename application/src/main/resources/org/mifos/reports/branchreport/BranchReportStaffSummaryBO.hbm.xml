@@ -85,9 +85,9 @@ explanation of the license and how it is applied.
 	                    ifnull(count(acc.ACCOUNT_ID),0) as activeLoansCount
 	        			from customer c, customer_state cs, account acc, personnel p
 				        where c.BRANCH_ID=:officeId and c.CUSTOMER_LEVEL_ID=1
-					    and c.CUSTOMER_ID=acc.CUSTOMER_ID and acc.ACCOUNT_STATE_ID=5 
+					    and c.CUSTOMER_ID=acc.CUSTOMER_ID and (acc.ACCOUNT_STATE_ID=5 or  acc.ACCOUNT_STATE_ID=9) 
 				        and c.LOAN_OFFICER_ID=p.PERSONNEL_ID 
-	 			        and cs.STATUS_ID=c.STATUS_ID and cs.DESCRIPTION='Customer Was Active' 
+	 			        and cs.STATUS_ID=c.STATUS_ID and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 					    group by c.LOAN_OFFICER_ID) staff_summary
 			     	on personnel.PERSONNEL_ID=staff_summary.PERSONNELID, personnel_details
 				    where personnel.PERSONNEL_ID=personnel_details.PERSONNEL_ID
