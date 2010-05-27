@@ -219,7 +219,6 @@ public interface NamedQueryConstants {
     // To get customer account
     public String CUSTOMER_ACCOUNT_ACTIONS_DATE = "accounts.getCustomerAccountActionDates";
 
-    public String GET_LOAN_ACOUNTS_IN_ARREARS = "accounts.GetLoanArrears";
     public String GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING = "accounts.GetLoanArrearsInGoodStanding";
     public String GET_LATENESS_FOR_LOANS = "productdefenition.GetLatenessDaysForLoans";
     public String GET_DORMANCY_DAYS = "productdefenition.getDormancyDays";
