@@ -1072,7 +1072,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
         while (itr.hasNext()) {
-            accountBO.removeFees(itr.next().getFees().getFeeId(), uc.getId());
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(itr.next().getFees().getFeeId(), uc.getId());
         }
 
         StaticHibernateUtil.getTransaction().commit();
@@ -4155,7 +4155,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-            accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
 
@@ -4225,7 +4225,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-            accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
         Map<String, String> fees0 = new HashMap<String, String>(0);

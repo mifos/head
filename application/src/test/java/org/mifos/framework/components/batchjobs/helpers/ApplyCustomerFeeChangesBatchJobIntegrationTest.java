@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -148,7 +149,7 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest {
     }
 
     @Test
-    public void givenFeeStatusIsChangedShouldApplyFeeChangesToUpcomingAndFutureAccountFees() throws Exception {
+    public void givenFeeStatusIsChangedToInactiveShouldRemoveAnyFeesAssociatedWithUpcomingAndFutureInstallments() throws Exception {
 
         weeklyPeriodicFeeForCenterOnly.updateDetails(TestUtils.makeUser());
         weeklyPeriodicFeeForCenterOnly.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
@@ -165,7 +166,37 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest {
 
         // verification
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
-//        assertThatFutureScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 52.0);
+        assertThatFutureScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 0.0);
+    }
+
+    @Test
+    public void givenFeeStatusIsChangedFromInactiveToActiveShouldAssociateFeesWithAllKnownFutureInstallments() throws Exception {
+
+        long timeInMillis = new Date().getTime();
+        weeklyPeriodicFeeForCenterOnly.updateDetails(TestUtils.makeUser());
+        weeklyPeriodicFeeForCenterOnly.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
+        weeklyPeriodicFeeForCenterOnly.updateStatus(FeeStatus.INACTIVE);
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
+
+        // setup fee and customer_fee_schedule state when fee is inactive
+        applyCustomerFeeChanges.execute(timeInMillis);
+
+        weeklyPeriodicFeeForCenterOnly = (AmountFeeBO) new FeePersistence().findFeeById(weeklyPeriodicFeeForCenterOnly.getFeeId());
+        weeklyPeriodicFeeForCenterOnly.updateDetails(TestUtils.makeUser());
+        weeklyPeriodicFeeForCenterOnly.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
+        weeklyPeriodicFeeForCenterOnly.updateStatus(FeeStatus.ACTIVE);
+        IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
+
+        // pre-verification
+        center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
+        assertThatFutureScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 0.0);
+
+        // exercise test
+        applyCustomerFeeChanges.execute(timeInMillis);
+
+        // verification
+        center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
+        assertThatFutureScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 100.0);
     }
 
     private void assertThatEachScheduleHasFeesDueOf(Set<AccountActionDateEntity> customerSchedules, double feesDue) {

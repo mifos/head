@@ -1511,7 +1511,7 @@ public class AccountBO extends AbstractBusinessObject {
         return false;
     }
 
-    public void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
     }
 
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
@@ -1527,11 +1527,10 @@ public class AccountBO extends AbstractBusinessObject {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
         AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
-        if (accountActionDateEntity != null
-                && !DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp())) {
+        if (accountActionDateEntity != null) {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
+
         return installmentIdList;
     }
 

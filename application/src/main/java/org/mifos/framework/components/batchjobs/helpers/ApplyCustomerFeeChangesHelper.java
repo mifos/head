@@ -61,8 +61,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
                 hydratedFee = new FeePersistence().getFee(feeId, hydratedFee.getFeeType());
 
                 if (!hydratedFee.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
-                    List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(hydratedFee
-                            .getFeeId());
+                    List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(hydratedFee.getFeeId());
                     if (accounts != null && accounts.size() > 0) {
                         for (AccountBO account : accounts) {
                             updateAccountFee(account, hydratedFee);

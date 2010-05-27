@@ -577,7 +577,7 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     @Override
-    public final void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
             updateAccountActionDateEntity(installmentIds, feeId);
@@ -1028,22 +1028,22 @@ public class CustomerAccountBO extends AccountBO {
             try {
                 if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_AND_STATUS_UPDATED)) {
                     if (!feeBO.isActive()) {
-                        removeFees(feeBO.getFeeId(), Short.valueOf("1"));
+                        removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeBO.getFeeId(), Short.valueOf("1"));
+                        fee.changeFeesStatus( FeeStatus.INACTIVE, new DateTimeService().getCurrentJavaDateTime());
                         updateAccountFee(fee, (AmountFeeBO)feeBO);
                     } else {
                         // generate repayment schedule and enable fee
-                        updateAccountFee(fee, (AmountFeeBO)feeBO);
                         fee.changeFeesStatus(FeeStatus.ACTIVE, new DateTimeService().getCurrentJavaDateTime());
-                        addTonextInstallment(fee);
+                        updateAccountFee(fee, (AmountFeeBO)feeBO);
+                        associateFeeWithAllKnownFutureInstallments(fee);
                     }
 
                 } else if (feeBO.getFeeChangeType().equals(FeeChangeType.STATUS_UPDATED)) {
                     if (!feeBO.isActive()) {
-                        removeFees(feeBO.getFeeId(), Short.valueOf("1"));
-
+                        removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeBO.getFeeId(), Short.valueOf("1"));
                     } else {
                         fee.changeFeesStatus(FeeStatus.ACTIVE, new DateTimeService().getCurrentJavaDateTime());
-                        addTonextInstallment(fee);
+                        associateFeeWithAllKnownFutureInstallments(fee);
                     }
 
                 } else if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_UPDATED)) {
@@ -1090,7 +1090,6 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     private void updateAccountFee(final AccountFeesEntity fee, final AmountFeeBO feeBO) {
-        fee.changeFeesStatus(FeeStatus.INACTIVE, new DateTimeService().getCurrentJavaDateTime());
         fee.setFeeAmount(feeBO.getFeeAmount().getAmountDoubleValue());
         fee.setAccountFeeAmount(feeBO.getFeeAmount());
     }
@@ -1113,10 +1112,21 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    private void addTonextInstallment(final AccountFeesEntity fee) throws AccountException {
+    private void associateFeeWithAllKnownFutureInstallments(final AccountFeesEntity fee) throws AccountException {
+
         CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
-        CustomerFeeScheduleEntity accountFeesaction = new CustomerFeeScheduleEntity(nextInstallment, fee.getFees(),
-                fee, fee.getAccountFeeAmount());
+        createCustomerFeeScheduleForInstallment(fee, nextInstallment);
+
+        List<AccountActionDateEntity> futureInstallments = getFutureInstallments();
+        for (AccountActionDateEntity accountActionDateEntity : futureInstallments) {
+            CustomerScheduleEntity installment = (CustomerScheduleEntity) accountActionDateEntity;
+            createCustomerFeeScheduleForInstallment(fee, installment);
+        }
+    }
+
+    private void createCustomerFeeScheduleForInstallment(final AccountFeesEntity fee,
+            CustomerScheduleEntity nextInstallment) throws AccountException {
+        CustomerFeeScheduleEntity accountFeesaction = new CustomerFeeScheduleEntity(nextInstallment, fee.getFees(), fee, fee.getAccountFeeAmount());
         accountFeesaction.setFeeAmountPaid(new Money(fee.getAccountFeeAmount().getCurrency(),"0.0"));
         nextInstallment.addAccountFeesAction(accountFeesaction);
         String description = fee.getFees().getFeeName() + " " + AccountConstants.FEES_APPLIED;
