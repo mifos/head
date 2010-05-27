@@ -31,6 +31,33 @@ explanation of the license and how it is applied.
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="definehiddenmandatoryfields" />
+
+<script type="text/javascript">
+    function disableFields(theElement) {
+        var theForm = theElement.form, z = 0, type = theElement.name.charAt(0), secondBox;
+        if (type == 'h') {
+            secondBox = document.getElementsByName('mandatory'.concat(theElement.name.substr(4)));
+            if (secondBox.length != 0) {
+                secondBox[0].disabled = theElement.checked;
+            }
+        }
+        else {
+            secondBox = document.getElementsByName('hide'.concat(theElement.name.substr(9)));
+            if (secondBox.length != 0 && secondBox[0].checked == false) {
+                secondBox[0].disabled = theElement.checked;
+            }
+        }
+    }
+
+    function disableAllFields() {
+        var theForm = document.getElementsByName('hiddenmandatoryconfigurationactionform')[0];
+        for(z=0; z<theForm.length;z++){
+            if(theForm[z].type == 'checkbox'){
+                disableFields(theForm[z]);
+            }
+        }
+    }
+</script>
 	
 		<html-el:form action="/hiddenmandatoryconfigurationaction">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -71,10 +98,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.EXTERNALID}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemExternalId" value="1"/>
+									<html-el:checkbox property="hideSystemExternalId" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemExternalId" value="1"/>
+									<html-el:checkbox property="mandatorySystemExternalId" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -82,10 +109,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemEthnicity" value="1"/>
+									<html-el:checkbox property="hideSystemEthnicity" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemEthnicity" value="1"/>
+									<html-el:checkbox property="mandatorySystemEthnicity" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -93,10 +120,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemCitizenShip" value="1"/>
+									<html-el:checkbox property="hideSystemCitizenShip" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemCitizenShip" value="1"/>
+									<html-el:checkbox property="mandatorySystemCitizenShip" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -104,10 +131,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemHandicapped" value="1"/>
+									<html-el:checkbox property="hideSystemHandicapped" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemHandicapped" value="1"/>
+									<html-el:checkbox property="mandatorySystemHandicapped" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -115,10 +142,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.educationlevel" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemEducationLevel" value="1"/>
+									<html-el:checkbox property="hideSystemEducationLevel" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemEducationLevel" value="1"/>
+									<html-el:checkbox property="mandatorySystemEducationLevel" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -126,10 +153,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.photo" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemPhoto" value="1"/>
+									<html-el:checkbox property="hideSystemPhoto" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemPhoto" value="1"/>
+									<html-el:checkbox property="mandatorySystemPhoto" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -139,7 +166,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.topositions" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemAssignClientPostions" value="1"/>
+									<html-el:checkbox property="hideSystemAssignClientPostions" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -153,7 +180,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatorySystemAddress1" value="1"/>
+									<html-el:checkbox property="mandatorySystemAddress1" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -161,7 +188,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS2}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemAddress2" value="1"/>
+									<html-el:checkbox property="hideSystemAddress2" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -172,7 +199,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS3}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemAddress3" value="1"/>
+									<html-el:checkbox property="hideSystemAddress3" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -183,7 +210,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.CITY}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemCity" value="1"/>
+									<html-el:checkbox property="hideSystemCity" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -194,7 +221,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.STATE}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemState" value="1"/>
+									<html-el:checkbox property="hideSystemState" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -205,7 +232,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.country" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemCountry" value="1"/>
+									<html-el:checkbox property="hideSystemCountry" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -216,7 +243,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemPostalCode" value="1"/>
+									<html-el:checkbox property="hideSystemPostalCode" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -227,7 +254,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.receiptiddate" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemReceiptIdDate" value="1"/>
+									<html-el:checkbox property="hideSystemReceiptIdDate" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -238,7 +265,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.collateraltypenotes" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideSystemCollateralTypeNotes" value="1"/>
+									<html-el:checkbox property="hideSystemCollateralTypeNotes" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -265,10 +292,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.middlename" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientMiddleName" value="1"/>
+									<html-el:checkbox property="hideClientMiddleName" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientMiddleName" value="1"/>
+									<html-el:checkbox property="mandatoryClientMiddleName" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -276,10 +303,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.secondlastname" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientSecondLastName" value="1"/>
+									<html-el:checkbox property="hideClientSecondLastName" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientSecondLastName" value="1"/>
+									<html-el:checkbox property="mandatoryClientSecondLastName" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -287,10 +314,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientGovtId" value="1"/>
+									<html-el:checkbox property="hideClientGovtId" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientGovtId" value="1"/>
+									<html-el:checkbox property="mandatoryClientGovtId" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -301,7 +328,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryMaritalStatus" value="1"/>
+									<html-el:checkbox property="mandatoryMaritalStatus" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>							
                             <tr>
@@ -309,10 +336,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.povertystatus" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientPovertyStatus" value="1"/>
+									<html-el:checkbox property="hideClientPovertyStatus" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientPovertyStatus" value="1"/>
+									<html-el:checkbox property="mandatoryClientPovertyStatus" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -320,7 +347,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.spousefathermiddlename" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientSpouseFatherMiddleName" value="1"/>
+									<html-el:checkbox property="hideClientSpouseFatherMiddleName" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -331,10 +358,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.spousefathersecondlastname" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientSpouseFatherSecondLastName" value="1"/>
+									<html-el:checkbox property="hideClientSpouseFatherSecondLastName" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientSpouseFatherSecondLastName" value="1"/>
+									<html-el:checkbox property="mandatoryClientSpouseFatherSecondLastName" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -342,10 +369,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.phonenumber" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientPhone" value="1"/>
+									<html-el:checkbox property="hideClientPhone" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientPhone" value="1"/>
+									<html-el:checkbox property="mandatoryClientPhone" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -353,10 +380,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.trained" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientTrained" value="1"/>
+									<html-el:checkbox property="hideClientTrained" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientTrained" value="1"/>
+									<html-el:checkbox property="mandatoryClientTrained" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -367,7 +394,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientTrainedOn" value="1"/>
+									<html-el:checkbox property="mandatoryClientTrainedOn" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -375,10 +402,10 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.Businessworkactivities" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideClientBusinessWorkActivities" value="1"/>
+									<html-el:checkbox property="hideClientBusinessWorkActivities" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryClientBusinessWorkActivities" value="1"/>
+									<html-el:checkbox property="mandatoryClientBusinessWorkActivities" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 							<tr>
@@ -389,7 +416,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryNumberOfChildren" value="1"/>
+									<html-el:checkbox property="mandatoryNumberOfChildren" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>														
 						</table>
@@ -412,7 +439,7 @@ explanation of the license and how it is applied.
 									<mifos:mifoslabel name="configuration.trained" />
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="hideGroupTrained" value="1"/>
+									<html-el:checkbox property="hideGroupTrained" value="1" onclick="disableFields(this)"/>
 								</td>
 								<td class="drawtablerow">
 									&nbsp;
@@ -441,7 +468,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryLoanAccountPurpose" value="1"/>
+									<html-el:checkbox property="mandatoryLoanAccountPurpose" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 
@@ -453,7 +480,7 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryLoanSourceOfFund" value="1"/>
+									<html-el:checkbox property="mandatoryLoanSourceOfFund" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
 
@@ -492,3 +519,6 @@ explanation of the license and how it is applied.
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
+<script>
+disableAllFields();
+</script>
