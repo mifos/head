@@ -99,5 +99,11 @@ public class DatabaseCleaner {
 
         template.execute("delete from office_holiday");
         template.execute("delete from holiday");
+
+        template.execute("delete from fee_frequency");
+        template.execute("delete from fees");
+
+        // couldn't track down test that is changing state of custom_field_definition data so forced it to be reset here
+        template.execute("update custom_field_definition set mandatory_flag = 0 where field_id = 6");
     }
 }

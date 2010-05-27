@@ -847,6 +847,16 @@ public class AccountBO extends AbstractBusinessObject {
         return pastActionDateList;
     }
 
+    public List<AccountActionDateEntity> getFutureInstallments() {
+        List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+            if (accountActionDateEntity.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+                futureActionDateList.add(accountActionDateEntity);
+            }
+        }
+        return futureActionDateList;
+    }
+
     public List<AccountActionDateEntity> getAllInstallments() {
         List<AccountActionDateEntity> actionDateList = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {

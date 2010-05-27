@@ -1029,10 +1029,10 @@ public class CustomerAccountBO extends AccountBO {
                 if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_AND_STATUS_UPDATED)) {
                     if (!feeBO.isActive()) {
                         removeFees(feeBO.getFeeId(), Short.valueOf("1"));
-                        updateAccountFee(fee, feeBO);
+                        updateAccountFee(fee, (AmountFeeBO)feeBO);
                     } else {
                         // generate repayment schedule and enable fee
-                        updateAccountFee(fee, feeBO);
+                        updateAccountFee(fee, (AmountFeeBO)feeBO);
                         fee.changeFeesStatus(FeeStatus.ACTIVE, new DateTimeService().getCurrentJavaDateTime());
                         addTonextInstallment(fee);
                     }
@@ -1047,8 +1047,8 @@ public class CustomerAccountBO extends AccountBO {
                     }
 
                 } else if (feeBO.getFeeChangeType().equals(FeeChangeType.AMOUNT_UPDATED)) {
-                    updateAccountFee(fee, feeBO);
-                    updateNextInstallment(fee);
+                    updateAccountFee(fee, (AmountFeeBO)feeBO);
+                    updateUpcomingAndFutureInstallments(fee);
                 }
             } catch (PropertyNotFoundException e) {
                 throw new BatchJobException(e);
@@ -1089,17 +1089,27 @@ public class CustomerAccountBO extends AccountBO {
 
     }
 
-    private void updateAccountFee(final AccountFeesEntity fee, final FeeBO feeBO) {
+    private void updateAccountFee(final AccountFeesEntity fee, final AmountFeeBO feeBO) {
         fee.changeFeesStatus(FeeStatus.INACTIVE, new DateTimeService().getCurrentJavaDateTime());
-        fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount().getAmountDoubleValue());
-        fee.setAccountFeeAmount(((AmountFeeBO) feeBO).getFeeAmount());
+        fee.setFeeAmount(feeBO.getFeeAmount().getAmountDoubleValue());
+        fee.setAccountFeeAmount(feeBO.getFeeAmount());
     }
 
-    private void updateNextInstallment(final AccountFeesEntity fee) {
-        CustomerScheduleEntity installment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
-        AccountFeesActionDetailEntity accountFeesActionDetail = installment.getAccountFeesAction(fee.getAccountFeeId());
-        if (accountFeesActionDetail != null) {
-            ((CustomerFeeScheduleEntity) accountFeesActionDetail).setFeeAmount(fee.getAccountFeeAmount());
+    private void updateUpcomingAndFutureInstallments(final AccountFeesEntity fee) {
+
+        CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
+        AccountFeesActionDetailEntity nextAccountFeesActionDetail = nextInstallment.getAccountFeesAction(fee.getAccountFeeId());
+        if (nextAccountFeesActionDetail != null) {
+            ((CustomerFeeScheduleEntity) nextAccountFeesActionDetail).setFeeAmount(fee.getAccountFeeAmount());
+        }
+
+        List<AccountActionDateEntity> futureInstallments = getFutureInstallments();
+        for (AccountActionDateEntity accountActionDateEntity : futureInstallments) {
+            CustomerScheduleEntity installment = (CustomerScheduleEntity) accountActionDateEntity;
+            AccountFeesActionDetailEntity accountFeesActionDetail = installment.getAccountFeesAction(fee.getAccountFeeId());
+            if (accountFeesActionDetail != null) {
+                ((CustomerFeeScheduleEntity) accountFeesActionDetail).setFeeAmount(fee.getAccountFeeAmount());
+            }
         }
     }
 
