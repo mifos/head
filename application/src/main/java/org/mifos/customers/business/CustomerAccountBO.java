@@ -60,6 +60,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -117,13 +118,12 @@ public class CustomerAccountBO extends AccountBO {
     }
 
     public static CustomerAccountBO createNew(CustomerBO customer, List<AccountFeesEntity> accountFees,
-            MeetingBO customerMeeting, List<Days> workingDays, List<Holiday> thisYearsAndNextYearsHolidays) {
+            MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents) {
 
         try {
             CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customerMeeting != null) {
-                customerAccount.createFirstSetOfMeetingDates(customer,
-                        accountFees, customerMeeting, workingDays, thisYearsAndNextYearsHolidays);
+                customerAccount.createFirstSetOfMeetingDates(customer, accountFees, customerMeeting, applicableCalendarEvents);
             }
             return customerAccount;
         } catch (AccountException e) {
@@ -148,19 +148,14 @@ public class CustomerAccountBO extends AccountBO {
      *      is attached
      * </ul>
      *
-     * @param accountFees the list of {@link AccountFeesEntity}s to be attached to the schedule.
      * @param customerMeeting defines the meeting starting date, frequency and recurrence.
-     * @param workingDays the days of the week specified as working days.
-     * @param thisYearsAndNextYearsHolidays The list of {@link Holiday} to schedule around.
      */
-    private void createFirstSetOfMeetingDates(CustomerBO customer,
-            List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, List<Days> workingDays,
-            List<Holiday> thisYearsAndNextYearsHolidays) {
+    public void createFirstSetOfMeetingDates(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents) {
 
         this.setMeetingScheduledEvent(ScheduledEventFactory.createScheduledEventFrom(customerMeeting));
         createInitialSetOfCustomerScheduleEntities(customer, new DateTime(customerMeeting.getMeetingStartDate()),
-                workingDays, thisYearsAndNextYearsHolidays);
-        applyFeesToInitialSetOfInstallments(accountFees);
+                applicableCalendarEvents.getWorkingDays(), applicableCalendarEvents.getHolidays());
+        applyFeesToInitialSetOfInstallments(new ArrayList<AccountFeesEntity>(accountFees));
     }
 
     private void createInitialSetOfCustomerScheduleEntities (CustomerBO customer, DateTime meetingStartDate,
@@ -309,14 +304,6 @@ public class CustomerAccountBO extends AccountBO {
     @Override
     public AccountTypes getType() {
         return AccountTypes.CUSTOMER_ACCOUNT;
-    }
-
-    /**
-     * @deprecated - use static factory methods for creating {@link CustomerAccountBO} and inject in installments.
-     */
-    @Deprecated
-    public void generateCustomerFeeSchedule() throws AccountException {
-        generateCustomerFeeSchedule(getCustomer());
     }
 
     public List<CustomerActivityEntity> getCustomerActivitDetails() {
