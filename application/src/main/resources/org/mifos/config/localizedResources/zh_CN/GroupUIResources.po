@@ -1,9 +1,9 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/GroupUIResources.properties, zh/GroupUIResources_zh_CN.properties
+#. extracted from GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-05-28 18:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -820,7 +820,8 @@ msgid "Schedule meeting"
 msgstr "安排会议"
 
 #: Group.searchmsg1
-msgid "To select, click on a resulting {0}"
+#, fuzzy
+msgid "To select, click on a resulting {0}."
 msgstr "如要选择，点击下方所列出的搜索{0}"
 
 #: Group.seeallnotes
@@ -1083,8 +1084,8 @@ msgid ""
 msgstr "会议频率和循环费用不匹配。请选择有效的费用类型。"
 
 #: errors.Customer.hasActiveAccount
+#, fuzzy
 msgctxt "errors.Customer.hasActiveAccount"
-"errors.Customer.hasActiveAccount"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
 msgstr "由于当前存在活动账户，因此无法修改成员。"
