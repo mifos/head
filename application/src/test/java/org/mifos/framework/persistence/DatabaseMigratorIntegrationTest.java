@@ -20,11 +20,13 @@
 
 package org.mifos.framework.persistence;
 
-import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
-
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.dbunit.Assertion;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.dataset.IDataSet;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.testng.annotations.AfterClass;
@@ -37,9 +39,9 @@ public class DatabaseMigratorIntegrationTest {
     private DatabaseMigrator databaseMigrator;
 
     @BeforeClass
-    public void berforeClass() throws Exception {
+    public void beforeClass() throws Exception {
         StaticHibernateUtil.initialize();
-        StaticHibernateUtil.getSessionFactory().openSession(connection);
+        connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
     }
 
@@ -55,17 +57,34 @@ public class DatabaseMigratorIntegrationTest {
     @Test
     public void testHappyPath() throws Exception {
         loadNonSeqDatabaseSchema();
+        createFooTable(connection);
+        IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
+
+        loadNonSeqDatabaseSchema();
 
         databaseMigrator.checkUnAppliedUpgradesAndUpgrade();
-
+        IDataSet dump = new DatabaseConnection(connection).createDataSet();
+        Assertion.assertEquals(latestDump, dump);
 
         // check if database is upgraded to 1274761395
 
     }
 
+    private void createFooTable(Connection connection) throws SQLException {
+        connection.createStatement().execute("CREATE TABLE FOO ( "+
+                "FOO_ID INTEGER AUTO INCREMENTNOT NULL,"+
+                "Description VARCHAR(25),"+
+                "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
+
+
+        connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
+
+        connection.createStatement().execute("INSERT INTO FOO VALUES(2, 'BAZ')");
+    }
+
     private void loadNonSeqDatabaseSchema() throws SQLException, IOException {
-        executeScript("mifosdroptables.sql", connection);
-        executeScript("latest-schema-nonseq-checkpoint", connection);
+        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+        DatabaseSetup.executeScript("latest-schema-non-sequential.sql", connection);
 
     }
 

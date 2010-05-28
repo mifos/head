@@ -20,13 +20,26 @@
 
 package org.mifos.framework.persistence;
 
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Session;
 import org.mifos.core.ClasspathResource;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
  * This class handles automated database schema and data changes.
@@ -43,20 +56,24 @@ import org.mifos.core.ClasspathResource;
  */
 public class DatabaseMigrator {
 
-    private List<Integer> getAvailableUpgrades() throws IOException {
+    private List<Integer> appliedUpgrades;
+
+    private Map<Integer, String> getAvailableUpgrades() throws IOException {
         Reader reader = null;
         BufferedReader bufferedReader = null;
-        List<Integer> upgrades = new ArrayList<Integer>();
+        Map<Integer, String> upgrades = new HashMap<Integer, String>();
         try {
             reader = ClasspathResource.getInstance("/sql").getAsReader("upgrades.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {
-                upgrades.add(Integer.parseInt(bufferedReader.readLine()));
+                String line = bufferedReader.readLine();
+                String upgradeType = line.substring(0, line.indexOf(":"));
+                Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(":")));
+                upgrades.put(upgradeId, upgradeType);
             }
 
         } catch (IOException e) {
-
 
         } finally {
             if (reader != null) {
@@ -70,26 +87,98 @@ public class DatabaseMigrator {
         return upgrades;
     }
 
+    public void checkUnAppliedUpgradesAndUpgrade() throws IOException, SQLException {
+        Map<Integer, String> availableUpgrades = getAvailableUpgrades();
+        appliedUpgrades = getAppliedUpgrades();
 
-    public void checkUnAppliedUpgradesAndUpgrade() throws IOException {
-        List<Integer> availableUpgrades = getAvailableUpgrades();
-        List<Integer> appliedUpgrades = getAppliedUpgrades();
-
-        for (int i: availableUpgrades){
-            if(appliedUpgrades.contains(i) == false){
-                applyUpgrade(i);
+        for (int i : availableUpgrades.keySet()) {
+            if (appliedUpgrades.contains(i) == false) {
+                applyUpgrade(i, availableUpgrades.get(i));
             }
         }
     }
 
-    private void applyUpgrade(int upgradeNumber){
-        //TODO implement method
+    private void applyUpgrade(int upgradeNumber, String type) throws IOException, SQLException {
+
         // run sql script
-        // for java upgrades, load class and run it.
+        Connection connection = null;
+        if (type.equals("sql")) {
+            try {
+                DatabaseSetup.executeScript(upgradeNumber + ".sql", connection);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+
+        if (type.equals("java")) {
+            String className = "org.mifos.application.master.persistence.Upgrade" + upgradeNumber;
+
+                Upgrade upgrade = getInstanceOfUpgradeClass(className);
+                upgrade.upgrade(connection);
+
+        }
+    }
+
+    private Upgrade getInstanceOfUpgradeClass(String className){
+        Upgrade upgrade = null;
+        try {
+            Class c = Class.forName(className);
+            Constructor<Upgrade> constructor = c.getConstructor();
+            upgrade= constructor.newInstance();
+
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+            return upgrade;
     }
 
     private List<Integer> getAppliedUpgrades() {
-        return null;
+
+        // TODO convert query to HQL
+        StaticHibernateUtil.initialize();
+
+        Session session = StaticHibernateUtil.getSessionFactory().openSession();
+        Connection connection = session.connection();
+        List<Integer> appliedUpgrades = new ArrayList<Integer>();
+
+        Statement stmt;
+        try {
+            stmt = connection.createStatement(ResultSet.FETCH_FORWARD, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = stmt.executeQuery("SELECT UPGRADE_ID FROM APPLIED_UPGRADES");
+
+            if (rs.next()) {
+                appliedUpgrades.add(rs.getInt(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return appliedUpgrades;
 
     }
 
