@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 18:11+0200\n"
+"POT-Creation-Date: 2010-05-28 19:39+0200\n"
 "PO-Revision-Date: 2009-08-18 21:14-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -361,7 +361,8 @@ msgid "Create an account for this {0}"
 msgstr "បង្កើតគណនេយ្យមួយសំរាប់{0}"
 
 #: Group.createanewgroup
-msgid "Create a new group"
+#, fuzzy
+msgid "Create a new Group"
 msgstr "បង្កើតក្រុមថ្មីមួយ"
 
 #: Group.createconfirm

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 18:11+0200\n"
+"POT-Creation-Date: 2010-05-28 19:39+0200\n"
 "PO-Revision-Date: 2009-11-09 22:31+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -366,7 +366,8 @@ msgid "Create an account for this {0}"
 msgstr "Számla létrehozása ezen {0} részére"
 
 #: Group.createanewgroup
-msgid "Create a new group"
+#, fuzzy
+msgid "Create a new Group"
 msgstr "Új csoport létrehozása"
 
 #: Group.createconfirm

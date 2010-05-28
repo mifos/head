@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-28 18:10+0200\n"
+"POT-Creation-Date: 2010-05-28 19:38+0200\n"
 "PO-Revision-Date: 2010-01-25 17:08-0800\n"
 "Last-Translator: Kay Chau <kchau@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -365,7 +365,8 @@ msgid "Create an account for this {0}"
 msgstr "Crear una cuenta para este {0}"
 
 #: Group.createanewgroup
-msgid "Create a new group"
+#, fuzzy
+msgid "Create a new Group"
 msgstr "Crear un nuevo grupo"
 
 #: Group.createconfirm
