@@ -1596,19 +1596,13 @@ public class AccountBO extends AbstractBusinessObject {
      *
      * <p> If no dates fall in any of the unapplied holidays, then do nothing.</p>
      *
-     * @param workingDays the days of the week that scheduled dates must occur in
-     * @param thisAndNextYearsHolidays upcoming holidays to schedule around.
      * @param unappliedHolidays the holidays that have not yet been applied to this account's schedule
      */
-    public void rescheduleDatesForNewHolidays (List<Days> workingDays, List<Holiday> thisAndNextYearsHolidays,
-            List<Holiday> unappliedHolidays) {
+    public void rescheduleDatesForNewHolidays (final ScheduledDateGeneration scheduledDateGeneration, List<Holiday> unappliedHolidays) {
 
         int firstInstallmentInUnappliedHolidays = getFirstFutureInstallmentInOneOfTheHolidays(unappliedHolidays);
         if (firstInstallmentInUnappliedHolidays > 0) {
-            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith
-                        (workingDays,
-                         thisAndNextYearsHolidays,
-                         firstInstallmentInUnappliedHolidays);
+            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith(scheduledDateGeneration, firstInstallmentInUnappliedHolidays);
             replaceActionDates (installmentDates, firstInstallmentInUnappliedHolidays);
         }
     }
@@ -1625,15 +1619,11 @@ public class AccountBO extends AbstractBusinessObject {
         return 0;
     }
 
-    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith (List<Days> workingDays, List<Holiday> holidays,
-            int startingInstallmentId) {
+    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith (final ScheduledDateGeneration dateGeneration, int startingInstallmentId) {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getMeetingForAccount());
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
         int numberOfDatesToGenerate = this.getAccountActionDates().size() - startingInstallmentId + 1;
-        DateTime dayBeforeFirstDateToGenerate
-            = new DateTime(this.getAccountActionDate((short) startingInstallmentId).getActionDate()).minusDays(1);
+        DateTime dayBeforeFirstDateToGenerate = new DateTime(this.getAccountActionDate((short) startingInstallmentId).getActionDate()).minusDays(1);
         return dateGeneration.generateScheduledDates(numberOfDatesToGenerate,
                                                      dayBeforeFirstDateToGenerate,
                                                      scheduledEvent);

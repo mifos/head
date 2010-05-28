@@ -41,6 +41,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.exceptions.SystemException;
@@ -100,6 +101,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
+    @Ignore
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
         createLatestDatabaseWithLatestData();

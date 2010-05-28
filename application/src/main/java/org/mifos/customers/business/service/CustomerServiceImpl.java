@@ -753,7 +753,7 @@ public class CustomerServiceImpl implements CustomerService {
                 CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
                 List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
-                client.getCustomerAccount().createFirstSetOfMeetingDates(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
 
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
