@@ -223,7 +223,7 @@ public class HolidayAction extends BaseAction {
 
     public ActionForward officeHierarchy(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse httpservletresponse) throws Exception {
-        httpservletresponse.setContentType("text/html");
+        httpservletresponse.setContentType("application/json");
         PrintWriter out = httpservletresponse.getWriter();
         out.println(new OfficeFacade(new OfficeBusinessService()).headOfficeHierarchy().toJSONString());
         out.flush();

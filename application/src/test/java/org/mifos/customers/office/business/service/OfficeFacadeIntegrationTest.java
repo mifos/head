@@ -52,20 +52,20 @@ public class OfficeFacadeIntegrationTest extends MifosIntegrationTestCase {
     public void testShouldReturnOfficeHierarchyList() throws ServiceException, JsonGenerationException, JsonMappingException, IOException {
         OfficeHierarchyDto officeHierarchy = officeFacade.headOfficeHierarchy();
         assertNotNull(officeHierarchy);
-        assertEquals("Mifos HO ",officeHierarchy.getText());
+        assertEquals("Mifos HO ",officeHierarchy.getData());
         assertEquals("1",officeHierarchy.getId());
         assertNotNull(officeHierarchy.getChildren());
         assertEquals(1,officeHierarchy.getChildren().size());
         OfficeHierarchyDto areaOfficeHierarchy = officeHierarchy.getChildren().get(0);
         assertNotNull(areaOfficeHierarchy);
         assertEquals("2",areaOfficeHierarchy.getId());
-        assertEquals("TestAreaOffice",areaOfficeHierarchy.getText());
+        assertEquals("TestAreaOffice",areaOfficeHierarchy.getData());
         assertNotNull(areaOfficeHierarchy.getChildren());
         assertEquals(1,areaOfficeHierarchy.getChildren().size());
         OfficeHierarchyDto branchOficeHierarchy = areaOfficeHierarchy.getChildren().get(0);
         assertNotNull(branchOficeHierarchy);
         assertEquals("3",branchOficeHierarchy.getId());
-        assertEquals("TestBranchOffice",branchOficeHierarchy.getText());
+        assertEquals("TestBranchOffice",branchOficeHierarchy.getData());
         assertNotNull(branchOficeHierarchy.getChildren());
         assertEquals(0,branchOficeHierarchy.getChildren().size());
     }
