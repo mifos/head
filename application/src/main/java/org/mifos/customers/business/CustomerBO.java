@@ -418,6 +418,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public Set<AccountBO> getAccounts() {
+        if (accounts == null) {
+            return new HashSet<AccountBO>();
+        }
         return accounts;
     }
 

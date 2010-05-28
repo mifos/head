@@ -83,7 +83,9 @@ public abstract class TransactionImport {
     }
 
     /**
-     * Get the number of transaction one physical row of import sheet(file) is supposed to implement in plugin.
+     * Expected number of transactions per import file row.
+     *
+     * See <a href="http://mifosforge.jira.com/browse/MIFOS-2909">MIFOS-2909</a>.
      *
      * @return numberOfTransactionsPerRow an integer
      */

@@ -48,7 +48,6 @@ import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
@@ -59,7 +58,6 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
@@ -87,7 +85,6 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
@@ -599,7 +596,9 @@ public class CustomerServiceImpl implements CustomerService {
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
                 group.updateCustomerHierarchy();
-                group.regenerateCustomerFeeSchedule();
+
+                CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
+                group.regenerateCustomerFeeSchedule(applicableCalendarEvents);
             }
 
             Set<CustomerBO> groupChildren = group.getChildren();
@@ -684,9 +683,9 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
 
-            setInitialObjectForAuditLogging(client);
             client.clearCustomerFlagsIfApplicable(oldStatus, newStatus);
 
             client.updateCustomerStatus(newStatus);
@@ -699,12 +698,13 @@ public class CustomerServiceImpl implements CustomerService {
             this.handleChangeOfClientStatusToClosedOrCancelled(client, customerStatusFlag, customerNote);
 
             customerDao.save(client);
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -745,18 +745,16 @@ public class CustomerServiceImpl implements CustomerService {
             ClientBO client = (ClientBO) customer;
 
             if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
-                try {
-                    if (client.getParentCustomer() != null) {
-                        CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, client.getParentCustomer());
-                        client.addCustomerHierarchy(hierarchy);
-                    }
-
-                    client.getCustomerAccount().generateCustomerFeeSchedule();
-                } catch (AccountException ae1) {
-                    throw new CustomerException(ae1);
+                if (client.getParentCustomer() != null) {
+                    CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, client.getParentCustomer());
+                    client.addCustomerHierarchy(hierarchy);
                 }
-            }
-            if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
+
+                CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
+
+                List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
                 if (client.getOfferingsAssociatedInCreate() != null) {
@@ -787,10 +785,6 @@ public class CustomerServiceImpl implements CustomerService {
 
                 new SavingsPersistence().persistSavingAccounts(client);
 
-                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao()
-                        .findAllHolidaysThisYearAndNext(customer.getOfficeId());
-
                 try {
                     if (client.getParentCustomer() != null) {
                         List<SavingsBO> savingsList = new CustomerPersistence()
@@ -809,7 +803,7 @@ public class CustomerServiceImpl implements CustomerService {
                                                 RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 
                                     savings.generateDepositAccountActions(client, client.getCustomerMeeting()
-                                            .getMeeting(), workingDays, holidays);
+                                            .getMeeting(), applicableCalendarEvents.getWorkingDays(), applicableCalendarEvents.getHolidays());
 
                                     savings.update();
                                 }
@@ -872,63 +866,26 @@ public class CustomerServiceImpl implements CustomerService {
         group.validateNewCenter(receivingCenter);
         group.validateForActiveAccounts();
 
-        setInitialObjectForAuditLogging(group);
-
-        OfficeBO centerOffice = receivingCenter.getOffice();
-        if (group.isDifferentBranch(centerOffice)) {
-            group.makeCustomerMovementEntries(centerOffice);
-            if (group.isActive()) {
-                group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-            }
+        if (group.isDifferentBranch(receivingCenter.getOffice())) {
+            customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), receivingCenter.getOfficeId());
         }
 
         CustomerBO oldParent = group.getParentCustomer();
-        group.setParentCustomer(receivingCenter);
 
-        CustomerHierarchyEntity currentHierarchy = group.getActiveCustomerHierarchy();
-        if (null != currentHierarchy) {
-            currentHierarchy.makeInactive(group.getUserContext().getId());
-        }
-        group.addCustomerHierarchy(new CustomerHierarchyEntity(group, receivingCenter));
-
-        // handle parent
-        group.setPersonnel(receivingCenter.getPersonnel());
-
-        MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
-        MeetingBO groupMeeting = group.getCustomerMeetingValue();
-        if (centerMeeting != null) {
-            if (groupMeeting != null) {
-                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
-                    // FIXME - #000002 - this will store meeting waiting for batch job to come along and update schedules to match updated meeting frequency
-                    group.setUpdatedMeeting(centerMeeting);
-                }
-            } else {
-                CustomerMeetingEntity customerMeeting = group.createCustomerMeeting(centerMeeting);
-                group.setCustomerMeeting(customerMeeting);
-            }
-        } else if (groupMeeting != null) {
-            group.setCustomerMeeting(null);
-        }
-
-        if (oldParent != null) {
-            oldParent.setUserContext(group.getUserContext());
-        }
-
-        receivingCenter.incrementChildCount();
-        group.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
-
-        receivingCenter.setUserContext(group.getUserContext());
+        group.transferTo(receivingCenter);
 
         try {
-            StaticHibernateUtil.startTransaction();
-
-            group.setUpdateDetails();
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
 
             if (oldParent != null) {
+                oldParent.updateDetails(group.getUserContext());
                 customerDao.save(oldParent);
             }
+            receivingCenter.updateDetails(group.getUserContext());
             customerDao.save(receivingCenter);
 
+            group.updateDetails(group.getUserContext());
             customerDao.save(group);
 
             Set<CustomerBO> clients = group.getChildren();
@@ -941,16 +898,15 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDao.save(client);
                 }
             }
-            StaticHibernateUtil.commitTransaction();
+            hibernateTransactionHelper.commitTransaction();
 
             return group;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
-
     }
 
     @Override
@@ -985,7 +941,7 @@ public class CustomerServiceImpl implements CustomerService {
         group.setSearchId(searchId);
 
         try {
-            StaticHibernateUtil.startTransaction();
+            hibernateTransactionHelper.startTransaction();
 
             group.setUpdateDetails();
 
@@ -1005,19 +961,15 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDao.save(client);
                 }
             }
-            StaticHibernateUtil.commitTransaction();
+
+            hibernateTransactionHelper.commitTransaction();
 
             return group;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            StaticHibernateUtil.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
-    }
-
-    private void setInitialObjectForAuditLogging(Object object) {
-        StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(object);
     }
 }

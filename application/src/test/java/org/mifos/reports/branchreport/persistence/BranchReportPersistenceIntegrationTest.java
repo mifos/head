@@ -270,12 +270,12 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
                 .find(staffingLevels, new Predicate() {
                     public boolean evaluate(Object arg0) {
                         BranchReportStaffingLevelSummaryBO summary = (BranchReportStaffingLevelSummaryBO) arg0;
-                        return !TOTAL_STAFF_ROLENAME_STR.equals(summary.getRolename())
+                        return !TOTAL_STAFF_ROLENAME_STR.equals(summary.getTitleName())
                                 && Integer.valueOf(0).equals((summary).getPersonnelCount());
                     }
                 }));
         for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevels) {
-            if (TOTAL_STAFF_ROLENAME_STR.equals(summaryBO.getRolename())) {
+            if (TOTAL_STAFF_ROLENAME_STR.equals(summaryBO.getTitleName())) {
                Assert.assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
             }
         }

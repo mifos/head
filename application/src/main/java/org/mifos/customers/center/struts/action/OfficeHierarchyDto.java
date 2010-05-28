@@ -23,6 +23,7 @@ package org.mifos.customers.center.struts.action;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -49,7 +50,7 @@ public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
         return this.officeName;
     }
 
-    public String getText() {
+    public String getData() {
         return this.officeName;
     }
 
@@ -63,6 +64,12 @@ public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
 
     public String getId() {
         return this.officeId.toString();
+    }
+
+    public Properties getAttr() {
+        Properties properties = new Properties();
+        properties.put("id", getId());
+        return properties;
     }
 
     public String getSearchId() {

@@ -140,8 +140,6 @@ public interface NamedQueryConstants {
     public String GET_ALL_CHILDREN_FOR_CUSTOMERLEVEL = "Customer.getAllChildrenForCustomerLevel";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN = "Customer.getActiveAndOnHoldChildren";
     public String GET_ACTIVE_AND_ONHOLD_CHILDREN_COUNT = "Customer.getActiveAndOnHoldChildrenCount";
-    public String GET_CHILDREN_FOR_PARENT = "Customer.getChildrenForParent";
-    public String GET_ALL_CUSTOMERS = "Customer.getAllCustomers";
     public String GET_CUSTOMER_COUNT_FOR_OFFICE = "Customer.getCustomerCountForOffice";
     public String GET_SEARCH_IDS_FOR_OFFICE = "Customer.getSearchIdsForOffice";
     public String GET_SQL_CUSTOMER_COUNT_FOR_OFFICE = "Customer.Sql.getCustomerCountForOffice";
@@ -221,7 +219,6 @@ public interface NamedQueryConstants {
     // To get customer account
     public String CUSTOMER_ACCOUNT_ACTIONS_DATE = "accounts.getCustomerAccountActionDates";
 
-    public String GET_LOAN_ACOUNTS_IN_ARREARS = "accounts.GetLoanArrears";
     public String GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING = "accounts.GetLoanArrearsInGoodStanding";
     public String GET_LATENESS_FOR_LOANS = "productdefenition.GetLatenessDaysForLoans";
     public String GET_DORMANCY_DAYS = "productdefenition.getDormancyDays";
@@ -235,13 +232,11 @@ public interface NamedQueryConstants {
     public String GET_ENTITY_MASTER = "getEntityMaster";
 
     public String CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS = "customerScheduleEntity.getScheduleForIds";
-    public String GET_UPDATED_CUSTOMER_MEETINGS = "getUpdatedMeetings";
     public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE = "accounts.countOfMissedDepositsPaidAfterDueDate";
     public String GET_CENTER_COUNT_BY_NAME = "Customer.getCenterCount";
     public String GET_GROUP_COUNT_BY_NAME = "Customer.getGroupCountByGroupNameAndOffice";
 
     // fee related m2
-    public String GET_UPDATED_FEES_FOR_CUSTOMERS = "getUpdatedFeesForCustomers";
     public String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
 
     // Seems not to be used by anything
@@ -393,7 +388,6 @@ public interface NamedQueryConstants {
     public String ACTIVE_CLIENTS_UNDER_GROUP = "Customer.getActiveClientsUnderGroup";
 
     // holiday handling
-    public String GET_HOLIDAYS = "holiday.getHolidays";
     public String GET_OFFICE_HOLIDAYS = "holiday.getOfficeHolidays";
     public String GET_ALL_HOLIDAYS = "holiday.getAll";
     public String GET_APPLICABLE_OFFICES_FOR_HOLIDAYS = "holiday.applicableOffices";
@@ -472,8 +466,6 @@ public interface NamedQueryConstants {
     public String EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_LOAN_AMOUNT_OUTSTANDING = "branchReport.extractLoanAmountOutstanding";
     public String EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_PAR = "branchReport.extractPortfolioAtRisk";
     public String EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR = "branchReport.extractPortfolioAtRiskForBranch";
-    public String EXTRACT_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY = "branchReport.extractStaffingLevelSummaryForBranch";
-    public String EXTRACT_BRANCH_REPORT_TOTAL_STAFFING_LEVEL_SUMMARY = "branchReport.extractTotalStaffingLevelSummaryForBranch";
     public String EXTRACT_BRANCH_REPORT_LOAN_DETAILS = "branchReport.extractLoanDetailsForBranch";
     public String EXTRACT_BRANCH_REPORT_LOANS_IN_ARREARS = "branchReport.extractLoansInArrearsForBranch";
     public String EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK = "branchReport.extractLoansAndOutstandingAmountsAtRiskForBranch";

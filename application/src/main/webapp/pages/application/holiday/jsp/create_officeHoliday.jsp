@@ -17,7 +17,7 @@ permissions and limitations under the License.
 See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 explanation of the license and how it is applied.
 --%>
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
@@ -27,9 +27,6 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-  <link rel="stylesheet" type="text/css" href="pages/framework/js/extjs/resources/css/ext-all.css">
-  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/Ext.ux.tree.CheckTreePanel.css">
-  <link rel="stylesheet" type="text/css" href="pages/framework/js/checktree/css/checktree.css">
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
         <span id="page.id" title="create_officeHoliday" />
@@ -48,17 +45,11 @@ explanation of the license and how it is applied.
 		//form.action="holidayAction.do?method=get";
 		//form.submit();
 	}
-	
-	function submitWithTreeValue(){
-		document.getElementById('selectedOfficeIds').value=office_hierarchy.getValue().join(',');
-		holidayActionForm.submit();
-	}
 </SCRIPT>
 	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-	  <script type="text/javascript" src="pages/framework/js/extjs/adapter/ext/ext-base.js"></script>
-	  <script type="text/javascript" src="pages/framework/js/extjs/ext-all.js"></script>
-	  <script type="text/javascript" src="pages/framework/js/checktree/js/Ext.ux.tree.CheckTreePanel.js"></script>
-  	  <script type="text/javascript" src="pages/application/holiday/js/officetree.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
+	  <script type="text/javascript" src="pages/framework/js/jstree/jquery.jstree.js"></script>
+  	  <script type="text/javascript" src="pages/application/holiday/js/createHolidays.js"></script>
 		<html-el:form method="post"
 			action="/holidayAction.do?method=preview"
 			onsubmit="return (validateMyForm(holidayFromDate,holidayFromDateFormat,holidayFromDateYY) &&
@@ -142,9 +133,8 @@ explanation of the license and how it is applied.
 								name="holiday.ApplicableOffices" mandatory="yes" isColonRequired="Yes" bundle="HolidayUIResources"/>
 							</td>
 							<td>
-								<div id="center-content" class="x-hidden">
-										<div id="officeTree"></div>							
-								</div>
+							    <div id="officeTree">
+							    </div>
 							</td>
 						</tr>
 					</table>
@@ -161,13 +151,13 @@ explanation of the license and how it is applied.
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) }"> <!--&& (holidayActionForm.amount == '0.0'||holidayActionForm.amount=='0')}"-->
 									<html-el:submit styleClass="buttn" styleId="holiday.button.preview"
-										property="Preview" onclick="submitWithTreeValue()"> 
+										property="Preview"> 
 										<mifos:mifoslabel name="holiday.button.preview" bundle="HolidayUIResources"><!--holiday.reviewtransaction"-->
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" styleId="holiday.button.preview" property="Preview" onclick="submitWithTreeValue()">
+									<html-el:submit styleClass="buttn" styleId="holiday.button.preview" property="Preview">
 										<mifos:mifoslabel name="holiday.reviewtransaction" bundle="HolidayUIResources">
 										</mifos:mifoslabel>
 									</html-el:submit>

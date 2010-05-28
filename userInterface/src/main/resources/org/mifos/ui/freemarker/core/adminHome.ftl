@@ -29,12 +29,6 @@
 					<li><a href="viewOffices.ftl" id="view.offices">[@spring.message "viewOffices" /]</a></li>
 					<li>[@spring.message "defineNewOffice" /]</li>
 					</ul>
-		
-				<h4>[@spring.message "systemInformation" /]</h4>
-				
-					<ul class="navigation-list">
-						<li><a href="appInfo.ftl" id="view.system.information">[@spring.message "viewSystemInformation" /]</a></li>
-					</ul>
 				
 			<h3>[@spring.message "manageProducts" /]</h3>
 	

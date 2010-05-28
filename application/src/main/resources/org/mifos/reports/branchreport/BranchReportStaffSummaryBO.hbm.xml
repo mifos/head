@@ -85,9 +85,9 @@ explanation of the license and how it is applied.
 	                    ifnull(count(acc.ACCOUNT_ID),0) as activeLoansCount
 	        			from customer c, customer_state cs, account acc, personnel p
 				        where c.BRANCH_ID=:officeId and c.CUSTOMER_LEVEL_ID=1
-					    and c.CUSTOMER_ID=acc.CUSTOMER_ID and acc.ACCOUNT_STATE_ID=5 
+					    and c.CUSTOMER_ID=acc.CUSTOMER_ID and (acc.ACCOUNT_STATE_ID=5 or  acc.ACCOUNT_STATE_ID=9) 
 				        and c.LOAN_OFFICER_ID=p.PERSONNEL_ID 
-	 			        and cs.STATUS_ID=c.STATUS_ID and cs.DESCRIPTION='Customer Was Active' 
+	 			        and cs.STATUS_ID=c.STATUS_ID and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 					    group by c.LOAN_OFFICER_ID) staff_summary
 			     	on personnel.PERSONNEL_ID=staff_summary.PERSONNELID, personnel_details
 				    where personnel.PERSONNEL_ID=personnel_details.PERSONNEL_ID
@@ -317,30 +317,30 @@ explanation of the license and how it is applied.
 	<sql-query name="branchReport.extractLoanArrearsAmountForPersonnel">
 		<return-scalar column="personnelId" type="short"/>	
 		<return-scalar column="loanArrearsAmount" type="big_decimal"/>	
-		<![CDATA[
+		<![CDATA[			
 			select 
 				c.loan_officer_id as personnelId, 
 				round(sum(laa.overdue_principal),2) as loanArrearsAmount 
 			from 
 				customer c, 
-				loan_arrears_aging laa 
-			left join
-			    account acc on acc.account_id=laa.account_id
-			where 
+				loan_arrears_aging laa,
+				customer_state cs,
+			    account acc
+			where 		   
+				acc.account_id=laa.account_id 
+			and
 			    acc.account_state_id in (9)
 			and
 				laa.customer_id = c.customer_id 
 			and 
 				c.loan_officer_id in (:personnelIdList) 
+			and
+				c.customer_level_id = 1
+		    and cs.status_id=c.status_id
+		    and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 			group by 
-				c.loan_officer_id
+				c.loan_officer_id				
 		]]>
 	</sql-query>	
-	<!--
-		select c.loan_officer_id as personnelId, round(sum(laa.overdue_balance),2) as loanArrearsAmount
-				from customer c, loan_arrears_aging laa
-				where laa.customer_id = c.customer_id
-				and c.loan_officer_id in (:personnelIdList)
-				group by c.loan_officer_id
-	-->
+
 </hibernate-mapping>

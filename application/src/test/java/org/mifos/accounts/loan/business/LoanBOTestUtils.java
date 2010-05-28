@@ -49,7 +49,6 @@ import org.mifos.accounts.productdefinition.util.helpers.GraceType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.holiday.util.helpers.HolidayUtilsIntegrationTest;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -371,10 +370,6 @@ public class LoanBOTestUtils {
         loan.setDisbursementDate(disbursementDate);
     }
 
-    /**
-     * FIXME: Only called from {@link HolidayUtilsIntegrationTest}. We should
-     * not have one test depending on another.
-     */
     public LoanScheduleEntity[] createLoanRepaymentSchedule() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         AccountBO accountBO = getLoanAccountWithMiscFeeAndPenalty(AccountState.LOAN_APPROVED, startDate, 3,

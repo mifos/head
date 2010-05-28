@@ -28,48 +28,41 @@ import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
 
-public class MifosSchedulerTest extends TestCase {
+public class MifosSchedulerTest {
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
+    @Test
     public void testRegisterTasks() throws Exception {
+
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/config/resources/task.xml");
+
         mifosScheduler.registerTasks();
         List<String> taskNames = mifosScheduler.getTaskNames();
-       Assert.assertEquals(12, taskNames.size());
-       Assert.assertTrue(taskNames.contains("ProductStatus"));
-        //Assert.assertTrue(taskNames.contains("CollectionSheetTask"));
-       Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
-       Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
-       Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
-       Assert.assertTrue(taskNames.contains("ApplyCustomerFeeTask"));
-       Assert.assertTrue(taskNames.contains("RegenerateScheduleTask"));
-       Assert.assertTrue(taskNames.contains("PortfolioAtRiskTask"));
-       Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
-       Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
-       Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));
-       Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
-        // no longer required issue 2881
-        // Assert.assertTrue(taskNames.contains("CollectionSheetReportParameterCachingTask"));
-       Assert.assertTrue(taskNames.contains("BranchReportTask"));
-        // Temporarily commented out as requested by issue 1881
-        //Assert.assertTrue(taskNames.contains("BranchCashConfirmationTask"));
+
+        Assert.assertTrue(taskNames.contains("ProductStatus"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
+        Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
+        Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
+        Assert.assertTrue(taskNames.contains("RegenerateScheduleTask"));
+        Assert.assertTrue(taskNames.contains("PortfolioAtRiskTask"));
+        Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
+        Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
+        Assert.assertTrue(taskNames.contains("LoanArrearsAgingTask"));
+        Assert.assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
+        Assert.assertTrue(taskNames.contains("BranchReportTask"));
     }
 
+    @Test
     public void testCallsConfigurationLocator() throws Exception {
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/mockTask.xml");
         mifosScheduler.registerTasks();
         List<String> taskNames = mifosScheduler.getTaskNames();
-       Assert.assertEquals(1, taskNames.size());
-       Assert.assertTrue(taskNames.contains("MockTask"));
+        Assert.assertEquals(1, taskNames.size());
+        Assert.assertTrue(taskNames.contains("MockTask"));
     }
 
     private MifosScheduler getMifosScheduler(String taskConfigurationPath) throws IOException {

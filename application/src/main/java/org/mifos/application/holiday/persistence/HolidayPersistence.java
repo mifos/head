@@ -20,11 +20,8 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
@@ -44,28 +41,6 @@ public class HolidayPersistence extends MasterPersistence {
 
     public HolidayBO getHoliday(final Integer holidayId) throws PersistenceException {
         return (HolidayBO) getPersistentObject(HolidayBO.class, holidayId);
-    }
-
-    /*
-     * we need a way to make this worx because our PK is the HolidayPK public
-     * HolidayBO getHoliday(HolidayPK holidayPK) throws PersistenceException {
-     * return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK); }
-     *
-     * Force a locale that works with pattern parsing.
-     */
-
-    @Deprecated
-    public List<HolidayBO> getHolidays(final int year) throws PersistenceException {
-        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd",new Locale("en","GB"));
-        isoDateFormat.setLenient(false);
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        try {
-            parameters.put("START_OF_YEAR", isoDateFormat.parse(year + "-01-01"));
-            parameters.put("END_OF_YEAR", isoDateFormat.parse(year + "-12-31"));
-        } catch (ParseException e) {
-            throw new PersistenceException(e);
-        }
-        return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
     }
 
     public List<HolidayBO> getUnAppliedHolidays() throws PersistenceException {

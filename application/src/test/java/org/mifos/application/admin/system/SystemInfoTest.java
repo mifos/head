@@ -45,7 +45,7 @@ public class SystemInfoTest extends TestCase {
         info = new SystemInfo(metaData, servletContext, Locale.US, false);
         info.setJavaVendor("Sun");
         info.setJavaVersion("1.5");
-        info.setSvnRevision(new MockSvnRevision());
+        info.setBuildInformation(new MockSvnRevision());
     }
 
     public void testApplicationDatabaseVersion() throws Exception {
@@ -82,13 +82,9 @@ public class SystemInfoTest extends TestCase {
        Assert.assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
     }
 
-    public void testGetSubversionRevision() throws Exception {
-       Assert.assertEquals("123456", info.getSvnRevision());
-    }
-
-    public void testGetSubversionRevisionFromMissingFile() throws Exception {
+    public void testGetVersionInfoFromMissingFile() throws Exception {
         try {
-            info.setSvnRevision(new SvnRevision("non-existant.file"));
+            info.setBuildInformation(new VersionInfo("non-existant.file"));
             Assert.fail("Expected RuntimeException.");
         } catch (RuntimeException e) {
             // expected
