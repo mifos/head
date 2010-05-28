@@ -19,9 +19,7 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
-        <buildNumber>FIXME</buildNumber>
-        <current.release.name>mifos-trunk_r${buildNumber}</current.release.name>
-
+        <current.release.name>mifos-v1.6.x-beta</current.release.name>
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
         <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
@@ -568,7 +566,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -982,6 +980,7 @@
                 </executions>
                 <configuration>
                     <finalName>${current.release.name}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/release.xml</descriptor>
                     </descriptors>

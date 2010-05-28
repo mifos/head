@@ -1072,7 +1072,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         }
         Iterator<AccountFeesEntity> itr = accountFeesEntitySet.iterator();
         while (itr.hasNext()) {
-            accountBO.removeFees(itr.next().getFees().getFeeId(), uc.getId());
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(itr.next().getFees().getFeeId(), uc.getId());
         }
 
         StaticHibernateUtil.getTransaction().commit();
@@ -1133,88 +1133,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
      *
      * Assert.fail(); } catch (AccountException e) {Assert.assertTrue(true); } }
      */
-
-    public void testHandleArrearsAging_Create() throws Exception {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        calendar.add(calendar.WEEK_OF_MONTH, -2);
-        java.sql.Date secondWeekDate = new java.sql.Date(calendar.getTimeInMillis());
-
-        accountBO = getLoanAccount();
-        for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
-            if (installment.getInstallmentId().intValue() == 1) {
-                ((LoanScheduleEntity) installment).setActionDate(secondWeekDate);
-            }
-        }
-        TestObjectFactory.updateObject(accountBO);
-        TestObjectFactory.flushandCloseSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        Assert.assertNull(((LoanBO) accountBO).getLoanArrearsAgingEntity());
-
-        ((LoanBO) accountBO).handleArrearsAging();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        LoanArrearsAgingEntity agingEntity = ((LoanBO) accountBO).getLoanArrearsAgingEntity();
-
-        Assert.assertNotNull(agingEntity);
-        Assert.assertEquals(new Money(getCurrency(), "100"), agingEntity.getOverduePrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "12"), agingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "112"), agingEntity.getOverdueBalance());
-        Assert.assertEquals(Short.valueOf("14"), agingEntity.getDaysInArrears());
-
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getPrincipalDue(), agingEntity.getUnpaidPrincipal());
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getInterestDue(), agingEntity.getUnpaidInterest());
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getPrincipalDue().add(
-                ((LoanBO) accountBO).getLoanSummary().getInterestDue()), agingEntity.getUnpaidBalance());
-
-        Assert.assertEquals(((LoanBO) accountBO).getTotalPrincipalAmountInArrears(), agingEntity.getOverduePrincipal());
-        Assert.assertEquals(((LoanBO) accountBO).getTotalInterestAmountInArrears(), agingEntity.getOverdueInterest());
-        Assert.assertEquals(((LoanBO) accountBO).getTotalPrincipalAmountInArrears().add(
-                ((LoanBO) accountBO).getTotalInterestAmountInArrears()), agingEntity.getOverdueBalance());
-    }
-
-    public void testHandleArrearsAging_Update() throws Exception {
-        testHandleArrearsAging_Create();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-        calendar.add(calendar.WEEK_OF_MONTH, -1);
-        java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());
-
-        for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
-            if (installment.getInstallmentId().intValue() == 2) {
-                ((LoanScheduleEntity) installment).setActionDate(lastWeekDate);
-            }
-        }
-        TestObjectFactory.updateObject(accountBO);
-        TestObjectFactory.flushandCloseSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-
-        Assert.assertNotNull(((LoanBO) accountBO).getLoanArrearsAgingEntity());
-
-        ((LoanBO) accountBO).handleArrearsAging();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        LoanArrearsAgingEntity agingEntity = ((LoanBO) accountBO).getLoanArrearsAgingEntity();
-
-        Assert.assertEquals(new Money(getCurrency(), "200"), agingEntity.getOverduePrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "24"), agingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "224"), agingEntity.getOverdueBalance());
-        Assert.assertEquals(Short.valueOf("14"), agingEntity.getDaysInArrears());
-
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getPrincipalDue(), agingEntity.getUnpaidPrincipal());
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getInterestDue(), agingEntity.getUnpaidInterest());
-        Assert.assertEquals(((LoanBO) accountBO).getLoanSummary().getPrincipalDue().add(
-                ((LoanBO) accountBO).getLoanSummary().getInterestDue()), agingEntity.getUnpaidBalance());
-
-        Assert.assertEquals(((LoanBO) accountBO).getTotalPrincipalAmountInArrears(), agingEntity.getOverduePrincipal());
-        Assert.assertEquals(((LoanBO) accountBO).getTotalInterestAmountInArrears(), agingEntity.getOverdueInterest());
-        Assert.assertEquals(((LoanBO) accountBO).getTotalPrincipalAmountInArrears().add(
-                ((LoanBO) accountBO).getTotalInterestAmountInArrears()), agingEntity.getOverdueBalance());
-    }
 
     public void testUpdateLoanForLogging() throws Exception {
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
@@ -4237,7 +4155,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-            accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
 
@@ -4307,7 +4225,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-            accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
+            accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
         }
         StaticHibernateUtil.commitTransaction();
         Map<String, String> fees0 = new HashMap<String, String>(0);

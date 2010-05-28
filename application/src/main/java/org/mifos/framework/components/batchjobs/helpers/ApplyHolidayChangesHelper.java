@@ -46,6 +46,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
@@ -201,8 +203,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             officeHolidays.retainAll(unappliedHolidays);
             if (!officeHolidays.isEmpty()) {
                 Short officeId = office.getOfficeId();
-                account.rescheduleDatesForNewHolidays(workingDays, getHolidayDao().findAllHolidaysThisYearAndNext(
-                        officeId), new ArrayList<Holiday>(officeHolidays));
+                List<Holiday> holidays = getHolidayDao().findAllHolidaysThisYearAndNext(officeId);
+                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+                account.rescheduleDatesForNewHolidays(dateGeneration, new ArrayList<Holiday>(officeHolidays));
             }
             houseKeeping();
 

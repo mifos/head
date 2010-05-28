@@ -103,7 +103,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateMM("09");
         params.setFromDateYYYY("2010");
         params.setRepaymentRule(CreateHolidaySubmitParameters.SAME_DAY);
-        params.setSelectedOfficeIds("1,2,3");
+        params.setSelectedOfficeIds("1");
 
         CreateHolidayConfirmationPage confirmHolidayPage = createHolidayPage.submitAndNavigateToHolidayConfirmationPage(params);
         confirmHolidayPage.verifyPage();
@@ -349,7 +349,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateMM("07");
         params.setFromDateYYYY("2009");
         params.setRepaymentRule(repaymentRule);
-        params.setSelectedOfficeIds("1,2,3");
+        params.setSelectedOfficeIds("1");
 
         createHoliday(params);
     }
@@ -363,7 +363,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setFromDateMM(month);
         params.setFromDateYYYY(year);
         params.setRepaymentRule(repaymentRule);
-        params.setSelectedOfficeIds("1,2,3");
+        params.setSelectedOfficeIds("1");
 
         createHoliday(params);
     }
@@ -379,7 +379,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         params.setThruDateMM("07");
         params.setThruDateYYYY("2009");
         params.setRepaymentRule(repaymentRule);
-        params.setSelectedOfficeIds("1,2,3");
+        params.setSelectedOfficeIds("1");
 
         createHoliday(params);
     }

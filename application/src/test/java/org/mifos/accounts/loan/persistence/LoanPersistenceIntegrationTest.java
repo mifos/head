@@ -106,43 +106,6 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testGetLoanAccountsInArrears() throws Exception {
-        Calendar currentDate = new GregorianCalendar();
-        Calendar twoDaysBack = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH),
-                currentDate.get(Calendar.DAY_OF_MONTH) - 2, 0, 0, 0);
-
-        for (AccountActionDateEntity accountAction : loanAccount.getAccountActionDates()) {
-            if (accountAction.getInstallmentId().equals(Short.valueOf("1"))) {
-                LoanBOTestUtils.setActionDate(accountAction, new Date(twoDaysBack.getTimeInMillis()));
-            }
-        }
-
-        TestObjectFactory.updateObject(loanAccount);
-        StaticHibernateUtil.closeSession();
-        loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
-
-        List<Integer> list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("1"));
-        Assert.assertEquals(1, list.size());
-
-        list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("2"));
-        Assert.assertEquals(1, list.size());
-        StaticHibernateUtil.closeSession();
-
-        LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list.get(0));
-        Assert
-                .assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING), testBO.getAccountState()
-                        .getId());
-        AccountActionDateEntity actionDate = testBO.getAccountActionDate(Short.valueOf("1"));
-        Assert.assertFalse(actionDate.isPaid());
-
-        StaticHibernateUtil.closeSession();
-        list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("3"));
-        Assert.assertEquals(0, list.size());
-
-        StaticHibernateUtil.closeSession();
-        loanAccount = TestObjectFactory.getObject(LoanBO.class, loanAccount.getAccountId());
-    }
-
     public void testFindBySystemId() throws Exception {
         LoanPersistence loanPersistance = new LoanPersistence();
         LoanBO loanBO = loanPersistance.findBySystemId(loanAccount.getGlobalAccountNum());

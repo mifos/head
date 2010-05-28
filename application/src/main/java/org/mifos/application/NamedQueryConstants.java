@@ -219,7 +219,6 @@ public interface NamedQueryConstants {
     // To get customer account
     public String CUSTOMER_ACCOUNT_ACTIONS_DATE = "accounts.getCustomerAccountActionDates";
 
-    public String GET_LOAN_ACOUNTS_IN_ARREARS = "accounts.GetLoanArrears";
     public String GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING = "accounts.GetLoanArrearsInGoodStanding";
     public String GET_LATENESS_FOR_LOANS = "productdefenition.GetLatenessDaysForLoans";
     public String GET_DORMANCY_DAYS = "productdefenition.getDormancyDays";
@@ -238,7 +237,6 @@ public interface NamedQueryConstants {
     public String GET_GROUP_COUNT_BY_NAME = "Customer.getGroupCountByGroupNameAndOffice";
 
     // fee related m2
-    public String GET_UPDATED_FEES_FOR_CUSTOMERS = "getUpdatedFeesForCustomers";
     public String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
 
     // Seems not to be used by anything

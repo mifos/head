@@ -137,26 +137,6 @@ public class LoanPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING, queryParameters);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Integer> getLoanAccountsInArrears(final Short latenessDays) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-
-        Calendar currentDate = new DateTimeService().getCurrentDateTime().toGregorianCalendar();
-        currentDate.add(Calendar.DAY_OF_MONTH, -latenessDays);
-
-        currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH),
-                currentDate.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-
-        queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOAN_ACCOUNT.getValue());
-        queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID.getValue()));
-        queryParameters.put("BADSTANDING", Short.valueOf(AccountStates.LOANACC_BADSTANDING));
-        queryParameters.put("LOANACTIVEINGOODSTAND", Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
-
-        queryParameters.put("CHECKDATE", currentDate.getTime());
-
-        return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS, queryParameters);
-    }
-
     public LoanBO getAccount(final Integer accountId) throws PersistenceException {
         return (LoanBO) getPersistentObject(LoanBO.class, accountId);
     }

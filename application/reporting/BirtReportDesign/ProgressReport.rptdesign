@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.20" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.5.1.v20090903 Build &lt;2.5.1.v20090917-1447></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 2.5.1.v20090903 Build &lt;2.5.1.v20090922-0630></property>
     <property name="units">in</property>
     <simple-property-list name="includeResource">
         <value>BirtReportResource/BranchReportResource</value>
@@ -1850,80 +1850,6 @@ return true;]]></method>
                                 </data>
                             </cell>
                         </row>
-                        <row id="95">
-                            <property name="height">0.3in</property>
-                            <cell id="96">
-                                <property name="style">fieldText</property>
-                                <label id="120">
-                                    <text-property name="text" key="branch.report.summary.dropouts"># Dropouts</text-property>
-                                </label>
-                            </cell>
-                            <cell id="97">
-                                <property name="style">valueText</property>
-                                <data id="130">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dropouts</property>
-                                            <expression name="expression">dataSetRow["dropouts"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dropouts</property>
-                                </data>
-                            </cell>
-                            <cell id="98">
-                                <property name="style">valueText</property>
-                                <data id="137">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dropouts_vpoor</property>
-                                            <expression name="expression">dataSetRow["dropouts_vpoor"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dropouts_vpoor</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="482">
-                            <property name="height">0.3in</property>
-                            <cell id="483">
-                                <property name="style">fieldText</property>
-                                <label id="486">
-                                    <text-property name="text" key="branch.report.summary.dropout.rate">Dropout Rate</text-property>
-                                </label>
-                            </cell>
-                            <cell id="484">
-                                <property name="style">valueText</property>
-                                <data id="487">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dropout_rate</property>
-                                            <expression name="expression">dataSetRow["dropout_rate"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dropout_rate</property>
-                                </data>
-                            </cell>
-                            <cell id="485">
-                                <property name="style">valueText</property>
-                                <data id="488">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dropout_rate_vpoor</property>
-                                            <expression name="expression">dataSetRow["dropout_rate_vpoor"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dropout_rate_vpoor</property>
-                                </data>
-                            </cell>
-                        </row>
                         <row id="99">
                             <property name="height">0.3in</property>
                             <cell id="100">
@@ -1958,117 +1884,6 @@ return true;]]></method>
                                         </structure>
                                     </list-property>
                                     <property name="resultSetColumn">onhold_vpoor</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="103">
-                            <property name="height">0.3in</property>
-                            <cell id="104">
-                                <property name="style">fieldText</property>
-                                <label id="122">
-                                    <text-property name="text" key="branch.report.summary.replacements"># Replacements</text-property>
-                                </label>
-                            </cell>
-                            <cell id="105">
-                                <property name="style">valueText</property>
-                                <data id="132">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">replacements</property>
-                                            <expression name="expression" type="javascript">dataSetRow["replacements"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">replacements</property>
-                                </data>
-                            </cell>
-                            <cell id="106">
-                                <property name="style">valueText</property>
-                                <data id="139">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">replacements_vpoor</property>
-                                            <expression name="expression">dataSetRow["replacements_vpoor"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">replacements_vpoor</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="107">
-                            <property name="height">0.3in</property>
-                            <cell id="108">
-                                <property name="style">fieldText</property>
-                                <label id="123">
-                                    <text-property name="text" key="branch.report.summary.loan.dormants"># Dormants with Loan Accounts</text-property>
-                                </label>
-                            </cell>
-                            <cell id="109">
-                                <property name="style">valueText</property>
-                                <data id="133">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dormant</property>
-                                            <expression name="expression" type="javascript">dataSetRow["dormant_loan_accounts"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dormant</property>
-                                </data>
-                            </cell>
-                            <cell id="110">
-                                <property name="style">valueText</property>
-                                <data id="140">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dormant_vpor</property>
-                                            <expression name="expression" type="javascript">dataSetRow["dormant_vpoor_loan_accounts"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dormant_vpor</property>
-                                </data>
-                            </cell>
-                        </row>
-                        <row id="318">
-                            <property name="height">0.3in</property>
-                            <cell id="319">
-                                <property name="style">fieldText</property>
-                                <label id="322">
-                                    <text-property name="text" key="branch.report.summary.savings.dormant"># Dormants with Savings Accounts</text-property>
-                                </label>
-                            </cell>
-                            <cell id="320">
-                                <property name="style">valueText</property>
-                                <data id="323">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dormant_savings_accounts</property>
-                                            <expression name="expression">dataSetRow["dormant_savings_accounts"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dormant_savings_accounts</property>
-                                </data>
-                            </cell>
-                            <cell id="321">
-                                <property name="style">valueText</property>
-                                <data id="324">
-                                    <property name="dataSet">BranchSummary</property>
-                                    <list-property name="boundDataColumns">
-                                        <structure>
-                                            <property name="name">dormant_vpoor_savings_accounts</property>
-                                            <expression name="expression">dataSetRow["dormant_vpoor_savings_accounts"]</expression>
-                                            <property name="dataType">string</property>
-                                        </structure>
-                                    </list-property>
-                                    <property name="resultSetColumn">dormant_vpoor_savings_accounts</property>
                                 </data>
                             </cell>
                         </row>

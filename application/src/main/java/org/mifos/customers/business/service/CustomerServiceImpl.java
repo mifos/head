@@ -48,7 +48,6 @@ import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
@@ -597,7 +596,9 @@ public class CustomerServiceImpl implements CustomerService {
             if (group.isActiveForFirstTime(oldStatus.getValue(), newStatus.getValue())) {
                 group.setCustomerActivationDate(new DateTime().toDate());
                 group.updateCustomerHierarchy();
-                group.regenerateCustomerFeeSchedule();
+
+                CalendarEvent applicableCalendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
+                group.regenerateCustomerFeeSchedule(applicableCalendarEvents);
             }
 
             Set<CustomerBO> groupChildren = group.getChildren();
@@ -744,18 +745,16 @@ public class CustomerServiceImpl implements CustomerService {
             ClientBO client = (ClientBO) customer;
 
             if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
-                try {
-                    if (client.getParentCustomer() != null) {
-                        CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, client.getParentCustomer());
-                        client.addCustomerHierarchy(hierarchy);
-                    }
-
-                    client.getCustomerAccount().generateCustomerFeeSchedule();
-                } catch (AccountException ae1) {
-                    throw new CustomerException(ae1);
+                if (client.getParentCustomer() != null) {
+                    CustomerHierarchyEntity hierarchy = new CustomerHierarchyEntity(client, client.getParentCustomer());
+                    client.addCustomerHierarchy(hierarchy);
                 }
-            }
-            if (client.isActiveForFirstTime(oldStatusId, newStatusId)) {
+
+                CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
+
+                List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
                 if (client.getOfferingsAssociatedInCreate() != null) {
@@ -786,10 +785,6 @@ public class CustomerServiceImpl implements CustomerService {
 
                 new SavingsPersistence().persistSavingAccounts(client);
 
-                List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-                List<Holiday> holidays = DependencyInjectedServiceLocator.locateHolidayDao()
-                        .findAllHolidaysThisYearAndNext(customer.getOfficeId());
-
                 try {
                     if (client.getParentCustomer() != null) {
                         List<SavingsBO> savingsList = new CustomerPersistence()
@@ -808,7 +803,7 @@ public class CustomerServiceImpl implements CustomerService {
                                                 RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 
                                     savings.generateDepositAccountActions(client, client.getCustomerMeeting()
-                                            .getMeeting(), workingDays, holidays);
+                                            .getMeeting(), applicableCalendarEvents.getWorkingDays(), applicableCalendarEvents.getHolidays());
 
                                     savings.update();
                                 }

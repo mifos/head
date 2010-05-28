@@ -42,4 +42,46 @@
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" cascade="none" update="true" insert="true" unique="true" access="field" />
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 	</class>
+	
+	<sql-query name="deleteAllLoanArrearsAging">
+		<![CDATA[
+		   	delete from loan_arrears_aging
+		]]>
+	</sql-query>
+	<sql-query name="generateLoanArrearsAging">
+		<![CDATA[
+				insert into LOAN_ARREARS_AGING(ACCOUNT_ID, CUSTOMER_ID, CUSTOMER_NAME, PARENT_CUSTOMER_ID, OFFICE_ID,
+  				DAYS_IN_ARREARS, OVERDUE_PRINCIPAL, OVERDUE_PRINCIPAL_CURRENCY_ID, OVERDUE_INTEREST, OVERDUE_INTEREST_CURRENCY_ID,
+  				OVERDUE_BALANCE, OVERDUE_BALANCE_CURRENCY_ID,  UNPAID_PRINCIPAL,  UNPAID_PRINCIPAL_CURRENCY_ID, UNPAID_INTEREST,
+  				UNPAID_INTEREST_CURRENCY_ID, UNPAID_BALANCE, UNPAID_BALANCE_CURRENCY_ID)
+  
+				/*all currency_id s must be the same, so just using one*/
+				select a.account_id, c.customer_id, c.display_name as customer_name, c.parent_customer_id, c.branch_id as office_id,
+
+				(to_days(:CURRENT_DATE) - to_days(min(ls.action_date))) as days_in_arrears,
+
+				sum(ls.principal - ls.principal_paid) as overdue_principal,
+				lsum.orig_principal_currency_id as overdue_principal_currency_id,
+				sum(ls.interest - ls.interest_paid) as overdue_interest,
+				lsum.orig_principal_currency_id as overdue_interest_currency_id,
+				sum((ls.principal - ls.principal_paid) + (ls.interest - ls.interest_paid)) as overdue_balance,
+				lsum.orig_principal_currency_id as overdue_balance_currency_id,
+
+				(lsum.orig_principal - lsum.principal_paid) as unpaid_principal,
+				lsum.orig_principal_currency_id as unpaid_principal_currency_id,
+				(lsum.orig_interest - ifnull(lsum.interest_paid, 0.0000)) as unpaid_interest,
+				lsum.orig_principal_currency_id as unpaid_interest_currency_id,
+				((lsum.orig_principal - lsum.principal_paid) +  (lsum.orig_interest - lsum.interest_paid)) as unpaid_balance,
+				lsum.orig_principal_currency_id as unpaid_balance_currency_id
+
+				from account a
+				join customer c on a.customer_id = c.customer_id
+				join loan_summary lsum on lsum.account_id = a.account_id
+				join loan_schedule ls on ls.account_id = a.account_id and ls.action_date < :CURRENT_DATE and ls.payment_status = 0
+
+				where a.account_state_id = 9
+				group by a.account_id
+				order by a.account_id
+		]]>
+	</sql-query>
 </hibernate-mapping>

@@ -847,6 +847,16 @@ public class AccountBO extends AbstractBusinessObject {
         return pastActionDateList;
     }
 
+    public List<AccountActionDateEntity> getFutureInstallments() {
+        List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+            if (accountActionDateEntity.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+                futureActionDateList.add(accountActionDateEntity);
+            }
+        }
+        return futureActionDateList;
+    }
+
     public List<AccountActionDateEntity> getAllInstallments() {
         List<AccountActionDateEntity> actionDateList = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
@@ -1501,7 +1511,7 @@ public class AccountBO extends AbstractBusinessObject {
         return false;
     }
 
-    public void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
     }
 
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
@@ -1517,11 +1527,10 @@ public class AccountBO extends AbstractBusinessObject {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
         AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
-        if (accountActionDateEntity != null
-                && !DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp())) {
+        if (accountActionDateEntity != null) {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
+
         return installmentIdList;
     }
 
@@ -1587,19 +1596,13 @@ public class AccountBO extends AbstractBusinessObject {
      *
      * <p> If no dates fall in any of the unapplied holidays, then do nothing.</p>
      *
-     * @param workingDays the days of the week that scheduled dates must occur in
-     * @param thisAndNextYearsHolidays upcoming holidays to schedule around.
      * @param unappliedHolidays the holidays that have not yet been applied to this account's schedule
      */
-    public void rescheduleDatesForNewHolidays (List<Days> workingDays, List<Holiday> thisAndNextYearsHolidays,
-            List<Holiday> unappliedHolidays) {
+    public void rescheduleDatesForNewHolidays (final ScheduledDateGeneration scheduledDateGeneration, List<Holiday> unappliedHolidays) {
 
         int firstInstallmentInUnappliedHolidays = getFirstFutureInstallmentInOneOfTheHolidays(unappliedHolidays);
         if (firstInstallmentInUnappliedHolidays > 0) {
-            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith
-                        (workingDays,
-                         thisAndNextYearsHolidays,
-                         firstInstallmentInUnappliedHolidays);
+            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith(scheduledDateGeneration, firstInstallmentInUnappliedHolidays);
             replaceActionDates (installmentDates, firstInstallmentInUnappliedHolidays);
         }
     }
@@ -1616,15 +1619,11 @@ public class AccountBO extends AbstractBusinessObject {
         return 0;
     }
 
-    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith (List<Days> workingDays, List<Holiday> holidays,
-            int startingInstallmentId) {
+    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith (final ScheduledDateGeneration dateGeneration, int startingInstallmentId) {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getMeetingForAccount());
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
         int numberOfDatesToGenerate = this.getAccountActionDates().size() - startingInstallmentId + 1;
-        DateTime dayBeforeFirstDateToGenerate
-            = new DateTime(this.getAccountActionDate((short) startingInstallmentId).getActionDate()).minusDays(1);
+        DateTime dayBeforeFirstDateToGenerate = new DateTime(this.getAccountActionDate((short) startingInstallmentId).getActionDate()).minusDays(1);
         return dateGeneration.generateScheduledDates(numberOfDatesToGenerate,
                                                      dayBeforeFirstDateToGenerate,
                                                      scheduledEvent);
