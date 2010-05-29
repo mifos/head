@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.struts.action;
 
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,15 +33,22 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.application.master.business.PaymentTypeDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -68,8 +76,15 @@ public class LoanDisbursementAction extends BaseAction {
 
     private LoanBusinessService loanBusinessService = null;
     private final ProductMixValidator productMixValidator;
+    private AccountService accountService = null;
+
+    public AccountService getAccountService() {
+        return accountService;
+    }
 
     LoanDisbursementAction(final LoanBusinessService service, final ProductMixValidator validator) {
+        accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
+                new AcceptedPaymentTypePersistence());
         this.loanBusinessService = service;
         this.productMixValidator = validator;
     }
@@ -190,8 +205,34 @@ public class LoanDisbursementAction extends BaseAction {
         Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH.getValue() : Short
                 .valueOf(modeOfPayment);
         try {
+            // old way
             loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short.valueOf(actionForm.getPaymentTypeId()),
                     personnel, receiptDate, modeOfPaymentId);
+
+            // new way START
+
+            // API does not support both receiptDate and trxnDate, so I'm calling
+            // loan.disburseLoan(AccountPaymentEntity) instead
+
+            // FIXME: paymentTypeId (AccountApplyPaymentAction has getLoanPaymentTypeDtoForId...)
+            final AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, loan.getLoanAmount(),
+                    actionForm.getReceiptId(), receiptDate, paymentTypeId, trxnDate);
+            loan.disburseLoan(disbursalPayment);
+
+            // new way END
+
+
+            // TODO: use API for disbursing loans?
+
+            // 1. validate?
+
+            // 2. disburse
+
+            // List<AccountPaymentParametersDto> payment = new ArrayList<AccountPaymentParametersDto>();
+            // PaymentTypeDto paymentTypeDto = getLoanPaymentTypeDtoForId( like AccountApplyPaymentAction ?
+            // payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), loan.getAccountId(),
+            // loan.getLoanAmount(), paymentDate, , ""));
+            // getAccountService().disburseLoans(payment);
 
         } catch (Exception e) {
             if (e.getMessage().startsWith("errors.")) {
