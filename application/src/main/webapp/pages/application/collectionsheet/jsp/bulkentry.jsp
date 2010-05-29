@@ -300,14 +300,7 @@ explanation of the license and how it is applied.
 												:
 											</td>
 											<td>
-												<c:choose>
-													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')==Constants.NO}">
-														<date:datetag property="transactionDate" isDisabled="Yes" renderstyle="simple"/>
-													</c:when>
-													<c:otherwise>
-														<date:datetag property="transactionDate" renderstyle="simple"/>
-													</c:otherwise>
-												</c:choose>
+                                                <date:datetag property="transactionDate" isDisabled="Yes" renderstyle="simple"/>
 											</td>
 										</tr>
 										<tr class="fontnormal">
