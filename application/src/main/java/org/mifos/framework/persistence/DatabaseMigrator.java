@@ -20,8 +20,6 @@
 
 package org.mifos.framework.persistence;
 
-import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -36,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Session;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -56,24 +53,24 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 public class DatabaseMigrator {
 
-    private List<Integer> appliedUpgrades;
+
 
     private Map<Integer, String> getAvailableUpgrades() throws IOException {
         Reader reader = null;
         BufferedReader bufferedReader = null;
         Map<Integer, String> upgrades = new HashMap<Integer, String>();
         try {
-            reader = ClasspathResource.getInstance("/sql").getAsReader("upgrades.txt");
+            reader = ClasspathResource.getInstance("/sql/").getAsReader("upgrades-non-sequential-checkpoint.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {
                 String line = bufferedReader.readLine();
-                String upgradeType = line.substring(0, line.indexOf(":"));
-                Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(":")));
+                String upgradeType = line.substring(0, line.indexOf(':'));
+                Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(':')+1));
                 upgrades.put(upgradeId, upgradeType);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
         } finally {
             if (reader != null) {
@@ -87,12 +84,12 @@ public class DatabaseMigrator {
         return upgrades;
     }
 
-    public void checkUnAppliedUpgradesAndUpgrade() throws IOException, SQLException {
+    public void checkUnAppliedUpgradesAndUpgrade() throws IOException, SQLException  {
         Map<Integer, String> availableUpgrades = getAvailableUpgrades();
-        appliedUpgrades = getAppliedUpgrades();
+        List<Integer> appliedUpgrades = getAppliedUpgrades();
 
         for (int i : availableUpgrades.keySet()) {
-            if (appliedUpgrades.contains(i) == false) {
+            if (!appliedUpgrades.contains(i)) {
                 applyUpgrade(i, availableUpgrades.get(i));
             }
         }
@@ -100,10 +97,11 @@ public class DatabaseMigrator {
 
     private void applyUpgrade(int upgradeNumber, String type) throws IOException, SQLException {
 
-        // run sql script
-        Connection connection = null;
-        if (type.equals("sql")) {
+        Connection  connection = null;
+
+        if ("sql".equals(type)) {
             try {
+                connection = TestDatabase.getJDBCConnection();
                 DatabaseSetup.executeScript(upgradeNumber + ".sql", connection);
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -111,11 +109,13 @@ public class DatabaseMigrator {
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            } catch (Exception e){
+
             }
 
         }
 
-        if (type.equals("java")) {
+        if ("java".equals(type)) {
             String className = "org.mifos.application.master.persistence.Upgrade" + upgradeNumber;
 
                 Upgrade upgrade = getInstanceOfUpgradeClass(className);
@@ -157,16 +157,22 @@ public class DatabaseMigrator {
             return upgrade;
     }
 
-    private List<Integer> getAppliedUpgrades() {
+    private List<Integer> getAppliedUpgrades()   {
 
         // TODO convert query to HQL
         StaticHibernateUtil.initialize();
 
-        Session session = StaticHibernateUtil.getSessionFactory().openSession();
-        Connection connection = session.connection();
+
+        Connection connection = null ;
+        try {
+            connection = TestDatabase.getJDBCConnection();
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
         List<Integer> appliedUpgrades = new ArrayList<Integer>();
 
-        Statement stmt;
+        Statement stmt = null;
         try {
             stmt = connection.createStatement(ResultSet.FETCH_FORWARD, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = stmt.executeQuery("SELECT UPGRADE_ID FROM APPLIED_UPGRADES");
@@ -174,6 +180,10 @@ public class DatabaseMigrator {
             if (rs.next()) {
                 appliedUpgrades.add(rs.getInt(0));
             }
+
+            rs.close();
+
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

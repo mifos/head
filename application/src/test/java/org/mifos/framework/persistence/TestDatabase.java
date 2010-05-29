@@ -170,7 +170,7 @@ public class TestDatabase {
     /**
      * Foreign key disabled connection
      */
-    private static Connection getJDBCConnection() throws Exception {
+    public static Connection getJDBCConnection() throws Exception {
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String url = databaseSettings.getProperty("hibernate.connection.url");
         final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";

@@ -20,14 +20,12 @@
 
 package org.mifos.framework.persistence;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -40,14 +38,14 @@ public class DatabaseMigratorIntegrationTest {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        StaticHibernateUtil.initialize();
-        connection = StaticHibernateUtil.getSessionTL().connection();
+        connection = TestDatabase.getJDBCConnection();
         connection.setAutoCommit(false);
+        databaseMigrator = new DatabaseMigrator();
     }
 
     @AfterClass
     public void afterClass() throws Exception {
-        StaticHibernateUtil.flushAndCloseSession();
+        connection.close();
     }
 
     /**
@@ -62,6 +60,8 @@ public class DatabaseMigratorIntegrationTest {
 
         loadNonSeqDatabaseSchema();
 
+        connection.createStatement().execute("drop table  if exists foo");
+
         databaseMigrator.checkUnAppliedUpgradesAndUpgrade();
         IDataSet dump = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(latestDump, dump);
@@ -71,8 +71,9 @@ public class DatabaseMigratorIntegrationTest {
     }
 
     private void createFooTable(Connection connection) throws SQLException {
+        connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("CREATE TABLE FOO ( "+
-                "FOO_ID INTEGER AUTO INCREMENTNOT NULL,"+
+                "FOO_ID INTEGER,"+
                 "Description VARCHAR(25),"+
                 "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
 
@@ -80,12 +81,13 @@ public class DatabaseMigratorIntegrationTest {
         connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
 
         connection.createStatement().execute("INSERT INTO FOO VALUES(2, 'BAZ')");
+        connection.commit();
     }
 
-    private void loadNonSeqDatabaseSchema() throws SQLException, IOException {
-        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+    private void loadNonSeqDatabaseSchema() throws Exception {
+        DatabaseSetup.executeScript("mifosdroptables-non-seq.sql", connection);
         DatabaseSetup.executeScript("latest-schema-non-sequential.sql", connection);
-
+        connection.commit();
     }
 
     @Test
