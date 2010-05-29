@@ -67,7 +67,7 @@ explanation of the license and how it is applied.
 					form.submit();
 				}
 				else if(document.getElementsByName("loanOfficerId")[0].selectedIndex==0) {
-					form.method.value="load";
+					form.method.value="loadLoanOfficers";
 					form.action="collectionsheetaction.do";
 					form.submit();
 				}
