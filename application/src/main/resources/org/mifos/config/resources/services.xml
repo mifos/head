@@ -29,6 +29,10 @@
     	<constructor-arg ref="customerDao" />
     </bean>
     
+    <bean id="meetingServiceFacade" class="org.mifos.application.servicefacade.MeetingServiceFacadeWebTier" >
+    	<constructor-arg ref="customerService" />
+    </bean>
+    
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
     
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" >

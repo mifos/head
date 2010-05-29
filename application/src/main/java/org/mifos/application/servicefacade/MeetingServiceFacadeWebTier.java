@@ -20,57 +20,21 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.Date;
-
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.business.service.CustomerService;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 
 public class MeetingServiceFacadeWebTier implements MeetingServiceFacade {
 
-    private final CustomerDao customerDao;
+    private final CustomerService customerService;
 
-    public MeetingServiceFacadeWebTier(CustomerDao customerDao) {
-        this.customerDao = customerDao;
+    public MeetingServiceFacadeWebTier(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @Override
     public void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest, UserContext userContext) throws ApplicationException {
-        CustomerBO customer = customerDao.findCustomerById(meetingUpdateRequest.getCustomerId());
 
-        if (customer.getPersonnel() != null) {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(),
-                    customer.getPersonnel().getPersonnelId());
-        } else {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(), userContext.getId());
-        }
-
-        try {
-            MeetingBO meeting = createMeeting(meetingUpdateRequest);
-            customer.updateMeeting(meeting);
-        } catch (MeetingException e) {
-            throw new MifosRuntimeException(e);
-        }
-    }
-
-    private MeetingBO createMeeting(MeetingUpdateRequest form) throws MeetingException {
-        MeetingBO meeting = null;
-        Date startDate = new DateTimeService().getCurrentJavaDateTime();
-        if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
-            meeting = new MeetingBO(form.getWeekDay(), form.getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
-        } else if (form.getRecurrenceType().equals(RecurrenceType.MONTHLY) && form.getDayOfMonth() != null) {
-            meeting = new MeetingBO(form.getDayOfMonth(), form.getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
-        } else {
-            meeting = new MeetingBO(form.getMonthWeek(), form.getRankOfDay(), form.getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
-        }
-        return meeting;
+        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
     }
 }
