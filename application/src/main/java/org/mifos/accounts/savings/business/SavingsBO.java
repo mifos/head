@@ -1318,6 +1318,13 @@ public class SavingsBO extends AccountBO {
                 }
             }
             return lastTrxn;
+        } else if (accountAction.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
+            for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
+                if (trxn.getAccountActionEntity().getId().equals(
+                        AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
+                    return (SavingsTrxnDetailEntity) trxn;
+                }
+            }
         }
         return null;
     }

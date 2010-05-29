@@ -128,10 +128,8 @@ public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest {
 
         // pre-verification
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
-
-        Set<AccountActionDateEntity> customerSchedules = center.getCustomerAccount().getAccountActionDates();
-        assertThat(customerSchedules.size(), is(10));
-        assertThatEachScheduleHasFeesDueOf(customerSchedules, 100.0);
+        assertThat(center.getCustomerAccount().getAccountActionDates().size(), is(10));
+        assertThatEachScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 100.0);
 
         // exercise test
         generateMeetingsForCustomerAndSavingsHelper.execute(timeInMillis);
@@ -139,7 +137,7 @@ public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest {
         // verification
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
         assertThat(center.getCustomerAccount().getAccountActionDates().size(), is(20));
-        assertThatEachScheduleHasFeesDueOf(customerSchedules, 100.0);
+        assertThatEachScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 100.0);
     }
 
     private void assertThatEachScheduleHasFeesDueOf(Set<AccountActionDateEntity> customerSchedules, double feesDue) {

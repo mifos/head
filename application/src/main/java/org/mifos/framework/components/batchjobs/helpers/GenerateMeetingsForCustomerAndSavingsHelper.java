@@ -30,6 +30,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -40,6 +41,8 @@ import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
@@ -75,8 +78,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         Integer currentAccountId = null;
         int updatedRecordCount = 0;
 
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-
         try {
             StaticHibernateUtil.getSessionTL();
             StaticHibernateUtil.startTransaction();
@@ -85,13 +86,15 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 currentRecordNumber++;
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
-                List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(accountBO.getOffice().getOfficeId());
+
+                CalendarEvent calendarEvent = holidayDao.findCalendarEventsForThisYearAndNext(accountBO.getOffice().getOfficeId());
+                ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvent.getWorkingDays(), calendarEvent.getHolidays());
 
                 if (accountBO instanceof CustomerAccountBO) {
-                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
+                    ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(scheduleGenerationStrategy);
                     updatedRecordCount++;
                 } else if (accountBO instanceof SavingsBO) {
-                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates(workingDays, orderedUpcomingHolidays);
+                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates(calendarEvent.getWorkingDays(), calendarEvent.getHolidays());
                     updatedRecordCount++;
                 }
 

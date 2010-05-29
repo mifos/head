@@ -358,16 +358,7 @@
 		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
 			where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
 	</query>
-	<!--    -->
-	<query name="accounts.GetLoanArrears">
-		<![CDATA[select account.accountId from org.mifos.accounts.loan.business.LoanBO account
-			join  account.accountActionDates as actiondate
-			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
-			and account.accountState.id in (:LOANACTIVEINGOODSTAND,:BADSTANDING)
-			and actiondate.actionDate <= date(:CHECKDATE)
-			and actiondate.paymentStatus=:PAYMENTSTATUS 
-			group by account.accountId]]>
-	</query>
+	
 	<query name="accounts.retrieveSavingsAccountsIntCalc">
 		<![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
 			where  savings.nextIntCalcDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>

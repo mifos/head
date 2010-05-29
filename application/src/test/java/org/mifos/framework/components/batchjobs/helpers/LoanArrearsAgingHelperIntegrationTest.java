@@ -30,6 +30,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.hibernate.Query;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -38,6 +39,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -67,6 +69,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     private LoanArrearsAgingHelper loanArrearsAgingHelper;
+    private LoanArrearsHelper loanArrearHelper;
 
     private CustomerBO center;
 
@@ -76,7 +79,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     private DateTime dateTime;
 
-    private final long dummy = 0;  // used for calling execute metohod
+    private final long dummy = 0; // used for calling execute metohod
 
     private final int loanAmount = 100;
     private final double interestRate = 100.0;
@@ -91,6 +94,15 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     protected void setUp() throws Exception {
         super.setUp();
         StaticHibernateUtil.getSessionTL().clear();
+        /*
+         * Takes lateness days out of the equation so that the LoanArrearsTask will set all overdue account into bad
+         * standing.
+         *
+         * Resetting the database in tear down puts the original value back for other tests
+         */
+        setLatenessDaysToZero();
+        LoanArrearsTask arrearsTask = new LoanArrearsTask();
+        loanArrearHelper = (LoanArrearsHelper) arrearsTask.getTaskHelper();
         LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
         loanArrearsAgingHelper = (LoanArrearsAgingHelper) loanArrearsAgingTask.getTaskHelper();
         dateTime = initializeToFixedDateTime();
@@ -103,6 +115,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         TestDatabase.resetMySQLDatabase();
 
         loanArrearsAgingHelper = null;
+        loanArrearHelper = null;
         StaticHibernateUtil.closeSession();
         super.tearDown();
     }
@@ -111,10 +124,12 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Date startDate = dateTime.toDate();
         meeting = getNewMeeting(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY, startDate);
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
+                CustomerStatus.GROUP_ACTIVE, center);
 
         LoanOfferingBO product = TestObjectFactory.createLoanOffering("LoanProduct", "LP", startDate, meeting);
-        LoanBO loan = createBasicLoanAccount(group, accountState, product, ""+loanAmount, numInstallments, interestRate);
+        LoanBO loan = createBasicLoanAccount(group, accountState, product, "" + loanAmount, numInstallments,
+                interestRate);
         try {
             loan.save();
         } catch (AccountException e) {
@@ -125,11 +140,11 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     /*
-     * This is a method taken from TestObjectFactory and modified to make it configurable.  This could be pushed back up
+     * This is a method taken from TestObjectFactory and modified to make it configurable. This could be pushed back up
      * to TestObjectFactory or better yet converted to a builder pattern.
      */
-    private LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state, final LoanOfferingBO loanOffering,
-            String loan_amount, short numInstallments, double interestRate) {
+    private LoanBO createBasicLoanAccount(final CustomerBO customer, final AccountState state,
+            final LoanOfferingBO loanOffering, String loan_amount, short numInstallments, double interestRate) {
         LoanBO loan;
         LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
         UserContext userContext = TestUtils.makeUser();
@@ -139,10 +154,11 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(customer.getOfficeId(), meeting, numInstallments);
 
         try {
-            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.RUPEE, loan_amount),
-                    numInstallments, meetingDates.get(0), false, interestRate, (short) 0, null, feeViewList, null,
-                    Double.valueOf(loan_amount), Double.valueOf(loan_amount), eligibleInstallmentRange.getMaxNoOfInstall(),
-                    eligibleInstallmentRange.getMinNoOfInstall(), false, null);
+            loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering, customer, state, new Money(TestUtils.RUPEE,
+                    loan_amount), numInstallments, meetingDates.get(0), false, interestRate, (short) 0, null,
+                    feeViewList, null, Double.valueOf(loan_amount), Double.valueOf(loan_amount),
+                    eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), false,
+                    null);
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
         }
@@ -151,11 +167,11 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     /*
-     * This is a method taken from TestObjectFactory and modified to make it configurable.  This could be pushed back up
+     * This is a method taken from TestObjectFactory and modified to make it configurable. This could be pushed back up
      * to TestObjectFactory or better yet converted to a builder pattern.
      */
-    private MeetingBO getNewMeeting(final RecurrenceType frequency, final short recurAfter, final MeetingType meetingType,
-            final WeekDay weekday, Date theDate) {
+    private MeetingBO getNewMeeting(final RecurrenceType frequency, final short recurAfter,
+            final MeetingType meetingType, final WeekDay weekday, Date theDate) {
         MeetingBO meeting;
         try {
             meeting = new MeetingBO(frequency, recurAfter, theDate, meetingType);
@@ -168,12 +184,11 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     private DateTime initializeToFixedDateTime() {
-        DateTime dateTime = new DateTime(2009,12,7,0,0,0,0);
+        DateTime dateTime = new DateTime(2009, 12, 7, 0, 0, 0, 0);
         DateTimeService dateTimeService = new DateTimeService();
         dateTimeService.setCurrentDateTimeFixed(dateTime);
         return dateTime;
     }
-
 
     public void testThatLoanInPendingApprovalStateDoesNotGenerateArrearsData() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_PENDING_APPROVAL);
@@ -187,18 +202,20 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Assert.assertNotNull(ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan));
     }
 
-    private LoanArrearsAgingEntity ageLoanTenDaysAndGetLoanArrearsAgingEntity(LoanBO loan) throws BatchJobException, PersistenceException {
+    private LoanArrearsAgingEntity ageLoanTenDaysAndGetLoanArrearsAgingEntity(LoanBO loan) throws BatchJobException,
+            PersistenceException {
         int daysOverdue = 3;
 
         return ageLoanAndGetLoanArrearsAgingEntity(loan, repaymentInterval + daysOverdue);
     }
 
-    private LoanArrearsAgingEntity ageLoanAndGetLoanArrearsAgingEntity(LoanBO loan, int daysToAgeLoan) throws BatchJobException, PersistenceException {
+    private LoanArrearsAgingEntity ageLoanAndGetLoanArrearsAgingEntity(LoanBO loan, int daysToAgeLoan)
+            throws BatchJobException, PersistenceException {
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
 
         new DateTimeService().setCurrentDateTimeFixed(dateTime.plusDays(daysToAgeLoan));
 
-        loanArrearsAgingHelper.execute(dummy);
+        runLoanArrearsThenLoanArrearsAging();
 
         LoanBO reloadedLoan = new LoanPersistence().getAccount(loan.getAccountId());
 
@@ -209,15 +226,18 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     // advance the date by ten days, run the batch job
     // one weeks payment should be in arrears
     public void testLoanWithOneOverduePayment() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         LoanArrearsAgingEntity loanArrearsAgingEntity = ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan);
 
         Assert.assertEquals(new Money(getCurrency(), "" + loanAmount), loanArrearsAgingEntity.getUnpaidPrincipal());
         Assert.assertEquals(new Money(getCurrency(), "" + totalInterest), loanArrearsAgingEntity.getUnpaidInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + principalForOneInstallment), loanArrearsAgingEntity.getOverduePrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "" + interestForOneInstallment), loanArrearsAgingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment + interestForOneInstallment)), loanArrearsAgingEntity.getOverdueBalance());
+        Assert.assertEquals(new Money(getCurrency(), "" + principalForOneInstallment), loanArrearsAgingEntity
+                .getOverduePrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + interestForOneInstallment), loanArrearsAgingEntity
+                .getOverdueInterest());
+        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment + interestForOneInstallment)),
+                loanArrearsAgingEntity.getOverdueBalance());
 
         Assert.assertEquals(Short.valueOf("3"), loanArrearsAgingEntity.getDaysInArrears());
 
@@ -226,30 +246,34 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     }
 
     public void testLoanWithTwoOverduePayments() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         int daysOverdue = 10;
-        LoanArrearsAgingEntity loanArrearsAgingEntity = ageLoanAndGetLoanArrearsAgingEntity(loan, repaymentInterval + daysOverdue);
+        LoanArrearsAgingEntity loanArrearsAgingEntity = ageLoanAndGetLoanArrearsAgingEntity(loan, repaymentInterval
+                + daysOverdue);
 
         Assert.assertEquals(new Money(getCurrency(), "" + loanAmount), loanArrearsAgingEntity.getUnpaidPrincipal());
         Assert.assertEquals(new Money(getCurrency(), "" + totalInterest), loanArrearsAgingEntity.getUnpaidInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + 2 * principalForOneInstallment), loanArrearsAgingEntity.getOverduePrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "" + 2 * interestForOneInstallment), loanArrearsAgingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + (2 * (principalForOneInstallment + interestForOneInstallment))),
-                loanArrearsAgingEntity.getOverdueBalance());
+        Assert.assertEquals(new Money(getCurrency(), "" + 2 * principalForOneInstallment), loanArrearsAgingEntity
+                .getOverduePrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + 2 * interestForOneInstallment), loanArrearsAgingEntity
+                .getOverdueInterest());
+        Assert.assertEquals(new Money(getCurrency(), ""
+                + (2 * (principalForOneInstallment + interestForOneInstallment))), loanArrearsAgingEntity
+                .getOverdueBalance());
 
         Assert.assertEquals(daysOverdue, loanArrearsAgingEntity.getDaysInArrears().intValue());
 
     }
 
     public void testLoanWithOnePaymentMadeAndOneOverduePayments() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
 
         short daysOverdue = 3;
         // advance time daysOverdue past the second repayment interval
-        dateTime = dateTime.plusDays(2*repaymentInterval + daysOverdue);
+        dateTime = dateTime.plusDays(2 * repaymentInterval + daysOverdue);
         new DateTimeService().setCurrentDateTimeFixed(dateTime);
 
         // make one payment, so we should still be one payment behind after that
@@ -257,24 +281,92 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
                 .getCurrency(), "" + onePayment), loan.getPersonnel(), Short.valueOf("1"), dateTime.toDate());
         loan.applyPaymentWithPersist(paymentData);
 
-        loanArrearsAgingHelper.execute(dummy);
+        runLoanArrearsThenLoanArrearsAging();
 
         loan = new LoanPersistence().getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loan.getLoanArrearsAgingEntity();
 
-        Assert.assertEquals(new Money(getCurrency(), "" + (loanAmount - principalForOneInstallment)), loanArrearsAgingEntity.getUnpaidPrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "" + (totalInterest - interestForOneInstallment)), loanArrearsAgingEntity.getUnpaidInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + principalForOneInstallment), loanArrearsAgingEntity.getOverduePrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "" + interestForOneInstallment), loanArrearsAgingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment + interestForOneInstallment)), loanArrearsAgingEntity.getOverdueBalance());
+        Assert.assertEquals(new Money(getCurrency(), "" + (loanAmount - principalForOneInstallment)),
+                loanArrearsAgingEntity.getUnpaidPrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + (totalInterest - interestForOneInstallment)),
+                loanArrearsAgingEntity.getUnpaidInterest());
+        Assert.assertEquals(new Money(getCurrency(), "" + principalForOneInstallment), loanArrearsAgingEntity
+                .getOverduePrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + interestForOneInstallment), loanArrearsAgingEntity
+                .getOverdueInterest());
+        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment + interestForOneInstallment)),
+                loanArrearsAgingEntity.getOverdueBalance());
 
         Assert.assertEquals(Short.valueOf(daysOverdue), loanArrearsAgingEntity.getDaysInArrears());
     }
 
+    public void testLoanWithOnePaymentMadeAndNoOverduePayments() throws Exception {
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+
+        short daysPastPaymentDate = 3;
+
+        // advance time daysOverdue past the second repayment interval
+        dateTime = dateTime.plusDays(repaymentInterval + daysPastPaymentDate);
+        new DateTimeService().setCurrentDateTimeFixed(dateTime);
+
+        runLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
+
+        // make one payment, so we should still be one payment behind after that
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration.getInstance().getSystemConfig()
+                .getCurrency(), "" + onePayment), loan.getPersonnel(), Short.valueOf("1"), dateTime.toDate());
+        loan.applyPaymentWithPersist(paymentData);
+
+        //jpwrunLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+        Assert.assertTrue(loan.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+
+    }
+
+    public void testLoanWithEarlyRepayment() throws Exception {
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+
+        short daysPastPaymentDate = 3;
+
+        // advance time daysOverdue past the second repayment interval
+        dateTime = dateTime.plusDays(repaymentInterval + daysPastPaymentDate);
+        new DateTimeService().setCurrentDateTimeFixed(dateTime);
+
+        runLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
+
+        Money totalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "" + loanAmount
+                + totalInterest);
+        String receiptNumber = "1";
+        loan.makeEarlyRepayment(totalAmount, receiptNumber, dateTime.toDate(), PaymentTypes.CASH.getValue().toString(),
+                loan.getPersonnel().getPersonnelId());
+
+        //jpw runLoanArrearsThenLoanArrearsAging();
+
+        loan = new LoanPersistence().getAccount(loan.getAccountId());
+
+        Assert.assertNull(loan.getLoanArrearsAgingEntity());
+        Assert.assertTrue(loan.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
+
+    }
+
     public void testLoanWithOnePartialPayment() throws Exception {
-        LoanBO loan = setUpLoan(dateTime,  AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+        LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
 
@@ -282,7 +374,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         dateTime = dateTime.plusDays(repaymentInterval + daysOverdue);
         new DateTimeService().setCurrentDateTimeFixed(dateTime);
 
-        // make one payment of 8.  Interest is paid off first, so 2 goes to interest and 6 to principal
+        // make one payment of 8. Interest is paid off first, so 2 goes to interest and 6 to principal
         int principalPayment = 6;
         int interestPayment = 2;
         int paymentAmount = interestPayment + principalPayment; // paymentAmount == 8
@@ -290,39 +382,61 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
                 .getCurrency(), "" + paymentAmount), loan.getPersonnel(), Short.valueOf("1"), dateTime.toDate());
         loan.applyPaymentWithPersist(paymentData);
 
-        loanArrearsAgingHelper.execute(dummy);
+        runLoanArrearsThenLoanArrearsAging();
 
         loan = new LoanPersistence().getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loan.getLoanArrearsAgingEntity();
 
-        Assert.assertEquals(new Money(getCurrency(), "" + (loanAmount - principalPayment)), loanArrearsAgingEntity.getUnpaidPrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "" + (totalInterest - interestPayment)), loanArrearsAgingEntity.getUnpaidInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment - principalPayment)), loanArrearsAgingEntity.getOverduePrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + (loanAmount - principalPayment)), loanArrearsAgingEntity
+                .getUnpaidPrincipal());
+        Assert.assertEquals(new Money(getCurrency(), "" + (totalInterest - interestPayment)), loanArrearsAgingEntity
+                .getUnpaidInterest());
+        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment - principalPayment)),
+                loanArrearsAgingEntity.getOverduePrincipal());
         Assert.assertEquals(new Money(getCurrency(), "0"), loanArrearsAgingEntity.getOverdueInterest());
-        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment - principalPayment)), loanArrearsAgingEntity.getOverdueBalance());
+        Assert.assertEquals(new Money(getCurrency(), "" + (principalForOneInstallment - principalPayment)),
+                loanArrearsAgingEntity.getOverdueBalance());
 
         Assert.assertEquals(Short.valueOf(daysOverdue), loanArrearsAgingEntity.getDaysInArrears());
 
     }
 
-    private void assertForLoanArrearsAgingEntity(LoanBO loanAccount) {
+    private void assertForLoanArrearsAgingEntity(LoanBO loan) throws PersistenceException {
+
+        LoanBO loanAccount = new LoanPersistence().getAccount(loan.getAccountId());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loanAccount.getLoanArrearsAgingEntity();
 
-       Assert.assertEquals(loanAccount.getLoanSummary().getPrincipalDue(), loanArrearsAgingEntity.getUnpaidPrincipal());
-       Assert.assertEquals(loanAccount.getLoanSummary().getInterestDue(), loanArrearsAgingEntity.getUnpaidInterest());
-       Assert.assertEquals(loanAccount.getLoanSummary().getPrincipalDue().add(loanAccount.getLoanSummary().getInterestDue()),
-                loanArrearsAgingEntity.getUnpaidBalance());
+        Assert
+                .assertEquals(loanAccount.getLoanSummary().getPrincipalDue(), loanArrearsAgingEntity
+                        .getUnpaidPrincipal());
+        Assert.assertEquals(loanAccount.getLoanSummary().getInterestDue(), loanArrearsAgingEntity.getUnpaidInterest());
+        Assert.assertEquals(loanAccount.getLoanSummary().getPrincipalDue().add(
+                loanAccount.getLoanSummary().getInterestDue()), loanArrearsAgingEntity.getUnpaidBalance());
 
-       Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears(), loanArrearsAgingEntity.getOverduePrincipal());
-       Assert.assertEquals(loanAccount.getTotalInterestAmountInArrears(), loanArrearsAgingEntity.getOverdueInterest());
-       Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears().add(loanAccount.getTotalInterestAmountInArrears()),
-                loanArrearsAgingEntity.getOverdueBalance());
+        Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears(), loanArrearsAgingEntity
+                .getOverduePrincipal());
+        Assert.assertEquals(loanAccount.getTotalInterestAmountInArrears(), loanArrearsAgingEntity.getOverdueInterest());
+        Assert.assertEquals(loanAccount.getTotalPrincipalAmountInArrears().add(
+                loanAccount.getTotalInterestAmountInArrears()), loanArrearsAgingEntity.getOverdueBalance());
 
-       Assert.assertEquals(group.getCustomerId(), loanArrearsAgingEntity.getCustomer().getCustomerId());
-       Assert.assertEquals(center.getCustomerId(), loanArrearsAgingEntity.getParentCustomer().getCustomerId());
-       Assert.assertEquals(group.getDisplayName(), loanArrearsAgingEntity.getCustomerName());
+        Assert.assertEquals(group.getCustomerId(), loanArrearsAgingEntity.getCustomer().getCustomerId());
+        Assert.assertEquals(center.getCustomerId(), loanArrearsAgingEntity.getParentCustomer().getCustomerId());
+        Assert.assertEquals(group.getDisplayName(), loanArrearsAgingEntity.getCustomerName());
+    }
+
+    private void setLatenessDaysToZero() throws Exception {
+        StaticHibernateUtil.startTransaction();
+        Query updateQuery = StaticHibernateUtil.getSessionTL().createQuery(
+                "update ProductTypeEntity set latenessDays = 0 where productTypeID = 1");
+        updateQuery.executeUpdate();
+        StaticHibernateUtil.commitTransaction();
+    }
+
+    private void runLoanArrearsThenLoanArrearsAging() throws BatchJobException, PersistenceException {
+        loanArrearHelper.execute(dummy);
+        loanArrearsAgingHelper.execute(dummy);
     }
 
 }

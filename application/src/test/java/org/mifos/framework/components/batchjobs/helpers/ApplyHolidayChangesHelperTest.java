@@ -26,7 +26,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.anyList;
 
 import java.util.ArrayList;
@@ -54,6 +53,7 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.schedule.ScheduledDateGeneration;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -66,6 +66,7 @@ import org.mockito.stubbing.Answer;
  * <em>requests</em> that the applicable accounts reschedule themselves, and that
  * requests are made to the correct holidays to mark themselves as applied.
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class ApplyHolidayChangesHelperTest {
 
@@ -186,7 +187,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // verify that the job has not requested any accounts or rescheduling
         verify(mockAccountBusinessService, times(0)).getAccount(any(Integer.class));
-        verify(mockLoanBO, times(0)).rescheduleDatesForNewHolidays(any(List.class), any(List.class), any(List.class));
+        verify(mockLoanBO, times(0)).rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), any(List.class));
     }
 
     @Test
@@ -202,7 +203,7 @@ public class ApplyHolidayChangesHelperTest {
         // verify that dependencies were invoked and only one loan account was rescheduled
         verify(mockAccountBusinessService).getAccount(loanAccountId);
         verify(mockAccountBusinessService, times(1)).getAccount(any(Integer.class));
-        verify(mockLoanBO).rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
+        verify(mockLoanBO).rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
         verify(holiday).markAsApplied();
     }
 
@@ -224,9 +225,9 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService, never())  .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(eq(workingDays), Matchers.eq(upcomingHolidays), anyList());
-        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
+        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
         verify(holiday).markAsApplied();
     }
@@ -249,9 +250,9 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService, never())  .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays),anyList());
-        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
+        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class),anyList());
+        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
         verify(holiday).markAsApplied();
     }
@@ -274,9 +275,9 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService)           .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
+        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
         verify(holiday).markAsApplied();
     }
@@ -301,11 +302,10 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService)           .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(3)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
-        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(eq(workingDays), eq(upcomingHolidays), anyList());
+        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
         verify(holiday).markAsApplied();
     }
-
 }

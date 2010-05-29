@@ -20,12 +20,14 @@
 
 package org.mifos.customers.group.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -33,6 +35,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.GroupUpdate;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -525,10 +528,11 @@ public class GroupBO extends CustomerBO {
         }
     }
 
-    public final void regenerateCustomerFeeSchedule() throws AccountException {
+    public void regenerateCustomerFeeSchedule(CalendarEvent applicableCalendarEvents) {
         CustomerAccountBO customerAccount = this.getCustomerAccount();
         if (customerAccount != null) {
-            this.getCustomerAccount().generateCustomerFeeSchedule();
+            List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees());
+            customerAccount.createSchedulesAndFeeSchedules(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents);
         }
     }
 
