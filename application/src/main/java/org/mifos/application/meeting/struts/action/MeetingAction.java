@@ -36,6 +36,9 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.MeetingServiceFacade;
+import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
@@ -43,7 +46,6 @@ import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -58,13 +60,15 @@ import org.mifos.security.util.SecurityConstants;
 
 public class MeetingAction extends BaseAction {
 
+    private final MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
+
     @Override
     protected BusinessService getService() throws ServiceException {
         return getMeetingBusinessService();
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -81,7 +85,7 @@ public class MeetingAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         populateActionForm(request, (MeetingActionForm) form);
         loadMasterData(request);
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -89,7 +93,7 @@ public class MeetingAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         MeetingActionForm actionForm = (MeetingActionForm) form;
         MeetingBO meeting = createMeeting(actionForm);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, meeting, request);
@@ -98,7 +102,7 @@ public class MeetingAction extends BaseAction {
 
     @TransactionDemarcate(conditionToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         MeetingActionForm actionForm = (MeetingActionForm) form;
         clearActionForm(actionForm);
         CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
@@ -125,51 +129,42 @@ public class MeetingAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         MeetingActionForm actionForm = (MeetingActionForm) form;
-        MeetingBO meeting = createMeeting(actionForm);
         CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
-        customer.setVersionNo(customerInSession.getVersionNo());
-        customer.setUserContext(getUserContext(request));
-        if (customer.getPersonnel() != null) {
-            getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(),
-                    getUserContext(request), customer.getOffice().getOfficeId(),
-                    customer.getPersonnel().getPersonnelId());
-        } else {
-            getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(),
-                    getUserContext(request), customer.getOffice().getOfficeId(), getUserContext(request).getId());
-        }
-        customer.updateMeeting(meeting);
+
+        MeetingUpdateRequest meetingUpdateRequest = createMeetingUupdateRequest(customerInSession, actionForm);
+        meetingServiceFacade.updateCustomerMeeting(meetingUpdateRequest, getUserContext(request));
+
         ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
         return mapping.findForward(forward.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward cancelCreate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelCreate(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         MeetingActionForm maf = (MeetingActionForm) form;
         return mapping.findForward(forwardForCreate(maf.getCustomerLevelValue()).toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelUpdate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelUpdate(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ActionForwards forward = forwardForUpdate(((MeetingActionForm) form).getCustomerLevelValue());
         return mapping.findForward(forward.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         MeetingActionForm maf = (MeetingActionForm) form;
         if (maf.getInput() == null || maf.getInput().equals(MeetingConstants.INPUT_EDIT)) {
             return mapping.findForward(method + "_failure");
-        } else {
-            return mapping.findForward(ActionForwards.createMeeting_failure.toString());
         }
 
+        return mapping.findForward(ActionForwards.createMeeting_failure.toString());
     }
 
     private void populateActionForm(HttpServletRequest request, MeetingActionForm form) throws PageExpiredException {
@@ -199,6 +194,30 @@ public class MeetingAction extends BaseAction {
             }
         }
         form.setMeetingPlace(meeting.getMeetingPlace());
+    }
+
+    private MeetingUpdateRequest createMeetingUupdateRequest(CustomerBO customerInSession, MeetingActionForm actionForm) {
+
+        MeetingUpdateRequest meetingUpdateRequest;
+
+        switch (actionForm.getRecurrenceType()) {
+        case DAILY:
+            throw new UnsupportedOperationException("Daily recurrence is not supported for customer meetings.");
+        case WEEKLY:
+            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
+            break;
+        case MONTHLY:
+            if (actionForm.isMonthlyOnDate()) {
+                meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getDayRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
+            }
+
+            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
+            break;
+            default:
+                throw new UnsupportedOperationException("Unknown recurrence for customer meetings.");
+        }
+
+        return meetingUpdateRequest;
     }
 
     private MeetingBO createMeeting(MeetingActionForm form) throws MeetingException {
@@ -237,7 +256,7 @@ public class MeetingAction extends BaseAction {
         }
     }
 
-    private MeetingBusinessService getMeetingBusinessService() throws ServiceException {
+    private MeetingBusinessService getMeetingBusinessService() {
         return new MeetingBusinessService();
     }
 
@@ -262,6 +281,6 @@ public class MeetingAction extends BaseAction {
     }
 
     private CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
+        return new CustomerBusinessService();
     }
 }
