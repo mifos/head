@@ -142,7 +142,8 @@ public class CollectionSheetEntryAction extends BaseAction {
         final BulkEntryActionForm bulkEntryActionForm = (BulkEntryActionForm) form;
         final Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
         final UserContext userContext = getUserContext(request);
-        final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = retrieveFromRequestCollectionSheetEntryFormDto(request);
+        final CollectionSheetEntryFormDto previousCollectionSheetEntryFormDto = collectionSheetServiceFacade
+                .loadAllActiveBranchesAndSubsequentDataIfApplicable(userContext);
 
         final CollectionSheetEntryFormDto latestCollectionSheetEntryFormDto = collectionSheetServiceFacade
                 .loadLoanOfficersForBranch(officeId, userContext, previousCollectionSheetEntryFormDto);

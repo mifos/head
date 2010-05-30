@@ -470,7 +470,7 @@
 				join savings_account sa on sa.account_id = a.account_id
 				join customer c on c.customer_id = a.customer_id
 				where c.status_id in (3,9,13)
-				and a.account_state_id = 16
+				and a.account_state_id in (16, 18)
 				and (select max(ss.installment_id) from saving_schedule ss
 					where ss.account_id = a.account_id
 					and ss.action_date <= date(:DATE)) + 4 >
