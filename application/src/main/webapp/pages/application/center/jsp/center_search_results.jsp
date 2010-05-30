@@ -113,10 +113,10 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></td>
 						</tr>
 						<tr>
-							<td class="fontnormalbold"><span class="fontnormal">                
-				 <mifos:mifoslabel name="Center.SearchInstructions1"  bundle="CenterUIResources"></mifos:mifoslabel>
-                <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-                <mifos:mifoslabel name="Center.SearchInstructions2"  bundle="CenterUIResources"></mifos:mifoslabel>
+							<td class="fontnormalbold"><span class="fontnormal">
+                                <fmt:message key="Center.Searchmsg1">
+                                    <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+                                </fmt:message>
 
 							<mifos:mifoslabel name="Center.CreatePageCancelInstruction"
 								bundle="CenterUIResources"></mifos:mifoslabel> </span></td>

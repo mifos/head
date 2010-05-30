@@ -73,6 +73,7 @@ public class DependencyInjectedServiceLocator {
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LoginServiceFacade loginServiceFacade;
+    private static MeetingServiceFacade meetingServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -177,6 +178,13 @@ public class DependencyInjectedServiceLocator {
             loginServiceFacade = new LoginServiceFacadeWebTier(authenticationDao);
         }
         return loginServiceFacade;
+    }
+
+    public static MeetingServiceFacade locateMeetingServiceFacade() {
+        if (meetingServiceFacade == null) {
+            meetingServiceFacade = new MeetingServiceFacadeWebTier(customerDao);
+        }
+        return meetingServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

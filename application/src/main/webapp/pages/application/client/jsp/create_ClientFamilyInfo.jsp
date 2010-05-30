@@ -206,7 +206,7 @@ explanation of the license and how it is applied.
 														</td>
 														<td class="paddingL10">
 														<span id="create_ClientFamilyInfo.label.familyMiddleName">
-																<mifos:mifoslabel  name="client.FamilyMiddleName" 
+																<mifos:mifoslabel keyhm="Client.SpouseFatherMiddleName" name="client.FamilyMiddleName"
 																		bundle="ClientUIResources">
 																		</mifos:mifoslabel>
 														</span>
@@ -266,7 +266,7 @@ explanation of the license and how it is applied.
 																</mifos:mifosalphanumtext>								
 															</td>
 															<td class="paddingL10">
-																<mifos:mifosalphanumtext name="clientCustActionForm" property="familyMiddleName[${row}]">																	
+																<mifos:mifosalphanumtext keyhm="Client.SpouseFatherMiddleName" name="clientCustActionForm" property="familyMiddleName[${row}]">																	
 																</mifos:mifosalphanumtext>								
 															</td>
 															<td class="paddingL10">

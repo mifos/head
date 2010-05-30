@@ -1,9 +1,9 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CenterUIResources.properties, zh/CenterUIResources_zh_CN.properties
+#. extracted from CenterUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-05-28 18:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -554,6 +554,10 @@ msgstr "新建组－"
 #: Center.SearchInstructions
 msgid "Enter a {0} name and click Search."
 msgstr "输入{0}名称并点击“搜索”按钮。"
+
+#: Center.Searchmsg1
+msgid "To select, click on a resulting {0}."
+msgstr ""
 
 #: Center.SearchResultName
 msgid "Search for:"
