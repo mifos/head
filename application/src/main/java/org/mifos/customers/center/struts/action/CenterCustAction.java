@@ -34,12 +34,10 @@ import org.mifos.application.servicefacade.CenterFormCreationDto;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CustomerSearch;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
@@ -54,8 +52,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CenterCustAction extends CustAction {
-
-    private final CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("centerCustAction");

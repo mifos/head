@@ -60,8 +60,7 @@ import org.mifos.security.authentication.AuthenticationDaoHibernate;
 /**
  * I contain static factory methods for locating/creating application services.
  *
- * NOTE: Use of DI frameworks method would make this redundant. e.g.
- * spring/juice
+ * NOTE: Use of DI frameworks method would make this redundant. e.g. spring/juice
  */
 public class DependencyInjectedServiceLocator {
 
@@ -117,7 +116,8 @@ public class DependencyInjectedServiceLocator {
     public static CustomerService locateCustomerService() {
 
         if (customerService == null) {
-            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransactionHelper);
+            customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao,
+                    hibernateTransactionHelper);
         }
         return customerService;
     }
@@ -128,7 +128,8 @@ public class DependencyInjectedServiceLocator {
             collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
 
             collectionSheetServiceFacade = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                    masterPersistence, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
+                    masterPersistence, personnelPersistence, customerPersistence, collectionSheetService,
+                    collectionSheetTranslator);
         }
         return collectionSheetServiceFacade;
     }
@@ -138,11 +139,11 @@ public class DependencyInjectedServiceLocator {
 
             customerService = DependencyInjectedServiceLocator.locateCustomerService();
 
-            customerServiceFacade = new CustomerServiceFacadeWebTier(customerService, officeDao, personnelDao, customerDao);
+            customerServiceFacade = new CustomerServiceFacadeWebTier(customerService, officeDao, personnelDao,
+                    customerDao);
         }
         return customerServiceFacade;
     }
-
 
     public static ClientDetailsServiceFacade locateClientDetailsServiceFacade() {
         if (clientDetailsServiceFacade == null) {
@@ -150,7 +151,6 @@ public class DependencyInjectedServiceLocator {
         }
         return clientDetailsServiceFacade;
     }
-
 
     public static GroupDetailsServiceFacade locateGroupDetailsServiceFacade() {
         if (groupDetailsServiceFacade == null) {
@@ -182,7 +182,8 @@ public class DependencyInjectedServiceLocator {
 
     public static MeetingServiceFacade locateMeetingServiceFacade() {
         if (meetingServiceFacade == null) {
-            meetingServiceFacade = new MeetingServiceFacadeWebTier(customerDao);
+            customerService = locateCustomerService();
+            meetingServiceFacade = new MeetingServiceFacadeWebTier(customerService);
         }
         return meetingServiceFacade;
     }
