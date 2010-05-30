@@ -30,6 +30,12 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -37,126 +43,123 @@ import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.service.test.TestMode;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
-    public SavingsBOMoreIntegrationTest() throws Exception {
-        super();
-        TestDatabase.resetMySQLDatabase();
-    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml"})
+public class SavingsBOMoreIntegrationTest {
 
     private CenterBO center;
     private GroupBO group;
     private ClientBO client;
     private SavingsBO savings;
+    private Money recommendedAmount;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        try {
-            TestObjectFactory.cleanUp(savings);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
-        }
-        StaticHibernateUtil.closeSession();
-        super.tearDown();
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
     }
 
-    public void testChangingSavingsAccountToInactiveRemovesRecommendedAmountsFromFutureInstallments() throws Exception {
-//
-//        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
-//        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
-//
-//        center = new CenterBuilder().with(weeklyMeeting).withName("Savings Center").with(sampleBranchOffice())
-//                .withLoanOfficer(testUser()).build();
-//        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
-//
-//        group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Savings Group")
-//                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(center).build();
-//        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
-//
-//        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Savings Client").withOffice(
-//                sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
-//        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
-//
-//        String recommendedAmountString = "3.0";
-//        Money recommendedAmount = new Money(Money.getDefaultCurrency(),recommendedAmountString);
-//        savings = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(client, "clm", recommendedAmountString,
-//                false, false);
-//
-//        assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
-//
-//        //
-//        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
-//        savings.save();
-//        StaticHibernateUtil.commitTransaction();
-//        // refresh hibernate data
-//        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
-//
-//        Money zero = new Money(Money.getDefaultCurrency());
-//        assertAllFutureSchedulesAreAsExpected(savings, zero);
-//    }
-//
-//    public void testChangingSavingsAccountFromInactiveToActiveResetsRecommendedAmountsFromFutureInstallments() throws Exception {
-//
-//        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
-//        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
-//
-//        center = new CenterBuilder().with(weeklyMeeting).withName("Savings Center").with(sampleBranchOffice())
-//                .withLoanOfficer(testUser()).build();
-//        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
-//
-//        group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Savings Group")
-//                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(center).build();
-//        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
-//
-//        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Savings Client").withOffice(
-//                sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
-//        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
-//
-//        String recommendedAmountString = "3.0";
-//        Money recommendedAmount = new Money(Money.getDefaultCurrency(),recommendedAmountString);
-//        savings = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(client, "clm", recommendedAmountString,
-//                false, false);
-//
-//        //make inactive first
-//        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
-//        savings.save();
-//        StaticHibernateUtil.commitTransaction();
-//        // refresh hibernate data
-//        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
-//
-//        Money zero = new Money(Money.getDefaultCurrency());
-//        assertAllFutureSchedulesAreAsExpected(savings, zero);
-//
-//
-//        //make active again
-//        savings.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Make Active Again");
-//        savings.save();
-//        StaticHibernateUtil.commitTransaction();
-//        // refresh hibernate data
-//        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
-//
-//        assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
+    }
+
+    @Before
+    public void cleanDatabaseTables() throws Exception {
+        databaseCleaner.clean();
+
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
+
+        center = new CenterBuilder().with(weeklyMeeting).withName("Savings Center").with(sampleBranchOffice())
+                .withLoanOfficer(testUser()).build();
+        IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
+
+        group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Savings Group")
+                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(center).build();
+        IntegrationTestObjectMother.createGroup(group, weeklyMeeting);
+
+        client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Savings Client").withOffice(
+                sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(client, weeklyMeeting);
+
+        String recommendedAmountString = "3.0";
+        recommendedAmount = new Money(Money.getDefaultCurrency(),recommendedAmountString);
+        savings = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(client, "clm", recommendedAmountString,
+                false, false);
+    }
+
+    @Test
+    public void changingSavingsAccountToInactiveRemovesRecommendedAmountsFromFutureInstallments() throws Exception {
+
+        assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
+
+        //
+        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
+        savings.save();
+        StaticHibernateUtil.commitTransaction();
+        // refresh hibernate data
+        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+
+        Money zero = new Money(Money.getDefaultCurrency());
+        assertAllFutureSchedulesAreAsExpected(savings, zero);
+    }
+
+    @Test
+    public void changingSavingsAccountFromInactiveToActiveResetsRecommendedAmountsFromFutureInstallments() throws Exception {
+
+        //make inactive first
+        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
+        savings.save();
+        StaticHibernateUtil.commitTransaction();
+        // refresh hibernate data
+        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+
+        Money zero = new Money(Money.getDefaultCurrency());
+        assertAllFutureSchedulesAreAsExpected(savings, zero);
+
+
+        //make active again
+        savings.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Make Active Again");
+        savings.save();
+        StaticHibernateUtil.commitTransaction();
+        // refresh hibernate data
+        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+
+        assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
     }
 
     private void assertAllFutureSchedulesAreAsExpected(SavingsBO savingsParam, Money expectedAmount) {
