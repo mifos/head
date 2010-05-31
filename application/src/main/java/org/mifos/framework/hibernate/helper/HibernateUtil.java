@@ -62,10 +62,6 @@ public class HibernateUtil {
         }
     }
 
-    public void setThreadLocal(Session session) {
-        sessionTL.set(session);
-    }
-
     public void resetDatabase() {
         closeSession();
     }
@@ -179,7 +175,7 @@ public class HibernateUtil {
         if (sessionTL.get() == null) {
             interceptorTL.set(new AuditInterceptor());
             Session session = sessionFactory.openSession(interceptorTL.get());
-            setThreadLocal(session);
+            sessionTL.set(session);
         }
         return sessionTL.get();
     }
