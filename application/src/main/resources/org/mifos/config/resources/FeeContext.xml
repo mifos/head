@@ -135,9 +135,6 @@
         </property>
     </bean>
 
-
-
-
     <bean id="feeDao" parent="abstractDao">
        <property name="proxyInterfaces" value="org.mifos.accounts.fees.persistence.FeeDao"/>
        <property name="target">
@@ -152,24 +149,7 @@
 	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
 	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebFeeServiceFacade"/>
-
-    <!--<context:component-scan base-package="org.mifos.application.importexport" />
-    <tx:annotation-driven transaction-manager="transactionManager" />
-    -->
-    
     <!--
     <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
-    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController">
-       <property name="methodNameResolver">     
-         <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
-           <property name="mappings">
-             <value>
-                /**/create.shtml=createFee
-             </value>
-           </property>
-        </bean>
-       </property>
-       <property name="feeServiceFacade" ref="feeServiceFacade"/>
-    </bean>
     -->
 </beans>

@@ -23,8 +23,8 @@ public class WebFeeServiceFacadeTest {
     @Test
     @Transactional
     public void shouldGetAllFees() throws Exception {
-        List<FeeDto> customerFees = feeSvcFacade.getCustomerFees();
-        List<FeeDto> productFees = feeSvcFacade.getProductFees();
+        //List<FeeDto> customerFees = feeSvcFacade.getCustomerFees();
+        //List<FeeDto> productFees = feeSvcFacade.getProductFees();
     }
 
 }
