@@ -101,26 +101,26 @@ public class AuthorizationManager {
             roles.retainAll(userContext.getRoles());
             if (roles.isEmpty()) {
                 return false;
-            } else {
-                HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(
-                        userContext, activityContext.getRecordOfficeId());
-                PersonnelLevel personnelLevel = userContext.getLevel();
-                short userId = userContext.getId().shortValue();
-                if (where == SAME) {
-                    // 1 check if record belog to him if so let him do
-                    if (userId == activityContext.getRecordLoanOfficer()) {
-                        return true;
-                    } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+            }
+
+            HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, activityContext.getRecordOfficeId());
+            PersonnelLevel personnelLevel = userContext.getLevel();
+            short userId = userContext.getId().shortValue();
+            if (where == SAME) {
+                // 1 check if record belog to him if so let him do
+                if (userId == activityContext.getRecordLoanOfficer()) {
                     return true;
-                } else {
+                } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
                     return false;
                 }
+
+                return true;
+
+            } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+                return true;
             }
+
+            return false;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

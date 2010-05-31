@@ -1009,14 +1009,14 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest newMeeting) throws CustomerException {
+    private void updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest updatedDetails) throws CustomerException {
         try {
             if (oldMeeting.isWeekly()) {
-                oldMeeting.update(newMeeting.getWeekDay(), newMeeting.getMeetingPlace());
+                oldMeeting.update(updatedDetails.getWeekDay(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthlyOnDate()) {
-                oldMeeting.update(newMeeting.getDayOfMonth(), newMeeting.getMeetingPlace());
+                oldMeeting.update(updatedDetails.getDayOfMonth(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthly()) {
-                oldMeeting.update(newMeeting.getMonthWeek(), newMeeting.getRankOfDay(), newMeeting.getMeetingPlace());
+                oldMeeting.update(updatedDetails.getMonthWeek(), updatedDetails.getRankOfDay(), updatedDetails.getMeetingPlace());
             }
 
         } catch (MeetingException me) {
