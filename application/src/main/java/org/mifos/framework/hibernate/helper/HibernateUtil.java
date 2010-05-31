@@ -62,10 +62,6 @@ public class HibernateUtil {
         }
     }
 
-    public void resetDatabase() {
-        closeSession();
-    }
-
     /**
      * Open a new Hibernate session.
      */

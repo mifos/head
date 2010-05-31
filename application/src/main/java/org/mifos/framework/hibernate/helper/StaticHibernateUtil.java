@@ -42,10 +42,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    public static void resetDatabase() {
-        hibernateUtil.resetDatabase();
-    }
-
     public static Session openSession() throws HibernateProcessException {
         return hibernateUtil.openSession();
     }
