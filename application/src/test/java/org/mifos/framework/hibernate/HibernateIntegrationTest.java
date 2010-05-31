@@ -21,27 +21,14 @@
 package org.mifos.framework.hibernate;
 
 import junit.framework.Assert;
-import junitx.framework.ObjectAssert;
 
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HibernateIntegrationTest extends MifosIntegrationTestCase {
 
     public HibernateIntegrationTest() throws Exception {
         super();
-    }
-
-    public void testHibernateSessionFactoryForNullConfig() {
-        try {
-            HibernateSessionFactory.setConfiguration(null);
-            Assert.fail();
-        } catch (HibernateStartUpException outer) {
-           Assert.assertEquals("exception.framework.SystemException", outer.getKey());
-            ObjectAssert.assertInstanceOf(NullPointerException.class, outer.getCause());
-        }
     }
 
     public void testHibernateUtilIsSessionOpen() {
