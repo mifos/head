@@ -175,7 +175,7 @@ public class HibernateUtil {
         return sessionTL.get();
     }
 
-    public Session getOrCreateSession() throws HibernateException {
+    private Session getOrCreateSession() throws HibernateException {
         if (sessionTL.get() == null) {
             interceptorTL.set(new AuditInterceptor());
             Session session = sessionFactory.openSession(interceptorTL.get());

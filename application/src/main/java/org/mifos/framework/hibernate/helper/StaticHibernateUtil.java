@@ -95,10 +95,6 @@ public class StaticHibernateUtil {
         return hibernateUtil.getSession();
     }
 
-    public static Session getOrCreateSession() throws HibernateException {
-        return hibernateUtil.getOrCreateSession();
-    }
-
     public static boolean isSessionOpen() {
         return hibernateUtil.isSessionOpen();
     }
