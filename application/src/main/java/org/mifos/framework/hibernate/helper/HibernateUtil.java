@@ -23,7 +23,6 @@ package org.mifos.framework.hibernate.helper;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.sql.Connection;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -33,12 +32,9 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.FilePaths;
 
@@ -47,7 +43,8 @@ public class HibernateUtil {
     private static Boolean initialized = Boolean.FALSE;
     private static SessionFactory sessionFactory;
     private static AnnotationConfiguration config = null;
-    private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
+    private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();
+    private static final ThreadLocal<Session> sessionTL = new ThreadLocal<Session>();
 
     public HibernateUtil() {
         initialize();
@@ -59,15 +56,14 @@ public class HibernateUtil {
                 config = new AnnotationConfiguration();
                 initializeHibernateConfiguration();
                 initializeDatabaseConnnectionSettings();
-                HibernateSessionFactory.setConfiguration(config);
-                initializeHibernateSessionFactory();
+                sessionFactory = config.buildSessionFactory();
                 initialized = Boolean.TRUE;
             }
         }
     }
 
-    public void setThreadLocal(SessionHolder holder) {
-        threadLocal.set(holder);
+    public void setThreadLocal(Session session) {
+        sessionTL.set(session);
     }
 
     public void resetDatabase() {
@@ -105,26 +101,22 @@ public class HibernateUtil {
         return sessionFactory;
     }
 
-    public Session openSession(Connection connection) {
-        return getSessionFactory().openSession(connection);
-    }
-
     /**
      * Return the current hibernate session for this thread. If this thread
      * doesn't have one, create a new one.
      */
     public Session getSessionTL() {
         try {
-            getOrCreateSessionHolder();
+            getOrCreateSession();
         } catch (HibernateException he) {
             throw new ConnectionNotFoundException(he);
         }
-        return threadLocal.get().getSession();
+        return sessionTL.get();
 
     }
 
     public AuditInterceptor getInterceptor() {
-        return getSessionHolder().getInterceptor();
+        return interceptorTL.get();
     }
 
     /**
@@ -153,7 +145,7 @@ public class HibernateUtil {
         if (getSessionTL().isOpen()) {
             getSessionTL().close();
         }
-        threadLocal.set(null);
+        sessionTL.set(null);
     }
 
     public void flushAndCloseSession() {
@@ -161,7 +153,7 @@ public class HibernateUtil {
             getSessionTL().flush();
             getSessionTL().close();
         }
-        threadLocal.set(null);
+        sessionTL.set(null);
 
     }
 
@@ -174,28 +166,27 @@ public class HibernateUtil {
 
     }
 
-    public SessionHolder getSessionHolder() {
-        if (null == threadLocal.get()) {
+    public Session getSession() {
+        if (null == sessionTL.get()) {
             // need to log to indicate that the session is being invoked when
             // not present
 
         }
-        return threadLocal.get();
+        return sessionTL.get();
     }
 
-    public SessionHolder getOrCreateSessionHolder() throws HibernateException {
-        if (threadLocal.get() == null) {
-            AuditInterceptor auditInterceptor = new AuditInterceptor();
-            SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
-            sessionHolder.setInterceptor(auditInterceptor);
-            setThreadLocal(sessionHolder);
+    public Session getOrCreateSession() throws HibernateException {
+        if (sessionTL.get() == null) {
+            interceptorTL.set(new AuditInterceptor());
+            Session session = sessionFactory.openSession(interceptorTL.get());
+            setThreadLocal(session);
         }
-        return threadLocal.get();
+        return sessionTL.get();
     }
 
     public boolean isSessionOpen() {
-        if (getSessionHolder() != null) {
-            return getSessionHolder().getSession().isOpen();
+        if (getSession() != null) {
+            return getSession().isOpen();
         }
         return false;
     }
@@ -232,16 +223,4 @@ public class HibernateUtil {
             throw new HibernateStartUpException(e);
         }
     }
-
-    private void initializeHibernateSessionFactory() throws ExceptionInInitializerError {
-        try {
-            sessionFactory = HibernateSessionFactory.getSessionFactory();
-        } catch (Throwable ex) {
-            MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.",
-                    false, null, ex);
-
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
 }

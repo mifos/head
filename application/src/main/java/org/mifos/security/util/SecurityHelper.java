@@ -33,7 +33,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
@@ -46,10 +45,10 @@ import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersist
 
 public class SecurityHelper {
 
-    private final SessionHolder sessionHolder;
+    private final Session session;
 
-    public SecurityHelper(SessionHolder session) {
-        this.sessionHolder = session;
+    public SecurityHelper(Session session) {
+        this.session = session;
     }
 
     /**
@@ -60,7 +59,6 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public List<ActivityRoles> getActivities() throws SystemException, ApplicationException {
-        Session session = sessionHolder.getSession();
         Transaction transaction = null;
         try {
             // FIXME: what's with the transaction here? I don't see any CRUD.
@@ -212,7 +210,7 @@ public class SecurityHelper {
     public List<Short> getLeafActivities() throws SystemException, ApplicationException {
         RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
-        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities(sessionHolder.getSession());
+        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities(session);
         List<Short> leafs = new ArrayList<Short>();
         buildLeafItems(activityList, leafs);
         return leafs;
