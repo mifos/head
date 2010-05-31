@@ -62,6 +62,10 @@ explanation of the license and how it is applied.
 						<td><span class="fontnormal" id="sysinfo.text.applicationVersion"><c:out value="${requestScope.systemInfo.applicationVersion}"/></span></td>
 					</tr>
 					<tr>
+						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.releaseName" bundle="adminUIResources" /></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.releaseName"><c:out value="${requestScope.systemInfo.releaseName}"/></span></td>
+					</tr>
+					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.commitIdentifier" bundle="adminUIResources" /></span></td>
 						<td><span class="fontnormal" id="sysinfo.text.commitIdentifier"><c:out value="${requestScope.systemInfo.commitIdentifier}"/></span></td>
 					</tr>

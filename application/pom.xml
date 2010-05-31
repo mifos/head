@@ -959,9 +959,9 @@
                                 if (env['OS'] =~ /^Windows/)
                                     gitcmd = "cmd /c ${gitcmd}"
                                 def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
-                                project.properties['mifosCommitIdentifier'] = gitShaProc.in.text
-                                project.properties['mifosBuildNumber'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
-                                project.properties['mifosBuildDate'] = "" + new Date()
+                                project.properties['this.commit.id'] = gitShaProc.in.text
+                                project.properties['ci.build.tag'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
+                                project.properties['ci.build.date'] = "" + new Date()
                             </source>
                         </configuration>
                     </execution>
