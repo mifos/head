@@ -36,8 +36,6 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.application.servicefacade.MeetingServiceFacade;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.FiscalCalendarRules;
@@ -59,8 +57,6 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class MeetingAction extends BaseAction {
-
-    private final MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
 
     @Override
     protected BusinessService getService() throws ServiceException {
@@ -209,9 +205,9 @@ public class MeetingAction extends BaseAction {
         case MONTHLY:
             if (actionForm.isMonthlyOnDate()) {
                 meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getDayRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
+            } else {
+                meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
             }
-
-            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
             break;
             default:
                 throw new UnsupportedOperationException("Unknown recurrence for customer meetings.");

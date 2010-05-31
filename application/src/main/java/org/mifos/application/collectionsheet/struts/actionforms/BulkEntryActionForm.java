@@ -218,10 +218,6 @@ public class BulkEntryActionForm extends BaseActionForm {
                     meetingDate = new java.sql.Date(((java.util.Date) lastMeetingDate).getTime());
                 }
 
-            } catch (PageExpiredException e) {
-                throw new RuntimeException(e);
-            }
-            try {
                 short isCenterHierarchyExists = (Short) SessionUtils.getAttribute(
                         CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request);
                 return mandatoryCheck(meetingDate, getUserContext(request), isCenterHierarchyExists);

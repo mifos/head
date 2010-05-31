@@ -176,21 +176,21 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
     private void rescheduleDatesStartingFromUnappliedHolidays () throws ServiceException, PersistenceException {
 
-        reschedule (new LoanAccountBatch());
-        reschedule (new SavingsAccountBatch());
-        reschedule (new CustomerAccountBatch());
+        reschedule ("Loan", new LoanAccountBatch());
+        reschedule ("Savings", new SavingsAccountBatch());
+        reschedule ("Customer", new CustomerAccountBatch());
 
         markHolidaysAsApplied();
     }
 
-    private void reschedule (AccountBatch accountBatch) throws PersistenceException, ServiceException {
+    private void reschedule (String accountType, AccountBatch accountBatch) throws PersistenceException, ServiceException {
 
         rollingStartTime = taskStartTime;
         currentRecordNumber = 0;
 
         List<Integer> accountIds = accountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
         accountCount = accountIds.size();
-        logMessage("No. of loan Accounts to Process: " + accountCount);
+        logMessage("No. of " + accountType + " Accounts to Process: " + accountCount);
 
         getHibernateUtil().getSessionTL();
         getHibernateUtil().startTransaction();
@@ -216,7 +216,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 + " remaining, batch time: " + (time - rollingStartTime) + " ms";
         logMessage(message);
 
-        String finalMessage = "Loan accounts Processed in: "
+        String finalMessage = accountType + " accounts Processed in: "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
     }
