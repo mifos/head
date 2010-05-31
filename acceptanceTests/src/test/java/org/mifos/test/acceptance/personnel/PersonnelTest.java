@@ -78,6 +78,7 @@ public class PersonnelTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
+//        UiTestUtils.sleep(600000);
         userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
 

@@ -20,6 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
+import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,12 +36,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
@@ -54,6 +56,7 @@ import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -82,6 +85,8 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class PersonAction extends SearchAction {
+
+    private final PersonnelDetailsServiceFacade personnelDetailsServiceFacade = DependencyInjectedServiceLocator.locatePersonnelDetailsServiceFacade();
 
     @Override
     protected BusinessService getService() throws ServiceException {
@@ -291,12 +296,16 @@ public class PersonAction extends SearchAction {
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         PersonActionForm personActionForm = (PersonActionForm) form;
-        PersonnelBO personnel = ((PersonnelBusinessService) getService())
-                .getPersonnelByGlobalPersonnelNum(personActionForm.getGlobalPersonnelNum());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
-        personnel.getStatus().setLocaleId(userContext.getLocaleId());
+        /* Now we are getting personnelInformationDto instead of PersonnelBO. PersonnelDetailsServiceFacade encapsulates
+                all calls to PersonnelDao to obtain PersonnelInformationDto */
+        PersonnelInformationDto personnelInformationDto = this.personnelDetailsServiceFacade.getPersonnelInformationDto(
+                ((PersonActionForm) form).getGlobalPersonnelNum(), getUserContext(request));
+
+        personnelInformationDto.getStatus().setLocaleId(userContext.getLocaleId());
+        SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);
+
         loadCreateMasterData(request, personActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());
     }

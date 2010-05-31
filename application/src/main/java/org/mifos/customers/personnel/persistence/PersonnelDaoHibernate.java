@@ -20,6 +20,13 @@
 
 package org.mifos.customers.personnel.persistence;
 
+import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.security.rolesandpermission.business.RoleBO;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +41,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 public class PersonnelDaoHibernate implements PersonnelDao {
 
     private final GenericDao genericDao;
+    private static org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence rolesPermissionsPersistence;
 
     public PersonnelDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
@@ -66,5 +74,120 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         queryParameters.put("PERSONNEL_ID", id);
 
         return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
+    }
+
+    @Override
+    public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<SupportedLocalesEntity> getAllLocales() {
+
+        return new ApplicationConfigurationPersistence().getSupportedLocale();
+    }
+
+    @Override
+    public List<PersonnelBO> getAllPersonnel() throws org.mifos.framework.exceptions.ServiceException {
+
+        try {
+            return new PersonnelPersistence().getAllPersonnel();
+        } catch (PersistenceException pe) {
+            throw new org.mifos.framework.exceptions.ServiceException(pe);
+        }
+    }
+
+    @Override
+    public QueryResult getAllPersonnelNotes(Short personnelId) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().getAllPersonnelNotes(personnelId);
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public OfficeBO getOffice(Short officeId) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new OfficePersistence().getOffice(officeId);
+        } catch (PersistenceException e) {
+
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public PersonnelBO getPersonnel(Short personnelId) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().getPersonnel(personnelId);
+        } catch (PersistenceException e) {
+
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public PersonnelBO getPersonnel(String personnelName) throws org.mifos.framework.exceptions.ServiceException {
+        PersonnelBO personnel = null;
+        try {
+            personnel = new PersonnelPersistence().getPersonnelByUserName(personnelName);
+            if (personnel == null) {
+                throw new org.mifos.framework.exceptions.ServiceException(org.mifos.security.login.util.helpers.LoginConstants.KEYINVALIDUSER);
+            }
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+        return personnel;
+    }
+
+    @Override
+    public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum) throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
+        } catch (PersistenceException e) {
+
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<RoleBO> getRoles() throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return rolesPermissionsPersistence.getRoles();
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<SupportedLocalesEntity> getSupportedLocales() throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            List<SupportedLocalesEntity> locales = new PersonnelPersistence().getSupportedLocales();
+            return locales;
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
+    }
+
+    @Override
+    public QueryResult search(String searchString, Short officeId, Short userId)  throws org.mifos.framework.exceptions.ServiceException {
+        try {
+            return new PersonnelPersistence().search(searchString, userId);
+        } catch (PersistenceException e) {
+            throw new org.mifos.framework.exceptions.ServiceException(e);
+        }
     }
 }
