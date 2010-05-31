@@ -91,10 +91,6 @@ public class StaticHibernateUtil {
         hibernateUtil.flushAndClearSession();
     }
 
-    public static Session getSession() {
-        return hibernateUtil.getSession();
-    }
-
     public static boolean isSessionOpen() {
         return hibernateUtil.isSessionOpen();
     }

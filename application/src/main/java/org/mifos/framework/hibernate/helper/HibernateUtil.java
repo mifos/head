@@ -166,7 +166,7 @@ public class HibernateUtil {
 
     }
 
-    public Session getSession() {
+    private Session getSession() {
         if (null == sessionTL.get()) {
             // need to log to indicate that the session is being invoked when
             // not present
