@@ -572,8 +572,6 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
-        } else {
-            resetUpdatedFlag();
         }
     }
 
@@ -618,13 +616,6 @@ public class AccountBO extends AbstractBusinessObject {
             }
         }
         return installment;
-    }
-
-    /**
-     * used by subclasses
-     */
-    @SuppressWarnings("unused")
-    protected void resetUpdatedFlag() throws AccountException {
     }
 
     public void changeStatus(final AccountState newStatus, final Short flagId, final String comment)
