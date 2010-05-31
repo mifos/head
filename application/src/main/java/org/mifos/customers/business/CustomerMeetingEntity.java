@@ -36,8 +36,9 @@ public class CustomerMeetingEntity extends AbstractEntity {
     private final Integer custMeetingId;
     private MeetingBO meeting;
     private CustomerBO customer;
-    private Short updatedFlag;
-    private MeetingBO updatedMeeting;
+
+    @SuppressWarnings("unused")
+    private Short updatedFlag = YesNoFlag.NO.getValue();
 
     /**
      * default constructor for hibernate usage
@@ -47,21 +48,11 @@ public class CustomerMeetingEntity extends AbstractEntity {
         this.customer = null;
     }
 
-    /**
-     * minimal constructor for builder
-     */
-    public CustomerMeetingEntity(final MeetingBO meeting, final Short updatedFlag) {
-        this.custMeetingId = null;
-        this.meeting = meeting;
-        this.updatedFlag = updatedFlag;
-    }
-
     public CustomerMeetingEntity(final CustomerBO customer, final MeetingBO meeting) {
         meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
         this.customer = customer;
         this.meeting = meeting;
         this.custMeetingId = null;
-        this.updatedFlag = YesNoFlag.NO.getValue();
     }
 
     public CustomerBO getCustomer() {
@@ -74,22 +65,6 @@ public class CustomerMeetingEntity extends AbstractEntity {
 
     void setMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
-    }
-
-    public Short getUpdatedFlag() {
-        return updatedFlag;
-    }
-
-    void setUpdatedFlag(final Short updatedFlag) {
-        this.updatedFlag = updatedFlag;
-    }
-
-    public MeetingBO getUpdatedMeeting() {
-        return updatedMeeting;
-    }
-
-    void setUpdatedMeeting(final MeetingBO updatedMeeting) {
-        this.updatedMeeting = updatedMeeting;
     }
 
     public void setCustomer(final CustomerBO customer) {

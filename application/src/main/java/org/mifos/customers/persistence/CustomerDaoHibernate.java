@@ -60,7 +60,6 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
@@ -100,7 +99,6 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -1509,20 +1507,6 @@ public class CustomerDaoHibernate implements CustomerDao {
             valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(GroupConstants.PREFIX_SEARCH_STRING, ""));
         }
         return valueAssociatedWithLastEnteredCustomer;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Integer> retrieveCustomerIdsOfCustomersWithUpdatedMeetings() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("updated", YesNoFlag.YES.getValue());
-        List<Integer> queryResult = (List<Integer>) this.genericDao.executeNamedQuery("getUpdatedMeetings", queryParameters);
-
-        if (queryResult == null) {
-            return new ArrayList<Integer>();
-        }
-
-        return queryResult;
     }
 
     @SuppressWarnings("unchecked")

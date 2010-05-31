@@ -577,10 +577,6 @@ public class CustomerAccountBO extends AccountBO {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
-            getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-            // FIXME - keithw - 00001 -
-            // getCustomer().changeUpdatedMeeting();
-
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = getMeetingForAccount();

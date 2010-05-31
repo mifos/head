@@ -12,21 +12,15 @@
             <generator class="native"/>
         </id>
         
-        <property name="updatedFlag"  column="UPDATED_FLAG"/>
+        <property name="updatedFlag"  column="UPDATED_FLAG" access="field" />
 		<many-to-one name="meeting" column="MEETING_ID"  
 		    class="org.mifos.application.meeting.business.MeetingBO" 
 		    insert="true" update="true"   unique="true" lazy="false" 
 		    cascade="save-update" access="field"/>
-		<many-to-one name="updatedMeeting" column="UPDATED_MEETING_ID"  
-		    class="org.mifos.application.meeting.business.MeetingBO" 
-		    insert="true" update="true"   unique="true" lazy="false" 
-		    cascade="save-update" access="field"/>
+		    
  		<many-to-one name="customer" column="CUSTOMER_ID"  
  		    class="org.mifos.customers.business.CustomerBO" 
  		    insert="true" update="true"  unique="true" 
  		    cascade="none" access="field"/>
     </class>
-    <query name="getUpdatedMeetings">
-    	<![CDATA[select meeting.customer.customerId from org.mifos.customers.business.CustomerMeetingEntity as meeting where meeting.updatedFlag=:updated  ]]>
-    </query>
 </hibernate-mapping>

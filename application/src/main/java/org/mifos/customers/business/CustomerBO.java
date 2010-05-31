@@ -968,9 +968,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    @Deprecated
     public void setUpdatedMeeting(final MeetingBO meeting) {
-        getCustomerMeeting().setUpdatedMeeting(meeting);
-        getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
     }
 
     /**

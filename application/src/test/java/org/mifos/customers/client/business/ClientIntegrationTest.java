@@ -749,8 +749,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        Assert.assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting()
-                .getUpdatedMeeting().getMeetingId());
+
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
         Assert.assertEquals(1, group1.getMaxChildCount().intValue());
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
@@ -766,7 +765,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        Assert.assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());

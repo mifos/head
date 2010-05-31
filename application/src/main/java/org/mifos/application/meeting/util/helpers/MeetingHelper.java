@@ -37,10 +37,8 @@ public class MeetingHelper {
         return this.getMessage(meeting, userContext, false);
     }
 
+    @Deprecated
     public String getUpdatedMeetingScheduleMessage(CustomerMeetingEntity customerMeeting, UserContext userContext) {
-        if (YesNoFlag.YES.getValue().equals(customerMeeting.getUpdatedFlag())) {
-            return this.getMessage(customerMeeting.getUpdatedMeeting(), userContext, true);
-        }
         return null;
     }
 
