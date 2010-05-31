@@ -62,14 +62,6 @@ public class HibernateUtil {
         }
     }
 
-    public void setThreadLocal(Session session) {
-        sessionTL.set(session);
-    }
-
-    public void resetDatabase() {
-        closeSession();
-    }
-
     /**
      * Open a new Hibernate session.
      */
@@ -166,7 +158,7 @@ public class HibernateUtil {
 
     }
 
-    public Session getSession() {
+    private Session getSession() {
         if (null == sessionTL.get()) {
             // need to log to indicate that the session is being invoked when
             // not present
@@ -175,20 +167,13 @@ public class HibernateUtil {
         return sessionTL.get();
     }
 
-    public Session getOrCreateSession() throws HibernateException {
+    private Session getOrCreateSession() throws HibernateException {
         if (sessionTL.get() == null) {
             interceptorTL.set(new AuditInterceptor());
             Session session = sessionFactory.openSession(interceptorTL.get());
-            setThreadLocal(session);
+            sessionTL.set(session);
         }
         return sessionTL.get();
-    }
-
-    public boolean isSessionOpen() {
-        if (getSession() != null) {
-            return getSession().isOpen();
-        }
-        return false;
     }
 
     public void commitTransaction() {

@@ -53,7 +53,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     public void tearDown() throws Exception {
         Statement stmt = session.connection().createStatement();
         stmt.execute("truncate questions");
-        StaticHibernateUtil.resetDatabase();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
