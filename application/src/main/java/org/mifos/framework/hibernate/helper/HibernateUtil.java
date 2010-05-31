@@ -176,13 +176,6 @@ public class HibernateUtil {
         return sessionTL.get();
     }
 
-    public boolean isSessionOpen() {
-        if (getSession() != null) {
-            return getSession().isOpen();
-        }
-        return false;
-    }
-
     public void commitTransaction() {
         if (getSessionTL().getTransaction().isActive()) {
             getSessionTL().getTransaction().commit();

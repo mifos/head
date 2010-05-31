@@ -82,10 +82,6 @@ public class StaticHibernateUtil {
         hibernateUtil.flushAndClearSession();
     }
 
-    public static boolean isSessionOpen() {
-        return hibernateUtil.isSessionOpen();
-    }
-
     public static void commitTransaction() {
         hibernateUtil.commitTransaction();
     }
