@@ -1,12 +1,27 @@
-#!/bin/sh
+#!/bin/bash
+
+null_rev=0000000000000000000000000000000000000000
 
 validate_pack()
 {
     oldrev=$(git rev-parse $1)
-    newrev=$(git rev-parse $2)                                                                                        refname="$3"                                                                                                  
-    for rev in $(git rev-list $oldrev..$newrev)
+    newrev=$(git rev-parse $2)
+    refname=$3 # unused
+
+    # ref (ie: tag/branch) deleted
+    [ $newrev == $null_rev ] && return
+
+    if [ $oldrev == $null_rev ]
+    then
+        # ref (ie: tag/branch) created
+        revlist=$newrev
+    else
+        revlist=$(git rev-list $oldrev..$newrev)
+    fi
+
+    for rev in $revlist
     do
-        authorName=$(git log "$rev" -n1 --pretty=format:%an)
+        authorName=$(git log $rev -n1 --pretty=format:%an)
         if ! echo "$authorName" | grep -q '[ ]'
         then
             echo >&2 "WARNING: Author for $rev ($authorName) does not look like a real name. See http://www.mifos.org/developers/wiki/MifosVersionControlGuide#author-info . This warning will become a fatal error."
