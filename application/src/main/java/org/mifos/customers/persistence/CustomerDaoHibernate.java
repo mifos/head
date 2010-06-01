@@ -688,11 +688,9 @@ public class CustomerDaoHibernate implements CustomerDao {
         if (customerMeeting != null) {
             String meetingSchedule = CustomerUIHelperFn.getMeetingSchedule(customerMeeting.getMeeting(), userContext);
 
-            String updatedMeetingScheduleMessage = CustomerUIHelperFn.getUpdatedMeetingSchedule(customerMeeting,
-                    userContext);
             String meetingPlace = customerMeeting.getMeeting().getMeetingPlace();
 
-            return new CustomerMeetingDto(meetingSchedule, updatedMeetingScheduleMessage, meetingPlace);
+            return new CustomerMeetingDto(meetingSchedule, meetingPlace);
         }
         return null;
     }

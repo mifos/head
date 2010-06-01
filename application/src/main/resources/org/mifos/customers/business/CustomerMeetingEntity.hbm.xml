@@ -12,7 +12,6 @@
             <generator class="native"/>
         </id>
         
-        <property name="updatedFlag"  column="UPDATED_FLAG" access="field" />
 		<many-to-one name="meeting" column="MEETING_ID"  
 		    class="org.mifos.application.meeting.business.MeetingBO" 
 		    insert="true" update="true"   unique="true" lazy="false" 
