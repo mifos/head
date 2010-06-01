@@ -47,7 +47,6 @@ public class MifosSchedulerTest {
         Assert.assertTrue(taskNames.contains("LoanArrearsTask"));
         Assert.assertTrue(taskNames.contains("SavingsIntCalcTask"));
         Assert.assertTrue(taskNames.contains("SavingsIntPostingTask"));
-        Assert.assertTrue(taskNames.contains("RegenerateScheduleTask"));
         Assert.assertTrue(taskNames.contains("PortfolioAtRiskTask"));
         Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
         Assert.assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));

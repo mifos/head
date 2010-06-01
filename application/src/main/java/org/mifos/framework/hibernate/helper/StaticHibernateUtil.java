@@ -20,9 +20,6 @@
 
 package org.mifos.framework.hibernate.helper;
 
-import java.sql.Connection;
-
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -45,14 +42,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    public static void setThreadLocal(SessionHolder holder) {
-        hibernateUtil.setThreadLocal(holder);
-    }
-
-    public static void resetDatabase() {
-        hibernateUtil.resetDatabase();
-    }
-
     public static Session openSession() throws HibernateProcessException {
         return hibernateUtil.openSession();
     }
@@ -63,10 +52,6 @@ public class StaticHibernateUtil {
 
     public static SessionFactory getSessionFactory() {
         return hibernateUtil.getSessionFactory();
-    }
-
-    public static Session openSession(Connection connection) {
-        return hibernateUtil.openSession(connection);
     }
 
     public static Session getSessionTL() {
@@ -95,18 +80,6 @@ public class StaticHibernateUtil {
 
     public static void flushAndClearSession() {
         hibernateUtil.flushAndClearSession();
-    }
-
-    public static SessionHolder getSessionHolder() {
-        return hibernateUtil.getSessionHolder();
-    }
-
-    public static SessionHolder getOrCreateSessionHolder() throws HibernateException {
-        return hibernateUtil.getOrCreateSessionHolder();
-    }
-
-    public static boolean isSessionOpen() {
-        return hibernateUtil.isSessionOpen();
     }
 
     public static void commitTransaction() {

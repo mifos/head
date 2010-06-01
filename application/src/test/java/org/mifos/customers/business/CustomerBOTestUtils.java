@@ -21,8 +21,6 @@
 package org.mifos.customers.business;
 
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.personnel.business.PersonnelBO;
 
 public class CustomerBOTestUtils {
@@ -43,18 +41,7 @@ public class CustomerBOTestUtils {
         customer.setDisplayName(displayName);
     }
 
-    public static void setUpdatedFlag(final CustomerMeetingEntity customerMeetingEntity, final Short updatedFlag) {
-        customerMeetingEntity.setUpdatedFlag(updatedFlag);
-    }
-
-    public static void setUpdatedMeeting(final CustomerMeetingEntity customerMeetingEntity,
-            final MeetingBO updatedMeeting) {
-        customerMeetingEntity.setUpdatedFlag(YesNoFlag.YES.getValue());
-        customerMeetingEntity.setUpdatedMeeting(updatedMeeting);
-    }
-
     public static void addFeesTrxnDetail(final CustomerTrxnDetailEntity accountTrxnEntity, final FeesTrxnDetailEntity feeTrxn) {
         accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
     }
-
 }

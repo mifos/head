@@ -70,7 +70,7 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
             transactionAcceptedPaymentTypes.setTransactionType(transactionType);
             currentAcceptedPaymentTypes.add(transactionAcceptedPaymentTypes);
             TransactionAcceptedPaymentTypes transactionAcceptedPaymentTypes2 = new TransactionAcceptedPaymentTypes();
-            List<AcceptedPaymentType> acceptedPaymentTypes2 = new ArrayList(acceptedPaymentTypes);
+            List<AcceptedPaymentType> acceptedPaymentTypes2 = new ArrayList<AcceptedPaymentType>(acceptedPaymentTypes);
             transactionAcceptedPaymentTypes2.setAcceptedPaymentTypes(acceptedPaymentTypes2);
             transactionAcceptedPaymentTypes2.setTransactionType(transactionType);
             allAcceptedPaymentTypes.add(transactionAcceptedPaymentTypes2);

@@ -173,8 +173,6 @@ public interface CustomerDao {
 
     void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException;
 
-    List<Integer> retrieveCustomerIdsOfCustomersWithUpdatedMeetings();
-
     // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 

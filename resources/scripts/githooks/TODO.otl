@@ -1,0 +1,4 @@
+[_] port hook scripts to python(?)
+	easier to test, re-use code
+	[_] make sure sf.net supports this
+[_] create test suite for these git hook scripts

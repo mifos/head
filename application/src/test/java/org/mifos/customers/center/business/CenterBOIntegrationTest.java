@@ -28,22 +28,18 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.center.util.helpers.CenterSearchResultsDto;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -51,7 +47,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -67,11 +62,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private CenterBO center;
-
-    private GroupBO group;
-
-    private ClientBO client;
-
     private final Short officeId = 1;
     private OfficeBO officeBo;
 
@@ -182,64 +172,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testUpdateMeeting_SaveToUpdateLater() throws Exception {
-        createCustomers();
-        String oldMeetingPlace = "Delhi";
-        MeetingBO centerMeeting = center.getCustomerMeeting().getMeeting();
-        String meetingPlace = "Bangalore";
-        MeetingBO newMeeting = new MeetingBO(WeekDay.MONDAY, centerMeeting.getMeetingDetails().getRecurAfter(),
-                centerMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        center.setUserContext(TestObjectFactory.getContext());
-        center.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-       Assert.assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-
-       Assert.assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
-
-       Assert.assertEquals(oldMeetingPlace, center.getCustomerMeeting().getMeeting().getMeetingPlace());
-       Assert.assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-       Assert.assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
-
-       Assert.assertEquals(meetingPlace, center.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-       Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-    }
-
-    public void testUpdateMeeting_updateWithSaveMeeting() throws Exception {
-        testUpdateMeeting_SaveToUpdateLater();
-        Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
-        center.changeUpdatedMeeting();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-       Assert.assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-       Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-
-        Assert.assertNull(center.getCustomerMeeting().getUpdatedMeeting());
-        Assert.assertNull(group.getCustomerMeeting().getUpdatedMeeting());
-        Assert.assertNull(client.getCustomerMeeting().getUpdatedMeeting());
-
-        MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeeting);
-        Assert.assertNull(meeting);
-    }
-
     public void testCenterSearchResultsView() {
 
         CenterSearchResultsDto searchResults = new CenterSearchResultsDto();
@@ -283,15 +215,6 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals("1.2", sameBranch.getSearchId());
     }
 
-    private void createCustomers() throws Exception {
-        meeting = new MeetingBO(WeekDay.THURSDAY, TestObjectFactory.EVERY_WEEK, new Date(),
-                MeetingType.CUSTOMER_MEETING, "Delhi");
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
-                center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-    }
-
     private MeetingBO getMeeting() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         return meeting;
@@ -315,11 +238,4 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.commitTransaction();
         return fees;
     }
-
-    private void removeFees(List<FeeDto> feesToRemove) {
-        for (FeeDto fee : feesToRemove) {
-            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-        }
-    }
-
 }

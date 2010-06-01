@@ -520,25 +520,6 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
-        if (getCustomerMeeting() == null) {
-            this.setCustomerMeeting(createCustomerMeeting(meeting));
-        } else {
-            saveUpdatedMeeting(meeting);
-        }
-        this.update();
-    }
-
-    @Override
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null) {
-            deleteMeeting(newMeeting);
-        }
-    }
-
-    @Override
     public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return (oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))

@@ -577,13 +577,6 @@ public class CustomerAccountBO extends AccountBO {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
-            try {
-                getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-                getCustomer().changeUpdatedMeeting();
-            } catch (CustomerException ce) {
-                throw new AccountException(ce);
-            }
-
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = getMeetingForAccount();
@@ -613,16 +606,6 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         return customerSchedulePayments;
-    }
-
-    @Override
-    protected void resetUpdatedFlag() throws AccountException {
-        try {
-            getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-            getCustomer().changeUpdatedMeeting();
-        } catch (CustomerException ce) {
-            throw new AccountException(ce);
-        }
     }
 
     public void generateNextSetOfMeetingDates(ScheduledDateGeneration scheduleGenerationStrategy) {

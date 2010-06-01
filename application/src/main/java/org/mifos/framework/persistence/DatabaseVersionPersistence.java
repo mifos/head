@@ -344,7 +344,7 @@ public class DatabaseVersionPersistence {
     }
 
     public DatabaseVersionPersistence() {
-        this(StaticHibernateUtil.getOrCreateSessionHolder().getSession().connection());
+        this(StaticHibernateUtil.getSessionTL().connection());
     }
 
     public DatabaseVersionPersistence(Connection connection) {

@@ -97,7 +97,6 @@ public class LoginAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         loginLogger.debug("Inside login of LoginAction");
         loginLogger.debug("Using Thread: " + Thread.currentThread().getName());
-        loginLogger.debug("Is Session Open?: " + StaticHibernateUtil.isSessionOpen());
         loginLogger.debug("Using hibernate session: " + StaticHibernateUtil.getSessionTL().hashCode());
 
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
