@@ -177,7 +177,7 @@ public class TestSaveCollectionSheetUtils {
                         sampleBranchOffice()).build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForFirstClients);
 
-        client = new ClientBuilder().withFee(weeklyPeriodicFeeForFirstClients).withMeeting(weeklyMeeting).withName(
+        client = new ClientBuilder().withMeeting(weeklyMeeting).withName(
                 "Client 1").withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group)
                 .buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(client, weeklyMeeting);

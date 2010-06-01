@@ -1521,4 +1521,25 @@ public class CustomerDaoHibernate implements CustomerDao {
         }
         return queryResult;
     }
+
+    @Override
+    public void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer)
+            throws CustomerException {
+
+        Short recordOfficeId = customer.getOffice().getOfficeId();
+        Short recordLoanOfficerId = userContext.getId();
+
+        if (customer.getPersonnel() != null) {
+            recordLoanOfficerId = customer.getPersonnel().getPersonnelId();
+        }
+
+        if (!isPermissionAllowed(customer.getLevel(), userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isEditMeetingSchedulePermittedForCustomers(customerLevel, userContext,
+                recordOfficeId, recordLoanOfficerId);
+    }
 }

@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
@@ -60,7 +59,7 @@ public class MeetingAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getMeetingBusinessService();
+        return null;
     }
 
     @Override
@@ -110,8 +109,9 @@ public class MeetingAction extends BaseAction {
         loadMasterData(request);
         if (customer.getCustomerMeeting() != null) {
             loadMasterData(request);
-            MeetingBO meeting = getMeetingBusinessService().getMeeting(
-                    customer.getCustomerMeeting().getMeeting().getMeetingId());
+
+            MeetingBO meeting = customer.getCustomerMeeting().getMeeting();
+
             setValuesInActionForm(actionForm, meeting);
             forward = mapping.findForward(ActionForwards.edit_success.toString());
             actionForm.setInput(MeetingConstants.INPUT_EDIT);
@@ -250,10 +250,6 @@ public class MeetingAction extends BaseAction {
         } else {
             return ActionForwards.client_detail_page;
         }
-    }
-
-    private MeetingBusinessService getMeetingBusinessService() {
-        return new MeetingBusinessService();
     }
 
     private void loadMasterData(HttpServletRequest request) throws Exception {

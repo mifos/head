@@ -37,11 +37,14 @@ import org.dom4j.io.SAXReader;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 
@@ -383,5 +386,10 @@ public class TestUtils {
         int yhashcode = notx.hashCode();
 
         Assert.assertTrue("Equal object, return unequal hashcode test fails", !(xhashcode == yhashcode));
+    }
+
+    public static DateTime nearestDateMatchingPeriodStartingOn(DateTime inclusiveOf, MeetingBO period) {
+        ScheduledEvent scheduledEvent =  ScheduledEventFactory.createScheduledEventFrom(period);
+        return scheduledEvent.nearestMatchingDateBeginningAt(inclusiveOf);
     }
 }

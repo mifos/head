@@ -44,7 +44,6 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -129,7 +128,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.validateMeetingAndFees(accountFees);
 
 //        FIXME - keithw - should we ensure center names are unique per branch/office
-//        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+//        customerDao.validateCenterNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
@@ -982,12 +981,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO customer = this.customerDao.findCustomerById(meetingUpdateRequest.getCustomerId());
 
-        if (customer.getPersonnel() != null) {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(),
-                    customer.getPersonnel().getPersonnelId());
-        } else {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(), userContext.getId());
-        }
+        customer.validateIsTopOfHierarchy();
+
+        customerDao.checkPermissionForEditMeetingSchedule(userContext, customer);
 
         try {
             CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
@@ -995,10 +991,12 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
 
             MeetingBO meeting = customer.getCustomerMeetingValue();
-            updateMeeting(meeting, meetingUpdateRequest);
+            boolean scheduleUpdateRequired = updateMeeting(meeting, meetingUpdateRequest);
             customerDao.save(customer);
 
-            handleChangeInMeetingSchedule(customer, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+            if (scheduleUpdateRequired) {
+                handleChangeInMeetingSchedule(customer, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+            }
 
             this.hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
@@ -1009,19 +1007,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest updatedDetails) throws CustomerException {
+    private boolean updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest updatedDetails) throws CustomerException {
+        boolean isRegenerationOfSchedulesRequired = false;
+
         try {
             if (oldMeeting.isWeekly()) {
+
+                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(updatedDetails.getWeekDay());
                 oldMeeting.update(updatedDetails.getWeekDay(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthlyOnDate()) {
+                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfMonthDifferent(updatedDetails.getDayOfMonth());
                 oldMeeting.update(updatedDetails.getDayOfMonth(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthly()) {
+                isRegenerationOfSchedulesRequired = oldMeeting.isWeekOfMonthDifferent(updatedDetails.getRankOfDay(), updatedDetails.getMonthWeek());
                 oldMeeting.update(updatedDetails.getMonthWeek(), updatedDetails.getRankOfDay(), updatedDetails.getMeetingPlace());
             }
 
         } catch (MeetingException me) {
             throw new CustomerException(me);
         }
+
+        return isRegenerationOfSchedulesRequired;
     }
 
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
