@@ -59,7 +59,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
@@ -574,8 +573,6 @@ public class CustomerAccountBO extends AccountBO {
 
     @Override
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-        if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
-                && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
@@ -591,7 +588,6 @@ public class CustomerAccountBO extends AccountBO {
                     startFromMeetingDate, scheduledEvent);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-        }
     }
 
     private List<CustomerScheduleEntity> findAllUnpaidInstallmentsUpTo(final Date transactionDate) {

@@ -1879,9 +1879,6 @@ public class SavingsBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
-                && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
-
             MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
             DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
@@ -1907,7 +1904,6 @@ public class SavingsBO extends AccountBO {
                 }
                 updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
             }
-        }
 
     }
 
