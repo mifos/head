@@ -20,21 +20,31 @@
 
 package org.mifos.customers;
 
+import static org.mifos.framework.TestUtils.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.CustomerAccountBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
+import org.mifos.calendar.DayOfWeek;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -48,6 +58,7 @@ import org.mifos.domain.builders.CalendarEventBuilder;
 import org.mifos.domain.builders.MeetingUpdateRequestBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
@@ -84,6 +95,21 @@ public class UpdateCustomerMeetingScheduleTest {
     // stubbed data
     @Mock
     private CenterBO mockedCenter;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
+
 
     @Before
     public void setupAndInjectDependencies() {
@@ -135,7 +161,9 @@ public class UpdateCustomerMeetingScheduleTest {
         // setup
         UserContext userContext = TestUtils.makeUser();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
-        CenterBO center = new CenterBuilder().active().with(weeklyMeeting).build();
+
+        CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
+        CenterBO center = new CenterBuilder().active().with(weeklyMeeting).withAccount(accountBuilder).build();
 
         Integer customerId = Integer.valueOf(1);
         MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.MONDAY).build();
@@ -143,10 +171,15 @@ public class UpdateCustomerMeetingScheduleTest {
         // stubbing
         when(customerDao.findCustomerById(customerId)).thenReturn(center);
 
+        // pre - verification
+        Set<AccountActionDateEntity> originalCustomerSchedules = center.getCustomerAccount().getAccountActionDates();
+
         // exercise test
         customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
 
         // verification
+        Set<AccountActionDateEntity> updatedCustomerSchedules = center.getCustomerAccount().getAccountActionDates();
+        assertThat(originalCustomerSchedules, is(updatedCustomerSchedules));
     }
 
     @Test
@@ -154,7 +187,8 @@ public class UpdateCustomerMeetingScheduleTest {
 
         // setup
         UserContext userContext = TestUtils.makeUser();
-        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
+        DateTime mondayTwoWeeksAgo = new DateTime().withDayOfWeek(DayOfWeek.monday()).minusWeeks(2);
+        MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).withStartDate(mondayTwoWeeksAgo).build();
 
         CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
         CenterBO center = new CenterBuilder().active().with(weeklyMeeting).withAccount(accountBuilder).build();
@@ -166,9 +200,14 @@ public class UpdateCustomerMeetingScheduleTest {
         when(customerDao.findCustomerById(customerId)).thenReturn(center);
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
 
+        // pre - verification
+        List<AccountActionDateEntity> originalCustomerSchedules = new ArrayList<AccountActionDateEntity>(center.getCustomerAccount().getAccountActionDates());
+
         // exercise test
         customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
 
         // verification
+        List<AccountActionDateEntity> updatedCustomerSchedules = new ArrayList<AccountActionDateEntity>(center.getCustomerAccount().getAccountActionDates());
+        assertThat(originalCustomerSchedules, is(updatedCustomerSchedules));
     }
 }

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -72,7 +73,8 @@ public class CenterBuilder {
         }
 
         if (customerAccountBuilder != null) {
-            customerAccountBuilder.withCustomer(center).buildForUnitTests();
+            CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(center).buildForUnitTests();
+            center.addAccount(customerAccount);
         }
 
         return center;

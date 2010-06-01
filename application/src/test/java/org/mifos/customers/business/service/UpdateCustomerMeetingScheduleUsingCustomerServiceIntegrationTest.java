@@ -20,20 +20,14 @@
 
 package org.mifos.customers.business.service;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import java.util.Set;
-
-import org.joda.time.DateMidnight;
+import static org.mifos.framework.TestUtils.*;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -41,8 +35,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -193,34 +185,5 @@ public class UpdateCustomerMeetingScheduleUsingCustomerServiceIntegrationTest {
         GroupBO modifiedGroup = customerDao.findGroupBySystemId(existingGroup.getGlobalCustNum());
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(modifiedGroup, orginalDayOfWeek);
         assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(modifiedGroup, WeekDay.MONDAY);
-    }
-
-    private void assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(CustomerBO customer, WeekDay expectedDayOfWeek) {
-        Set<AccountActionDateEntity> customerSchedules = customer.getCustomerAccount().getAccountActionDates();
-        for (AccountActionDateEntity accountActionDateEntity : customerSchedules) {
-            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
-
-            LocalDate scheduledDate = new LocalDate(customerSchedule.getActionDate());
-            DateTime endOfCurrentInstallmentPeriod = TestUtils.nearestDateMatchingPeriodStartingOn(new DateMidnight().toDateTime(), customer.getCustomerMeetingValue());
-            LocalDate endOfCurrentInstallmentPeriodLocalDate = new LocalDate(endOfCurrentInstallmentPeriod);
-
-            if (scheduledDate.isBefore(endOfCurrentInstallmentPeriodLocalDate)) {
-                assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
-            }
-        }
-    }
-
-    private void assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(CustomerBO customer, WeekDay expectedDayOfWeek) {
-        Set<AccountActionDateEntity> customerSchedules = customer.getCustomerAccount().getAccountActionDates();
-        for (AccountActionDateEntity accountActionDateEntity : customerSchedules) {
-            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
-
-            LocalDate scheduledDate = new LocalDate(customerSchedule.getActionDate());
-            DateTime endOfCurrentInstallmentPeriod = TestUtils.nearestDateMatchingPeriodStartingOn(new DateMidnight().toDateTime(), customer.getCustomerMeetingValue());
-
-            if (scheduledDate.isAfter(new LocalDate(endOfCurrentInstallmentPeriod))) {
-                assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
-            }
-        }
     }
 }

@@ -178,10 +178,4 @@ public class FiscalCalendarRulesTest {
        Assert.assertEquals(scheduleType.toUpperCase(), "same_day".toUpperCase());
     }
 
-    @Test
-    public void testGetDaysForCalDefinition() {
-        Short days = new FiscalCalendarRules().getDaysForCalendarDefinition();
-       Assert.assertEquals(days.shortValue(), 30);
-    }
-
 }

@@ -1038,9 +1038,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.save(account);
         }
 
-        List<Integer> customerIds = customerDao.retrieveCustomerIdsOfChildrenForParent(customer.getSearchId(), customer.getOffice().getOfficeId());
-        for (Integer childCustomerId : customerIds) {
-            CustomerBO child = customerDao.findCustomerById(childCustomerId);
+        for (CustomerBO child : customer.getChildren()) {
             handleChangeInMeetingSchedule(child, workingDays, orderedUpcomingHolidays);
         }
     }

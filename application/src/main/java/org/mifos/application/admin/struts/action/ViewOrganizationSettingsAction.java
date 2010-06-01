@@ -86,8 +86,6 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         Properties fiscalRules = new Properties();
 
         fiscalRules.setProperty("workingDays", getWorkingDays());
-        fiscalRules
-                .setProperty("allowCalDefForNextYear", new FiscalCalendarRules().getDaysForCalendarDefinition().toString());
         fiscalRules.setProperty("startOfWeek", WeekDay.getWeekDay(new FiscalCalendarRules().getStartOfWeek()).getName());
         fiscalRules.setProperty("offDays", getOffDays());
         fiscalRules.setProperty("holidayMeeting", new FiscalCalendarRules().getScheduleTypeForMeetingOnHoliday());
