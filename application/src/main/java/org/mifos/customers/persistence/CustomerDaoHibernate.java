@@ -288,12 +288,14 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomerDetailDto> findClientsThatAreNotCancelledOrClosedReturningDetailDto(String searchId, Short branchId) {
+    public List<CustomerDetailDto> findClientsThatAreNotCancelledOrClosedReturningDetailDto(String searchId,
+            Short branchId) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", searchId + ".%");
         queryParameters.put("OFFICE_ID", branchId);
-        List<CustomerDetailDto> clients = (List<CustomerDetailDto>) genericDao.executeNamedQuery("Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled", queryParameters);
+        List<CustomerDetailDto> clients = (List<CustomerDetailDto>) genericDao.executeNamedQuery(
+                "Customer.getListOfClientsUnderGroupOtherThanClosedAndCancelled", queryParameters);
 
         // bug #1417 - wrong client sort order. Client sort order on bulk
         // entry screens should match ordering on group details page.
@@ -323,7 +325,8 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     private List<CustomerDto> findCustomersThatAreNotClosedOrCanceled(Map<String, Object> queryParameters) {
-        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
+        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery(
+                NamedQueryConstants.GET_CHILDREN_OTHER_THAN_CLOSED_AND_CANCELLED, queryParameters);
 
         List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
         for (CustomerBO customerBO : queryResult) {
@@ -892,10 +895,12 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("prdApplicableTo", ApplicableTo.CLIENTS.getValue());
 
-        List<SavingsOfferingBO> savingOfferings = (List<SavingsOfferingBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
+        List<SavingsOfferingBO> savingOfferings = (List<SavingsOfferingBO>) this.genericDao.executeNamedQuery(
+                NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
         for (SavingsOfferingBO savingsOffering : savingOfferings) {
 
-            SavingsDetailDto savingsDetailsWithOnlyPrdOfferingName = SavingsDetailDto.create(savingsOffering.getPrdOfferingId(), savingsOffering.getPrdOfferingName());
+            SavingsDetailDto savingsDetailsWithOnlyPrdOfferingName = SavingsDetailDto.create(savingsOffering
+                    .getPrdOfferingId(), savingsOffering.getPrdOfferingName());
             savingDetails.add(savingsDetailsWithOnlyPrdOfferingName);
         }
 
@@ -914,11 +919,13 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
         final Integer customerIdRepresentingClosedClient = Integer.valueOf(0);
-        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId, customerIdRepresentingClosedClient);
+        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
+                customerIdRepresentingClosedClient);
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId, final Integer customerId) {
+    private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
+            final Integer customerId) {
 
         if (StringUtils.isBlank(governmentId)) {
             return false;
@@ -934,12 +941,13 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     private boolean checkForDuplicacyForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
-        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth, Integer
-                .valueOf(0));
+        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
+                Integer.valueOf(0));
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth, final Integer customerId) {
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
+            final Integer customerId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
         queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
@@ -959,7 +967,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.CENTER.getValue());
         queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE, CustomerStatus.CENTER_ACTIVE.getValue());
 
-        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_active_centers", queryParameters, CustomerDetailDto.class);
+        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer(
+                "Customer.get_loanofficer_list_of_active_centers", queryParameters, CustomerDetailDto.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -969,7 +978,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel.getPersonnelId());
         queryParameters.put(CustomerSearchConstants.OFFICEID, personnel.getOffice().getOfficeId());
         queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID, CustomerLevel.GROUP.getValue());
-        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer("Customer.get_loanofficer_list_of_groups", queryParameters, CustomerDetailDto.class);
+        return (List<CustomerDetailDto>) this.genericDao.executeNamedQueryWithResultTransformer(
+                "Customer.get_loanofficer_list_of_groups", queryParameters, CustomerDetailDto.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -978,7 +988,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", groupSearchId + ".%");
         queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getAvgLoanAmountForMemberInGoodOrBadStanding", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery(
+                "Customer.getAvgLoanAmountForMemberInGoodOrBadStanding", queryParameters);
 
         if (queryResult.size() > 1) {
             return localizedMessageLookup("errors.multipleCurrencies");
@@ -1008,7 +1019,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("SEARCH_STRING", groupSearchId);
         queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
         queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery(
+                "Customer.getTotalOutstandingLoanAmountForGroupAndClientsOfGroups", queryParameters);
 
         if (queryResult.size() > 1) {
             return localizedMessageLookup("errors.multipleCurrencies");
@@ -1032,7 +1044,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("SEARCH_STRING", groupSearchId);
         queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
         queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getTotalSavingsAmountForGroupandClientsOfGroup", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery(
+                "Customer.getTotalSavingsAmountForGroupandClientsOfGroup", queryParameters);
 
         if (queryResult.size() > 1) {
             return localizedMessageLookup("errors.multipleCurrencies");
@@ -1081,7 +1094,8 @@ public class CustomerDaoHibernate implements CustomerDao {
     public GroupDisplayDto getGroupDisplayDto(Integer groupId, UserContext userContext) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("GROUP_ID", groupId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("getGroupDisplayDto", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("getGroupDisplayDto",
+                queryParameters);
 
         if (queryResult.size() == 0) {
             throw new MifosRuntimeException("Group not found: " + groupId);
@@ -1147,7 +1161,8 @@ public class CustomerDaoHibernate implements CustomerDao {
     public ClientDisplayDto getClientDisplayDto(Integer clientId, UserContext userContext) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CLIENT_ID", clientId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientDisplayDto", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientDisplayDto",
+                queryParameters);
 
         if (queryResult.size() == 0) {
             throw new MifosRuntimeException("Client not found: " + clientId);
@@ -1210,7 +1225,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         if (areFamilyDetailsRequired) {
             familyDetails = new ArrayList<ClientFamilyDetailDto>();
 
-            List<Object[]> familyDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientFamilyDetailDto", queryParameters);
+            List<Object[]> familyDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
+                    "getClientFamilyDetailDto", queryParameters);
 
             for (Object[] familyDetail : familyDetailsQueryResult) {
                 final String relationshipLookup = (String) familyDetail[0];
@@ -1228,7 +1244,8 @@ public class CustomerDaoHibernate implements CustomerDao {
             }
         } else {
 
-            List<Object[]> clientNameDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getClientNameDetailDto", queryParameters);
+            List<Object[]> clientNameDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
+                    "getClientNameDetailDto", queryParameters);
 
             final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
             spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
@@ -1255,10 +1272,12 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("DATEONEYEARBEFORE", dateOneYearBefore);
 
         if (isPresent) {
-            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED, queryParameters);
+            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(
+                    NamedQueryConstants.NUMBEROFMEETINGSATTENDED, queryParameters);
             customerPerformanceHistoryDto.setMeetingsAttended(result.intValue());
         } else {
-            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED, queryParameters);
+            Long result = (Long) this.genericDao.executeUniqueResultNamedQuery(
+                    NamedQueryConstants.NUMBEROFMEETINGSMISSED, queryParameters);
             customerPerformanceHistoryDto.setMeetingsMissed(result.intValue());
         }
 
@@ -1283,7 +1302,8 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     private CustomerStatusEntity findCustomerStatusByStatusId(Map<String, Object> queryParameters) {
-        return (CustomerStatusEntity) genericDao.executeUniqueResultNamedQuery("findCustomerStatusByStatusId", queryParameters);
+        return (CustomerStatusEntity) genericDao.executeUniqueResultNamedQuery("findCustomerStatusByStatusId",
+                queryParameters);
     }
 
     @SuppressWarnings("unchecked")
@@ -1292,7 +1312,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("OFFICE_ID", officeIdValue);
         queryParameters.put("PARENT_CUSTOMER", null);
 
-        List queryResult = this.genericDao.executeNamedQuery("maxIdOfCustomersWithNoParentWithinOffice", queryParameters);
+        List queryResult = this.genericDao.executeNamedQuery("maxIdOfCustomersWithNoParentWithinOffice",
+                queryParameters);
 
         Object result = queryResult.get(0);
 
@@ -1300,7 +1321,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             return 0;
         }
 
-        return ((Number)result).intValue();
+        return ((Number) result).intValue();
     }
 
     @SuppressWarnings("unchecked")
@@ -1325,12 +1346,14 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<AccountBO> findGLIMLoanAccountsApplicableTo(final Integer customerId, final Integer customerWithActiveAccount) {
+    public List<AccountBO> findGLIMLoanAccountsApplicableTo(final Integer customerId,
+            final Integer customerWithActiveAccount) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
 
-        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery("findGLIMLoanAccountsByCustomerId", queryParameters);
+        List<LoanBO> queryResult = (List<LoanBO>) this.genericDao.executeNamedQuery("findGLIMLoanAccountsByCustomerId",
+                queryParameters);
 
         List<AccountBO> matchingAccounts = new ArrayList<AccountBO>();
         for (LoanBO loanAccount : queryResult) {
@@ -1350,7 +1373,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("entityId", EntityType.CENTER.getValue());
 
-        return (List<FieldConfigurationEntity>) this.genericDao.executeNamedQuery("findVisibleMandatoryConfigurableFieldsApplicableTo", queryParameters);
+        return (List<FieldConfigurationEntity>) this.genericDao.executeNamedQuery(
+                "findVisibleMandatoryConfigurableFieldsApplicableTo", queryParameters);
     }
 
     @Override
@@ -1375,8 +1399,8 @@ public class CustomerDaoHibernate implements CustomerDao {
      * This method was introduced for when a center is assigned a new loan officer, and this loan officer needs to be
      * re-assigned not just for the center's groups and clients, but for each account belonging to those customers.
      *
-     * Note: Required as to fix issues 1570 and 1804
-     * Note: 10/08/2008: direct sqls are used to improve performance (issue 2209)
+     * Note: Required as to fix issues 1570 and 1804 Note: 10/08/2008: direct sqls are used to improve performance
+     * (issue 2209)
      *
      * @param parentLO
      *            the parent loan officer
@@ -1385,7 +1409,8 @@ public class CustomerDaoHibernate implements CustomerDao {
      * @param parentOfficeId
      *            the parent office id
      */
-    public final void updateLoanOfficersForAllChildrenAccounts(final Short parentLO, String parentSearchId, final Short parentOfficeId) {
+    public final void updateLoanOfficersForAllChildrenAccounts(final Short parentLO, String parentSearchId,
+            final Short parentOfficeId) {
 
         if (parentLO == null || parentSearchId == null || parentOfficeId == null) {
             return;
@@ -1396,7 +1421,8 @@ public class CustomerDaoHibernate implements CustomerDao {
         String childrenSearchId = parentSearchId + ".%";
 
         try {
-            Connection connection = ((GenericDaoHibernate)this.genericDao).getHibernateUtil().getSessionTL().connection();
+            Connection connection = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL()
+                    .connection();
             statement = connection.createStatement();
             String sql = " select customer_id from customer where " + " customer.search_id like '" + childrenSearchId
                     + "' and customer.branch_id = " + parentOfficeId.shortValue();
@@ -1409,8 +1435,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             }
         } catch (SQLException e) {
             throw new MifosRuntimeException(e);
-        }
-        finally {
+        } finally {
             try {
                 if (statement != null) {
                     statement.close();
@@ -1463,13 +1488,16 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         if (StringUtils.isNotBlank(governmentId)) {
             if (checkForDuplicacyOnGovtIdForNonClosedClients(governmentId, customerId) == true) {
-                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID, client.getUserContext());
-                throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId, label });
+                String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GOVERNMENT_ID,
+                        client.getUserContext());
+                throw new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, new Object[] { governmentId,
+                        label });
             }
         }
 
         if (checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob, customerId) == true) {
-            throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, new Object[] { name });
+            throw new CustomerException(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
+                    new Object[] { name });
         }
     }
 
@@ -1479,12 +1507,15 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     // returns true if a duplicate client is found with same display name and dob in state other than closed
-    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob, final Integer customerId) {
-        return checkForDuplicacyBasedOnName("Customer.getNonClosedClientBasedOnNameAndDateOfBirth" , name, dob, customerId);
+    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob,
+            final Integer customerId) {
+        return checkForDuplicacyBasedOnName("Customer.getNonClosedClientBasedOnNameAndDateOfBirth", name, dob,
+                customerId);
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob, final Integer customerId) {
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob,
+            final Integer customerId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
         queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
@@ -1502,23 +1533,10 @@ public class CustomerDaoHibernate implements CustomerDao {
         if (maxCustomerId > 0) {
             final CustomerBO lastEnteredNonParentCustomerUnderOffice = findCustomerById(maxCustomerId);
             final String searchId = lastEnteredNonParentCustomerUnderOffice.getSearchId();
-            valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(GroupConstants.PREFIX_SEARCH_STRING, ""));
+            valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(
+                    GroupConstants.PREFIX_SEARCH_STRING, ""));
         }
         return valueAssociatedWithLastEnteredCustomer;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Integer> retrieveCustomerIdsOfChildrenForParent(String searchId, Short officeId) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", searchId + ".%");
-        queryParameters.put("OFFICE_ID", officeId);
-        List<Integer> queryResult = (List<Integer>) this.genericDao.executeNamedQuery("Customer.getChildrenForParent",
-                queryParameters);
-
-        if (queryResult == null) {
-            queryResult = new ArrayList<Integer>();
-        }
-        return queryResult;
-    }
 }

@@ -204,5 +204,4 @@ public interface CustomerDao {
 
     void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 
-    List<Integer> retrieveCustomerIdsOfChildrenForParent(String searchId, Short officeId);
 }
