@@ -40,9 +40,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
@@ -54,6 +56,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -94,10 +97,19 @@ public class StandardAccountServiceTest {
 
     private LoanBO accountBO;
 
+    @Mock
+    private LoanPersistence loanPersistence;
+
+    @Mock
+    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+
+    @Mock
+    private PersonnelDao personnelDao;
+
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService();
-        standardAccountService.setAccountPersistence(accountPersistence);
+        standardAccountService = new StandardAccountService(accountPersistence, loanPersistence,
+                acceptedPaymentTypePersistence, personnelDao);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);
@@ -115,28 +127,27 @@ public class StandardAccountServiceTest {
         UserReferenceDto userMakingPayment = new UserReferenceDto(userId);
         AccountReferenceDto loanAccount = new AccountReferenceDto(accountId);
         BigDecimal paymentAmount = new BigDecimal("100");
-        LocalDate paymentDate = new LocalDate(2009,10,1);
+        LocalDate paymentDate = new LocalDate(2009, 10, 1);
         String comment = "some comment";
         java.sql.Date lastMeetingDate = new java.sql.Date(paymentDate.minusWeeks(3).toDateMidnight().getMillis());
 
         when(customerBO.getCustomerId()).thenReturn(customerId);
         when(accountPersistence.getAccount(accountId)).thenReturn(accountBO);
-        //when(accountBO.isTrxnDateValid(paymentDate.toDateMidnight().toDate())).thenReturn(true);
+        // when(accountBO.isTrxnDateValid(paymentDate.toDateMidnight().toDate())).thenReturn(true);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(customerPersistence.getLastMeetingDateForCustomer(anyInt())).thenReturn(lastMeetingDate);
         when(personnelPersistence.getPersonnel(anyShort())).thenReturn(personnelBO);
 
         // FIXME - work in progress Vanmh
-        //standardLoanAccountService.makeLoanPayment(new AccountPaymentParametersDTO(userMakingPayment, loanAccount, paymentAmount, paymentDate, PaymentTypeDTO.CASH, comment));
+        // standardLoanAccountService.makeLoanPayment(new AccountPaymentParametersDTO(userMakingPayment, loanAccount,
+        // paymentAmount, paymentDate, PaymentTypeDTO.CASH, comment));
     }
 
-    private AccountPaymentParametersDto createAccountPaymentParametersDto(short userId, int accountId, String paymentAmount) {
-        AccountPaymentParametersDto accountPaymentParametersDTO = new AccountPaymentParametersDto(
-            new UserReferenceDto(userId),
-            new AccountReferenceDto(accountId),
-            new BigDecimal(paymentAmount),
-            new LocalDate(),
-            new PaymentTypeDto((short)1,"CASH"),"");
+    private AccountPaymentParametersDto createAccountPaymentParametersDto(short userId, int accountId,
+            String paymentAmount) {
+        AccountPaymentParametersDto accountPaymentParametersDTO = new AccountPaymentParametersDto(new UserReferenceDto(
+                userId), new AccountReferenceDto(accountId), new BigDecimal(paymentAmount), new LocalDate(),
+                new PaymentTypeDto((short) 1, "CASH"), "");
 
         return accountPaymentParametersDTO;
     }
@@ -169,15 +180,14 @@ public class StandardAccountServiceTest {
 
     }
 
-
     @Test
     public void testMakeLoanDisbursements() throws Exception {
-        //TODO Assert.fail("unimplemented");
+        // TODO Assert.fail("unimplemented");
     }
 
     @Test
     public void testValidateDisbursement() throws Exception {
-        //TODO Assert.fail("unimplemented");
+        // TODO Assert.fail("unimplemented");
     }
 
     @Test
@@ -186,17 +196,17 @@ public class StandardAccountServiceTest {
         int accountId = 3;
         when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(someAccountBo);
         when(someAccountBo.getAccountId()).thenReturn(accountId);
-        AccountReferenceDto accountReferenceDto = standardAccountService.
-            lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
+        AccountReferenceDto accountReferenceDto = standardAccountService
+                .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
         assertThat(accountReferenceDto.getAccountId(), is(accountId));
     }
 
-    @Test(expected=PersistenceException.class)
+    @Test(expected = PersistenceException.class)
     public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
         when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(null);
-        AccountReferenceDto accountReferenceDto = standardAccountService.
-            lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
+        AccountReferenceDto accountReferenceDto = standardAccountService
+                .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }
 
     private class PrivateLoanAccountBuilder {
@@ -221,52 +231,21 @@ public class StandardAccountServiceTest {
         private final double minInterestRate = 0.0;
         private final short maxInstall = 100;
         private final short minInstall = 2;
+
         /*
-    public LoanBO(final UserContext userContext,
-        final LoanOfferingBO loanOffering,
-        final CustomerBO customer,
-        final AccountState accountState,
-        final Money loanAmount,
-        final Short noOfinstallments,
-        final Date disbursementDate,
-        final boolean interestDeductedAtDisbursement,
-        final Double interestRate,
-        final Short gracePeriodDuration,
-        final FundBO fund,
-        final List<FeeDto> feeViews,
-        final List<CustomFieldDto> customFields,
-        final Boolean isRedone,
-        final Double maxLoanAmount,
-        final Double minLoanAmount,
-        final Short maxNoOfInstall,
-        final Short minNoOfInstall,
-        final boolean isRepaymentIndepOfMeetingEnabled,
-        final MeetingBO newMeetingForRepaymentDay)
+         * public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
+         * final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date
+         * disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate, final Short
+         * gracePeriodDuration, final FundBO fund, final List<FeeDto> feeViews, final List<CustomFieldDto> customFields,
+         * final Boolean isRedone, final Double maxLoanAmount, final Double minLoanAmount, final Short maxNoOfInstall,
+         * final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO
+         * newMeetingForRepaymentDay)
          */
         public LoanBO build() throws AccountException {
-            final LoanBO loanAccount = new LoanBO(
-                    TestUtils.makeUserWithLocales(),
-                    loanProduct,
-                    customer,
-                    accountState,
-                    loanAmount,
-                    numOfInstallments,
-                    createdDate,
-                    noInterestDeductedAtDisbursement,
-                    interestRate,
-                    gracePeriodDuration,
-                    null,
-                    null,
-                    null,
-                    false,
-                    maxLoan,
-                    minLoan,
-                    maxInterestRate,
-                    minInterestRate,
-                    maxInstall,
-                    minInstall,
-                    false,
-                    null);
+            final LoanBO loanAccount = new LoanBO(TestUtils.makeUserWithLocales(), loanProduct, customer, accountState,
+                    loanAmount, numOfInstallments, createdDate, noInterestDeductedAtDisbursement, interestRate,
+                    gracePeriodDuration, null, null, null, false, maxLoan, minLoan, maxInterestRate, minInterestRate,
+                    maxInstall, minInstall, false, null);
             return loanAccount;
         }
 
