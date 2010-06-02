@@ -54,7 +54,6 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
@@ -495,16 +494,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 .size());
     }
 
-    public void testGetCustomersWithUpdatedMeetings() throws Exception {
-        center = createCenter();
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-        CustomerBOTestUtils.setUpdatedFlag(group.getCustomerMeeting(), YesNoFlag.YES.getValue());
-        TestObjectFactory.updateObject(group);
-        List<Integer> customerIds = customerPersistence.getCustomersWithUpdatedMeetings();
-        Assert.assertEquals(1, customerIds.size());
-
-    }
-
     public void testRetrieveAllLoanAccountUnderCustomer() throws PersistenceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = createCenter("center");
@@ -610,48 +599,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.cleanUp(center1);
     }
 
-    public void testGetChildrenForParent() throws NumberFormatException, SystemException, ApplicationException {
-        center = createCenter("center");
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        CenterBO center1 = createCenter("center1");
-        GroupBO group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE,
-                center1);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
-        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
-        List<Integer> customerIds = customerPersistence.getChildrenForParent(center.getSearchId(), Short.valueOf("3"));
-        Assert.assertEquals(3, customerIds.size());
-        CustomerBO customer = TestObjectFactory.getCustomer(customerIds.get(0));
-        Assert.assertEquals("Group", customer.getDisplayName());
-        customer = TestObjectFactory.getCustomer(customerIds.get(1));
-        Assert.assertEquals("client1", customer.getDisplayName());
-        customer = TestObjectFactory.getCustomer(customerIds.get(2));
-        Assert.assertEquals("client2", customer.getDisplayName());
-
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center1);
-    }
-
-    public void testGetCustomers() throws NumberFormatException, SystemException, ApplicationException {
-        center = createCenter("center");
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        CenterBO center1 = createCenter("center11");
-        GroupBO group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE,
-                center1);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client2 = TestObjectFactory.createClient("client2", CustomerStatus.CLIENT_CLOSED, group);
-        ClientBO client3 = TestObjectFactory.createClient("client3", CustomerStatus.CLIENT_CANCELLED, group1);
-        List<Integer> customerIds = customerPersistence.getCustomers(CustomerLevel.CENTER.getValue());
-        Assert.assertEquals(2, customerIds.size());
-
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center1);
-    }
-
     public void testGetCustomerChecklist() throws NumberFormatException, SystemException, ApplicationException,
             Exception {
 
@@ -750,39 +697,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
         Short LO = customerPersistence.getLoanOfficerForCustomer(center.getCustomerId());
         Assert.assertEquals(center.getPersonnel().getPersonnelId(), LO);
-    }
-
-    public void testUpdateLOsForAllChildren() {
-        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        Assert.assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
-        Assert.assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
-        StaticHibernateUtil.startTransaction();
-        PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
-        new CustomerPersistence().updateLOsForAllChildren(newLO.getPersonnelId(), center.getSearchId(), center
-                .getOffice().getOfficeId());
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(newLO.getPersonnelId(), group.getPersonnel().getPersonnelId());
-        Assert.assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
-    }
-
-    public void testUpdateLOsForAllChildrenAccounts() throws Exception {
-        createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        Assert.assertEquals(center.getPersonnel().getPersonnelId(), group.getPersonnel().getPersonnelId());
-        Assert.assertEquals(center.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
-        StaticHibernateUtil.startTransaction();
-        PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
-        new CustomerPersistence().updateLOsForAllChildrenAccounts(newLO.getPersonnelId(), center.getSearchId(), center
-                .getOffice().getOfficeId());
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        for (AccountBO account : client.getAccounts()) {
-            Assert.assertEquals(newLO.getPersonnelId(), account.getPersonnel().getPersonnelId());
-        }
     }
 
     public void testCustomerDeleteMeeting() throws Exception {

@@ -19,9 +19,7 @@
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
         <jdk.version>1.6</jdk.version>
-        <buildNumber>FIXME</buildNumber>
-        <current.release.name>mifos-trunk_r${buildNumber}</current.release.name>
-
+        <current.release.name>mifos-v1.6.x-beta</current.release.name>
         <test.database.properties.file>${basedir}/src/test/resources/org/mifos/config/resources/integrationDatabase.properties</test.database.properties.file>
         <main.database.properties.file>${basedir}/src/main/resources/org/mifos/config/resources/mainDatabase.properties</main.database.properties.file>
         <sql.resources.src.directory>${modules.root.dir}/application/src/main/sql</sql.resources.src.directory>
@@ -588,7 +586,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -607,7 +605,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <defaultGoal>war:war</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
@@ -964,6 +962,32 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Fetch build version information, store for use in Mifos -->
+                            <source>
+                                def env = System.getenv()
+                                def gitcmd = "git"
+                                if (env['OS'] =~ /^Windows/)
+                                    gitcmd = "cmd /c ${gitcmd}"
+                                def gitShaProc = """${gitcmd} log --pretty=format:%H -n1""".execute()
+                                project.properties['mifosCommitIdentifier'] = gitShaProc.in.text
+                                project.properties['mifosBuildNumber'] = env['BUILD_TAG'] ?: 'DEVELOPMENT'
+                                project.properties['mifosBuildDate'] = "" + new Date()
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2-beta-3</version>
                 <executions>
@@ -976,6 +1000,7 @@
                 </executions>
                 <configuration>
                     <finalName>${current.release.name}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/release.xml</descriptor>
                     </descriptors>

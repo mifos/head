@@ -45,21 +45,6 @@
 		</set>
 
 	</class>
-	
-	<query name="getAccountIdsForActiveCustomersHavingCustomerAccountsWithPeriodicFeesAndWithAMatchingInstallmentDate">
-		<![CDATA[
-		select distinct customerAccount.accountId
-		from org.mifos.customers.business.CustomerAccountBO as customerAccount
-		inner join customerAccount.accountFees accountFees
-		inner join accountFees.fees fees
-		inner join fees.feeFrequency feeFrequency
-		inner join customerAccount.accountActionDates accountActionDates
-		inner join customerAccount.customer customer
-		 where customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE)
-		   and accountActionDates.actionDate=date(:CURRENT_DATE)
-		   and feeFrequency.feeFrequencyType.id = 1
-		]]>
-	</query>
 
 	<query name="customerScheduleEntity.getScheduleForIds">
 		<![CDATA[ from org.mifos.customers.business.CustomerScheduleEntity customerSchedule

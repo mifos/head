@@ -105,7 +105,7 @@ public class AccountAppAction extends BaseAction {
             getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
                     accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(), uc.getId());
         }
-        accountBO.removeFees(feeId, uc.getId());
+        accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeId, uc.getId());
         String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
         StringBuilder forward = new StringBuilder();
         forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_" + AccountConstants.CHARGES);

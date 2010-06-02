@@ -40,6 +40,6 @@ public class DefaultCustomerAccountFactory implements CustomerAccountFactory {
     @Override
     public CustomerAccountBO create(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO meeting,
             CalendarEvent upcomingCalendarEvents) {
-        return CustomerAccountBO.createNew(customer, accountFees, meeting, upcomingCalendarEvents.getWorkingDays(), upcomingCalendarEvents.getHolidays());
+        return CustomerAccountBO.createNew(customer, accountFees, meeting, upcomingCalendarEvents);
     }
 }

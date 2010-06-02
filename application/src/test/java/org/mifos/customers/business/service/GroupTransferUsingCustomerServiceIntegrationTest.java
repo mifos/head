@@ -34,7 +34,6 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilde
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.anExistingLoanOfficer;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.anExistingOffice;
 
-import java.util.List;
 import java.util.Locale;
 
 import org.junit.After;
@@ -46,20 +45,17 @@ import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,33 +221,5 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
 
         assertThat(centerWithNoChildren.getPersonnel().getDisplayName(), is("loan officer"));
         assertThat(groupForTransfer.getPersonnel().getDisplayName(), is("loan officer"));
-    }
-
-    @Test
-    public void transferingGroupToCenterInSameBranchShouldExecuteAuditLogging() throws Exception {
-
-        // setup
-        CenterBuilder centerWithWeeklyMeeting = anActiveCenter().withName("center-with-no-children").with(aWeeklyMeeting()).with(
-                anExistingOffice()).withLoanOfficer(anExistingLoanOfficer());
-
-        CenterBO centerWithNoChildren = anExistingActiveCenter(centerWithWeeklyMeeting);
-        GroupBO groupForTransfer = anExistingGroupUnderCenterInSameBranchAs(centerWithWeeklyMeeting.withName("center-with-group"));
-
-        // exercise test
-        customerService.transferGroupTo(groupForTransfer, centerWithNoChildren);
-
-        // verification
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, groupForTransfer.getCustomerId());
-        assertThat(auditLogList.size(), is(1));
-        assertThat(auditLogList.get(0).getEntityTypeAsEnum(), is(EntityType.GROUP));
-
-//        for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-//            if (auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")) {
-//                assertThat(auditLogRecord.getOldValue(), is("Center"));
-//                assertThat(auditLogRecord.getNewValue(), is("toTransfer"));
-//            } else {
-//                fail("field name should be 'Kendra Name' and was '" + auditLogRecord.getFieldName() + "'");
-//            }
-//        }
     }
 }

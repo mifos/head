@@ -73,24 +73,9 @@
                 /ping.ftl=genericController
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
-                /appInfoNoSecurity.ftl=appInfoController
                 /v1/**/*=backendBridgeController
             </value>
         </property>
-    </bean>
-
-    <bean id="applicationInformation" class="org.mifos.core.service.ApplicationInformationDto">
-        <property name="buildId" value="ID 1"/>
-        <property name="buildTag" value="TAG 1"/>
-        <property name="svnRevision" value="Revision 1"/>
-    </bean>
-
-    <bean id="ApplicationInformationService" class="org.mifos.application.admin.system.StandardApplicationInformationService">
-        <property name="applicationInformation" ref="applicationInformation"/>
-    </bean>
-
-    <bean id="appInfoController" class="org.mifos.ui.core.controller.AppInfoController">
-        <property name="appInfo" ref="applicationInformation"/>
     </bean>
 
     <bean id="testingService" class="org.mifos.framework.util.StandardTestingService"/>

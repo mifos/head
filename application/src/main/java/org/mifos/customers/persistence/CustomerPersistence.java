@@ -143,14 +143,6 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<Integer> getChildrenForParent(final String searchId, final Short officeId) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("SEARCH_STRING", searchId + ".%");
-        queryParameters.put("OFFICE_ID", officeId);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_CHILDREN_FOR_PARENT, queryParameters);
-        return queryResult;
-    }
-
     public List<CustomerDto> getActiveParentList(final Short personnelId, final Short customerLevelId,
             final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -591,14 +583,6 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<Integer> getCustomersWithUpdatedMeetings() throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("updated", YesNoFlag.YES.getValue());
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_UPDATED_CUSTOMER_MEETINGS,
-                queryParameters);
-        return queryResult;
-    }
-
     public List<AccountBO> retrieveAccountsUnderCustomer(final String searchId, final Short officeId,
             final Short accountTypeId) throws PersistenceException {
 
@@ -618,13 +602,6 @@ public class CustomerPersistence extends Persistence {
         queryParameters.put("OFFICE_ID", officeId);
         queryParameters.put("LEVEL_ID", customerLevelId);
         List<CustomerBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CHILDREN, queryParameters);
-        return queryResult;
-    }
-
-    public List<Integer> getCustomers(final Short customerLevelId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("LEVEL_ID", customerLevelId);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
         return queryResult;
     }
 
@@ -671,13 +648,6 @@ public class CustomerPersistence extends Persistence {
             }
         }
         return maxValue;
-    }
-
-    public List<Integer> getCustomerSearchIds(final Short customerLevelId) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("LEVEL_ID", customerLevelId);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_CUSTOMERS, queryParameters);
-        return queryResult;
     }
 
     public List<CustomerStatusEntity> retrieveAllCustomerStatusList(final Short levelId) throws PersistenceException {
@@ -738,22 +708,6 @@ public class CustomerPersistence extends Persistence {
         return (Short) queryResult.get(0);
     }
 
-    /**
-     * @deprecated - use {@link CustomerDao#updateLoanOfficersForAllChildrenAndAccounts(Short, String, Short)}
-     */
-    @Deprecated
-    public void updateLOsForAllChildren(final Short parentLO, final String parentSearchId, final Short parentOfficeId) {
-        String hql = "update CustomerBO customer " + " set customer.personnel.personnelId = :parentLoanOfficer "
-                + " where customer.searchId like :parentSearchId" + " and customer.office.officeId = :parentOfficeId";
-        Session session = getHibernateUtil().getSessionTL();
-        getHibernateUtil().startTransaction();
-        Query update = session.createQuery(hql);
-        update.setParameter("parentLoanOfficer", parentLO);
-        update.setParameter("parentSearchId", parentSearchId + ".%");
-        update.setParameter("parentOfficeId", parentOfficeId);
-        update.executeUpdate();
-    }
-
     private void updateAccountsForOneCustomer(final Integer customerId, final Short parentLO,
             final Connection connection) throws Exception {
 
@@ -762,63 +716,6 @@ public class CustomerPersistence extends Persistence {
                 + " where account.customer_id = " + customerId.intValue();
         statement.executeUpdate(sql);
         statement.close();
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao#updateLoanOfficersForAllChildrenAndAccounts(Short, String, Short)}
-     *
-     * Update loan officer for all children accounts.
-     *
-     * This method was introduced for when a center is assigned a new loan officer, and this loan officer needs to be
-     * re-assigned not just for the center's groups and clients, but for each account belonging to those customers.
-     *
-     * Note: Required as to fix issues 1570 and 1804
-     * Note: 10/08/2008: direct sqls are used to improve performance (issue 2209)
-     *
-     * @param parentLO
-     *            the parent loan officer
-     * @param parentSearchId
-     *            the parent search id
-     * @param parentOfficeId
-     *            the parent office id
-     */
-    @Deprecated
-    public void updateLOsForAllChildrenAccounts(final Short parentLO, String parentSearchId, final Short parentOfficeId)
-            throws Exception {
-
-        if (parentLO == null || parentSearchId == null || parentOfficeId == null) {
-            return;
-        }
-
-        ResultSet customerIds = null;
-        Statement statement = null;
-        parentSearchId = parentSearchId + ".%";
-
-        try {
-            Connection connection = getHibernateUtil().getSessionTL().connection();
-            statement = connection.createStatement();
-            String sql = " select customer_id from customer where " + " customer.search_id like '" + parentSearchId
-                    + "' and customer.branch_id = " + parentOfficeId.shortValue();
-            customerIds = statement.executeQuery(sql);
-            if (customerIds != null) {
-                while (customerIds.next()) {
-                    int customerId = customerIds.getInt("customer_id");
-                    updateAccountsForOneCustomer(customerId, parentLO, connection);
-                }
-
-            }
-
-        }
-
-        finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (customerIds != null) {
-                customerIds.close();
-            }
-        }
-
     }
 
     public void deleteCustomerMeeting(final CustomerBO customer) throws PersistenceException {

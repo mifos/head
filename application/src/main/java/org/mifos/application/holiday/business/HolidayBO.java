@@ -71,10 +71,10 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         this.validationEnabled = validationEnabled;
     }
 
-    public HolidayBO(){
+    public HolidayBO() {
     }
 
-    public HolidayBO(HolidayDetails holidayDetails){
+    public HolidayBO(HolidayDetails holidayDetails) {
         this.holidayName = holidayDetails.getName();
         this.holidayFromDate = holidayDetails.getFromDate();
         this.holidayThruDate = holidayDetails.getThruDate();
@@ -85,7 +85,6 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     public RepaymentRuleTypes getRepaymentRuleType() {
         return this.repaymentRuleType;
     }
-
 
     @Override
     public DateTime getFromDate() {
@@ -178,10 +177,11 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
      * Shift the scheduled day according to the holiday's repayment rule.
      */
     @Override
-    public DateTime adjust(final DateTime scheduledDay, final List<Days> workingDays, final ScheduledEvent scheduledEvent) {
+    public DateTime adjust(final DateTime scheduledDay, final List<Days> workingDays,
+            final ScheduledEvent scheduledEvent) {
 
-        //This is a hack -- need to refactor into cleaner code or subclass HolidayBO into
-        //specialized classes for each repayment rule
+        // This is a hack -- need to refactor into cleaner code or subclass HolidayBO into
+        // specialized classes for each repayment rule
 
         DateTime adjustedDate = scheduledDay;
         switch (repaymentRuleType) {
@@ -191,7 +191,8 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
             } while (this.containsDate(adjustedDate));
             break;
         case NEXT_WORKING_DAY:
-            adjustedDate = new NextWorkingDayStrategy(workingDays).adjust(new DateTime(this.getHolidayThruDate()).plusDays(1));
+            adjustedDate = new NextWorkingDayStrategy(workingDays).adjust(new DateTime(this.getHolidayThruDate())
+                    .plusDays(1));
             break;
         case SAME_DAY:
             break;
@@ -206,12 +207,28 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         return adjustedDate;
     }
 
-    private boolean containsDate (DateTime date) {
-        return !(date.isBefore(new DateTime(this.getHolidayFromDate()))
-                 || date.isAfter(new DateTime(this.getHolidayThruDate())));
+    private boolean containsDate(DateTime date) {
+        return !(date.isBefore(new DateTime(this.getHolidayFromDate())) || date.isAfter(new DateTime(this
+                .getHolidayThruDate())));
     }
 
     public void markAsApplied() {
         this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (id != null) {
+            return id.equals(((HolidayBO) o).getId());
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
     }
 }

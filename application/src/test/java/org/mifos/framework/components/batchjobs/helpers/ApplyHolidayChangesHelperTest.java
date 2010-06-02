@@ -24,13 +24,14 @@ package org.mifos.framework.components.batchjobs.helpers;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
+import static org.mockito.Matchers.anyList;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -44,12 +45,16 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -61,18 +66,22 @@ import org.mockito.stubbing.Answer;
  * <em>requests</em> that the applicable accounts reschedule themselves, and that
  * requests are made to the correct holidays to mark themselves as applied.
  */
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.class)
 public class ApplyHolidayChangesHelperTest {
 
     private ApplyHolidayChangesHelper applyHolidayChangesHelper;
+
     @Mock private BatchJobConfigurationService mockBatchJobConfigurationService;
     @Mock private AccountPersistence mockAccountPersistence;
     @Mock private HibernateUtil mockHibernateUtil;
     @Mock private HolidayDao mockHolidayDao;
     @Mock private FiscalCalendarRules mockFiscalCalendarRules;
     @Mock private LoanBusinessService mockLoanBusinessService;
-    @Mock private Holiday mockHoliday;
+    private Holiday holiday;
+    @Mock private HolidayBO mockHolidayBO;
     @Mock private LoanBO mockLoanBO;
+    @Mock private OfficeBO officeBO;
     @Mock private SavingsBO mockSavingsBO;
     @Mock private CustomerAccountBO mockCustomerAccountBO;
     @Mock private AccountBusinessService mockAccountBusinessService;
@@ -87,16 +96,10 @@ public class ApplyHolidayChangesHelperTest {
     private List<Integer> listOfSavingsAccountIdsInAnUnappliedHoliday;
     private List<Integer> listOfCustomerAccountIdsInAnUnappliedHoliday;
 
-
-
-
-
-
     @Before
     public void setupAndInjectMocks() throws Exception {
 
-        resetMocks();
-
+        holiday = mockHolidayBO;
         loanAccountId = new Integer(1);
         savingsAccountId = new Integer(2);
         customerAccountId = new Integer(3);
@@ -130,8 +133,8 @@ public class ApplyHolidayChangesHelperTest {
         when(mockBatchJobConfigurationService.getOutputIntervalForBatchJobs()) .thenReturn(1);
 
         // tests should add holidays to these lists before executing the batch job
-        when(mockHolidayDao.getUnAppliedHolidays()) .thenReturn (unappliedHolidays);
-        when(mockHolidayDao.findAllHolidaysThisYearAndNext()) .thenReturn(upcomingHolidays);
+        when(mockHolidayDao.getUnAppliedHolidays()).thenReturn (unappliedHolidays);
+        when(mockHolidayDao.findAllHolidaysThisYearAndNext(Matchers.anyShort())) .thenReturn(upcomingHolidays);
 
         // Don't care about working days, it's passed to the account for rescheduling
         when(mockFiscalCalendarRules.getWorkingDaysAsJodaTimeDays()) .thenReturn(workingDays);
@@ -144,6 +147,15 @@ public class ApplyHolidayChangesHelperTest {
                 .thenReturn(listOfSavingsAccountIdsInAnUnappliedHoliday);
         when(mockAccountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
                 .thenReturn(listOfCustomerAccountIdsInAnUnappliedHoliday);
+
+        when(mockLoanBO.getOffice()).thenReturn(officeBO);
+        when(mockSavingsBO.getOffice()).thenReturn(officeBO);
+        when(mockCustomerAccountBO.getOffice()).thenReturn(officeBO);
+        when(officeBO.getOfficeId()).thenReturn(new Short("1"));
+
+        Set<HolidayBO> officeHolidays = new HashSet<HolidayBO>();
+        officeHolidays.add(mockHolidayBO);
+        when(officeBO.getHolidays()).thenReturn(officeHolidays);
 
         when(mockAccountBusinessService.getAccount(any(Integer.class))) .thenAnswer(new Answer<AccountBO>() {
             public AccountBO answer(InvocationOnMock invocation) {
@@ -161,22 +173,8 @@ public class ApplyHolidayChangesHelperTest {
 
         });
 
-    }
 
-    private void resetMocks() {
 
-        mockBatchJobConfigurationService = mock(BatchJobConfigurationService.class);
-        mockAccountPersistence = mock(AccountPersistence.class);
-        mockHibernateUtil = mock(HibernateUtil.class);
-        mockHolidayDao = mock(HolidayDao.class);
-        mockFiscalCalendarRules = mock(FiscalCalendarRules.class);
-        mockLoanBusinessService = mock(LoanBusinessService.class);
-        mockAccountBusinessService = mock( AccountBusinessService.class);
-
-        mockHoliday = mock(Holiday.class);
-        mockLoanBO = mock (LoanBO.class);
-        mockSavingsBO = mock (SavingsBO.class);
-        mockCustomerAccountBO = mock (CustomerAccountBO.class);
     }
 
     @Test
@@ -189,7 +187,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // verify that the job has not requested any accounts or rescheduling
         verify(mockAccountBusinessService, times(0)).getAccount(any(Integer.class));
-        verify(mockLoanBO, times(0)).rescheduleDatesForNewHolidays(any(List.class), any(List.class), any(List.class));
+        verify(mockLoanBO, times(0)).rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), any(List.class));
     }
 
     @Test
@@ -197,7 +195,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // setup
         listOfLoanAccountIdsInAnUnappliedHoliday.add(loanAccountId); // this should trigger rescheduling the loan
-        unappliedHolidays.add(mockHoliday); // this should trigger marking the holiday as applied
+        unappliedHolidays.add(holiday); // this should trigger marking the holiday as applied
 
         // exercise test
         applyHolidayChangesHelper.execute(new DateTime().getMillis());
@@ -205,8 +203,8 @@ public class ApplyHolidayChangesHelperTest {
         // verify that dependencies were invoked and only one loan account was rescheduled
         verify(mockAccountBusinessService).getAccount(loanAccountId);
         verify(mockAccountBusinessService, times(1)).getAccount(any(Integer.class));
-        verify(mockLoanBO).rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockHoliday).markAsApplied();
+        verify(mockLoanBO).rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(holiday).markAsApplied();
     }
 
     @Test
@@ -214,7 +212,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // setup
         listOfSavingsAccountIdsInAnUnappliedHoliday.add(savingsAccountId); // this should trigger rescheduling the loan
-        unappliedHolidays.add(mockHoliday); // this should trigger marking the holiday as applied
+        unappliedHolidays.add(holiday); // this should trigger marking the holiday as applied
 
         // exercise test
         applyHolidayChangesHelper.execute(new DateTime().getMillis());
@@ -227,11 +225,11 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService, never())  .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
+        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
-        verify(mockHoliday).markAsApplied();
+        verify(holiday).markAsApplied();
     }
 
     @Test
@@ -239,7 +237,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // setup
         listOfLoanAccountIdsInAnUnappliedHoliday.add(loanAccountId);
-        unappliedHolidays.add(mockHoliday); // this should trigger marking the holiday as applied
+        unappliedHolidays.add(holiday); // this should trigger marking the holiday as applied
 
         // exercise test
         applyHolidayChangesHelper.execute(new DateTime().getMillis());
@@ -252,11 +250,11 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService, never())  .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
+        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class),anyList());
+        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO, never()) .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
-        verify(mockHoliday).markAsApplied();
+        verify(holiday).markAsApplied();
     }
 
     @Test
@@ -264,7 +262,7 @@ public class ApplyHolidayChangesHelperTest {
 
         // setup
         listOfCustomerAccountIdsInAnUnappliedHoliday.add(customerAccountId);
-        unappliedHolidays.add(mockHoliday); // this should trigger marking the holiday as applied
+        unappliedHolidays.add(holiday); // this should trigger marking the holiday as applied
 
         // exercise test
         applyHolidayChangesHelper.execute(new DateTime().getMillis());
@@ -277,11 +275,11 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService)           .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(1)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
+        verify(mockSavingsBO, never())         .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO, never())            .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
-        verify(mockHoliday).markAsApplied();
+        verify(holiday).markAsApplied();
     }
 
     @Test
@@ -291,7 +289,7 @@ public class ApplyHolidayChangesHelperTest {
         listOfLoanAccountIdsInAnUnappliedHoliday.add(loanAccountId);
         listOfCustomerAccountIdsInAnUnappliedHoliday.add(customerAccountId);
         listOfSavingsAccountIdsInAnUnappliedHoliday.add(savingsAccountId); // this should trigger rescheduling the loan
-        unappliedHolidays.add(mockHoliday); // this should trigger marking the holiday as applied
+        unappliedHolidays.add(holiday); // this should trigger marking the holiday as applied
 
         // exercise test
         applyHolidayChangesHelper.execute(new DateTime().getMillis());
@@ -304,11 +302,10 @@ public class ApplyHolidayChangesHelperTest {
         verify(mockAccountBusinessService)           .getAccount(customerAccountId);
         verify(mockAccountBusinessService, times(3)) .getAccount(any(Integer.class));
 
-        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
-        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(workingDays, upcomingHolidays, unappliedHolidays);
+        verify(mockSavingsBO)                  .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockLoanBO)                     .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
+        verify(mockCustomerAccountBO)          .rescheduleDatesForNewHolidays(any(ScheduledDateGeneration.class), anyList());
 
-        verify(mockHoliday).markAsApplied();
+        verify(holiday).markAsApplied();
     }
-
 }

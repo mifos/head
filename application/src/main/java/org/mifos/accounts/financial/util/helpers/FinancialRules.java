@@ -50,13 +50,12 @@ public class FinancialRules {
         return financialRules;
     }
 
-    public String getGLAccountForAction(short financialActionId, FinancialConstants type) throws FinancialException {
+    public String getGLAccountForAction(short financialActionId, FinancialConstants type) {
         FinancialActionConstants financialAction = FinancialActionConstants.getFinancialAction(financialActionId);
         return getGLAccountForAction(financialAction, type);
     }
 
-    public String getGLAccountForAction(FinancialActionConstants financialAction, FinancialConstants type)
-            throws FinancialException {
+    public String getGLAccountForAction(FinancialActionConstants financialAction, FinancialConstants type) {
         if (type.equals(FinancialConstants.DEBIT)) {
             return actionToDebitAccount.get(financialAction);
         } else if (type.equals(FinancialConstants.CREDIT)) {

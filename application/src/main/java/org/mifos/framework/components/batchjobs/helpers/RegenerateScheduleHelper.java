@@ -31,7 +31,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -41,40 +41,39 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class RegenerateScheduleHelper extends TaskHelper {
 
     private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    private final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 
     public RegenerateScheduleHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
 
-    List<Integer> accountList;
+    private List<Integer> accountList = new ArrayList<Integer>();
 
     @Override
-    public void execute(final long timeInMills) throws BatchJobException {
-        List<String> errorList = new ArrayList<String>();
+    public void execute(@SuppressWarnings("unused") final long timeInMills) throws BatchJobException {
+
         accountList = new ArrayList<Integer>();
+        List<String> errorList = new ArrayList<String>();
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
 
-        List<Integer> customerIds;
-        try {
-            customerIds = new CustomerPersistence().getCustomersWithUpdatedMeetings();
-        } catch (Exception e) {
-            throw new BatchJobException(e);
-        }
-        if (customerIds != null && !customerIds.isEmpty()) {
-            CustomerPersistence customerPersistence = new CustomerPersistence();
-            for (Integer customerId : customerIds) {
-                try {
-                    CustomerBO customer = customerPersistence.getCustomer(customerId);
-                    List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(customer.getOfficeId());
-                    handleChangeInMeetingSchedule(customer, workingDays, orderedUpcomingHolidays);
-                    StaticHibernateUtil.commitTransaction();
-                } catch (Exception e) {
-                    StaticHibernateUtil.rollbackTransaction();
-                    errorList.add(customerId.toString());
-                } finally {
-                    StaticHibernateUtil.closeSession();
-                }
+        List<Integer> customerIds = customerDao.retrieveCustomerIdsOfCustomersWithUpdatedMeetings();
+        for (Integer customerId : customerIds) {
+            try {
+                CustomerBO customer = customerDao.findCustomerById(customerId);
+                List<Holiday> orderedUpcomingHolidays = holidayDao.findAllHolidaysThisYearAndNext(customer
+                        .getOfficeId());
+
+                StaticHibernateUtil.startTransaction();
+
+                handleChangeInMeetingSchedule(customer, workingDays, orderedUpcomingHolidays);
+
+                StaticHibernateUtil.commitTransaction();
+            } catch (Exception e) {
+                StaticHibernateUtil.rollbackTransaction();
+                errorList.add(customerId.toString());
+            } finally {
+                StaticHibernateUtil.closeSession();
             }
         }
 
@@ -89,24 +88,19 @@ public class RegenerateScheduleHelper extends TaskHelper {
     }
 
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
-        CustomerPersistence customerPersistence = new CustomerPersistence();
         Set<AccountBO> accounts = customer.getAccounts();
-        if (accounts != null && !accounts.isEmpty()) {
-            for (AccountBO account : accounts) {
-                if (!accountList.contains(account.getAccountId())) {
-                    account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
-                    accountList.add(account.getAccountId());
-                }
+        for (AccountBO account : accounts) {
+            if (!accountList.contains(account.getAccountId())) {
+                account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
+                customerDao.save(account);
+                accountList.add(account.getAccountId());
             }
         }
-        List<Integer> customerIds = customerPersistence.getChildrenForParent(customer.getSearchId(), customer
-                .getOffice().getOfficeId());
-        if (customerIds != null && !customerIds.isEmpty()) {
-            for (Integer childCustomerId : customerIds) {
-                handleChangeInMeetingSchedule(customerPersistence.getCustomer(childCustomerId), workingDays,
-                        orderedUpcomingHolidays);
-            }
+
+        List<Integer> customerIds = customerDao.retrieveCustomerIdsOfChildrenForParent(customer.getSearchId(), customer.getOffice().getOfficeId());
+        for (Integer childCustomerId : customerIds) {
+            CustomerBO child = customerDao.findCustomerById(childCustomerId);
+            handleChangeInMeetingSchedule(child, workingDays, orderedUpcomingHolidays);
         }
     }
-
 }

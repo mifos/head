@@ -20,13 +20,9 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.hibernate.Query;
+import org.joda.time.LocalDate;
 import org.mifos.framework.components.batchjobs.MifosTask;
-import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -39,28 +35,46 @@ public class LoanArrearsAgingHelper extends TaskHelper {
 
     @Override
     public void execute(long timeInMillis) throws BatchJobException {
-        List<Integer> listAccountIds = null;
-        List<String> errorList = new ArrayList<String>();
+        /*
+         * This batch task expects batch task LoanArrearsTask to have successfully completed. LoanArrearsTask sets loan
+         * accounts into bad standing if they are in arrears more than the lateness_days value on prd_type (prd_type_id
+         * = 1)
+         *
+         * This batch task regenerates the contents of table loan_arrears_aging for accounts in bad standing.
+         * loan_arrears_aging is then further used by the branch report batch task to extract data for eventual use by
+         * the mifos branch report.
+         *
+         * A database view could replace this batch job. Unfortunately, as of May 2010, MySql views perform extremely
+         * badly if the view contains 'grouped' data i.e. algorithm temptable is used rather than algorithm merge.
+         * http://dev.mysql.com/doc/refman/5.0/en/view-algorithms.html
+         */
+        deleteAllLoanArrearsAging();
+
+        generateLoanArrearsAging();
+    }
+
+    private void deleteAllLoanArrearsAging() throws BatchJobException {
+        StaticHibernateUtil.startTransaction();
         try {
-            listAccountIds = new LoanPersistence().getLoanAccountsInArrears(Short.valueOf("1"));
+            Query delete = StaticHibernateUtil.getSessionTL().getNamedQuery("deleteAllLoanArrearsAging");
+            delete.executeUpdate();
+            StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new BatchJobException(e);
         }
+    }
 
-        for (Integer accountId : listAccountIds) {
-            try {
-                LoanBO loanBO = new LoanPersistence().getAccount(accountId);
-                loanBO.handleArrearsAging();
-                StaticHibernateUtil.commitTransaction();
-            } catch (Exception e) {
-                StaticHibernateUtil.rollbackTransaction();
-                errorList.add(accountId.toString());
-            } finally {
-                StaticHibernateUtil.closeSession();
-            }
-        }
-        if (errorList.size() > 0) {
-            throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+    private void generateLoanArrearsAging() throws BatchJobException {
+        StaticHibernateUtil.startTransaction();
+        try {
+            Query insert_select = StaticHibernateUtil.getSessionTL().getNamedQuery("generateLoanArrearsAging");
+            insert_select.setParameter("CURRENT_DATE", new LocalDate().toString());
+            insert_select.executeUpdate();
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new BatchJobException(e);
         }
     }
 

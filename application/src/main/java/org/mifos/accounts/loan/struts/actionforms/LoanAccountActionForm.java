@@ -779,6 +779,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
         }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
+        validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
         validateDefaultFee(errors, locale, currency);
@@ -879,6 +880,10 @@ public class LoanAccountActionForm extends BaseActionForm {
         addError(errors, LoanExceptionConstants.CUSTOMER_SOURCE_OF_FUND_FIELD);
     }
 
+    private void addErrorInvalidExternalId(ActionErrors errors) {
+        addError(errors, LoanExceptionConstants.CUSTOMER_EXTERNAL_ID_FIELD);
+    }
+
     private void validatePurposeOfLoanFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
         if (isPurposeOfLoanMandatory(mandatoryFields) && StringUtils.isBlank(getBusinessActivityId())) {
             addErrorInvalidPurpose(errors);
@@ -888,6 +893,12 @@ public class LoanAccountActionForm extends BaseActionForm {
     private void validateSourceOfFundFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
         if (isSourceOfFundMandatory(mandatoryFields) && StringUtils.isBlank(getLoanOfferingFund())) {
             addErrorInvalidSource(errors);
+        }
+    }
+
+    private void validateExternalIDFields(ActionErrors errors, List<FieldConfigurationEntity> mandatoryFields) {
+        if (isExternalIDMandatory(mandatoryFields) && StringUtils.isBlank(getExternalId())) {
+            addErrorInvalidExternalId(errors);
         }
     }
 
@@ -922,6 +933,7 @@ public class LoanAccountActionForm extends BaseActionForm {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
         }
         validateSourceOfFundFields(errors, getMandatoryFields(request));
+        validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
     }
@@ -1213,6 +1225,19 @@ public class LoanAccountActionForm extends BaseActionForm {
         for (FieldConfigurationEntity entity : mandatoryfieldList) {
 
             if (entity.getFieldName().equalsIgnoreCase(LoanConstants.SOURCE_OF_FUND)) {
+                isMandatory = true;
+                break;
+            }
+        }
+        return isMandatory;
+    }
+
+    private boolean isExternalIDMandatory(List<FieldConfigurationEntity> mandatoryfieldList) {
+        boolean isMandatory = false;
+
+        for (FieldConfigurationEntity entity : mandatoryfieldList) {
+
+            if (entity.getFieldName().equalsIgnoreCase(LoanConstants.EXTERNAL_ID)) {
                 isMandatory = true;
                 break;
             }

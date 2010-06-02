@@ -285,6 +285,32 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    public void testSuccessfullPreviewSuccessWithZeroAmountAdjustment() throws Exception {
+        //Introduced for [MIFOS-2958]
+        createInitialObjects();
+        savingsOffering = createSavingsOffering();
+        savings = createSavingsAccountWithPayment("000X00000000017", savingsOffering, group,
+                AccountState.SAVINGS_ACTIVE);
+
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        StaticHibernateUtil.closeSession();
+        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        verifyForward("load_success");
+
+        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+        addRequestParameter("method", "preview");
+        addRequestParameter("note", "adjustmentComment");
+        addRequestParameter("lastPaymentAmount", "0.0");
+        actionPerform();
+        verifyForward("preview_success");
+        verifyNoActionMessages();
+        verifyNoActionErrors();
+        StaticHibernateUtil.closeSession();
+        // savings = new SavingsPersistence().findById(savings.getAccountId());
+    }
+
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);

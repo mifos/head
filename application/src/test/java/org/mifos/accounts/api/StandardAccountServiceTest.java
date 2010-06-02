@@ -169,6 +169,17 @@ public class StandardAccountServiceTest {
 
     }
 
+
+    @Test
+    public void testMakeLoanDisbursements() throws Exception {
+        //TODO Assert.fail("unimplemented");
+    }
+
+    @Test
+    public void testValidateDisbursement() throws Exception {
+        //TODO Assert.fail("unimplemented");
+    }
+
     @Test
     public void testLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";

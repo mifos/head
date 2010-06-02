@@ -52,5 +52,6 @@ public interface LoanExceptionConstants {
     public final String CUSTOMER_LOAN_AMOUNT_FIELD = "errors.individualamountfield";
     public final String CUSTOMER_PURPOSE_OF_LOAN_FIELD = "errors.individualpurposeofloanfield";
     public final String CUSTOMER_SOURCE_OF_FUND_FIELD = "errors.individualsourceoffundfield";
+    public final String CUSTOMER_EXTERNAL_ID_FIELD = "errors.externalid";
     public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";
 }

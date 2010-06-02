@@ -527,9 +527,9 @@ explanation of the license and how it is applied.
 								</tr>
                                 <tr class="fontnormal">
                                     <td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
-                                        keyhm="accounts.externalId" name="accounts.externalId"
+                                        keyhm="Loan.ExternalId" name="accounts.externalId"
                                         isColonRequired="yes" bundle="accountsUIResources" /></td>
-                                    <td valign="top"><html-el:text property="externalId"/></td>
+                                    <td valign="top"><mifos:mifosalphanumtext keyhm="Loan.ExternalId" property="externalId" /></td>
                                 </tr>
 
 							</table>
