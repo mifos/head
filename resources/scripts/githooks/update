@@ -3,5 +3,5 @@ refname=$1
 oldhead=$2
 newhead=$3
 for merged in $(git rev-list ${oldhead}..${newhead} | tac) ; do
-    /gitrepo/m/mi/mifos/hooktest/hooks/ciabot.bash ${refname} ${merged}
+    /gitrepo/m/mi/mifos/head/hooks/ciabot.bash ${refname} ${merged}
 done
