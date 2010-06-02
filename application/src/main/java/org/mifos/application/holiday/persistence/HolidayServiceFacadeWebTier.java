@@ -61,19 +61,19 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
     }
 
     @Override
-    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException{
+    public Map<String, List<HolidayOfficeNames>> holidaysByYear() throws ServiceException{
         HolidayDaoHibernate holidayDaoHibernate = new HolidayDaoHibernate(new GenericDaoHibernate());
         List<HolidayBO> holidays = holidayDaoHibernate.findAllHolidays();
-        Map<String, List<OfficeHoliday>> holidaysByYear = new TreeMap<String, List<OfficeHoliday>>();
+        Map<String, List<HolidayOfficeNames>> holidaysByYear = new TreeMap<String, List<HolidayOfficeNames>>();
         for (HolidayBO holiday : holidays) {
             HolidayDetails holidayDetail = new HolidayDetails(holiday.getHolidayName(), holiday.getHolidayFromDate(), holiday
                     .getHolidayThruDate(), holiday.getRepaymentRuleType());
             int year = holiday.getThruDate().getYear();
-            List<OfficeHoliday> holidaysInYear = holidaysByYear.get(Integer.toString(year));
+            List<HolidayOfficeNames> holidaysInYear = holidaysByYear.get(Integer.toString(year));
             if (holidaysInYear == null) {
-                holidaysInYear = new LinkedList<OfficeHoliday>();
+                holidaysInYear = new LinkedList<HolidayOfficeNames>();
             }
-            holidaysInYear.add(new OfficeHoliday(holidayDetail,holidayDaoHibernate.applicableOffices(holiday.getId())));
+            holidaysInYear.add(new HolidayOfficeNames(holidayDetail,holidayDaoHibernate.applicableOffices(holiday.getId())));
             holidaysByYear.put(Integer.toString(year), holidaysInYear);
         }
         return holidaysByYear;

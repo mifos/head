@@ -17,25 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.holiday.persistence;
+package org.mifos.customers.office.persistence;
 
-import org.mifos.application.holiday.business.HolidayBO;
+public class AccountOffice {
 
-public class OfficeHoliday {
+    private final Integer accountId;
     private final Short officeId;
 
-    private final HolidayBO holiday;
-
-    public OfficeHoliday(Short officeId, HolidayBO holiday) {
+    public AccountOffice(Integer accountId, Short officeId) {
+        this.accountId = accountId;
         this.officeId = officeId;
-        this.holiday = holiday;
+    }
+
+    public Integer getAccountId() {
+        return this.accountId;
     }
 
     public Short getOfficeId() {
         return this.officeId;
     }
 
-    public HolidayBO getHoliday() {
-        return this.holiday;
-    }
 }
