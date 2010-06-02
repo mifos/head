@@ -1404,4 +1404,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     public final void addChild(final CustomerBO existingClient) {
         this.children.add(existingClient);
     }
+
+    public void validateIsTopOfHierarchy() throws CustomerException {
+        if (this.parentCustomer != null) {
+            throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
+    }
 }

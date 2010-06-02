@@ -20,28 +20,23 @@
 
 package org.mifos.customers.business.service;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import java.util.Set;
-
+import static org.mifos.framework.TestUtils.*;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -103,7 +98,6 @@ public class UpdateCustomerMeetingScheduleUsingCustomerServiceIntegrationTest {
         AuthorizationManager.getInstance().init();
     }
 
-    @Ignore
     @Test
     public void shouldRescheduleSchedulesThatFallOnOrAfterDateMeetingIsRescheduled() throws Exception {
 
@@ -113,6 +107,7 @@ public class UpdateCustomerMeetingScheduleUsingCustomerServiceIntegrationTest {
 
 
         DateTime fiveWeeksAgo = new DateTime().minusWeeks(5);
+        WeekDay orginalDayOfWeek = WeekDay.getJodaWeekDay(fiveWeeksAgo.getDayOfWeek());
         MeetingBO existingMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingFrom(fiveWeeksAgo.toDate()).build();
         IntegrationTestObjectMother.saveMeeting(existingMeeting);
 
@@ -133,27 +128,62 @@ public class UpdateCustomerMeetingScheduleUsingCustomerServiceIntegrationTest {
 
         // pre-verification
         CenterBO createdCenter = customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
-        assertThatAllCustomerSchedulesOccuringOnOrAfterTodayFallOnDayOfWeek(createdCenter, WeekDay.MONDAY);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(createdCenter, orginalDayOfWeek);
 
         // exercise test
         customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
 
         // verification
         CenterBO modifiedCenter = customerDao.findCenterBySystemId(existingCenter.getGlobalCustNum());
-        assertThatAllCustomerSchedulesOccuringOnOrAfterTodayFallOnDayOfWeek(modifiedCenter, WeekDay.WEDNESDAY);
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(modifiedCenter, orginalDayOfWeek);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(modifiedCenter, WeekDay.WEDNESDAY);
     }
 
-    private void assertThatAllCustomerSchedulesOccuringOnOrAfterTodayFallOnDayOfWeek(CenterBO createdCenter, WeekDay expectedDayOfWeek) {
-        Set<AccountActionDateEntity> customerSchedules = createdCenter.getCustomerAccount().getAccountActionDates();
-        for (AccountActionDateEntity accountActionDateEntity : customerSchedules) {
-            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
+    @Test
+    public void givenCenterGroupHierarchyShouldRescheduleSchedulesThatFallOnOrAfterDateMeetingIsRescheduled() throws Exception {
 
-            LocalDate scheduledDate = new LocalDate(customerSchedule.getActionDate());
-            LocalDate now = new LocalDate();
+        // setup
+        PersonnelBO existingLoanOfficer = IntegrationTestObjectMother.testUser();
+        OfficeBO existingOffice = IntegrationTestObjectMother.sampleBranchOffice();
 
-            if (scheduledDate.isEqual(now) || scheduledDate.isAfter(now)) {
-                assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
-            }
-        }
+
+        DateTime fiveWeeksAgo = new DateTime().minusWeeks(5);
+        WeekDay orginalDayOfWeek = WeekDay.getJodaWeekDay(fiveWeeksAgo.getDayOfWeek());
+        MeetingBO existingMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingFrom(fiveWeeksAgo.toDate()).build();
+        IntegrationTestObjectMother.saveMeeting(existingMeeting);
+
+        CenterBO existingCenter = new CenterBuilder().withName("Center-top-hierarchy")
+                                                     .with(existingMeeting)
+                                                     .with(existingOffice)
+                                                     .withLoanOfficer(existingLoanOfficer)
+                                                     .withUserContext()
+                                                     .build();
+        IntegrationTestObjectMother.createCenter(existingCenter, existingMeeting);
+
+        GroupBO existingGroup = new GroupBuilder().withName("group1")
+                                                  .withParentCustomer(existingCenter)
+                                                  .formedBy(existingLoanOfficer)
+                                                  .build();
+        IntegrationTestObjectMother.createGroup(existingGroup, existingMeeting);
+
+        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(existingCenter.getCustomerId())
+                                                                                     .with(WeekDay.MONDAY)
+                                                                                     .withMeetingPlace("town hall")
+                                                                                     .build();
+
+        UserContext userContext = TestUtils.makeUser();
+        userContext.setBranchId(existingOffice.getOfficeId());
+
+        // pre-verification
+        GroupBO createdGroup = customerDao.findGroupBySystemId(existingGroup.getGlobalCustNum());
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(createdGroup, orginalDayOfWeek);
+
+        // exercise test
+        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+
+        // verification
+        GroupBO modifiedGroup = customerDao.findGroupBySystemId(existingGroup.getGlobalCustNum());
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(modifiedGroup, orginalDayOfWeek);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(modifiedGroup, WeekDay.MONDAY);
     }
 }

@@ -37,9 +37,6 @@ public class CustomerMeetingEntity extends AbstractEntity {
     private MeetingBO meeting;
     private CustomerBO customer;
 
-    @SuppressWarnings("unused")
-    private Short updatedFlag = YesNoFlag.NO.getValue();
-
     /**
      * default constructor for hibernate usage
      */

@@ -106,22 +106,4 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(expected, helper.getDetailMessageWithFrequency(meeting, TestUtils.makeUser()));
     }
 
-    public void testGetUpdatedMeetingScheduledWeekMessage() throws Exception {
-        String expected = "(Meetings will be changed to recur every 5 Week(s) on Monday after the batch jobs run)";
-        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-        Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser(), true));
-    }
-
-    public void testGetUpdatedMeetingScheduledMonthMessage() throws Exception {
-        String expected = "(Meetings will be changed to recur on First Monday of every 5 month(s) after the batch jobs run)";
-        MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankOfDay.FIRST, (short) 5, new Date(),
-                MeetingType.CUSTOMER_MEETING, "Delhi");
-        Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser(), true));
-    }
-
-    public void testGetUpdatedMeetingScheduledMonthlyOnDayMessage() throws Exception {
-        String expected = "(Meetings will be changed to recur on day 7 of every 2 month(s) after the batch jobs run)";
-        MeetingBO meeting = new MeetingBO((short) 7, (short) 2, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-        Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser(), true));
-    }
 }

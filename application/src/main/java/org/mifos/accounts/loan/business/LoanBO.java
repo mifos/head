@@ -1718,10 +1718,6 @@ public class LoanBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
@@ -1738,7 +1734,6 @@ public class LoanBO extends AccountBO {
                     startFromMeetingDate, scheduledEvent);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-        }
     }
 
     private int calculateDays(final Date fromDate, final Date toDate) {

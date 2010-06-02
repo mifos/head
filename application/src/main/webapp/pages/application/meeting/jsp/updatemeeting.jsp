@@ -100,9 +100,8 @@ function goToCancelPage(){
 			</table>			
 			<table width="90%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td align="left" valign="top" class="paddingL15T15"><span
-						class="heading">
-						<c:out value="${BusinessKey.displayName}" /> - </span>
+					<td align="left" valign="top" class="paddingL15T15">
+					    <span class="heading"><c:out value="${BusinessKey.displayName}" /> - </span>
 						<c:if test="${BusinessKey.customerLevel.client}">
 							<span class="headingorange">
 								<mifos:mifoslabel name="meeting.labelmeetingschedule&groupMembership" bundle="MeetingResources" />
@@ -124,16 +123,12 @@ function goToCancelPage(){
 						<html-el:errors bundle="MeetingResources" /> </font></td>
 				</tr>
 				<tr>
-					<td align="left" valign="top" class="paddingL15T15"><span
-						class="fontnormalRedBold"> 
-						<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/></span>
+					<td align="left" valign="top" class="paddingL15T15">
+						<span class="fontnormal"><mifos:mifoslabel name="meeting.labelCreateInstruction" mandatory="yes" bundle="MeetingResources" /></span>
 						<br>
-						<span class="fontnormal"><mifos:mifoslabel
-						name="meeting.labelCreateInstruction" mandatory="yes"
-						bundle="MeetingResources">
-					</mifos:mifoslabel> </span><br>
-					<br>
-					<table width="90%" border="0" cellpadding="3" cellspacing="0">
+						<br>
+					
+					    <table width="90%" border="0" cellpadding="3" cellspacing="0">
 						<tr class="fontnormal">
 							<td align="right" valign="top"><mifos:mifoslabel
 								name="meeting.labelFrequencyOfMeeting" mandatory="yes"

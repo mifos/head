@@ -191,13 +191,6 @@
 		order by customer.displayName
 		]]>
 	</query>
-	<query name="Customer.getChildrenForParent">
-		<![CDATA[select customer.customerId 
-		from org.mifos.customers.business.CustomerBO as customer 
-		where customer.searchId like :SEARCH_STRING and 
-			customer.office.officeId = :OFFICE_ID 
-		order by customer.customerId]]>
-	</query>
 	<query name="Customer.getChildrenOtherThanClosed"><![CDATA[
 		from org.mifos.customers.business.CustomerBO as customer 
 		where customer.searchId like :SEARCH_STRING and 

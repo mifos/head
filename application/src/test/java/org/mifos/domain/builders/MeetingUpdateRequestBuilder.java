@@ -27,12 +27,12 @@ import org.mifos.application.servicefacade.MeetingUpdateRequest;
 
 public class MeetingUpdateRequestBuilder {
 
-    private Integer customerId;
-    private Integer customerVersionNo;
-    private RecurrenceType recurrenceType;
-    private String meetingPlace;
-    private Short recursEvery;
-    private WeekDay dayOfWeek;
+    private Integer customerId = Integer.valueOf(1);
+    private Integer customerVersionNo = Integer.valueOf(1);
+    private RecurrenceType recurrenceType = RecurrenceType.WEEKLY;
+    private String meetingPlace = "builderSomewhere";
+    private Short recursEvery = Short.valueOf("1");
+    private WeekDay dayOfWeek = WeekDay.MONDAY;
     private Short dayOfMonth;
     private WeekDay dayOfWeekForWeekOfMonth;
     private RankOfDay weekOfMonth;

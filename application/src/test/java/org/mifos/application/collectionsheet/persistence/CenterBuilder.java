@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -39,7 +39,7 @@ import org.mifos.security.util.UserContext;
 public class CenterBuilder {
 
     private CenterBO center;
-    private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
+    private CustomerAccountBuilder customerAccountBuilder;
     private String name = "Test Center";
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").withOfficeId(new Short("1")).build();
     private PersonnelBO loanOfficer;
@@ -72,6 +72,11 @@ public class CenterBuilder {
             center.setVersionNo(versionNumber);
         }
 
+        if (customerAccountBuilder != null) {
+            CustomerAccountBO customerAccount = customerAccountBuilder.withCustomer(center).buildForUnitTests();
+            center.addAccount(customerAccount);
+        }
+
         return center;
     }
 
@@ -97,11 +102,6 @@ public class CenterBuilder {
 
     public CenterBuilder withLoanOfficer(final PersonnelBO withLoanOfficer) {
         this.loanOfficer = withLoanOfficer;
-        return this;
-    }
-
-    public CenterBuilder withFee(final AmountFeeBO withFee) {
-        customerAccountBuilder.withFee(withFee);
         return this;
     }
 
@@ -157,6 +157,11 @@ public class CenterBuilder {
      */
     public CenterBuilder withVersion(int withVersionNumber) {
         this.versionNumber = withVersionNumber;
+        return this;
+    }
+
+    public CenterBuilder withAccount(CustomerAccountBuilder accountBuilder) {
+        this.customerAccountBuilder = accountBuilder;
         return this;
     }
 }

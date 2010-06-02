@@ -458,4 +458,25 @@ public class MeetingBO extends AbstractBusinessObject {
         return this.getRecurrenceType().equals(customerMeetingValue.getRecurrenceType());
     }
 
+    public boolean isDayOfWeekDifferent(WeekDay dayOfWeek) {
+        return !dayOfWeek.equals(this.getMeetingDetails().getWeekDay());
+    }
+
+    public boolean isDayOfMonthDifferent(Short dayOfMonth) {
+        return !dayOfMonth.equals(this.getMeetingDetails().getDayNumber());
+    }
+
+    public boolean isWeekOfMonthDifferent(RankOfDay weekOfMonth, WeekDay dayOfWeekInWeekOfMonth) {
+
+        boolean isDifferent = false;
+        if (!weekOfMonth.equals(this.getMeetingDetails().getWeekRank())) {
+            isDifferent = true;
+        }
+
+        if (!dayOfWeekInWeekOfMonth.equals(this.getMeetingDetails().getWeekDay())) {
+            isDifferent = true;
+        }
+
+        return isDifferent;
+    }
 }
