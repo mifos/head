@@ -37,10 +37,12 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -62,7 +64,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     protected void setUp() throws Exception {
         super.setUp();
         standardAccountService = new StandardAccountService(new AccountPersistence(),
-                new LoanPersistence(), new AcceptedPaymentTypePersistence(), null);
+                new LoanPersistence(), new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
         paymentTypeDtos = standardAccountService.getLoanPaymentTypes();
         defaultPaymentType = paymentTypeDtos.get(0);
         StaticHibernateUtil.commitTransaction();
