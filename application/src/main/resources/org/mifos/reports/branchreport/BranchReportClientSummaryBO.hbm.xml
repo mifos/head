@@ -74,7 +74,7 @@ explanation of the license and how it is applied.
 				            where
 				                acc.account_state_id in (:loanActiveInBadStanding)
                             and
-                                cs.description='Customer Was Active'
+                                (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 				            and 
 				                cust.customer_level_id=:customerLevelId
 				            and
@@ -95,7 +95,7 @@ explanation of the license and how it is applied.
 				            where
 				                acc.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding)
                             and
-                                cs.description='Customer Was Active'
+                                (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 				            and
 				                cust.customer_level_id=:customerLevelId
 				            and
@@ -103,16 +103,5 @@ explanation of the license and how it is applied.
 				     ) ls1
 		]]>	
 	</sql-query>
-	<!-- 
-	select round(ifnull(sum(unpaid_principal)/(select sum(orig_principal-principal_paid) 
-	                      from loan_summary, account where account.office_id=:officeId 
-	                      and account.account_id=loan_summary.account_id
-	                      and account.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding))*100.0,0),3)
-	        as portfolioAtRisk
-	        from loan_arrears_aging, account 
-	        where days_in_arrears >= :daysInArrears
-	        and loan_arrears_aging.account_id=account.account_id
-	        and account.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding)
-	        and account.office_id = :officeId	
-	-->
+
 </hibernate-mapping>

@@ -45,7 +45,6 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -200,96 +199,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertTrue(true);
         }
 
-    }
-
-    public void testUpdateWeeklyMeeting_SavedToUpdateLater() throws Exception {
-        String oldMeetingPlace = "Delhi";
-        MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
-        client = TestObjectFactory.createClient("clientname", weeklyMeeting, CustomerStatus.CLIENT_ACTIVE);
-        MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
-        String meetingPlace = "Bangalore";
-        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(),
-                clientMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-        client.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-        Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        Assert.assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
-
-        Assert.assertEquals(YesNoFlag.YES.getValue(), client.getCustomerMeeting().getUpdatedFlag());
-        Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
-                .getWeekDay());
-        Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-    }
-
-    public void ignore_testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus() throws Exception {
-        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1",
-                SavingsType.MANDATORY, ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
-        createParentObjects(CustomerStatus.GROUP_ACTIVE);
-        accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACTIVE,
-                new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
-        client = createClient(CustomerStatus.CLIENT_PENDING);
-        StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(0, accountBO.getAccountActionDates().size());
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        client.setUserContext(TestObjectFactory.getContext());
-
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive");
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        Assert.assertNotNull(accountBO.getAccountActionDates());
-
-        Assert.assertEquals(10, accountBO.getAccountActionDates().size());
-        Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
-        for (AccountActionDateEntity actionDate : accountBO.getAccountActionDates()) {
-            Assert.assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
-            Assert.assertTrue(true);
-        }
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-    }
-
-    public void ignore_testGenerateScheduleForClient_GroupSavingsAccount_OnChangeStatus() throws Exception {
-        SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1",
-                SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
-        createParentObjects(CustomerStatus.GROUP_ACTIVE);
-        accountBO = TestObjectFactory.createSavingsAccount("globalNum", group, AccountState.SAVINGS_ACTIVE,
-                new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
-        client = createClient(CustomerStatus.CLIENT_PENDING);
-        StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(0, accountBO.getAccountActionDates().size());
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        client.setUserContext(TestObjectFactory.getContext());
-
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive");
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        Assert.assertNotNull(accountBO.getAccountActionDates());
-        Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
-        Assert.assertEquals(10, accountBO.getAccountActionDates().size());
-        for (AccountActionDateEntity actionDate : accountBO.getAccountActionDates()) {
-            Assert.assertEquals(client.getCustomerId(), actionDate.getCustomer().getCustomerId());
-            Assert.assertTrue(true);
-        }
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
     public void testGenerateScheduleForClient_OnClientCreate() throws Exception {
@@ -840,8 +749,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
         group1 = TestObjectFactory.getGroup(group1.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        Assert.assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting()
-                .getUpdatedMeeting().getMeetingId());
+
         Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
         Assert.assertEquals(1, group1.getMaxChildCount().intValue());
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
@@ -857,7 +765,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
 
         Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        Assert.assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -1041,71 +948,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(client.getSpouseName().getName().getFirstName(), "Client 1");
         client = TestObjectFactory.getClient(client.getCustomerId());
         office = new OfficePersistence().getOffice(office.getOfficeId());
-    }
-
-    public void testUpdateWeeklyMeeting() throws Exception {
-        client = TestObjectFactory.createClient("clientname", getMeeting(), CustomerStatus.CLIENT_PENDING);
-        MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
-        String meetingPlace = "Bangalore";
-        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(),
-                clientMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-        client.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-        Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
-                .getWeekDay());
-        Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-    }
-
-    public void testUpdateMonthlyMeeting() throws Exception {
-        String meetingPlace = "Bangalore";
-        MeetingBO monthlyMeeting = new MeetingBO(WeekDay.MONDAY, RankOfDay.FIRST, Short.valueOf("2"),
-                new java.util.Date(), MeetingType.CUSTOMER_MEETING, "delhi");
-        client = TestObjectFactory.createClient("clientname", monthlyMeeting, CustomerStatus.CLIENT_PENDING);
-        MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
-        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, RankOfDay.FIRST, clientMeeting.getMeetingDetails()
-                .getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-        client.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails()
-                .getWeekDay());
-        Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-    }
-
-    public void testUpdateMonthlyMeetingOnDate() throws Exception {
-        MeetingBO monthlyMeetingOnDate = new MeetingBO(Short.valueOf("5"), Short.valueOf("2"), new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING, "delhi");
-        client = TestObjectFactory.createClient("clientname", monthlyMeetingOnDate, CustomerStatus.CLIENT_PENDING);
-        MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
-        String meetingPlace = "Bangalore";
-        MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(),
-                clientMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
-        client.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
-    }
-
-    public void testCreateMeeting() throws Exception {
-        client = TestObjectFactory.createClient("clientname", null, CustomerStatus.CLIENT_PENDING);
-        String meetingPlace = "newPlace";
-        Short recurAfter = Short.valueOf("4");
-        MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING, meetingPlace);
-        client.updateMeeting(newMeeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-        Assert.assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-        Assert.assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
-        Assert.assertEquals(recurAfter, client.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
     }
 
     private void createObjectsForClientTransfer() throws Exception {

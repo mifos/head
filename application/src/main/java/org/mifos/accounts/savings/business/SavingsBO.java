@@ -951,7 +951,8 @@ public class SavingsBO extends AccountBO {
         DateTime startingFromtoday = new DateTime().toDateMidnight().toDateTime();
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
         List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startingFromtoday, scheduledEvent);
 
@@ -971,8 +972,10 @@ public class SavingsBO extends AccountBO {
         DateTime startFromDayAfterLastKnownInstallmentDate = new DateTime(lastInstallment.getActionDate()).plusDays(1);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
-        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
+        List<DateTime> depositDates = dateGeneration.generateScheduledDates(10,
+                startFromDayAfterLastKnownInstallmentDate, scheduledEvent);
 
         short installmentNumber = lastInstallment.getInstallmentId();
         for (DateTime depositDate : depositDates) {
@@ -1000,15 +1003,12 @@ public class SavingsBO extends AccountBO {
         CustomerBO customer = paymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
                 paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()), transactionDate);
-        if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
-            try {
-                this
-                        .setAccountState(getSavingsPersistence().getAccountStatusObject(
-                                AccountStates.SAVINGS_ACC_APPROVED));
-            } catch (PersistenceException pe) {
-                throw new AccountException(pe);
-            }
+
+        // make savings account active if inactive
+        if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
         }
+
         if (totalAmount.isGreaterThanZero() && paymentData.getAccountPayments().size() <= 0) {
             SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(accountPayment, totalAmount, paymentData
                     .getPersonnel(), customer, transactionDate);
@@ -1097,7 +1097,11 @@ public class SavingsBO extends AccountBO {
 
         addSavingsActivityDetails(savingsActivity);
         addAccountPayment(payment);
-        setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACTIVE));
+
+        // make savings account active if inactive
+        if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+        }
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = findAllUnpaidInstallmentsForPayingCustomerUpTo(
                 transactionDate, payingCustomer.getCustomerId());
@@ -1129,8 +1133,10 @@ public class SavingsBO extends AccountBO {
             throw new AccountException("errors.exceedmaxwithdrawal", new String[] { getGlobalAccountNum() });
         }
 
-        final AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
-        this.setAccountState(accountStateEntity);
+        // make savings account active if inactive
+        if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+        }
         this.addAccountPayment(payment);
 
         savingsBalance = savingsBalance.subtract(amountToWithdraw);
@@ -1181,15 +1187,12 @@ public class SavingsBO extends AccountBO {
                 AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), accountPaymentData.getTransactionDate(),
                 accountPaymentData.getPersonnel()));
         buildFinancialEntries(accountPayment.getAccountTrxns());
-        if (this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_INACTIVE)) {
-            try {
-                this
-                        .setAccountState(getSavingsPersistence().getAccountStatusObject(
-                                AccountStates.SAVINGS_ACC_APPROVED));
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
-            }
+
+        // make savings account active if inactive
+        if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
         }
+
         if (persist) {
             try {
                 getSavingsPersistence().createOrUpdate(this);
@@ -1318,6 +1321,13 @@ public class SavingsBO extends AccountBO {
                 }
             }
             return lastTrxn;
+        } else if (accountAction.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
+            for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
+                if (trxn.getAccountActionEntity().getId()
+                        .equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
+                    return (SavingsTrxnDetailEntity) trxn;
+                }
+            }
         }
         return null;
     }
@@ -1869,15 +1879,13 @@ public class SavingsBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
-                && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
-
             MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
             DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                    workingDays, holidays);
 
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
             List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
@@ -1896,7 +1904,6 @@ public class SavingsBO extends AccountBO {
                 }
                 updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
             }
-        }
 
     }
 
@@ -2084,5 +2091,34 @@ public class SavingsBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getCustomer().getCustomerMeetingValue();
+    }
+
+    public void removeRecommendedAmountOnFutureInstallments() {
+        Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+        if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
+            for (AccountActionDateEntity accountAction : getAccountActionDates()) {
+                if (accountAction.getActionDate().compareTo(currentDate) >= 0 && !accountAction.isPaid()) {
+                    SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity) accountAction;
+                    if (savingsSchedule.getDepositPaid().isGreaterThanZero()) {
+                        savingsSchedule.setDeposit(savingsSchedule.getDepositPaid());
+                        savingsSchedule.setPaymentStatus(PaymentStatus.PAID);
+                    } else {
+                        savingsSchedule.setDeposit(new Money(this.getCurrency()));
+                    }
+                }
+            }
+        }
+    }
+
+    public void resetRecommendedAmountOnFutureInstallments() {
+        Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+        if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
+            for (AccountActionDateEntity accountAction : getAccountActionDates()) {
+                if (accountAction.getActionDate().compareTo(currentDate) >= 0 && !accountAction.isPaid()) {
+                    SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity) accountAction;
+                    savingsSchedule.setDeposit(this.getRecommendedAmount());
+                }
+            }
+        }
     }
 }

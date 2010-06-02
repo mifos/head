@@ -34,6 +34,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountPaymentParametersDto;
 import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.PaymentTypeDto;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.UserReferenceDto;
@@ -65,20 +66,20 @@ import org.mifos.security.util.UserContext;
 
 public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
-    private StandardAccountService standardAccountService = null;
+    private AccountService accountService = null;
     private AccountBusinessService accountBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        standardAccountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence());
-        loanPaymentTypeDtos = standardAccountService.getLoanPaymentTypes();
-        feePaymentTypeDtos = standardAccountService.getFeePaymentTypes();
+        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence());
+        loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
+        feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
 
-    public StandardAccountService getStandardAccountService() {
-        return standardAccountService;
+    public AccountService getAccountService() {
+        return accountService;
     }
 
     @Override
@@ -180,7 +181,7 @@ public class AccountApplyPaymentAction extends BaseAction {
                     (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
                     actionForm.getReceiptId());
 
-            getStandardAccountService().makePayment(accountPaymentParametersDto);
+            getAccountService().makePayment(accountPaymentParametersDto);
 
             return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
         } catch (InvalidDateException ide) {

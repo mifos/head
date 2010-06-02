@@ -358,16 +358,7 @@
 		<![CDATA[from org.mifos.accounts.loan.business.LoanBO account
 			where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
 	</query>
-	<!--    -->
-	<query name="accounts.GetLoanArrears">
-		<![CDATA[select account.accountId from org.mifos.accounts.loan.business.LoanBO account
-			join  account.accountActionDates as actiondate
-			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
-			and account.accountState.id in (:LOANACTIVEINGOODSTAND,:BADSTANDING)
-			and actiondate.actionDate <= date(:CHECKDATE)
-			and actiondate.paymentStatus=:PAYMENTSTATUS 
-			group by account.accountId]]>
-	</query>
+	
 	<query name="accounts.retrieveSavingsAccountsIntCalc">
 		<![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
 			where  savings.nextIntCalcDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
@@ -479,7 +470,7 @@
 				join savings_account sa on sa.account_id = a.account_id
 				join customer c on c.customer_id = a.customer_id
 				where c.status_id in (3,9,13)
-				and a.account_state_id = 16
+				and a.account_state_id in (16, 18)
 				and (select max(ss.installment_id) from saving_schedule ss
 					where ss.account_id = a.account_id
 					and ss.action_date <= date(:DATE)) + 4 >
@@ -854,5 +845,8 @@ select coll.*,
              ) ld on coll.memid = ld.customer_id
           ]]>
 	</sql-query>
-    
+
+    <query name="account.AccountOfficeMap">
+		<![CDATA[ select new org.mifos.customers.office.persistence.AccountOffice(a.accountId, a.office.officeId) from org.mifos.accounts.business.AccountBO a where a.accountId in (:ACCOUNT_IDS)]]>
+    </query>    
 </hibernate-mapping>

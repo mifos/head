@@ -49,8 +49,12 @@
 		<![CDATA[from FeeBO fee where fee.categoryType.id in (5) order by fee.feeName]]>
 	</query>
 
-	<query name="getUpdatedFeesForCustomers">
-		<![CDATA[from FeeBO fee where  fee.changeType in (1,2,3) and fee.categoryType.id in (1,2,3,4)]]>
+	<query name="retrieveUpdatedFeesApplicableToCustomers">
+		<![CDATA[select fee.feeId from FeeBO fee where fee.changeType in (1,2,3) and fee.categoryType.id in (1,2,3,4)]]>
+	</query>
+	
+	<query name="findFeeById">
+		<![CDATA[from FeeBO fee where fee.feeId=:feeId]]>
 	</query>
 
 	<query name="retrieveCustomerFeesByCategoryType">

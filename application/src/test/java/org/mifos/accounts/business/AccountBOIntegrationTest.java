@@ -77,7 +77,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         Set<AccountFeesEntity> accountFeesEntitySet = groupLoan.getAccountFees();
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
-            groupLoan.removeFees(accountFeesEntity.getFees().getFeeId(), uc.getId());
+            groupLoan.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), uc.getId());
         }
         StaticHibernateUtil.getTransaction().commit();
     }

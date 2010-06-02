@@ -27,6 +27,10 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
 
+/**
+ * use builders instead of templates.
+ */
+@Deprecated
 public interface CustomerTemplate {
     public CustomerStatus getCustomerStatus();
 

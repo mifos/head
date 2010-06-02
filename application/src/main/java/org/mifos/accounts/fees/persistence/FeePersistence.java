@@ -22,6 +22,7 @@ package org.mifos.accounts.fees.persistence;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -32,6 +33,8 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.core.MifosRepositoryException;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -47,13 +50,13 @@ public class FeePersistence extends Persistence {
 
         if (rateflag.equals(RateAmountFlag.AMOUNT)) {
             return (AmountFeeBO) getPersistentObject(AmountFeeBO.class, feeId);
-        } else {
-            return (RateFeeBO) getPersistentObject(RateFeeBO.class, feeId);
         }
+
+        return (RateFeeBO) getPersistentObject(RateFeeBO.class, feeId);
     }
 
-    public List<FeeBO> getUpdatedFeesForCustomer() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);
+    public List<Short> getUpdatedFeesForCustomer() throws PersistenceException {
+        return executeNamedQuery("retrieveUpdatedFeesApplicableToCustomers", null);
     }
 
     // Seems not to be used by anything
@@ -93,5 +96,16 @@ public class FeePersistence extends Persistence {
     public RateFeeBO getRateFee(Short feeId) {
         Session session = StaticHibernateUtil.getSessionTL();
         return (RateFeeBO) session.get(RateFeeBO.class, feeId);
+    }
+
+    public FeeBO findFeeById(final Short feeId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("feeId", feeId);
+
+        try {
+            return (FeeBO) execUniqueResultNamedQuery("findFeeById", queryParameters);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

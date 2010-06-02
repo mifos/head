@@ -31,11 +31,12 @@ public class HolidayBuilder {
     private DateTime from;
     private DateTime to;
     private RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
+    private String name = "builderCreatedHoliday";
 
     private final Short officeId = Short.valueOf("1");
 
     public Holiday build() {
-        HolidayBO holidayBO = new HolidayBO(new HolidayDetails("builderCreatedHoliday",from.toDate(), to.toDate(), repaymentRule));
+        HolidayBO holidayBO = new HolidayBO(new HolidayDetails(name,from.toDate(), to.toDate(), repaymentRule));
 
         return holidayBO;
     }

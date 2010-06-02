@@ -89,9 +89,9 @@ public class ApplicationException extends Exception {
     public String getKey() {
         if (null == key) {
             return "exception.framework.ApplicationException";
-        } else {
-            return this.key;
         }
+
+        return this.key;
     }
 
     public Object[] getValues() {

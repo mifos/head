@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.springframework.core.io.ClassPathResource;
 
 public class VersionInfo extends Properties {
+    private static final String RELEASE_NAME = "versioninfo.releaseName";
     private static final String COMMIT_IDENTIFIER = "versioninfo.commitIdentifier";
     private static final String BUILD_NUMBER = "versioninfo.buildNumber";
     private static final String BUILD_DATE = "versioninfo.buildDate";
@@ -58,5 +59,9 @@ public class VersionInfo extends Properties {
 
     public String getBuildDate() {
         return getProperty(BUILD_DATE);
+    }
+
+    public String getReleaseName() {
+        return getProperty(RELEASE_NAME);
     }
 }

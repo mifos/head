@@ -369,8 +369,6 @@ explanation of the license and how it is applied.
 							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Center.MeetingsSubHeading" />:&nbsp;
 							<c:out value="${centerInformationDto.customerMeeting.meetingSchedule}" /></span>
-							<c:set var="updatedMeetingScheduleMessage" value="${centerInformationDto.customerMeeting.updatedMeetingScheduleMessage}" />
-							<c:if test="${!empty updatedMeetingScheduleMessage}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
 							<span class="fontnormal"><br></span>
 							<span class="fontnormal"><c:out
 								value="${centerInformationDto.customerMeeting.meetingPlace}" /></span>

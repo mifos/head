@@ -20,12 +20,13 @@
 
 package org.mifos.customers.group.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -33,6 +34,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.GroupUpdate;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -53,9 +55,6 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -67,8 +66,6 @@ import org.springframework.util.Assert;
  * composition of other objects like Custom fields, fees, personnel etc., since it inherits from Customer
  */
 public class GroupBO extends CustomerBO {
-
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
 
     private GroupPerformanceHistoryEntity groupPerformanceHistory;
 
@@ -225,42 +222,6 @@ public class GroupBO extends CustomerBO {
             groupPerformanceHistory.setGroup(this);
         }
         this.groupPerformanceHistory = groupPerformanceHistory;
-    }
-
-    @Override
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null) {
-            deleteMeeting(newMeeting);
-        }
-    }
-
-    @Override
-    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In GroupBO::updateMeeting(), customerId: " + getCustomerId());
-        if (getParentCustomer() == null) {
-            if (getCustomerMeeting() == null) {
-                this.setCustomerMeeting(createCustomerMeeting(meeting));
-                updateMeetingForClients(meeting);
-            } else {
-                saveUpdatedMeeting(meeting);
-            }
-        } else {
-            saveUpdatedMeeting(meeting);
-        }
-        update();
-    }
-
-    private void updateMeetingForClients(final MeetingBO meeting) throws CustomerException {
-        Set<CustomerBO> clients = getChildren();
-        if (clients != null) {
-            for (CustomerBO client : clients) {
-                client.setUserContext(getUserContext());
-                client.updateMeeting(meeting);
-            }
-        }
     }
 
     @Override
@@ -525,10 +486,11 @@ public class GroupBO extends CustomerBO {
         }
     }
 
-    public final void regenerateCustomerFeeSchedule() throws AccountException {
+    public void regenerateCustomerFeeSchedule(CalendarEvent applicableCalendarEvents) {
         CustomerAccountBO customerAccount = this.getCustomerAccount();
         if (customerAccount != null) {
-            this.getCustomerAccount().generateCustomerFeeSchedule();
+            List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees());
+            customerAccount.createSchedulesAndFeeSchedules(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents);
         }
     }
 

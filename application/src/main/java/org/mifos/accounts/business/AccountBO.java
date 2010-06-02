@@ -46,6 +46,7 @@ import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -119,13 +120,11 @@ public class AccountBO extends AbstractBusinessObject {
      *
      * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
      *
-     * The Persistence classes below are used by this class and can be injected
-     * via a setter for testing purposes. In order for this mechanism to work
-     * correctly, the getter must be used to access them because the getter will
+     * The Persistence classes below are used by this class and can be injected via a setter for testing purposes. In
+     * order for this mechanism to work correctly, the getter must be used to access them because the getter will
      * initialize the Persistence class if it has not been injected.
      *
-     * Long term these references to Persistence classes should probably be
-     * eliminated.
+     * Long term these references to Persistence classes should probably be eliminated.
      */
     private AccountPersistence accountPersistence = null;
     private ConfigurationPersistence configurationPersistence = null;
@@ -236,9 +235,8 @@ public class AccountBO extends AbstractBusinessObject {
      */
     public AccountBO(final AccountTypes accountType, final AccountState accountState, final CustomerBO customer,
             final Integer offsettingAllowable, final Set<AccountActionDateEntity> scheduledPayments,
-            final Set<AccountFeesEntity> accountFees, final OfficeBO office,
-            final PersonnelBO accountOfficer, final Date createdDate,
-            final Short createdByUserId) {
+            final Set<AccountFeesEntity> accountFees, final OfficeBO office, final PersonnelBO accountOfficer,
+            final Date createdDate, final Short createdByUserId) {
         this.accountId = null;
         this.accountType = new AccountTypeEntity(accountType.getValue());
         this.accountState = new AccountStateEntity(accountState);
@@ -329,8 +327,7 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /**
-     * For most purposes this is deprecated and one should call
-     * {@link #getState()} instead.
+     * For most purposes this is deprecated and one should call {@link #getState()} instead.
      */
     public AccountStateEntity getAccountState() {
         return accountState;
@@ -354,7 +351,7 @@ public class AccountBO extends AbstractBusinessObject {
     public List<AccountActionDateEntity> getAccountActionDatesSortedByInstallmentId() {
         List<AccountActionDateEntity> sortedList = new ArrayList<AccountActionDateEntity>(getAccountActionDates());
         Collections.sort(sortedList, new Comparator<AccountActionDateEntity>() {
-            public int compare (AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
+            public int compare(AccountActionDateEntity entity1, AccountActionDateEntity entity2) {
                 return new Integer(entity1.getInstallmentId()).compareTo(new Integer(entity2.getInstallmentId()));
             }
         });
@@ -469,6 +466,7 @@ public class AccountBO extends AbstractBusinessObject {
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
     }
+
     /*
      * Take raw PaymentData (usually from a web page) and enter it into Mifos.
      */
@@ -493,13 +491,13 @@ public class AccountBO extends AbstractBusinessObject {
         applyPayment(paymentData, true);
     }
 
-    public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate, final String receiptId,
-            final Date receiptDate, final Short paymentTypeId) {
+    public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate,
+            final String receiptId, final Date receiptDate, final Short paymentTypeId) {
         return createPaymentData(userContext.getId(), amount, trxnDate, receiptId, receiptDate, paymentTypeId);
     }
 
-    public PaymentData createPaymentData(final Short personnelId, final Money amount, final Date trxnDate, final String receiptId,
-            final Date receiptDate, final Short paymentTypeId) {
+    public PaymentData createPaymentData(final Short personnelId, final Money amount, final Date trxnDate,
+            final String receiptId, final Date receiptDate, final Short paymentTypeId) {
         PersonnelBO personnel;
         try {
             personnel = getPersonnelPersistence().getPersonnel(personnelId);
@@ -568,19 +566,18 @@ public class AccountBO extends AbstractBusinessObject {
         buildFinancialEntries(new HashSet<AccountTrxnEntity>(reversedTrxns));
     }
 
-    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    public final void handleChangeInMeetingSchedule(final List<Days> workingDays, final List<Holiday> holidays)
+            throws AccountException {
         // find the installment to update
         AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
-        } else {
-            resetUpdatedFlag();
         }
     }
 
     /**
-     * This method should be called only from a subclass.
-     * TODO KRP this method should throw a runtime exception.
+     * This method should be called only from a subclass. TODO KRP this method should throw a runtime exception.
+     *
      * @return null
      */
     protected MeetingBO getMeetingForAccount() {
@@ -588,15 +585,11 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /*
-     * Find the first installment which has an enclosing "interval" such
-     * that the entire interval is after the current date.  For example
-     * assume March 1 is a Monday and that weeks are defined to start on
-     * Monday.  If the meeting is a weekly meeting on a Wednesday
-     * then the "interval" for the meeting of Wednesday March 10 is Monday
-     * March 8 to Sunday March 14.  If the current date was March 7, then
-     * we would return the installment for March 10 since the 3/8-14 interval
-     * is after the 7th.  But if today were the 8th, then we would return
-     * the following installment.
+     * Find the first installment which has an enclosing "interval" such that the entire interval is after the current
+     * date. For example assume March 1 is a Monday and that weeks are defined to start on Monday. If the meeting is a
+     * weekly meeting on a Wednesday then the "interval" for the meeting of Wednesday March 10 is Monday March 8 to
+     * Sunday March 14. If the current date was March 7, then we would return the installment for March 10 since the
+     * 3/8-14 interval is after the 7th. But if today were the 8th, then we would return the following installment.
      */
     private AccountActionDateEntity findInstallmentToUpdate() {
         List<AccountActionDateEntity> allInstallments = getAllInstallments();
@@ -611,8 +604,9 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
         // keep looking at the next installment as long as the current date falls on or
         // after (!before) the start of the current installment
-        while(installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(
-                new LocalDate(installment.getActionDate().getTime())))) {
+        while (installment != null
+                && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate()
+                        .getTime())))) {
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
             if (installmentIndex == allInstallments.size()) {
@@ -624,18 +618,19 @@ public class AccountBO extends AbstractBusinessObject {
         return installment;
     }
 
-    /**
-     * used by subclasses
-     */
-    @SuppressWarnings("unused")
-    protected void resetUpdatedFlag() throws AccountException {
-    }
-
-    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment) throws AccountException {
+    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment)
+            throws AccountException {
         changeStatus(newStatus.getValue(), flagId, comment);
     }
 
-    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment) throws AccountException {
+    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment)
+            throws AccountException {
+
+        Short oldStatusId = this.getState().getValue();
+        if (getUserContext() == null) {
+            setThisUserContext();
+        }
+
         try {
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "In the change status method of AccountBO:: new StatusId= " + newStatusId);
@@ -675,11 +670,45 @@ public class AccountBO extends AbstractBusinessObject {
                 reschedule();
             }
 
+            if (newStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+                ((SavingsBO) this).removeRecommendedAmountOnFutureInstallments();
+            }
+
+            if (oldStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())
+                    && newStatusId.equals(AccountState.SAVINGS_ACTIVE.getValue())) {
+                ((SavingsBO) this).resetRecommendedAmountOnFutureInstallments();
+            }
+
             MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
                     "Coming out successfully from the change status method of AccountBO");
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
+    }
+
+    /*
+     * This hack is used because accountBO.changeStatus uses userContext details. Should try to remove/improve in
+     * refactoring.
+     *
+     * The specific situation that required this hack is when a savings account is inactive and a payment is made (needs
+     * to be changes to active).
+     *
+     * Other 'changeStatus' sitations cater for this by setting values into the account's usercontext at the UI level (a
+     * different hack)
+     */
+    private void setThisUserContext() throws AccountException {
+
+        final PersonnelBO userForUserContext;
+        try {
+            userForUserContext = getPersonnelPersistence().getPersonnel(this.getCreatedBy());
+        } catch (PersistenceException pe) {
+            throw new AccountException(pe);
+        }
+
+        UserContext userContext = new UserContext();
+        userContext.setLocaleId(userForUserContext.getLocaleId());
+        userContext.setId(userForUserContext.getPersonnelId());
+        this.setUserContext(userContext);
     }
 
     /**
@@ -708,10 +737,11 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /**
-     * Return an {@link AccountFeesEntity} that links this account to the given fee, or null if the
-     * fee does not apply to this account.
+     * Return an {@link AccountFeesEntity} that links this account to the given fee, or null if the fee does not apply
+     * to this account.
      *
-     * @param feeId the primary key of the {@link FeeBO} being sought.
+     * @param feeId
+     *            the primary key of the {@link FeeBO} being sought.
      * @return
      */
     public AccountFeesEntity getAccountFees(final Short feeId) {
@@ -847,6 +877,16 @@ public class AccountBO extends AbstractBusinessObject {
         return pastActionDateList;
     }
 
+    public List<AccountActionDateEntity> getFutureInstallments() {
+        List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+            if (accountActionDateEntity.compareDate(DateUtils.getCurrentDateWithoutTimeStamp()) > 0) {
+                futureActionDateList.add(accountActionDateEntity);
+            }
+        }
+        return futureActionDateList;
+    }
+
     public List<AccountActionDateEntity> getAllInstallments() {
         List<AccountActionDateEntity> actionDateList = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
@@ -880,8 +920,10 @@ public class AccountBO extends AbstractBusinessObject {
         CustomerMeetingEntity customerMeeting = customer.getCustomerMeeting();
         if (customerMeeting != null) {
 
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting.getMeeting());
-            DateTime nextMeetingDate = scheduledEvent.nearestMatchingDateBeginningAt(new LocalDate().toDateTimeAtStartOfDay());
+            ScheduledEvent scheduledEvent = ScheduledEventFactory
+                    .createScheduledEventFrom(customerMeeting.getMeeting());
+            DateTime nextMeetingDate = scheduledEvent.nearestMatchingDateBeginningAt(new LocalDate()
+                    .toDateTimeAtStartOfDay());
             return new java.sql.Date(nextMeetingDate.toDate().getTime());
         }
         return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());
@@ -941,9 +983,8 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /*
-     * By default, an account will use the system defined default currency.
-     * Derived classes like LoanBO can override this to get the currency from
-     * the associated product (PrdOfferingBO)
+     * By default, an account will use the system defined default currency. Derived classes like LoanBO can override
+     * this to get the currency from the associated product (PrdOfferingBO)
      */
     public MifosCurrency getCurrency() {
         return Money.getDefaultCurrency();
@@ -1055,8 +1096,8 @@ public class AccountBO extends AbstractBusinessObject {
         return AccountState.fromShort(getAccountState().getId());
     }
 
-    protected void updateAccountActivity(final Money principal, final Money interest, final Money fee, final Money penalty, final Short personnelId,
-            final String description) throws AccountException {
+    protected void updateAccountActivity(final Money principal, final Money interest, final Money fee,
+            final Money penalty, final Short personnelId, final String description) throws AccountException {
     }
 
     public void waiveAmountDue(final WaiveEnum waiveType) throws AccountException {
@@ -1097,10 +1138,10 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /**
-     * Returns the next {@link AccountActionDateEntity} occuring after today, if any, otherwise
-     * return null.
-     * <p>If more than one installment occurs on the next closest installment date, the method returns the entity
-     * with the lowest installment id.
+     * Returns the next {@link AccountActionDateEntity} occuring after today, if any, otherwise return null.
+     * <p>
+     * If more than one installment occurs on the next closest installment date, the method returns the entity with the
+     * lowest installment id.
      */
     public AccountActionDateEntity getDetailsOfUpcomigInstallment() {
         AccountActionDateEntity nextAccountAction = null;
@@ -1169,11 +1210,14 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /**
-     * If the given {@FeeBO} has not yet been applied to this account, build and return a new {@link AccountFeesEntity}
-     * linking this account to the fee; otherwise return the link object with the fee amount replaced with the charge.
+     * If the given {@FeeBO} has not yet been applied to this account, build and return a new
+     * {@link AccountFeesEntity} linking this account to the fee; otherwise return the link object with the fee amount
+     * replaced with the charge.
      *
-     * @param fee the fee to apply or update
-     * @param charge the amount to charge for the given fee
+     * @param fee
+     *            the fee to apply or update
+     * @param charge
+     *            the amount to charge for the given fee
      * @return return the new or updated {@link AccountFeesEntity} linking this account to the fee
      */
     protected final AccountFeesEntity getAccountFee(final FeeBO fee, final Double charge) {
@@ -1201,7 +1245,8 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     protected final List<InstallmentDate> getInstallmentDates(final MeetingBO meeting, final Short noOfInstallments,
-            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled, final boolean adjustForHolidays) {
+            final Short installmentToSkip, final boolean isRepaymentIndepOfMeetingEnabled,
+            final boolean adjustForHolidays) {
 
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Generating intallment dates");
 
@@ -1246,22 +1291,22 @@ public class AccountBO extends AbstractBusinessObject {
         return installmentDates;
     }
 
-//    @Deprecated
-//    protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
-//            throws AccountException {
-//        List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-//        for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-//            if (accountFeesEntity.isActive()) {
-//                Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
-//                if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-//                    feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
-//                } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
-//                    feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
-//                }
-//            }
-//        }
-//        return feeInstallmentList;
-//    }
+    // @Deprecated
+    // protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
+    // throws AccountException {
+    // List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
+    // for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+    // if (accountFeesEntity.isActive()) {
+    // Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
+    // if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
+    // feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
+    // } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
+    // feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
+    // }
+    // }
+    // }
+    // return feeInstallmentList;
+    // }
 
     /**
      *
@@ -1287,12 +1332,13 @@ public class AccountBO extends AbstractBusinessObject {
         return feeInstallmentList;
     }
 
-    public final List<Date> getFeeDates (final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates) {
-        return getFeeDates (feeMeetingFrequency, installmentDates, true);
+    public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency,
+            final List<InstallmentDate> installmentDates) {
+        return getFeeDates(feeMeetingFrequency, installmentDates, true);
     }
 
-    public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency, final List<InstallmentDate> installmentDates,
-           final boolean adjustForHolidays ) {
+    public final List<Date> getFeeDates(final MeetingBO feeMeetingFrequency,
+            final List<InstallmentDate> installmentDates, final boolean adjustForHolidays) {
 
         MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
 
@@ -1306,11 +1352,15 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         DateTime startFromMeetingDate = new DateTime(installmentDates.get(0).getInstallmentDueDate());
-        DateTime repaymentEndDatetime = new DateTime(installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate());
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting, feeMeetingFrequency);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+        DateTime repaymentEndDatetime = new DateTime(installmentDates.get(installmentDates.size() - 1)
+                .getInstallmentDueDate());
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting,
+                feeMeetingFrequency);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
-        List<DateTime> feeScheduleDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate, repaymentEndDatetime, scheduledEvent);
+        List<DateTime> feeScheduleDates = dateGeneration.generateScheduledDatesThrough(startFromMeetingDate,
+                repaymentEndDatetime, scheduledEvent);
 
         List<Date> feeSchedulesAsJavaDates = new ArrayList<Date>();
         for (DateTime feeSchedule : feeScheduleDates) {
@@ -1380,7 +1430,7 @@ public class AccountBO extends AbstractBusinessObject {
         for (AccountFeesEntity accountFee : getAccountFees()) {
             if (accountFee.getFees().isPeriodic()) {
                 // Why? Doesn't appear to do anything with the retrieved FeeBO
-//                getFeePersistence().getFee(accountFee.getFees().getFeeId());
+                // getFeePersistence().getFee(accountFee.getFees().getFeeId());
                 periodicFeeList.add(accountFee);
             }
         }
@@ -1400,9 +1450,8 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     /**
-     * This can be very inefficient if an account has many action dates. Note
-     * that an account having too many action dates may also be a sign of bad
-     * data--at least, this was the case with some GK data.
+     * This can be very inefficient if an account has many action dates. Note that an account having too many action
+     * dates may also be a sign of bad data--at least, this was the case with some GK data.
      */
     public Short getLastInstallmentId() {
         Short lastInstallmentId = null;
@@ -1458,19 +1507,21 @@ public class AccountBO extends AbstractBusinessObject {
         this.accountActionDates.clear();
     }
 
-    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns) throws AccountException {
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
+            throws AccountException {
     }
 
     protected Money getDueAmount(final AccountActionDateEntity installment) {
         return null;
     }
 
-    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
+    protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
+            final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
     }
 
     @Deprecated
-    protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees, final List<InstallmentDate> installmentDates)
-            throws AccountException {
+    protected List<FeeInstallment> handlePeriodic(final AccountFeesEntity accountFees,
+            final List<InstallmentDate> installmentDates) throws AccountException {
         return null;
     }
 
@@ -1501,15 +1552,15 @@ public class AccountBO extends AbstractBusinessObject {
         return false;
     }
 
-    public void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId)
+            throws AccountException {
     }
 
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
     }
 
     /**
-     * Return list of unpaid AccountActionDateEntities occurring on or after
-     * today
+     * Return list of unpaid AccountActionDateEntities occurring on or after today
      */
     protected List<Short> getApplicableInstallmentIdsForRemoveFees() {
         List<Short> installmentIdList = new ArrayList<Short>();
@@ -1517,21 +1568,21 @@ public class AccountBO extends AbstractBusinessObject {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
         AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
-        if (accountActionDateEntity != null
-                && !DateUtils.getDateWithoutTimeStamp(accountActionDateEntity.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp())) {
+        if (accountActionDateEntity != null) {
             installmentIdList.add(accountActionDateEntity.getInstallmentId());
         }
+
         return installmentIdList;
     }
 
-    protected List<AccountTrxnEntity> reversalAdjustment(final String adjustmentComment, final AccountPaymentEntity lastPayment)
-            throws AccountException {
+    protected List<AccountTrxnEntity> reversalAdjustment(final String adjustmentComment,
+            final AccountPaymentEntity lastPayment) throws AccountException {
         return lastPayment.reversalAdjustment(getLoggedInUser(), adjustmentComment);
 
     }
 
-    private void setFinancialEntries(final FinancialTransactionBO financialTrxn, final TransactionHistoryDto transactionHistory) {
+    private void setFinancialEntries(final FinancialTransactionBO financialTrxn,
+            final TransactionHistoryDto transactionHistory) {
         String debit = "-";
         String credit = "-";
         String notes = "-";
@@ -1553,7 +1604,8 @@ public class AccountBO extends AbstractBusinessObject {
 
     }
 
-    private void setAccountingEntries(final AccountTrxnEntity accountTrxn, final TransactionHistoryDto transactionHistory) {
+    private void setAccountingEntries(final AccountTrxnEntity accountTrxn,
+            final TransactionHistoryDto transactionHistory) {
 
         transactionHistory.setAccountingEnteries(accountTrxn.getAccountPayment().getPaymentId(), String
                 .valueOf(removeSign(accountTrxn.getAmount())), accountTrxn.getCustomer().getDisplayName(), accountTrxn
@@ -1571,7 +1623,8 @@ public class AccountBO extends AbstractBusinessObject {
         return null;
     }
 
-    protected final FeeInstallment handleOneTime(final AccountFeesEntity accountFee, final List<InstallmentDate> installmentDates) {
+    protected final FeeInstallment handleOneTime(final AccountFeesEntity accountFee,
+            final List<InstallmentDate> installmentDates) {
         Money accountFeeAmount = accountFee.getAccountFeeAmount();
         Date feeDate = installmentDates.get(0).getInstallmentDueDate();
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Handling OneTime fee" + feeDate);
@@ -1585,29 +1638,28 @@ public class AccountBO extends AbstractBusinessObject {
      * Shift schedule dates to account for new holidays, starting with the first future or present installment that
      * falls in one of the unapplied holidays.
      *
-     * <p> If no dates fall in any of the unapplied holidays, then do nothing.</p>
+     * <p>
+     * If no dates fall in any of the unapplied holidays, then do nothing.
+     * </p>
      *
-     * @param workingDays the days of the week that scheduled dates must occur in
-     * @param thisAndNextYearsHolidays upcoming holidays to schedule around.
-     * @param unappliedHolidays the holidays that have not yet been applied to this account's schedule
+     * @param unappliedHolidays
+     *            the holidays that have not yet been applied to this account's schedule
      */
-    public void rescheduleDatesForNewHolidays (List<Days> workingDays, List<Holiday> thisAndNextYearsHolidays,
+    public void rescheduleDatesForNewHolidays(final ScheduledDateGeneration scheduledDateGeneration,
             List<Holiday> unappliedHolidays) {
 
         int firstInstallmentInUnappliedHolidays = getFirstFutureInstallmentInOneOfTheHolidays(unappliedHolidays);
         if (firstInstallmentInUnappliedHolidays > 0) {
-            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith
-                        (workingDays,
-                         thisAndNextYearsHolidays,
-                         firstInstallmentInUnappliedHolidays);
-            replaceActionDates (installmentDates, firstInstallmentInUnappliedHolidays);
+            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith(scheduledDateGeneration,
+                    firstInstallmentInUnappliedHolidays);
+            replaceActionDates(installmentDates, firstInstallmentInUnappliedHolidays);
         }
     }
 
-    private int  getFirstFutureInstallmentInOneOfTheHolidays(List<Holiday> holidays) {
+    private int getFirstFutureInstallmentInOneOfTheHolidays(List<Holiday> holidays) {
 
         for (AccountActionDateEntity accountAction : this.getAccountActionDatesSortedByInstallmentId()) {
-            for (Holiday  holiday: holidays) {
+            for (Holiday holiday : holidays) {
                 if (holiday.encloses(accountAction.getActionDate())) {
                     return accountAction.getInstallmentId();
                 }
@@ -1616,25 +1668,22 @@ public class AccountBO extends AbstractBusinessObject {
         return 0;
     }
 
-    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith (List<Days> workingDays, List<Holiday> holidays,
+    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith(final ScheduledDateGeneration dateGeneration,
             int startingInstallmentId) {
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getMeetingForAccount());
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
         int numberOfDatesToGenerate = this.getAccountActionDates().size() - startingInstallmentId + 1;
-        DateTime dayBeforeFirstDateToGenerate
-            = new DateTime(this.getAccountActionDate((short) startingInstallmentId).getActionDate()).minusDays(1);
-        return dateGeneration.generateScheduledDates(numberOfDatesToGenerate,
-                                                     dayBeforeFirstDateToGenerate,
-                                                     scheduledEvent);
+        DateTime dayBeforeFirstDateToGenerate = new DateTime(this.getAccountActionDate((short) startingInstallmentId)
+                .getActionDate()).minusDays(1);
+        return dateGeneration.generateScheduledDates(numberOfDatesToGenerate, dayBeforeFirstDateToGenerate,
+                scheduledEvent);
     }
 
-    private void replaceActionDates (List<DateTime> installmentDates, int firstInstallmentId) {
+    private void replaceActionDates(List<DateTime> installmentDates, int firstInstallmentId) {
 
         for (int installmentId = firstInstallmentId; installmentId <= this.getAccountActionDates().size(); installmentId++) {
-            this.getAccountActionDate((short) installmentId)
-                    .setActionDate(new java.sql.Date(installmentDates.get(installmentId-firstInstallmentId).toDate().getTime()));
+            this.getAccountActionDate((short) installmentId).setActionDate(
+                    new java.sql.Date(installmentDates.get(installmentId - firstInstallmentId).toDate().getTime()));
         }
     }
 
@@ -1753,15 +1802,18 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void setExternalId(final String externalId) {
-        this.externalId= externalId;
+        this.externalId = externalId;
     }
+
     public String getExternalId() {
         return externalId;
     }
 
     /**
      * Return true if a given payment amount valid for this account.
-     * @param amount the payment amount to validate.
+     *
+     * @param amount
+     *            the payment amount to validate.
      *
      */
     public boolean paymentAmountIsValid(final Money amount) {

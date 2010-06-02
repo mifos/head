@@ -116,8 +116,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes, request);
 
         if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
-                || savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue() && savings
-                        .getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())) {
+                || savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue()
+                && savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())) {
             SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings.getCustomer().getChildren(
                     CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
         } else {
@@ -158,7 +158,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
                         persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit
                                 .getValue()), request);
             } else {
-                actionForm.setAmount(new Money(savings.getCurrency(),"0").toString());
+                actionForm.setAmount(new Money(savings.getCurrency(), "0").toString());
                 SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
                         .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal
                                 .getValue()), request);
@@ -188,8 +188,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
-    public ActionForward makePayment(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward makePayment(final ActionMapping mapping, final ActionForm form,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         SavingsBO savedAccount = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsBO savings = getSavingsService().findById(savedAccount.getAccountId());
         checkVersionMismatch(savedAccount.getVersionNo(), savings.getVersionNo());
@@ -197,7 +197,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         logger.debug("In SavingsDepositWithdrawalAction::makePayment(), accountId: " + savings.getAccountId());
         SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
 
         if (!savings.isTrxnDateValid(trxnDate)) {
@@ -225,13 +224,12 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     }
 
     private PaymentData createPaymentData(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc,
-            final MifosCurrency currency)
-            throws Exception {
+            final MifosCurrency currency) throws Exception {
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
-        PaymentData paymentData = PaymentData.createPaymentData(
-                new Money(currency, actionForm.getAmount()), new PersonnelPersistence()
-                .getPersonnel(uc.getId()), Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
+        PaymentData paymentData = PaymentData.createPaymentData(new Money(currency, actionForm.getAmount()),
+                new PersonnelPersistence().getPersonnel(uc.getId()), Short.valueOf(actionForm.getPaymentTypeId()),
+                trxnDate);
         paymentData.setReceiptDate(receiptDate);
         paymentData.setReceiptNum(actionForm.getReceiptId());
         CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
@@ -240,8 +238,8 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         return paymentData;
     }
 
-    private PaymentData createPaymentDataForDeposit(final SavingsDepositWithdrawalActionForm actionForm, final UserContext uc,
-            final SavingsBO savings) throws Exception {
+    private PaymentData createPaymentDataForDeposit(final SavingsDepositWithdrawalActionForm actionForm,
+            final UserContext uc, final SavingsBO savings) throws Exception {
         PaymentData paymentData = createPaymentData(actionForm, uc, savings.getCurrency());
         for (AccountActionDateEntity installment : savings.getTotalInstallmentsDue(Integer.valueOf(actionForm
                 .getCustomerId()))) {

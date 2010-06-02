@@ -34,7 +34,6 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
@@ -79,7 +78,7 @@ public class AuthorizationManager {
     }
 
     public void init(Session session) throws ApplicationException {
-        SecurityHelper security = new SecurityHelper(new SessionHolder(session));
+        SecurityHelper security = new SecurityHelper(session);
 
         List<ActivityRoles> al = security.getActivities();
         activityToRolesCacheMap.clear();
@@ -102,26 +101,26 @@ public class AuthorizationManager {
             roles.retainAll(userContext.getRoles());
             if (roles.isEmpty()) {
                 return false;
-            } else {
-                HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(
-                        userContext, activityContext.getRecordOfficeId());
-                PersonnelLevel personnelLevel = userContext.getLevel();
-                short userId = userContext.getId().shortValue();
-                if (where == SAME) {
-                    // 1 check if record belog to him if so let him do
-                    if (userId == activityContext.getRecordLoanOfficer()) {
-                        return true;
-                    } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+            }
+
+            HierarchyManager.BranchLocation where = HierarchyManager.getInstance().compareOfficeInHierarchy(userContext, activityContext.getRecordOfficeId());
+            PersonnelLevel personnelLevel = userContext.getLevel();
+            short userId = userContext.getId().shortValue();
+            if (where == SAME) {
+                // 1 check if record belog to him if so let him do
+                if (userId == activityContext.getRecordLoanOfficer()) {
                     return true;
-                } else {
+                } else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
                     return false;
                 }
+
+                return true;
+
+            } else if (where == BELOW && PersonnelLevel.LOAN_OFFICER != personnelLevel) {
+                return true;
             }
+
+            return false;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

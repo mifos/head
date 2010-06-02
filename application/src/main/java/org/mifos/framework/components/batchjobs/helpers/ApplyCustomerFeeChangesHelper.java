@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
@@ -44,38 +45,44 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
     }
 
     @Override
-    public void execute(long timeInMillis) throws BatchJobException {
+    public void execute(@SuppressWarnings("unused") long timeInMillis) throws BatchJobException {
         List<String> errorList = new ArrayList<String>();
-        List<FeeBO> fees = new ArrayList<FeeBO>();
+        List<Short> updatedFeeIds = new ArrayList<Short>();
         try {
-            fees = new FeePersistence().getUpdatedFeesForCustomer();
+            updatedFeeIds = new FeePersistence().getUpdatedFeesForCustomer();
         } catch (Exception e) {
             errorList.add(e.getMessage());
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
-        if (fees != null && fees.size() > 0) {
-            for (FeeBO fee : fees) {
-                try {
-                    if (!fee.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
-                        List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(fee.getFeeId());
-                        if (accounts != null && accounts.size() > 0) {
-                            for (AccountBO account : accounts) {
-                                updateAccountFee(account, fee);
-                            }
+
+        for (Short feeId : updatedFeeIds) {
+            try {
+                FeeBO hydratedFee = new FeePersistence().findFeeById(feeId);
+                hydratedFee = new FeePersistence().getFee(feeId, hydratedFee.getFeeType());
+
+                if (!hydratedFee.getFeeChangeType().equals(FeeChangeType.NOT_UPDATED)) {
+                    List<AccountBO> accounts = new CustomerPersistence().getCustomerAccountsForFee(hydratedFee.getFeeId());
+                    if (accounts != null && accounts.size() > 0) {
+                        for (AccountBO account : accounts) {
+                            updateAccountFee(account, hydratedFee);
                         }
                     }
-                    fee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
-                    UserContext userContext = new UserContext();
-                    userContext.setId(PersonnelConstants.SYSTEM_USER);
-                    fee.setUserContext(userContext);
-                    fee.save();
-                    StaticHibernateUtil.commitTransaction();
-                } catch (Exception e) {
-                    StaticHibernateUtil.rollbackTransaction();
-                    errorList.add(fee.getFeeName());
                 }
+
+                hydratedFee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
+                UserContext userContext = new UserContext();
+                userContext.setId(PersonnelConstants.SYSTEM_USER);
+                hydratedFee.setUserContext(userContext);
+
+                hydratedFee.save();
+
+                StaticHibernateUtil.commitTransaction();
+            } catch (Exception e) {
+                StaticHibernateUtil.rollbackTransaction();
+                errorList.add("feeId: " + feeId);
             }
         }
+
         if (errorList.size() > 0) {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
@@ -83,7 +90,8 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 
     private void updateAccountFee(AccountBO account, FeeBO feesBO) throws BatchJobException {
         CustomerAccountBO customerAccount = (CustomerAccountBO) account;
-        customerAccount.updateFee(account.getAccountFees(feesBO.getFeeId()), feesBO);
+        AccountFeesEntity accountFee = account.getAccountFees(feesBO.getFeeId());
+        customerAccount.updateFee(accountFee, feesBO);
     }
 
     @Override

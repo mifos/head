@@ -61,10 +61,6 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="VOS.workingDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.workingDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.allowCalDefForNextYear" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.allowCalDefForNextYear}"/>
-								<mifos:mifoslabel name="VOS.daysBeforeYearEnd" bundle="viewOrganizationSettingsUIResources" />
-								<br/>
 								<mifos:mifoslabel name="VOS.startOfWeek" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.startOfWeek}"/>
 								<br/>

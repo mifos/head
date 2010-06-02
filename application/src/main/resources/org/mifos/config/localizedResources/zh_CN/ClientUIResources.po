@@ -1,9 +1,9 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ClientUIResources.properties, zh/ClientUIResources_zh_CN.properties
+#. extracted from ClientUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-05-29 12:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1608,7 +1608,7 @@ msgid "Customer cannot be added to an inactive group"
 msgstr "无法将客户添加至非活动的组"
 
 #: errors.Customer.TargetGroupStatusLowerThanClient
-msgid "Target group status is lower than client"
+msgid "Group status should be higher than Client status"
 msgstr ""
 
 #: errors.InvalidTrainedDate

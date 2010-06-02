@@ -46,6 +46,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanServiceFacade;
+import org.mifos.application.servicefacade.MeetingServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
@@ -95,10 +96,12 @@ public abstract class BaseAction extends DispatchAction {
 
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
+    protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
     protected CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -110,6 +113,7 @@ public abstract class BaseAction extends DispatchAction {
         if (springAppContext != null) {
             this.customerDao = springAppContext.getBean(CustomerDao.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
+            this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
             this.centerDetailsServiceFacade = springAppContext.getBean(CenterDetailsServiceFacade.class);
             this.groupDetailsServiceFacade = springAppContext.getBean(GroupDetailsServiceFacade.class);
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
@@ -125,9 +129,6 @@ public abstract class BaseAction extends DispatchAction {
         }
         if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
             request.setAttribute("shutdownIsImminent", true);
-        }
-        if (StaticHibernateUtil.isSessionOpen()) {
-            logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
         }
         TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
@@ -249,9 +250,6 @@ public abstract class BaseAction extends DispatchAction {
         }
 
         if (closeSession) {
-            if (StaticHibernateUtil.isSessionOpen()) {
-                logger.info("Closing open hibernate session at end of action: " + getClass().getName());
-            }
             // StaticHibernateUtil.flushAndCloseSession();
             StaticHibernateUtil.closeSession();
         }

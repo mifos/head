@@ -90,11 +90,4 @@ public class CustomerUIHelperFn {
         return null;
     }
 
-    public static String getUpdatedMeetingSchedule(Object meeting, Object userContext) {
-        if (meeting instanceof CustomerMeetingEntity) {
-            return new MeetingHelper().getUpdatedMeetingScheduleMessage(
-                    (CustomerMeetingEntity) meeting, (UserContext) userContext);
-        }
-        return null;
-    }
 }

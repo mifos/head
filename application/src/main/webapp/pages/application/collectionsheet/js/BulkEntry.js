@@ -259,7 +259,7 @@ function setTotalsForCenter(loanProductSize, savingsProductSize) {
     document.getElementsByName("dueColl")[0].value = dueCollection;
     document.getElementsByName("otherColl")[0].value = otherColl;
     document.getElementsByName("loanDisb")[0].value = loanDisb;
-    document.getElementsByName("WithDrawals")[0].value = withDrawals;
+    document.getElementsByName("Withdrawals")[0].value = withDrawals;
     document.getElementsByName("totColl")[0].value = totColl;
     document.getElementsByName("totIssue")[0].value = totIssue;
     document.getElementsByName("netCash")[0].value = totColl - totIssue;

@@ -115,17 +115,6 @@ public class CenterBO extends CustomerBO {
         return getStatus() == CustomerStatus.CENTER_ACTIVE;
     }
 
-    /**
-     * @deprecated - pull out of domain model up towards service level.
-     */
-    @Deprecated
-    @Override
-    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In CenterBO::updateMeeting(), customerId: " + getCustomerId());
-        saveUpdatedMeeting(meeting);
-        this.update();
-    }
-
     @Override
     public boolean isActiveForFirstTime(@SuppressWarnings("unused") final Short oldStatus, @SuppressWarnings("unused") final Short newStatusId) {
         return false;
@@ -134,13 +123,6 @@ public class CenterBO extends CustomerBO {
     @Override
     public CustomerPerformanceHistory getPerformanceHistory() {
         return null;
-    }
-
-    @Override
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        super.saveUpdatedMeeting(meeting);
-        deleteMeeting(newMeeting);
     }
 
     public void validateChangeToInActive() throws CustomerException {

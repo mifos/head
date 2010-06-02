@@ -21,9 +21,12 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -46,6 +49,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.schedule.ScheduledDateGeneration;
+import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
@@ -68,6 +73,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private List<Days> workingDays;
     private List<String> errorList;
     private List<Holiday> unappliedHolidays;
+    private Map<Integer, Short> accountOffice;
+    private Map<Short, List<HolidayBO>> unappliedOfficeHolidays;
+    private Map<Short, List<HolidayBO>> officeHolidaysForThisYearAndNext;
 
     public ApplyHolidayChangesHelper(MifosTask mifosTask) {
         super(mifosTask);
@@ -172,23 +180,55 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         }
     }
 
-    private void rescheduleDatesStartingFromUnappliedHolidays () throws ServiceException, PersistenceException {
+    private void rescheduleDatesStartingFromUnappliedHolidays() throws ServiceException, PersistenceException {
+        LoanAccountBatch loanAccountBatch = new LoanAccountBatch();
+        SavingsAccountBatch savingsAccountBatch = new SavingsAccountBatch();
+        CustomerAccountBatch customerAccountBatch = new CustomerAccountBatch();
 
-        reschedule (new LoanAccountBatch());
-        reschedule (new SavingsAccountBatch());
-        reschedule (new CustomerAccountBatch());
+        List<Integer> loanAccountIds = loanAccountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
+        List<Integer> savingsAccountIds = savingsAccountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
+        List<Integer> customerAccountIds = customerAccountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
+
+        initializeOfficeHolidayMaps(loanAccountIds, savingsAccountIds, customerAccountIds);
+
+        reschedule("Loan", loanAccountBatch, loanAccountIds);
+        reschedule("Savings", savingsAccountBatch, savingsAccountIds);
+        reschedule("Customer", customerAccountBatch, customerAccountIds);
 
         markHolidaysAsApplied();
     }
 
-    private void reschedule (AccountBatch accountBatch) throws PersistenceException, ServiceException {
+    private void initializeOfficeHolidayMaps(List<Integer> loanAccountIds, List<Integer> savingsAccountIds,
+            List<Integer> customerAccountIds) {
+        List<Integer> accountIds = new LinkedList<Integer>();
+        accountIds.addAll(loanAccountIds);
+        accountIds.addAll(savingsAccountIds);
+        accountIds.addAll(customerAccountIds);
+        accountOfficeMap(accountIds);
+        unappliedOfficeHolidays();
+        officeHolidaysThisYearAndNext();
+    }
 
+    private void accountOfficeMap(List<Integer> accountIds) {
+        accountOffice = getAccountPersistence().accountOfficeMap(accountIds);
+    }
+
+    private void unappliedOfficeHolidays() {
+        unappliedOfficeHolidays = getHolidayDao().unappliedOfficeHolidays(accountOffice.values());
+    }
+
+    private void officeHolidaysThisYearAndNext() {
+        DateTime today = new DateTime();
+        officeHolidaysForThisYearAndNext = getHolidayDao().holidaysForOffices(accountOffice.values(), today.getYear(),
+                today.plusYears(2).getYear());
+    }
+
+    private void reschedule(String accountType, AccountBatch accountBatch, List<Integer> accountIds)
+            throws PersistenceException, ServiceException {
         rollingStartTime = taskStartTime;
         currentRecordNumber = 0;
-
-        List<Integer> accountIds = accountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
         accountCount = accountIds.size();
-        logMessage("No. of loan Accounts to Process: " + accountCount);
+        logMessage("No. of " + accountType + " Accounts to Process: " + accountCount);
 
         getHibernateUtil().getSessionTL();
         getHibernateUtil().startTransaction();
@@ -196,24 +236,24 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         for (Integer accountId : accountIds) {
             currentRecordNumber++;
             AccountBO account = accountBatch.getAccount(accountId);
-            OfficeBO office = account.getOffice();
-            Set<HolidayBO> officeHolidays = office.getHolidays();
-            officeHolidays.retainAll(unappliedHolidays);
-            if (!officeHolidays.isEmpty()) {
-                Short officeId = office.getOfficeId();
-                account.rescheduleDatesForNewHolidays(workingDays, getHolidayDao().findAllHolidaysThisYearAndNext(
-                        officeId), new ArrayList<Holiday>(officeHolidays));
+            Short officeId = accountOffice.get(accountId);
+            List<HolidayBO> unappliedHolidays = unappliedOfficeHolidays.get(officeId);
+            if (!unappliedHolidays.isEmpty()) {
+                List<HolidayBO> holidaysThisYearAndNext = officeHolidaysForThisYearAndNext.get(officeId);
+                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                        workingDays, new ArrayList<Holiday>(holidaysThisYearAndNext));
+                account.rescheduleDatesForNewHolidays(dateGeneration, new ArrayList<Holiday>(unappliedHolidays));
             }
             houseKeeping();
-
         }
+
         getHibernateUtil().commitTransaction();
+
         long time = new DateTimeService().getCurrentDateTime().getMillis();
         String message = "" + currentRecordNumber + " updated, " + (accountCount - currentRecordNumber)
                 + " remaining, batch time: " + (time - rollingStartTime) + " ms";
         logMessage(message);
-
-        String finalMessage = "Loan accounts Processed in: "
+        String finalMessage = accountType + " accounts Processed in: "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
     }

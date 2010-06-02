@@ -1,9 +1,9 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/BulkEntryUIResources.properties, zh/BulkEntryUIResources_zh_CN.properties
+#. extracted from BulkEntryUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-05-28 20:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -237,6 +237,13 @@ msgctxt "errors.invalidamount"
 msgid ""
 "<li>The amount specified for {0} of customer {1} is invalid. Please specify "
 "a valid amount.</li>"
+msgstr "<li>填写的客户{1}的{0}金额无效。请填写有效的金额。</li>"
+
+#: errors.invalidaccollections
+#, fuzzy
+msgid ""
+"<li>The amount specified for {0} of customer {1} must be exact amount due or "
+"0. Please specify a valid amount.</li>"
 msgstr "<li>填写的客户{1}的{0}金额无效。请填写有效的金额。</li>"
 
 #: errors.invalidamountvalue

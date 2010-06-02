@@ -158,6 +158,10 @@ public class SystemInfo implements Serializable {
         return versionInfo.getBuildDate();
     }
 
+    public String getReleaseName() {
+        return versionInfo.getReleaseName();
+    }
+
     public void setJavaVendor(String javaVendor) {
         this.javaVendor = javaVendor;
     }

@@ -785,7 +785,7 @@ public class LoanBO extends AccountBO {
      * Remove the fee from all unpaid current or future installments, and update the loan accordingly.
      */
     @Override
-    public final void removeFees(final Short feeId, final Short personnelId) throws AccountException {
+    public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
         Money totalFeeAmount = new Money(getCurrency());
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
@@ -1427,24 +1427,6 @@ public class LoanBO extends AccountBO {
         return daysInArrears;
     }
 
-    public void handleArrearsAging() throws AccountException {
-        if (this.loanArrearsAgingEntity == null) {
-            this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this, getDaysInArrears(), getLoanSummary()
-                    .getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(),
-                    getTotalInterestAmountInArrears());
-        } else {
-            this.loanArrearsAgingEntity.update(getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary()
-                    .getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears(),
-                    getCustomer());
-        }
-
-        try {
-            getLoanPersistence().createOrUpdate(this);
-        } catch (PersistenceException pe) {
-            throw new AccountException(pe);
-        }
-    }
-
     public final void reverseLoanDisbursal(final PersonnelBO loggedInUser, final String note) throws AccountException {
         changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_REVERSAL.getValue(), note);
         if (getAccountPayments() != null && getAccountPayments().size() > 0) {
@@ -1529,10 +1511,6 @@ public class LoanBO extends AccountBO {
                 loanArrearsAgingEntity = null;
             }
 
-            if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                    && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
-                handleArrearsAging();
-            }
             LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
             accountAction.setPaymentDetails(loanPaymentData, paymentDate);
             accountPaymentData.setAccountActionDate(accountAction);
@@ -1550,6 +1528,12 @@ public class LoanBO extends AccountBO {
                 performanceHistory.setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
             }
         }
+
+        if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
+                && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
+            handleArrearsAging();
+        }
+
         addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(),
                 AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
         return accountPayment;
@@ -1680,6 +1664,7 @@ public class LoanBO extends AccountBO {
                 } else {
                     if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
                         setAccountState(new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+                        handleArrearsAging();
                     }
                 }
             }
@@ -1733,10 +1718,6 @@ public class LoanBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
@@ -1753,7 +1734,6 @@ public class LoanBO extends AccountBO {
                     startFromMeetingDate, scheduledEvent);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-        }
     }
 
     private int calculateDays(final Date fromDate, final Date toDate) {
@@ -4058,6 +4038,24 @@ public class LoanBO extends AccountBO {
     @Override
     public MeetingBO getMeetingForAccount() {
         return getLoanMeeting();
+    }
+
+    private void handleArrearsAging() throws AccountException {
+        if (this.loanArrearsAgingEntity == null) {
+            this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this, getDaysInArrears(), getLoanSummary()
+                    .getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(),
+                    getTotalInterestAmountInArrears());
+        } else {
+            this.loanArrearsAgingEntity.update(getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary()
+                    .getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears(),
+                    getCustomer());
+        }
+
+        try {
+            getLoanPersistence().createOrUpdate(this);
+        } catch (PersistenceException pe) {
+            throw new AccountException(pe);
+        }
     }
 
     private boolean accountActionTypeIsWrittenOffOrRescheduled(AccountActionTypes accountActionType) {
