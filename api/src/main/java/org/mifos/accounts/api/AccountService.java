@@ -137,6 +137,8 @@ public interface AccountService {
      */
     List<PaymentTypeDto> getLoanPaymentTypes() throws Exception;
 
+    List<PaymentTypeDto> getLoanDisbursementTypes() throws Exception;
+
     /**
      * Gets the payment types that are valid for fee payments.
      *

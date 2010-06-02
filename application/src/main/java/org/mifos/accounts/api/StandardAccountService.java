@@ -196,7 +196,7 @@ public class StandardAccountService implements AccountService {
         if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
-        if (!getLoanDisbursementType().contains(payment.getPaymentType())) {
+        if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
             errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
         }
         if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
@@ -245,7 +245,8 @@ public class StandardAccountService implements AccountService {
         return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
     }
 
-    public List<PaymentTypeDto> getLoanDisbursementType() throws PersistenceException {
+    @Override
+    public List<PaymentTypeDto> getLoanDisbursementTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.loan_disbursement.getValue());
     }
 
