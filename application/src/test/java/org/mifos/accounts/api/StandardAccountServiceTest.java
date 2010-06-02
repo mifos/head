@@ -22,6 +22,7 @@ package org.mifos.accounts.api;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyShort;
@@ -185,12 +186,14 @@ public class StandardAccountServiceTest {
 
     @Test
     public void testMakeLoanDisbursements() throws Exception {
-        // TODO Assert.fail("unimplemented");
+        // TODO
+        fail("unimplemented");
     }
 
     @Test
     public void testValidateDisbursement() throws Exception {
-        // TODO Assert.fail("unimplemented");
+        // TODO
+        fail("unimplemented");
     }
 
     @Test
