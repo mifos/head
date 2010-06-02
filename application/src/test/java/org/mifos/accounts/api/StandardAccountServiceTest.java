@@ -184,16 +184,15 @@ public class StandardAccountServiceTest {
 
     }
 
-    @Test
-    public void testMakeLoanDisbursements() throws Exception {
-        // TODO
-        fail("unimplemented");
-    }
-
-    @Test
-    public void testValidateDisbursement() throws Exception {
-        // TODO
-        fail("unimplemented");
+    @Test(expected = AccountException.class)
+    public void testThrowsExceptionWhenDisbursalAmountDoesNotMatchLoanAmount() throws Exception {
+        final int accountId = 1;
+        final LoanBO loan = new LoanAccountBuilder().approved().build();
+        when(loanPersistence.getAccount(accountId)).thenReturn(loan);
+        AccountPaymentParametersDto disbursal = new AccountPaymentParametersDto(new UserReferenceDto((short) 1),
+                new AccountReferenceDto(accountId), new BigDecimal("299"), new LocalDate(), new PaymentTypeDto(
+                        (short) 1, "CASH"), "");
+        standardAccountService.validateLoanDisbursement(disbursal);
     }
 
     @Test
