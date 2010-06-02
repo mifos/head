@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
-import org.mifos.application.holiday.persistence.OfficeHoliday;
+import org.mifos.application.holiday.persistence.HolidayOfficeNames;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
@@ -145,7 +145,7 @@ public class HolidayAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         HolidayServiceFacadeWebTier holidayServiceFacade = new HolidayServiceFacadeWebTier(new OfficePersistence());
         int count = 1;
-        Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
+        Map<String, List<HolidayOfficeNames>> holidaysByYear = holidayServiceFacade.holidaysByYear();
         Set<String> distinctYears = holidaysByYear.keySet();
         for (String year : distinctYears) {
             request.getSession().setAttribute(HolidayConstants.HOLIDAY_LIST + count, holidaysByYear.get(year));

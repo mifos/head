@@ -22,16 +22,18 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyCollection;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Matchers.anyList;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -54,7 +56,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurationService;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.schedule.ScheduledDateGeneration;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -85,12 +86,13 @@ public class ApplyHolidayChangesHelperTest {
     @Mock private SavingsBO mockSavingsBO;
     @Mock private CustomerAccountBO mockCustomerAccountBO;
     @Mock private AccountBusinessService mockAccountBusinessService;
+    private List<HolidayBO> holidays;
 
     private Integer loanAccountId;
     private Integer savingsAccountId;
     private Integer customerAccountId;
     private List<Holiday> unappliedHolidays;
-    private List<Holiday> upcomingHolidays;
+    private List<HolidayBO> upcomingHolidays;
     private List<Days> workingDays;
     private List<Integer> listOfLoanAccountIdsInAnUnappliedHoliday;
     private List<Integer> listOfSavingsAccountIdsInAnUnappliedHoliday;
@@ -100,6 +102,7 @@ public class ApplyHolidayChangesHelperTest {
     public void setupAndInjectMocks() throws Exception {
 
         holiday = mockHolidayBO;
+        Short officeId = new Short("1");
         loanAccountId = new Integer(1);
         savingsAccountId = new Integer(2);
         customerAccountId = new Integer(3);
@@ -109,7 +112,7 @@ public class ApplyHolidayChangesHelperTest {
         unappliedHolidays = new ArrayList<Holiday>();
 
         // Don't care about upcoming holidays or working days, they're passed to the account for rescheduling
-        upcomingHolidays = new ArrayList<Holiday>();
+        upcomingHolidays = new ArrayList<HolidayBO>();
         workingDays = new ArrayList<Days>();
 
         listOfLoanAccountIdsInAnUnappliedHoliday = new ArrayList<Integer>();
@@ -134,11 +137,25 @@ public class ApplyHolidayChangesHelperTest {
 
         // tests should add holidays to these lists before executing the batch job
         when(mockHolidayDao.getUnAppliedHolidays()).thenReturn (unappliedHolidays);
-        when(mockHolidayDao.findAllHolidaysThisYearAndNext(Matchers.anyShort())) .thenReturn(upcomingHolidays);
+
+        Map<Short, List<HolidayBO>> unappliedOfficeHolidays = new HashMap<Short, List<HolidayBO>>();
+        holidays = new ArrayList<HolidayBO>();
+        holidays.add(mockHolidayBO);
+        unappliedOfficeHolidays.put(officeId, holidays);
+        when(mockHolidayDao.unappliedOfficeHolidays(anyCollection())).thenReturn(unappliedOfficeHolidays);
+
+        Map<Short, List<HolidayBO>> officeHolidaysThisYearAndNext = new HashMap<Short, List<HolidayBO>>();
+        officeHolidaysThisYearAndNext.put(officeId, upcomingHolidays);
+        when(mockHolidayDao.holidaysForOffices(anyCollection(), anyInt(), anyInt())).thenReturn(officeHolidaysThisYearAndNext);
 
         // Don't care about working days, it's passed to the account for rescheduling
         when(mockFiscalCalendarRules.getWorkingDaysAsJodaTimeDays()) .thenReturn(workingDays);
 
+        Map<Integer, Short> accountOffice = new HashMap<Integer, Short>();
+        accountOffice.put(loanAccountId, officeId);
+        accountOffice.put(savingsAccountId, officeId);
+        accountOffice.put(customerAccountId, officeId);
+        when(mockAccountPersistence.accountOfficeMap(anyCollection())).thenReturn(accountOffice);
         // Default is to return an empty list. A test should add Integers to the accountList
         // and mock LoanBusinessService to return one.
         when(mockAccountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
@@ -151,11 +168,7 @@ public class ApplyHolidayChangesHelperTest {
         when(mockLoanBO.getOffice()).thenReturn(officeBO);
         when(mockSavingsBO.getOffice()).thenReturn(officeBO);
         when(mockCustomerAccountBO.getOffice()).thenReturn(officeBO);
-        when(officeBO.getOfficeId()).thenReturn(new Short("1"));
 
-        Set<HolidayBO> officeHolidays = new HashSet<HolidayBO>();
-        officeHolidays.add(mockHolidayBO);
-        when(officeBO.getHolidays()).thenReturn(officeHolidays);
 
         when(mockAccountBusinessService.getAccount(any(Integer.class))) .thenAnswer(new Answer<AccountBO>() {
             public AccountBO answer(InvocationOnMock invocation) {
