@@ -271,9 +271,29 @@
             <artifactId>spring-security-taglibs</artifactId>
         </dependency>
         <dependency>
+	    <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+        </dependency>
+        <dependency>
+	        <groupId>org.springframework.webflow</groupId>
+	        <artifactId>spring-binding</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.springframework.webflow</groupId>
+	        <artifactId>spring-js</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.springframework.webflow</groupId>
+	        <artifactId>spring-webflow</artifactId>
+	    </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>

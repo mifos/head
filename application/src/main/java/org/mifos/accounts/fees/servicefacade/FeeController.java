@@ -27,25 +27,27 @@ public class FeeController {
         this.feeServiceFacade = feeServiceFacade;
     }
 
-    @RequestMapping("/viewFees.ftl")
-    public String viewFees() {
-        return "customerFees";
+    @RequestMapping("/Fees.ftl")
+    public String viewFees(HttpServletRequest request) throws Exception {
+        feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId());
+        return "Fees";
     }
 
-    @RequestMapping(value="/defineFee.ftl", method = RequestMethod.GET)
+    //@RequestMapping(value="/defineFee.ftl", method = RequestMethod.GET)
     public String defineFee(ModelMap model, HttpServletRequest request) throws Exception {
         model.addAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         model.addAttribute("currencies", AccountingRules.getCurrencies());
         model.addAttribute("FeeParameters", feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId()));
+        //org.springframework.webflow.mvc.servlet.FlowController
         return "defineFee";
     }
 
-    @RequestMapping("/previewFee.ftl")
+    //@RequestMapping("/previewFee.ftl")
     public String previewFee() {
         return "previewFee";
     }
 
-    @RequestMapping(value="/createFee.ftl",method = RequestMethod.POST)
+    //@RequestMapping(value="/createFee.ftl",method = RequestMethod.POST)
     public String createFee(@ModelAttribute("FeeDto") FeeCreateRequest request,
             BindingResult result) {
         return "defineFeeSuccess";

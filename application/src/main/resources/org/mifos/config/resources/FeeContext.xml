@@ -147,6 +147,10 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
+	
+	
+	
+	
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
 	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebFeeServiceFacade"/>
     <!--

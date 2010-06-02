@@ -7,10 +7,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-		    WEB-INF\classes\org\mifos\config\resources\applicationContext.xml
-		    WEB-INF\classes\org\mifos\config\resources\services.xml
-		    WEB-INF\classes\org\mifos\config\resources\hibernate-daos.xml
-		    WEB-INF\classes\org\mifos\config\resources\FeeContext.xml		    
+			/WEB-INF/web-app-config.xml
         </param-value>
     </context-param>
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+
+    <context:annotation-config/>
+    	 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>org.mifos.ui.localizedProperties.messages</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    	<property name="exceptionMappings">
+    		<props>
+    			<prop key="java.lang.Exception">unhandledError</prop>
+    		</props>
+    	</property>
+    	<property name="exceptionAttribute"><value>exception</value></property>
+    </bean> 
+    
+    <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/> 
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+
+    <!-- freemarker config -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPaths">
+            <list>
+                <value>/WEB-INF/freemarker/</value>
+                <value>classpath:org/mifos/ui/freemarker/core</value>
+                <value>classpath:org/mifos/ui/freemarker/css</value>
+            </list>
+        </property>
+        <property name="preferFileSystemAccess" value="false"/>
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html; charset=UTF-8" />
+        <!-- if you want to use the Spring FreeMarker macros, set this property to true -->
+        <property name="exposeSpringMacroHelpers" value="true"/>
+    </bean>
+
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController"/>
+    
+    <!--  <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>  -->
+    
+	
+	<webflow:flow-executor id="flowExecutor"/>
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+	   <webflow:flow-location-pattern value="/WEB-INF/flows/**.xml"/>
+	</webflow:flow-registry>
+	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" development="true" />
+	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+	   <property name="viewResolvers" ref="freemarkerViewResolver"/>
+	</bean>
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+	   <property name="flowExecutor" ref="flowExecutor" />
+	</bean>
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+	   <property name="flowRegistry" ref="flowRegistry"/>
+	   <property name="order" value="-1"/>
+    </bean>
+ 
+</beans>
