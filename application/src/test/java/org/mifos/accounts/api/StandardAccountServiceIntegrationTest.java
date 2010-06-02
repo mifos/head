@@ -62,7 +62,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     protected void setUp() throws Exception {
         super.setUp();
         standardAccountService = new StandardAccountService(new AccountPersistence(),
-                new LoanPersistence(), new AcceptedPaymentTypePersistence());
+                new LoanPersistence(), new AcceptedPaymentTypePersistence(), null);
         paymentTypeDtos = standardAccountService.getLoanPaymentTypes();
         defaultPaymentType = paymentTypeDtos.get(0);
         StaticHibernateUtil.commitTransaction();
