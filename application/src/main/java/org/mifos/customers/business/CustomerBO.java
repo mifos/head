@@ -962,7 +962,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             if (getCustomerMeeting() != null) {
                 if (!getCustomerMeeting().getMeeting().getMeetingId().equals(
                         getParentCustomer().getCustomerMeeting().getMeeting().getMeetingId())) {
-                    setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
+                    // FIXME - keithw - fix transfer of client to group
+//                    setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
                 }
             } else {
                 setCustomerMeeting(createCustomerMeeting(getParentCustomer().getCustomerMeeting().getMeeting()));
