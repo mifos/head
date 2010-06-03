@@ -914,4 +914,27 @@ select coll.*,
 				order by s.survey_name
 		]]>
 	</sql-query>
+	
+	<sql-query name="savings.retrieveAllEndOfDayTransactionDetails">
+	   <return-scalar column="dayOfYear" type="date" />
+	   <return-scalar column="totalDeposits" type="big_decimal" />
+	   <return-scalar column="totalWithdrawals" type="big_decimal" />
+	   <return-scalar column="totalInterest" type="big_decimal" />
+	   <![CDATA[select ifnull(atxn.action_date, date('3001-01-01')) as dayOfYear,
+					sum(stxn.deposit_amount) as totalDeposits,
+					sum(stxn.withdrawal_amount) as totalWithdrawals,
+					sum(stxn.interest_amount) as totalInterest
+					from account_trxn atxn
+					inner join  savings_trxn_detail stxn on atxn.account_trxn_id = stxn.account_trxn_id
+					where atxn.account_action_id in (6,7, 11, 14)
+					and account_id = :ACCOUNT_ID
+					group by dayOfYear
+					/*
+					6 Deposit
+					7 Withdrawal
+					11 Interest_posting
+					14 SavingsAdjustment - but covers deposits and withdrawals
+					*/
+					]]>
+	</sql-query>
 </hibernate-mapping>

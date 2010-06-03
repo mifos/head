@@ -37,22 +37,6 @@ public class SavingsInterestCalculatorFactoryTest {
     private SavingsInterestCalculatorFactory savingsInterestCalculatorFactory;
 
     @Test
-    public void shouldReturnSavingsInterest() {
-
-        InterestCalcType interestCalcType = InterestCalcType.AVERAGE_BALANCE;
-        InterestCalculator interestCalculator = savingsInterestCalculatorFactory.create(interestCalcType);
-
-        InterestCalculationRange range = null;
-        List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
-        InterestCalculationPeriodDetail interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(range, dailyDetails);
-
-        Money interestDueForPeriod = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
-
-        // verification
-        assertThat(interestDueForPeriod, is(TestUtils.createMoney("54.0")));
-    }
-
-    @Test
     public void shouldReturnSavingsInterestCalculatorWithAverageBalanceStrategy() {
 
         InterestCalcType interestCalcType = InterestCalcType.AVERAGE_BALANCE;

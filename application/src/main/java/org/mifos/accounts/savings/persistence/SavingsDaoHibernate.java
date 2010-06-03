@@ -19,16 +19,22 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  *
@@ -188,5 +194,29 @@ public class SavingsDaoHibernate implements SavingsDao {
     @Override
     public void save(SavingsBO savingsAccount) {
         this.baseDao.createOrUpdate(savingsAccount);
+    }
+
+    @Override
+    public List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId) {
+
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = new ArrayList<EndOfDayDetail>();
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("ACCOUNT_ID", savingsId.intValue());
+        List<Object[]> queryResult = (List<Object[]>) this.baseDao.executeNamedQuery("savings.retrieveAllEndOfDayTransactionDetails", queryParameters);
+
+        if (queryResult != null) {
+            for (Object[] dailyRecord : queryResult) {
+                Date dayOfYear = (Date)dailyRecord[0];
+                BigDecimal totalDeposits = (BigDecimal)dailyRecord[1];
+                BigDecimal totalWithdrawals = (BigDecimal)dailyRecord[2];
+                BigDecimal totalInterest = (BigDecimal)dailyRecord[3];
+
+                EndOfDayDetail endOfDayDetail = new EndOfDayDetail(new LocalDate(dayOfYear), new Money(currency, totalDeposits), new Money(currency, totalWithdrawals), new Money(currency, totalInterest));
+                allEndOfDayDetailsForAccount.add(endOfDayDetail);
+            }
+        }
+
+        return allEndOfDayDetailsForAccount;
     }
 }

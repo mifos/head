@@ -21,10 +21,18 @@
 package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
+import org.mifos.accounts.savings.interest.InterestCalculationRange;
+import org.mifos.accounts.savings.interest.InterestCalculator;
+import org.mifos.accounts.savings.interest.SavingsInterestCalculatorFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -39,6 +47,8 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -169,6 +179,27 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             throw new BusinessRuleException(e.getKey(), e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void handleInterestCalculationAndPosting(Long savingsId) {
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
+
+        if (!allEndOfDayDetailsForAccount.isEmpty()) {
+            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
+            ScheduledEvent interestCalculationEvent = ScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+
+            LocalDate upperDate = new LocalDate(interestCalculationEvent.nextEventDateAfter(firstDepositDate.toDateMidnight().toDateTime()));
+            InterestCalculationRange range = new InterestCalculationRange(firstDepositDate, upperDate);
+            InterestCalculationPeriodDetail interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);
+
+            InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
+            InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
+
+            interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
         }
     }
 }

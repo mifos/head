@@ -36,4 +36,6 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    void handleInterestCalculationAndPosting(Long savingsId);
 }

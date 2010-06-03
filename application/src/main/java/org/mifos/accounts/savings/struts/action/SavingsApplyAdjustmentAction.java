@@ -164,6 +164,8 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+
+            this.savingsServiceFacade.handleInterestCalculationAndPosting(savingsId);
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {
