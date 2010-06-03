@@ -170,14 +170,4 @@ public class CenterBO extends CustomerBO {
         clearCustomerFlagsIfApplicable(getStatus(), newStatus);
         super.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
     }
-
-    public boolean hasMeetingDifferentTo(MeetingBO groupMeeting) {
-        MeetingBO centerMeeting = getCustomerMeetingValue();
-
-        if ((groupMeeting.getMeetingId() == null) && (centerMeeting.getMeetingId() == null)) {
-            return false;
-        }
-
-        return !groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId());
-    }
 }

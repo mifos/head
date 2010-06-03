@@ -926,25 +926,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.addCustomerMovement(newCustomerMovement);
     }
 
-    protected void changeParentCustomer(final CustomerBO newParent) throws CustomerException {
-        CustomerBO oldParent = getParentCustomer();
-        setParentCustomer(newParent);
-
-        CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-        if (null != currentHierarchy) {
-            currentHierarchy.makeInactive(userContext.getId());
-        }
-        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-        handleParentTransfer();
-        childAddedForParent(newParent);
-        setSearchId(newParent.getSearchId() + "." + String.valueOf(newParent.getMaxChildCount()));
-
-        oldParent.setUserContext(getUserContext());
-        oldParent.update();
-        newParent.setUserContext(getUserContext());
-        newParent.update();
-    }
-
     protected String generateSystemId() {
         String systemId = "";
         int numberOfZeros = CustomerConstants.SYSTEM_ID_LENGTH - String.valueOf(getCustomerId()).length();
@@ -954,23 +935,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
 
         return getOffice().getGlobalOfficeNum() + "-" + systemId + getCustomerId();
-    }
-
-    protected void handleParentTransfer() {
-        setPersonnel(getParentCustomer().getPersonnel());
-        if (getParentCustomer().getCustomerMeeting() != null) {
-            if (getCustomerMeeting() != null) {
-                if (!getCustomerMeeting().getMeeting().getMeetingId().equals(
-                        getParentCustomer().getCustomerMeeting().getMeeting().getMeetingId())) {
-                    // FIXME - keithw - fix transfer of client to group
-//                    setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
-                }
-            } else {
-                setCustomerMeeting(createCustomerMeeting(getParentCustomer().getCustomerMeeting().getMeeting()));
-            }
-        } else if (getCustomerMeeting() != null) {
-            deleteCustomerMeeting();
-        }
     }
 
     /**
@@ -1063,6 +1027,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * just call incrementChildCount directly
+     */
+    @Deprecated
     public void childAddedForParent(final CustomerBO parent) {
         parent.incrementChildCount();
     }
@@ -1409,5 +1377,15 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         if (this.parentCustomer != null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
         }
+    }
+
+    public boolean hasMeetingDifferentTo(MeetingBO groupMeeting) {
+        MeetingBO customerMeeting = getCustomerMeetingValue();
+
+        if ((groupMeeting.getMeetingId() == null) && (customerMeeting.getMeetingId() == null)) {
+            return false;
+        }
+
+        return !groupMeeting.getMeetingId().equals(customerMeeting.getMeetingId());
     }
 }
