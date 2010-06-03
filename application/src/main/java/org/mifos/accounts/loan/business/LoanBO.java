@@ -286,7 +286,11 @@ public class LoanBO extends AccountBO {
         this.maxMinLoanAmount = null;
         this.maxMinInterestRate = null;
         this.maxMinNoOfInstall = null;
-        addcustomFields(customFields);
+        try {
+            addcustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new AccountException(e);
+        }
     }
 
     public static LoanBO redoLoan(final UserContext userContext, final LoanOfferingBO loanOffering,

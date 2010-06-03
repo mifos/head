@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -49,6 +50,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -120,6 +122,14 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.globalPersonnelNum = new Long(new DateTimeService().getCurrentDateTime().getMillis()).toString();
         if (customFields != null) {
             for (CustomFieldDto view : customFields) {
+                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
+                    try {
+                        view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                    } catch (InvalidDateException e) {
+                        throw new ValidationException(e.toString());
+                    }
+                }
                 this.customFields.add(new PersonnelCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
         }
@@ -329,11 +339,15 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.title = title;
     }
 
-    private void updateCustomFields(final List<CustomFieldDto> customfields) {
+    private void updateCustomFields(final List<CustomFieldDto> customfields) throws InvalidDateException {
         if (this.customFields != null && customfields != null) {
             for (CustomFieldDto fieldView : customfields) {
                 for (PersonnelCustomFieldEntity fieldEntity : this.customFields) {
                     if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
+                        if (CustomFieldType.DATE.getValue().equals(fieldView.getFieldType())
+                                && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
+                            fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                        }
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
                     }
                 }
@@ -470,7 +484,11 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
         updatePersonnelRoles(roles);
         updatePersonnelDetails(name, maritalStatus, gender, address, dateOfJoiningBranch);
-        updateCustomFields(customFields);
+        try {
+            updateCustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new PersonnelException(e);
+        }
         try {
             setUpdateDetails(updatedById);
             new PersonnelPersistence().createOrUpdate(this);
