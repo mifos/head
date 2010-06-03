@@ -26,6 +26,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib prefix="date" uri="/tags/date" %>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="editsavingsaccount" />
@@ -144,8 +146,8 @@ explanation of the license and how it is applied.
 	               	  <c:if test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
 	                 	<mifos:mifosalphanumtext name = "savingsActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength ="200"/>
 		    	 	</c:if>
-	                 <c:if test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_DATE}"> 
-	                 	<mifos:mifosalphanumtext name = "savingsActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength ="200"/>
+	                 <c:if test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
+                         <date:datetag property='customField[${ctr}].fieldValue'/>
 	                 </c:if>
 	                  	<html-el:hidden property='customField[${ctr}].fieldId' value="${cfdef.fieldId}"></html-el:hidden>
 	                </td>

@@ -927,13 +927,14 @@ public class CustomerDaoHibernate implements CustomerDao {
     private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
             final Integer customerId) {
 
-        if (StringUtils.isBlank(governmentId)) {
+        String trimmedGovtId = StringUtils.trim(governmentId);
+        if (StringUtils.isBlank(trimmedGovtId)) {
             return false;
         }
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
-        queryParameters.put("GOVT_ID", governmentId);
+        queryParameters.put("GOVT_ID", trimmedGovtId);
         queryParameters.put("customerId", customerId);
         queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
@@ -1502,22 +1503,20 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     // Returns true if another client with same govt id is found with a state other than closed
-    public boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
+    private boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
         return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId);
     }
 
     // returns true if a duplicate client is found with same display name and dob in state other than closed
-    public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob,
-            final Integer customerId) {
-        return checkForDuplicacyBasedOnName("Customer.getNonClosedClientBasedOnNameAndDateOfBirth", name, dob,
-                customerId);
+    private boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(final String name, final Date dob, final Integer customerId) {
+        return checkForDuplicacyBasedOnName("Customer.getNonClosedClientBasedOnNameAndDateOfBirth", name, dob, customerId);
     }
 
     @SuppressWarnings("unchecked")
-    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob,
-            final Integer customerId) {
+    private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final Date dob, final Integer customerId) {
+        String trimmedName = StringUtils.trim(name);
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("clientName", name);
+        queryParameters.put("clientName", trimmedName);
         queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
         queryParameters.put("DATE_OFBIRTH", dob);
         queryParameters.put("customerId", customerId);

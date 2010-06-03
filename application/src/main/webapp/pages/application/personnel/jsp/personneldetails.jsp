@@ -263,7 +263,15 @@ explanation of the license and how it is applied.
 									<span class="fontnormal"> <mifos:mifoslabel
 										name="${cfdef.lookUpEntity.entityType}"
 										bundle="PersonnelUIResources"></mifos:mifoslabel>:
-									<c:out value="${cf.fieldValue}" /> </span>
+                                        <c:choose>
+                                            <c:when test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
+                                                <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="${cf.fieldValue}" />
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span>
 									<br>
 								</c:if>
 							</c:forEach>
