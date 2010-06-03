@@ -894,13 +894,11 @@ public class CustomerServiceImpl implements CustomerService {
 
             Set<CustomerBO> clients = group.getChildren();
 
-            if (clients != null) {
-                for (CustomerBO client : clients) {
-                    client.setUserContext(group.getUserContext());
-                    ((ClientBO) client).handleGroupTransfer();
-                    client.setUpdateDetails();
-                    customerDao.save(client);
-                }
+            for (CustomerBO client : clients) {
+                client.setUserContext(group.getUserContext());
+                ((ClientBO) client).handleGroupTransfer();
+                client.setUpdateDetails();
+                customerDao.save(client);
             }
             hibernateTransactionHelper.commitTransaction();
 

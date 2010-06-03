@@ -751,9 +751,10 @@ public class ClientBO extends CustomerBO {
             this.setPersonnel(null);
         }
         setSearchId(getParentCustomer().getSearchId() + getSearchId().substring(getSearchId().lastIndexOf(".")));
-        if (getParentCustomer().getParentCustomer() != null) {
+
+        if (getParentCustomer() != null) {
             setPersonnel(getParentCustomer().getPersonnel());
-            setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
+            this.setCustomerMeeting(this.getParentCustomer().getCustomerMeeting());
         }
     }
 

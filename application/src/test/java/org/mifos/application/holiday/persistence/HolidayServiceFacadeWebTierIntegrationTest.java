@@ -35,8 +35,9 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HolidayServiceFacadeWebTierIntegrationTest extends MifosIntegrationTestCase {
-    HolidayDetails holidayDetails;
-    HolidayServiceFacade holidayServiceFacade;
+
+    private HolidayDetails holidayDetails;
+    private HolidayServiceFacade holidayServiceFacade;
 
     public HolidayServiceFacadeWebTierIntegrationTest() throws Exception {
         super();
