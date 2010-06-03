@@ -1008,8 +1008,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private void createCustomFields(final List<CustomFieldDto> customFields) {
         if (customFields != null) {
             for (CustomFieldDto customField : customFields) {
-                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
-                        this));
+                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), customField.getFieldType(), this));
             }
         }
     }

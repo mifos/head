@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
@@ -50,22 +52,25 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
     @SuppressWarnings("unused")
     private final CustomerBO customer;
 
-    public CustomerCustomFieldEntity(Short fieldId, String fieldValue, CustomerBO customer) {
+    private final Short fieldType;
+
+    public CustomerCustomFieldEntity(Short fieldId, String fieldValue, Short fieldType, CustomerBO customer) {
         this.fieldId = fieldId;
         this.fieldValue = fieldValue;
         this.customer = customer;
+        this.fieldType = fieldType;
         this.customFieldId = null;
     }
 
     /*
-     * Adding a default constructor is hibernate's requirement and should not be
-     * used to create a valid Object.
+     * Adding a default constructor is hibernate's requirement and should not be used to create a valid Object.
      */
     protected CustomerCustomFieldEntity() {
         super();
         this.customFieldId = null;
         this.fieldId = null;
         this.customer = null;
+        this.fieldType = null;
     }
 
     public Short getFieldId() {
@@ -80,19 +85,25 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
         this.fieldValue = fieldValue;
     }
 
+    public Short getFieldType() {
+        return fieldType;
+    }
+
     public static List<CustomerCustomFieldEntity> fromDto(List<CustomFieldDto> customFields, CustomerBO customer) {
         List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
         for (CustomFieldDto customField : customFields) {
             customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField
-                    .getFieldValue(), customer));
+                    .getFieldValue(), customField.getFieldType(), customer));
         }
         return customerCustomFields;
     }
-    
-    public static List<CustomerCustomFieldEntity> fromCustomerCustomFieldEntity(List<CustomerCustomFieldEntity> customFields, CustomerBO customer) {
+
+    public static List<CustomerCustomFieldEntity> fromCustomerCustomFieldEntity(
+            List<CustomerCustomFieldEntity> customFields, CustomerBO customer) {
         List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
         for (CustomerCustomFieldEntity customField : customFields) {
-            customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), customer));
+            customerCustomFields.add(new CustomerCustomFieldEntity(customField.getFieldId(), customField
+                    .getFieldValue(), customField.getFieldType(), customer));
         }
         return customerCustomFields;
     }
@@ -116,8 +127,8 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
                                 .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
                                 .getFieldType());
                     } else {
-                        customFieldDto = new CustomFieldDto(customFieldEntity.getFieldId(),
-                                customFieldEntity.getFieldValue(), customFieldDef.getFieldType());
+                        customFieldDto = new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
+                                .getFieldValue(), customFieldDef.getFieldType());
                     }
                     customFieldDto.setMandatory(customFieldDef.isMandatory());
                     customFieldDto.setMandatoryString(customFieldDef.getMandatoryStringValue());
@@ -128,5 +139,19 @@ public class CustomerCustomFieldEntity extends AbstractEntity {
             }
         }
         return customFields;
+    }
+
+    public static void convertCustomFieldDateToUniformPattern(List<CustomerCustomFieldEntity> customerCustomFields,
+            Locale preferredLocale) throws InvalidDateException {
+        for (CustomerCustomFieldEntity customerCustomField : customerCustomFields) {
+            if (customerCustomField.isValidDateCustomField()) {
+                String dateInDBFormat = DateUtils.convertToDbFormat(preferredLocale, customerCustomField.getFieldValue());
+                customerCustomField.setFieldValue(dateInDBFormat);
+            }
+        }
+    }
+
+    private boolean isValidDateCustomField() {
+        return getFieldType().equals(CustomFieldType.DATE.getValue()) && StringUtils.isNotBlank(getFieldValue());
     }
 }
