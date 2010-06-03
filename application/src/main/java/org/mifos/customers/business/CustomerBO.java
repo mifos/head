@@ -972,10 +972,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    @Deprecated
-    public void setUpdatedMeeting(final MeetingBO meeting) {
-    }
-
     /**
      * @deprecated - move methods that call persistence out of domain model.
      */
