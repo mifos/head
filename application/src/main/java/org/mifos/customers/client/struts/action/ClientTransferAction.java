@@ -32,7 +32,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.struts.actionforms.ClientTransferActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -131,22 +130,9 @@ public class ClientTransferAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
-
-        GroupBO transferToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
-
-        transferToGroup.setUserContext(getUserContext(request));
-
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
-        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
 
-        client.setVersionNo(clientInSession.getVersionNo());
-        client.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(client);
-
-        client.transferToGroup(transferToGroup);
-        clientInSession = null;
-        transferToGroup = null;
+        ClientBO client = this.customerServiceFacade.transferClientToGroup(getUserContext(request), actionForm.getParentGroupIdValue(), clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
         return mapping.findForward(ActionForwards.update_success.toString());

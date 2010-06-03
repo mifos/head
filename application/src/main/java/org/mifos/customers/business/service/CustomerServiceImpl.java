@@ -904,11 +904,66 @@ public class CustomerServiceImpl implements CustomerService {
 
             if (regenerateSchedules) {
                 hibernateTransactionHelper.startTransaction();
-                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(receivingCenter.getOfficeId());
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
                 handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
                 hibernateTransactionHelper.commitTransaction();
             }
             return group;
+        } catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public ClientBO transferClientTo(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws CustomerException {
+
+        ClientBO client = customerDao.findClientBySystemId(clientGlobalCustNum);
+        client.validateVersion(previousClientVersionNo);
+        client.updateDetails(userContext);
+
+        GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
+        client.validateReceivingGroup(receivingGroup);
+        client.validateNoActiveAccountExist();
+
+        CustomerBO oldParent = client.getParentCustomer();
+
+        boolean regenerateSchedules = client.transferTo(receivingGroup);
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
+
+            client.resetPositions(oldParent);
+            if (oldParent != null) {
+                oldParent.updateDetails(client.getUserContext());
+
+                if (oldParent.getParentCustomer() != null) {
+                    CustomerBO center = oldParent.getParentCustomer();
+                    client.resetPositions(center);
+                    center.setUserContext(client.getUserContext());
+                }
+
+                customerDao.save(oldParent);
+            }
+
+            receivingGroup.updateDetails(client.getUserContext());
+            customerDao.save(receivingGroup);
+
+            client.updateDetails(userContext);
+            customerDao.save(client);
+
+            hibernateTransactionHelper.commitTransaction();
+
+            if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(client.getOfficeId());
+                handleChangeInMeetingSchedule(client, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
+            }
+            return client;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

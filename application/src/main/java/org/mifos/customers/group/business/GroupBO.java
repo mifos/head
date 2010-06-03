@@ -503,24 +503,14 @@ public class GroupBO extends CustomerBO {
 
         boolean regenerateGroupSchedules = false;
 
-        OfficeBO centerOffice = receivingCenter.getOffice();
-        if (this.isDifferentBranch(centerOffice)) {
-            this.makeCustomerMovementEntries(centerOffice);
-            if (this.isActive()) {
-                this.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-            }
-        }
-
         this.setParentCustomer(receivingCenter);
+        this.setPersonnel(receivingCenter.getPersonnel());
 
         CustomerHierarchyEntity currentHierarchy = this.getActiveCustomerHierarchy();
         if (null != currentHierarchy) {
             currentHierarchy.makeInactive(this.getUserContext().getId());
         }
         this.addCustomerHierarchy(new CustomerHierarchyEntity(this, receivingCenter));
-
-        // handle parent
-        this.setPersonnel(receivingCenter.getPersonnel());
 
         MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
         MeetingBO groupMeeting = this.getCustomerMeetingValue();
@@ -534,6 +524,15 @@ public class GroupBO extends CustomerBO {
             }
         } else if (groupMeeting != null) {
             this.setCustomerMeeting(null);
+        }
+
+        OfficeBO centerOffice = receivingCenter.getOffice();
+        if (this.isDifferentBranch(centerOffice)) {
+            this.makeCustomerMovementEntries(centerOffice);
+            if (this.isActive()) {
+                this.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
+            regenerateGroupSchedules = true;
         }
 
         receivingCenter.incrementChildCount();

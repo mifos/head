@@ -875,6 +875,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
+    public ClientBO transferClientToGroup(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException {
+        return this.customerService.transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
+    }
+
+    @Override
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
             String newStatusIdAsString, String notes, UserContext userContext) throws ApplicationException {
 
