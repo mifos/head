@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<form action="/mifos/defineFee.ftl" method="post" name="feeactionform">
+<form action="defineFee.ftl?execution=${flowExecutionKey}" method="post" name="feeactionform">
 Define new fee <br/>
 <input type="submit" name="_eventId_preview" value="preview" /> <br/>
 <input type="submit" name="_eventId_cancel" value="cancel" /> <br/>
