@@ -456,7 +456,7 @@ explanation of the license and how it is applied.
 				                	<mifos:mifosalphanumtext styleId="editLoanAccount.input.customField" name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 								</c:if>
 				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
-				                	<mifos:mifosalphanumtext styleId="editLoanAccount.input.customField" name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
+                                    <date:datetag property='customField[${ctr}].fieldValue' isDisabled="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 				                </c:if>
 				                <html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 				                <html-el:hidden property='customField[${ctr}].fieldType' value='${cf.fieldType}' />

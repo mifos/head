@@ -48,7 +48,7 @@
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)
 			    and la.accountState.id in (3, 4, 5, 9)]]>
 	</query>
-	
+
 	<query name="prefetchCustomerSchedules">
 		<![CDATA[from org.mifos.customers.business.CustomerAccountBO as ca
 				inner join fetch ca.accountActionDates aad
@@ -59,7 +59,7 @@
 			    and c.customerStatus.id in (3,4,9,10,13)
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
-	
+
 	<query name="prefetchAccountFeeDetails">
 		<![CDATA[from org.mifos.accounts.business.AccountBO as a	
 				inner join fetch a.accountFees af
@@ -75,7 +75,7 @@
 				and (c.searchId = :SEARCH_ID or c.searchId like :SEARCH_ID2)]]>
 	</query>
 
-	
+
 	<query name="ClientAttendance.getAttendanceForClientsOnMeetingDate">
        <![CDATA[select clientAttendance from org.mifos.customers.client.business.ClientAttendanceBO clientAttendance  
        inner join clientAttendance.customer c
@@ -84,7 +84,7 @@
 	   and c.customerStatus.id in (3,4,9,10,13)
 	   and clientAttendance.meetingDate = :MEETING_DATE ]]>
 	</query>
-	
+
 	<sql-query name="findCustomerWithNoAssocationsLoaded">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="parentCustomerId" type="integer" />
@@ -104,9 +104,9 @@
 			and c.status_id in (3 , 4 , 9 , 10 , 13)
 		]]>
 	</sql-query>
-	
+
 	<!-- start of retrieve collectionsheet sql-queries -->
-	
+
 	<sql-query name="findCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="parentCustomerId" type="integer" />
@@ -131,8 +131,8 @@
 	</sql-query>
 
 	<sql-query name="findCustomersWithinHierarchyAsDto">
-	    <return-scalar column="customerId" type="integer" />
-	    <return-scalar column="parentCustomerId" type="integer" />
+		<return-scalar column="customerId" type="integer" />
+		<return-scalar column="parentCustomerId" type="integer" />
 		<return-scalar column="levelId" type="short" />
 		<return-scalar column="name" type="string" />
 		<return-scalar column="searchId" type="string" />
@@ -156,7 +156,7 @@
 	</sql-query>
 
 	<!-- loan queries for collection sheet -->
-		<sql-query name="findLoanDisbursementsforCustomerAtTopOfHierarchyAsDto">
+	<sql-query name="findLoanDisbursementsforCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="accountStateId" type="short" />
@@ -178,7 +178,7 @@
 				and (a.account_state_id in (3 , 4)) and date(:TRANSACTION_DATE) >= la.disbursement_date
 		]]>
 	</sql-query>
-	
+
 	<sql-query name="findLoanDisbursementsforCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -201,8 +201,8 @@
 				and (a.account_state_id in (3 , 4)) and date(:TRANSACTION_DATE) >= la.disbursement_date
 		]]>
 	</sql-query>
-	
-		<sql-query name="findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto">
+
+	<sql-query name="findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="accountStateId" type="short" />
@@ -245,7 +245,7 @@
 			group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id, lse.principal_currency_id
 		]]>
 	</sql-query>
-	
+
 	<sql-query name="findLoanRepaymentsforCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -289,7 +289,7 @@
 			group by c.customer_id, a.account_id, a.account_state_id, po.prd_offering_short_name, po.prd_offering_id, lse.principal_currency_id
 		]]>
 	</sql-query>
-	
+
 	<sql-query name="findOutstandingFeesForLoansOnCustomerAtTopOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
@@ -343,13 +343,15 @@
 			group by c.customer_id, a.account_id, lfs.amount_currency_id
 		]]>
 	</sql-query>
-	
+
 	<!-- customer account queries for collection sheet -->
-	<!-- 
-	Note: because of issue 2595 "and cs.currency_id is null" 
-	has been added to this query 
-	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
-	<sql-query name="findAccountCollectionsOnCustomerAccountForCustomerHierarchyAsDto">
+	<!--
+		Note: because of issue 2595 "and cs.currency_id is null" has been
+		added to this query Could be taken out if data on customer_schedule
+		pre about 2008-01-05 is removed
+	-->
+	<sql-query
+		name="findAccountCollectionsOnCustomerAccountForCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="currencyId" type="short" />
@@ -375,12 +377,14 @@
 			group by c.customer_id, a.account_id, cs.misc_fees_currency_id
 		]]>
 	</sql-query>
-	
-	<!-- 
-	Note: because of issue 2595 "and cs.currency_id is null" 
-	has been added to this query 
-	Could be taken out if data on customer_schedule pre about 2008-01-05 is removed -->
-	<sql-query name="findAccountCollectionsOnCustomerAccountForTopCustomerOfHierarchy">
+
+	<!--
+		Note: because of issue 2595 "and cs.currency_id is null" has been
+		added to this query Could be taken out if data on customer_schedule
+		pre about 2008-01-05 is removed
+	-->
+	<sql-query
+		name="findAccountCollectionsOnCustomerAccountForTopCustomerOfHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="currencyId" type="short" />
@@ -406,7 +410,8 @@
 		]]>
 	</sql-query>
 
-	<sql-query name="findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto">
+	<sql-query
+		name="findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="currencyId" type="short" />
@@ -429,8 +434,9 @@
 			group by c.customer_id, a.account_id, cfs.amount_currency_id
 		]]>
 	</sql-query>
-	
-	<sql-query name="findOutstandingCustomerAccountFeesForTopCustomerOfHierarchyAsDto">
+
+	<sql-query
+		name="findOutstandingCustomerAccountFeesForTopCustomerOfHierarchyAsDto">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="currencyId" type="short" />
@@ -452,7 +458,7 @@
 			group by c.customer_id, a.account_id, cfs.amount_currency_id
 		]]>
 	</sql-query>
-	
+
 	<!--  Loan disbursement queries for collection sheet -->
 	<sql-query name="findFirstLoanSchedule">
 		<return-scalar column="id" type="integer" />
@@ -483,10 +489,18 @@
       		and lse.installment_id  = 1
 		]]>
 	</sql-query>
-	
-	
-	<!-- queries around mandatory, voluntary (per_individual, complete_group) savings accounts applicable to center, group and clients -->
-	<sql-query name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
+
+
+	<!--
+		queries around (mandatory and voluntary/ per_individual and
+		complete_group) savings accounts applicable to center, group and
+		clients. Except for findAllSavingAccountsForCustomerHierarchy, only
+		active savings accounts are picked up as inactive accounts don't have
+		a due amount shown (deposits for inactive savings accounts are allowed
+		to be entered though.
+	-->
+	<sql-query
+		name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -513,15 +527,16 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
 			order by c.customer_id, a.account_id, po.prd_offering_name
 		]]>
 	</sql-query>
-	
-    <sql-query name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
+
+	<sql-query
+		name="findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -549,15 +564,16 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
 			order by c.customer_id, a.account_id, po.prd_offering_name
 		]]>
 	</sql-query>
-	
-	<sql-query name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
+
+	<sql-query
+		name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForTopOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -584,15 +600,16 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
 			order by c.customer_id, a.account_id, po.prd_offering_name
 		]]>
 	</sql-query>
-	
-    <sql-query name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
+
+	<sql-query
+		name="findAllVoluntarySavingsAccountsForClientsAndGroupsWithCompleteGroupStatusForRestOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -620,16 +637,17 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 1 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=2))
 			group by c.customer_id, a.account_id, po.prd_offering_id, po.prd_offering_short_name, sse.deposit_currency_id, s.recommended_amnt_unit_id
 			order by c.customer_id, a.account_id, po.prd_offering_name
 		]]>
 	</sql-query>
-	
-    <sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
-        <return-scalar column="customerId" type="integer" />
+
+	<sql-query
+		name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
@@ -651,16 +669,17 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
       		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
-	
-	<sql-query name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
-	    <return-scalar column="customerId" type="integer" />
+
+	<sql-query
+		name="findAllMandatorySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
+		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
 		<return-scalar column="productShortName" type="string" />
@@ -683,15 +702,16 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 1
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
       		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
-	
-	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
+
+	<sql-query
+		name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForTopOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -714,15 +734,16 @@
 			and sse.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
       		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
-	
-	<sql-query name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
+
+	<sql-query
+		name="findAllVoluntarySavingsAccountsForCentersAndGroupsWithPerIndividualStatusForRestOfCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />
 		<return-scalar column="productId" type="short" />
@@ -746,14 +767,14 @@
 			and c.branch_id = :BRANCH_ID
 			and c.search_id like :SEARCH_ID
 			and c.status_id in (3,4,9,10,13)
-			and a.account_state_id in (16, 18)
+			and a.account_state_id = 16
       		and s.savings_type_id = 2
       		and (c.customer_level_id = 3 or (c.customer_level_id = 2 and s.recommended_amnt_unit_id=1))
 			group by a.account_id, sse.customer_id, po.prd_offering_id, po.prd_offering_short_name
       		order by a.account_id, sse.customer_id
 		]]>
 	</sql-query>
-	
+
 	<sql-query name="findAllSavingAccountsForCustomerHierarchy">
 		<return-scalar column="customerId" type="integer" />
 		<return-scalar column="accountId" type="integer" />

@@ -27,9 +27,13 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -148,5 +152,27 @@ public class CustomerAccountCreationTest {
 
         // verification
         assertThat(customerAccount.getAccountActionDates().isEmpty(), is(false));
+    }
+
+    @Test
+    public void customerSchedulesAreCreatedFromCustomersActivationDate() throws Exception {
+
+        // setup
+        applicableCalendarEvents = new CalendarEventBuilder().build();
+
+        DateTime twoWeeksAgo = new DateTime().minusWeeks(2);
+        customerMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingFrom(twoWeeksAgo.toDate()).build();
+        accountFees = new ArrayList<AccountFeesEntity>();
+
+        customer = new CenterBuilder().active().withActivationDate(new DateMidnight().toDateTime()).build();
+
+        // exercise test
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, customerMeeting, applicableCalendarEvents);
+
+        // verification
+        assertThat(customerAccount.getAccountActionDates().isEmpty(), is(false));
+
+        List<AccountActionDateEntity> customerSchedules = new ArrayList<AccountActionDateEntity>(customerAccount.getAccountActionDates());
+        assertThat(new LocalDate(customerSchedules.get(0).getActionDate()), is(new LocalDate()));
     }
 }

@@ -28,7 +28,6 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testU
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -37,6 +36,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -51,7 +51,6 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
@@ -66,11 +65,8 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -142,6 +138,7 @@ public class SavingsScheduleIntegrationTest {
         fiscalCalendarRules.setWorkingDays(weekDaysToPropertyString(savedWorkingDays));
    }
 
+    @Ignore
     @Test
     public void createWeeklySavingScheduleSecondInstallmentFallsInMoratorium() throws Exception {
         buildAndPersistHoliday(expectedFirstDepositDate.plusWeeks(1), expectedFirstDepositDate.plusWeeks(1),

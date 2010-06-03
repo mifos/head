@@ -69,6 +69,7 @@ public interface CollectionSheetEntryConstants {
     public String CENTER = "Center";
 
     public String BULKENTRYINVALIDAMOUNT = "errors.invalidamount";
+    public String BULKENTRYINVALIDACCOLLECTIONS = "errors.invalidaccollections";
     public String INVALID_RECEIPT_DATE = "errors.invaliddate";
     public String ERRORINVALIDAMOUNT = "errors.invalidamountvalue";
     public String MANDATORYFIELDS = "errors.mandatoryselect";

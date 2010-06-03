@@ -7,15 +7,15 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-		    WEB-INF\classes\org\mifos\config\resources\applicationContext.xml
-		    WEB-INF\classes\org\mifos\config\resources\services.xml
-		    WEB-INF\classes\org\mifos\config\resources\hibernate-daos.xml
+            WEB-INF\classes\org\mifos\config\resources\applicationContext.xml
+            WEB-INF\classes\org\mifos\config\resources\services.xml
+            WEB-INF\classes\org\mifos\config\resources\hibernate-daos.xml
         </param-value>
     </context-param>
 
     <!-- 
-		WEB-INF\applicationContext-security.xml 
-	-->
+                WEB-INF\applicationContext-security.xml 
+        -->
 
     <servlet>
         <servlet-name>reportTemplateDownload</servlet-name>
@@ -97,14 +97,14 @@
         <init-param>
             <param-name>config</param-name>
             <param-value>/WEB-INF/struts-config.xml,
-                         /WEB-INF/other-struts-config.xml,
-                         /WEB-INF/customer-struts-config.xml,
-                         /WEB-INF/reports-struts-config.xml,
-                         /WEB-INF/accounts-struts-config.xml,
-                         /WEB-INF/productdefinition-struts-config.xml,
-                         /WEB-INF/admindocument-struts-config.xml,
-                         /WEB-INF/import-export-struts-config.xml
-             </param-value>
+                /WEB-INF/other-struts-config.xml,
+                /WEB-INF/customer-struts-config.xml,
+                /WEB-INF/reports-struts-config.xml,
+                /WEB-INF/accounts-struts-config.xml,
+                /WEB-INF/productdefinition-struts-config.xml,
+                /WEB-INF/admindocument-struts-config.xml,
+                /WEB-INF/import-export-struts-config.xml
+            </param-value>
         </init-param>
         <init-param>
             <param-name>convertNull</param-name>
@@ -151,8 +151,8 @@
 
     <welcome-file-list>
         <welcome-file>
-			/pages/application/login/jsp/index.jsp
-		</welcome-file>
+            /pages/application/login/jsp/index.jsp
+        </welcome-file>
     </welcome-file-list>
     <!-- Struts Tag Library Descriptors -->
 
@@ -235,7 +235,6 @@
     <servlet-mapping>
         <servlet-name>cheetah</servlet-name>
         <url-pattern>*.ftl</url-pattern>
-        <url-pattern>/i/*</url-pattern>
     </servlet-mapping>
 
     <error-page>

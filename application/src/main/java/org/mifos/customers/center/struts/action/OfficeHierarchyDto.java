@@ -86,7 +86,7 @@ public class OfficeHierarchyDto implements Comparable<OfficeHierarchyDto> {
     }
 
     public String toJSONString() throws JsonGenerationException, JsonMappingException, IOException {
-        org.codehaus.jackson.map.ObjectMapper jsonMapper = new ObjectMapper();
+        ObjectMapper jsonMapper = new ObjectMapper();
         LinkedList<OfficeHierarchyDto> officeHierarchyList = new LinkedList<OfficeHierarchyDto>();
         officeHierarchyList.add(this);
         return jsonMapper.writeValueAsString(officeHierarchyList.toArray());

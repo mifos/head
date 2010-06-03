@@ -113,10 +113,4 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertNotNull(holidays);
         Assert.assertEquals(1, holidays.size());
     }
-
-    public void testGetDistinctYears() throws Exception {
-        List<HolidayBO> distinctYears = new HolidayPersistence().getDistinctYears();
-        Assert.assertNotNull(distinctYears);
-    }
-
 }

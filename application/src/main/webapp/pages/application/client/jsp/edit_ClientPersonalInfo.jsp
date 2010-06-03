@@ -283,12 +283,14 @@ explanation of the license and how it is applied.
 						</tr>
 
 						<%-- Photograph ADD CUSTOMER PICTURE TO ACTION FORM AND CUSTOMER VO --%>
+						<%-- adding client pictures feature has been disabled in the UI - Issue MIFOS-2901
 						<tr class="fontnormal">
 							<td align="right"><span id="edit_ClientPersonalInfo.label.file"><mifos:mifoslabel keyhm="Client.Photo" name="client.Photograph"
 								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
 							<td><mifos:file styleId="edit_ClientPersonalInfo.input.file" keyhm="Client.Photo" property="picture" maxlength="200"
 								onkeypress="return onKeyPressForFileComponent(this);" /></td>
 						</tr>
+						--%>
 						<%-- Spouse/Father details --%>
 						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
 						<tr class="fontnormal">

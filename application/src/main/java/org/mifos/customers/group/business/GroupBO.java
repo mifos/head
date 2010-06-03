@@ -23,9 +23,9 @@ package org.mifos.customers.group.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -56,9 +56,6 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -70,8 +67,6 @@ import org.springframework.util.Assert;
  * composition of other objects like Custom fields, fees, personnel etc., since it inherits from Customer
  */
 public class GroupBO extends CustomerBO {
-
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER);
 
     private GroupPerformanceHistoryEntity groupPerformanceHistory;
 
@@ -231,42 +226,6 @@ public class GroupBO extends CustomerBO {
     }
 
     @Override
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null) {
-            deleteMeeting(newMeeting);
-        }
-    }
-
-    @Override
-    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In GroupBO::updateMeeting(), customerId: " + getCustomerId());
-        if (getParentCustomer() == null) {
-            if (getCustomerMeeting() == null) {
-                this.setCustomerMeeting(createCustomerMeeting(meeting));
-                updateMeetingForClients(meeting);
-            } else {
-                saveUpdatedMeeting(meeting);
-            }
-        } else {
-            saveUpdatedMeeting(meeting);
-        }
-        update();
-    }
-
-    private void updateMeetingForClients(final MeetingBO meeting) throws CustomerException {
-        Set<CustomerBO> clients = getChildren();
-        if (clients != null) {
-            for (CustomerBO client : clients) {
-                client.setUserContext(getUserContext());
-                client.updateMeeting(meeting);
-            }
-        }
-    }
-
-    @Override
     public boolean isActiveForFirstTime(final Short oldStatusId, final Short newStatusId) {
 
         CustomerStatus oldStatus = CustomerStatus.fromInt(oldStatusId);
@@ -275,7 +234,7 @@ public class GroupBO extends CustomerBO {
         return oldStatus.isGroupPartialOrGroupPending() && newStatus.isGroupActive();
     }
 
-    public void validateNewCenter(final CenterBO toCenter) throws CustomerException {
+    public void validateReceivingCenter(final CenterBO toCenter) throws CustomerException {
         if (toCenter == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
         }
@@ -301,15 +260,13 @@ public class GroupBO extends CustomerBO {
         return isSame;
     }
 
-    public void validateForActiveAccounts() throws CustomerException {
+    public void validateNoActiveAccountsExist() throws CustomerException {
         if (this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen()) {
             throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);
         }
-        if (getChildren() != null) {
-            for (CustomerBO client : getChildren()) {
-                if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
-                    throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);
-                }
+        for (CustomerBO client : getChildren()) {
+            if (client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen()) {
+                throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);
             }
         }
     }
@@ -532,7 +489,7 @@ public class GroupBO extends CustomerBO {
         CustomerAccountBO customerAccount = this.getCustomerAccount();
         if (customerAccount != null) {
             List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customerAccount.getAccountFees());
-            customerAccount.createSchedulesAndFeeSchedules(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents);
+            customerAccount.createSchedulesAndFeeSchedules(this, accountFees, this.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
         }
     }
 
@@ -542,16 +499,12 @@ public class GroupBO extends CustomerBO {
         super.updateCustomerStatus(newStatus, customerNote, customerStatusFlagEntity);
     }
 
-    public void transferTo(CenterBO receivingCenter) {
-        OfficeBO centerOffice = receivingCenter.getOffice();
-        if (this.isDifferentBranch(centerOffice)) {
-            this.makeCustomerMovementEntries(centerOffice);
-            if (this.isActive()) {
-                this.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-            }
-        }
+    public boolean transferTo(CenterBO receivingCenter) {
+
+        boolean regenerateGroupSchedules = false;
 
         this.setParentCustomer(receivingCenter);
+        this.setPersonnel(receivingCenter.getPersonnel());
 
         CustomerHierarchyEntity currentHierarchy = this.getActiveCustomerHierarchy();
         if (null != currentHierarchy) {
@@ -559,16 +512,12 @@ public class GroupBO extends CustomerBO {
         }
         this.addCustomerHierarchy(new CustomerHierarchyEntity(this, receivingCenter));
 
-        // handle parent
-        this.setPersonnel(receivingCenter.getPersonnel());
-
         MeetingBO centerMeeting = receivingCenter.getCustomerMeetingValue();
         MeetingBO groupMeeting = this.getCustomerMeetingValue();
         if (centerMeeting != null) {
             if (groupMeeting != null) {
-                if (!groupMeeting.getMeetingId().equals(centerMeeting.getMeetingId())) {
-                    this.setUpdatedMeeting(centerMeeting);
-                }
+                regenerateGroupSchedules = receivingCenter.hasMeetingDifferentTo(groupMeeting);
+                this.setCustomerMeeting(receivingCenter.getCustomerMeeting());
             } else {
                 CustomerMeetingEntity customerMeeting = this.createCustomerMeeting(centerMeeting);
                 this.setCustomerMeeting(customerMeeting);
@@ -577,7 +526,18 @@ public class GroupBO extends CustomerBO {
             this.setCustomerMeeting(null);
         }
 
+        OfficeBO centerOffice = receivingCenter.getOffice();
+        if (this.isDifferentBranch(centerOffice)) {
+            this.makeCustomerMovementEntries(centerOffice);
+            if (this.isActive()) {
+                this.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
+            regenerateGroupSchedules = true;
+        }
+
         receivingCenter.incrementChildCount();
         this.setSearchId(receivingCenter.getSearchId() + "." + String.valueOf(receivingCenter.getMaxChildCount()));
+
+        return regenerateGroupSchedules;
     }
 }

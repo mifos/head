@@ -51,7 +51,6 @@ import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.actionforms.GroupTransferActionForm;
 import org.mifos.customers.group.util.helpers.CenterSearchInput;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
@@ -128,18 +127,6 @@ public class GroupTransferAction extends BaseAction {
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         GroupBO group = this.customerServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), userContext, groupInSession.getVersionNo());
-
-        OfficeBO officeToTransfer = getOfficeBusinessService().getOffice(actionForm.getOfficeIdValue());
-//        GroupBO group = getGroupBusinessService().getGroup(groupInSession.getCustomerId());
-
-        checkVersionMismatch(groupInSession.getVersionNo(), group.getVersionNo());
-
-//        group.setVersionNo(groupInSession.getVersionNo());
-//        group.setUserContext(getUserContext(request));
-//        setInitialObjectForAuditLogging(group);
-
-//        group.transferToBranch(officeToTransfer);
-//        groupInSession = null;
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());

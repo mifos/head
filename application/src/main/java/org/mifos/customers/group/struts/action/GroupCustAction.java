@@ -20,12 +20,15 @@
 
 package org.mifos.customers.group.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
@@ -38,6 +41,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -180,7 +184,8 @@ public class GroupCustAction extends CustAction {
         UserContext userContext = getUserContext(request);
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext);
+        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext, customerCustomFields);
 
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());

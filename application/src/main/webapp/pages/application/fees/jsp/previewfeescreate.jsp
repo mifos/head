@@ -112,9 +112,9 @@ explanation of the license and how it is applied.
 												<c:out value="${sessionScope.feeactionform.feeName}" />
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.feeappliesto" /> </span>
-												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CategoryList')}" var="entity">
-													<c:if test="${entity.id == sessionScope.feeactionform.categoryType}">
-														<c:out value="${entity.name}" />
+												<c:forEach items="${FeeParameters.categories}" var="entity">
+													<c:if test="${entity.key == sessionScope.feeactionform.categoryType}">
+														<c:out value="${entity.value}" />
 													</c:if>
 												</c:forEach>
 												<br>
@@ -135,9 +135,9 @@ explanation of the license and how it is applied.
 												</c:choose>
 
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.frequency" /> </span>
-												<c:forEach var="entity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'feeFrequencyTypeList')}">
-													<c:if test="${entity.id == sessionScope.feeactionform.feeFrequencyType}">
-														<c:out value="${entity.name}" />
+												<c:forEach var="entity" items="${FeeParameters.frequencies}">
+													<c:if test="${entity.key == sessionScope.feeactionform.feeFrequencyType}">
+														<c:out value="${entity.value}" />
 													</c:if>
 												</c:forEach>
 												<br>
@@ -156,9 +156,9 @@ explanation of the license and how it is applied.
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.timeToCharge" /> </span>
-														<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'TimeOfCharges')}" var="entity">
-															<c:if test="${entity.id == sessionScope.feeactionform.feePaymentType}">
-																<c:out value="${entity.name}" />
+														<c:forEach items="${FeeParameters.timesOfCharging}" var="entity">
+															<c:if test="${entity.key == sessionScope.feeactionform.feePaymentType}">
+																<c:out value="${entity.value}" />
 															</c:if>
 														</c:forEach>
 													</c:otherwise>
@@ -185,18 +185,18 @@ explanation of the license and how it is applied.
 												</c:choose>
 												<c:if test="${sessionScope.feeactionform.rateFee==true}">
 													<mifos:mifoslabel name="Fees.ofa" />
-													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="entity">
-														<c:if test="${entity.id == sessionScope.feeactionform.feeFormula}">
-															<c:out value="${entity.name}" />
+													<c:forEach items="${FeeParameters.formulas}" var="entity">
+														<c:if test="${entity.key == sessionScope.feeactionform.feeFormula}">
+															<c:out value="${entity.value}" />
 														</c:if>
 													</c:forEach>
 												</c:if>
 												<br>
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="Fees.accounting" /> <br> <mifos:mifoslabel name="Fees.GLCode" /> </span>
-												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'glCodeList')}" var="glCodeList">
-													<c:if test="${glCodeList.glcodeId == sessionScope.feeactionform.glCode}">
-														<c:out value="${glCodeList.glcode}" />
+												<c:forEach items="${FeeParameters.glCodes}" var="glCodeList">
+													<c:if test="${glCodeList.key == sessionScope.feeactionform.glCode}">
+														<c:out value="${glCodeList.value}" />
 													</c:if>
 												</c:forEach>
 												<br>

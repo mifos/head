@@ -144,14 +144,4 @@ public class CustomFieldDto implements DataTransferObject {
     public void setMandatoryString(String mandatoryString) {
         this.mandatoryString = mandatoryString;
     }
-
-    public static void convertCustomFieldDateToUniformPattern(List<CustomFieldDto> customFields, Locale locale)
-            throws InvalidDateException {
-        for (CustomFieldDto customField : customFields) {
-            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNotBlank(customField.getFieldValue())) {
-                customField.convertDateToUniformPattern(locale);
-            }
-        }
-    }
 }
