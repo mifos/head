@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
@@ -44,7 +45,6 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -129,7 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.validateMeetingAndFees(accountFees);
 
 //        FIXME - keithw - should we ensure center names are unique per branch/office
-//        customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+//        customerDao.validateCenterNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
@@ -757,7 +757,7 @@ public class CustomerServiceImpl implements CustomerService {
                 CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
                 List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
-                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
 
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
@@ -867,8 +867,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public final GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
-        group.validateNewCenter(receivingCenter);
-        group.validateForActiveAccounts();
+        group.validateReceivingCenter(receivingCenter);
+        group.validateNoActiveAccountsExist();
 
         if (group.isDifferentBranch(receivingCenter.getOffice())) {
             customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), receivingCenter.getOfficeId());
@@ -876,7 +876,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO oldParent = group.getParentCustomer();
 
-        group.transferTo(receivingCenter);
+        boolean regenerateSchedules = group.transferTo(receivingCenter);
 
         try {
             hibernateTransactionHelper.startTransaction();
@@ -904,6 +904,12 @@ public class CustomerServiceImpl implements CustomerService {
             }
             hibernateTransactionHelper.commitTransaction();
 
+            if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(receivingCenter.getOfficeId());
+                handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
+            }
             return group;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
@@ -917,7 +923,7 @@ public class CustomerServiceImpl implements CustomerService {
     public final GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
 
         group.validateNewOffice(transferToOffice);
-        group.validateForActiveAccounts();
+        group.validateNoActiveAccountsExist();
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 
@@ -982,12 +988,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO customer = this.customerDao.findCustomerById(meetingUpdateRequest.getCustomerId());
 
-        if (customer.getPersonnel() != null) {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(),
-                    customer.getPersonnel().getPersonnelId());
-        } else {
-            new MeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), userContext, customer.getOffice().getOfficeId(), userContext.getId());
-        }
+        customer.validateIsTopOfHierarchy();
+
+        customerDao.checkPermissionForEditMeetingSchedule(userContext, customer);
 
         try {
             CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
@@ -995,10 +998,12 @@ public class CustomerServiceImpl implements CustomerService {
             this.hibernateTransactionHelper.startTransaction();
 
             MeetingBO meeting = customer.getCustomerMeetingValue();
-            updateMeeting(meeting, meetingUpdateRequest);
+            boolean scheduleUpdateRequired = updateMeeting(meeting, meetingUpdateRequest);
             customerDao.save(customer);
 
-            handleChangeInMeetingSchedule(customer, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+            if (scheduleUpdateRequired) {
+                handleChangeInMeetingSchedule(customer, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+            }
 
             this.hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
@@ -1009,19 +1014,27 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private void updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest updatedDetails) throws CustomerException {
+    private boolean updateMeeting(final MeetingBO oldMeeting, final MeetingUpdateRequest updatedDetails) throws CustomerException {
+        boolean isRegenerationOfSchedulesRequired = false;
+
         try {
             if (oldMeeting.isWeekly()) {
+
+                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(updatedDetails.getWeekDay());
                 oldMeeting.update(updatedDetails.getWeekDay(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthlyOnDate()) {
+                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfMonthDifferent(updatedDetails.getDayOfMonth());
                 oldMeeting.update(updatedDetails.getDayOfMonth(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthly()) {
+                isRegenerationOfSchedulesRequired = oldMeeting.isWeekOfMonthDifferent(updatedDetails.getRankOfDay(), updatedDetails.getMonthWeek());
                 oldMeeting.update(updatedDetails.getMonthWeek(), updatedDetails.getRankOfDay(), updatedDetails.getMeetingPlace());
             }
 
         } catch (MeetingException me) {
             throw new CustomerException(me);
         }
+
+        return isRegenerationOfSchedulesRequired;
     }
 
     private void handleChangeInMeetingSchedule(CustomerBO customer, final List<Days> workingDays, final List<Holiday> orderedUpcomingHolidays) throws Exception {
@@ -1032,9 +1045,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.save(account);
         }
 
-        List<Integer> customerIds = customerDao.retrieveCustomerIdsOfChildrenForParent(customer.getSearchId(), customer.getOffice().getOfficeId());
-        for (Integer childCustomerId : customerIds) {
-            CustomerBO child = customerDao.findCustomerById(childCustomerId);
+        for (CustomerBO child : customer.getChildren()) {
             handleChangeInMeetingSchedule(child, workingDays, orderedUpcomingHolidays);
         }
     }

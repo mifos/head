@@ -47,7 +47,7 @@ import org.mifos.security.util.UserContext;
  */
 public class ClientBuilder {
 
-    private final CustomerAccountBuilder customerAccountBuilder = new CustomerAccountBuilder();
+    private CustomerAccountBuilder customerAccountBuilder;
     private String name = "TestBuilderClient";
     private MeetingBO meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxxx-112").build();
@@ -117,7 +117,6 @@ public class ClientBuilder {
                 spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
         client.setCustomerActivationDate(activationDate.toDate());
 
-        customerAccountBuilder.withCustomer(client).withOffice(office).withLoanOfficer(loanOfficer).buildForUnitTests();
         return client;
     }
 
@@ -138,11 +137,6 @@ public class ClientBuilder {
 
     public ClientBuilder withLoanOfficer(final PersonnelBO withLoanOfficer) {
         this.loanOfficer = withLoanOfficer;
-        return this;
-    }
-
-    public ClientBuilder withFee(final AmountFeeBO withFee) {
-        customerAccountBuilder.withFee(withFee);
         return this;
     }
 

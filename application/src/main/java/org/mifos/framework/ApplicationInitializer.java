@@ -128,15 +128,15 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void init(ServletContextEvent ctx) {
         try {
             synchronized (ApplicationInitializer.class) {
-                initializeHibernate();
 
                 /*
-                 * getLogger() cannot be called statically (ie: when initializing LOG) because
-                 * MifosLogManager.initializeLogger() hasn't been called yet, so MifosLogManager.loggerRepository will
-                 * be null.
+                 * If we do not call MifosLogManager as first step of initialization
+                 * MifosLogManager.loggerRepository will be null.
                  */
                 LOG = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
                 LOG.info("Logger has been initialised", false, null);
+
+                initializeHibernate();
 
                 LOG.info(getDatabaseConnectionInfo(), false, null);
 

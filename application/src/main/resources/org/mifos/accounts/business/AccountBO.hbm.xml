@@ -556,32 +556,47 @@
 		]]>
 	</sql-query>
 	
-	<sql-query name="getListOfAccountIdsHavingLoanSchedulesWithinDates">
+	<sql-query name="getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays">
 		<return-scalar column="accountId" type="integer" />
-		<![CDATA[select distinct(account.account_id) as accountId
-				from account
-				inner join loan_schedule schedule on account.account_id = schedule.account_id
-				where schedule.action_date >= date(:FROM_DATE)
-				and schedule.action_date <= date(:THRU_DATE)
+		<![CDATA[
+			select
+			    distinct(account.account_id) as accountId
+			from account
+			    join office on account.office_id = office.office_id
+			    join office_holiday on office.office_id = office_holiday.office_id
+			    join holiday on office_holiday.holiday_id = holiday.holiday_id
+			        and holiday.holiday_changes_applied_flag = :FLAG
+			    join loan_schedule schedule on account.account_id = schedule.account_id
+			        and schedule.action_date between holiday.holiday_from_date and holiday.holiday_thru_date
 		]]>
 	</sql-query>
-	<sql-query name="getListOfAccountIdsHavingSavingsSchedulesWithinDates">
+	<sql-query name="getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays">
 		<return-scalar column="accountId" type="integer" />
-		<![CDATA[select distinct(account.account_id) as accountId
-				from account
-				inner join saving_schedule schedule on account.account_id = schedule.account_id
-				where schedule.action_date >= date(:FROM_DATE)
-				and schedule.action_date <= date(:THRU_DATE)
+		<![CDATA[
+			select
+			    distinct(account.account_id) as accountId
+			from account
+			    join office on account.office_id = office.office_id
+			    join office_holiday on office.office_id = office_holiday.office_id
+			    join holiday on office_holiday.holiday_id = holiday.holiday_id
+			        and holiday.holiday_changes_applied_flag = :FLAG
+			    join saving_schedule schedule on account.account_id = schedule.account_id
+			        and schedule.action_date between holiday.holiday_from_date and holiday.holiday_thru_date
 		]]>
 	</sql-query>
 	
-	<sql-query name="getListOfAccountIdsHavingCustomerSchedulesWithinDates">
+	<sql-query name="getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays">
 		<return-scalar column="accountId" type="integer" />
-		<![CDATA[select distinct(account.account_id) as accountId
-				from account
-				inner join customer_schedule schedule on account.account_id = schedule.account_id
-				where schedule.action_date >= date(:FROM_DATE)
-				and schedule.action_date <= date(:THRU_DATE)
+		<![CDATA[
+			select
+			    distinct(account.account_id) as accountId
+			from account
+			    join office on account.office_id = office.office_id
+			    join office_holiday on office.office_id = office_holiday.office_id
+			    join holiday on office_holiday.holiday_id = holiday.holiday_id
+			        and holiday.holiday_changes_applied_flag = :FLAG
+			    join customer_schedule schedule on account.account_id = schedule.account_id
+			        and schedule.action_date between holiday.holiday_from_date and holiday.holiday_thru_date
 		]]>
 	</sql-query>
 
@@ -845,5 +860,8 @@ select coll.*,
              ) ld on coll.memid = ld.customer_id
           ]]>
 	</sql-query>
-    
+
+    <query name="account.AccountOfficeMap">
+		<![CDATA[ select new org.mifos.customers.office.persistence.AccountOffice(a.accountId, a.office.officeId) from org.mifos.accounts.business.AccountBO a where a.accountId in (:ACCOUNT_IDS)]]>
+    </query>    
 </hibernate-mapping>

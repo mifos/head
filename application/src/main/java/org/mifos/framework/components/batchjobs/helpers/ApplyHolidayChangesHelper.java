@@ -21,9 +21,11 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -35,7 +37,6 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -70,6 +71,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private List<Days> workingDays;
     private List<String> errorList;
     private List<Holiday> unappliedHolidays;
+    private Map<Integer, Short> accountOffice;
+    private Map<Short, List<HolidayBO>> unappliedOfficeHolidays;
+    private Map<Short, List<HolidayBO>> officeHolidaysForThisYearAndNext;
 
     public ApplyHolidayChangesHelper(MifosTask mifosTask) {
         super(mifosTask);
@@ -169,26 +173,58 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 getHibernateUtil().closeSession();
             }
             String finalMessage = "ApplyHolidayChanges task completed in "
-                + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
+                    + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
             logMessage(finalMessage);
         }
     }
 
-    private void rescheduleDatesStartingFromUnappliedHolidays () throws ServiceException, PersistenceException {
+    private void rescheduleDatesStartingFromUnappliedHolidays() throws ServiceException, PersistenceException {
+        LoanAccountBatch loanAccountBatch = new LoanAccountBatch();
+        SavingsAccountBatch savingsAccountBatch = new SavingsAccountBatch();
+        CustomerAccountBatch customerAccountBatch = new CustomerAccountBatch();
 
-        reschedule ("Loan", new LoanAccountBatch());
-        reschedule ("Savings", new SavingsAccountBatch());
-        reschedule ("Customer", new CustomerAccountBatch());
+        List<Integer> loanAccountIds = loanAccountBatch.getAccountIdsHavingSchedulesInUnappliedHolidays();
+        List<Integer> savingsAccountIds = savingsAccountBatch.getAccountIdsHavingSchedulesInUnappliedHolidays();
+        List<Integer> customerAccountIds = customerAccountBatch.getAccountIdsHavingSchedulesInUnappliedHolidays();
+
+        initializeOfficeHolidayMaps(loanAccountIds, savingsAccountIds, customerAccountIds);
+
+        reschedule("Loan", loanAccountBatch, loanAccountIds);
+        reschedule("Savings", savingsAccountBatch, savingsAccountIds);
+        reschedule("Customer", customerAccountBatch, customerAccountIds);
 
         markHolidaysAsApplied();
     }
 
-    private void reschedule (String accountType, AccountBatch accountBatch) throws PersistenceException, ServiceException {
+    private void initializeOfficeHolidayMaps(List<Integer> loanAccountIds, List<Integer> savingsAccountIds,
+            List<Integer> customerAccountIds) {
+        List<Integer> accountIds = new LinkedList<Integer>();
+        accountIds.addAll(loanAccountIds);
+        accountIds.addAll(savingsAccountIds);
+        accountIds.addAll(customerAccountIds);
+        accountOfficeMap(accountIds);
+        unappliedOfficeHolidays();
+        officeHolidaysThisYearAndNext();
+    }
 
+    private void accountOfficeMap(List<Integer> accountIds) {
+        accountOffice = getAccountPersistence().accountOfficeMap(accountIds);
+    }
+
+    private void unappliedOfficeHolidays() {
+        unappliedOfficeHolidays = getHolidayDao().unappliedOfficeHolidays(accountOffice.values());
+    }
+
+    private void officeHolidaysThisYearAndNext() {
+        DateTime today = new DateTime();
+        officeHolidaysForThisYearAndNext = getHolidayDao().holidaysForOffices(accountOffice.values(), today.getYear(),
+                today.plusYears(2).getYear());
+    }
+
+    private void reschedule(String accountType, AccountBatch accountBatch, List<Integer> accountIds)
+            throws PersistenceException, ServiceException {
         rollingStartTime = taskStartTime;
         currentRecordNumber = 0;
-
-        List<Integer> accountIds = accountBatch.getAccountIdsWithDatesIn(unappliedHolidays);
         accountCount = accountIds.size();
         logMessage("No. of " + accountType + " Accounts to Process: " + accountCount);
 
@@ -198,24 +234,24 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         for (Integer accountId : accountIds) {
             currentRecordNumber++;
             AccountBO account = accountBatch.getAccount(accountId);
-            OfficeBO office = account.getOffice();
-            Set<HolidayBO> officeHolidays = office.getHolidays();
-            officeHolidays.retainAll(unappliedHolidays);
-            if (!officeHolidays.isEmpty()) {
-                Short officeId = office.getOfficeId();
-                List<Holiday> holidays = getHolidayDao().findAllHolidaysThisYearAndNext(officeId);
-                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
-                account.rescheduleDatesForNewHolidays(dateGeneration, new ArrayList<Holiday>(officeHolidays));
+            Short officeId = accountOffice.get(accountId);
+            List<HolidayBO> unappliedHolidays = unappliedOfficeHolidays.get(officeId);
+            if (unappliedHolidays != null && !unappliedHolidays.isEmpty()) {
+                List<HolidayBO> holidaysThisYearAndNext = officeHolidaysForThisYearAndNext.get(officeId);
+                ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                        workingDays, new ArrayList<Holiday>(
+                                holidaysThisYearAndNext == null ? new ArrayList<HolidayBO>() : holidaysThisYearAndNext));
+                account.rescheduleDatesForNewHolidays(dateGeneration, new ArrayList<Holiday>(unappliedHolidays));
             }
             houseKeeping();
-
         }
+
         getHibernateUtil().commitTransaction();
+
         long time = new DateTimeService().getCurrentDateTime().getMillis();
         String message = "" + currentRecordNumber + " updated, " + (accountCount - currentRecordNumber)
                 + " remaining, batch time: " + (time - rollingStartTime) + " ms";
         logMessage(message);
-
         String finalMessage = accountType + " accounts Processed in: "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
@@ -279,53 +315,33 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     }
 
     private interface AccountBatch {
-        List<Integer> getAccountIdsWithDatesIn(List<Holiday> holidays) throws PersistenceException;
         AccountBO getAccount(Integer accountId) throws PersistenceException, ServiceException;
+
+        List<Integer> getAccountIdsHavingSchedulesInUnappliedHolidays() throws PersistenceException;
     }
 
     private abstract class AbstractAccountBatch implements AccountBatch {
-
-        public List<Integer> getAccountIdsWithDatesIn(List<Holiday> holidays) throws PersistenceException {
-            List<Integer> accountIds = new ArrayList<Integer>();
-            for (Holiday holiday : holidays) {
-                accountIds.addAll(getAccountIdsHavingSchedulesWithinHoliday(holiday));
-            }
-            return accountIds;
+        @Override
+        public AccountBO getAccount(Integer accountId) throws ServiceException {
+            return getAccountBusinessService().getAccount(accountId);
         }
-
-        public abstract AccountBO getAccount(Integer accountId) throws PersistenceException, ServiceException;
-
-        protected abstract List<Integer> getAccountIdsHavingSchedulesWithinHoliday (Holiday holiday)
-                    throws PersistenceException;
 
     }
 
     private class LoanAccountBatch extends AbstractAccountBatch {
 
         @Override
-        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
-            return getAccountPersistence().getListOfAccountIdsHavingLoanSchedulesWithinDates
-                                        (holiday.getFromDate(), holiday.getThruDate());
-            }
-
-        @Override
-        public AccountBO getAccount(Integer accountId) throws ServiceException {
-            return getAccountBusinessService().getAccount(accountId);
+        public List<Integer> getAccountIdsHavingSchedulesInUnappliedHolidays() throws PersistenceException {
+            return getAccountPersistence().getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays();
         }
     }
 
     private class SavingsAccountBatch extends AbstractAccountBatch {
 
         @Override
-        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
+        public List<Integer> getAccountIdsHavingSchedulesInUnappliedHolidays() throws PersistenceException {
 
-            return getAccountPersistence().getListOfAccountIdsHavingSavingsSchedulesWithinDates
-            (holiday.getFromDate(), holiday.getThruDate());
-        }
-
-        @Override
-        public AccountBO getAccount(Integer accountId) throws ServiceException {
-            return getAccountBusinessService().getAccount(accountId);
+            return getAccountPersistence().getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays();
         }
 
     }
@@ -333,14 +349,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private class CustomerAccountBatch extends AbstractAccountBatch {
 
         @Override
-        public List<Integer> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException{
-            return getAccountPersistence().getListOfAccountIdsHavingCustomerSchedulesWithinDates
-            (holiday.getFromDate(), holiday.getThruDate());
-        }
-
-        @Override
-        public AccountBO getAccount(Integer accountId) throws ServiceException {
-            return getAccountBusinessService().getAccount(accountId);
+        public List<Integer> getAccountIdsHavingSchedulesInUnappliedHolidays() throws PersistenceException {
+            return getAccountPersistence().getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays();
         }
 
     }

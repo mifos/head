@@ -25,6 +25,10 @@ import java.util.Date;
 import org.mifos.customers.CustomerTemplateImpl;
 import org.mifos.customers.util.helpers.CustomerStatus;
 
+/**
+ * use builders instead of templates.
+ */
+@Deprecated
 public class GroupTemplateImpl extends CustomerTemplateImpl implements GroupTemplate {
     private boolean isTrained;
     private Date trainedDate;

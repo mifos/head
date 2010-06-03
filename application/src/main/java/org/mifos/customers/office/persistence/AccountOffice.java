@@ -17,32 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.customers.office.persistence;
 
-package org.mifos.customers;
+public class AccountOffice {
 
-import java.util.List;
+    private final Integer accountId;
+    private final Short officeId;
 
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.framework.business.util.Address;
+    public AccountOffice(Integer accountId, Short officeId) {
+        this.accountId = accountId;
+        this.officeId = officeId;
+    }
 
-/**
- * use builders instead of templates.
- */
-@Deprecated
-public interface CustomerTemplate {
-    public CustomerStatus getCustomerStatus();
+    public Integer getAccountId() {
+        return this.accountId;
+    }
 
-    public String getDisplayName();
+    public Short getOfficeId() {
+        return this.officeId;
+    }
 
-    public Address getAddress();
-
-    public List<CustomFieldDto> getCustomFieldViews();
-
-    public List<FeeDto> getFees();
-
-    public String getExternalId();
-
-    public Short getLoanOfficerId();
 }

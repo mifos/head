@@ -381,6 +381,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public Set<CustomerBO> getChildren() {
+        if (children == null) {
+            return new HashSet<CustomerBO>();
+        }
+
         return children;
     }
 
@@ -835,7 +839,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return this.office.getGlobalOfficeNum().equals(officeObj.getGlobalOfficeNum());
     }
 
-    public final boolean isDifferentBranch(final OfficeBO otherOffice) {
+    public boolean isDifferentBranch(final OfficeBO otherOffice) {
         return !isSameBranch(otherOffice);
     }
 
@@ -1402,5 +1406,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public final void addChild(final CustomerBO existingClient) {
         this.children.add(existingClient);
+    }
+
+    public void validateIsTopOfHierarchy() throws CustomerException {
+        if (this.parentCustomer != null) {
+            throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
     }
 }

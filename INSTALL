@@ -42,7 +42,6 @@ This file describes how to install Mifos for use in a production environment.
          Adjust them if your database login is different. See sections 6.1.4
          and 7.1 for more information.
 
-         mysql -u mifos -pmifos < sql/create_mifos_db.sql
          mysql -D mifos -u mifos -pmifos < sql/latest-schema.sql
          mysql -D mifos -u mifos -pmifos < sql/latest-data.sql
          mysql -D mifos -u mifos -pmifos < sql/init_mifos_password.sql
