@@ -54,6 +54,9 @@ import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -62,8 +65,10 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerScheduleEntity;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -285,16 +290,24 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(3, affectedDates.size());
     }
 
-    public void testGetListOfAccountIdsHavingCustomerSchedulesWithinDates() throws Exception {
-
-        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
-        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(fromDate,
-                thruDate);
+    public void testGetListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays() throws Exception {
+        createHoliday();
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays();
 
         Assert.assertNotNull(accountIds);
         // should pick up center, group and client customer accounts
         Assert.assertEquals(3, accountIds.size());
+        StaticHibernateUtil.rollbackTransaction();
+    }
+
+    public void testGetListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays() throws Exception {
+        savingsBO = createSavingsAccount();
+        createHoliday();
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays();
+        Assert.assertNotNull(accountIds);
+        // should pick up group savings account
+        Assert.assertEquals(1, accountIds.size());
+        StaticHibernateUtil.rollbackTransaction();
     }
 
     public void testGetLoanSchedulesForAccountThatAreWithinDates() throws Exception {
@@ -308,16 +321,26 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(4, affectedDates.size());
     }
 
-    public void testGetListOfAccountIdsHavingLoanSchedulesWithinDates() throws Exception {
-
-        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
-        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(fromDate,
-                thruDate);
+    public void testGetListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays() throws Exception {
+        createHoliday();
+        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays();
 
         Assert.assertNotNull(accountIds);
         // should pick up group and client loan account
         Assert.assertEquals(2, accountIds.size());
+        StaticHibernateUtil.rollbackTransaction();
+    }
+
+    private void createHoliday() throws ServiceException {
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
+        HolidayDetails holidayDetails = new HolidayDetails("TestHoliday1", fromDate.toDate(), thruDate.toDate(),
+                RepaymentRuleTypes.NEXT_WORKING_DAY);
+        holidayDetails.disableValidation(true);
+        List<Short> officeIds = new ArrayList<Short>();
+        officeIds.add((short)1);
+        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+        StaticHibernateUtil.getSessionTL().flush();
     }
 
     public void testGetSavingsSchedulesForAccountThatAreWithinDates() throws Exception {
@@ -334,22 +357,6 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertNotNull(affectedDates);
         Assert.assertEquals(5, affectedDates.size());
 
-    }
-
-    public void testGetListOfAccountIdsHavingSavingsSchedulesWithinDates() throws Exception {
-
-        savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
-                false, false);
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingSavingsSchedulesWithinDates(fromDate,
-                thruDate);
-
-        Assert.assertNotNull(accountIds);
-        // should pick up group savings account
-        Assert.assertEquals(1, accountIds.size());
     }
 
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnNothing() throws Exception {

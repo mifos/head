@@ -22,9 +22,7 @@ package org.mifos.customers.business.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.aDifferentExistingLoanOfficer;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.aWeeklyMeeting;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.anActiveCenter;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMotherBuilderDsl.anExistingActiveCenter;
@@ -62,6 +60,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/**
+ * FIXME - keithw - #000001 delete this class as behaviour is now covered in unit tests
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/integration-test-context.xml",
                                     "/org/mifos/config/resources/hibernate-daos.xml",
@@ -170,56 +171,5 @@ public class GroupTransferUsingCustomerServiceIntegrationTest {
         assertThat(previousParent.getDisplayName(), is("center-with-group"));
         assertThat(previousParent.getMaxChildCount(), is(1));
         assertThat(previousParent.getChildren().size(), is(0));
-    }
-
-    @Test
-    public void transferingGroupToCenterInSameBranchCreatesActiveCustomerHierarchyBetweenGroupAndNewParent() throws Exception {
-
-        // setup
-        CenterBuilder centerWithWeeklyMeeting = anActiveCenter().withName("center-with-no-children").with(aWeeklyMeeting()).with(
-                anExistingOffice()).withLoanOfficer(anExistingLoanOfficer());
-
-        CenterBO centerWithNoChildren = anExistingActiveCenter(centerWithWeeklyMeeting);
-        GroupBO groupForTransfer = anExistingGroupUnderCenterInSameBranchAs(centerWithWeeklyMeeting.withName("center-with-group"));
-
-        // pre-verification
-        assertThat(centerWithNoChildren.getActiveCustomerHierarchy(), is(nullValue()));
-        assertThat(groupForTransfer.getActiveCustomerHierarchy().getParentCustomer().getDisplayName(), is("center-with-group"));
-        final String oldGroupParentSystemId = groupForTransfer.getParentCustomer().getGlobalCustNum();
-
-        // exercise test
-        customerService.transferGroupTo(groupForTransfer, centerWithNoChildren);
-
-        // verification
-        centerWithNoChildren = customerDao.findCenterBySystemId(centerWithNoChildren.getGlobalCustNum());
-        CenterBO previousParent = customerDao.findCenterBySystemId(oldGroupParentSystemId);
-
-        assertThat(groupForTransfer.getActiveCustomerHierarchy(), is(notNullValue()));
-        assertThat(groupForTransfer.getActiveCustomerHierarchy().getParentCustomer().getDisplayName(), is("center-with-no-children"));
-        assertThat(previousParent.getActiveCustomerHierarchy(), is(nullValue()));
-    }
-
-    @Test
-    public void transferingGroupToCenterInSameBranchShouldModifyGroupToHaveSameLoanOfficerAsReceivingCenter() throws Exception {
-
-        // setup
-        CenterBuilder centerWithWeeklyMeeting = anActiveCenter().withName("center-with-no-children").with(aWeeklyMeeting()).with(
-                anExistingOffice()).withLoanOfficer(anExistingLoanOfficer());
-
-        CenterBO centerWithNoChildren = anExistingActiveCenter(centerWithWeeklyMeeting);
-        GroupBO groupForTransfer = anExistingGroupUnderCenterInSameBranchAs(centerWithWeeklyMeeting.withName("center-with-group").withLoanOfficer(aDifferentExistingLoanOfficer()));
-
-        // pre-verification
-        assertThat(centerWithNoChildren.getPersonnel().getDisplayName(), is("loan officer"));
-        assertThat(groupForTransfer.getPersonnel().getDisplayName(), is("mifos"));
-
-        // exercise test
-        customerService.transferGroupTo(groupForTransfer, centerWithNoChildren);
-
-        // verification
-        centerWithNoChildren = customerDao.findCenterBySystemId(centerWithNoChildren.getGlobalCustNum());
-
-        assertThat(centerWithNoChildren.getPersonnel().getDisplayName(), is("loan officer"));
-        assertThat(groupForTransfer.getPersonnel().getDisplayName(), is("loan officer"));
     }
 }

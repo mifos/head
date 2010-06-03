@@ -1047,9 +1047,6 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    /*
-     * This disburseLoan only used via saveCollectionSheet - John W
-     */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {

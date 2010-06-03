@@ -381,6 +381,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public Set<CustomerBO> getChildren() {
+        if (children == null) {
+            return new HashSet<CustomerBO>();
+        }
+
         return children;
     }
 
@@ -835,7 +839,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return this.office.getGlobalOfficeNum().equals(officeObj.getGlobalOfficeNum());
     }
 
-    public final boolean isDifferentBranch(final OfficeBO otherOffice) {
+    public boolean isDifferentBranch(final OfficeBO otherOffice) {
         return !isSameBranch(otherOffice);
     }
 
@@ -1008,8 +1012,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private void createCustomFields(final List<CustomFieldDto> customFields) {
         if (customFields != null) {
             for (CustomFieldDto customField : customFields) {
-                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
-                        this));
+                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), customField.getFieldType(), this));
             }
         }
     }

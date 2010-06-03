@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -112,7 +113,8 @@ public class CustomerAccountBO extends AccountBO {
         try {
             CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customer.isActive()) {
-                customerAccount.createSchedulesAndFeeSchedules(customer, accountFees, customerMeeting, applicableCalendarEvents);
+                DateTime scheduleGenerationStartingFromDate = new DateTime(customer.getCustomerActivationDate());
+                customerAccount.createSchedulesAndFeeSchedules(customer, accountFees, customerMeeting, applicableCalendarEvents, scheduleGenerationStartingFromDate);
             }
             return customerAccount;
         } catch (AccountException e) {
@@ -136,14 +138,12 @@ public class CustomerAccountBO extends AccountBO {
      * <li> The <code>lastAppliedDate</code> for each fee is set to the date of the latest meeting to which the fee
      *      is attached
      * </ul>
-     *
-     * @param customerMeeting defines the meeting starting date, frequency and recurrence.
      */
-    public void createSchedulesAndFeeSchedules(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents) {
+    public void createSchedulesAndFeeSchedules(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents, DateTime scheduleGenerationStartingFrom) {
 
         final ScheduledEvent customerMeetingEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
 
-        createInitialSetOfCustomerScheduleEntities(customer, new DateTime(customerMeeting.getMeetingStartDate()), applicableCalendarEvents, customerMeetingEvent);
+        createInitialSetOfCustomerScheduleEntities(customer, scheduleGenerationStartingFrom, applicableCalendarEvents, customerMeetingEvent);
 
         applyFeesToInitialSetOfInstallments(new ArrayList<AccountFeesEntity>(accountFees), customerMeetingEvent);
     }
@@ -172,12 +172,10 @@ public class CustomerAccountBO extends AccountBO {
         this.setLastAppliedDatesForFees(accountFees);
    }
 
-    private List<InstallmentDate> generateInitialInstallmentDates(DateTime meetingStartDate, CalendarEvent calendarEvents, ScheduledEvent meetingEvent) {
+    private List<InstallmentDate> generateInitialInstallmentDates(DateTime startingFrom, CalendarEvent calendarEvents, ScheduledEvent meetingEvent) {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate,
-                                                                            meetingStartDate,
-                                                                            meetingEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate, startingFrom, meetingEvent);
         return InstallmentDate.createInstallmentDates(meetingDates);
     }
 

@@ -173,6 +173,12 @@ public class StandardAccountService implements AccountService {
         return new AccountReferenceDto(loan.getAccountId());
     }
 
+    /**
+     * Note that, since we don't store or otherwise utilize the amount disbursed (passed in
+     * AccountPaymentParametersDto.paymentAmount) we <em>do not</em> validate that digits after decimal for the amount
+     * disbursed fit in an allowed range. We <em>do</em> check that the amount disbursed matches the full amount of the
+     * loan.
+     */
     @Override
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
@@ -181,6 +187,7 @@ public class StandardAccountService implements AccountService {
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             throw new AccountException("Loan not in a State to be Disbursed: " + loanAccount.getState());
         }
+        /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
         if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
             throw new AccountException("Loan Amount to be Disbursed Held on Database : "
                     + loanAccount.getLoanAmount().getAmount()
@@ -189,7 +196,7 @@ public class StandardAccountService implements AccountService {
         if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
-        if (!getLoanDisbursementType().contains(payment.getPaymentType())) {
+        if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
             errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
         }
         if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
@@ -238,7 +245,8 @@ public class StandardAccountService implements AccountService {
         return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
     }
 
-    public List<PaymentTypeDto> getLoanDisbursementType() throws PersistenceException {
+    @Override
+    public List<PaymentTypeDto> getLoanDisbursementTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.loan_disbursement.getValue());
     }
 

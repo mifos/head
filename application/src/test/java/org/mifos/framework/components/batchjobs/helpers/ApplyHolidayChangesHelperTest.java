@@ -158,11 +158,11 @@ public class ApplyHolidayChangesHelperTest {
         when(mockAccountPersistence.accountOfficeMap(anyCollection())).thenReturn(accountOffice);
         // Default is to return an empty list. A test should add Integers to the accountList
         // and mock LoanBusinessService to return one.
-        when(mockAccountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
+        when(mockAccountPersistence.getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays())
                 .thenReturn(listOfLoanAccountIdsInAnUnappliedHoliday);
-        when(mockAccountPersistence.getListOfAccountIdsHavingSavingsSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
+        when(mockAccountPersistence.getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays())
                 .thenReturn(listOfSavingsAccountIdsInAnUnappliedHoliday);
-        when(mockAccountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(any(DateTime.class), any(DateTime.class)))
+        when(mockAccountPersistence.getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays())
                 .thenReturn(listOfCustomerAccountIdsInAnUnappliedHoliday);
 
         when(mockLoanBO.getOffice()).thenReturn(officeBO);
