@@ -84,6 +84,11 @@ public class LoanAccountBuilder {
         return this;
     }
 
+    public LoanAccountBuilder activeInGoodStanding() {
+        this.accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
+        return this;
+    }
+
     public LoanAccountBuilder approved() {
         this.accountState = AccountState.LOAN_APPROVED;
         return this;
