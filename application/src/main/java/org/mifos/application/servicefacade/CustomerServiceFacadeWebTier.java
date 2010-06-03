@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -333,7 +334,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     .getFeesToApply());
 
             CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                    centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId);
+                    centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId, new DateMidnight().toDateTime());
 
             this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 

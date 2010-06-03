@@ -113,8 +113,14 @@ public class GenerateMeetingsForCustomerAndSavingsBatchJobIntegrationTest {
                                                                      .build();
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
-        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).with(weeklyMeeting).withName("Center1")
-                .with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
+        center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3)
+                                    .withName("Center1")
+                                    .with(weeklyMeeting)
+                                    .with(sampleBranchOffice())
+                                    .withLoanOfficer(testUser())
+                                    .withActivationDate(eightWeeksInPast)
+                                    .active()
+                                    .build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
 
         MifosTask mifosTask = null;

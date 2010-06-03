@@ -276,7 +276,7 @@
 		<return-scalar column="educationLevelName" type="string" />	
 		<return-scalar column="povertyStatusName" type="string" />		
 		<return-scalar column="numChildren" type="short" />		
-		<return-scalar column="pictureId" type="integer" />
+		<return-scalar column="pictureLength" type="integer" />
 		<![CDATA[select c.customer_id as customerId,
 				c.global_cust_num as globalCustNum,
 				c.display_name as displayName,
@@ -303,7 +303,7 @@
 				lv_educationLevel.lookup_name as educationLevelName,
 				lv_povertyStatus.lookup_name as povertyStatusName,
 				cd.num_children as numChildren,
-				cp.picture_id as pictureId
+				length(cp.picture) as pictureLength
 				from customer c
 				left join customer parent on parent.customer_id = c.parent_customer_id
 				join customer_detail cd on cd.customer_id = c.customer_id

@@ -128,9 +128,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
-        PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestUtils.createMoney(100), null, loan.getPersonnel(), "receiptNum", Short
-                        .valueOf("1"), currentDate, currentDate);
+        PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
+                .createMoney(100), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
+                currentDate);
 
         loan.applyPaymentWithPersist(accountPaymentDataView);
         TestObjectFactory.flushandCloseSession();
@@ -140,14 +140,15 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         List<TransactionHistoryDto> trxnHistlist = accountBusinessService.getTrxnHistory(loan, uc);
         Collections.sort(trxnHistlist);
         Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
-       Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero", trxnHistlist.size() > 0);
+        Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero",
+                trxnHistlist.size() > 0);
         for (TransactionHistoryDto view : trxnHistlist) {
-           Assert.assertEquals("100.0", view.getBalance());
+            Assert.assertEquals("100.0", view.getBalance());
             Assert.assertNotNull(view.getClientName());
-           Assert.assertEquals("-", view.getDebit());
-           Assert.assertEquals("100.0", view.getCredit());
+            Assert.assertEquals("-", view.getDebit());
+            Assert.assertEquals("100.0", view.getCredit());
             Assert.assertNotNull(view.getGlcode());
-           Assert.assertEquals("-", view.getNotes());
+            Assert.assertEquals("-", view.getNotes());
             Assert.assertNotNull(view.getPostedBy());
             Assert.assertNotNull(view.getType());
             Assert.assertNotNull(view.getUserPrefferedPostedDate());
@@ -155,9 +156,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertNotNull(view.getAccountTrxnId());
             Assert.assertNull(view.getLocale());
             Assert.assertNotNull(view.getPaymentId());
-           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
+            Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
                     .getPostedDate().getTime()));
-           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
+            Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
                     .getTransactionDate().getTime()));
             break;
         }
@@ -171,7 +172,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         AccountActionEntity accountaction = service.getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
                 Short.valueOf("1"));
         Assert.assertNotNull(accountaction);
-       Assert.assertEquals(Short.valueOf("1"), accountaction.getLocaleId());
+        Assert.assertEquals(Short.valueOf("1"), accountaction.getLocaleId());
     }
 
     public void testGetAppllicableFees() throws Exception {
@@ -184,7 +185,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
                 .getAccountId(), uc);
-       Assert.assertEquals(2, applicableChargeList.size());
+        Assert.assertEquals(2, applicableChargeList.size());
     }
 
     public void testGetAppllicableFeesForInstallmentStartingOnCurrentDate() throws Exception {
@@ -197,14 +198,16 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
                 .getAccountId(), uc);
-       Assert.assertEquals(4, applicableChargeList.size());
+        Assert.assertEquals(4, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "20.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
+                Assert.assertEquals(new Money(getCurrency(), "20.0"), new Money(getCurrency(), applicableCharge
+                        .getAmountOrRate()));
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
+                Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge
+                        .getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {
@@ -229,7 +232,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
                 .getAccountId(), uc);
-       Assert.assertEquals(6, applicableChargeList.size());
+        Assert.assertEquals(6, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
                 // this is a rate, so we shouldn't have a trailing ".0"
@@ -237,7 +240,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertNotNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
+                Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge
+                        .getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Misc Fee")) {
@@ -260,7 +264,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(customerAccountBO
                 .getAccountId(), uc);
-       Assert.assertEquals(4, applicableChargeList.size());
+        Assert.assertEquals(4, applicableChargeList.size());
         for (ApplicableCharge applicableCharge : applicableChargeList) {
             if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
                 // this is a rate, so we shouldn't have a trailing ".0"
@@ -272,7 +276,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Periodic Fee")) {
-               Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge.getAmountOrRate()));
+                Assert.assertEquals(new Money(getCurrency(), "200.0"), new Money(getCurrency(), applicableCharge
+                        .getAmountOrRate()));
                 Assert.assertNull(applicableCharge.getFormula());
                 Assert.assertNotNull(applicableCharge.getPeriodicity());
             } else if (applicableCharge.getFeeName().equalsIgnoreCase("Mainatnence Fee")) {
@@ -316,13 +321,13 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         List<AccountStateEntity> statusListForSavings = service.getStatusList(new AccountStateEntity(
                 AccountState.SAVINGS_PARTIAL_APPLICATION), AccountTypes.SAVINGS_ACCOUNT, TestUtils.makeUser()
                 .getLocaleId());
-       Assert.assertEquals(2, statusListForSavings.size());
+        Assert.assertEquals(2, statusListForSavings.size());
 
         AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
                 AccountTypes.LOAN_ACCOUNT, null);
         List<AccountStateEntity> statusListForLoan = service.getStatusList(new AccountStateEntity(
                 AccountState.LOAN_PARTIAL_APPLICATION), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
-       Assert.assertEquals(2, statusListForLoan.size());
+        Assert.assertEquals(2, statusListForLoan.size());
         StaticHibernateUtil.closeSession();
     }
 
@@ -332,7 +337,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
             service.retrieveCustomFieldsDefinition(EntityType.LOAN);
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
+            Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -384,7 +389,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 new Double("40.0"), FeeStatus.ACTIVE.getValue(), null, loanScheduleEntity.getActionDate());
         AccountTestUtils.addAccountFees(accountFirstLoanRepaymentFee, accountBO);
         AccountFeesActionDetailEntity accountTimeOfFirstLoanRepaymentFeesaction = new LoanFeeScheduleEntity(
-                loanScheduleEntity, firstLoanRepaymentFee, accountFirstLoanRepaymentFee, new Money(getCurrency(), "40.0"));
+                loanScheduleEntity, firstLoanRepaymentFee, accountFirstLoanRepaymentFee, new Money(getCurrency(),
+                        "40.0"));
         loanScheduleEntity.addAccountFeesAction(accountTimeOfFirstLoanRepaymentFeesaction);
         TestObjectFactory.updateObject(accountBO);
 
@@ -438,8 +444,8 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
                 int month = dateCalendar.get(Calendar.MONTH);
                 int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
                 dateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
-                LoanBOTestUtils.setActionDate(accountActionDateEntity, new java.sql.Date(dateCalendar
-                        .getTimeInMillis()));
+                LoanBOTestUtils.setActionDate(accountActionDateEntity,
+                        new java.sql.Date(dateCalendar.getTimeInMillis()));
                 break;
             }
         }

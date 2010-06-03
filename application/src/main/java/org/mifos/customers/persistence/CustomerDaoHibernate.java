@@ -1198,14 +1198,14 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String educationLevelName = (String) queryResult.get(0)[23];
         final String povertyStatusName = (String) queryResult.get(0)[24];
         final Short numChildren = (Short) queryResult.get(0)[25];
-        final Integer pictureId = (Integer) queryResult.get(0)[26];
+        final Integer pictureLength = (Integer) queryResult.get(0)[26];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
             clientUnderGroup = true;
         }
         Boolean isCustomerPicture = false;
-        if (pictureId != null) {
+        if (pictureLength != null) {
             isCustomerPicture = true;
         }
         final String customerStatusName = MessageLookup.getInstance().lookup(lookupName, userContext);

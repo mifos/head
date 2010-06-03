@@ -203,6 +203,7 @@ explanation of the license and how it is applied.
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
 								</tr>
 								<%-- Personal Information --%>
+								<%-- adding client pictures feature has been disabled in the UI - Issue MIFOS-2901
 								<tr>
 									<td class="fontnormalbold">
 									 <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPicture') eq 'No'}">
@@ -210,6 +211,7 @@ explanation of the license and how it is applied.
 											height="100" width="150" />
 										<br>
 									</c:if></td></tr>
+								--%>
 									<tr><td class="fontnormalbold"><mifos:mifoslabel name="client.Name"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
 										class="fontnormal">
