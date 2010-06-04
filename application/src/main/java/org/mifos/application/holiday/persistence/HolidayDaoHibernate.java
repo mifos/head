@@ -85,15 +85,12 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
         return (List<HolidayBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_OFFICE_HOLIDAYS, queryParameters);
     }
 
-
     @SuppressWarnings("unchecked")
-   public List<Holiday> getUnAppliedHolidays() {
+    public List<Holiday> getUnAppliedHolidays() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("FLAG", YesNoFlag.NO.getValue());
         return (List<Holiday>) genericDao.executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS_BY_FLAG, queryParameters);
     }
-
-
 
     @Override
     public final void save(final Holiday holiday) throws PersistenceException {
@@ -115,5 +112,4 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
         return new CalendarEvent(workingDays, upcomingHolidays);
     }
-
 }
