@@ -34,6 +34,7 @@ public abstract class AbstractReportParameterValidator<T extends ReportParameter
 
     private List<String> applicableFilePaths;
 
+    @SuppressWarnings("unchecked")
     public AbstractReportParameterValidator(List<String> applicableFilePaths) {
         this.applicableFilePaths = (List<String>) CollectionUtils.collect(applicableFilePaths, new Transformer() {
             public Object transform(Object input) {

@@ -23,9 +23,7 @@ package org.mifos.application.holiday.persistence;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,7 +39,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.office.persistence.AccountOffice;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -75,7 +72,8 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
     @SuppressWarnings("unchecked")
     public List<HolidayBO> findAllHolidaysForYear(short officeId, final int year) {
-        SimpleDateFormat isoDateFormat = isoDateFormat();
+        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "GB"));
+        isoDateFormat.setLenient(false);
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         try {
             queryParameters.put("OFFICE_ID", officeId);
@@ -87,21 +85,12 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
         return (List<HolidayBO>) genericDao.executeNamedQuery(NamedQueryConstants.GET_OFFICE_HOLIDAYS, queryParameters);
     }
 
-    private SimpleDateFormat isoDateFormat() {
-        SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "GB"));
-        isoDateFormat.setLenient(false);
-        return isoDateFormat;
-    }
-
-
     @SuppressWarnings("unchecked")
-   public List<Holiday> getUnAppliedHolidays() {
+    public List<Holiday> getUnAppliedHolidays() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("FLAG", YesNoFlag.NO.getValue());
         return (List<Holiday>) genericDao.executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS_BY_FLAG, queryParameters);
     }
-
-
 
     @Override
     public final void save(final Holiday holiday) throws PersistenceException {
@@ -122,45 +111,5 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
         List<Holiday> upcomingHolidays = this.findAllHolidaysThisYearAndNext(officeId);
 
         return new CalendarEvent(workingDays, upcomingHolidays);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Map<Short, List<HolidayBO>> unappliedOfficeHolidays(Collection<Short> officeIds) {
-        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_UNAPPLIED_OFFICE_HOLIDAYS);
-        List<OfficeHoliday> unappliedOfficeHolidays = namedQuery.setParameterList("OFFICE_IDS", officeIds)
-                .setParameter("FLAG", YesNoFlag.NO.getValue()).list();
-        return toMap(unappliedOfficeHolidays);
-    }
-
-    private Map<Short, List<HolidayBO>> toMap(List<OfficeHoliday> officeHolidays) {
-        Map<Short, List<HolidayBO>> result = new HashMap<Short, List<HolidayBO>>();
-        for (OfficeHoliday officeHoliday : officeHolidays) {
-            Short officeId = officeHoliday.getOfficeId();
-            List<HolidayBO> holidays = result.get(officeId);
-            if (holidays == null) {
-                holidays = new LinkedList<HolidayBO>();
-                result.put(officeId, holidays);
-            }
-            holidays.add(officeHoliday.getHoliday());
-        }
-        return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Map<Short, List<HolidayBO>> holidaysForOffices(Collection<Short> officeIds, int startYear, int endYear) {
-        SimpleDateFormat isoDateFormat = isoDateFormat();
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        try {
-            queryParameters.put("START_OF_YEAR", isoDateFormat.parse(startYear + "-01-01"));
-            queryParameters.put("END_OF_YEAR", isoDateFormat.parse(endYear + "-12-31"));
-        } catch (ParseException e) {
-            throw new MifosRuntimeException(e);
-        }
-        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_HOLIDAYS_FOR_OFFICES);
-        List<OfficeHoliday> holidaysForOffices = namedQuery.setParameterList("OFFICE_IDS", officeIds)
-                .setProperties(queryParameters).list();
-        return toMap(holidaysForOffices);
     }
 }

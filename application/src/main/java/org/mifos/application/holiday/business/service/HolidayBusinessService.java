@@ -62,6 +62,14 @@ public class HolidayBusinessService implements BusinessService {
         }
     }
 
+    public List<HolidayBO> getDistinctYears() throws ServiceException {
+        try {
+            return new HolidayPersistence().getDistinctYears();
+        } catch (PersistenceException pe) {
+            throw new ServiceException(pe);
+        }
+    }
+
     public List<HolidayBO> getAllPushOutHolidaysContaining (Date date) {
         //TODO: implement this
         return null;
