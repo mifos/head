@@ -265,6 +265,7 @@ public interface NamedQueryConstants {
     public final String CHECKOFFICENAMEUNIQUENESS = "office.getOfficeWithName";
     public final String CHECKOFFICESHORTNAMEUNIQUENESS = "office.getOfficeWithShortName";
     public final String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB = "Customer.getClosedClientBasedOnNameAndDateOfBirth";
+    public final String GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB = "Customer.getBlackListedClientBasedOnNameAndDateOfBirth";
     public final String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER = "product.getActiveOfferingsForCustomer";
     public final String GET_CLOSED_CLIENT_BASEDON_GOVTID = "Customer.getClosedClientBasedOnGovtId";
     public final String GETOFFICEACTIVEPERSONNEL = "getCountActivePersonnel";
