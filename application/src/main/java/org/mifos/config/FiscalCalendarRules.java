@@ -157,17 +157,6 @@ public class FiscalCalendarRules {
         return scheduleType;
     }
 
-    public Short getDaysForCalendarDefinition() {
-        Short days = null;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if (configMgr.containsKey(FiscalCalendarRulesDaysForCalendarDefinition)) {
-            days = configMgr.getShort(FiscalCalendarRulesDaysForCalendarDefinition);
-        } else {
-            throw new RuntimeException("The days for calendar definition is not defined in the config file.");
-        }
-        return days;
-    }
-
     public void setWorkingDays(final String workingDays) {
         ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
         reloadConfigWorkingDays();

@@ -24,12 +24,9 @@
 	<bean id="accountBusinessService" class="org.mifos.accounts.business.service.AccountBusinessService" />
 	<bean id="savingsPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService" />
 	<bean id="loanPrdBusinessService" class="org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService" />
-	<bean id="prdOfferingPersistence" class="org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence" />
 	<bean id="branchReportPersistence" class="org.mifos.reports.branchreport.persistence.BranchReportPersistence" />
 	
-	<bean id="branchCashConfirmationReportPersistence" class="org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence">
-		<constructor-arg ref="prdOfferingPersistence" />
-	</bean>
+	<bean id="branchCashConfirmationReportPersistence" class="org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence" />
 	
 	<bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
 	

@@ -452,9 +452,13 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    protected void addcustomFields(final List<CustomFieldDto> customFields) {
+    protected void addcustomFields(final List<CustomFieldDto> customFields) throws InvalidDateException {
         if (customFields != null) {
             for (CustomFieldDto view : customFields) {
+                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
+                    view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                }
                 this.getAccountCustomFields().add(
                         new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
             }
@@ -572,8 +576,6 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity nextInstallment = findInstallmentToUpdate();
         if (nextInstallment != null) {
             regenerateFutureInstallments(nextInstallment, workingDays, holidays);
-        } else {
-            resetUpdatedFlag();
         }
     }
 
@@ -618,13 +620,6 @@ public class AccountBO extends AbstractBusinessObject {
             }
         }
         return installment;
-    }
-
-    /**
-     * used by subclasses
-     */
-    @SuppressWarnings("unused")
-    protected void resetUpdatedFlag() throws AccountException {
     }
 
     public void changeStatus(final AccountState newStatus, final Short flagId, final String comment)

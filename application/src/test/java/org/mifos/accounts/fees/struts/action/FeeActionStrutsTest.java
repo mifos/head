@@ -110,7 +110,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
 
-        FeeParameters feeParameters = (FeeParameters)request.getAttribute(FeeParameters.class.getSimpleName());
+        FeeParameters feeParameters = (FeeParameters)request.getSession().getAttribute(FeeParameters.class.getSimpleName());
         Assert.assertEquals("The size of master data for categories", feeParameters.getCategories().size(), 5);
         Assert.assertEquals("The size of master data for loan time of charges for one time fees  : ",
                 feeParameters.getTimesOfCharging().size(), 3);

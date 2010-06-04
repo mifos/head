@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -59,7 +60,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
@@ -113,7 +113,8 @@ public class CustomerAccountBO extends AccountBO {
         try {
             CustomerAccountBO customerAccount = new CustomerAccountBO(customer, accountFees);
             if (customer.isActive()) {
-                customerAccount.createSchedulesAndFeeSchedules(customer, accountFees, customerMeeting, applicableCalendarEvents);
+                DateTime scheduleGenerationStartingFromDate = new DateTime(customer.getCustomerActivationDate());
+                customerAccount.createSchedulesAndFeeSchedules(customer, accountFees, customerMeeting, applicableCalendarEvents, scheduleGenerationStartingFromDate);
             }
             return customerAccount;
         } catch (AccountException e) {
@@ -137,14 +138,12 @@ public class CustomerAccountBO extends AccountBO {
      * <li> The <code>lastAppliedDate</code> for each fee is set to the date of the latest meeting to which the fee
      *      is attached
      * </ul>
-     *
-     * @param customerMeeting defines the meeting starting date, frequency and recurrence.
      */
-    public void createSchedulesAndFeeSchedules(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents) {
+    public void createSchedulesAndFeeSchedules(CustomerBO customer, List<AccountFeesEntity> accountFees, MeetingBO customerMeeting, CalendarEvent applicableCalendarEvents, DateTime scheduleGenerationStartingFrom) {
 
         final ScheduledEvent customerMeetingEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
 
-        createInitialSetOfCustomerScheduleEntities(customer, new DateTime(customerMeeting.getMeetingStartDate()), applicableCalendarEvents, customerMeetingEvent);
+        createInitialSetOfCustomerScheduleEntities(customer, scheduleGenerationStartingFrom, applicableCalendarEvents, customerMeetingEvent);
 
         applyFeesToInitialSetOfInstallments(new ArrayList<AccountFeesEntity>(accountFees), customerMeetingEvent);
     }
@@ -173,12 +172,10 @@ public class CustomerAccountBO extends AccountBO {
         this.setLastAppliedDatesForFees(accountFees);
    }
 
-    private List<InstallmentDate> generateInitialInstallmentDates(DateTime meetingStartDate, CalendarEvent calendarEvents, ScheduledEvent meetingEvent) {
+    private List<InstallmentDate> generateInitialInstallmentDates(DateTime startingFrom, CalendarEvent calendarEvents, ScheduledEvent meetingEvent) {
 
         ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate,
-                                                                            meetingStartDate,
-                                                                            meetingEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfMeetingDatesToGenerate, startingFrom, meetingEvent);
         return InstallmentDate.createInstallmentDates(meetingDates);
     }
 
@@ -574,15 +571,6 @@ public class CustomerAccountBO extends AccountBO {
 
     @Override
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment, final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
-        if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
-                && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
-
-            try {
-                getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-                getCustomer().changeUpdatedMeeting();
-            } catch (CustomerException ce) {
-                throw new AccountException(ce);
-            }
 
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
@@ -598,7 +586,6 @@ public class CustomerAccountBO extends AccountBO {
                     startFromMeetingDate, scheduledEvent);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-        }
     }
 
     private List<CustomerScheduleEntity> findAllUnpaidInstallmentsUpTo(final Date transactionDate) {
@@ -613,16 +600,6 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         return customerSchedulePayments;
-    }
-
-    @Override
-    protected void resetUpdatedFlag() throws AccountException {
-        try {
-            getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-            getCustomer().changeUpdatedMeeting();
-        } catch (CustomerException ce) {
-            throw new AccountException(ce);
-        }
     }
 
     public void generateNextSetOfMeetingDates(ScheduledDateGeneration scheduleGenerationStrategy) {

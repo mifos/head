@@ -68,6 +68,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -225,7 +226,11 @@ public class SavingsBO extends AccountBO {
         setSavingsBalance(new Money(getCurrency()));
         this.setSavingsType(savingsOffering.getSavingsType());
         this.setRecommendedAmntUnit(savingsOffering.getRecommendedAmntUnit());
-        addcustomFields(customFields);
+        try {
+            addcustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new AccountException(e);
+        }
         this.recommendedAmount = recommendedAmount;
         this.setSavingsOfferingDetails();
         // generated the deposit action dates only if savings account is being
@@ -475,6 +480,14 @@ public class SavingsBO extends AccountBO {
         if (this.getAccountCustomFields() != null && customFields != null) {
             for (CustomFieldDto view : customFields) {
                 boolean fieldPresent = false;
+                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
+                    try {
+                        view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                    } catch (InvalidDateException e) {
+                        throw new AccountException(e);
+                    }
+                }
                 for (AccountCustomFieldEntity customFieldEntity : this.getAccountCustomFields()) {
                     if (customFieldEntity.getFieldId().equals(view.getFieldId())) {
                         fieldPresent = true;
@@ -1879,9 +1892,6 @@ public class SavingsBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CANCEL)
-                && !this.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED)) {
-
             MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
             DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
                     new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
@@ -1907,7 +1917,6 @@ public class SavingsBO extends AccountBO {
                 }
                 updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
             }
-        }
 
     }
 

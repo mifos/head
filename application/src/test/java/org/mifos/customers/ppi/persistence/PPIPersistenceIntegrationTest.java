@@ -72,7 +72,7 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void tearDown() throws Exception {
         Statement stmt = StaticHibernateUtil.getSessionTL().connection().createStatement();
         stmt.execute("truncate ppi_survey");
-        StaticHibernateUtil.resetDatabase();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 

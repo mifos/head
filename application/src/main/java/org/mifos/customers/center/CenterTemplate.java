@@ -26,6 +26,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.CustomerTemplate;
 import org.mifos.customers.util.helpers.CustomerLevel;
 
+/**
+ * use builders instead of templates.
+ */
+@Deprecated
 public interface CenterTemplate extends CustomerTemplate {
     public CustomerLevel getCustomerLevel();
 

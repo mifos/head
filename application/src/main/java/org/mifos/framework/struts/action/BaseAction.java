@@ -130,9 +130,6 @@ public abstract class BaseAction extends DispatchAction {
         if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
             request.setAttribute("shutdownIsImminent", true);
         }
-        if (StaticHibernateUtil.isSessionOpen()) {
-            logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
-        }
         TransactionDemarcate annotation = getTransaction(form, request);
         preExecute(form, request, annotation);
         ActionForward forward = super.execute(mapping, form, request, response);
@@ -253,9 +250,6 @@ public abstract class BaseAction extends DispatchAction {
         }
 
         if (closeSession) {
-            if (StaticHibernateUtil.isSessionOpen()) {
-                logger.info("Closing open hibernate session at end of action: " + getClass().getName());
-            }
             // StaticHibernateUtil.flushAndCloseSession();
             StaticHibernateUtil.closeSession();
         }

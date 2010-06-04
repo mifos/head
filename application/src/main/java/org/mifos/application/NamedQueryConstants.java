@@ -475,14 +475,10 @@ public interface NamedQueryConstants {
     public String EXTRACT_BRANCH_REPORT_LOAN_ARREARS_AMOUNT_FOR_PERSONNEL = "branchReport.extractLoanArrearsAmountForPersonnel";
 
     // Branch Cash Confirmation Report Queries
-    public String EXTRACT_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES = "branchCashConfirmationReport.extractCenterRecovery";
-    public String EXTRACT_BRANCH_CASH_CONFIRMATION_DISBURSEMENTS = "branchCashConfirmationReport.extractDisbursement";
-
     public String GET_BRANCH_CASH_CONFIRMATION_CENTER_RECOVERIES = "branchCashConfirmationReport.getCenterRecoveries";
     public String GET_BRANCH_CASH_CONFIRMATION_CENTER_ISSUES = "branchCashConfirmationReport.getCenterIssues";
     public String GET_BRANCH_CASH_CONFIRMATION_DISBURSEMENTS = "branchCashConfirmationReport.getDisbursements";
 
-    public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE = "branchCashConfirmationReport.getReportForDate";
     public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE_AND_BRANCH = "branchCashConfirmationReport.getReportForDateAndBranch";
     public String COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA = "collectionSheet.extractCollectionSheetReportData";
 

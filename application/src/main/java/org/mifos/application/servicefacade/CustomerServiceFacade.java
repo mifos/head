@@ -24,7 +24,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
@@ -43,11 +45,11 @@ public interface CustomerServiceFacade {
 
     ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag, Short officeId, String parentGroupId);
 
-    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws ApplicationException;
+    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
-    CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext) throws ApplicationException;
+    CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
-    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> allowedSavingProducts) throws ApplicationException;
+    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
 
     CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
 
@@ -64,6 +66,8 @@ public interface CustomerServiceFacade {
     GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, UserContext userContext, Integer previousGroupVersionNo) throws ApplicationException;
 
     GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo) throws ApplicationException;
+
+    ClientBO transferClientToGroup(UserContext userContext, Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException;
 
     void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes, UserContext userContext) throws ApplicationException;
 
