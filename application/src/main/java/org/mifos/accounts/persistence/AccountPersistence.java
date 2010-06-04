@@ -54,7 +54,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -464,29 +463,82 @@ public class AccountPersistence extends Persistence {
         }
     }
 
-    public List<Integer> getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays()
+    public List<Integer> getListOfAccountIdsHavingLoanSchedulesWithinDates(final Date fromDate, final Date thruDate)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesInUnappliedHolidays("getListOfAccountIdsHavingLoanSchedulesInUnappliedHolidays");
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingLoanSchedulesWithinDates",
+                fromDate, thruDate);
     }
 
-    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays()
+    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesWithinDates(final Date fromDate, final Date thruDate)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesInUnappliedHolidays("getListOfAccountIdsHavingSavingsSchedulesInUnappliedHolidays");
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingSavingsSchedulesWithinDates",
+                fromDate, thruDate);
     }
 
-    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays()
+    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesWithinDates(final Date fromDate, final Date thruDate)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesInUnappliedHolidays("getListOfAccountIdsHavingCustomerSchedulesInUnappliedHolidays");
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingCustomerSchedulesWithinDates",
+                fromDate, thruDate);
     }
 
     @SuppressWarnings("unchecked")
-    private List<Integer> getListOfAccountIdsHavingSchedulesInUnappliedHolidays(final String queryName) throws PersistenceException {
+    private List<Integer> getListOfAccountIdsHavingSchedulesWithinDates(final String queryName, final Date fromDate,
+            final Date thruDate) throws PersistenceException {
+
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FLAG", YesNoFlag.NO.getValue());
-        return executeNamedQuery(queryName, parameters);
+        parameters.put("FROM_DATE", fromDate);
+        parameters.put("THRU_DATE", thruDate);
+
+        List<Integer> queryResult = executeNamedQuery(queryName, parameters);
+
+        List<Integer> accountIds = new ArrayList<Integer>();
+        for (Integer obj : queryResult) {
+            accountIds.add(obj);
+        }
+
+        return accountIds;
+    }
+
+    public List<Integer> getListOfAccountIdsHavingLoanSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+            throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingLoanSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+            throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingSavingsSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+            throws PersistenceException {
+
+        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingCustomerSchedulesWithinDates",
+                fromDate, thruDate);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Integer> getListOfAccountIdsHavingSchedulesWithinDates(final String queryName, final DateTime fromDate,
+            final DateTime thruDate) throws PersistenceException {
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("FROM_DATE", fromDate.toDate());
+        parameters.put("THRU_DATE", thruDate.toDate());
+
+        List<Integer> queryResult = executeNamedQuery(queryName, parameters);
+
+        List<Integer> accountIds = new ArrayList<Integer>();
+        for (Integer obj : queryResult) {
+            accountIds.add(obj);
+        }
+
+        return accountIds;
     }
 
     @SuppressWarnings("unchecked")

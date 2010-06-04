@@ -33,6 +33,14 @@
 	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
 			]]>
 	</query>
+	
+	
+	<query name="holiday.getDistinctYears">
+			<![CDATA[select distinct(holidayBO.holidayThruDate)
+					from org.mifos.application.holiday.business.HolidayBO holidayBO
+					order by holidayBO.holidayThruDate
+   	       ]]>
+	</query>
 
 	<query name="holiday.getAll">
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO]]>
