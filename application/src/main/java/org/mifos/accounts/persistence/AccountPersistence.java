@@ -22,7 +22,6 @@ package org.mifos.accounts.persistence;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +56,6 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.office.persistence.AccountOffice;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
@@ -614,16 +612,5 @@ public class AccountPersistence extends Persistence {
         parameters.put("THRU_DATE", thruDate.toDate());
 
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<Integer, Short> accountOfficeMap(Collection<Integer> accountIds) {
-        Map<Integer, Short> result = new HashMap<Integer, Short>();
-        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_ACCOUNT_ID_OFFICE_ID_MAP);
-        List<AccountOffice> accountOfficeList = namedQuery.setParameterList("ACCOUNT_IDS", accountIds).list();
-        for (AccountOffice accountOffice : accountOfficeList) {
-            result.put(accountOffice.getAccountId(), accountOffice.getOfficeId());
-        }
-        return result;
     }
 }

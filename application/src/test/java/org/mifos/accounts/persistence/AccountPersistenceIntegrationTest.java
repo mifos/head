@@ -20,10 +20,8 @@
 
 package org.mifos.accounts.persistence;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.Assert;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +29,6 @@ import static org.junit.Assert.assertThat;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.hamcrest.CoreMatchers;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -397,18 +394,6 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(savingsBO.getAccountId()), is(true));
-    }
-
-    public void testMappingOfAccountIdToOfficeId(){
-        ArrayList<Integer> accountIds = new ArrayList<Integer>();
-        Integer groupLoanAccountId = groupLoan.getAccountId();
-        accountIds.add(groupLoanAccountId);
-        Integer clinetLoanAccountId = clientLoan.getAccountId();
-        accountIds.add(clinetLoanAccountId);
-        Map<Integer, Short> accountOfficeMap = accountPersistence.accountOfficeMap(accountIds);
-        assertThat(accountOfficeMap.size(), is(2));
-        assertEquals(groupLoan.getOffice().getOfficeId(), accountOfficeMap.get(groupLoanAccountId));
-        assertEquals(clientLoan.getOffice().getOfficeId(), accountOfficeMap.get(clinetLoanAccountId));
     }
 
     /*********************
