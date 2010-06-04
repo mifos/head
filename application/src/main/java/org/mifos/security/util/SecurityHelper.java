@@ -99,7 +99,7 @@ public class SecurityHelper {
         Query personRoles = null;
 
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             transaction = session.beginTransaction();
             personRoles = session.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
             personRoles.setShort("ID", uid);
@@ -144,7 +144,7 @@ public class SecurityHelper {
         Transaction transaction = null;
         Query officeSearch = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             transaction = session.beginTransaction();
             officeSearch = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
             officeSearch.setString(SecurityConstants.PATTERN, pattern);
@@ -181,7 +181,7 @@ public class SecurityHelper {
         Query queryOfficeSearchList = null;
 
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             transaction = session.beginTransaction();
             queryOfficeSearchList = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
             lst = queryOfficeSearchList.list();

@@ -111,7 +111,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testRescheduleLoan() throws Exception {
-        Session session = StaticHibernateUtil.openSession();
+        Session session = StaticHibernateUtil.getSessionTL();
         loanBO = getLoanAccount();
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("accountId", loanBO.getAccountId().toString());

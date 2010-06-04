@@ -252,9 +252,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
         try {
-            // in case any other leaked sessions exist from legacy code use.
-            this.hibernateTransactionHelper.closeSession();
-
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
 
@@ -277,8 +274,6 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (Exception e) {
             this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } finally {
-            this.hibernateTransactionHelper.closeSession();
         }
     }
 

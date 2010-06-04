@@ -132,7 +132,7 @@ public class AccountPersistence extends Persistence {
         try {
             Session session = null;
             notesResult = QueryFactory.getQueryResult("NotesSearch");
-            session = notesResult.getSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(NamedQueryConstants.GETALLACCOUNTNOTES);
             query.setInteger("accountId", accountId);
             notesResult.executeQuery(query);
@@ -267,14 +267,12 @@ public class AccountPersistence extends Persistence {
     private List executeNamedQueryAtInit(String queryName, Map queryParameters) throws PersistenceException {
         Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.list();
         } catch (Exception e) {
             throw new PersistenceException(e);
-        } finally {
-            session.close();
         }
     }
 

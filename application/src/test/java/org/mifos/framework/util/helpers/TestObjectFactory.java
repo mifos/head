@@ -1253,7 +1253,7 @@ public class TestObjectFactory {
 
     public static void cleanUpAccount(final Integer accountId) {
         if (null != accountId) {
-            Session session = StaticHibernateUtil.openSession();
+            Session session = StaticHibernateUtil.getSessionTL();
             Transaction transaction = session.beginTransaction();
             AccountBO account = (AccountBO) session.get(AccountBO.class, accountId);
             deleteAccount(account, session);
@@ -2023,13 +2023,10 @@ public class TestObjectFactory {
         StaticHibernateUtil.startTransaction();
         List<AuditLog> auditLogList = session
                 .createQuery("from org.mifos.framework.components.audit.business.AuditLog").list();
-        if (auditLogList != null) {
-            for (AuditLog auditLog : auditLogList) {
-                session.delete(auditLog);
-            }
+        for (AuditLog auditLog : auditLogList) {
+            session.delete(auditLog);
         }
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
     }
 
     public static List<AuditLog> getChangeLog(final EntityType type, final Integer entityId) {

@@ -87,7 +87,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.save(reportsParams);
             session.flush();
@@ -111,7 +111,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.delete(reportsParams);
             session.flush();
@@ -141,7 +141,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.save(reportsDataSource);
             session.flush();
@@ -166,7 +166,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.delete(reportsDataSource);
             session.flush();
@@ -246,7 +246,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.save(reportsParamsMapValue);
             session.flush();
@@ -274,7 +274,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.delete(reportsParamsMapValue);
             session.flush();
@@ -301,7 +301,7 @@ public class ReportsPersistence extends Persistence {
         Session session = null;
         Transaction trxn = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             trxn = session.beginTransaction();
             session.update(reportsJasperMap);
             session.flush();
@@ -354,7 +354,7 @@ public class ReportsPersistence extends Persistence {
     public void createJasperMap(ReportsJasperMap map) {
         Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             createJasperMap(session, map);
         } finally {
             StaticHibernateUtil.closeSession(session);
@@ -375,7 +375,7 @@ public class ReportsPersistence extends Persistence {
     public Connection getJasperConnection() throws ApplicationException, SystemException {
         Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             return session.connection();
         } catch (HibernateProcessException e) {
             throw new ApplicationException(e);

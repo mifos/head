@@ -32,14 +32,4 @@ import org.mifos.framework.exceptions.HibernateProcessException;
  */
 public class QuerySession {
 
-    public static Session openSession() throws HibernateProcessException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("opening session for search");
-        return StaticHibernateUtil.openSession();
-    }
-
-    public static void closeSession(Session hibernateSession) throws HibernateProcessException {
-        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("closing session after search");
-        StaticHibernateUtil.closeSession(hibernateSession);
-    }
-
 }

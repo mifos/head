@@ -63,17 +63,6 @@ public class HibernateUtil {
     }
 
     /**
-     * Open a new Hibernate session.
-     */
-    public Session openSession() throws HibernateProcessException {
-        try {
-            return sessionFactory.openSession();
-        } catch (HibernateException e) {
-            throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION, e);
-        }
-    }
-
-    /**
      * Close a session. Do nothing if the session is null or already closed.
      */
     public void closeSession(Session session) throws HibernateProcessException {
@@ -156,15 +145,6 @@ public class HibernateUtil {
             session.clear();
         }
 
-    }
-
-    private Session getSession() {
-        if (null == sessionTL.get()) {
-            // need to log to indicate that the session is being invoked when
-            // not present
-
-        }
-        return sessionTL.get();
     }
 
     private Session getOrCreateSession() throws HibernateException {

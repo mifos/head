@@ -27,7 +27,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 /**
@@ -67,15 +66,6 @@ public class QueryResultDTOImpl implements QueryResult {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, h);
         }
 
-    }
-
-    /**
-     * Return the Session used for query
-     *
-     */
-    public Session getSession() throws HibernateProcessException {
-        hibernateSession = QuerySession.openSession();
-        return hibernateSession;
     }
 
     /**
@@ -145,21 +135,6 @@ public class QueryResultDTOImpl implements QueryResult {
         }
         size = lastRowNumber + 1;
         return size;
-    }
-
-    /**
-     * This is invoked on the query result to indicate the end of search result
-     * view at the front end , the associated hibernate session would be closed
-     */
-    public void close() throws HibernateProcessException {
-        if (scrollResult != null) {
-            scrollResult.close();
-        }
-        try {
-            QuerySession.closeSession(hibernateSession);
-        } catch (HibernateProcessException e) {
-            throw e;
-        }
     }
 
     protected Object buildDTO(Object[] dtoData) throws HibernateSearchException {

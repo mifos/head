@@ -163,7 +163,7 @@ public class PersonnelPersistence extends Persistence {
         try {
             Session session = null;
             notesResult = QueryFactory.getQueryResult("NotesSearch");
-            session = notesResult.getSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(NamedQueryConstants.GETALLPERSONNELNOTES);
             query.setInteger("PERSONNEL_ID", personnelId);
             notesResult.executeQuery(query);

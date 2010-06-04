@@ -87,6 +87,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -670,7 +671,7 @@ public class CustomerPersistence extends Persistence {
         try {
             Session session = null;
             notesResult = QueryFactory.getQueryResult("NotesSearch");
-            session = notesResult.getSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(NamedQueryConstants.GETALLCUSTOMERNOTES);
             query.setInteger("CUSTOMER_ID", customerId);
             notesResult.executeQuery(query);

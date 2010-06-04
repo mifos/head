@@ -33,7 +33,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
         java.util.List list = new java.util.ArrayList();
         Session session = null;
         try {
-            session = getSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = prepareQuery(session, queryInputs.getQueryStrings()[1]);
             query.setFirstResult(position);
             query.setMaxResults(noOfObjects);
@@ -63,7 +63,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
                     }
                 }
             }
-            close();
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
         }

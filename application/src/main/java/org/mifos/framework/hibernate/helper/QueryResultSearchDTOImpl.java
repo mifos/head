@@ -67,7 +67,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
         List<Object> returnList = new ArrayList<Object>();
         List<?> list = new ArrayList<Object>();
         try {
-            session = QuerySession.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             Query query = prepareQuery(session, queryInputs.getQueryStrings()[1]);
             query.setFirstResult(position);
             query.setMaxResults(noOfObjects);
@@ -87,7 +87,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
                 }
             }
 
-            QuerySession.closeSession(session);
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
         }
@@ -102,7 +102,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
     public int getSize() throws HibernateSearchException {
         Session session = null;
         try {
-            session = QuerySession.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             if (this.queryInputs == null) {
                 throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
             }
@@ -114,7 +114,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl {
             if (resultSetCount != null && resultSetCount > 0) {
                 size = resultSetCount;
             }
-            QuerySession.closeSession(session);
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
         }

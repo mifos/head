@@ -124,8 +124,6 @@ public class IntegrationTestObjectMother {
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 

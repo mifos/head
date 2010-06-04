@@ -40,7 +40,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
         List<Object> returnList = new ArrayList<Object>();
 
         try {
-            Session session = QuerySession.openSession();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = prepareQuery(session, queryInputs.getQueryStrings()[1]);
             list = query.list();
             this.queryInputs.setTypes(query.getReturnTypes());
@@ -71,7 +71,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
                     }
                 }
             }
-            QuerySession.closeSession(session);
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
         }
@@ -123,7 +123,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
     @Override
     public int getSize() throws HibernateSearchException {
         try {
-            Session session = QuerySession.openSession();
+            Session session = StaticHibernateUtil.getSessionTL();
             if (this.queryInputs == null) {
                 throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
             }
@@ -134,7 +134,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
             if (resultSetCount != null && resultSetCount > 0) {
                 size = resultSetCount;
             }
-            QuerySession.closeSession(session);
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED, e);
         }

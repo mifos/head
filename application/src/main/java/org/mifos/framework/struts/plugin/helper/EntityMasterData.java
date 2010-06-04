@@ -56,7 +56,7 @@ public final class EntityMasterData {
     public void init() throws HibernateProcessException {
         Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             session.beginTransaction();
             Query query = session.getNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER);
 

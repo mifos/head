@@ -42,10 +42,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    public static Session openSession() throws HibernateProcessException {
-        return hibernateUtil.openSession();
-    }
-
     public static void closeSession(Session session) throws HibernateProcessException {
         hibernateUtil.closeSession(session);
     }

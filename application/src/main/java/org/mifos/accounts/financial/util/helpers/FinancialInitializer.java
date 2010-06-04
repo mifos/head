@@ -54,7 +54,6 @@ public class FinancialInitializer {
 
             // necessary or cacheCOA() doesn't work correctly. Is that because
             // the commitTransaction() isn't flushing the session?
-            StaticHibernateUtil.closeSession();
 
             cacheCOA();
         } catch (Exception e) {

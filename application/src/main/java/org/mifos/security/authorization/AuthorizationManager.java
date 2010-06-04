@@ -63,7 +63,7 @@ public class AuthorizationManager {
     public void init() throws SystemException, ApplicationException {
         Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
+            session = StaticHibernateUtil.getSessionTL();
             init(session);
 
         } catch (SystemException e) {
@@ -72,8 +72,6 @@ public class AuthorizationManager {
             throw e;
         } catch (Exception e) {
             throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED, e);
-        } finally {
-            StaticHibernateUtil.closeSession(session);
         }
     }
 

@@ -178,21 +178,19 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setSavingsBalance(depositMoney);
         savings.update();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         Money balanceAmount = new Money(currency, "2000.0");
        Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 25/09 - 30/9 = 2000
         // Interest 2000*.12*5/365 = 2.2
        Assert.assertEquals(TestUtils.createMoney(2.2), savings.getInterestToBePosted());
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         Money recommendedAmnt = new Money(currency, "1000.0");
@@ -207,19 +205,18 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setSavingsBalance(balanceAmount);
         savings.update();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+
         savings = savingsPersistence.findById(savings.getAccountId());
-       Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
+        Assert.assertEquals(balanceAmount, savings.getSavingsBalance());
 
         Money amountAdjustedTo = new Money(getCurrency(), "0");
         savings.setUserContext(userContext);
         try {
             savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
         } catch (ApplicationException ae) {
-           Assert.assertTrue(false);
+           fail();
         }
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
        Assert.assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
         balanceAmount = new Money(currency, "1502.2");
@@ -233,44 +230,40 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setSavingsBalance(balanceAmount);
         savings.update();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+
         savings = savingsPersistence.findById(savings.getAccountId());
        Assert.assertEquals(new Money(currency, "1502.2"), savings.getSavingsBalance());
 
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/09 - 31/10 = 1502.2
         // Interest 1502.2*.8*31/365 = 10.3
        Assert.assertEquals(TestUtils.createMoney(10.3), savings.getInterestToBePosted());
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 31/10 - 30/11 = 1512.5
         // Interest 1512.5*.8*30/365 = 10.0
        Assert.assertEquals(TestUtils.createMoney(10.0), savings.getInterestToBePosted());
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.updateInterestAccrued();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         savings = savingsPersistence.findById(savings.getAccountId());
         // Min Bal from 30/11 - 31/12 = 1522.5
         // Interest1522.5*.8*31/365 = 10.4
        Assert.assertEquals(TestUtils.createMoney(10.4), savings.getInterestToBePosted());
         savings.postInterest();
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         group = savings.getCustomer();
