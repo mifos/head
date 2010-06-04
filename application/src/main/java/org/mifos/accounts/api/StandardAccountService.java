@@ -140,9 +140,12 @@ public class StandardAccountService implements AccountService {
             PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
-            Date receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            Date receiptDate = null;
+            if (null != accountPaymentParametersDto.getReceiptDate()) {
+                receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            }
             Date transactionDate = accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate();
-            String receiptId = accountPaymentParametersDto.getReceiptId().toString();
+            String receiptId = accountPaymentParametersDto.getReceiptId();
 
             AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
                     paymentTypeEntity, transactionDate);
@@ -185,13 +188,11 @@ public class StandardAccountService implements AccountService {
         LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccount().getAccountId());
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
-            throw new AccountException("Loan not in a State to be Disbursed: " + loanAccount.getState());
+            errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
         }
         /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
         if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
-            throw new AccountException("Loan Amount to be Disbursed Held on Database : "
-                    + loanAccount.getLoanAmount().getAmount()
-                    + " does not match the Input Loan Amount to be Disbursed: " + payment.getPaymentAmount());
+            errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
         }
         if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
