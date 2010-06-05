@@ -190,10 +190,7 @@ public class StandardAccountService implements AccountService {
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
         }
-        /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
-        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
-            errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
-        }
+        disbursalAmountMatchesFullLoanAmount(payment, errors, loanAccount);
         if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
@@ -204,6 +201,14 @@ public class StandardAccountService implements AccountService {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;
+    }
+
+    void disbursalAmountMatchesFullLoanAmount(AccountPaymentParametersDto payment, List<InvalidPaymentReason> errors,
+            LoanBO loanAccount) {
+        /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
+        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
+            errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
+        }
     }
 
     @Override
