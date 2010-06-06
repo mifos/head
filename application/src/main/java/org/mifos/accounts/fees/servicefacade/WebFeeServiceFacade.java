@@ -252,4 +252,15 @@ public class WebFeeServiceFacade implements FeeServiceFacade {
         return glCodes;
     }
 
+    private List<GLCodeDto> mapGLCodeEntityToGLCodeDtos(List<GLCodeEntity> glCodeEntities) {
+        if (glCodeEntities == null) {
+            return new ArrayList<GLCodeDto>();
+        }
+        List<GLCodeDto> glCodes = new ArrayList<GLCodeDto>();
+        for (GLCodeEntity glCodeEntity : glCodeEntities) {
+            glCodes.add(mapGLCodeDto(glCodeEntity));
+        }
+        return glCodes;
+    }
+
 }

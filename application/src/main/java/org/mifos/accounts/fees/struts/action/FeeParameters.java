@@ -17,9 +17,10 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
- 
+
 package org.mifos.accounts.fees.struts.action;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,37 +31,56 @@ import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.config.AccountingRules;
 
-public class FeeParameters {
-    private Map<Short, String> categories;
-    private Map<Short, String> timesOfCharging;
-    private Map<Short, String> timesOfChargingCustomers;
-    private Map<Short, String> formulas;
-    private Map<Short, String> frequencies;
-    private Map<Short, String> glCodes;
+public class FeeParameters implements Serializable{
+    private Map<String, String> categories;
+    private Map<String, String> timesOfCharging;
+    private Map<String, String> timesOfChargingCustomers;
+    private Map<String, String> formulas;
+    private Map<String, String> frequencies;
+    private Map<String, String> glCodes;
+    private Map<String, String> recurrenceTypes;
+    private boolean multiCurrencyEnabled;
+    private Map<String, String> currencies;
 
-    public Map<Short, String> getCategories() {
+
+    public Map<String, String> getCurrencies() {
+        return this.currencies;
+    }
+
+    public boolean isMultiCurrencyEnabled() {
+        return this.multiCurrencyEnabled;
+    }
+
+    public Map<String, String> getCategories() {
         return this.categories;
     }
 
-    public Map<Short, String> getTimesOfCharging() {
+    public Map<String, String> getTimesOfCharging() {
         return this.timesOfCharging;
     }
 
-    public Map<Short, String> getTimesOfChargingCustomers() {
+    public Map<String, String> getTimesOfChargingCustomers() {
         return this.timesOfChargingCustomers;
     }
 
-    public Map<Short, String> getFormulas() {
+    public Map<String, String> getFormulas() {
         return this.formulas;
     }
 
-    public Map<Short, String> getFrequencies() {
+    public Map<String, String> getFrequencies() {
         return this.frequencies;
     }
 
-    public Map<Short, String> getGlCodes() {
+    public Map<String, String> getGlCodes() {
         return this.glCodes;
+    }
+
+    public Map<String, String> getRecurrenceTypes() {
+        return this.recurrenceTypes;
     }
 
     public FeeParameters(List<CategoryTypeEntity> categories, List<FeePaymentEntity> timesOfCharging,
@@ -72,21 +92,42 @@ public class FeeParameters {
         this.formulas = listToMap(formulas);
         this.frequencies = listToMap(frequencies);
         this.glCodes = glCodesToMap(glCodes);
+        this.recurrenceTypes = getFeeRecurrenceTypes();
+        this.multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+        this.currencies = getCurrenciesMap();
+
     }
 
-    private Map<Short, String> glCodesToMap(List<GLCodeEntity> glCodes) {
-        Map<Short, String> idCodeMap = new HashMap<Short, String>();
+    private Map<String, String> getCurrenciesMap() {
+        Map<String, String> currencyMap = new HashMap<String, String>();
+        for (MifosCurrency currency : AccountingRules.getCurrencies()) {
+            currencyMap.put(currency.getCurrencyId().toString(), currency.getCurrencyCode());
+        }
+        return currencyMap;
+    }
+
+    private Map<String, String> getFeeRecurrenceTypes() {
+        Map<String, String> recurrTypes = new HashMap<String, String>();
+        for (RecurrenceType type : RecurrenceType.values()) {
+            recurrTypes.put(type.getValue().toString(), type.name());
+        }
+        return recurrTypes;
+    }
+
+    private Map<String, String> glCodesToMap(List<GLCodeEntity> glCodes) {
+        Map<String, String> idCodeMap = new HashMap<String, String>();
         for (GLCodeEntity glCode : glCodes) {
-            idCodeMap.put(glCode.getGlcodeId(), glCode.getGlcode());
+            idCodeMap.put(glCode.getGlcodeId().toString(), glCode.getGlcode());
         }
         return idCodeMap;
     }
 
-    private Map<Short, String> listToMap(List<? extends MasterDataEntity> masterDataEntityList) {
-        Map<Short, String> idNameMap = new HashMap<Short, String>();
+    private Map<String, String> listToMap(List<? extends MasterDataEntity> masterDataEntityList) {
+        Map<String, String> idNameMap = new HashMap<String, String>();
         for (MasterDataEntity masterDataEntity : masterDataEntityList) {
-            idNameMap.put(masterDataEntity.getId(), masterDataEntity.getName());
+            idNameMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
         }
         return idNameMap;
     }
+
 }

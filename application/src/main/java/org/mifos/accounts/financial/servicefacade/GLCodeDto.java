@@ -20,12 +20,14 @@
 
 package org.mifos.accounts.financial.servicefacade;
 
+import java.io.Serializable;
+
 
 /**
  * @author angshus
  *
  */
-public class GLCodeDto {
+public class GLCodeDto implements Serializable {
     private Short glcodeId;
     private String glcode;
 

@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.webflow.core.collection.SharedAttributeMap;
+import org.springframework.webflow.engine.Transition;
 
 @Controller
 public class FeeController {
@@ -28,8 +30,8 @@ public class FeeController {
     }
 
     @RequestMapping("/Fees.ftl")
-    public String viewFees(HttpServletRequest request) throws Exception {
-        feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId());
+    public String viewFees(ModelMap model, HttpServletRequest request) throws Exception {
+        model.addAttribute("FeeParameters", feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId()));
         return "Fees";
     }
 
@@ -39,6 +41,9 @@ public class FeeController {
         model.addAttribute("currencies", AccountingRules.getCurrencies());
         model.addAttribute("FeeParameters", feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId()));
         //org.springframework.webflow.mvc.servlet.FlowController
+        //org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver f;
+        //f.setExposeSpringMacroHelpers(exposeSpringMacroHelpers)
+        //Transition
         return "defineFee";
     }
 

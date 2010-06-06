@@ -7,18 +7,20 @@
 
 
 	<!--  <input name="hotelId" required="true" />  
-	
-	<on-start>
-		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
-	</on-start>
 	-->
 	
-	<view-state id="defineFee">
+	<var name="feeDefintiion" class="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
+	<on-start>
+	   <evaluate expression="externalContext.sessionMap.get('UserContext').localeId" result ="flowScope.localeId" />
+	   <evaluate expression="feeServiceFacade.getFeeParameters(flowScope.localeId)" result ="flowScope.FeeParameters" />
+	</on-start>
+	
+	<view-state id="defineFee" model="feeDefintiion">
 		<transition on="preview" to="previewFee" />
 		<transition on="cancel" to="cancel" bind="false" />
 	</view-state>
 	
-	<view-state id="previewFee">
+	<view-state id="previewFee" model="feeDefintiion">
 		<transition on="proceed" to="defineFeeSuccess" />
 		<transition on="cancel" to="cancel" />
 	</view-state>
