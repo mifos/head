@@ -20,9 +20,7 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -43,7 +41,5 @@ public interface HolidayDao {
 
     CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
 
-    Map<Short, List<HolidayBO>> unappliedOfficeHolidays(Collection<Short> officeIds);
 
-    Map<Short, List<HolidayBO>> holidaysForOffices(Collection<Short> officeIds, int startYear, int endYear);
 }

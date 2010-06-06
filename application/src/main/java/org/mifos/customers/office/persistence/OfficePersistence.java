@@ -23,7 +23,6 @@ package org.mifos.customers.office.persistence;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -319,8 +318,8 @@ public class OfficePersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> topLevelOfficeName(Collection<Short> officeIds) {
+    public List<String> topLevelOfficeName(Collection<Short> ids) {
         Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES);
-        return namedQuery.setParameterList("OFFICE_IDS", officeIds).list();
+        return namedQuery.setParameterList("OFFICE_IDS", ids).list();
     }
 }

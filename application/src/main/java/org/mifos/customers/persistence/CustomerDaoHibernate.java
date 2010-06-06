@@ -908,24 +908,30 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
-    public boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth) {
+    public boolean validateGovernmentIdForClient(String governmentId) {
+        return doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
+    }
 
-        boolean result = doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
-        if (!result) {
-            result = checkForDuplicacyForClosedClientsOnNameAndDob(clientName, dateOfBirth);
-        }
-        return result;
+    @Override
+    public boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
+    }
+
+    @Override
+    public boolean validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
+        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
     }
 
     private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
-        final Integer customerIdRepresentingClosedClient = Integer.valueOf(0);
         return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
-                customerIdRepresentingClosedClient);
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @SuppressWarnings("unchecked")
     private boolean checkForClientsBasedOnGovtId(final String queryName, final String governmentId,
-            final Integer customerId) {
+            final Integer customerId, CustomerStatus customerStatus) {
 
         String trimmedGovtId = StringUtils.trim(governmentId);
         if (StringUtils.isBlank(trimmedGovtId)) {
@@ -936,25 +942,20 @@ public class CustomerDaoHibernate implements CustomerDao {
         queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
         queryParameters.put("GOVT_ID", trimmedGovtId);
         queryParameters.put("customerId", customerId);
-        queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
+        queryParameters.put("clientStatus", customerStatus.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
         return ((Long) queryResult.get(0)).intValue() > 0;
     }
 
-    private boolean checkForDuplicacyForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
-        return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
-                Integer.valueOf(0));
-    }
-
     @SuppressWarnings("unchecked")
     private boolean checkForDuplicacyBasedOnName(final String queryName, final String name, final DateTime dateOfBirth,
-            final Integer customerId) {
+            final Integer customerId, CustomerStatus customerStatus) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientName", name);
         queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
         queryParameters.put("DATE_OFBIRTH", dateOfBirth.toDate());
         queryParameters.put("customerId", customerId);
-        queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED.getValue());
+        queryParameters.put("clientStatus", customerStatus.getValue());
         List queryResult = this.genericDao.executeNamedQuery(queryName, queryParameters);
         return ((Number) queryResult.get(0)).intValue() > 0;
     }
@@ -1504,7 +1505,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     // Returns true if another client with same govt id is found with a state other than closed
     private boolean checkForDuplicacyOnGovtIdForNonClosedClients(final String governmentId, final Integer customerId) {
-        return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId);
+        return checkForClientsBasedOnGovtId("Customer.getNonClosedClientBasedOnGovtId", governmentId, customerId, CustomerStatus.CLIENT_CLOSED);
     }
 
     // returns true if a duplicate client is found with same display name and dob in state other than closed

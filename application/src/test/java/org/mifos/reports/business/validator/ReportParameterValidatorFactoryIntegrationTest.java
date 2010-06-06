@@ -72,6 +72,7 @@ public class ReportParameterValidatorFactoryIntegrationTest extends MifosIntegra
         retrieveAndAssertValidatorType(COLLECTION_SHEET_REPORT_FILENAME, SqlCollectionSheetReportParamValidator.class);
     }
 
+    @SuppressWarnings("unchecked")
     private void retrieveAndAssertValidatorType(String reportFilename, Class validatorClass) {
         ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
                 .getValidator(reportFilename);

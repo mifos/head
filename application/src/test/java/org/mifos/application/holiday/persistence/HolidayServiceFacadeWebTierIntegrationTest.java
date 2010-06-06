@@ -78,15 +78,15 @@ public class HolidayServiceFacadeWebTierIntegrationTest extends MifosIntegration
     }
 
     public void testShouldReturnHolidaysByYear() throws ServiceException {
-         Map<String, List<HolidayOfficeNames>> holidaysByYear = holidayServiceFacade.holidaysByYear();
+         Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
          assertNotNull(holidaysByYear);
          assertEquals(1, holidaysByYear.size());
-         List<HolidayOfficeNames> holidayOfficeNames = holidaysByYear.get(Integer.toString(new DateTime(holidayDetails
+         List<OfficeHoliday> officeHoliday = holidaysByYear.get(Integer.toString(new DateTime(holidayDetails
          .getFromDate()).getYear()));
-         assertNotNull(holidayOfficeNames);
-         assertEquals(1, holidayOfficeNames.size());
-         assertEquals("testHoliday", holidayOfficeNames.get(0).getHolidayDetails().getName());
-         assertEquals(1, holidayOfficeNames.get(0).getOfficeNames().size());
-         assertEquals("Mifos HO ", holidayOfficeNames.get(0).getOfficeNames().get(0));
+         assertNotNull(officeHoliday);
+         assertEquals(1, officeHoliday.size());
+         assertEquals("testHoliday", officeHoliday.get(0).getHolidayDetails().getName());
+         assertEquals(1, officeHoliday.get(0).getOfficeNames().size());
+         assertEquals("Mifos HO ", officeHoliday.get(0).getOfficeNames().get(0));
     }
 }
