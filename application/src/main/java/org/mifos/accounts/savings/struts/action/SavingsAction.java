@@ -261,8 +261,6 @@ public class SavingsAction extends AccountAppAction {
                 .getOfficeId(), customer.getPersonnel().getPersonnelId());
 
         List<CustomFieldDto> customFields = savingsActionForm.getAccountCustomFieldSet();
-        UserContext userContext = getUserContext(request);
-        convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 
         SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer, AccountState
                 .fromShort(getShortValue(savingsActionForm.getStateSelected())),

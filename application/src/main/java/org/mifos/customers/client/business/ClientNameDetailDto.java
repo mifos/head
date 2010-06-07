@@ -20,6 +20,7 @@
 
 package org.mifos.customers.client.business;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
@@ -102,11 +103,12 @@ public class ClientNameDetailDto implements DataTransferObject {
     }
 
     private void appendToName(StringBuilder displayName, String valueToBeAppend, boolean isBlankRequired) {
-        if (!ValidateMethods.isNullOrBlank(valueToBeAppend)) {
+        String trimmedValue = StringUtils.trim(valueToBeAppend);
+        if (!ValidateMethods.isNullOrBlank(trimmedValue)) {
             if (isBlankRequired) {
                 displayName.append(CustomerConstants.BLANK);
             }
-            displayName.append(valueToBeAppend);
+            displayName.append(trimmedValue);
         }
     }
 

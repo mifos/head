@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDto;
@@ -54,6 +55,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.security.util.UserContext;
 
+@Deprecated
 public class CenterPersistence extends Persistence {
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
@@ -143,7 +145,7 @@ public class CenterPersistence extends Persistence {
         List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldDto, null);
 
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
-                centerOffice, numberOfCustomersInOfficeAlready, customFields, template.getAddress(), template.getExternalId());
+                centerOffice, numberOfCustomersInOfficeAlready, customFields, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
 
         CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 

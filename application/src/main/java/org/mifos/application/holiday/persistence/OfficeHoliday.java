@@ -19,23 +19,34 @@
  */
 package org.mifos.application.holiday.persistence;
 
-import org.mifos.application.holiday.business.HolidayBO;
+import java.util.Iterator;
+import java.util.List;
 
 public class OfficeHoliday {
-    private final Short officeId;
+    private HolidayDetails holidayDetails;
+    private List<String> officeNames;
 
-    private final HolidayBO holiday;
-
-    public OfficeHoliday(Short officeId, HolidayBO holiday) {
-        this.officeId = officeId;
-        this.holiday = holiday;
+    public OfficeHoliday(HolidayDetails holidayDetails, List<String> officeNames) {
+        this.holidayDetails = holidayDetails;
+        this.officeNames = officeNames;
     }
 
-    public Short getOfficeId() {
-        return this.officeId;
+    public HolidayDetails getHolidayDetails() {
+        return this.holidayDetails;
     }
 
-    public HolidayBO getHoliday() {
-        return this.holiday;
+    public List<String> getOfficeNames() {
+        return this.officeNames;
+    }
+
+    public String getOfficeNamesAsString() {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (Iterator<String> iterator = officeNames.iterator(); iterator.hasNext();) {
+            stringBuffer.append(iterator.next());
+            if (iterator.hasNext()) {
+                stringBuffer.append(", ");
+            }
+        }
+        return stringBuffer.toString();
     }
 }

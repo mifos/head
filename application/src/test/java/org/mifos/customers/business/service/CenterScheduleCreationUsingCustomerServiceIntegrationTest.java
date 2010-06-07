@@ -27,7 +27,6 @@ import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampl
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +47,6 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
@@ -62,7 +60,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -563,6 +560,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
                                             .withLoanOfficer(testUser()).withUserContext()
+                                            .active()
+                                            .withActivationDate(tomorrow)
                                             .build();
 
         // exercise test

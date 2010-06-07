@@ -55,6 +55,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     private Integer id;
 
+    @Override
     public Integer getId() {
         return this.id;
     }
@@ -101,6 +102,11 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     public Date getHolidayThruDate() {
         return this.holidayThruDate;
+    }
+
+    @Override
+    public String getName() {
+        return getHolidayName();
     }
 
     public String getHolidayName() {

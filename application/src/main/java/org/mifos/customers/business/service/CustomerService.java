@@ -59,6 +59,8 @@ public interface CustomerService {
 
     GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException;
 
+    ClientBO transferClientTo(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo)  throws CustomerException;
+
     void updateCustomerStatus(UserContext userContext, CustomerStatusUpdate customerStatusUpdate) throws CustomerException;
 
     void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException;

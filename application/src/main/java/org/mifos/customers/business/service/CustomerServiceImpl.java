@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
@@ -756,7 +757,7 @@ public class CustomerServiceImpl implements CustomerService {
                 CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
                 List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
-                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
 
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
@@ -866,8 +867,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public final GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
-        group.validateNewCenter(receivingCenter);
-        group.validateForActiveAccounts();
+        group.validateReceivingCenter(receivingCenter);
+        group.validateNoActiveAccountsExist();
 
         if (group.isDifferentBranch(receivingCenter.getOffice())) {
             customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), receivingCenter.getOfficeId());
@@ -875,7 +876,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO oldParent = group.getParentCustomer();
 
-        group.transferTo(receivingCenter);
+        boolean regenerateSchedules = group.transferTo(receivingCenter);
 
         try {
             hibernateTransactionHelper.startTransaction();
@@ -893,17 +894,76 @@ public class CustomerServiceImpl implements CustomerService {
 
             Set<CustomerBO> clients = group.getChildren();
 
-            if (clients != null) {
-                for (CustomerBO client : clients) {
-                    client.setUserContext(group.getUserContext());
-                    ((ClientBO) client).handleGroupTransfer();
-                    client.setUpdateDetails();
-                    customerDao.save(client);
-                }
+            for (CustomerBO client : clients) {
+                client.setUserContext(group.getUserContext());
+                ((ClientBO) client).handleGroupTransfer();
+                client.setUpdateDetails();
+                customerDao.save(client);
             }
             hibernateTransactionHelper.commitTransaction();
 
+            if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
+                handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
+            }
             return group;
+        } catch (Exception e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public ClientBO transferClientTo(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws CustomerException {
+
+        ClientBO client = customerDao.findClientBySystemId(clientGlobalCustNum);
+        client.validateVersion(previousClientVersionNo);
+        client.updateDetails(userContext);
+
+        GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
+        client.validateReceivingGroup(receivingGroup);
+        client.validateNoActiveAccountExist();
+
+        CustomerBO oldParent = client.getParentCustomer();
+
+        boolean regenerateSchedules = client.transferTo(receivingGroup);
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            hibernateTransactionHelper.beginAuditLoggingFor(client);
+
+            client.resetPositions(oldParent);
+            if (oldParent != null) {
+                oldParent.updateDetails(client.getUserContext());
+
+                if (oldParent.getParentCustomer() != null) {
+                    CustomerBO center = oldParent.getParentCustomer();
+                    client.resetPositions(center);
+                    center.setUserContext(client.getUserContext());
+                }
+
+                customerDao.save(oldParent);
+            }
+
+            receivingGroup.updateDetails(client.getUserContext());
+            customerDao.save(receivingGroup);
+
+            client.updateDetails(userContext);
+            customerDao.save(client);
+
+            hibernateTransactionHelper.commitTransaction();
+
+            if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(client.getOfficeId());
+                handleChangeInMeetingSchedule(client, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
+            }
+            return client;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -916,7 +976,7 @@ public class CustomerServiceImpl implements CustomerService {
     public final GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
 
         group.validateNewOffice(transferToOffice);
-        group.validateForActiveAccounts();
+        group.validateNoActiveAccountsExist();
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 

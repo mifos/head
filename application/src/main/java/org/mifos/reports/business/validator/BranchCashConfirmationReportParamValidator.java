@@ -28,10 +28,6 @@ import org.mifos.reports.business.BranchReportParameterForm;
 import org.mifos.reports.business.service.BranchCashConfirmationReportService;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
 
-/**
- * @deprecated - don't think this is used by any reports.
- */
-@Deprecated
 public class BranchCashConfirmationReportParamValidator extends
         AbstractReportParameterValidator<BranchReportParameterForm> {
 
@@ -58,5 +54,4 @@ public class BranchCashConfirmationReportParamValidator extends
                     ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
         }
     }
-
 }

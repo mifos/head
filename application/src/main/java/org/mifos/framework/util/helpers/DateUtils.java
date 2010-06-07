@@ -708,4 +708,10 @@ public class DateUtils {
         }
         return new LocalDate(date.getTime());
     }
+
+    public static String convertToDbFormat(Locale locale, String givenDate) throws InvalidDateException {
+        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
+        String userfmt = convertToCurrentDateFormat(format.toPattern());
+        return convertUserToDbFmt(givenDate, userfmt);
+    }
 }

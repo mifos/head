@@ -73,7 +73,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence());
+        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null);
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
@@ -205,7 +205,6 @@ public class AccountApplyPaymentAction extends BaseAction {
             }
         }
         throw new MifosRuntimeException("Expected fee PaymentTypeDto not found for id: " + id);
-
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

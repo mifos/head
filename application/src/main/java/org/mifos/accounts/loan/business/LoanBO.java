@@ -286,7 +286,11 @@ public class LoanBO extends AccountBO {
         this.maxMinLoanAmount = null;
         this.maxMinInterestRate = null;
         this.maxMinNoOfInstall = null;
-        addcustomFields(customFields);
+        try {
+            addcustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new AccountException(e);
+        }
     }
 
     public static LoanBO redoLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
@@ -1043,9 +1047,6 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    /*
-     * This disburseLoan only used via saveCollectionSheet - John W
-     */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {

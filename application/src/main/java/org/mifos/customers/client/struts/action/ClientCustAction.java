@@ -47,6 +47,7 @@ import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
@@ -258,29 +259,33 @@ public class ClientCustAction extends CustAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
-        DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth()));
-
+        String givenDateOfBirth = actionForm.getDateOfBirth();
+        DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
-
-        if (processRules.isClientPendingApprovalStateEnabled()) {
-            SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, CustomerConstants.YES, request);
-        } else {
-            SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, CustomerConstants.NO, request);
-        }
-
+        String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled()? CustomerConstants.YES: CustomerConstants.NO;
+        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, pendingApprovalState, request);
+        addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
-        actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+        actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
+        return mapping.findForward(ActionForwards.preview_success.toString());
+    }
 
+    private void addWarningMessages(HttpServletRequest request, ProcessRulesDto processRules)
+            throws PageExpiredException {
         if (processRules.isGovernmentIdValidationFailing()) {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
         }
 
-        return mapping.findForward(ActionForwards.preview_success.toString());
+        if (processRules.isDuplicateNameOnClosedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+        }
+
+        if (processRules.isDuplicateNameOnBlackListedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_BLACKLISTED);
+        }
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
@@ -420,7 +425,8 @@ public class ClientCustAction extends CustAction {
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         List<SavingsDetailDto> allowedSavingProducts = getSavingsOfferingsFromSession(request);
 
-        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, userContext, allowedSavingProducts);
+        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
+        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, userContext, allowedSavingProducts, customerCustomFields);
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());

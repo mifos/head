@@ -28,5 +28,5 @@ import org.mifos.framework.exceptions.ServiceException;
 public interface HolidayServiceFacade {
     void createHoliday(HolidayDetails holidayDetails, List<Short> branchIds) throws ServiceException;
 
-    Map<String, List<HolidayOfficeNames>> holidaysByYear() throws ServiceException;
+    Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException;
 }

@@ -37,22 +37,16 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMovementEntity;
-import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -62,14 +56,11 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -92,7 +83,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     private Short officeId = 1;
     private OfficeBO office;
     private OfficeBO officeBo;
-    private CustomerPersistence customerPersistence = new CustomerPersistence();
 
     @Override
     protected void setUp() throws Exception {
@@ -114,7 +104,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             TestObjectFactory.removeObject(savingsOffering1);
             TestObjectFactory.removeObject(savingsOffering2);
         } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
         StaticHibernateUtil.closeSession();
@@ -385,55 +374,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering1 = null;
     }
 
-    public void ignore_testSavingsAccountOnChangeStatusToActive() throws Exception {
-        savingsOffering1 = TestObjectFactory.createSavingsProduct("offering1", "s1", SavingsType.MANDATORY,
-                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        savingsOffering2 = TestObjectFactory.createSavingsProduct("offering2", "s2", SavingsType.VOLUNTARY,
-                ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        StaticHibernateUtil.closeSession();
-        List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
-        selectedOfferings.add(savingsOffering1);
-        selectedOfferings.add(savingsOffering2);
-
-        Short povertyStatus = Short.valueOf("41");
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
-                TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
-                TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                .valueOf("1"), povertyStatus);
-        client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailDto.getDisplayName(),
-                CustomerStatus.CLIENT_PENDING, null, null, null, null, null, selectedOfferings, personnel,
-                getBranchOffice(), getMeeting(), personnel, null, null, null, null, YesNoFlag.YES.getValue(),
-                clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(2, client.getOfferingsAssociatedInCreate().size());
-        Assert.assertEquals(1, client.getAccounts().size());
-
-        client.setUserContext(TestObjectFactory.getContext());
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "Client Made Active");
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        Assert.assertEquals(3, client.getAccounts().size());
-
-        for (AccountBO account : client.getAccounts()) {
-            if (account instanceof SavingsBO) {
-                Assert.assertNotNull(account.getGlobalAccountNum());
-                Assert.assertTrue(true);
-            }
-        }
-        savingsOffering1 = null;
-        savingsOffering2 = null;
-    }
-
     public void testSuccessfulCreateWithParentGroup() throws Exception {
         String name = "Client 1";
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
@@ -537,62 +477,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    // FIXME - #000010 - keithw - put back on after client creation is complete!
-    public void ignore_testFailureCreateClientWithDuplicateNameAndDOB() throws Exception {
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
-                TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
-                TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                .valueOf("1"), Short.valueOf("41"));
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
-                .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
-                date, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
-                clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        try {
-            new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus.fromInt(new Short(
-                    "1")), null, null, null, null, null, null, personnel, officeBo, null, personnel, date, null, null,
-                    null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION, e.getKey());
-        }
-
-    }
-
-    // FIXME - #000010 - keithw - put back on after client creation is complete!
-    public void ignore_testFailureCreateClientWithDuplicateGovtId() throws Exception {
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT,
-                TestObjectFactory.SAMPLE_SALUTATION, "Client", "", "1", "");
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
-                TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                .valueOf("1"), Short.valueOf("41"));
-        client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
-                .fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeBo, null, personnel,
-                new java.util.Date(), "1", null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
-                spouseNameDetailView, clientPersonalDetailDto, null);
-        new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-        try {
-            client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(),
-                    CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, null, personnel, officeBo, null,
-                    personnel, new java.util.Date(), "1", null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
-                    spouseNameDetailView, clientPersonalDetailDto, null);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, e.getKey());
-        }
-
-    }
-
     public void testSuccessfulCreateClientInBranch() throws Exception {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         String firstName = "Client";
@@ -618,163 +502,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
-    public void testUpdateGroupFailure_GroupNULL() throws Exception {
-        createInitialObjects();
-        try {
-            client.transferToGroup(null);
-            Assert.fail();
-        } catch (CustomerException ce) {
-            Assert.assertEquals(CustomerConstants.INVALID_PARENT, ce.getKey());
-        }
-    }
-
-    public void testUpdateGroupFailure_TransferInSameGroup() throws Exception {
-        createInitialObjects();
-        try {
-            client.transferToGroup((GroupBO) client.getParentCustomer());
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER, e.getKey());
-        }
-    }
-
-    public void ignore_testUpdateGroupFailure_GroupCancelled() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-        refetchGroup();
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // group1.changeStatus(CustomerStatus.GROUP_CANCELLED, CustomerStatusFlag.GROUP_CANCEL_WITHDRAW,
-        // "Status Changed");
-        StaticHibernateUtil.commitTransaction();
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e.getKey());
-        }
-    }
-
-    private void refetchGroup() throws PersistenceException {
-        group1 = (GroupBO) customerPersistence.getCustomer(group1.getCustomerId());
-        group1.setUserContext(TestUtils.makeUserWithLocales());
-    }
-
-    public void ignore_testUpdateGroupFailure_GroupClosed() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-        refetchGroup();
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // group1.changeStatus(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED,
-        // "Status Changed");
-        StaticHibernateUtil.commitTransaction();
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException expected) {
-            Assert.assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, expected.getKey());
-        }
-    }
-
-    public void testUpdateGroupFailure_GroupStatusLower() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException expected) {
-            Assert.assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, expected.getKey());
-        }
-    }
-
-    public void ignore_testUpdateGroupFailure_GroupStatusLower_Client_OnHold() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
-        client = (ClientBO) customerPersistence.getCustomer(client.getCustomerId());
-        client.setUserContext(TestUtils.makeUserWithLocales());
-        // FIXME - keithw - use builder for creation of client for tests in given state.
-        // client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold");
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS, e.getKey());
-        }
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    public void testUpdateGroupFailure_ClientHasActiveAccounts() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-        accountBO = createSavingsAccount(client, "fsaf6", "ads6");
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        client.setUserContext(TestUtils.makeUserWithLocales());
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException ce) {
-            Assert.assertEquals(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, ce.getKey());
-        }
-        StaticHibernateUtil.closeSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    public void testUpdateGroupFailure_MeetingFrequencyMismatch() throws Exception {
-        createInitialObjects();
-        MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short.valueOf("1"), new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING, "Bangalore");
-        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
-        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        client.setUserContext(TestUtils.makeUser());
-        try {
-            client.transferToGroup(group1);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH, e.getKey());
-        }
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    public void testSuccessfulTransferToGroupInSameBranch() throws Exception {
-        createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-        PositionEntity position = new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
-                Short.valueOf("1")).get(0);
-        group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
-        center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
-        client.transferToGroup(group1);
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-        Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
-        CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-    }
-
-    public void testSuccessfulTransferToGroup_WithMeeting() throws Exception {
-        createObjectsForTransferToGroup_WithMeeting();
-
-        client.transferToGroup(group1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        Assert.assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-    }
-
     /**
      * Transfer a client created outside a group to a group. This was originally created to address <a
      * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=2184">issue 2184</a>.
@@ -784,85 +511,11 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulTransferToGroupFromOutsideGroup() throws Exception {
         createObjectsForTransferToGroup_OutsideGroup();
 
-        client.addClientToGroup((GroupBO) group); // FIXME: this method should be adding hierarchy
+        client.addClientToGroup((GroupBO) group);
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-
-        Assert.assertEquals(1, group.getMaxChildCount().intValue());
-
-        CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertNotNull("Adding client to group should also create hierarchy entities.", currentHierarchy);
-        Assert.assertEquals(group.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-
-        // this "normal" group transfer is tested elsewhere, but I added this
-        // specifically because
-        // issue 2184 reproduced after *two* transfers, one into a group from
-        // outside any group,
-        // the 2nd from group to group.
-        StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.startTransaction();
-        client.transferToGroup(group1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertNotNull(currentHierarchy);
-        Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
     }
 
-    public void testSuccessfulTransferToGroup_WithOutMeeting() throws Exception {
-        createObjectsForTransferToGroup_WithoutMeeting();
-        Assert.assertNotNull(client.getCustomerMeeting());
-
-        client.transferToGroup(group1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-
-        Assert.assertNull(client.getCustomerMeeting());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-    }
-
-    public void testSuccessfulTransferToGroupInDifferentBranch() throws Exception {
-        createObjectsForTransferToGroup_DifferentBranch();
-        PositionEntity position = new MasterPersistence().retrieveMasterEntities(PositionEntity.class,
-                Short.valueOf("1")).get(0);
-        group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
-        center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
-
-        client.transferToGroup(group1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-        Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
-        CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-        CustomerMovementEntity customerMovementEntity = client.getActiveCustomerMovement();
-        Assert.assertEquals(office.getOfficeId(), customerMovementEntity.getOffice().getOfficeId());
-
-        client.setUserContext(TestObjectFactory.getContext());
-        client.transferToGroup((GroupBO) group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        center1 = TestObjectFactory.getCenter(center1.getCustomerId());
-        office = new OfficePersistence().getOffice(office.getOfficeId());
-    }
 
     public void testUpdateBranchFailure_OfficeNULL() throws Exception {
         createInitialObjects();
@@ -957,12 +610,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    private SavingsBO createSavingsAccount(CustomerBO customer, String offeringName, String shortName) throws Exception {
-        SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering(offeringName, shortName);
-        return TestObjectFactory.createSavingsAccount("000100000000017", customer, AccountStates.SAVINGS_ACC_APPROVED,
-                new Date(System.currentTimeMillis()), savingsOffering);
-    }
-
     private void createObjectsForTransferToGroup_WithMeeting() throws Exception {
         Short officeId = new Short("3");
         Short personnel = new Short("1");
@@ -970,18 +617,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 personnel);
         group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
                 getMeeting(), personnel);
-        client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
-                new java.util.Date());
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_WithoutMeeting() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, getMeeting(),
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId, null,
-                personnel);
         client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
                 new java.util.Date());
         StaticHibernateUtil.closeSession();
@@ -996,27 +631,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 getMeeting(), personnel);
         client = TestObjectFactory
                 .createClient("new client", CustomerStatus.CLIENT_PARTIAL, null, new java.util.Date());
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_SameBranch(CustomerStatus groupStatus) throws Exception {
-        createInitialObjects();
-        MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(),
-                MeetingType.CUSTOMER_MEETING, "Bangalore");
-        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting);
-        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", groupStatus, center1);
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_DifferentBranch() throws Exception {
-        createInitialObjects();
-        office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
-                .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
-        StaticHibernateUtil.closeSession();
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting, office.getOfficeId(),
-                PersonnelConstants.SYSTEM_USER);
-        group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
         StaticHibernateUtil.closeSession();
     }
 
