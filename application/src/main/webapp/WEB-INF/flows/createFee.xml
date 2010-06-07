@@ -33,6 +33,6 @@
 	
 	<end-state id="feeDefinitionSuccess" />
 
-	<end-state id="cancel" view=" view=”externalRedirect:AdminAction.do" />
+	<end-state id="cancel" view="externalRedirect:AdminAction.do" />
 
 </flow>
