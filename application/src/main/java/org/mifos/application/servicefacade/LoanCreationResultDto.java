@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.customers.business.CustomerBO;
 
 public class LoanCreationResultDto {
 
@@ -28,20 +29,18 @@ public class LoanCreationResultDto {
     private final Integer accountId;
     private final String globalAccountNum;
     private final LoanBO loan;
+    private final CustomerBO customer;
 
-    public LoanCreationResultDto(boolean isGlimApplicable, Integer accountId, String globalAccountNum, LoanBO loan) {
+    public LoanCreationResultDto(boolean isGlimApplicable, Integer accountId, String globalAccountNum, LoanBO loan, CustomerBO customer) {
         this.isGlimApplicable = isGlimApplicable;
         this.accountId = accountId;
         this.globalAccountNum = globalAccountNum;
         this.loan = loan;
+        this.customer = customer;
     }
 
     public boolean isGlimApplicable() {
         return this.isGlimApplicable;
-    }
-
-    public LoanBO getLoan() {
-        return this.loan;
     }
 
     public Integer getAccountId() {
@@ -50,5 +49,13 @@ public class LoanCreationResultDto {
 
     public String getGlobalAccountNum() {
         return this.globalAccountNum;
+    }
+
+    public LoanBO getLoan() {
+        return this.loan;
+    }
+
+    public CustomerBO getCustomer() {
+        return this.customer;
     }
 }

@@ -161,10 +161,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -919,9 +916,8 @@ public class LoanAccountAction extends AccountAppAction {
         loanActionForm.setAccountId(loanCreationResultDto.getAccountId().toString());
         request.setAttribute(GLOBAL_ACCOUNT_NUM, loanCreationResultDto.getGlobalAccountNum());
 
-        // FIXME - keithw - why set these
-//        request.setAttribute("customer", customer);
-//        request.setAttribute("loan", loan);
+        // NOTE: needed for link creation
+        request.setAttribute("customer", loanCreationResultDto.getCustomer());
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }

@@ -176,11 +176,16 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
         prdOfferingPageParams = new HashMap<String, String>();
         initPageParams();
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TestDatabase.resetMySQLDatabase();
     }
 
     private void initSchedulePreviewPageParamsForLoanRedo(LoanOfferingBO loanOffering, String disbursementDate) {

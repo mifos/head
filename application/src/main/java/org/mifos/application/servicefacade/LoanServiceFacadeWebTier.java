@@ -81,7 +81,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -449,14 +448,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             new LoanPersistence().createOrUpdate(loan);
             StaticHibernateUtil.commitTransaction();
 
-            String globalAccountNum = loan.generateId(userContext.getBranchGlobalNum());
+            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
             new LoanPersistence().createOrUpdate(loan);
             StaticHibernateUtil.commitTransaction();
         } catch (PersistenceException e) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
         }
 
-        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan);
+        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
     }
 
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId, final Short loanOfficerId) {

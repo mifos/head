@@ -378,7 +378,7 @@ public class AccountBO extends AbstractBusinessObject {
         return (Date) (closedDate == null ? null : closedDate.clone());
     }
 
-    protected void setGlobalAccountNum(final String globalAccountNum) {
+    public void setGlobalAccountNum(final String globalAccountNum) {
         this.globalAccountNum = globalAccountNum;
     }
 
