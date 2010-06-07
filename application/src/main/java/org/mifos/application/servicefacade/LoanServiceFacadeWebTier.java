@@ -19,6 +19,8 @@
  */
 package org.mifos.application.servicefacade;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -50,6 +52,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
@@ -80,6 +83,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -355,5 +359,48 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
         return newMeetingForRepaymentDay;
+    }
+
+    @Override
+    public LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails,
+            List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity) {
+
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        final boolean isGroup = customer.isGroup();
+        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+
+        List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
+
+        for (String clientIdAsString : selectedClientIds) {
+            if (StringUtils.isNotEmpty(clientIdAsString)) {
+
+                LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
+                ClientBO client = (ClientBO) this.customerDao.findCustomerById(Integer.valueOf(clientIdAsString));
+
+                LoanAccountDetailsDto account = null;
+                for (LoanAccountDetailsDto tempAccount : accountDetails) {
+                    if (tempAccount.getClientId().equals(clientIdAsString)) {
+                        account = tempAccount;
+                    }
+                }
+                tempLoanAccount.setClientId(client.getGlobalCustNum().toString());
+                tempLoanAccount.setClientName(client.getDisplayName());
+                tempLoanAccount.setLoanAmount((null != account.getLoanAmount() && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount() : "0.0"));
+
+                String businessActName = null;
+                for (ValueListElement busact : businessActEntity) {
+                    if (busact.getId().toString().equals(account.getBusinessActivity())) {
+                        businessActName = busact.getName();
+                    }
+                }
+                tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
+                tempLoanAccount.setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName : "-").toString());
+                tempLoanAccount.setGovermentId((StringUtils.isNotBlank(client.getGovernmentId()) ? client.getGovernmentId() : "-").toString());
+
+                loanAccountDetailsView.add(tempLoanAccount);
+            }
+        }
+
+        return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
     }
 }
