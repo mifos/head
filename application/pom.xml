@@ -7,13 +7,13 @@
     	 now that we have a mifos-war, and that this is actually not a 'webapp' (?!) anymore, for clarity? -->
     <artifactId>mifos-webapp</artifactId>
     <packaging>jar</packaging>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <name>Mifos - Application</name>
     
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     

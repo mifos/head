@@ -4,7 +4,7 @@
 
 	<groupId>org.mifos</groupId>
 	<artifactId>mifos-reporting</artifactId>
-	<version>1.9-SNAPSHOT</version>
+	<version>1.10-SNAPSHOT</version>
 
 	<name>Mifos - Reporting</name>
 	<description>BIRT Viewer - Web Module embedded in Mifos</description>
@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.mifos</groupId>
 		<artifactId>mifos-parent</artifactId>
-		<version>1.9-SNAPSHOT</version>
+		<version>1.10-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 

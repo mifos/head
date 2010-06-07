@@ -4,14 +4,14 @@
     <groupId>org.mifos</groupId>
     <artifactId>mifos-acceptanceTests</artifactId>
     <packaging>jar</packaging>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <name>Mifos - Acceptance Tests</name>
     <url>http://www.mifos.org</url>
 
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -119,7 +119,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-war</artifactId>
-            <version>1.9-SNAPSHOT</version>
+            <version>1.10-SNAPSHOT</version>
             <type>war</type>
         </dependency>
         <dependency>
