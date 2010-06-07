@@ -1340,6 +1340,10 @@ public class LoanBO extends AccountBO {
                 || getState() == AccountState.LOAN_ACTIVE_IN_BAD_STANDING;
     }
 
+    /**
+     * use service/dao for saving and creating loans
+     */
+    @Deprecated
     public void save() throws AccountException {
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
@@ -1350,11 +1354,6 @@ public class LoanBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
         }
-    }
-
-    public void save(final AccountState accountState) throws AccountException {
-        this.setAccountState(new AccountStateEntity(accountState));
-        save();
     }
 
     public void updateLoan(final Boolean interestDeductedAtDisbursement, final Money loanAmount,

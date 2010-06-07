@@ -20,7 +20,6 @@
 package org.mifos.application.servicefacade;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -32,6 +31,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -39,6 +39,7 @@ import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanService;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
@@ -51,6 +52,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
+import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -77,13 +79,20 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -256,37 +265,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
         }
 
-        Short productId = loanActionForm.getPrdOfferingIdValue();
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
-
-        Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
-        Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();
-        boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDedAtDisbValue();
-        Double interest = loanActionForm.getInterestDoubleValue();
-        Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
-        List<FeeDto> fees = loanActionForm.getFeesToApply();
-        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
-        Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
-        Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
-        Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
-        Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
-        String externalId = loanActionForm.getExternalId();
-        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
-        String collateralNote = loanActionForm.getCollateralNote();
-        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
-        List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
-        List<String> clientNames = loanActionForm.getClients();
-
-        LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer,
-                AccountState.LOAN_PARTIAL_APPLICATION, loanAmount, numOfInstallments, disbursementDate.toDate(),
-                isInterestDeductedAtDisbursement, interest, gracePeriod, fund, fees, customFields,
-                maxLoanAmount, minLoanAmount, maxNumOfInstallments, minNumOfShortInstallments,
-                isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
-
-        loan.setExternalId(externalId);
-        loan.setBusinessActivityId(selectedLoanPurpose);
-        loan.setCollateralNote(collateralNote);
-        loan.setCollateralTypeId(selectedCollateralType);
+        LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
 
         List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto();
 
@@ -308,6 +287,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         final boolean isGroup = customer.isGroup();
         final boolean isGlimApplicable = isGroup && configurationPersistence.isGlimEnabled();
         double glimLoanAmount = Double.valueOf("0");
+        List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
+        List<String> clientNames = loanActionForm.getClients();
         for (LoanAccountDetailsDto loanAccount : loanAccountDetails) {
             if (clientNames.contains(loanAccount.getClientId())) {
                 if (loanAccount.getLoanAmount() != null) {
@@ -330,6 +311,44 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
 
         return new LoanCreationLoanScheduleDetailsDto(isGroup, isGlimApplicable, glimLoanAmount, isLoanPendingApprovalDefined, installments);
+    }
+
+    private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, DateTime disbursementDate, FundBO fund, boolean isRepaymentIndependentOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay, LoanAccountActionForm loanActionForm) throws ApplicationException {
+
+        Short productId = loanActionForm.getPrdOfferingIdValue();
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+
+        Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
+        Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();
+        boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDedAtDisbValue();
+        Double interest = loanActionForm.getInterestDoubleValue();
+        Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
+        List<FeeDto> fees = loanActionForm.getFeesToApply();
+        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+        Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
+        Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
+        Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
+        Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
+        String externalId = loanActionForm.getExternalId();
+        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
+        String collateralNote = loanActionForm.getCollateralNote();
+        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
+        AccountState accountState = loanActionForm.getState();
+        if (accountState == null) {
+            accountState = AccountState.LOAN_PARTIAL_APPLICATION;
+        }
+
+        LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountState, loanAmount, numOfInstallments, disbursementDate.toDate(),
+                isInterestDeductedAtDisbursement, interest, gracePeriod, fund, fees, customFields,
+                maxLoanAmount, minLoanAmount, maxNumOfInstallments, minNumOfShortInstallments,
+                isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
+
+        loan.setExternalId(externalId);
+        loan.setBusinessActivityId(selectedLoanPurpose);
+        loan.setCollateralNote(collateralNote);
+        loan.setCollateralTypeId(selectedCollateralType);
+
+        return loan;
     }
 
     private MeetingBO createNewMeetingForRepaymentDay(DateTime disbursementDate,
@@ -402,5 +421,45 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
 
         return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
+    }
+
+    @Override
+    public LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
+
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+
+        final boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
+
+        if (!isPermissionAllowed(loanActionForm.getState().getValue(), userContext, customer.getOffice().getOfficeId(), customer.getPersonnel().getPersonnelId())) {
+            throw new ApplicationException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+
+        MeetingBO newMeetingForRepaymentDay = null;
+        if (isRepaymentIndependentOfMeetingEnabled) {
+            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
+        }
+
+        LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
+
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        try {
+            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan.getAccountState(), createdBy, loan));
+            new LoanPersistence().createOrUpdate(loan);
+            StaticHibernateUtil.commitTransaction();
+
+            String globalAccountNum = loan.generateId(userContext.getBranchGlobalNum());
+            new LoanPersistence().createOrUpdate(loan);
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
+        }
+
+        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan);
+    }
+
+    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId, final Short loanOfficerId) {
+        return AuthorizationManager.getInstance().isActivityAllowed(userContext, new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
 }
