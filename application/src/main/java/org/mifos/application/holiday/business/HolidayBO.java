@@ -145,8 +145,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         this.holidayChangesAppliedFlag = flag;
     }
 
-    protected void validateHolidayState(final Short masterTypeId, final Short stateId, final boolean isCustomer)
-            throws ApplicationException {
+    private void validateHolidayState(final Short masterTypeId, final Short stateId, final boolean isCustomer) throws ApplicationException {
         Integer records;
         records = new HolidayPersistence().isValidHolidayState(masterTypeId, stateId, isCustomer);
         if (records.intValue() != 0) {

@@ -66,7 +66,7 @@ public class HolidayAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -141,11 +141,12 @@ public class HolidayAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        HolidayServiceFacadeWebTier holidayServiceFacade = new HolidayServiceFacadeWebTier(new OfficePersistence());
+    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         int count = 1;
         Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
+
         Set<String> distinctYears = holidaysByYear.keySet();
         for (String year : distinctYears) {
             request.getSession().setAttribute(HolidayConstants.HOLIDAY_LIST + count, holidaysByYear.get(year));
@@ -179,20 +180,20 @@ public class HolidayAction extends BaseAction {
 
     // @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         HolidayActionForm holidayActionForm = (HolidayActionForm) form;
-        RepaymentRuleTypes repaymentRuleType = RepaymentRuleTypes.fromShort(new Short(holidayActionForm
-                .getRepaymentRuleId()));
-        HolidayDetails holidayDetails = new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm
-                .getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
+
+        RepaymentRuleTypes repaymentRuleType = RepaymentRuleTypes.fromShort(Short.valueOf(holidayActionForm.getRepaymentRuleId()));
+        HolidayDetails holidayDetails = assembleHolidayDetails(holidayActionForm, repaymentRuleType);
+
         List<Short> officeIds = new LinkedList<Short>();
-        String[] selectedOfficeIds = ((HolidayActionForm)form).getSelectedOfficeIds().split(",");
+        String[] selectedOfficeIds = holidayActionForm.getSelectedOfficeIds().split(",");
         for (String selectedOfficeId : selectedOfficeIds) {
-            officeIds.add(new Short(selectedOfficeId));
+            officeIds.add(Short.valueOf(selectedOfficeId));
         }
-        // TODO HolidayServiceFacadeWebTier and OfficePersistence to be injected
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+
+        this.holidayServiceFacade.createHoliday(holidayDetails, officeIds);
 
         if (null != request.getParameter(Constants.CURRENTFLOWKEY)) {
             request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
@@ -204,6 +205,11 @@ public class HolidayAction extends BaseAction {
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
 
         return mapping.findForward(ActionForwards.update_success.toString());
+    }
+
+    private HolidayDetails assembleHolidayDetails(HolidayActionForm holidayActionForm,
+            RepaymentRuleTypes repaymentRuleType) {
+        return new HolidayDetails(holidayActionForm.getHolidayName(), holidayActionForm.getFromDate(), holidayActionForm.getThruDate(), repaymentRuleType);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

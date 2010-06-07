@@ -48,7 +48,7 @@ import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
+import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -57,7 +57,6 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ServiceException;
@@ -90,6 +89,9 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private HolidayServiceFacade holidayServiceFacade;
 
     private FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
     private List<WeekDay> savedWorkingDays = fiscalCalendarRules.getWorkingDays();
@@ -749,7 +751,8 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         holidayDetails.disableValidation(true);
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short)1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds );
+        // FIXME - keithw - Do not couple tests directly to production code for data insertion. use creation pattern
+        this.holidayServiceFacade.createHoliday(holidayDetails, officeIds );
     }
 
     private List<AccountActionDateEntity> getActionDatesSortedByDate(CustomerAccountBO customerAccount) {

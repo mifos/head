@@ -29,16 +29,13 @@ import junit.framework.Assert;
 
 import org.hibernate.Transaction;
 import org.joda.time.DateMidnight;
-import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
@@ -71,7 +68,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
     private void createHolidayForHeadOffice(HolidayDetails holidayDetails) throws ServiceException {
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short) 1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
     }
 
     /**
@@ -86,7 +83,7 @@ public class HolidayBOIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    public void testHolidayRepaymentRuleTypeEntity() throws ServiceException, PersistenceException {
+    public void testHolidayRepaymentRuleTypeEntity() throws Exception {
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.DAY_OF_MONTH, 1);
         Date holidayStartDate = startDate.getTime();

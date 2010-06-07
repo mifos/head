@@ -31,8 +31,8 @@ import org.hibernate.Transaction;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -66,7 +66,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
     private void createHolidayForHeadOffice(HolidayDetails holidayDetails) throws ServiceException {
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short) 1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
     }
 
     public void testGetHolidays() throws Exception {

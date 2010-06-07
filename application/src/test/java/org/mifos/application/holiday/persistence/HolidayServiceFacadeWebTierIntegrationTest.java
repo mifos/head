@@ -28,6 +28,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -54,8 +55,9 @@ public class HolidayServiceFacadeWebTierIntegrationTest extends MifosIntegration
         List<Short> officeIds = new ArrayList<Short>();
         Short officeId = new Short((short) 1);
         officeIds.add(officeId);
-        holidayServiceFacade = new HolidayServiceFacadeWebTier(new OfficePersistence());
-        holidayServiceFacade.createHoliday(holidayDetails, officeIds);
+
+        this.holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
+        this.holidayServiceFacade.createHoliday(holidayDetails, officeIds);
         StaticHibernateUtil.getSessionTL().flush();
     }
 

@@ -34,6 +34,8 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
+import org.mifos.application.holiday.persistence.HolidayServiceFacade;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -73,6 +75,7 @@ public class DependencyInjectedServiceLocator {
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
+    private static HolidayServiceFacade holidayServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -186,6 +189,13 @@ public class DependencyInjectedServiceLocator {
             meetingServiceFacade = new MeetingServiceFacadeWebTier(customerService);
         }
         return meetingServiceFacade;
+    }
+
+    public static HolidayServiceFacade locateHolidayServiceFacade() {
+        if (holidayServiceFacade == null) {
+            holidayServiceFacade = new HolidayServiceFacadeWebTier(officeDao, holidayDao);
+        }
+        return holidayServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

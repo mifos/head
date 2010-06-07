@@ -37,10 +37,10 @@ import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -89,7 +89,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         holidayDetails.disableValidation(true);
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short) 1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
 
         holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
         assertFalse(holidays.isEmpty());
@@ -173,7 +173,6 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
                 .getThruDate().toDate(), holiday.getRepaymentRuleType());
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short) 1);
-        new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
+        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
     }
-
 }
