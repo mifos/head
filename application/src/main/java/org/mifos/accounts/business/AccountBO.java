@@ -1638,59 +1638,6 @@ public class AccountBO extends AbstractBusinessObject {
         return buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
     }
 
-    /**
-     * Shift schedule dates to account for new holidays, starting with the first future or present installment that
-     * falls in one of the unapplied holidays.
-     *
-     * <p>
-     * If no dates fall in any of the unapplied holidays, then do nothing.
-     * </p>
-     *
-     * @param unappliedHolidays
-     *            the holidays that have not yet been applied to this account's schedule
-     */
-    public void rescheduleDatesForNewHolidays(final ScheduledDateGeneration scheduledDateGeneration,
-            List<Holiday> unappliedHolidays) {
-
-        int firstInstallmentInUnappliedHolidays = getFirstFutureInstallmentInOneOfTheHolidays(unappliedHolidays);
-        if (firstInstallmentInUnappliedHolidays > 0) {
-            List<DateTime> installmentDates = getDatesToReplaceScheduledDatesStartingWith(scheduledDateGeneration,
-                    firstInstallmentInUnappliedHolidays);
-            replaceActionDates(installmentDates, firstInstallmentInUnappliedHolidays);
-        }
-    }
-
-    private int getFirstFutureInstallmentInOneOfTheHolidays(List<Holiday> holidays) {
-
-        for (AccountActionDateEntity accountAction : this.getAccountActionDatesSortedByInstallmentId()) {
-            for (Holiday holiday : holidays) {
-                if (holiday.encloses(accountAction.getActionDate())) {
-                    return accountAction.getInstallmentId();
-                }
-            }
-        }
-        return 0;
-    }
-
-    private List<DateTime> getDatesToReplaceScheduledDatesStartingWith(final ScheduledDateGeneration dateGeneration,
-            int startingInstallmentId) {
-
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(getMeetingForAccount());
-        int numberOfDatesToGenerate = this.getAccountActionDates().size() - startingInstallmentId + 1;
-        DateTime dayBeforeFirstDateToGenerate = new DateTime(this.getAccountActionDate((short) startingInstallmentId)
-                .getActionDate()).minusDays(1);
-        return dateGeneration.generateScheduledDates(numberOfDatesToGenerate, dayBeforeFirstDateToGenerate,
-                scheduledEvent);
-    }
-
-    private void replaceActionDates(List<DateTime> installmentDates, int firstInstallmentId) {
-
-        for (int installmentId = firstInstallmentId; installmentId <= this.getAccountActionDates().size(); installmentId++) {
-            this.getAccountActionDate((short) installmentId).setActionDate(
-                    new java.sql.Date(installmentDates.get(installmentId - firstInstallmentId).toDate().getTime()));
-        }
-    }
-
     private void removeInstallmentsNeedNotPay(final Short installmentSkipToStartRepayment,
             final List<InstallmentDate> installmentDates) {
         int removeCounter = 0;
@@ -1835,4 +1782,5 @@ public class AccountBO extends AbstractBusinessObject {
             installmentId++;
         }
     }
+
 }

@@ -24,10 +24,15 @@ public class ProcessRulesDto {
 
     private final boolean clientPendingApprovalStateEnabled;
     private final boolean governmentIdValidationFailing;
+    private final boolean duplicateNameOnClosedClient;
+    private final boolean duplicateNameOnBlackListedClient;
 
-    public ProcessRulesDto(boolean clientPendingApprovalStateEnabled, boolean governmentIdValidationFailing) {
+    public ProcessRulesDto(boolean clientPendingApprovalStateEnabled, boolean governmentIdValidationFailing,
+            boolean duplicateNameOnClosedClient, boolean duplicateNameOnBlackListedClient) {
         this.clientPendingApprovalStateEnabled = clientPendingApprovalStateEnabled;
         this.governmentIdValidationFailing = governmentIdValidationFailing;
+        this.duplicateNameOnClosedClient = duplicateNameOnClosedClient;
+        this.duplicateNameOnBlackListedClient = duplicateNameOnBlackListedClient;
     }
 
     public boolean isClientPendingApprovalStateEnabled() {
@@ -36,5 +41,13 @@ public class ProcessRulesDto {
 
     public boolean isGovernmentIdValidationFailing() {
         return this.governmentIdValidationFailing;
+    }
+
+    public boolean isDuplicateNameOnClosedClient() {
+        return duplicateNameOnClosedClient;
+    }
+
+    public boolean isDuplicateNameOnBlackListedClient() {
+        return duplicateNameOnBlackListedClient;
     }
 }

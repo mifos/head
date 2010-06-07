@@ -24,15 +24,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -46,6 +53,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     }
 
     private HolidayDaoHibernate holidayDao;
+    private OfficeDaoHibernate officeDao;
 
     private GenericDao genericDao;
 
@@ -54,6 +62,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         super.setUp();
         genericDao = new GenericDaoHibernate();
         holidayDao = new HolidayDaoHibernate(genericDao);
+        officeDao = new OfficeDaoHibernate(genericDao);
 
     }
 
@@ -65,29 +74,32 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     private void rollback() {
         Transaction transaction = StaticHibernateUtil.getSessionTL().getTransaction();
-        if(transaction.isActive()){
+        if (transaction.isActive()) {
             transaction.rollback();
         }
     }
 
     public void testShouldSaveHoliday() throws Exception {
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext((short)1);
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
         assertTrue(holidays.isEmpty());
 
-        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday Dao", new Date(),null,RepaymentRuleTypes.fromInt(1));
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday Dao", new Date(), null, RepaymentRuleTypes
+                .fromInt(1));
         holidayDetails.disableValidation(true);
         List<Short> officeIds = new LinkedList<Short>();
-        officeIds.add((short)1);
+        officeIds.add((short) 1);
         new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
 
-        holidays = holidayDao.findAllHolidaysThisYearAndNext((short)1);
+        holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
         assertFalse(holidays.isEmpty());
     }
 
     public void testShouldFindAllHolidaysWithinThisAndNextYear() throws ServiceException {
-        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
-        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
+        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
+                .toDateTime();
+        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2)
+                .toDateMidnight().toDateTime();
         DateTime secondOfJanTwoYears = secondOfJanNextYear.plusYears(1);
 
         Holiday holidayThisYear = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
@@ -104,10 +116,13 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     }
 
     public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws ServiceException {
-        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
+                .toDateTime();
         DateTime lastDayOfYear = secondlastDayOfYear.plusDays(1);
-        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
-        DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(3).toDateMidnight().toDateTime();
+        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2)
+                .toDateMidnight().toDateTime();
+        DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(3).toDateMidnight()
+                .toDateTime();
 
         Holiday holiday1 = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
         Holiday holiday2 = new HolidayBuilder().from(secondOfJanNextYear).to(secondOfJanNextYear).build();
@@ -128,10 +143,37 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertTrue(holidays.get(3).encloses(thirdOfJanNextYear.toDate()));
     }
 
+    public void testShouldfindCurrentAndFutureOfficeHolidaysEarliestFirst() throws OfficeException {
+
+        DateTime yesterday = new DateTime().minusDays(1);
+        Set<HolidayBO> holidays;
+        OfficeBO headOffice = officeDao.findOfficeById((short) 1);
+
+        OfficeBO myOffice = new OfficeBuilder().withParentOffice(headOffice).build();
+        holidays = new HashSet<HolidayBO>();
+        holidays.add((HolidayBO) new HolidayBuilder().withName("Second").from(yesterday.plusWeeks(3)).to(yesterday.plusWeeks(4)).build());
+        holidays.add((HolidayBO) new HolidayBuilder().withName("First").from(yesterday).to(yesterday.plusWeeks(2)).build());
+        myOffice.setHolidays(holidays);
+        myOffice.save();
+
+        OfficeBO anotherOffice = new OfficeBuilder().withParentOffice(headOffice).build();
+        holidays = new HashSet<HolidayBO>();
+        holidays.add((HolidayBO) new HolidayBuilder().from(yesterday.minusWeeks(3)).to(yesterday.plusWeeks(4)).build());
+        anotherOffice.save();
+
+        List<Holiday> myHolidays = holidayDao.findCurrentAndFutureOfficeHolidaysEarliestFirst(myOffice.getOfficeId());
+
+        assertThat(myHolidays.size(), is(2));
+        assertThat(myHolidays.get(0).getName(), is("First"));
+
+    }
+
     private void insert(final Holiday holiday) throws ServiceException {
-        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holiday.getFromDate().toDate(), holiday.getThruDate().toDate(), holiday.getRepaymentRuleType());
+        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holiday.getFromDate().toDate(), holiday
+                .getThruDate().toDate(), holiday.getRepaymentRuleType());
         List<Short> officeIds = new LinkedList<Short>();
-        officeIds.add((short)1);
+        officeIds.add((short) 1);
         new HolidayServiceFacadeWebTier(new OfficePersistence()).createHoliday(holidayDetails, officeIds);
     }
+
 }

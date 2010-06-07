@@ -259,26 +259,27 @@ public interface NamedQueryConstants {
     public String FORMEDBY_LOANOFFICERS_LIST = "personnel.formedByLoanOfficers";
     public String GETALLPERSONNELNOTES = "personnel.getAllPersonnelNotes";
     // M2 office
-    public String GETMAXOFFICEID = "office.getMaxId";
-    public String GETCHILDCOUNT = "office.getChlidCount";
-    public String CHECKOFFICENAMEUNIQUENESS = "office.getOfficeWithName";
-    public String CHECKOFFICESHORTNAMEUNIQUENESS = "office.getOfficeWithShortName";
-    public String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB = "Customer.getClosedClientBasedOnNameAndDateOfBirth";
-    public String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER = "product.getActiveOfferingsForCustomer";
-    public String GET_CLOSED_CLIENT_BASEDON_GOVTID = "Customer.getClosedClientBasedOnGovtId";
-    public String GETOFFICEACTIVEPERSONNEL = "getCountActivePersonnel";
-    public String GETCOUNTOFACTIVECHILDERN = "getCountOfActiveChildren";
-    public String GETACTIVEPARENTS = "masterdata.activeParents";
-    public String GETACTIVELEVELS = "masterdata.activeLevels";
-    public String GETOFFICESTATUS = "masterdata.officestatus";
-    public String GETCHILDERN = "getChlidren";
-    public String GET_CUSTOMER_PICTURE = "Customer.getPicture";
-    public String GETOFFICEINACTIVE = "getCountInactiveOffice";
-    public String GET_PRD_TYPES = "productdefenition.getProductTypes";
-    public String GET_PRODUCTCATEGORY = "productdefenition.getProductCategory";
-    public String GET_PRDCATEGORYSTATUS = "productdefenition.prdcategorystatus";
-    public String GET_OFFICES_TILL_BRANCH = "office.getOfficesTillBranchOfficeActive";
-    public String GET_BRANCH_PARENTS = "office.getBranchParents";
+    public final String GETMAXOFFICEID = "office.getMaxId";
+    public final String GETCHILDCOUNT = "office.getChlidCount";
+    public final String CHECKOFFICENAMEUNIQUENESS = "office.getOfficeWithName";
+    public final String CHECKOFFICESHORTNAMEUNIQUENESS = "office.getOfficeWithShortName";
+    public final String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB = "Customer.getClosedClientBasedOnNameAndDateOfBirth";
+    public final String GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB = "Customer.getBlackListedClientBasedOnNameAndDateOfBirth";
+    public final String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER = "product.getActiveOfferingsForCustomer";
+    public final String GET_CLOSED_CLIENT_BASEDON_GOVTID = "Customer.getClosedClientBasedOnGovtId";
+    public final String GETOFFICEACTIVEPERSONNEL = "getCountActivePersonnel";
+    public final String GETCOUNTOFACTIVECHILDERN = "getCountOfActiveChildren";
+    public final String GETACTIVEPARENTS = "masterdata.activeParents";
+    public final String GETACTIVELEVELS = "masterdata.activeLevels";
+    public final String GETOFFICESTATUS = "masterdata.officestatus";
+    public final String GETCHILDERN = "getChlidren";
+    public final String GET_CUSTOMER_PICTURE = "Customer.getPicture";
+    public final String GETOFFICEINACTIVE = "getCountInactiveOffice";
+    public final String GET_PRD_TYPES = "productdefenition.getProductTypes";
+    public final String GET_PRODUCTCATEGORY = "productdefenition.getProductCategory";
+    public final String GET_PRDCATEGORYSTATUS = "productdefenition.prdcategorystatus";
+    public final String GET_OFFICES_TILL_BRANCH = "office.getOfficesTillBranchOfficeActive";
+    public final String GET_BRANCH_PARENTS = "office.getBranchParents";
 
     // M2 center
     public String GET_LO_FOR_CUSTOMER = "Customer.getLOForCustomer";
