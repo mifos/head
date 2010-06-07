@@ -188,23 +188,6 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
-    public void testFailure_transferToParent() throws Exception {
-
-        createObjectsForTransferringClientInGroup();
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-        setRequestPathInfo("/clientTransferAction.do");
-        addRequestParameter("method", "updateParent");
-        addRequestParameter("parentGroupId", client.getParentCustomer().getCustomerId().toString());
-        addRequestParameter("parentGroupName", client.getParentCustomer().getDisplayName());
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyForward(ActionForwards.updateParent_failure.toString());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
     public void testSuccessful_transferToParent() throws Exception {
         createObjectsForTransferringClientInGroup();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -225,40 +208,6 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
         CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
         Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-    }
-
-    public void testSuccessful_transferToParent_AuditLog() throws Exception {
-        createObjectsForTransferringClientInGroup();
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
-        setRequestPathInfo("/clientTransferAction.do");
-        addRequestParameter("method", "updateParent");
-        addRequestParameter("parentGroupId", group1.getCustomerId().toString());
-        addRequestParameter("parentGroupName", group1.getDisplayName());
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        verifyForward(ActionForwards.update_success.toString());
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-        Assert.assertEquals(center1.getSearchId() + ".1.1", client.getSearchId());
-        CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
-        Assert.assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
-
-        List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
-        Assert.assertEquals(1, auditLogList.size());
-        Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
-        Assert.assertEquals(client.getCustomerId(), auditLogList.get(0).getEntityId());
-        Assert.assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
-        for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
-            if (auditLogRecord.getFieldName().equalsIgnoreCase("Group Name")) {
-                matchValues(auditLogRecord, "Group", "Group2");
-            }
-        }
-        TestObjectFactory.cleanUpChangeLog();
     }
 
     public void testSuccessful_transferToBranch_AuditLog() throws Exception {

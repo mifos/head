@@ -31,7 +31,6 @@ import org.mifos.framework.business.AbstractBusinessObject;
 
 public class BranchCashConfirmationReportBO extends AbstractBusinessObject {
 
-    @SuppressWarnings("unused")
     private Integer branchCashConfirmationReportId;
     private Set<BranchCashConfirmationCenterRecoveryBO> centerRecoveries;
     private Set<BranchCashConfirmationInfoBO> centerIssues;

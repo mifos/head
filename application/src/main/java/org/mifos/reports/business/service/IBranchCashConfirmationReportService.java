@@ -20,30 +20,16 @@
 
 package org.mifos.reports.business.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
-import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
 public interface IBranchCashConfirmationReportService {
 
     public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(Integer branchId, String runDate)
-            throws ServiceException;
-
-    public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(Date actionDate,
-            AccountTypes accountType, List<Short> prdOfferingsForRecoveries, List<Short> prdOfferingsForIssues,
-            List<Short> prdOfferingsForDisbursements, MifosCurrency currency, Date runDate) throws ServiceException;
-
-    public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(Date runDate)
-            throws ServiceException;
-
-    public void deleteBranchCashConfirmationReports(List<BranchCashConfirmationReportBO> reports)
             throws ServiceException;
 
     public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId, String runDate) throws ServiceException;

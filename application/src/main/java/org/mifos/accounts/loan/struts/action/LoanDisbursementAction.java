@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.struts.action;
 
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,22 +33,32 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.api.AccountPaymentParametersDto;
+import org.mifos.accounts.api.AccountReferenceDto;
+import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
+import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -68,8 +79,15 @@ public class LoanDisbursementAction extends BaseAction {
 
     private LoanBusinessService loanBusinessService = null;
     private final ProductMixValidator productMixValidator;
+    private AccountService accountService = null;
+
+    public AccountService getAccountService() {
+        return accountService;
+    }
 
     LoanDisbursementAction(final LoanBusinessService service, final ProductMixValidator validator) {
+        accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
+                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
         this.loanBusinessService = service;
         this.productMixValidator = validator;
     }
@@ -180,7 +198,6 @@ public class LoanDisbursementAction extends BaseAction {
         Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc.getPreferredLocale());
         trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
-        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc.getId());
 
         if (!loan.isTrxnDateValid(trxnDate)) {
             throw new AccountException("errors.invalidTxndate");
@@ -190,8 +207,14 @@ public class LoanDisbursementAction extends BaseAction {
         Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH.getValue() : Short
                 .valueOf(modeOfPayment);
         try {
-            loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short.valueOf(actionForm.getPaymentTypeId()),
-                    personnel, receiptDate, modeOfPaymentId);
+            final List<AccountPaymentParametersDto> payment = new ArrayList<AccountPaymentParametersDto>();
+            final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanPaymentTypeDtoForId(Short
+                    .valueOf(modeOfPaymentId));
+            final String comment = "";
+            payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(loan
+                    .getAccountId()), loan.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
+                    new LocalDate(receiptDate), actionForm.getReceiptId()));
+            getAccountService().disburseLoans(payment);
 
         } catch (Exception e) {
             if (e.getMessage().startsWith("errors.")) {
@@ -201,6 +224,16 @@ public class LoanDisbursementAction extends BaseAction {
         }
 
         return mapping.findForward(Constants.UPDATE_SUCCESS);
+    }
+
+    // FIXME: share code with AccountApplyPaymentAction getLoanPaymentTypeDtoForId()
+    private org.mifos.accounts.api.PaymentTypeDto getLoanPaymentTypeDtoForId(short id) throws Exception {
+        for (org.mifos.accounts.api.PaymentTypeDto paymentTypeDto : getAccountService().getLoanPaymentTypes()) {
+            if (paymentTypeDto.getValue() == id) {
+                return paymentTypeDto;
+            }
+        }
+        throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + id);
     }
 
     private LoanBusinessService getLoanBusinessService() throws ServiceException {

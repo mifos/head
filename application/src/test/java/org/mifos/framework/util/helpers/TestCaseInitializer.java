@@ -20,16 +20,13 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.security.authorization.AuthorizationManager;

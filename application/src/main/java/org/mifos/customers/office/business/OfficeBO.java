@@ -156,6 +156,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         this.level = new OfficeLevelEntity(level);
         this.status = new OfficeStatusEntity(status);
         this.parentOffice = parentOffice;
+        if (parentOffice != null && parentOffice.getHolidays() != null) {
+            this.setHolidays(new HashSet<HolidayBO>(parentOffice.getHolidays()));
+        }
 
         this.officeName = officeName;
         this.shortName = shortName;

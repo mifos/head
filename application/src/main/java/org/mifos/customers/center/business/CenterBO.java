@@ -42,23 +42,18 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.UserContext;
 
 public class CenterBO extends CustomerBO {
 
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
-
     public static CenterBO createNew(UserContext userContext, String centerName, DateTime mfiJoiningDate,
             MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO centerOffice, int numberOfCustomersInOfficeAlready,
-            List<CustomerCustomFieldEntity> customerCustomFields, Address centerAddress, String externalId) {
+            List<CustomerCustomFieldEntity> customerCustomFields, Address centerAddress, String externalId, DateTime activationDate) {
 
         PersonnelBO formedBy = null;
         CenterBO center = new CenterBO(userContext, centerName, mfiJoiningDate, meeting, loanOfficer, centerOffice,
-                numberOfCustomersInOfficeAlready, CustomerStatus.CENTER_ACTIVE, formedBy);
+                numberOfCustomersInOfficeAlready, CustomerStatus.CENTER_ACTIVE, formedBy, activationDate);
 
         center.setExternalId(externalId);
         center.updateAddress(centerAddress);
@@ -83,16 +78,16 @@ public class CenterBO extends CustomerBO {
      */
     public CenterBO(UserContext userContext, String centerName, DateTime mfiJoiningDate, MeetingBO meeting,
             PersonnelBO loanOfficer, OfficeBO office, int numberOfCustomersInOfficeAlready,
-            CustomerStatus customerStatus, PersonnelBO formedBy) {
+            CustomerStatus customerStatus, PersonnelBO formedBy, DateTime activationDate) {
         super(userContext, centerName, CustomerLevel.CENTER, customerStatus, mfiJoiningDate, office, meeting, loanOfficer, formedBy);
 
         int searchIdCustomerValue = numberOfCustomersInOfficeAlready + 1;
         this.setSearchId("1." + searchIdCustomerValue);
-        this.setCustomerActivationDate(this.getCreatedDate());
+        this.setCustomerActivationDate(activationDate.toDate());
     }
 
     /**
-     * @deprecated - use static factory {@link CenterBO#createNew(UserContext, String, DateTime, MeetingBO, PersonnelBO, OfficeBO, int, List, Address, String)}.
+     * @deprecated - use static factory
      */
     @Deprecated
     public CenterBO(final UserContext userContext, final String displayName, final Address address, final List<CustomFieldDto> customFields,
