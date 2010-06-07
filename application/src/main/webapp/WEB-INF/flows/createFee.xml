@@ -4,10 +4,7 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
 	<!--   <secured attributes="ROLE_USER" /> -->
-
-
-	<!--  <input name="hotelId" required="true" />  
-	-->
+	<!--  <input name="hotelId" required="true" />  -->
 	
 	<var name="feeDefintion" class="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
 	<on-start>
