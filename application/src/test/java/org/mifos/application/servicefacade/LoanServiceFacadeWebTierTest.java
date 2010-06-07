@@ -41,6 +41,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -61,6 +62,9 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private CustomerDao customerDao;
 
+    @Mock
+    private PersonnelDao personnelDao;
+
     // test data
     @Mock
     private CustomerBO customer;
@@ -75,7 +79,7 @@ public class LoanServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao);
     }
 
     @Test

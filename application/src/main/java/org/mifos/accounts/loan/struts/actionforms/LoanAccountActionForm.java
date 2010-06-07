@@ -559,19 +559,8 @@ public class LoanAccountActionForm extends BaseActionForm {
         return false;
     }
 
-    public void initializeTransactionFields(UserContext userContext, List<RepaymentScheduleInstallment> installments) {
-        this.paymentDataBeans = new ArrayList<PaymentDataHtmlBean>(installments.size());
-        PersonnelBO personnel;
-        try {
-            personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
-        } catch (PersistenceException e) {
-            throw new IllegalArgumentException("bad UserContext id");
-        }
-
-        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
-            this.paymentDataBeans
-                    .add(new PaymentDataHtmlBean(userContext.getPreferredLocale(), personnel, repaymentScheduleInstallment));
-        }
+    public void initializeTransactionFields(List<PaymentDataHtmlBean> paymentDataBeans) {
+        this.paymentDataBeans = paymentDataBeans;
     }
 
     public List<FeeDto> getFeesToApply() {

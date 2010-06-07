@@ -19,17 +19,28 @@
  */
 package org.mifos.application.servicefacade;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -38,6 +49,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
@@ -49,19 +61,25 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -71,10 +89,12 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     private final LoanProductDao loanProductDao;
     private final CustomerDao customerDao;
+    private final PersonnelDao personnelDao;
 
-    public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao) {
+    public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao, PersonnelDao personnelDao) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
+        this.personnelDao = personnelDao;
     }
 
     @Override
@@ -214,5 +234,126 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
         return filteredFees;
+    }
+
+    @Override
+    public LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
+
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        LocalizationConverter localizationConverter = new LocalizationConverter();
+        CustomerBO customer = customerDao.findCustomerById(customerId);
+
+        new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
+
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+
+        MeetingBO newMeetingForRepaymentDay = null;
+        if (isRepaymentIndependentOfMeetingEnabled) {
+            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
+        }
+
+        Short productId = loanActionForm.getPrdOfferingIdValue();
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+
+        Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
+        Short numOfInstallments = loanActionForm.getNoOfInstallmentsValue();
+        boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDedAtDisbValue();
+        Double interest = loanActionForm.getInterestDoubleValue();
+        Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
+        List<FeeDto> fees = loanActionForm.getFeesToApply();
+        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+        Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
+        Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
+        Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
+        Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
+        String externalId = loanActionForm.getExternalId();
+        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
+        String collateralNote = loanActionForm.getCollateralNote();
+        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
+        List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
+        List<String> clientNames = loanActionForm.getClients();
+
+        LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer,
+                AccountState.LOAN_PARTIAL_APPLICATION, loanAmount, numOfInstallments, disbursementDate.toDate(),
+                isInterestDeductedAtDisbursement, interest, gracePeriod, fund, fees, customFields,
+                maxLoanAmount, minLoanAmount, maxNumOfInstallments, minNumOfShortInstallments,
+                isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
+
+        loan.setExternalId(externalId);
+        loan.setBusinessActivityId(selectedLoanPurpose);
+        loan.setCollateralNote(collateralNote);
+        loan.setCollateralTypeId(selectedCollateralType);
+
+        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto();
+
+        if (isRepaymentIndependentOfMeetingEnabled) {
+            Date firstRepaymentDate = installments.get(0).getDueDate();
+
+            Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+            Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+
+            if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate), DateUtils
+                    .getDateWithoutTimeStamp(disbursementDate.toDate())) < minDaysInterval) {
+                throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
+            } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
+                    DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
+                throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
+            }
+        }
+
+        final boolean isGroup = customer.isGroup();
+        final boolean isGlimApplicable = isGroup && configurationPersistence.isGlimEnabled();
+        double glimLoanAmount = Double.valueOf("0");
+        for (LoanAccountDetailsDto loanAccount : loanAccountDetails) {
+            if (clientNames.contains(loanAccount.getClientId())) {
+                if (loanAccount.getLoanAmount() != null) {
+                    glimLoanAmount = glimLoanAmount + localizationConverter.getDoubleValueForCurrentLocale(loanAccount.getLoanAmount());
+                }
+            }
+        }
+
+        // FIXME - keithw - redo loan functionality only
+//        List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>(installments.size());
+//        PersonnelBO personnel = this.personnelDao.findPersonnelById(userContext.getId());
+//        if (personnel == null) {
+//            throw new IllegalArgumentException("bad UserContext id");
+//        }
+//
+//        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
+//            paymentDataBeans.add(new PaymentDataHtmlBean(userContext.getPreferredLocale(), personnel, repaymentScheduleInstallment));
+//        }
+
+        boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+
+        return new LoanCreationLoanScheduleDetailsDto(isGroup, isGlimApplicable, glimLoanAmount, isLoanPendingApprovalDefined, installments);
+    }
+
+    private MeetingBO createNewMeetingForRepaymentDay(DateTime disbursementDate,
+            final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) throws NumberFormatException, MeetingException {
+
+        MeetingBO newMeetingForRepaymentDay = null;
+        Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
+
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+
+        final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDate();
+
+        if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+            newMeetingForRepaymentDay = new MeetingBO(WeekDay.getWeekDay(Short.valueOf(loanAccountActionForm
+                    .getWeekDay())), Short.valueOf(loanAccountActionForm.getRecurWeek()), repaymentStartDate,
+                    MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+        } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
+            if (loanAccountActionForm.getMonthType().equals("1")) {
+                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthDay()), Short
+                        .valueOf(loanAccountActionForm.getDayRecurMonth()), repaymentStartDate,
+                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+            } else {
+                newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthWeek()), Short
+                        .valueOf(loanAccountActionForm.getRecurMonth()), repaymentStartDate,
+                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+                        Short.valueOf(loanAccountActionForm.getMonthRank()));
+            }
+        }
+        return newMeetingForRepaymentDay;
     }
 }

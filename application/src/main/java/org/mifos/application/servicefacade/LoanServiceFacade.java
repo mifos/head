@@ -22,7 +22,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -37,4 +40,6 @@ public interface LoanServiceFacade {
     LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId) throws ApplicationException;
 
     LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId, Short productId) throws ApplicationException;
+
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 }
