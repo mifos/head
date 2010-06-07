@@ -43,6 +43,12 @@ public class FeeController {
         return "viewFees";
     }
 
+    /**
+     * to be used from a webflow context
+     * @param requestForm
+     * @param requestContext
+     * @return
+     */
     public String createFee(FeeActionForm requestForm, RequestContext requestContext) {
         UserContext userCtx = (UserContext) requestContext.getExternalContext().getSessionMap().get(Constants.USER_CONTEXT_KEY);
         FeeCreateRequest feeCreateRequest;
