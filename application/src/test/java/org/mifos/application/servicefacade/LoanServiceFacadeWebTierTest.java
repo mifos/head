@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -94,11 +95,10 @@ public class LoanServiceFacadeWebTierTest {
         when(activeLoanProduct.getLoanOfferingMeetingValue()).thenReturn(meeting);
 
         // exercise test
-        List<LoanOfferingBO> activeLoanProductsForCustomer = loanServiceFacade
-                .loadActiveProductsApplicableForCustomer(customer);
+        List<PrdOfferingDto> activeLoanProductsForCustomer = loanServiceFacade.retrieveActiveLoanProductsApplicableForCustomer(customer);
 
         // verification
-        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct));
+        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct.toDto()));
     }
 
     @Test

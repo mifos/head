@@ -17,22 +17,24 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
-/**
- * service facade for {@link LoanBO} functionality.
- */
 public interface LoanServiceFacade {
 
-    List<LoanOfferingBO> loadActiveProductsApplicableForCustomer(CustomerBO customer);
+    List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(CustomerBO customer);
 
     LoanCreationGlimDto retrieveGlimSpecificDataForGroup(CustomerBO customer);
 
+    LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId) throws ApplicationException;
+
+    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId, Short productId) throws ApplicationException;
 }

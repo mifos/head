@@ -121,6 +121,7 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -412,7 +413,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering, request);
         SessionUtils.setAttribute(LoanConstants.LOANFUNDS, new ArrayList<FundBO>(), request);
-        SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group, request);
+        SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group.toCustomerDetailDto(), request);
         SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES, new ArrayList<MasterDataEntity>(), request);
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         setRequestPathInfo("/loanAccountAction.do");
@@ -751,8 +752,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("customerId", group.getCustomerId().toString());
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
-        Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
-                .getDisplayName());
+        Assert.assertEquals("Group", (getLoanAccountOwnerFromSession()).getDisplayName());
     }
 
     public void testGetPrdOfferingsApplicableForCustomer() throws Exception {
@@ -765,10 +765,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
-        Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
-                .getDisplayName());
-        Assert.assertEquals(2, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS,
-                request)).size());
+        Assert.assertEquals("Group", (getLoanAccountOwnerFromSession()).getDisplayName());
+        Assert.assertEquals(2, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request)).size());
 
         TestObjectFactory.removeObject(loanOffering2);
         TestObjectFactory.removeObject(loanOffering3);
@@ -789,16 +787,18 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
-        Assert.assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request))
-                .getDisplayName());
-        Assert.assertEquals(4, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS,
-                request)).size());
+        Assert.assertEquals("Group", (getLoanAccountOwnerFromSession()).getDisplayName());
+        Assert.assertEquals(4, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request)).size());
 
         TestObjectFactory.removeObject(loanOffering1);
         TestObjectFactory.removeObject(loanOffering2);
         TestObjectFactory.removeObject(loanOffering3);
         TestObjectFactory.removeObject(loanOffering4);
         TestObjectFactory.removeObject(loanOffering5);
+    }
+
+    private CustomerDetailDto getLoanAccountOwnerFromSession() throws PageExpiredException {
+        return (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
     }
 
     public void testLoadWithoutCustomerAndPrdOfferingId() throws Exception {
