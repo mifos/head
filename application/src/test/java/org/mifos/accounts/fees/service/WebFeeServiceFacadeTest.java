@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class WebFeeServiceFacadeTest {
 
     @Autowired
-    private FeeServiceFacade feeSvcFacade;
+    private FeeServiceFacade feeServiceFacade;
 
     @Test
     @Transactional

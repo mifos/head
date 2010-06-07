@@ -21,7 +21,6 @@
 package org.mifos.accounts.fees.service;
 
 import java.util.Date;
-
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +39,6 @@ import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
 import org.mifos.accounts.fees.entities.FeeLevelEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
-import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl;
 import org.mifos.accounts.fees.persistence.MasterEntityDao;
@@ -62,7 +60,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;

@@ -13,6 +13,7 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
+                <value>org.mifos.ui.localizedProperties.fees_messages</value>
             </list>
         </property>
     </bean>

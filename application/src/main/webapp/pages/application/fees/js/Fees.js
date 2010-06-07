@@ -54,17 +54,22 @@ function selectAdminBox() {
 function showFrequency() {
     var freqTypes = document.getElementsByName("feeFrequencyType");
     var recurTypes = document.getElementsByName("feeRecurrenceType");
-    if (freqTypes[0].checked == false && freqTypes[1].checked == false) {
-        freqTypes[1].checked = true;
+    var freqPeriodic = (freqTypes[0].value=="1") ? freqTypes[0] : freqTypes[1];
+    var freqOneTime = (freqTypes[0].value=="2") ? freqTypes[0] : freqTypes[1];
+    
+    
+    if (freqOneTime.checked == false && freqPeriodic.checked == false) {
+    	freqOneTime.checked = true;
     }
-    if (freqTypes[0].checked == true) {
+    
+    if (freqPeriodic.checked == true) {
         document.getElementById("scheduleDIV").style.display = "block";
         document.getElementById("timeofchargeDiv").style.display = "none";
         if (recurTypes[0].checked == false && recurTypes[1].checked == false) {
             recurTypes[0].checked = true;
         }
     } else {
-        if (freqTypes[1].checked == true) {
+        if (freqOneTime.checked == true) {
             document.getElementById("scheduleDIV").style.display = "none";
             document.getElementById("timeofchargeDiv").style.display = "block";
         }

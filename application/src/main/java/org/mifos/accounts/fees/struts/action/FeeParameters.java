@@ -92,7 +92,8 @@ public class FeeParameters implements Serializable{
         this.formulas = listToMap(formulas);
         this.frequencies = listToMap(frequencies);
         this.glCodes = glCodesToMap(glCodes);
-        this.recurrenceTypes = getFeeRecurrenceTypes();
+        //This is not provided by feeservicefacade.getFeeParameters ??
+        this.recurrenceTypes = getFeeRecurrenceTypesMap();
         this.multiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
         this.currencies = getCurrenciesMap();
 
@@ -106,11 +107,13 @@ public class FeeParameters implements Serializable{
         return currencyMap;
     }
 
-    private Map<String, String> getFeeRecurrenceTypes() {
+    private Map<String, String> getFeeRecurrenceTypesMap() {
         Map<String, String> recurrTypes = new HashMap<String, String>();
-        for (RecurrenceType type : RecurrenceType.values()) {
+        /*for (RecurrenceType type : RecurrenceType.values()) {
             recurrTypes.put(type.getValue().toString(), type.name());
-        }
+        }*/
+        recurrTypes.put(RecurrenceType.WEEKLY.toString(), RecurrenceType.WEEKLY.name());
+        recurrTypes.put(RecurrenceType.MONTHLY.toString(), RecurrenceType.MONTHLY.name());
         return recurrTypes;
     }
 

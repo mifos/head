@@ -61,6 +61,16 @@
   <body>
 [/#macro]
 
+[#macro formCheckboxB path attributes=""]
+	[@spring.bind path /]
+    [#assign id="${spring.status.expression}"]
+    [#assign isSelected = spring.status.value?? && spring.status.value?string=="true"]
+	<input type="hidden" name="_${id}" value="0"/>
+	<input type="checkbox" id="${id}" name="${id}"[#if isSelected] checked="checked"[/#if] ${attributes}/>
+[/#macro]
+
+
+
 [#macro footer]
 </body>
 </html>

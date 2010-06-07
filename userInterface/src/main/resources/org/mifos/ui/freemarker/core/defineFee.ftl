@@ -51,7 +51,7 @@
 		<span id="page.id" title="Create Fee" /> <script
 			src="pages/application/fees/js/Fees.js"></script> 
 			
-		<form name="feeactionform" method="POST">
+		<form name="feeactionform" action="createFee.ftl?execution=${flowExecutionKey}" method="POST">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -60,8 +60,7 @@
 							<td align="center" class="heading">&nbsp;</td>
 						</tr>
 					</table>
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0">
+					<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 						<tr>
 							<td class="bluetablehead">
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -119,31 +118,31 @@
 										<script src="pages/framework/js/func.js"></script>
 										<script src="pages/framework/js/func_en_GB.js"></script>
 										
-										[@spring.formInput "feeDefintiion.feeName", 
+										[@spring.formInput "feeDefintion.feeName", 
 											'onkeypress="return FnCheckNumCharsOnPress(event,this);"
 											 onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-										[@spring.showErrors "<br>"/]
+										[@spring.showErrors "<br>","fontnormalRedBold" /] 
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Fee Applies To:</td>
 									<td valign="top">
-										[@spring.formSingleSelect "feeDefintiion.categoryType", FeeParameters.categories, 'onchange="onPageLoad();"' /]
-										[@spring.showErrors "<br>"/] 
+										[@spring.formSingleSelect "feeDefintion.categoryType", FeeParameters.categories, 'onchange="onPageLoad();"' /]
+										[@spring.showErrors "<br>","fontnormalRedBold" /] 
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top">Default fees:</td>
 									<td valign="top">
-									   [@spring.formCheckbox "feeDefintiion.customerDefaultFee"/]
-									   [@spring.showErrors "<br>"/]
+									   [@mifos.formCheckboxB "feeDefintion.customerDefaultFee"/]
+									   [@spring.showErrors "<br>","fontnormalRedBold" /]
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><span class="mandatorytext"><font color="#FF0000">*</font></span>Frequency:</td>
 									<td valign="top">
-									   [@spring.formRadioButtons "feeDefintiion.feeFrequencyType", FeeParameters.frequencies, "<br/>", 'onclick="onPageLoad();"' /]
-									   [@spring.showErrors "<br>"/]  	
+									   [@spring.formRadioButtons "feeDefintion.feeFrequencyType", FeeParameters.frequencies, "<br/>", 'onclick="onPageLoad();"' /]
+									   [@spring.showErrors "<br>","fontnormalRedBold" /]  	
 									</td>
 								</tr>
 								
@@ -152,12 +151,12 @@
 								  <td valign="top">
 									<div id="timeofchargeDiv">Select time of charge for one time fees: <br>
 									    <div id="loanTimeOfChargeDiv">
-									        [@spring.formSingleSelect "feeDefintiion.loanCharge", FeeParameters.timesOfCharging,"" /]
-									        [@spring.showErrors "<br>"/]
+									        [@spring.formSingleSelect "feeDefintion.loanCharge", FeeParameters.timesOfCharging,"" /]
+									        [@spring.showErrors "<br>","fontnormalRedBold" /]
 									    </div>
 									    <div id="customerTimeOfChargeDiv">
-									       [@spring.formSingleSelect "feeDefintiion.customerCharge", FeeParameters.timesOfChargingCustomers,"" /]
-									       [@spring.showErrors "<br>"/] 
+									       [@spring.formSingleSelect "feeDefintion.customerCharge", FeeParameters.timesOfChargingCustomers,"" /]
+									       [@spring.showErrors "<br>","fontnormalRedBold" /] 
 									    </div>
 									    </div>
 									    <div id="scheduleDIV">
@@ -165,8 +164,8 @@
 										    <tr class="fontnormal">
 											  <td align="left" valign="top"
 												style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
-												[@spring.formRadioButtons "feeDefintiion.feeRecurrenceType", FeeParameters.recurrenceTypes, "&nbsp;&nbsp;&nbsp;&nbsp;", 'onclick="onPageLoad();"' /]
-												[@spring.showErrors "<br>"/]
+												[@spring.formRadioButtons "feeDefintion.feeRecurrenceType", FeeParameters.recurrenceTypes, "&nbsp;&nbsp;&nbsp;&nbsp;", 'onclick="onPageLoad();"' /]
+												[@spring.showErrors "<br>","fontnormalRedBold" /]
 											  </td>
 										    </tr>
 										    <tr class="fontnormal">
@@ -179,12 +178,12 @@
 													      <script src="pages/framework/js/func.js"></script>
 													      <script src="pages/framework/js/func_en_GB.js"></script>
 													      
-													      [@spring.formInput "feeDefintiion.weekRecurAfter", 
+													      [@spring.formInput "feeDefintion.weekRecurAfter", 
 														    'maxlength="3" size="3" value="" 
 														     onkeypress="return FnCheckNumberOnPress(event);" 
 														     onblur="FnCheckNumber(event,"","",this);"'/] 
 														  week(s)
-														  [@spring.showErrors "<br>"/]
+														  [@spring.showErrors "<br>","fontnormalRedBold" /]
 													    </td>
 													  </tr>
 											       </table>
@@ -196,12 +195,12 @@
 														<td>Recur every 
 													  		<script src="pages/framework/js/func.js"></script>
 													  		<script src="pages/framework/js/func_en_GB.js"></script>
-													   		[@spring.formInput "feeDefintiion.monthRecurAfter", 
+													   		[@spring.formInput "feeDefintion.monthRecurAfter", 
 														      'maxlength="3" size="3" value="" 
 														       onkeypress="return FnCheckNumberOnPress(event);" 
 														       onblur="FnCheckNumber(event,"","",this);"'/] 
 														     month(s)
-														[@spring.showErrors "<br>"/]
+														[@spring.showErrors "<br>","fontnormalRedBold" /]
 														</td>
 													  </tr>
 												   </table>
@@ -221,8 +220,8 @@
 									<table>
 										<tr>
 											<td>
-											   [@spring.formInput "feeDefintiion.amount"/]
-											   [@spring.showErrors "<br>"/]
+											   [@spring.formInput "feeDefintion.amount"/]
+											   [@spring.showErrors "<br>","fontnormalRedBold" /]
 											</td>
 											[#if FeeParameters.multiCurrencyEnabled]
 												<td class="fontnormal">
@@ -230,8 +229,8 @@
 												</td>
 												<td>
 													<div id="currencyDiv">
-														[@spring.formSingleSelect "feeDefintiion.currencyId", FeeParameters.currencies,"" /]
-														[@spring.showErrors "<br>"/]
+														[@spring.formSingleSelect "feeDefintion.currencyId", FeeParameters.currencies,"" /]
+														[@spring.showErrors "<br>","fontnormalRedBold" /]
 													</div>
 												</td>
 											[/#if]
@@ -260,9 +259,10 @@
 												</tr>
 												<tr class="fontnormal">
 													<td width="16%">
-													   <input type="text" name="rate" value=""> % of 
-													   [@spring.formSingleSelect "feeDefintiion.feeFormula", FeeParameters.formulas,"" /]
-													   [@spring.showErrors "<br>"/]
+													   [@spring.formInput "feeDefintion.rate"/] % of 
+													   [@spring.showErrors "<br>","fontnormalRedBold" /]
+													   [@spring.formSingleSelect "feeDefintion.feeFormula", FeeParameters.formulas,"" /]
+													   [@spring.showErrors "<br>","fontnormalRedBold" /]
 													</td>
 											        <td width="17%">&nbsp;</td>
 												</tr>
@@ -280,7 +280,7 @@
 								<tr class="fontnormal">
 									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>GL Code:</td>
 									<td valign="top">
-										[@spring.formSingleSelect "feeDefintiion.glCode", FeeParameters.glCodes,'style="width:136px;"' /] 
+										[@spring.formSingleSelect "feeDefintion.glCode", FeeParameters.glCodes,'style="width:136px;"' /] 
 									</td>
 								</tr>
 							</table>

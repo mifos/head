@@ -9,24 +9,30 @@
 	<!--  <input name="hotelId" required="true" />  
 	-->
 	
-	<var name="feeDefintiion" class="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
+	<var name="feeDefintion" class="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
 	<on-start>
 	   <evaluate expression="externalContext.sessionMap.get('UserContext').localeId" result ="flowScope.localeId" />
 	   <evaluate expression="feeServiceFacade.getFeeParameters(flowScope.localeId)" result ="flowScope.FeeParameters" />
 	</on-start>
 	
-	<view-state id="defineFee" model="feeDefintiion">
+	<view-state id="defineFee" model="feeDefintion">
 		<transition on="preview" to="previewFee" />
-		<transition on="cancel" to="cancel" bind="false" />
+		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 	
-	<view-state id="previewFee" model="feeDefintiion">
-		<transition on="proceed" to="defineFeeSuccess" />
-		<transition on="cancel" to="cancel" />
+	<view-state id="previewFee" model="feeDefintion">
+		<transition on="proceed" to="createFeeDefinition" />
+		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 	
-	<end-state id="defineFeeSuccess" />
+	<action-state id="createFeeDefinition">
+		<evaluate expression="feeController.createFee(feeDefintion, flowRequestContext)" />
+		<transition on="feeDefinitionSuccess" to="feeDefinitionSuccess" />
+		<transition on="feeDefinitionFailure" to="defineFee" />
+	</action-state>
+	
+	<end-state id="feeDefinitionSuccess" />
 
-	<end-state id="cancel" view=" view=”externalRedirect:contextRelative:/AdminAction.do"/>
+	<end-state id="cancel" view=" view=”externalRedirect:AdminAction.do" />
 
 </flow>

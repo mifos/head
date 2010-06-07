@@ -2,19 +2,26 @@ package org.mifos.accounts.fees.servicefacade;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
+import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.config.AccountingRules;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.binding.message.MessageBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
 import org.springframework.webflow.engine.Transition;
+import org.springframework.webflow.execution.RequestContext;
 
 @Controller
 public class FeeController {
@@ -29,38 +36,53 @@ public class FeeController {
         this.feeServiceFacade = feeServiceFacade;
     }
 
-    @RequestMapping("/Fees.ftl")
+    @RequestMapping("/viewFees.ftl")
     public String viewFees(ModelMap model, HttpServletRequest request) throws Exception {
-        model.addAttribute("FeeParameters", feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId()));
-        return "Fees";
+        model.addAttribute(FeeConstants.CUSTOMER_FEES, feeServiceFacade.getCustomerFees());
+        model.addAttribute(FeeConstants.PRODUCT_FEES, feeServiceFacade.getProductFees());
+        return "viewFees";
     }
 
-    //@RequestMapping(value="/defineFee.ftl", method = RequestMethod.GET)
-    public String defineFee(ModelMap model, HttpServletRequest request) throws Exception {
-        model.addAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
-        model.addAttribute("currencies", AccountingRules.getCurrencies());
-        model.addAttribute("FeeParameters", feeServiceFacade.getFeeParameters(getUserContext(request).getLocaleId()));
-        //org.springframework.webflow.mvc.servlet.FlowController
-        //org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver f;
-        //f.setExposeSpringMacroHelpers(exposeSpringMacroHelpers)
-        //Transition
-        return "defineFee";
-    }
-
-    //@RequestMapping("/previewFee.ftl")
-    public String previewFee() {
-        return "previewFee";
-    }
-
-    //@RequestMapping(value="/createFee.ftl",method = RequestMethod.POST)
-    public String createFee(@ModelAttribute("FeeDto") FeeCreateRequest request,
-            BindingResult result) {
-        return "defineFeeSuccess";
+    public String createFee(FeeActionForm requestForm, RequestContext requestContext) {
+        UserContext userCtx = (UserContext) requestContext.getExternalContext().getSessionMap().get(Constants.USER_CONTEXT_KEY);
+        FeeCreateRequest feeCreateRequest;
+        try {
+            feeCreateRequest = new FeeCreateRequest(
+                    requestForm.getCategoryTypeValue(),
+                    requestForm.getFeeFrequencyTypeValue(),
+                    requestForm.getGlCodeValue(),
+                    requestForm.getFeePaymentTypeValue(),
+                    requestForm.getFeeFormulaValue(),
+                    requestForm.getFeeName(),
+                    requestForm.isRateFee(),
+                    requestForm.isCustomerDefaultFee(),
+                    requestForm.getRateValue(),
+                    requestForm.getCurrencyId(),
+                    requestForm.getAmount(),
+                    requestForm.getFeeRecurrenceTypeValue(),
+                    requestForm.getMonthRecurAfterValue(),
+                    requestForm.getWeekRecurAfterValue());
+            FeeDto feeDto = feeServiceFacade.createFee(feeCreateRequest, userCtx);
+            requestForm.setFeeId(feeDto.getId().toString());
+        } catch (PropertyNotFoundException e) {
+            requestContext.getMessageContext().addMessage(
+                   new MessageBuilder().error().source("feeDefinition").code("fees.error.feeDefinitionFailure").
+                       defaultText("Error occurred while defining new fee. Property Not found Exception!").build());
+            return "feeDefinitionFailure";
+        } catch (ServiceException e) {
+            requestContext.getMessageContext().addMessage(
+                    new MessageBuilder().error().source("feeDefinition").code("fees.error.feeDefinitionFailure").
+                        defaultText("Error occurred while defining new fee. Service Exception key:!" + e.getKey()).build());
+             return "feeDefinitionFailure";
+        }
+        return "feeDefinitionSuccess";
     }
 
     private UserContext getUserContext(HttpServletRequest request) {
         return  (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
     }
+
+
 
 
 }

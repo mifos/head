@@ -39,8 +39,12 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.binding.validation.ValidationContext;
 
 public class FeeActionForm extends BaseActionForm {
     private String feeId;
@@ -381,6 +385,76 @@ public class FeeActionForm extends BaseActionForm {
             setRate(fee.getRate().toString());
             setFeeFormula(fee.getFeeFormula().getId().toString());
             setAmount(null);
+        }
+    }
+
+    public boolean isPeriodic() {
+        //used for preview.ftl model
+        return StringUtils.isBlank(this.feeFrequencyType) ? false : this.feeFrequencyType.equals(FeeFrequencyType.PERIODIC.getValue().toString());
+    }
+
+    public boolean isWeeklyRecurrence() {
+        //used for preview.ftl model
+        return StringUtils.isBlank(this.feeRecurrenceType) ? false : this.feeRecurrenceType.equals(RecurrenceType.WEEKLY.getValue().toString());
+    }
+
+    public boolean isMonthlyRecurrence() {
+        //used for preview.ftl model
+        return StringUtils.isBlank(this.feeRecurrenceType) ? false : this.feeRecurrenceType.equals(RecurrenceType.MONTHLY.getValue().toString());
+    }
+
+    public boolean isDailyRecurrence() {
+        //used for preview.ftl model
+        return StringUtils.isBlank(this.feeRecurrenceType) ? false : this.feeRecurrenceType.equals(RecurrenceType.DAILY.getValue().toString());
+    }
+
+    /**
+     * This method is called in the createFee webflow context,
+     * whenever the user defines fee and request for transition to next state.
+     * @param context spring webflow context.
+     *
+     */
+    public void validateDefineFee(ValidationContext context) {
+        MessageContext messages = context.getMessageContext();
+
+        if (StringUtils.isNotBlank(getCategoryType()) && isCategoryLoan()) {
+            if (StringUtils.isNotBlank(getRate()) && StringUtils.isNotBlank(getAmount())) {
+                messages.addMessage(new MessageBuilder().error().source("rate").
+                        code("fees.error.amountOrRate").defaultText("Please specify either rate or amount.").build());
+            } else if (StringUtils.isNotBlank(getRate()) && StringUtils.isNotBlank(getFeeFormula())) {
+
+
+            } else if (StringUtils.isNotBlank(getRate()) && StringUtils.isBlank(getFeeFormula())) {
+                messages.addMessage(new MessageBuilder().error().source("rate").
+                        code("fees.error.rateAndFormulaId").defaultText("Please specify rate along with formula.").build());
+            } else if (StringUtils.isNotBlank(getAmount())) {
+                DoubleConversionResult conversionResult = parseDoubleForMoney(getAmount(), null);
+                if (!conversionResult.getErrors().isEmpty()) {
+                    //FIXME: this must be coded properly. WIP for fee UI spike. Should loop through errors
+                    messages.addMessage(new MessageBuilder().error().source("amount").
+                            code("fees.error.invalidAmount").defaultText("Please specify a valid amount.").build());
+                }
+            } else {
+                messages.addMessage(new MessageBuilder().error().source("rate").
+                        code("fees.error.amountOrRate").defaultText("Please specify either rate or amount.").build());
+            }
+        } else {
+            if (StringUtils.isBlank(getAmount())) {
+                // neither rate nor amount was specified
+                messages.addMessage(new MessageBuilder().error().source("amount").
+                        code("fees.error.amount").defaultText("Amount").build());
+            } else {
+                DoubleConversionResult conversionResult = parseDoubleForMoney(getAmount(), null);
+                if (!conversionResult.getErrors().isEmpty()) {
+                    //FIXME: this must be coded properly. WIP for fee UI spike. Should loop through errors
+                    messages.addMessage(new MessageBuilder().error().source("amount").
+                            code("fees.error.invalidAmount").defaultText("Please specify a valid amount.").build());
+                }
+            }
+        }
+        if (getGlCodeValue() == null) {
+            messages.addMessage(new MessageBuilder().error().source("glCode").
+                    code("fees.error.invalidGLCode").defaultText("Please specify GL Code.").build());
         }
     }
 

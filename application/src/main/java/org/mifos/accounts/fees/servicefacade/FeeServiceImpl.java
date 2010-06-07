@@ -59,7 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FeeServiceImpl implements FeeService {
 
     @Autowired
-    private MasterEntityDao masterDao;
+    private MasterEntityDao masterEntityDao;
 
     @Autowired
     private FeeDao feeDao;
@@ -69,7 +69,7 @@ public class FeeServiceImpl implements FeeService {
 
     public FeeServiceImpl(MasterEntityDao masterDao, FeeDao feeDao) {
         super();
-        this.masterDao = masterDao;
+        this.masterEntityDao = masterDao;
         this.feeDao = feeDao;
     }
 
@@ -167,29 +167,29 @@ public class FeeServiceImpl implements FeeService {
 
     private CategoryTypeEntity getFeeCategoryTypeEntity(UserContext userContext, FeeCategory categoryType)
             throws PersistenceException {
-        return masterDao.retrieveMasterEntity(
+        return masterEntityDao.retrieveMasterEntity(
                 CategoryTypeEntity.class, categoryType.getValue(), userContext.getLocaleId());
     }
 
     private FeeFormulaEntity getFeeFormulaEntity(UserContext userContext, FeeFormula feeFormula)
             throws PersistenceException {
-        return masterDao.retrieveMasterEntity(FeeFormulaEntity.class, feeFormula.getValue(), userContext.getLocaleId());
+        return masterEntityDao.retrieveMasterEntity(FeeFormulaEntity.class, feeFormula.getValue(), userContext.getLocaleId());
     }
 
     private FeePaymentEntity getFeePaymentEntity(UserContext userContext, FeePayment feePaymentType)
             throws PersistenceException {
-        return masterDao.retrieveMasterEntity(FeePaymentEntity.class, feePaymentType.getValue(), userContext
+        return masterEntityDao.retrieveMasterEntity(FeePaymentEntity.class, feePaymentType.getValue(), userContext
                 .getLocaleId());
     }
 
     private FeeFrequencyTypeEntity getFeeFrequencyTypeEntity(UserContext userContext, FeeFrequencyType feefrequencytype)
             throws PersistenceException {
-        return masterDao.retrieveMasterEntity(FeeFrequencyTypeEntity.class, feefrequencytype.getValue(), userContext
+        return masterEntityDao.retrieveMasterEntity(FeeFrequencyTypeEntity.class, feefrequencytype.getValue(), userContext
                 .getLocaleId());
     }
 
     private FeeStatusEntity retrieveFeeStatusEntity(final FeeStatus status, Short localeId) throws PersistenceException {
-            return masterDao.retrieveMasterEntity(FeeStatusEntity.class, status.getValue(), localeId);
+            return masterEntityDao.retrieveMasterEntity(FeeStatusEntity.class, status.getValue(), localeId);
     }
 
     private void validateAmount(final Money amount) throws FeeException {

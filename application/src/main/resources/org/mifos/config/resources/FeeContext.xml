@@ -108,7 +108,7 @@
           	<tx:method name="find*" read-only="true"/>
           	<tx:method name="list*" read-only="true"/>
           	<tx:method name="retrieve*" read-only="true"/>
-          	<tx:method name="*" rollback-for="org.springframework.dao.DataAccessException"/>
+          	<tx:method name="*" rollback-for="java.lang.Exception"/>
 			<!-- other methods use the default transaction settings (see below) -->
 			<tx:method name="*"/>
 		</tx:attributes>
