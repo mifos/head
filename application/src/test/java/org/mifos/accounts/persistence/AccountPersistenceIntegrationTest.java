@@ -20,18 +20,20 @@
 
 package org.mifos.accounts.persistence;
 
-import java.util.Date;
-import java.util.List;
-
-import junit.framework.Assert;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import junit.framework.Assert;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
@@ -48,9 +50,14 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -59,12 +66,16 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerScheduleEntity;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.office.persistence.OfficeDaoHibernate;
+import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -270,28 +281,59 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
-    public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {
 
+    public void testGetListOfAccountIdsHavingLoanSchedulesWithinAHoliday() throws Exception {
+
+        Set<HolidayBO> holidays;
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
-        DateTime thruDate = new DateMidnight().toDateTime().plusDays(23);
-        List<CustomerScheduleEntity> affectedDates = accountPersistence
-                .getCustomerSchedulesForAccountThatAreWithinDates(center.getCustomerAccount().getAccountId(), fromDate,
-                        thruDate);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(30);
 
-        Assert.assertNotNull(affectedDates);
-        Assert.assertEquals(3, affectedDates.size());
+        GenericDao genericDao = new GenericDaoHibernate();
+        OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
+        HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
+
+        OfficeBO sampleBranch = officeDao.findOfficeById(this.getBranchOffice().getOfficeId());
+        holidays = new HashSet<HolidayBO>();
+        holiday = new HolidayBuilder().withName("Welcome Holiday").from(fromDate).to(thruDate).build();
+        holidayDao.save(holiday);
+        holidays.add((HolidayBO) holiday);
+        sampleBranch.setHolidays(holidays);
+        new OfficePersistence().createOrUpdate(sampleBranch);
+        StaticHibernateUtil.commitTransaction();
+
+
+        List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(
+                holiday);
+
+        Assert.assertNotNull(AccountIds);
+        assertThat(AccountIds.size(), is(2));
     }
 
-    public void testGetListOfAccountIdsHavingCustomerSchedulesWithinDates() throws Exception {
+    public void testGetListOfAccountIdsHavingCustomerSchedulesWithinAHoliday() throws Exception {
 
+        Set<HolidayBO> holidays;
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
-        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinDates(fromDate,
-                thruDate);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(30);
 
-        Assert.assertNotNull(accountIds);
-        // should pick up center, group and client customer accounts
-        Assert.assertEquals(3, accountIds.size());
+        GenericDao genericDao = new GenericDaoHibernate();
+        OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
+        HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
+
+        OfficeBO sampleBranch = officeDao.findOfficeById(this.getBranchOffice().getOfficeId());
+        holidays = new HashSet<HolidayBO>();
+        holiday = new HolidayBuilder().withName("Welcome Holiday").from(fromDate).to(thruDate).build();
+        holidayDao.save(holiday);
+        holidays.add((HolidayBO) holiday);
+        sampleBranch.setHolidays(holidays);
+        new OfficePersistence().createOrUpdate(sampleBranch);
+        StaticHibernateUtil.commitTransaction();
+
+
+        List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(
+                holiday);
+
+        Assert.assertNotNull(AccountIds);
+        assertThat(AccountIds.size(), is(3));
     }
 
     public void testGetLoanSchedulesForAccountThatAreWithinDates() throws Exception {
@@ -305,48 +347,30 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(4, affectedDates.size());
     }
 
-    public void testGetListOfAccountIdsHavingLoanSchedulesWithinDates() throws Exception {
+    public void testGetCustomerSchedulesForAccountThatAreWithinDates() throws Exception {
 
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
-        DateTime thruDate = new DateMidnight().toDateTime().plusDays(16);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinDates(fromDate,
-                thruDate);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(23);
+        List<CustomerScheduleEntity> affectedDates = accountPersistence
+                .getCustomerSchedulesForAccountThatAreWithinDates(center.getCustomerAccount().getAccountId(), fromDate,
+                        thruDate);
 
-        Assert.assertNotNull(accountIds);
-        // should pick up group and client loan account
-        Assert.assertEquals(2, accountIds.size());
+        Assert.assertNotNull(affectedDates);
+        Assert.assertEquals(3, affectedDates.size());
     }
 
     public void testGetSavingsSchedulesForAccountThatAreWithinDates() throws Exception {
 
         savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
                 false, false);
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(37);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
+        DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
+        DateTime thruDate = new DateMidnight().toDateTime().plusDays(37);
         List<SavingsScheduleEntity> affectedDates = accountPersistence.getSavingsSchedulesForAccountThatAreWithinDates(
                 savingsBO.getAccountId(), fromDate, thruDate);
 
         Assert.assertNotNull(affectedDates);
         Assert.assertEquals(5, affectedDates.size());
 
-    }
-
-    public void testGetListOfAccountIdsHavingSavingsSchedulesWithinDates() throws Exception {
-
-        savingsBO = new TestCollectionSheetRetrieveSavingsAccountsUtils().createSavingsAccount(group, "clm", "3.0",
-                false, false);
-        LocalDate fromDateLocal = new LocalDate().plusDays(1);
-        LocalDate thruDateLocal = fromDateLocal.plusDays(16);
-        Date fromDate = DateUtils.getDateFromLocalDate(fromDateLocal);
-        Date thruDate = DateUtils.getDateFromLocalDate(thruDateLocal);
-        List<Integer> accountIds = accountPersistence.getListOfAccountIdsHavingSavingsSchedulesWithinDates(fromDate,
-                thruDate);
-
-        Assert.assertNotNull(accountIds);
-        // should pick up group savings account
-        Assert.assertEquals(1, accountIds.size());
     }
 
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnNothing() throws Exception {

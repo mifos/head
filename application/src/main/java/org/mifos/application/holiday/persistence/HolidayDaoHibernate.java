@@ -31,6 +31,7 @@ import java.util.Map;
 import org.hibernate.Query;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
@@ -48,6 +49,21 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
     public HolidayDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId) {
+
+        List<Holiday> orderedHolidays = new ArrayList<Holiday>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("CURRENT_DATE", new LocalDate().toString());
+        queryParameters.put("OFFICE_ID", officeId);
+
+        List<HolidayBO> queryResult = (List<HolidayBO>) genericDao.executeNamedQuery("holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst", queryParameters);
+        orderedHolidays.addAll(queryResult);
+
+        return orderedHolidays;
     }
 
     @Override
@@ -112,4 +128,5 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
         return new CalendarEvent(workingDays, upcomingHolidays);
     }
+
 }
