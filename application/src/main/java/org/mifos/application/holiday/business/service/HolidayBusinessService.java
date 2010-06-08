@@ -28,8 +28,6 @@ import java.util.List;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
-import org.mifos.calendar.MoratoriumSwitch;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -39,12 +37,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
 public class HolidayBusinessService implements BusinessService {
-
-    private MoratoriumSwitch moratoriumSwitch = new MoratoriumSwitch();
-
-    public void setMoratoriumSwitch (MoratoriumSwitch moratoriumSwitch) {
-        this.moratoriumSwitch = moratoriumSwitch;
-    }
 
     @Override
     public AbstractBusinessObject getBusinessObject(final UserContext userContext) {

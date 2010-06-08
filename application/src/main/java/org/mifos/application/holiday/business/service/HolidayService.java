@@ -18,25 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.calendar;
+package org.mifos.application.holiday.business.service;
 
-/**
- * Switch moratorium-handling on or off. By default, moratorium-handling is switched off.
- *
- */
-public class MoratoriumSwitch {
-    private boolean isOn = true;
+import java.util.List;
 
-    public boolean isOn() {
-        return this.isOn;
-    }
+import org.mifos.application.holiday.persistence.HolidayDetails;
 
-    public void turnOn() {
-        this.isOn = true;
-    }
+public interface HolidayService {
 
-    public void turnOff() {
-        this.isOn = false;
-    }
+    void create(HolidayDetails holidayDetails, List<Short> officeIds);
 
 }

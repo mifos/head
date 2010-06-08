@@ -32,6 +32,8 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.core.MifosRuntimeException;
@@ -42,6 +44,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -71,10 +74,12 @@ public class IntegrationTestObjectMother {
 
     // DAO's for fetching existing data within database
     private static final OfficePersistence officePersistence = new OfficePersistence();
+    private static final OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
     private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+    private static final HolidayService holidayService = DependencyInjectedServiceLocator.locateHolidayService();
     private static final GenericDao genericDao = DependencyInjectedServiceLocator.locateGenericDao();
 
     public static OfficeBO sampleBranchOffice() {
@@ -446,5 +451,13 @@ public class IntegrationTestObjectMother {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    public static void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) {
+        holidayService.create(holidayDetails, officeIds);
+    }
+
+    public static OfficeBO findOfficeById(Short officeId) {
+        return officeDao.findOfficeById(officeId);
     }
 }

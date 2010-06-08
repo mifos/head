@@ -236,4 +236,11 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         }
         return super.hashCode();
     }
+
+    public static HolidayBO fromDto(HolidayDetails holidayDetails) {
+        return new HolidayBO(holidayDetails);
+    }
+
+    public void validate() {
+    }
 }

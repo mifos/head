@@ -33,6 +33,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -41,9 +42,8 @@ import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
 
-public class HolidayDaoHibernate extends Persistence implements HolidayDao {
+public class HolidayDaoHibernate implements HolidayDao {
 
     private final GenericDao genericDao;
 
@@ -110,13 +110,13 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
 
     @Override
     public final void save(final Holiday holiday) throws PersistenceException {
-        createOrUpdate(holiday);
+        this.genericDao.createOrUpdate(holiday);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
-        Query sqlQuery = getSession().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
+        Query sqlQuery = ((GenericDaoHibernate) genericDao).getHibernateUtil().getSessionTL().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
         return sqlQuery.setInteger("HOLIDAY_ID", id).list();
     }
 

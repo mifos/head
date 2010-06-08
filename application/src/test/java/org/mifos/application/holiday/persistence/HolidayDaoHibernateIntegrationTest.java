@@ -21,85 +21,104 @@
 package org.mifos.application.holiday.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-import org.hibernate.Transaction;
 import org.joda.time.DateTime;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.exceptions.OfficeException;
-import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.domain.builders.HolidayBuilder;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml",
+                                    "/org/mifos/config/resources/services.xml" })
+public class HolidayDaoHibernateIntegrationTest {
 
-    public HolidayDaoHibernateIntegrationTest() throws Exception {
-        super();
+    @Autowired
+    private HolidayDao holidayDao;
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        Locale locale = Localization.getInstance().getMainLocale();
+        AuditConfigurtion.init(locale);
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
     }
 
-    private HolidayDaoHibernate holidayDao;
-    private OfficeDaoHibernate officeDao;
-
-    private GenericDao genericDao;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        genericDao = new GenericDaoHibernate();
-        holidayDao = new HolidayDaoHibernate(genericDao);
-        officeDao = new OfficeDaoHibernate(genericDao);
-
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        StaticHibernateUtil.getSessionTL().clear();
-        rollback();
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
     }
 
-    private void rollback() {
-        Transaction transaction = StaticHibernateUtil.getSessionTL().getTransaction();
-        if (transaction.isActive()) {
-            transaction.rollback();
-        }
+    @Before
+    public void cleanDatabaseTables() {
+        databaseCleaner.clean();
     }
 
-    public void testShouldSaveHoliday() throws Exception {
+    @Test
+    public void shouldSaveFutureHoliday() throws Exception {
 
         List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
         assertTrue(holidays.isEmpty());
 
-        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday Dao", new Date(), null, RepaymentRuleTypes
-                .fromInt(1));
-        holidayDetails.disableValidation(true);
-        List<Short> officeIds = new LinkedList<Short>();
-        officeIds.add((short) 1);
-        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+        Holiday futureHoliday = new HolidayBuilder().from(new DateTime()).to(new DateTime().plusDays(1)).appliesTo(headOffice).build();
 
-        holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
+        StaticHibernateUtil.startTransaction();
+        holidayDao.save(futureHoliday);
+        StaticHibernateUtil.commitTransaction();
+
+        holidays = holidayDao.findAllHolidaysThisYearAndNext(headOffice.getOfficeId());
         assertFalse(holidays.isEmpty());
     }
 
-    public void testShouldFindAllHolidaysWithinThisAndNextYear() throws ServiceException {
-        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
-                .toDateTime();
-        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2)
-                .toDateMidnight().toDateTime();
+    @Test
+    public void shouldFindAllHolidaysWithinThisAndNextYear() throws Exception {
+        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
         DateTime secondOfJanTwoYears = secondOfJanNextYear.plusYears(1);
 
         Holiday holidayThisYear = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
@@ -115,7 +134,8 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(holidays.size(), is(2));
     }
 
-    public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws ServiceException {
+    @Test
+    public void shouldFindAllHolidaysOrderedByFromDateAscending() throws Exception {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
                 .toDateTime();
         DateTime lastDayOfYear = secondlastDayOfYear.plusDays(1);
@@ -143,36 +163,38 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertTrue(holidays.get(3).encloses(thirdOfJanNextYear.toDate()));
     }
 
-    public void testShouldfindCurrentAndFutureOfficeHolidaysEarliestFirst() throws OfficeException {
+    @Test
+    public void shouldfindCurrentAndFutureOfficeHolidaysEarliestFirst() throws Exception {
 
         DateTime yesterday = new DateTime().minusDays(1);
         Set<HolidayBO> holidays;
-        OfficeBO headOffice = officeDao.findOfficeById((short) 1);
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
-        OfficeBO myOffice = new OfficeBuilder().withParentOffice(headOffice).build();
+        OfficeBO myOffice = new OfficeBuilder().withParentOffice(headOffice).withGlobalOfficeNum("xxx234").build();
         holidays = new HashSet<HolidayBO>();
         holidays.add((HolidayBO) new HolidayBuilder().withName("Second").from(yesterday.plusWeeks(3)).to(yesterday.plusWeeks(4)).build());
         holidays.add((HolidayBO) new HolidayBuilder().withName("First").from(yesterday).to(yesterday.plusWeeks(2)).build());
         myOffice.setHolidays(holidays);
-        myOffice.save();
+
+        IntegrationTestObjectMother.createOffice(myOffice);
 
         OfficeBO anotherOffice = new OfficeBuilder().withParentOffice(headOffice).build();
         holidays = new HashSet<HolidayBO>();
         holidays.add((HolidayBO) new HolidayBuilder().from(yesterday.minusWeeks(3)).to(yesterday.plusWeeks(4)).build());
-        anotherOffice.save();
+        IntegrationTestObjectMother.createOffice(anotherOffice);
 
         List<Holiday> myHolidays = holidayDao.findCurrentAndFutureOfficeHolidaysEarliestFirst(myOffice.getOfficeId());
 
         assertThat(myHolidays.size(), is(2));
         assertThat(myHolidays.get(0).getName(), is("First"));
-
     }
 
-    private void insert(final Holiday holiday) throws ServiceException {
-        HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holiday.getFromDate().toDate(), holiday
-                .getThruDate().toDate(), holiday.getRepaymentRuleType());
-        List<Short> officeIds = new LinkedList<Short>();
-        officeIds.add((short) 1);
-        DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);
+    private void insert(final Holiday holiday) {
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        HolidayDetails holidayDetails = new HolidayDetails("HolidayDaoTest", holiday.getFromDate().toDate(), holiday.getThruDate().toDate(), holiday.getRepaymentRuleType());
+
+        List<Short> officeIds = Arrays.asList(headOffice.getOfficeId());
+        IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);
     }
 }
