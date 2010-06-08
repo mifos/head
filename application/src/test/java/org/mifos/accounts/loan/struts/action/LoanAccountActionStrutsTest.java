@@ -76,9 +76,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingTestUtils;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
-import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -88,15 +86,12 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.helpers.PaymentTypes;
-import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -107,20 +102,7 @@ import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.center.CenterTemplate;
-import org.mifos.customers.center.CenterTemplateImpl;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.GroupTemplate;
-import org.mifos.customers.group.GroupTemplateImpl;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.persistence.GroupPersistence;
-import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -131,12 +113,9 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
-import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -149,6 +128,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+@SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     public LoanAccountActionStrutsTest() throws Exception {
         super();
@@ -162,10 +142,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private LoanBusinessService loanBusinessServiceMock;
     private ConfigurationBusinessService configurationBusinessServiceMock;
     private HttpServletRequest requestMock;
-    private CustomerBO groupForLoanRedo = null;
-    private CustomerBO clientForLoanRedo = null;
-    private LoanOfferingBO loanOfferingForLoanRedo = null;
-    private CenterBO centerForLoanRedo = null;
 
     @Override
     protected void setStrutsConfig() {
@@ -188,162 +164,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         TestDatabase.resetMySQLDatabase();
     }
 
-    private void initSchedulePreviewPageParamsForLoanRedo(LoanOfferingBO loanOffering, String disbursementDate) {
-        schedulePreviewPageParams = new HashMap<String, String>();
-        schedulePreviewPageParams.put("loanAmount", loanOffering.eligibleLoanAmount(
-                group.getMaxLoanAmount(loanOffering), group.getMaxLoanCycleForProduct(loanOffering))
-                .getDefaultLoanAmount().toString());
-        schedulePreviewPageParams.put("interestRate", loanOffering.getMaxInterestRate().toString());
-        schedulePreviewPageParams.put("noOfInstallments", loanOffering.eligibleNoOfInstall(
-                group.getMaxLoanAmount(loanOffering), group.getMaxLoanCycleForProduct(loanOffering))
-                .getDefaultNoOfInstall().toString());
-        schedulePreviewPageParams.put("disbursementDate", disbursementDate);
-        schedulePreviewPageParams.put("gracePeriodDuration", "1");
-        schedulePreviewPageParams.put("businessActivityId", "1");
-        schedulePreviewPageParams.put("loanOfferingFund", "1");
-    }
-
-    private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
-        Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
-        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, 6);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
-        LoanScheduleEntity loanSchedule = paymentsArray[0];
-        Short paymentTypeId = PaymentTypes.CASH.getValue();
-        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                .getActionDate());
-        loan.applyPayment(paymentData, true);
-        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                .getActionDate());
-        loan.applyPayment(paymentData, true);
-    }
-
-    private Date createPreviousDate(int numberOfDays) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DATE, -numberOfDays);
-        Date pastDate = DateUtils.getDateWithoutTimeStamp(calendar.getTime());
-        return pastDate;
-    }
-
-    private GroupBO createGroup(UserContext userContext, GroupTemplate groupTemplate, final Date disbursementDate)
-            throws PersistenceException, ValidationException, CustomerException {
-        CenterBO center = null;
-        if (groupTemplate.getParentCenterId() != null) {
-            center = new GroupPersistence().getCenterPersistence().getCenter(groupTemplate.getParentCenterId());
-            if (center == null) {
-                throw new ValidationException(GroupConstants.PARENT_OFFICE_ID);
-            }
-        }
-        GroupBO group = TestObjectFactory.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
-        new GroupPersistence().saveGroup(group);
-        return group;
-    }
-
-    private LoanOfferingBO createLoanOffering(UserContext userContext, MeetingBO meeting, Date loanProductStartDate)
-            throws ProductDefinitionException {
-        PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
-        ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
-        GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE);
-        InterestTypesEntity interestType = new InterestTypesEntity(InterestType.FLAT);
-        GLCodeEntity glCodePrincipal = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
-                TestGeneralLedgerCode.LOANS_TO_CLIENTS);
-        GLCodeEntity glCodeInterest = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
-                TestGeneralLedgerCode.INTEREST_ON_LOANS);
-
-        boolean interestDeductedAtDisbursement = false;
-        boolean principalDueInLastInstallment = false;
-        Money loanAmount = new Money(getCurrency(), "300");
-        Double interestRate = new Double(1.2);
-        Short installments = new Short((short) 6);
-        LoanOfferingBO loanOffering = LoanOfferingTestUtils.createInstanceForTest(userContext, "TestLoanOffering",
-                "TLO", productCategory, prdApplicableMaster, loanProductStartDate, null, null, gracePeriodType,
-                (short) 0, interestType, loanAmount, loanAmount, loanAmount, interestRate, interestRate, interestRate,
-                installments, installments, installments, true, interestDeductedAtDisbursement,
-                principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
-                glCodePrincipal, glCodeInterest);
-
-        PrdStatusEntity prdStatus = new TestObjectPersistence().retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
-        LoanOfferingTestUtils.setStatus(loanOffering, prdStatus);
-        LoanOfferingTestUtils.setGracePeriodType(loanOffering, gracePeriodType, (short) 0);
-        loanOffering.save();
-
-        return loanOffering;
-    }
-
-    private void initPageParamsForLoanRedo(LoanOfferingBO loanOffering, String disbursementDate) {
-        initPrdOfferingPageParams(loanOffering);
-        initSchedulePreviewPageParamsForLoanRedo(loanOffering, disbursementDate);
-    }
-
-    private void createInitialObjectsForLoanRedo() throws Exception {
-        // groupForLoanRedo =
-        // TestObjectFactory.createGroupUnderCenter("MyGroup",
-        // CustomerStatus.GROUP_ACTIVE, center);
-        // String newDate = offSetCurrentDate(-2,
-        // userContext.getPreferredLocale());
-        // groupForLoanRedo.setCreatedDate(DateUtils.getDate(newDate));
-        // clientForLoanRedo = TestObjectFactory.createClient("MyClient",
-        // CustomerStatus.CLIENT_ACTIVE, groupForLoanRedo);
-        // clientForLoanRedo.setCreatedDate(DateUtils.getDate(newDate));
-        int loanStartDaysAgo = 14;
-        Date disbursementDate = createPreviousDate(loanStartDaysAgo);
-        OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
-        MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplateStartingFrom(disbursementDate));
-        // .createWeeklyMeetingTemplateOnMondaysStartingFrom(disbursementDate));
-
-        CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
-        centerForLoanRedo = new CenterPersistence().createCenter(userContext, centerTemplate);
-
-        GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(centerForLoanRedo.getCustomerId());
-
-        groupForLoanRedo = createGroup(userContext, groupTemplate, disbursementDate);
-
-        loanOfferingForLoanRedo = createLoanOffering(userContext, meeting, disbursementDate);
-        initPageParamsForLoanRedo(loanOfferingForLoanRedo, disbursementDate.toString());
-    }
-
-    private void goToLoanAccountInputPageForLoanRedo() {
-        setRequestPathInfo("/loanAccountAction.do");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "load");
-        addRequestParameter("customerId", groupForLoanRedo.getCustomerId().toString());
-        Set<Entry<String, String>> entrySet = prdOfferingPageParams.entrySet();
-        for (Entry<String, String> entry : entrySet) {
-            addRequestParameter(entry.getKey(), entry.getValue());
-        }
-    }
-
-    private void goToPrdOfferingPageForLoanRedo() throws Exception {
-        request.getSession().setAttribute(Constants.BUSINESS_KEY, groupForLoanRedo);
-        setRequestPathInfo("/loanAccountAction.do");
-        addRequestParameter("method", "getPrdOfferings");
-        addRequestParameter("customerId", groupForLoanRedo.getCustomerId().toString());
-    }
-
-    private void goToSchedulePreviewPageForLoanRedo() throws InvalidDateException {
-        setRequestPathInfo("/loanAccountAction.do");
-        Set<Entry<String, String>> entrySet = schedulePreviewPageParams.entrySet();
-        for (Entry<String, String> entry : entrySet) {
-            addRequestParameter(entry.getKey(), entry.getValue());
-        }
-        addRequestParameter("method", "schedulePreview");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        int loanStartDaysAgo = 14;
-        String disbursementDate = offSetCurrentDate(-loanStartDaysAgo, userContext.getPreferredLocale());
-        addRequestParameter("disbursementDate", disbursementDate);
-
-    }
-
-    private void jumpToSchedulePreviewForLoanRedo() throws Exception {
-
-        goToPrdOfferingPageForLoanRedo();
-        actionPerform();
-        goToLoanAccountInputPageForLoanRedo();
-        actionPerform();
-        goToSchedulePreviewPageForLoanRedo();
-    }
-
-    // repaymentSchedulesIndependentOfMeetingIsEnabled
     public void testLoadWithFeeForToday() throws Exception {
         // get rid of default objects
         tearDown();
@@ -373,36 +193,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(WeekDay.WEDNESDAY.getValue().toString(), loanActionForm.getWeekDay());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
-    }
-
-    public void ignore_testRedoLoanThenApplyPayment() throws Exception {
-        createInitialObjectsForLoanRedo();
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        jumpToSchedulePreviewForLoanRedo();
-        // actionPerform();
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "create");
-        // addRequestParameter("stateSelected", "1");
-        addRequestParameter("perspective", LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
-        int loanStartDaysAgo = 14;
-        String disbursementDate = offSetCurrentDate(-loanStartDaysAgo, userContext.getPreferredLocale());
-        addRequestParameter("disbursementDate", disbursementDate);
-
-        performNoErrors();
-        verifyForward(ActionForwards.create_success.toString());
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
-                "loanAccountActionForm");
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        createPayment(loan, new Money(getCurrency(), "100"));
-        StaticHibernateUtil.commitTransaction();
-        loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        Assert.assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));
-        Assert.assertEquals(new LocalDate(), new LocalDate(loan.getCreatedDate().getTime()));
-
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.cleanUp(clientForLoanRedo);
-        TestObjectFactory.cleanUp(groupForLoanRedo);
-        TestObjectFactory.cleanUp(centerForLoanRedo);
     }
 
     public void testCreateWithoutPermission() throws Exception {
@@ -523,8 +313,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
         int i = 0;
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
             addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
