@@ -221,4 +221,8 @@ public class DependencyInjectedServiceLocator {
     public static GenericDao locateGenericDao() {
         return genericDao;
     }
+
+    public static OfficeDao locateOfficeDao() {
+        return officeDao;
+    }
 }

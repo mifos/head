@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 
@@ -49,6 +50,10 @@ public class HolidayServiceImpl implements HolidayService {
             hibernateTransactionHelper.startTransaction();
 
             this.holidayDao.save(holiday);
+            for (Short officeId : officeIds) {
+                OfficeBO office = officeDao.findOfficeById(officeId);
+                office.addHoliday(holiday);
+            }
 
             hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {

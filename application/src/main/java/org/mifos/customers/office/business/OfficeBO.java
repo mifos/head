@@ -69,7 +69,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     private OfficeAddressEntity address;
     private Set<OfficeCustomFieldEntity> customFields;
     private Set<OfficeBO> children;
-    private Set<HolidayBO> holidays;
+    private Set<HolidayBO> holidays = new HashSet<HolidayBO>();
 
     public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(
             List<OfficeBO> branchParents) {
