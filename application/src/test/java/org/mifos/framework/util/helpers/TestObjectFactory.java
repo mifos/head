@@ -109,7 +109,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -125,7 +124,6 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.CustomerAccountBOIntegrationTest;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -440,8 +438,8 @@ public class TestObjectFactory {
     public static ClientBO createClient(final String customerName, final CustomerStatus status,
             final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth) {
 
-        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                .valueOf("1"), Short.valueOf("41"));
+        ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
+                .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
         ClientNameDetailDto clientNameDetailDto = clientNameView(NameType.CLIENT, customerName);
         ClientNameDetailDto spouseNameDetailView = clientNameView(NameType.SPOUSE, customerName);
 
@@ -450,8 +448,8 @@ public class TestObjectFactory {
             client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, null, null, fees,
                     null, new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
-                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
-                    null);
+                    null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
+                    clientPersonalDetailDto, null);
             new ClientPersistence().saveClient(client);
         } catch (CustomerException e) {
             throw new RuntimeException(e);
@@ -476,8 +474,8 @@ public class TestObjectFactory {
                     customerName, "middle", customerName, "secondLast");
             ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                    .valueOf("1"), Short.valueOf("41"));
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
+                    .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status, null,
                     null, null, null, getFees(), null, systemUser, new OfficePersistence()
                             .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
@@ -497,12 +495,12 @@ public class TestObjectFactory {
         ClientBO client;
         Short personnel = PersonnelConstants.SYSTEM_USER;
         try {
-            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.MAYBE_CLIENT,
-                    SAMPLE_SALUTATION, customerName, "", customerName, "");
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.MAYBE_CLIENT, SAMPLE_SALUTATION,
+                    customerName, "", customerName, "");
             ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
-                    .valueOf("1"), Short.valueOf("41"));
+            ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
+                    .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
 
             // Add a way to create parentless clients; like clients outside
             // groups
@@ -579,7 +577,8 @@ public class TestObjectFactory {
             final Double defLnAmnt, final Double defIntRate, final int defInstallments,
             final InterestType interestType, final MeetingBO meeting) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
-                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, (short) 1, "1", "1");
+                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
+                (short) 1, "1", "1");
     }
 
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName,
@@ -588,8 +587,8 @@ public class TestObjectFactory {
             final InterestType interestType, final MeetingBO meeting, final String loanAmtCalcType,
             final String calcInstallmentType, final MifosCurrency currency) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
-                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS, (short)8,
-                loanAmtCalcType, calcInstallmentType, currency);
+                (short) defInstallments, interestType, false, false, meeting, GraceType.GRACEONALLREPAYMENTS,
+                (short) 8, loanAmtCalcType, calcInstallmentType, currency);
     }
 
     public static LoanOfferingBO createLoanOffering(final Date currentTime, final MeetingBO meeting) {
@@ -634,11 +633,12 @@ public class TestObjectFactory {
         short gracePeriodDuration = (short) 0;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, TestUtils.createMoney(defLnAmnt),
-                    TestUtils.createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt), defIntRate, defIntRate,
-                    defIntRate, defInstallments, defInstallments, defInstallments, true,
-                    interestDeductedAtDisbursement, principalDueInLastInstallment, new ArrayList<FundBO>(),
-                    new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest);
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, TestUtils
+                            .createMoney(defLnAmnt), TestUtils.createMoney(defLnAmnt),
+                    TestUtils.createMoney(defLnAmnt), defIntRate, defIntRate, defIntRate, defInstallments,
+                    defInstallments, defInstallments, true, interestDeductedAtDisbursement,
+                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
+                    glCodePrincipal, glCodeInterest);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -653,9 +653,8 @@ public class TestObjectFactory {
             final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
             final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
             final InterestType interestType, final boolean interestDeductedAtDisbursement,
-            final boolean principalDueInLastInstallment, final MeetingBO meeting,
-            final GraceType graceType, final short gracePeriodDuration,
-            final String loanAmountCalcType, final String noOfInstallCalcType) {
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final short gracePeriodDuration, final String loanAmountCalcType, final String noOfInstallCalcType) {
         return createLoanOffering(name, shortName, applicableTo, startDate, offeringStatus, defLnAmnt, defIntRate,
                 defInstallments, interestType, interestDeductedAtDisbursement, principalDueInLastInstallment, meeting,
                 graceType, gracePeriodDuration, loanAmountCalcType, noOfInstallCalcType, TestUtils.RUPEE);
@@ -665,9 +664,9 @@ public class TestObjectFactory {
             final ApplicableTo applicableTo, final Date startDate, final PrdStatus offeringStatus,
             final Double defLnAmnt, final Double defIntRate, final Short defInstallments,
             final InterestType interestType, final boolean interestDeductedAtDisbursement,
-            final boolean principalDueInLastInstallment, final MeetingBO meeting,
-            final GraceType graceType, final short gracePeriodDuration,
-            final String loanAmountCalcType, final String noOfInstallCalcType, final MifosCurrency currency) {
+            final boolean principalDueInLastInstallment, final MeetingBO meeting, final GraceType graceType,
+            final short gracePeriodDuration, final String loanAmountCalcType, final String noOfInstallCalcType,
+            final MifosCurrency currency) {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(applicableTo);
         ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
         GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(graceType);
@@ -680,12 +679,12 @@ public class TestObjectFactory {
         LoanOfferingBO loanOffering;
         try {
             loanOffering = new LoanOfferingBO(getContext(), name, shortName, productCategory, prdApplicableMaster,
-                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, new Money(currency, defLnAmnt
-                            .toString()), new Money(currency, defLnAmnt.toString()), new Money(currency, defLnAmnt
-                            .toString()), defIntRate, defIntRate, defIntRate, defInstallments, defInstallments,
-                    defInstallments, true, interestDeductedAtDisbursement, principalDueInLastInstallment,
-                    new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest,
-                    loanAmountCalcType, noOfInstallCalcType);
+                    startDate, null, null, gracePeriodType, gracePeriodDuration, interestTypes, new Money(currency,
+                            defLnAmnt.toString()), new Money(currency, defLnAmnt.toString()), new Money(currency,
+                            defLnAmnt.toString()), defIntRate, defIntRate, defIntRate, defInstallments,
+                    defInstallments, defInstallments, true, interestDeductedAtDisbursement,
+                    principalDueInLastInstallment, new ArrayList<FundBO>(), new ArrayList<FeeBO>(), meeting,
+                    glCodePrincipal, glCodeInterest, loanAmountCalcType, noOfInstallCalcType);
         } catch (ProductDefinitionException e) {
             throw new RuntimeException(e);
         }
@@ -937,12 +936,14 @@ public class TestObjectFactory {
 
     public static List<Date> getMeetingDates(short officeId, final MeetingBO meeting, final int occurrences) {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext(officeId);
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao()
+                .findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, upcomingHolidays);
         List<DateTime> allDates = dateGeneration.generateScheduledDates(occurrences, meetingStartDate, scheduledEvent);
 
         List<Date> dates = new ArrayList<Date>();
@@ -956,14 +957,17 @@ public class TestObjectFactory {
     public static List<Date> getMeetingDatesThroughTo(short officeId, final MeetingBO meeting, Date endDate) {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao().findAllHolidaysThisYearAndNext(officeId);
+        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao()
+                .findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         DateTime meetingStartDate = new DateTime(meeting.getMeetingStartDate());
         DateTime endDateTime = new DateTime(endDate);
 
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, upcomingHolidays);
-        List<DateTime> allDates = dateGeneration.generateScheduledDatesThrough(meetingStartDate, endDateTime, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, upcomingHolidays);
+        List<DateTime> allDates = dateGeneration.generateScheduledDatesThrough(meetingStartDate, endDateTime,
+                scheduledEvent);
 
         List<Date> dates = new ArrayList<Date>();
         for (DateTime dateTime : allDates) {
@@ -1010,7 +1014,8 @@ public class TestObjectFactory {
     public static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
             final String feeAmnt, final RecurrenceType meetingFrequency, final Short recurAfter,
             final UserContext userContext) {
-        return createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, userContext, "Test Category");
+        return createPeriodicAmountFee(feeName, feeCategory, feeAmnt, meetingFrequency, recurAfter, userContext,
+                "Test Category");
     }
 
     private static FeeBO createPeriodicAmountFee(final String feeName, final FeeCategory feeCategory,
@@ -1121,7 +1126,9 @@ public class TestObjectFactory {
      *
      * Changing TestObjectFactory#getUserContext() to {@link TestUtils#makeUserWithLocales()} caused a failure in
      * {@link LoanBOIntegrationTest#testApplyUpfrontFee} (and other tests).
-     * @param categoryTypeName TODO
+     *
+     * @param categoryTypeName
+     *            TODO
      */
     public static FeeBO createOneTimeRateFee(final String feeName, final FeeCategory feeCategory, final Double rate,
             final FeeFormula feeFormula, final FeePayment feePayment, String categoryTypeName) {
@@ -1221,6 +1228,12 @@ public class TestObjectFactory {
      */
     public static MeetingBO createMeeting(final MeetingBO meeting) {
         return (MeetingBO) addObject(testObjectPersistence.persist(meeting));
+    }
+
+    public static void cleanUp(Holiday holiday) {
+        if (null != holiday) {
+            deleteHoliday(holiday);
+        }
     }
 
     public static void cleanUp(CustomerBO customer) {
@@ -1493,6 +1506,12 @@ public class TestObjectFactory {
                 session.delete(customerNote);
             }
         }
+
+    }
+
+    private static void deleteHoliday(final Holiday holiday) {
+        Session session = StaticHibernateUtil.getSessionTL();
+        session.delete(holiday);
 
     }
 
@@ -2220,7 +2239,8 @@ public class TestObjectFactory {
         }
     }
 
-    public static org.mifos.accounts.fees.servicefacade.FeeDto getAmountBasedFee(String feeId, String statusId, String amount) {
+    public static org.mifos.accounts.fees.servicefacade.FeeDto getAmountBasedFee(String feeId, String statusId,
+            String amount) {
         org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
         FeeStatusDto feeStatus = new FeeStatusDto();
         feeStatus.setId(statusId);
@@ -2231,7 +2251,8 @@ public class TestObjectFactory {
         return fee;
     }
 
-    public static org.mifos.accounts.fees.servicefacade.FeeDto getRateBasedFee(String feeId, String statusId, double rate, String formulaId) {
+    public static org.mifos.accounts.fees.servicefacade.FeeDto getRateBasedFee(String feeId, String statusId,
+            double rate, String formulaId) {
         org.mifos.accounts.fees.servicefacade.FeeDto fee = new org.mifos.accounts.fees.servicefacade.FeeDto();
         FeeStatusDto feeStatus = new FeeStatusDto();
         feeStatus.setId(statusId);

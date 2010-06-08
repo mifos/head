@@ -114,7 +114,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         final File latestDumpFile = File.createTempFile("latestDataDump", ".xml");
         FlatXmlDataSet.write(latestDataDump, new FileOutputStream(latestDumpFile));
         latestDataDump = new FlatXmlDataSet(latestDumpFile);
-        assert latestDumpFile.delete();
+        latestDumpFile.delete();
 
         final String latestDumpAsString = TestDatabase.getAllTablesStructureDump();
         dropLatestDatabase();
@@ -127,7 +127,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
         FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
         upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
-        assert upgradeDumpFile.delete();
+        upgradeDumpFile.delete();
 
         Assert.assertEquals(latestDumpAsString, upgradeDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);

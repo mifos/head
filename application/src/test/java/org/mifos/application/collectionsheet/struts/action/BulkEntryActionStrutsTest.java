@@ -261,7 +261,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
         actionPerform();
 
-        verifyActionErrors(new String[] { "errors.invalidamount", "errors.invalidamount" });
+        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
 
     }
 
@@ -448,7 +448,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { "errors.invalidamount", "errors.invalidamount" });
+        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
     }
 
     public void testFailurePreviewForCharAmount() throws Exception {
@@ -461,7 +461,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { "errors.invalidamount", "errors.invalidamount" });
+        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
     }
 
     public void testValidateForLoadMethod() {

@@ -198,15 +198,6 @@ public class AccountAppAction extends BaseAction {
         return accountBusinessService;
     }
 
-    protected void convertCustomFieldDateToUniformPattern(List<CustomFieldDto> customFields, Locale locale) throws InvalidDateException {
-        for (CustomFieldDto customField : customFields) {
-            if (customField.getFieldType().equals(CustomFieldType.DATE.getValue())
-                    && StringUtils.isNotBlank(customField.getFieldValue())) {
-                customField.convertDateToUniformPattern(locale);
-            }
-        }
-    }
-
     protected List<CustomFieldDto> createCustomFieldViewsForEdit(Set<AccountCustomFieldEntity> customFieldEntities,
             HttpServletRequest request) throws ApplicationException {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();

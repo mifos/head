@@ -20,10 +20,6 @@
 
 package org.mifos.accounts;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +34,8 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -47,6 +45,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
@@ -61,6 +60,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     protected GroupBO group;
     protected ClientBO client;
     protected MeetingBO meeting;
+    protected Holiday holiday;
     protected AccountPersistence accountPersistence;
 
     @Override
@@ -75,6 +75,8 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
+            this.getBranchOffice().setHolidays(null);
+            TestObjectFactory.cleanUp(holiday);
             TestObjectFactory.cleanUp(groupLoan);
             TestObjectFactory.cleanUp(clientLoan);
             TestObjectFactory.cleanUp(savingsBO);
@@ -107,8 +109,10 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     }
 
     private void createInitialCustomerAccounts() {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
+
+        meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(meeting);
+
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         List<FeeDto> fees = new ArrayList<FeeDto>();

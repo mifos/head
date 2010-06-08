@@ -132,7 +132,7 @@ explanation of the license and how it is applied.
 				and acc.account_id=laa.account_id 
 				AND c.customer_level_id=:customerLevelId
 				AND c.branch_id = :officeId
-				AND days_in_arrears > :daysInArrears
+				AND days_in_arrears >= :daysInArrears
 				AND acc.account_state_id in (9)
 		        AND (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
 		]]>

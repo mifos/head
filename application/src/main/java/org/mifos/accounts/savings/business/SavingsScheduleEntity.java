@@ -24,6 +24,7 @@ import java.sql.Date;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
@@ -43,6 +44,9 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
             PaymentStatus paymentStatus, Money deposit) {
         super(account, customer, installmentId, actionDate, paymentStatus);
         this.deposit = deposit;
+        if (account.getAccountState().getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
+            this.deposit = new Money(account.getCurrency());
+        }
         this.depositPaid = new Money(account.getCurrency());
     }
 

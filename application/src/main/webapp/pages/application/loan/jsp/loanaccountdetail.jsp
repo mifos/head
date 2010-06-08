@@ -469,7 +469,15 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										<c:if test="${cfdef.fieldId==cf.fieldId}">
 											<span class="fontnormal"> <mifos:mifoslabel
 												name="${cfdef.lookUpEntity.entityType}"></mifos:mifoslabel>:
-											<c:out value="${cf.fieldValue}" /> </span>
+                                                <c:choose>
+                                                <c:when test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
+                                                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:out value="${cf.fieldValue}" />
+                                                </c:otherwise>
+                                                </c:choose>
+                                                 </span>
 											<br>
 										</c:if>
 									</c:forEach>

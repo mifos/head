@@ -44,7 +44,7 @@ public class MeetingBuilder {
     private RankOfDay weekRank = null;
     private Short dayNumber = null;
     private Date startDate = new DateTime().toDate();
-    private final String meetingLocation = "test-meeting-location";
+    private String meetingLocation = "test-meeting-location";
 
     public MeetingBuilder() {
     }
@@ -153,6 +153,11 @@ public class MeetingBuilder {
 
     public MeetingBuilder startingFrom(Date withStartDate) {
         this.startDate = withStartDate;
+        return this;
+    }
+
+    public MeetingBuilder withLocation(String withLocation) {
+        this.meetingLocation = withLocation;
         return this;
     }
 }

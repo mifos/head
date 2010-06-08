@@ -83,13 +83,6 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void checkForValueObjectConversionErrorWhenEnteringInvalidDateIntoTransation() throws Exception {
-        SubmitFormParameters invalidFormParameters = getFormParametersWithInvalidTransactionDay();
-        SubmitFormParameters validFormParameters = getFormParameters();
-        checkForValueObjectConversionErrorWhenEnteringInvalidDate(invalidFormParameters, validFormParameters);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters,
             SubmitFormParameters validFormParameters) throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
@@ -129,11 +122,6 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     private SubmitFormParameters getFormParametersWithInvalidReceiptDay() {
         String invalidReceiptDay = "4.";
         return getFormParameters(invalidReceiptDay, VALID_TRANSACTION_DAY);
-    }
-
-    private SubmitFormParameters getFormParametersWithInvalidTransactionDay() {
-        String invalidTransactionDay = "7.";
-        return getFormParameters(VALID_RECEIPT_DAY, invalidTransactionDay);
     }
 
     private SubmitFormParameters getFormParameters() {

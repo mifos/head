@@ -286,7 +286,11 @@ public class LoanBO extends AccountBO {
         this.maxMinLoanAmount = null;
         this.maxMinInterestRate = null;
         this.maxMinNoOfInstall = null;
-        addcustomFields(customFields);
+        try {
+            addcustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new AccountException(e);
+        }
     }
 
     public static LoanBO redoLoan(final UserContext userContext, final LoanOfferingBO loanOffering,
@@ -1043,9 +1047,6 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    /*
-     * This disburseLoan only used via saveCollectionSheet - John W
-     */
     public void disburseLoan(final AccountPaymentEntity disbursalPayment) throws AccountException, PersistenceException {
 
         if (this.getLoanAmount().getAmount().compareTo(disbursalPayment.getAmount().getAmount()) != 0) {
@@ -1718,10 +1719,6 @@ public class LoanBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-        if (!this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())
-                && !this.getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
             MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
@@ -1738,7 +1735,6 @@ public class LoanBO extends AccountBO {
                     startFromMeetingDate, scheduledEvent);
 
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-        }
     }
 
     private int calculateDays(final Date fromDate, final Date toDate) {

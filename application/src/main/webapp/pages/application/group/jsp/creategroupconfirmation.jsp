@@ -114,10 +114,7 @@ explanation of the license and how it is applied.
                       </c:if>
                       <span class="fontnormal">
                           <a id="creategroupconfirmation.link.createNewAccount" href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-                     
-                            	<fmt:message key="Group.createNewAccount">
-								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
-								</fmt:message>
+                              <mifos:mifoslabel name="Group.createanewgroup" bundle="GroupUIResources"></mifos:mifoslabel>
                           </a>
                       </span>
                       

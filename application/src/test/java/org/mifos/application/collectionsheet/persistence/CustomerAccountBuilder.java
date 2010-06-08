@@ -19,16 +19,17 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.CalendarEventBuilder;
 import org.mifos.framework.TestUtils;
 
 /**
@@ -38,49 +39,21 @@ public class CustomerAccountBuilder {
 
     private CustomerAccountBO customerAccount;
     private CustomerBO customer;
-    private OfficeBO office;
-    private PersonnelBO loanOfficer;
+    private List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
     private final Set<AmountFeeBO> fees = new HashSet<AmountFeeBO>();
 
-    private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-    private final Date createdDate = new DateTime().minusDays(14).toDate();
+    private CalendarEvent applicableCalendarEvents = new CalendarEventBuilder().build();
 
     public CustomerAccountBO buildForUnitTests() {
 
-        customerAccount = new CustomerAccountBO(customer, fees, office, loanOfficer, createdDate,
-                createdByUserId, false);
-        return customerAccount;
-    }
-
-    /* TODO KRP: Refactor to use new signature for method CustomerAccountBO.createNew()
-
-    public CustomerAccountBO buildForIntegrationTests() {
-
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-        List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext();
-
-        DateTime startFromMeetingDate = new DateTime(customer.getCustomerMeetingValue().getMeetingStartDate());
-        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
-
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
-                thisAndNextYearsHolidays);
-        List<DateTime> installmentDates = dateGeneration.generateScheduledDates(10, startFromMeetingDate,
-                scheduledEvent);
-
-        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        for (AmountFeeBO fee : fees) {
-            accountFees.add(new AccountFeesEntity(null, fee, fee.getFeeAmount().getAmountDoubleValue()));
+        if (customer.getUserContext() == null) {
+            customer.setUserContext(TestUtils.makeUser());
         }
 
-        CustomerAccountBO customerAccount = CustomerAccountBO.createNew(customer, accountFees, installmentDates);
-        customer.addAccount(customerAccount);
-        customerAccount.setUserContext(TestUtils.makeUser());
-        customerAccount.setUpdateDetails();
+        customerAccount = CustomerAccountBO.createNew(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
 
         return customerAccount;
     }
-    */
 
     public CustomerAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
@@ -89,16 +62,6 @@ public class CustomerAccountBuilder {
 
     public CustomerAccountBuilder withFee(final AmountFeeBO withFee) {
         fees.add(withFee);
-        return this;
-    }
-
-    public CustomerAccountBuilder withOffice(final OfficeBO withOffice) {
-        this.office = withOffice;
-        return this;
-    }
-
-    public CustomerAccountBuilder withLoanOfficer(final PersonnelBO withLoanOfficer) {
-        this.loanOfficer = withLoanOfficer;
         return this;
     }
 }

@@ -447,17 +447,4 @@ public class IntegrationTestObjectMother {
             StaticHibernateUtil.closeSession();
         }
     }
-
-    public static void updateCustomerMeeting(CustomerBO customer, MeetingBO updatedMeeting) {
-        try {
-            customer.updateMeeting(updatedMeeting);
-            StaticHibernateUtil.commitTransaction();
-        } catch (CustomerException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
 }

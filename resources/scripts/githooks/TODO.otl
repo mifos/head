@@ -1,0 +1,6 @@
+[_] port hook scripts to python(?)
+	easier to test, re-use code
+	[_] make sure sf.net supports this
+[_] create test suite for these git hook scripts
+[_] provide pre-commit for developers
+	http://thread.gmane.org/gmane.comp.finance.mifos.devel/8716/focus=8729

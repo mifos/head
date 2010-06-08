@@ -39,28 +39,28 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 
 /**
- * A service class implementation to expose basic functions on loans. As an
- * external API, this class should not expose business objects, only DTOs.
+ * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
+ * business objects, only DTOs.
  */
 public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
     private LoanPersistence loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
-
-    public StandardAccountService() {
-
-    }
+    private final PersonnelDao personnelDao;
 
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
-            AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
+            AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
+        this.personnelDao = personnelDao;
     }
 
     public LoanPersistence getLoanPersistence() {
@@ -140,12 +140,18 @@ public class StandardAccountService implements AccountService {
             PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
-            Date receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            Date receiptDate = null;
+            if (null != accountPaymentParametersDto.getReceiptDate()) {
+                receiptDate = accountPaymentParametersDto.getReceiptDate().toDateMidnight().toDate();
+            }
             Date transactionDate = accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate();
-            String receiptId = accountPaymentParametersDto.getReceiptId().toString();
+            String receiptId = accountPaymentParametersDto.getReceiptId();
 
             AccountPaymentEntity disbursalPayment = new AccountPaymentEntity(loan, amount, receiptId, receiptDate,
                     paymentTypeEntity, transactionDate);
+            PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParametersDto.getUserMakingPayment()
+                    .getUserId());
+            disbursalPayment.setCreatedByUser(personnelBO);
 
             loan.disburseLoan(disbursalPayment);
         }
@@ -170,29 +176,39 @@ public class StandardAccountService implements AccountService {
         return new AccountReferenceDto(loan.getAccountId());
     }
 
+    /**
+     * Note that, since we don't store or otherwise utilize the amount disbursed (passed in
+     * AccountPaymentParametersDto.paymentAmount) we <em>do not</em> validate that digits after decimal for the amount
+     * disbursed fit in an allowed range. We <em>do</em> check that the amount disbursed matches the full amount of the
+     * loan.
+     */
     @Override
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
         LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccount().getAccountId());
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
-            throw new AccountException("Loan not in a State to be Disbursed: " + loanAccount.getState());
+            errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
         }
-        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
-            throw new AccountException("Loan Amount to be Disbursed Held on Database : "
-                    + loanAccount.getLoanAmount().getAmount()
-                    + " does not match the Input Loan Amount to be Disbursed: " + payment.getPaymentAmount());
-        }
+        disbursalAmountMatchesFullLoanAmount(payment, errors, loanAccount);
         if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
-        if (!getLoanDisbursementType().contains(payment.getPaymentType())) {
+        if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
             errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);
         }
         if (!loanAccount.paymentAmountIsValid(new Money(loanAccount.getCurrency(), payment.getPaymentAmount()))) {
             errors.add(InvalidPaymentReason.INVALID_PAYMENT_AMOUNT);
         }
         return errors;
+    }
+
+    void disbursalAmountMatchesFullLoanAmount(AccountPaymentParametersDto payment, List<InvalidPaymentReason> errors,
+            LoanBO loanAccount) {
+        /* BigDecimal.compareTo() ignores scale, .equals() was explicitly avoided */
+        if (loanAccount.getLoanAmount().getAmount().compareTo(payment.getPaymentAmount()) != 0) {
+            errors.add(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT);
+        }
     }
 
     @Override
@@ -235,7 +251,8 @@ public class StandardAccountService implements AccountService {
         return getPaymentTypes(TrxnTypes.loan_repayment.getValue());
     }
 
-    public List<PaymentTypeDto> getLoanDisbursementType() throws PersistenceException {
+    @Override
+    public List<PaymentTypeDto> getLoanDisbursementTypes() throws PersistenceException {
         return getPaymentTypes(TrxnTypes.loan_disbursement.getValue());
     }
 
@@ -263,9 +280,11 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(
             String clientGovernmentId, String loanProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(clientGovernmentId, loanProductShortName);
+        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(
+                clientGovernmentId, loanProductShortName);
         if (null == accountBo) {
-            throw new PersistenceException("loan not found for client government id " + clientGovernmentId + " and loan product short name " + loanProductShortName);
+            throw new PersistenceException("loan not found for client government id " + clientGovernmentId
+                    + " and loan product short name " + loanProductShortName);
         }
         return new AccountReferenceDto(accountBo.getAccountId());
     }
@@ -273,9 +292,11 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(
             String clientGovernmentId, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findSavingsByClientGovernmentIdAndProductShortName(clientGovernmentId, savingsProductShortName);
+        AccountBO accountBo = getAccountPersistence().findSavingsByClientGovernmentIdAndProductShortName(
+                clientGovernmentId, savingsProductShortName);
         if (null == accountBo) {
-            throw new PersistenceException("savings not found for client government id " + clientGovernmentId + " and savings product short name " + savingsProductShortName);
+            throw new PersistenceException("savings not found for client government id " + clientGovernmentId
+                    + " and savings product short name " + savingsProductShortName);
         }
         return new AccountReferenceDto(accountBo.getAccountId());
     }

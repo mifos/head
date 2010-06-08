@@ -218,7 +218,7 @@ public class OffActionForm extends BaseActionForm {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     OfficeConstants.ENTERADDTIONALINFO, customFieldDef.getLabel()));
                         }
-                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                        if (CustomFieldType.DATE.getValue().equals(customField.getFieldType()) &&
                                 (StringUtils.isNotBlank(customField.getFieldValue()))) {
                             try {
                                 DateUtils.getDate(customField.getFieldValue());

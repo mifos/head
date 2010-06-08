@@ -136,6 +136,11 @@ public class SavingsAccountBuilder {
         return this;
     }
 
+    public SavingsAccountBuilder active() {
+        this.accountState = AccountState.SAVINGS_ACTIVE;
+        return this;
+    }
+
     public SavingsAccountBuilder asInActive() {
         this.accountState = AccountState.SAVINGS_INACTIVE;
         return this;

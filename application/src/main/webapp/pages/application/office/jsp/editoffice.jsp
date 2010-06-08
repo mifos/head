@@ -27,6 +27,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib prefix="date" uri="/tags/date" %>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -280,10 +281,10 @@ explanation of the license and how it is applied.
 								items="${offActionForm.customFields}">
 								<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 									<tr class="fontnormal">
-										<td width="21%" align="right"><span id="editoffice.label.customField""><mifos:mifoslabel
+										<td width="21%" align="right"><span id="editoffice.label.customField"><mifos:mifoslabel
 											name="${customFieldDef.lookUpEntity.entityType}"
 											mandatory="${customFieldDef.mandatoryStringValue}"
-											bundle="OfficeUIResources"></mifos:mifoslabel></span>:
+											bundle="OfficeUIResources"/></span>:
 										</td>
 										<td width="79%"><c:if test="${customFieldDef.fieldType == 1}">
 											<mifos:mifosnumbertext styleId="editoffice.input.customField" name="offActionForm"
@@ -294,10 +295,7 @@ explanation of the license and how it is applied.
 												property='customField[${ctr}].fieldValue'
 												value="${cf.fieldValue}" maxlength="200" />
 										</c:if> <c:if test="${customFieldDef.fieldType == 3}">
-											<mifos:mifosalphanumtext styleId="editoffice.input.customField" name="offActionForm"
-												property='customField[${ctr}].fieldValue'
-												value="${cf.fieldValue}" maxlength="200" />
-
+                                            <date:datetag property="customField[${ctr}].fieldValue" />
 										</c:if> <html-el:hidden property='customField[${ctr}].fieldId'
 											value="${cf.fieldId}"></html-el:hidden></td>
 									</tr>

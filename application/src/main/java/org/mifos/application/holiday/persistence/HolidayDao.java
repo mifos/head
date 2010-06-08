@@ -29,6 +29,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public interface HolidayDao {
 
+    List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId);
+
     List<Holiday> getUnAppliedHolidays();
 
     List<Holiday> findAllHolidaysThisYearAndNext(short officeId);
