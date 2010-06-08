@@ -53,8 +53,6 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 public class DatabaseMigrator {
 
-
-
     private Map<Integer, String> getAvailableUpgrades() throws IOException {
         Reader reader = null;
         BufferedReader bufferedReader = null;
@@ -66,11 +64,12 @@ public class DatabaseMigrator {
             while (true) {
                 String line = bufferedReader.readLine();
                 String upgradeType = line.substring(0, line.indexOf(':'));
-                Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(':')+1));
+                Integer upgradeId = Integer.parseInt(line.substring(line.indexOf(':') + 1));
                 upgrades.put(upgradeId, upgradeType);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
 
         } finally {
             if (reader != null) {
@@ -84,7 +83,7 @@ public class DatabaseMigrator {
         return upgrades;
     }
 
-    public void checkUnAppliedUpgradesAndUpgrade() throws IOException, SQLException  {
+    public void checkUnAppliedUpgradesAndUpgrade() throws Exception {
         Map<Integer, String> availableUpgrades = getAvailableUpgrades();
         List<Integer> appliedUpgrades = getAppliedUpgrades();
 
@@ -95,41 +94,35 @@ public class DatabaseMigrator {
         }
     }
 
-    private void applyUpgrade(int upgradeNumber, String type) throws IOException, SQLException {
+    private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
-        Connection  connection = null;
+        Connection connection = TestDatabase.getJDBCConnection();
+        connection.setAutoCommit(false);
 
         if ("sql".equals(type)) {
-            try {
-                connection = TestDatabase.getJDBCConnection();
-                DatabaseSetup.executeScript(upgradeNumber + ".sql", connection);
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (Exception e){
 
-            }
+            DatabaseSetup.executeScript(upgradeNumber + ".sql", connection);
 
         }
 
         if ("java".equals(type)) {
-            String className = "org.mifos.application.master.persistence.Upgrade" + upgradeNumber;
+            String className = "org.mifos.application.master.persistence.JavaUpgrade" + upgradeNumber;
 
-                Upgrade upgrade = getInstanceOfUpgradeClass(className);
-                upgrade.upgrade(connection);
+            Upgrade upgradeClass = getInstanceOfUpgradeClass(className);
+            upgradeClass.upgrade(connection);
 
         }
     }
 
-    private Upgrade getInstanceOfUpgradeClass(String className){
+    private Upgrade getInstanceOfUpgradeClass(String className) {
         Upgrade upgrade = null;
+        Class<?> c = null;
+        Constructor<?> cs = null;
         try {
-            Class c = Class.forName(className);
-            Constructor<Upgrade> constructor = c.getConstructor();
-            upgrade= constructor.newInstance();
+            c = Class.forName(className);
+            cs = c.getDeclaredConstructor();
+            cs.setAccessible(true);
+            upgrade = (Upgrade) cs.newInstance();
 
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
@@ -154,16 +147,15 @@ public class DatabaseMigrator {
             e.printStackTrace();
         }
 
-            return upgrade;
+        return upgrade;
     }
 
-    private List<Integer> getAppliedUpgrades()   {
+    private List<Integer> getAppliedUpgrades() {
 
         // TODO convert query to HQL
         StaticHibernateUtil.initialize();
 
-
-        Connection connection = null ;
+        Connection connection = null;
         try {
             connection = TestDatabase.getJDBCConnection();
         } catch (Exception e1) {
