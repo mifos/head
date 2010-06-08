@@ -54,7 +54,7 @@
       </p>
       <p class="orangeheading">[@spring.message "manageimports"/]</p>
       <ul>
-        <li type="circle"><a href="import.html">[@spring.message "importtransactions"/]</a></li>
+        <li type="circle"><a id="admin.link.manageImports" href="manageImportAction.do?method=load">[@spring.message "importtransactions"/]</a></li>
       </ul>
       <p class="orangeheading">[@spring.message "manageinformation"/]</p>
       <ul>
