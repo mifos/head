@@ -105,9 +105,11 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     /**
      * minimal legal constructor
+     *
      * @param officeId
      */
-    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
+    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum,
+            OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
         this.officeId = officeId;
         this.officeName = name;
         this.shortName = shortName;
@@ -310,6 +312,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public Set<OfficeBO> getChildren() {
+        if (children == null) {
+            children = new HashSet<OfficeBO>();
+        }
         return children;
     }
 
@@ -319,7 +324,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     private void removeChild(final OfficeBO office) {
         Set<OfficeBO> childerns = null;
-        if (getChildren() != null && getChildren().size() > 0) {
+        if (getChildren().size() > 0) {
             childerns = getChildren();
             childerns.remove(office);
         }
@@ -327,12 +332,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     private void addChild(final OfficeBO office) {
-        Set<OfficeBO> childerns = null;
-        if (getChildren() == null) {
-            childerns = new HashSet<OfficeBO>();
-        } else {
-            childerns = getChildren();
-        }
+        Set<OfficeBO> childerns = getChildren();
         office.setParentOffice(this);
         childerns.add(office);
         setChildren(childerns);
@@ -635,11 +635,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public Set<OfficeBO> getBranchOnlyChildren() {
         Set<OfficeBO> offices = new HashSet<OfficeBO>();
-        if (getChildren() != null) {
-            for (OfficeBO office : getChildren()) {
-                if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
-                    offices.add(office);
-                }
+        for (OfficeBO office : getChildren()) {
+            if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
+                offices.add(office);
             }
         }
         return offices;
@@ -656,35 +654,47 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
-        if (parent.getChildren() != null) {
-            for (OfficeBO childl : parent.getChildren()) {
-                if (childl.getOfficeId().equals(child.getOfficeId())) {
-                    return childl;
-                }
-                return getIfChildPresent(childl, child);
+        for (OfficeBO childl : parent.getChildren()) {
+            if (childl.getOfficeId().equals(child.getOfficeId())) {
+                return childl;
             }
+            return getIfChildPresent(childl, child);
         }
+
         return null;
     }
 
     public boolean isParent(final OfficeBO child) {
         boolean isParent = false;
-        if (getChildren() != null) {
-            for (OfficeBO children : getChildren()) {
-                if (children.equals(child)) {
-                    return true;
-                }
-                isParent = children.isParent(child);
-                if (isParent) {
-                    return true;
-                }
-
+        for (OfficeBO children : getChildren()) {
+            if (children.equals(child)) {
+                return true;
+            }
+            isParent = children.isParent(child);
+            if (isParent) {
+                return true;
             }
         }
+
         return isParent;
     }
 
-    public void addHoliday(HolidayBO holiday){
+    public void addHoliday(HolidayBO holiday) {
         getHolidays().add(holiday);
+    }
+
+    public boolean hasChildWithAnyOf(List<Short> officeIds) {
+        boolean childFound = false;
+
+        for (OfficeBO child : getChildren()) {
+            if (officeIds.contains(child.getOfficeId())) {
+                childFound = true;
+                return childFound;
+            }
+
+            childFound = child.hasChildWithAnyOf(officeIds);
+        }
+
+        return childFound;
     }
 }

@@ -43,18 +43,6 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
     public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
 
         this.holidayService.create(holidayDetails, officeIds);
-
-//        try {
-//            holidayDetails.validate();
-//            HolidayBO holiday = new HolidayBO(holidayDetails);
-//            for (Short officeId : officeIds) {
-//                new OfficePersistence().addHoliday(officeId, holiday);
-//            }
-//        } catch (PersistenceException e) {
-//            throw new ServiceException(e);
-//        } catch (ValidationException e) {
-//            throw new ServiceException(e);
-//        }
     }
 
     @Override

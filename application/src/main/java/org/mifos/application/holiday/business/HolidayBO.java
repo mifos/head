@@ -28,7 +28,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -55,6 +54,17 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     private Integer id;
 
+    public HolidayBO() {
+    }
+
+    public HolidayBO(HolidayDetails holidayDetails) {
+        this.holidayName = holidayDetails.getName();
+        this.holidayFromDate = holidayDetails.getFromDate();
+        this.holidayThruDate = holidayDetails.getThruDate();
+        this.holidayChangesAppliedFlag = holidayDetails.getHolidayChangesAppliedFlag().getValue();
+        this.repaymentRuleType = holidayDetails.getRepaymentRuleType();
+    }
+
     @Override
     public Integer getId() {
         return this.id;
@@ -70,17 +80,6 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     public void setValidationEnabled(final boolean validationEnabled) {
         this.validationEnabled = validationEnabled;
-    }
-
-    public HolidayBO() {
-    }
-
-    public HolidayBO(HolidayDetails holidayDetails) {
-        this.holidayName = holidayDetails.getName();
-        this.holidayFromDate = holidayDetails.getFromDate();
-        this.holidayThruDate = holidayDetails.getThruDate();
-        this.holidayChangesAppliedFlag = holidayDetails.getHolidayChangesAppliedFlag().getValue();
-        this.repaymentRuleType = holidayDetails.getRepaymentRuleType();
     }
 
     public RepaymentRuleTypes getRepaymentRuleType() {
@@ -143,27 +142,6 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
 
     public void setHolidayChangesAppliedFlag(final Short flag) {
         this.holidayChangesAppliedFlag = flag;
-    }
-
-    private void validateHolidayState(final Short masterTypeId, final Short stateId, final boolean isCustomer) throws ApplicationException {
-        Integer records;
-        records = new HolidayPersistence().isValidHolidayState(masterTypeId, stateId, isCustomer);
-        if (records.intValue() != 0) {
-            throw new ApplicationException(HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
-        }
-    }
-
-    private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {
-        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
-            throw new ApplicationException(HolidayConstants.INVALIDFROMDATE);
-        }
-    }
-
-    private void validateFromDateAgainstThruDate(final Date fromDate, final Date thruDate) throws ApplicationException {
-        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
-                DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
-            throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
-        }
     }
 
     @Override
@@ -241,6 +219,21 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
         return new HolidayBO(holidayDetails);
     }
 
-    public void validate() {
+    public void validate() throws ApplicationException {
+        validateFromDateAgainstCurrentDate(this.holidayFromDate);
+        validateFromDateAgainstThruDate(this.holidayFromDate, this.holidayThruDate);
+    }
+
+    private void validateFromDateAgainstCurrentDate(final Date fromDate) throws ApplicationException {
+        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0) {
+            throw new ApplicationException(HolidayConstants.INVALIDFROMDATE);
+        }
+    }
+
+    private void validateFromDateAgainstThruDate(final Date fromDate, final Date thruDate) throws ApplicationException {
+        if (DateUtils.getDateWithoutTimeStamp(fromDate.getTime()).compareTo(
+                DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
+            throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
+        }
     }
 }

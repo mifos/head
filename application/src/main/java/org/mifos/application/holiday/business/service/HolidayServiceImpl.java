@@ -20,6 +20,7 @@
 
 package org.mifos.application.holiday.business.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
@@ -27,6 +28,8 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 
 public class HolidayServiceImpl implements HolidayService {
@@ -42,16 +45,24 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     @Override
-    public void create(HolidayDetails holidayDetails, List<Short> officeIds) {
+    public void create(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
         HolidayBO holiday = HolidayBO.fromDto(holidayDetails);
         holiday.validate();
+
+        List<OfficeBO> offices = new ArrayList<OfficeBO>();
+        for (Short officeId : officeIds) {
+            OfficeBO office = officeDao.findOfficeById(officeId);
+            offices.add(office);
+            if (office.hasChildWithAnyOf(officeIds)) {
+                throw new ValidationException("Holidays can only be associated with one level of office in an office hierarchy.");
+            }
+        }
 
         try {
             hibernateTransactionHelper.startTransaction();
 
             this.holidayDao.save(holiday);
-            for (Short officeId : officeIds) {
-                OfficeBO office = officeDao.findOfficeById(officeId);
+            for (OfficeBO office : offices) {
                 office.addHoliday(holiday);
             }
 

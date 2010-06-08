@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.persistence.HolidayDetails;
@@ -204,19 +205,6 @@ public class IntegrationTestObjectMother {
             for (SavingsBO savingsBO : savingsAccount) {
                 TestObjectFactory.cleanUp(savingsBO);
             }
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public static void createOffice(OfficeBO office) {
-        try {
-            StaticHibernateUtil.startTransaction();
-            customerPersistence.createOrUpdate(office);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new RuntimeException(e);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -454,10 +442,40 @@ public class IntegrationTestObjectMother {
     }
 
     public static void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) {
-        holidayService.create(holidayDetails, officeIds);
+        try {
+            holidayService.create(holidayDetails, officeIds);
+        } catch (ApplicationException e) {
+            throw new MifosRuntimeException(e.getMessage(), e);
+        }
     }
 
     public static OfficeBO findOfficeById(Short officeId) {
         return officeDao.findOfficeById(officeId);
+    }
+
+    public static void createOffice(OfficeBO office) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(office);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createOffice(OfficeBuilder officeBuilder) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(officeBuilder.build());
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 }

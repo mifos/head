@@ -23,9 +23,10 @@ package org.mifos.application.holiday.business.service;
 import java.util.List;
 
 import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public interface HolidayService {
 
-    void create(HolidayDetails holidayDetails, List<Short> officeIds);
+    void create(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException;
 
 }
