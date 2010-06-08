@@ -26,39 +26,39 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
-    private final OfficeDao officeDao;
+    private final HolidayService holidayService;
     private final HolidayDao holidayDao;
 
-    public HolidayServiceFacadeWebTier(OfficeDao officeDao, HolidayDao holidayDao) {
-        this.officeDao = officeDao;
+    public HolidayServiceFacadeWebTier(HolidayService holidayService, HolidayDao holidayDao) {
+        this.holidayService = holidayService;
         this.holidayDao = holidayDao;
     }
 
     @Override
-    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ServiceException {
-        try {
-            holidayDetails.validate();
-            HolidayBO holiday = new HolidayBO(holidayDetails);
-            for (Short officeId : officeIds) {
-                new OfficePersistence().addHoliday(officeId, holiday);
-            }
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        } catch (ValidationException e) {
-            throw new ServiceException(e);
-        }
+    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
+
+        this.holidayService.create(holidayDetails, officeIds);
+
+//        try {
+//            holidayDetails.validate();
+//            HolidayBO holiday = new HolidayBO(holidayDetails);
+//            for (Short officeId : officeIds) {
+//                new OfficePersistence().addHoliday(officeId, holiday);
+//            }
+//        } catch (PersistenceException e) {
+//            throw new ServiceException(e);
+//        } catch (ValidationException e) {
+//            throw new ServiceException(e);
+//        }
     }
 
     @Override
-    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException{
+    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ApplicationException {
 
         List<HolidayBO> holidays = this.holidayDao.findAllHolidays();
 

@@ -34,7 +34,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase {
@@ -63,7 +63,7 @@ public class HolidayPersistenceIntegrationTest extends MifosIntegrationTestCase 
         }
     }
 
-    private void createHolidayForHeadOffice(HolidayDetails holidayDetails) throws ServiceException {
+    private void createHolidayForHeadOffice(HolidayDetails holidayDetails) throws ApplicationException {
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short) 1);
         DependencyInjectedServiceLocator.locateHolidayServiceFacade().createHoliday(holidayDetails, officeIds);

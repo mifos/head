@@ -32,7 +32,6 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HolidayServiceFacadeWebTierIntegrationTest extends MifosIntegrationTestCase {
@@ -79,7 +78,7 @@ public class HolidayServiceFacadeWebTierIntegrationTest extends MifosIntegration
         assertEquals(1, new OfficePersistence().getOffice((short) 3).getHolidays().size());
     }
 
-    public void testShouldReturnHolidaysByYear() throws ServiceException {
+    public void testShouldReturnHolidaysByYear() throws Exception {
          Map<String, List<OfficeHoliday>> holidaysByYear = holidayServiceFacade.holidaysByYear();
          assertNotNull(holidaysByYear);
          assertEquals(1, holidaysByYear.size());

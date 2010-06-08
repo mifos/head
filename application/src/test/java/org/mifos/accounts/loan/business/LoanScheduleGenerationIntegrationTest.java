@@ -66,7 +66,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.StandardTestingService;
@@ -693,7 +692,7 @@ public class LoanScheduleGenerationIntegrationTest {
 
     }
 
-    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+    private void buildAndPersistHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws Exception {
         HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
         List<Short> officeIds = new LinkedList<Short>();
         officeIds.add((short)1);
@@ -702,7 +701,7 @@ public class LoanScheduleGenerationIntegrationTest {
         StaticHibernateUtil.commitTransaction();
     }
 
-    private void buildAndPersistMoratorium (DateTime start, DateTime through) throws ServiceException {
+    private void buildAndPersistMoratorium (DateTime start, DateTime through) throws Exception {
         buildAndPersistHoliday(start, through, RepaymentRuleTypes.REPAYMENT_MORATORIUM);
     }
 

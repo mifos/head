@@ -43,7 +43,7 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
@@ -95,7 +95,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertFalse(holidays.isEmpty());
     }
 
-    public void testShouldFindAllHolidaysWithinThisAndNextYear() throws ServiceException {
+    public void testShouldFindAllHolidaysWithinThisAndNextYear() throws Exception {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
                 .toDateTime();
         DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2)
@@ -115,7 +115,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(holidays.size(), is(2));
     }
 
-    public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws ServiceException {
+    public void testShouldFindAllHolidaysOrderedByFromDateAscending() throws Exception {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
                 .toDateTime();
         DateTime lastDayOfYear = secondlastDayOfYear.plusDays(1);
@@ -168,7 +168,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
     }
 
-    private void insert(final Holiday holiday) throws ServiceException {
+    private void insert(final Holiday holiday) throws ApplicationException {
         HolidayDetails holidayDetails = new HolidayDetails("Test Holiday", holiday.getFromDate().toDate(), holiday
                 .getThruDate().toDate(), holiday.getRepaymentRuleType());
         List<Short> officeIds = new LinkedList<Short>();

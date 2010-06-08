@@ -59,7 +59,6 @@ import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -746,7 +745,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest {
         }
     }
 
-    private void saveHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws ServiceException {
+    private void saveHoliday (DateTime start, DateTime through, RepaymentRuleTypes rule) throws Exception {
         HolidayDetails holidayDetails = new HolidayDetails("testHoliday", start.toDate(), through.toDate(), rule);
         holidayDetails.disableValidation(true);
         List<Short> officeIds = new LinkedList<Short>();
