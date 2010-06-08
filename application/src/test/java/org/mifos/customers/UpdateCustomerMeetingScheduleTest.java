@@ -204,4 +204,23 @@ public class UpdateCustomerMeetingScheduleTest {
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
         assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.WEDNESDAY);
     }
+
+    @Test
+    public void givenCustomerHasNoExistingMeetingShouldCreateMeetingOnCustomer() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        Integer customerId = Integer.valueOf(1);
+        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.WEDNESDAY).build();
+
+        // stubbing
+        when(customerDao.findCustomerById(customerId)).thenReturn(mockedCenter);
+        when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
+
+        // exercise test
+        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+
+        // verification
+        verify(mockedCenter).createCustomerMeeting((MeetingBO)anyObject());
+    }
 }
