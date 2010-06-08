@@ -26,22 +26,15 @@ import org.mifos.framework.business.service.DataTransferObject;
  */
 public class CustomerMeetingDto implements DataTransferObject {
     private final String meetingSchedule;
-    private final String updatedMeetingScheduleMessage;
     private final String meetingPlace;
 
-    public CustomerMeetingDto(final String meetingSchedule, final String updatedMeetingScheduleMessage,
-            final String meetingPlace) {
+    public CustomerMeetingDto(final String meetingSchedule, final String meetingPlace) {
         this.meetingSchedule = meetingSchedule;
-        this.updatedMeetingScheduleMessage = updatedMeetingScheduleMessage;
         this.meetingPlace = meetingPlace;
     }
 
     public String getMeetingSchedule() {
         return this.meetingSchedule;
-    }
-
-    public String getUpdatedMeetingScheduleMessage() {
-        return this.updatedMeetingScheduleMessage;
     }
 
     public String getMeetingPlace() {

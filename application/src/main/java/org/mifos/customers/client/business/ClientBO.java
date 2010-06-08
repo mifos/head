@@ -58,6 +58,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
+import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -126,7 +127,7 @@ public class ClientBO extends CustomerBO {
                 clientLastName, secondLastName, clientDetailEntity);
 
         client.setParentCustomer(group);
-        client.childAddedForParent(client.getParentCustomer());
+        group.incrementChildCount();
 
         client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
         client.updateAddress(address);
@@ -520,25 +521,6 @@ public class ClientBO extends CustomerBO {
     }
 
     @Override
-    public void updateMeeting(final MeetingBO meeting) throws CustomerException {
-        if (getCustomerMeeting() == null) {
-            this.setCustomerMeeting(createCustomerMeeting(meeting));
-        } else {
-            saveUpdatedMeeting(meeting);
-        }
-        this.update();
-    }
-
-    @Override
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        super.saveUpdatedMeeting(meeting);
-        if (getParentCustomer() == null) {
-            deleteMeeting(newMeeting);
-        }
-    }
-
-    @Override
     public boolean isActiveForFirstTime(final Short oldStatus, final Short newStatusId) {
         return (oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
                 .equals(CustomerStatus.CLIENT_PENDING.getValue()))
@@ -738,29 +720,6 @@ public class ClientBO extends CustomerBO {
         logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());
     }
 
-    public void transferToGroup(final GroupBO newParent) throws CustomerException {
-        validateGroupTransfer(newParent);
-        logger.debug("In ClientBO::transferToGroup(), transfering customerId: " + getCustomerId() + "to Group Id : "
-                + newParent.getCustomerId());
-
-        if (!isSameBranch(newParent.getOffice())) {
-            makeCustomerMovementEntries(newParent.getOffice());
-        }
-
-        CustomerBO oldParent = getParentCustomer();
-        changeParentCustomer(newParent);
-        resetPositions(oldParent);
-
-        if (oldParent.getParentCustomer() != null) {
-            CustomerBO center = oldParent.getParentCustomer();
-            resetPositions(center);
-            center.setUserContext(getUserContext());
-            center.update();
-        }
-        update();
-        logger.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :" + getCustomerId());
-    }
-
     public void handleGroupTransfer() {
         if (!isSameBranch(getParentCustomer().getOffice())) {
             makeCustomerMovementEntries(getParentCustomer().getOffice());
@@ -770,9 +729,10 @@ public class ClientBO extends CustomerBO {
             this.setPersonnel(null);
         }
         setSearchId(getParentCustomer().getSearchId() + getSearchId().substring(getSearchId().lastIndexOf(".")));
-        if (getParentCustomer().getParentCustomer() != null) {
+
+        if (getParentCustomer() != null) {
             setPersonnel(getParentCustomer().getPersonnel());
-            setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
+            this.setCustomerMeeting(this.getParentCustomer().getCustomerMeeting());
         }
     }
 
@@ -847,7 +807,7 @@ public class ClientBO extends CustomerBO {
         return getParentCustomer().getCustomerId().equals(group.getCustomerId());
     }
 
-    private void validateGroupTransfer(final GroupBO toGroup) throws CustomerException {
+    public void validateReceivingGroup(final GroupBO toGroup) throws CustomerException {
         if (toGroup == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
         }
@@ -1248,5 +1208,43 @@ public class ClientBO extends CustomerBO {
         if (isStatusValidationRequired()) {
             this.validateClientStatus();
         }
+    }
+
+    public boolean transferTo(GroupBO receivingGroup) {
+
+        boolean regenerateClientSchedules = false;
+
+        this.setParentCustomer(receivingGroup);
+        this.setPersonnel(receivingGroup.getPersonnel());
+
+        CustomerHierarchyEntity currentHierarchy = this.getActiveCustomerHierarchy();
+        if (null != currentHierarchy) {
+            currentHierarchy.makeInactive(userContext.getId());
+        }
+        addCustomerHierarchy(new CustomerHierarchyEntity(this, receivingGroup));
+
+        MeetingBO parentGroupMeeting = receivingGroup.getCustomerMeetingValue();
+        MeetingBO clientMeeting = this.getCustomerMeetingValue();
+        if (parentGroupMeeting != null) {
+            if (clientMeeting != null) {
+                regenerateClientSchedules = receivingGroup.hasMeetingDifferentTo(clientMeeting);
+                this.setCustomerMeeting(receivingGroup.getCustomerMeeting());
+            } else {
+                CustomerMeetingEntity customerMeeting = this.createCustomerMeeting(parentGroupMeeting);
+                this.setCustomerMeeting(customerMeeting);
+            }
+        } else if (clientMeeting != null) {
+            this.setCustomerMeeting(null);
+        }
+
+        if (!isSameBranch(receivingGroup.getOffice())) {
+            this.makeCustomerMovementEntries(receivingGroup.getOffice());
+            regenerateClientSchedules = true;
+        }
+
+        receivingGroup.incrementChildCount();
+        this.setSearchId(receivingGroup.getSearchId() + "." + String.valueOf(receivingGroup.getMaxChildCount()));
+
+        return regenerateClientSchedules;
     }
 }

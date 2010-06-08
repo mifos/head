@@ -20,6 +20,9 @@
 
 package org.mifos.framework;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -34,14 +37,23 @@ import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.schedule.ScheduledEvent;
+import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 
@@ -383,5 +395,39 @@ public class TestUtils {
         int yhashcode = notx.hashCode();
 
         Assert.assertTrue("Equal object, return unequal hashcode test fails", !(xhashcode == yhashcode));
+    }
+
+    public static DateTime nearestDateMatchingPeriodStartingOn(DateTime inclusiveOf, MeetingBO period) {
+        ScheduledEvent scheduledEvent =  ScheduledEventFactory.createScheduledEventFrom(period);
+        return scheduledEvent.nearestMatchingDateBeginningAt(inclusiveOf);
+    }
+
+    public static void assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(CustomerBO customer, WeekDay expectedDayOfWeek) {
+        Set<AccountActionDateEntity> customerSchedules = customer.getCustomerAccount().getAccountActionDates();
+        for (AccountActionDateEntity accountActionDateEntity : customerSchedules) {
+            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
+
+            LocalDate scheduledDate = new LocalDate(customerSchedule.getActionDate());
+            DateTime endOfCurrentInstallmentPeriod = TestUtils.nearestDateMatchingPeriodStartingOn(new DateMidnight().toDateTime(), customer.getCustomerMeetingValue());
+            LocalDate endOfCurrentInstallmentPeriodLocalDate = new LocalDate(endOfCurrentInstallmentPeriod);
+
+            if (scheduledDate.isBefore(endOfCurrentInstallmentPeriodLocalDate)) {
+                assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
+            }
+        }
+    }
+
+    public static void assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(CustomerBO customer, WeekDay expectedDayOfWeek) {
+        Set<AccountActionDateEntity> customerSchedules = customer.getCustomerAccount().getAccountActionDates();
+        for (AccountActionDateEntity accountActionDateEntity : customerSchedules) {
+            CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountActionDateEntity;
+
+            LocalDate scheduledDate = new LocalDate(customerSchedule.getActionDate());
+            DateTime endOfCurrentInstallmentPeriod = TestUtils.nearestDateMatchingPeriodStartingOn(new DateMidnight().toDateTime(), customer.getCustomerMeetingValue());
+
+            if (scheduledDate.isAfter(new LocalDate(endOfCurrentInstallmentPeriod))) {
+                assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
+            }
+        }
     }
 }

@@ -21,8 +21,6 @@
 package org.mifos.application.meeting.util.helpers;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.util.UserContext;
@@ -34,42 +32,19 @@ public class MeetingHelper {
     }
 
     public String getMessage(MeetingBO meeting, UserContext userContext) {
-        return this.getMessage(meeting, userContext, false);
-    }
-
-    public String getUpdatedMeetingScheduleMessage(CustomerMeetingEntity customerMeeting, UserContext userContext) {
-        if (YesNoFlag.YES.getValue().equals(customerMeeting.getUpdatedFlag())) {
-            return this.getMessage(customerMeeting.getUpdatedMeeting(), userContext, true);
-        }
-        return null;
-    }
-
-    public String getMessage(MeetingBO meeting, UserContext userContext, boolean updatedMeeting) {
         String key;
         Object[] args = new Object[3];
         if (meeting.isWeekly()) {
-            if (updatedMeeting) {
-                key = MeetingConstants.WEEK_SCHEDULE_CHANGE;
-            } else {
                 key = MeetingConstants.WEEK_SCHEDULE;
-            }
             args[0] = meeting.getMeetingDetails().getRecurAfter();
             WeekDay weekDay = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
             args[1] = weekDay.getName();
         } else if (meeting.isMonthlyOnDate()) {
-            if (updatedMeeting) {
-                key = MeetingConstants.MONTH_DAY_SCHEDULE_CHANGE;
-            } else {
                 key = MeetingConstants.MONTH_DAY_SCHEDULE;
-            }
             args[0] = meeting.getMeetingDetails().getDayNumber();
             args[1] = meeting.getMeetingDetails().getRecurAfter();
         } else {
-            if (updatedMeeting) {
-                key = MeetingConstants.MONTH_SCHEDULE_CHANGE;
-            } else {
                 key = MeetingConstants.MONTH_SCHEDULE;
-            }
             args[0] = meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().getName();
             args[1] = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
             args[2] = meeting.getMeetingDetails().getRecurAfter();

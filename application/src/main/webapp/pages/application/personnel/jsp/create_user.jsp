@@ -385,7 +385,7 @@ explanation of the license and how it is applied.
 										<td width="22%" align="right"><span id="create_user.label.customField"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
-											bundle="PersonnelUIResources"></mifos:mifoslabel></span>: 
+											bundle="PersonnelUIResources"/></span>:
 										</td>
 										<td width="78%" ><c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext styleId="create_user.input.customField" name="personActionForm"
@@ -394,9 +394,7 @@ explanation of the license and how it is applied.
 											<mifos:mifosalphanumtext styleId="create_user.input.customField" name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
-											<mifos:mifosalphanumtext styleId="create_user.input.customField" name="personActionForm"
-												property='customField[${ctr}].fieldValue' maxlength="200" />
-
+                                            <date:datetag property="customField[${ctr}].fieldValue" />
 										</c:if></td>
 									</tr>
 								</c:forEach>

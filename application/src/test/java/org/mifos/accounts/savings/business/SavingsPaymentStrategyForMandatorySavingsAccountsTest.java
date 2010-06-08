@@ -37,8 +37,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.SavingsScheduleBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
@@ -53,8 +55,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
 
-    private static final Short defaultCurrencyId = Short.valueOf("2");
     private static MifosCurrency defaultCurrency;
+    private static AccountStateEntity savingsAccountState;
 
     // class under test
     private SavingsPaymentStrategy paymentStrategy;
@@ -79,6 +81,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
     public static void setupMifosLoggerDueToUseOfStaticClientRules() {
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
+        savingsAccountState = new AccountStateEntity(AccountState.SAVINGS_ACTIVE);
     }
 
     @Before
@@ -86,6 +89,7 @@ public class SavingsPaymentStrategyForMandatorySavingsAccountsTest {
         paymentStrategy = new SavingsPaymentStrategyImpl(savingsTransactionActivityHelper);
         when(accountPayment.getAccount()).thenReturn(savingsAccount);
         when(savingsAccount.getCurrency()).thenReturn(defaultCurrency);
+        when(savingsAccount.getAccountState()).thenReturn(savingsAccountState);
     }
 
     @Test

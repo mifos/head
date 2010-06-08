@@ -48,7 +48,6 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -382,6 +381,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public Set<CustomerBO> getChildren() {
+        if (children == null) {
+            return new HashSet<CustomerBO>();
+        }
+
         return children;
     }
 
@@ -515,18 +518,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     public void update() throws CustomerException {
         try {
             setUpdateDetails();
-            getCustomerPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
-        }
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao}.
-     */
-    @Deprecated
-    protected void persist() throws CustomerException {
-        try {
             getCustomerPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new CustomerException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
@@ -718,114 +709,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return amount;
     }
 
-    /**
-     * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
-     *
-     * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
-     */
-    @Deprecated
-    public abstract void updateMeeting(MeetingBO meeting) throws CustomerException;
-
-    /**
-     * FIXME - #00005 - keithw - remove update meeting and wait for batch job functionality.
-     *
-     * @deprecated - Pull up from pojo to service level and consider removing functionality completely.
-     */
-    @Deprecated
-    protected void saveUpdatedMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: " + getCustomerId());
-        getCustomerMeeting().setUpdatedMeeting(meeting);
-        setUpdatedMeetingForChildren(meeting);
-        getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
-        persist();
-    }
-
-    private void setUpdatedMeetingForChildren(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: " + getCustomerId());
-        Set<CustomerBO> childList = getChildren();
-        if (childList != null) {
-            for (CustomerBO child : childList) {
-                child.setUserContext(getUserContext());
-                child.updateMeeting(meeting);
-            }
-        }
-    }
-
-    public void changeUpdatedMeeting() throws CustomerException {
-        logger.debug("In CustomerBO::changeUpdatedMeeting(), customerId: " + getCustomerId());
-        MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
-        MeetingBO oldMeeting = getCustomerMeeting().getMeeting();
-        if (newMeeting != null) {
-            if (sameRecurrence(oldMeeting, newMeeting)) {
-                logger.debug("In CustomerBO::changeUpdatedMeeting(), Same Recurrence Found, customerId: "
-                        + getCustomerId());
-                updateMeeting(oldMeeting, newMeeting);
-                resetUpdatedMeetingForChildren(oldMeeting);
-                if (getParentCustomer() == null) {
-                    deleteMeeting(newMeeting);
-                }
-            } else {
-                logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
-                        + getCustomerId());
-                getCustomerMeeting().setMeeting(newMeeting);
-                resetUpdatedMeetingForChildren(newMeeting);
-                if (getParentCustomer() == null) {
-                    deleteMeeting(oldMeeting);
-                }
-            }
-            getCustomerMeeting().setUpdatedMeeting(null);
-        }
-        persist();
-    }
-
-    protected void resetUpdatedMeetingForChildren(final MeetingBO currentMeeting) throws CustomerException {
-        logger.debug("In CustomerBO::resetUpdatedMeetingForChildren(), customerId: " + getCustomerId());
-        Set<CustomerBO> childList = getChildren();
-        if (childList != null) {
-            for (CustomerBO child : childList) {
-                child.getCustomerMeeting().setMeeting(currentMeeting);
-                child.getCustomerMeeting().setUpdatedMeeting(null);
-                child.resetUpdatedMeetingForChildren(currentMeeting);
-                child.persist();
-            }
-        }
-    }
-
-    protected void deleteMeeting(final MeetingBO meeting) throws CustomerException {
-        logger.debug("In CustomerBO::deleteMeeting(), customerId: " + getCustomerId());
-        try {
-            if (meeting != null) {
-                logger.debug("In CustomerBO::deleteMeeting(), customerId: " + getCustomerId() + " , meetingId: "
-                        + meeting.getMeetingId());
-                getCustomerPersistence().deleteMeeting(meeting);
-            }
-        } catch (PersistenceException pe) {
-            throw new CustomerException(pe);
-        }
-    }
-
-    protected void updateMeeting(final MeetingBO oldMeeting, final MeetingBO newMeeting) throws CustomerException {
-        try {
-            if (oldMeeting.isWeekly()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingPlace());
-            } else if (oldMeeting.isMonthlyOnDate()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getDayNumber(), newMeeting.getMeetingPlace());
-            } else if (oldMeeting.isMonthly()) {
-                oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingDetails()
-                        .getWeekRank(), newMeeting.getMeetingPlace());
-            }
-
-        } catch (MeetingException me) {
-            throw new CustomerException(me);
-        }
-    }
-
-    private boolean sameRecurrence(final MeetingBO oldMeeting, final MeetingBO newMeeting) {
-        return oldMeeting.isWeekly() && newMeeting.isWeekly() || oldMeeting.isMonthlyOnDate()
-                && newMeeting.isMonthlyOnDate() || oldMeeting.isMonthly() && !oldMeeting.isMonthlyOnDate()
-                && newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate();
-    }
-
     public List<LoanBO> getOpenLoanAccounts() {
         List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
         for (AccountBO account : getAccounts()) {
@@ -956,7 +839,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return this.office.getGlobalOfficeNum().equals(officeObj.getGlobalOfficeNum());
     }
 
-    public final boolean isDifferentBranch(final OfficeBO otherOffice) {
+    public boolean isDifferentBranch(final OfficeBO otherOffice) {
         return !isSameBranch(otherOffice);
     }
 
@@ -1043,25 +926,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.addCustomerMovement(newCustomerMovement);
     }
 
-    protected void changeParentCustomer(final CustomerBO newParent) throws CustomerException {
-        CustomerBO oldParent = getParentCustomer();
-        setParentCustomer(newParent);
-
-        CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-        if (null != currentHierarchy) {
-            currentHierarchy.makeInactive(userContext.getId());
-        }
-        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-        handleParentTransfer();
-        childAddedForParent(newParent);
-        setSearchId(newParent.getSearchId() + "." + String.valueOf(newParent.getMaxChildCount()));
-
-        oldParent.setUserContext(getUserContext());
-        oldParent.update();
-        newParent.setUserContext(getUserContext());
-        newParent.update();
-    }
-
     protected String generateSystemId() {
         String systemId = "";
         int numberOfZeros = CustomerConstants.SYSTEM_ID_LENGTH - String.valueOf(getCustomerId()).length();
@@ -1071,27 +935,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
 
         return getOffice().getGlobalOfficeNum() + "-" + systemId + getCustomerId();
-    }
-
-    protected void handleParentTransfer() {
-        setPersonnel(getParentCustomer().getPersonnel());
-        if (getParentCustomer().getCustomerMeeting() != null) {
-            if (getCustomerMeeting() != null) {
-                if (!getCustomerMeeting().getMeeting().getMeetingId().equals(
-                        getParentCustomer().getCustomerMeeting().getMeeting().getMeetingId())) {
-                    setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
-                }
-            } else {
-                setCustomerMeeting(createCustomerMeeting(getParentCustomer().getCustomerMeeting().getMeeting()));
-            }
-        } else if (getCustomerMeeting() != null) {
-            deleteCustomerMeeting();
-        }
-    }
-
-    public void setUpdatedMeeting(final MeetingBO meeting) {
-        getCustomerMeeting().setUpdatedMeeting(meeting);
-        getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
     }
 
     /**
@@ -1130,8 +973,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     private void createCustomFields(final List<CustomFieldDto> customFields) {
         if (customFields != null) {
             for (CustomFieldDto customField : customFields) {
-                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(),
-                        this));
+                addCustomField(new CustomerCustomFieldEntity(customField.getFieldId(), customField.getFieldValue(), customField.getFieldType(), this));
             }
         }
     }
@@ -1185,6 +1027,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * just call incrementChildCount directly
+     */
+    @Deprecated
     public void childAddedForParent(final CustomerBO parent) {
         parent.incrementChildCount();
     }
@@ -1525,5 +1371,21 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public final void addChild(final CustomerBO existingClient) {
         this.children.add(existingClient);
+    }
+
+    public void validateIsTopOfHierarchy() throws CustomerException {
+        if (this.parentCustomer != null) {
+            throw new CustomerException(CustomerConstants.INVALID_PARENT);
+        }
+    }
+
+    public boolean hasMeetingDifferentTo(MeetingBO groupMeeting) {
+        MeetingBO customerMeeting = getCustomerMeetingValue();
+
+        if ((groupMeeting.getMeetingId() == null) && (customerMeeting.getMeetingId() == null)) {
+            return false;
+        }
+
+        return !groupMeeting.getMeetingId().equals(customerMeeting.getMeetingId());
     }
 }

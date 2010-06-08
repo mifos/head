@@ -28,6 +28,10 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.business.util.Address;
 
+/**
+ * use builders instead of templates.
+ */
+@Deprecated
 public class CustomerTemplateImpl implements CustomerTemplate {
     private CustomerStatus customerStatus;
     private String displayName;

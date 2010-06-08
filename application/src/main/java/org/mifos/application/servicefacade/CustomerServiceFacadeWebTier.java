@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -85,13 +86,11 @@ import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
-import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
@@ -311,12 +310,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext) throws ApplicationException {
+    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields)
+        throws ApplicationException {
 
         try {
-            List<CustomFieldDto> customFields = actionForm.getCustomFields();
-            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
             DateTime mfiJoiningDate = CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), userContext
                     .getPreferredLocale());
 
@@ -328,14 +326,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(actionForm.getOfficeIdValue());
 
-            List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
-                    .fromDto(customFields, null);
-
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm
                     .getFeesToApply());
 
             CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                    centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId);
+                    centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId, new DateMidnight().toDateTime());
 
             this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
@@ -361,7 +356,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext)
+    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields)
             throws ApplicationException {
 
         GroupBO group;
@@ -370,11 +365,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm
                     .getFeesToApply());
 
-            List<CustomFieldDto> customFields = actionForm.getCustomFields();
-            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
-
-            List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
-                    .fromDto(customFields, null);
+            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
 
             PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getFormedByPersonnelValue());
 
@@ -431,7 +422,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext, List<SavingsDetailDto> allowedSavingProducts) throws ApplicationException {
+            UserContext userContext, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
 
         try {
             List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
@@ -451,13 +442,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             InputStream picture = picture(actionForm);
 
             ClientBO client = null;
-            List<CustomFieldDto> customFields = actionForm.getCustomFields();
-            CustomFieldDto.convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
+            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
 
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(clientFees(actionForm));
-            List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity
-                    .fromDto(customFields, null);
-
             List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
             for (Short productId : selectedSavingProducts) {
                 if (productId != null) {
@@ -885,6 +872,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         GroupBO transferedGroup = this.customerService.transferGroupTo(group, transferToOffice);
 
         return transferedGroup;
+    }
+
+    @Override
+    public ClientBO transferClientToGroup(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException {
+        return this.customerService.transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
     }
 
     @Override

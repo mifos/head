@@ -40,7 +40,7 @@ public class LoanAccountBuilder {
     private final Short numOfInstallments = Short.valueOf("5");
     private final GraceType gracePeriodType = GraceType.NONE;
     private final AccountTypes accountType = AccountTypes.LOAN_ACCOUNT;
-    private final AccountState accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
+    private AccountState accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
@@ -81,6 +81,16 @@ public class LoanAccountBuilder {
 
     public LoanAccountBuilder remainingLoanBalance(double withRemainingLoanBalance) {
         this.remainingLoanBalance = withRemainingLoanBalance;
+        return this;
+    }
+
+    public LoanAccountBuilder activeInGoodStanding() {
+        this.accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
+        return this;
+    }
+
+    public LoanAccountBuilder approved() {
+        this.accountState = AccountState.LOAN_APPROVED;
         return this;
     }
 }

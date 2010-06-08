@@ -439,9 +439,7 @@ explanation of the license and how it is applied.
 											<mifos:mifosalphanumtext styleId="edit_user.input.customField" name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
-											<mifos:mifosalphanumtext styleId="edit_user.input.customField" name="personActionForm"
-												property='customField[${ctr}].fieldValue' maxlength="200" />
-
+											<date:datetag property="customField[${ctr}].fieldValue" />
 										</c:if>
 										<html-el:hidden property='customField[${ctr}].fieldId'	value="${cf.fieldId}"></html-el:hidden>
 										</td>

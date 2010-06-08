@@ -31,6 +31,7 @@ import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
+import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -58,6 +59,8 @@ public interface CustomerService {
 
     GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException;
 
+    ClientBO transferClientTo(UserContext userContext, Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo)  throws CustomerException;
+
     void updateCustomerStatus(UserContext userContext, CustomerStatusUpdate customerStatusUpdate) throws CustomerException;
 
     void updateCenterStatus(CenterBO center, CustomerStatus newStatus, CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException;
@@ -71,4 +74,6 @@ public interface CustomerService {
     void updateClientFamilyInfo(UserContext userContext, ClientFamilyInfoUpdate clientFamilyInfoUpdate) throws CustomerException;
 
     void updateClientMfiInfo(UserContext userContext, ClientMfiInfoUpdate clientMfiInfoUpdate) throws CustomerException;
+
+    void updateCustomerMeetingSchedule(MeetingUpdateRequest meetingUpdateRequest, UserContext userContext) throws ApplicationException;
 }

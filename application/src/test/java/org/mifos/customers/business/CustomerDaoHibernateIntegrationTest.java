@@ -84,7 +84,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
         center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(sampleBranchOffice())
-                .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
+                .withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting);
 
         weeklyPeriodicFeeForGroupOnly = new FeeBuilder().appliesToGroupsOnly().withFeeAmount("50.0").withName(
@@ -102,8 +102,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForClientsOnly);
 
         activeClient = new ClientBuilder().active().withMeeting(weeklyMeeting).withName("Active Client").withOffice(
-                sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForClientsOnly)
-                .withParentCustomer(group).buildForIntegrationTests();
+                sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(activeClient, weeklyMeeting);
 
         weeklyPeriodicFeeForSecondClient = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
@@ -112,8 +111,7 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForSecondClient);
 
         pendingClient = new ClientBuilder().pendingApproval().withMeeting(weeklyMeeting).withName("Pending Client")
-                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForSecondClient)
-                .withParentCustomer(group).buildForIntegrationTests();
+                .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(pendingClient, weeklyMeeting);
 
         customerDao = new CustomerDaoHibernate(genericDao);

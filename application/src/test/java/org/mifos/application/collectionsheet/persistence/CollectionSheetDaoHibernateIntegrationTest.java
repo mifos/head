@@ -104,7 +104,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForCenterOnly);
 
         center = new CenterBuilder().with(weeklyMeeting).withName("Center").with(sampleBranchOffice())
-                .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForCenterOnly).build();
+                .withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter((CenterBO)center, weeklyMeeting, weeklyPeriodicFeeForCenterOnly);
 
         weeklyPeriodicFeeForGroupOnly = new FeeBuilder().appliesToGroupsOnly().withFeeAmount("50.0").withName(
@@ -122,7 +122,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         IntegrationTestObjectMother.saveFee(weeklyPeriodicFeeForClientsOnly);
 
         client = new ClientBuilder().withMeeting(weeklyMeeting).withName("Client 1").withOffice(sampleBranchOffice())
-                .withLoanOfficer(testUser()).withFee(weeklyPeriodicFeeForClientsOnly).withParentCustomer(group)
+                .withLoanOfficer(testUser()).withParentCustomer(group)
                 .buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(client, weeklyMeeting);
 

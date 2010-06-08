@@ -558,8 +558,6 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" />&nbsp; <c:out
 												value="${groupInformationDto.customerMeeting.meetingSchedule}" /></span>
-											<c:set var="updatedMeetingScheduleMessage" value="${groupInformationDto.customerMeeting.updatedMeetingScheduleMessage}" />
-											<c:if test="${!empty updatedMeetingScheduleMessage}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
 											<span class="fontnormal"><br></span>
 											</span> <span class="fontnormal"> <c:if
 												test="${groupInformationDto.customerMeeting.meetingPlace!=null && !empty groupInformationDto.customerMeeting.meetingPlace}">

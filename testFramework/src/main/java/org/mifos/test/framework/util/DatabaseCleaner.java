@@ -61,6 +61,7 @@ public class DatabaseCleaner {
         template.execute("delete from savings_account");
         template.execute("delete from savings_performance");
 
+        template.execute("delete from account_notes");
         template.execute("delete from account");
 
         template.execute("delete from customer_address_detail");
@@ -104,6 +105,6 @@ public class DatabaseCleaner {
         template.execute("delete from fees");
 
         // couldn't track down test that is changing state of custom_field_definition data so forced it to be reset here
-        template.execute("update custom_field_definition set mandatory_flag = 0 where field_id = 6");
+        template.execute("update custom_field_definition set mandatory_flag = 0 where entity_type in (1, 12, 20)");
     }
 }
