@@ -37,6 +37,7 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerScheduleEntity;
@@ -50,6 +51,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledDateGeneration;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -168,8 +170,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         if (unappliedHolidays != null && !unappliedHolidays.isEmpty()) {
 
             for (Holiday holiday : unappliedHolidays) {
-                logMessage("Processing Holiday: " + holiday.getName() + " From: " + holiday.getFromDate().toDateMidnight() + " To: "
-                        + holiday.getThruDate().toDateMidnight());
+                logMessage("Processing Holiday: " + holiday.getName() + " From: "
+                        + DateUtils.getLocalDateFromDate(holiday.getFromDate().toDate()) + " To: "
+                        + DateUtils.getLocalDateFromDate(holiday.getThruDate().toDate()));
 
                 try {
                     rescheduleDatesStartingFromUnappliedHoliday(holiday);
@@ -201,8 +204,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         getHolidayDao().save(holiday);
         getHibernateUtil().commitTransaction();
 
-        String endHolidayMessage = "Completed Processing for Holiday: " + holiday.getName()
-                + "  Time Taken: "
+        String endHolidayMessage = "Completed Processing for Holiday: " + holiday.getName() + "  Time Taken: "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - holidayStartTime) + " ms";
         logMessage(endHolidayMessage);
     }
@@ -210,10 +212,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private void reschedule(Holiday holiday, AccountBatch accountBatch) throws PersistenceException {
 
         long rescheduleStartTime = new DateTimeService().getCurrentDateTime().getMillis();
+
         List<Object[]> accountIdsArray = accountBatch.getAccountIdsWithDatesIn(holiday);
         accountCount = accountIdsArray.size();
-        logMessage("No. of " + accountBatch.getAccountTypeName() + " Accounts to Process: " + accountCount + " : Query took: "
-                + (new DateTimeService().getCurrentDateTime().getMillis() - rescheduleStartTime) + " ms");
+        logMessage("No. of " + accountBatch.getAccountTypeName() + " Accounts to Process: " + accountCount
+                + " : Query took: " + (new DateTimeService().getCurrentDateTime().getMillis() - rescheduleStartTime)
+                + " ms");
 
         rollingStartTime = new DateTimeService().getCurrentDateTime().getMillis();
         currentRecordNumber = 0;
@@ -229,8 +233,16 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             currentRecordNumber++;
 
             ScheduledDateGeneration officeScheduledDateGeneration = getScheduledDateGeneration(officeId);
+
+            DateTime amendedThruDate = holiday.getThruDate();
+            //Moratoria affect all installments on or after the fromDate.
+            //Normal holidays only affect installments between the fromDate and thruDate
+            if (holiday.getRepaymentRuleType().getValue().equals(RepaymentRuleTypes.REPAYMENT_MORATORIUM.getValue())){
+                amendedThruDate = holiday.getThruDate().plusYears(10);
+            }
             List<AccountActionDateEntity> futureAffectedInstallments = accountBatch.getAffectedInstallments(accountId,
-                    holiday.getFromDate(), holiday.getThruDate());
+                    holiday.getFromDate(), amendedThruDate);
+
             MeetingBO meeting = (MeetingBO) StaticHibernateUtil.getSessionTL().get(MeetingBO.class, meetingId);
 
             rescheduleDatesForNewHolidays(officeScheduledDateGeneration, futureAffectedInstallments, meeting);
@@ -238,6 +250,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             houseKeeping();
 
         }
+
+
         getHibernateUtil().commitTransaction();
         long rescheduleEndTime = new DateTimeService().getCurrentDateTime().getMillis();
         String message = "" + currentRecordNumber + " updated, " + (accountCount - currentRecordNumber)
@@ -273,10 +287,30 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
         int numberOfDatesToGenerate = installments.size() + 1;
 
-        // question this with Keith w
         DateTime dayBeforeFirstDateToGenerate = new DateTime(installments.get(0).getActionDate()).minusDays(1);
         return dateGeneration.generateScheduledDates(numberOfDatesToGenerate, dayBeforeFirstDateToGenerate,
                 scheduledEvent);
+    }
+
+    private ScheduledDateGeneration getScheduledDateGeneration(Short officeId) {
+
+        ScheduledDateGeneration scheduledDateGeneration = officeScheduledDateGenerationMap.get(officeId);
+
+        if (scheduledDateGeneration != null) {
+            return scheduledDateGeneration;
+        }
+
+        List<Holiday> futureHolidays = getHolidayDao().findCurrentAndFutureOfficeHolidaysEarliestFirst(officeId);
+        scheduledDateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays,
+                futureHolidays);
+        officeScheduledDateGenerationMap.put(officeId, scheduledDateGeneration);
+
+        return scheduledDateGeneration;
+    }
+
+    @Override
+    public boolean isTaskAllowedToRun() {
+        return true;
     }
 
     private void initializeTaskGlobalParameters() {
@@ -289,26 +323,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
         unappliedHolidays = getUnappliedHolidays();
         officeScheduledDateGenerationMap = new HashMap<Short, ScheduledDateGeneration>();
-    }
-
-    private ScheduledDateGeneration getScheduledDateGeneration(Short officeId) {
-
-        ScheduledDateGeneration scheduledDateGeneration = officeScheduledDateGenerationMap.get(officeId);
-
-        if (scheduledDateGeneration != null) {
-            return scheduledDateGeneration;
-        }
-
-        List<Holiday> futureHolidays = getHolidayDao().findCurrentAndFutureOfficeHolidaysEarliestFirst(officeId);
-        scheduledDateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, futureHolidays);
-        officeScheduledDateGenerationMap.put(officeId, scheduledDateGeneration);
-
-        return scheduledDateGeneration;
-    }
-
-    @Override
-    public boolean isTaskAllowedToRun() {
-        return true;
     }
 
     private List<Holiday> getUnappliedHolidays() {
