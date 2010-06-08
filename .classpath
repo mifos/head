@@ -29,6 +29,5 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="var" path="M2_REPO"/>
 	<classpathentry kind="output" path="application/target/mifos-webapp/WEB-INF/classes"/>
 </classpath>

@@ -173,7 +173,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     }
 
     @Override
-    public FeeParameters parameters(Short localeId) throws ServiceException {
+    public FeeParameters getFeeParameters(Short localeId) throws ServiceException {
         List<GLCodeEntity> glCodes = retrieveGlCodes();
         List<CategoryTypeEntity> categories = masterDataService.retrieveMasterEntities(CategoryTypeEntity.class,
                 localeId);
@@ -323,5 +323,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         feeBo.updateFeeChangeType(feeChangeType);
         feeBo.update();
     }
+
+
 
 }

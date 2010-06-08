@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-
+@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
 public class GenericController extends AbstractController {
 
 	@Override
@@ -46,6 +46,8 @@ public class GenericController extends AbstractController {
 	}
 
 	public String getPageToDisplay(HttpServletRequest request) {
+	    System.out.println(request.getRequestURI());
+	    //request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "")
 		return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
 	}
 }

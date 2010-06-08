@@ -3,7 +3,7 @@
 [#import "macros.ftl" as mifos]
 
 [@mifos.header "title" /]
-  [@mifos.topNavigation currentTab="Admin" /]
+  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" ] 
         
 	<div id="page-content">

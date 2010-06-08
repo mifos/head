@@ -42,6 +42,8 @@
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
     <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+    
+    
 
     <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
@@ -53,9 +55,13 @@
                 /accessDenied.ftl=genericController
                 /pageNotFound.ftl=genericController
                 /ping.ftl=genericController
-                /adminHome.ftl=genericController
+                /adminHome.ftl=genericController  
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
+                /admin.ftl=genericController
+                /cheetah.css.ftl=genericController
+                /gazelle.css.ftl=genericController 
+                /ClientLeftPane.ftl=genericController               
             </value>
         </property>
     </bean>

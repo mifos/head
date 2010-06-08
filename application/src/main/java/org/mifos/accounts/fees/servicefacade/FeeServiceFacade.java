@@ -33,7 +33,7 @@ public interface FeeServiceFacade {
 
     public List<FeeDto> getCustomerFees() throws ServiceException;
 
-    public FeeParameters parameters(Short localeId) throws ServiceException;
+    public FeeParameters getFeeParameters(Short localeId) throws ServiceException;
 
     public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
 
