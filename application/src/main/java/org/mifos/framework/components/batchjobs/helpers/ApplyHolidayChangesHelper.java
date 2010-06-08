@@ -28,11 +28,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -40,7 +36,6 @@ import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -65,8 +60,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private HibernateUtil hibernateUtil;
     private HolidayDao holidayDao;
     private FiscalCalendarRules fiscalCalendarRules;
-    private LoanBusinessService loanBusinessService;
-    private AccountBusinessService accountBusinessService;
     private Map<Short, ScheduledDateGeneration> officeScheduledDateGenerationMap;
 
     private int outputIntervalForBatchJobs;
@@ -136,28 +129,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
     public void setFiscalCalendarRules(FiscalCalendarRules fiscalCalendarRules) {
         this.fiscalCalendarRules = fiscalCalendarRules;
-    }
-
-    public LoanBusinessService getLoanBusinessService() {
-        if (loanBusinessService == null) {
-            return new LoanBusinessService();
-        }
-        return this.loanBusinessService;
-    }
-
-    public void setLoanBusinessService(LoanBusinessService loanBusinessService) {
-        this.loanBusinessService = loanBusinessService;
-    }
-
-    public AccountBusinessService getAccountBusinessService() {
-        if (accountBusinessService == null) {
-            return new AccountBusinessService();
-        }
-        return this.accountBusinessService;
-    }
-
-    public void setAccountBusinessService(AccountBusinessService accountBusinessService) {
-        this.accountBusinessService = accountBusinessService;
     }
 
     @Override
@@ -235,9 +206,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             ScheduledDateGeneration officeScheduledDateGeneration = getScheduledDateGeneration(officeId);
 
             DateTime amendedThruDate = holiday.getThruDate();
-            //Moratoria affect all installments on or after the fromDate.
-            //Normal holidays only affect installments between the fromDate and thruDate
-            if (holiday.getRepaymentRuleType().getValue().equals(RepaymentRuleTypes.REPAYMENT_MORATORIUM.getValue())){
+            // Moratoria affect all installments on or after the fromDate.
+            // Normal holidays only affect installments between the fromDate and thruDate
+            if (holiday.getRepaymentRuleType().getValue().equals(RepaymentRuleTypes.REPAYMENT_MORATORIUM.getValue())) {
                 amendedThruDate = holiday.getThruDate().plusYears(10);
             }
             List<AccountActionDateEntity> futureAffectedInstallments = accountBatch.getAffectedInstallments(accountId,
@@ -250,7 +221,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
             houseKeeping();
 
         }
-
 
         getHibernateUtil().commitTransaction();
         long rescheduleEndTime = new DateTimeService().getCurrentDateTime().getMillis();
@@ -266,7 +236,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     /**
      * Shift schedule dates to account for new holidays, starting with the first future or present installment presented
      */
-    public void rescheduleDatesForNewHolidays(final ScheduledDateGeneration scheduledDateGeneration,
+    private void rescheduleDatesForNewHolidays(final ScheduledDateGeneration scheduledDateGeneration,
             List<AccountActionDateEntity> futureAffectedInstallments, final MeetingBO meeting) {
 
         List<DateTime> installmentDates = getDatesToReplaceScheduledDates(scheduledDateGeneration,
@@ -317,7 +287,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         outputIntervalForBatchJobs = getBatchJobConfigurationService().getOutputIntervalForBatchJobs();
         batchSize = getBatchJobConfigurationService().getBatchSizeForBatchJobs();
-        // Overriding default recordCommittingSize of 1000 because only accounts that need more schedules are returned
+
         recordCommittingSize = 500;
         errorList = new ArrayList<String>();
         workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
@@ -399,14 +369,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         public List<AccountActionDateEntity> getAffectedInstallmentsForAccountType(Integer accountId,
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
-            List<LoanScheduleEntity> affectedInstallments = getAccountPersistence()
-                    .getLoanSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate);
-
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            for (LoanScheduleEntity affectedInstallment : affectedInstallments) {
-                affectedInstallmentsGeneric.add(affectedInstallment);
-            }
-
+            affectedInstallmentsGeneric.addAll(getAccountPersistence().getLoanSchedulesForAccountThatAreWithinDates(
+                    accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }
 
@@ -428,13 +393,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         public List<AccountActionDateEntity> getAffectedInstallmentsForAccountType(Integer accountId,
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
-            List<SavingsScheduleEntity> affectedInstallments = getAccountPersistence()
-                    .getSavingsSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate);
-
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            for (SavingsScheduleEntity affectedInstallment : affectedInstallments) {
-                affectedInstallmentsGeneric.add(affectedInstallment);
-            }
+            affectedInstallmentsGeneric.addAll(getAccountPersistence().getSavingsSchedulesForAccountThatAreWithinDates(
+                    accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }
 
@@ -455,13 +416,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         public List<AccountActionDateEntity> getAffectedInstallmentsForAccountType(Integer accountId,
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
-            List<CustomerScheduleEntity> affectedInstallments = getAccountPersistence()
-                    .getCustomerSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate);
-
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            for (CustomerScheduleEntity affectedInstallment : affectedInstallments) {
-                affectedInstallmentsGeneric.add(affectedInstallment);
-            }
+            affectedInstallmentsGeneric.addAll(getAccountPersistence()
+                    .getCustomerSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }
 
