@@ -1,18 +1,17 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
     <artifactId>mifos-acceptanceTests</artifactId>
     <packaging>jar</packaging>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <name>Mifos - Acceptance Tests</name>
     <url>http://www.mifos.org</url>
 
     <parent>
         <groupId>org.mifos</groupId>
         <artifactId>mifos-parent</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.7-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -189,12 +188,12 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-webapp</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
             <type>war</type>
         </dependency>
         <dependency>
@@ -234,7 +233,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-testFramework</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
