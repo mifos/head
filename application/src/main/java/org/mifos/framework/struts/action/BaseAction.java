@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -101,6 +102,7 @@ public abstract class BaseAction extends DispatchAction {
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
 
 
     @Override
@@ -118,6 +120,7 @@ public abstract class BaseAction extends DispatchAction {
             this.groupDetailsServiceFacade = springAppContext.getBean(GroupDetailsServiceFacade.class);
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
+            this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
         }
 
         if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
@@ -203,7 +206,7 @@ public abstract class BaseAction extends DispatchAction {
         }
     }
 
-    private void createToken(HttpServletRequest request) throws PageExpiredException {
+    private void createToken(HttpServletRequest request) {
         String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
         FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
         if (flowManager == null) {
@@ -225,7 +228,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected void postHandleTransaction(HttpServletRequest request, TransactionDemarcate annotation)
-            throws SystemException, ApplicationException {
+            throws SystemException {
         if (null != annotation && annotation.validateAndResetToken()) {
             FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
             flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -312,7 +315,7 @@ public abstract class BaseAction extends DispatchAction {
      * forms to business objects (for example, if the data from the form ends up
      * in several business objects)
      */
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return false;
     }
 
