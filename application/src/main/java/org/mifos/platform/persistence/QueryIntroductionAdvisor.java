@@ -1,4 +1,4 @@
-package org.mifos.accounts.fees.persistence;
+package org.mifos.platform.persistence;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;

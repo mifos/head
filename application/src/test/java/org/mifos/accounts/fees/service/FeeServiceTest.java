@@ -10,7 +10,7 @@ import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.servicefacade.FeeService;
-import org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl;
+import org.mifos.platform.persistence.GenericDaoHibernateImpl;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
@@ -29,7 +29,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/test-FeeContext.xml"})
+@ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
 public class FeeServiceTest {
 

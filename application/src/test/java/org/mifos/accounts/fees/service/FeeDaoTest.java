@@ -20,34 +20,18 @@
 
 package org.mifos.accounts.fees.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.fees.business.CategoryTypeEntity;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeStatusEntity;
-import org.mifos.accounts.fees.entities.AmountFeeEntity;
-import org.mifos.accounts.fees.entities.FeeEntity;
+import org.mifos.accounts.fees.business.*;
+import org.mifos.accounts.fees.entities.*;
 import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
 import org.mifos.accounts.fees.entities.FeeLevelEntity;
-import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
-import org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl;
 import org.mifos.accounts.fees.persistence.MasterEntityDao;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeeLevel;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.util.helpers.*;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -57,6 +41,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.platform.persistence.GenericDaoHibernateImpl;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -65,8 +50,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/test-FeeContext.xml"}) //{"/org/mifos/config/resources/FeeContext.xml"}
+@ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
 public class FeeDaoTest {
 

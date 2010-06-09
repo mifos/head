@@ -13,22 +13,16 @@
       
   	<context:annotation-config/>  
   	
-    <bean id="feeDao" parent="abstractDao">
-       <property name="proxyInterfaces" value="org.mifos.accounts.fees.persistence.FeeDao"/>
+    <bean id="questionnaireDao" parent="abstractDao">
+       <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionnaireDao"/>
        <property name="target">
            <bean parent="abstractDaoTarget">
-              <constructor-arg><value>org.mifos.accounts.fees.entities.FeeEntity</value></constructor-arg>
+              <constructor-arg><value>org.mifos.customers.surveys.business.Question</value></constructor-arg>
            </bean>
        </property>
     </bean>
-	<bean id="masterEntityDao" class="org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
-	
-	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
-	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebFeeServiceFacade"/>
-    <!--
-    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
-    -->
+
+    <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
+    <bean name="questionValidator" class="org.mifos.platform.questionnaire.QuestionValidatorImpl"/>
+
 </beans>

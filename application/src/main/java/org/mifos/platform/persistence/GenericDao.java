@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.persistence;
+package org.mifos.platform.persistence;
 
 import java.io.Serializable;
 import java.util.Collection;

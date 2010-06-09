@@ -225,13 +225,13 @@
 
     <!-- Cheetah integration -->
     <servlet>
-        <servlet-name>gazelle</servlet-name>
+        <servlet-name>cheetah</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>gazelle</servlet-name>
+        <servlet-name>cheetah</servlet-name>
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
 

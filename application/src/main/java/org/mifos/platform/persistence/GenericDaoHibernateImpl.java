@@ -18,15 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.persistence;
+package org.mifos.platform.persistence;
 
 import java.io.Serializable;
 
 import org.hibernate.Query;
-import org.mifos.accounts.fees.persistence.GenericDao;
+import org.mifos.platform.persistence.GenericDao;
 import java.util.Collection;
 import java.util.List;
 
+import org.mifos.accounts.fees.persistence.QueryExecutor;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class GenericDaoHibernateImpl<T, ID extends Serializable>

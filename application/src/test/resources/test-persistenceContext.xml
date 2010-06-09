@@ -11,27 +11,26 @@
       http://www.springframework.org/schema/aop
       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
       
-    <context:annotation-config/>    
+  	<context:annotation-config/>  
   	
   	<import resource="integrationPropertyConfigurer.xml" />
   	<!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="/integrationDatabase.properties"/>
+		<property name="location" value="/mainDatabase.properties"/>
     </bean>
-     -->
+    -->
     
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-    	<property name="driverClass" value="${integration.database.driver}"/> 
+    	<property name="driverClass" value="${integration.database.driver}"/>
     	<property name="jdbcUrl" value="jdbc:mysql://${integration.database.host}:${integration.database.port}/${integration.database}" />
     	<property name="user" value="${integration.database.user}"/>
     	<property name="password" value="${integration.database.password}"/>
     	<property name="initialPoolSize" value="5"></property>
     	<property name="minPoolSize" value="${integration.database.hibernate.c3p0.min_size}"/>
     	<property name="maxPoolSize" value="${integration.database.hibernate.c3p0.max_size}"/>
-    	<property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/> 
+    	<property name="checkoutTimeout" value="${integration.database.hibernate.c3p0.timeout}"/>
     	<property name="maxStatements" value="${integration.database.hibernate.c3p0.max_statements}"></property>
-    	<property name="testConnectionOnCheckin" value="true"/>
     	<property name="testConnectionOnCheckout" value="false"/>
-    	<property name="idleConnectionTestPeriod" value="${integration.database.hibernate.c3p0.idle_test_period}"></property> 
+    	<property name="idleConnectionTestPeriod" value="${integration.database.hibernate.c3p0.idle_test_period}"></property>
    	</bean>
     
     <!--  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  -->
@@ -66,6 +65,9 @@
 				
 				<value>/org/mifos/accounts/financial/business/COABO.hbm.xml</value>
 				<value>/org/mifos/accounts/financial/business/COAHierarchyEntity.hbm.xml</value>
+
+                <value>/org/mifos/customers/surveys/business/Question.hbm.xml</value>
+                <value>/org/mifos/customers/surveys/business/QuestionChoice.hbm.xml</value>
 			</list>
 		</property>
 		
@@ -87,8 +89,8 @@
 				hibernate.dialect=${integration.database.hibernate.dialect}
 				hibernate.show_sql=${integration.database.hibernate.show_sql}
 				hibernate.generate_statistics=false
-				hibernate.format_sql=true
-				hibernate.use_sql_comments=true
+				hibernate.format_sql=false
+				hibernate.use_sql_comments=false
 				hibernate.cache.use_query_cache=${integration.database.hibernate.cache.use_query_cache}
 				hibernate.cache.use_second_level_cache=${integration.database.hibernate.cache.use_second_level_cache}
 				hibernate.connection.provider_class=${integration.database.hibernate.connection.provider_class}
@@ -109,7 +111,7 @@
           	<tx:method name="find*" read-only="true"/>
           	<tx:method name="list*" read-only="true"/>
           	<tx:method name="retrieve*" read-only="true"/>
-          	<tx:method name="*" rollback-for="org.springframework.dao.DataAccessException"/>
+          	<tx:method name="*" rollback-for="java.lang.Exception"/>
 			<!-- other methods use the default transaction settings (see below) -->
 			<tx:method name="*"/>
 		</tx:attributes>
@@ -120,14 +122,17 @@
 		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*ServiceFacade.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
 	</aop:config>
-	<bean id="queryInterceptor" class="org.mifos.accounts.fees.persistence.QueryIntroductionInterceptor" />
-	<bean id="queryIntroductionAdvisor" class="org.mifos.accounts.fees.persistence.QueryIntroductionAdvisor">
+
+	<bean id="queryInterceptor" class="org.mifos.platform.persistence.QueryIntroductionInterceptor" />
+	<bean id="queryIntroductionAdvisor" class="org.mifos.platform.persistence.QueryIntroductionAdvisor">
 		<constructor-arg ref="queryInterceptor"/>
 	</bean>
+
 	<bean id="abstractDaoTarget"
-        class="org.mifos.accounts.fees.persistence.GenericDaoHibernateImpl" abstract="true">
+        class="org.mifos.platform.persistence.GenericDaoHibernateImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    
     <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean" abstract="true">
     	<property name="interceptorNames">
             <list>
@@ -135,23 +140,4 @@
             </list>
         </property>
     </bean>
-
-    <bean id="feeDao" parent="abstractDao">
-       <property name="proxyInterfaces" value="org.mifos.accounts.fees.persistence.FeeDao"/>
-       <property name="target">
-           <bean parent="abstractDaoTarget">
-              <constructor-arg><value>org.mifos.accounts.fees.entities.FeeEntity</value></constructor-arg>
-           </bean>
-       </property>
-    </bean>
-	<bean id="masterEntityDao" class="org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
-	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
-	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebFeeServiceFacade"/>
-
-    <!--
-    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
-    -->
 </beans>

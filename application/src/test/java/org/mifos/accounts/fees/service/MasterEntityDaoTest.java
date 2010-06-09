@@ -17,7 +17,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/test-FeeContext.xml"})
+@ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
 public class MasterEntityDaoTest {
 

@@ -9,5 +9,6 @@
 	<import resource="classpath:org/mifos/config/resources/applicationContext.xml" />
 	<import resource="classpath:org/mifos/config/resources/services.xml" />
 	<import resource="classpath:org/mifos/config/resources/hibernate-daos.xml" />
+	<import resource="classpath:org/mifos/config/resources/persistenceContext.xml" />
 	<import resource="classpath:org/mifos/config/resources/FeeContext.xml" />
 </beans>

@@ -18,9 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.persistence;
+package org.mifos.platform.persistence;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.mifos.accounts.fees.persistence.QueryExecutor;
 import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 
 public class QueryIntroductionInterceptor extends DelegatingIntroductionInterceptor {

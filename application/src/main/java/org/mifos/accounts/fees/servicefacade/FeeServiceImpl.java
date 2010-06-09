@@ -20,14 +20,7 @@
 
 package org.mifos.accounts.fees.servicefacade;
 
-import java.util.Date;
-import java.util.List;
-
-import org.mifos.accounts.fees.business.CategoryTypeEntity;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeStatusEntity;
+import org.mifos.accounts.fees.business.*;
 import org.mifos.accounts.fees.entities.AmountFeeEntity;
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.FeeFrequencyEntity;
@@ -35,13 +28,7 @@ import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.persistence.MasterEntityDao;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeChangeType;
-import org.mifos.accounts.fees.util.helpers.FeeConstants;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.util.helpers.*;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -55,6 +42,9 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.List;
 
 public class FeeServiceImpl implements FeeService {
 

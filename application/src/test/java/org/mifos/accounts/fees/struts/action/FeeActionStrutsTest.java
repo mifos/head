@@ -20,22 +20,13 @@
 
 package org.mifos.accounts.fees.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeConstants;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fees.util.helpers.*;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -52,6 +43,13 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.util.List;
 
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -73,9 +71,16 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String flowKey;
 
+    private static ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+            new String[]{"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"});
+
+    private TransactionTemplate transactionTemplate;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        PlatformTransactionManager platformTransactionManager = (PlatformTransactionManager) applicationContext.getBean("platformTransactionManager");
+        transactionTemplate = new TransactionTemplate(platformTransactionManager);
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -94,6 +99,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
             TestObjectFactory.cleanUp(fee2);
             TestObjectFactory.cleanUp(fee3);
             StaticHibernateUtil.closeSession();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
@@ -428,18 +434,20 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         FeeActionForm actionForm = (FeeActionForm) request.getSession().getAttribute("feeactionform");
         fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, actionForm.getFeeIdValue());
 
-        Assert.assertEquals("Loan_Periodic_Fee", fee.getFeeName());
-        Assert.assertEquals(FeeCategory.LOAN.getValue(), fee.getCategoryType().getId());
-        Assert.assertEquals(RateAmountFlag.RATE, fee.getFeeType());
-        Assert.assertEquals(23.0, ((RateFeeBO) fee).getRate(), DELTA);
-        Assert.assertEquals(((RateFeeBO) fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
-        Assert.assertTrue(fee.isPeriodic());
-        Assert.assertTrue(fee.isActive());
+        Assert.assertEquals("Loan_Periodic_Fee", this.fee.getFeeName());
+        Assert.assertEquals(FeeCategory.LOAN.getValue(), this.fee.getCategoryType().getId());
+        Assert.assertEquals(RateAmountFlag.RATE, this.fee.getFeeType());
+        Assert.assertEquals(23.0, ((RateFeeBO) this.fee).getRate(), DELTA);
+        Assert.assertEquals(((RateFeeBO) this.fee).getFeeFormula().getId(), FeeFormula.AMOUNT.getValue(), DELTA);
+        Assert.assertTrue(this.fee.isPeriodic());
+        Assert.assertTrue(this.fee.isActive());
     }
 
     public void testSuccessfulManage_AmountFee() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -467,6 +475,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFailureEditPreviewForAmount() throws PageExpiredException {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -491,6 +501,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -515,6 +527,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulManage_RateFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -544,6 +558,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFailureEditPreviewForRate() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -569,6 +585,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulEditPreview() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -600,6 +618,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulUpdate_AmountFee() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -636,6 +656,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulGetFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, "non null lookup value");
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);
@@ -657,6 +679,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulUpdate_RateFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         LookUpValueEntity lookUpValue = new LookUpValueEntity();
         fee.getFeeFrequency().getFeeFrequencyType().setLookUpValue(lookUpValue);
         fee.getFeeFrequency().getFeePayment().setLookUpValue(lookUpValue);

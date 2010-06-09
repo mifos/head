@@ -20,31 +20,6 @@
 
 package org.mifos.accounts.fees.entities;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
@@ -56,6 +31,11 @@ import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "FEES")
