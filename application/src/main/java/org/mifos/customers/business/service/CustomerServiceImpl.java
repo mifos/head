@@ -1058,7 +1058,8 @@ public class CustomerServiceImpl implements CustomerService {
                 scheduleUpdateRequired = updateMeeting(meeting, meetingUpdateRequest);
             } else {
                 MeetingBO newMeeting = MeetingBO.fromDto(meetingUpdateRequest);
-                customer.createCustomerMeeting(newMeeting);
+                CustomerMeetingEntity newMeetingEntity = customer.createCustomerMeeting(newMeeting);
+                customer.setCustomerMeeting(newMeetingEntity);
             }
             customerDao.save(customer);
 
