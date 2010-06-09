@@ -152,12 +152,10 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                     errorList.add("Failed to apply holiday changes: " + e.toString());
                     e.printStackTrace();
                     throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
-                } finally {
-                    getHibernateUtil().closeSession();
                 }
             }
         }
-
+        getHibernateUtil().closeSession();
         String finalMessage = "ApplyHolidayChanges task completed in "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
@@ -171,9 +169,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         reschedule(holiday, new CustomerAccountBatch());
         reschedule(holiday, new LoanAccountBatch());
 
-        holiday.markAsApplied();
-        getHolidayDao().save(holiday);
-        getHibernateUtil().commitTransaction();
+        applyHoliday(holiday);
 
         String endHolidayMessage = "Completed Processing for Holiday: " + holiday.getName() + "  Time Taken: "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - holidayStartTime) + " ms";
@@ -276,6 +272,14 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         officeScheduledDateGenerationMap.put(officeId, scheduledDateGeneration);
 
         return scheduledDateGeneration;
+    }
+
+    private void applyHoliday(Holiday holiday) throws PersistenceException {
+
+        getHibernateUtil().getSessionTL();
+        getHibernateUtil().startTransaction();
+        holiday.markAsApplied();
+        getHibernateUtil().commitTransaction();
     }
 
     @Override

@@ -21,9 +21,11 @@
 	<!-- Holiday Specific Queries  -->
 	<query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
    	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
-   	       			join office.holidays holidayBO
+   	       			join office.holidays holidayBO,
+   	       			org.mifos.customers.office.business.OfficeBO branch
                     where holidayBO.holidayThruDate >= date(:CURRENT_DATE)
-		            and office.officeId = :OFFICE_ID
+					and branch.searchId like concat(office.searchId, '%')
+					and branch.officeId = :OFFICE_ID
                     order by holidayBO.holidayFromDate
    	       ]]>
 	</query>

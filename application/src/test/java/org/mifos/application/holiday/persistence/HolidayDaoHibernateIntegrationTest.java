@@ -169,10 +169,21 @@ public class HolidayDaoHibernateIntegrationTest {
         DateTime yesterday = new DateTime().minusDays(1);
         Set<HolidayBO> holidays;
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
-
-        OfficeBO myOffice = new OfficeBuilder().withParentOffice(headOffice).withGlobalOfficeNum("xxx234").build();
         holidays = new HashSet<HolidayBO>();
-        holidays.add((HolidayBO) new HolidayBuilder().withName("Second").from(yesterday.plusWeeks(3)).to(yesterday.plusWeeks(4)).build());
+        holidays.add((HolidayBO) new HolidayBuilder().withName("Fourth").from(yesterday.plusWeeks(4)).to(yesterday.plusWeeks(5)).build());
+        holidays.add((HolidayBO) new HolidayBuilder().withName("Second").from(yesterday.plusDays(1)).to(yesterday.plusWeeks(7)).build());
+        headOffice.setHolidays(holidays);
+
+        OfficeBO areaOffice = new OfficeBuilder().withParentOffice(headOffice).withGlobalOfficeNum("area56").build();
+        holidays = new HashSet<HolidayBO>();
+        holidays.add((HolidayBO) new HolidayBuilder().withName("Fifth").from(yesterday.plusWeeks(8)).to(yesterday.plusWeeks(9)).build());
+        areaOffice.setHolidays(holidays);
+
+        IntegrationTestObjectMother.createOffice(areaOffice);
+
+        OfficeBO myOffice = new OfficeBuilder().withParentOffice(areaOffice).withGlobalOfficeNum("xxx234").build();
+        holidays = new HashSet<HolidayBO>();
+        holidays.add((HolidayBO) new HolidayBuilder().withName("Third").from(yesterday.plusWeeks(3)).to(yesterday.plusWeeks(4)).build());
         holidays.add((HolidayBO) new HolidayBuilder().withName("First").from(yesterday).to(yesterday.plusWeeks(2)).build());
         myOffice.setHolidays(holidays);
 
@@ -180,13 +191,17 @@ public class HolidayDaoHibernateIntegrationTest {
 
         OfficeBO anotherOffice = new OfficeBuilder().withParentOffice(headOffice).build();
         holidays = new HashSet<HolidayBO>();
-        holidays.add((HolidayBO) new HolidayBuilder().from(yesterday.minusWeeks(3)).to(yesterday.plusWeeks(4)).build());
+        holidays.add((HolidayBO) new HolidayBuilder().withName("N/A").from(yesterday.minusWeeks(3)).to(yesterday.plusWeeks(4)).build());
         IntegrationTestObjectMother.createOffice(anotherOffice);
 
         List<Holiday> myHolidays = holidayDao.findCurrentAndFutureOfficeHolidaysEarliestFirst(myOffice.getOfficeId());
 
-        assertThat(myHolidays.size(), is(2));
+        assertThat(myHolidays.size(), is(5));
         assertThat(myHolidays.get(0).getName(), is("First"));
+        assertThat(myHolidays.get(1).getName(), is("Second"));
+        assertThat(myHolidays.get(2).getName(), is("Third"));
+        assertThat(myHolidays.get(3).getName(), is("Fourth"));
+        assertThat(myHolidays.get(4).getName(), is("Fifth"));
     }
 
     private void insert(final Holiday holiday) {
