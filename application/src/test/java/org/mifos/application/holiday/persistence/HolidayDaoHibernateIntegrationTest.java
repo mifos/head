@@ -116,25 +116,6 @@ public class HolidayDaoHibernateIntegrationTest {
     }
 
     @Test
-    public void shouldFindAllHolidaysWithinThisAndNextYear() throws Exception {
-        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
-        DateTime secondOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(2).toDateMidnight().toDateTime();
-        DateTime secondOfJanTwoYears = secondOfJanNextYear.plusYears(1);
-
-        Holiday holidayThisYear = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
-        Holiday holidayNextYear = new HolidayBuilder().from(secondOfJanNextYear).to(secondOfJanNextYear).build();
-        Holiday holidayTwoYearsAway = new HolidayBuilder().from(secondOfJanTwoYears).to(secondOfJanTwoYears).build();
-        insert(holidayThisYear);
-        insert(holidayNextYear);
-        insert(holidayTwoYearsAway);
-
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
-
-        assertFalse(holidays.isEmpty());
-        assertThat(holidays.size(), is(2));
-    }
-
-    @Test
     public void shouldFindAllHolidaysOrderedByFromDateAscending() throws Exception {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
                 .toDateTime();

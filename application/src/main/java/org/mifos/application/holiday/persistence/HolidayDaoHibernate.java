@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.Query;
-import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
@@ -62,10 +61,14 @@ public class HolidayDaoHibernate implements HolidayDao {
         this.genericDao.createOrUpdate(holiday);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId) {
+    public List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(final Short officeId) {
 
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Holiday> retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(final Short officeId) {
         List<Holiday> orderedHolidays = new ArrayList<Holiday>();
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CURRENT_DATE", new LocalDate().toString());
@@ -78,16 +81,8 @@ public class HolidayDaoHibernate implements HolidayDao {
     }
 
     @Override
-    public final List<Holiday> findAllHolidaysThisYearAndNext(short officeId) {
-        DateTime today = new DateTime();
-
-        List<HolidayBO> holidaysThisYear = findAllHolidaysForYear(officeId, today.getYear());
-        List<HolidayBO> holidaysNextYear = findAllHolidaysForYear(officeId, today.plusYears(1).getYear());
-
-        List<Holiday> orderedHolidays = new ArrayList<Holiday>(holidaysThisYear);
-        orderedHolidays.addAll(holidaysNextYear);
-
-        return orderedHolidays;
+    public final List<Holiday> findAllHolidaysThisYearAndNext(final short officeId) {
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
     }
 
     @Override
@@ -130,7 +125,7 @@ public class HolidayDaoHibernate implements HolidayDao {
     public final CalendarEvent findCalendarEventsForThisYearAndNext(short officeId) {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = this.findAllHolidaysThisYearAndNext(officeId);
+        List<Holiday> upcomingHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
 
         return new CalendarEvent(workingDays, upcomingHolidays);
     }
