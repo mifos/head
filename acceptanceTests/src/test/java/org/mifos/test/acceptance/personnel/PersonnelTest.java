@@ -20,6 +20,8 @@
 
 package org.mifos.test.acceptance.personnel;
 
+import junit.framework.Assert;
+
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -38,7 +40,6 @@ import org.mifos.test.acceptance.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -78,6 +79,7 @@ public class PersonnelTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
+//        UiTestUtils.sleep(600000);
         userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
 

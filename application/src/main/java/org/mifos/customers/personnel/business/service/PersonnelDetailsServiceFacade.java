@@ -18,34 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.holiday.business;
+package org.mifos.customers.personnel.business.service;
 
-import java.util.Date;
-import java.util.List;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.schedule.ScheduledEvent;
-
-public interface Holiday {
-
-    boolean encloses(Date date);
-
-    boolean encloses(final DateTime dateTime);
-
-    DateTime adjust(DateTime adjustedDate, List<Days> workingDays, ScheduledEvent scheduledEvent);
-
-    RepaymentRuleTypes getRepaymentRuleType();
-
-    Integer getId();
-
-    String getName();
-
-    DateTime getFromDate();
-
-    DateTime getThruDate();
-
-    void markAsApplied();
+public interface PersonnelDetailsServiceFacade {
+    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, UserContext userContext)
+            throws ServiceException;
 
 }

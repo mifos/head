@@ -31,11 +31,11 @@ public class HolidayBuilder {
     private DateTime from;
     private DateTime to;
     private RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
-
-    private final Short officeId = Short.valueOf("1");
+    private String name = "builderCreatedHoliday";
 
     public Holiday build() {
-        HolidayBO holidayBO = new HolidayBO(new HolidayDetails("builderCreatedHoliday",from.toDate(), to.toDate(), repaymentRule));
+        HolidayBO holidayBO = new HolidayBO(new HolidayDetails(this.name, from.toDate(), to.toDate(),
+                repaymentRule));
 
         return holidayBO;
     }
@@ -50,7 +50,7 @@ public class HolidayBuilder {
         return this;
     }
 
-    public HolidayBuilder withRepaymentRule (RepaymentRuleTypes rule) {
+    public HolidayBuilder withRepaymentRule(RepaymentRuleTypes rule) {
         this.repaymentRule = rule;
         return this;
     }
@@ -72,6 +72,11 @@ public class HolidayBuilder {
 
     public HolidayBuilder withRepaymentMoratoriumRule() {
         repaymentRule = RepaymentRuleTypes.REPAYMENT_MORATORIUM;
+        return this;
+    }
+
+    public HolidayBuilder withName(String holidayName) {
+        this.name = holidayName;
         return this;
     }
 }

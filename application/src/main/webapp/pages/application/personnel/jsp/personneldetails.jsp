@@ -50,10 +50,10 @@ explanation of the license and how it is applied.
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <a id="personneldetails.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / </span> <c:set var="personnelBO" scope="request"
-						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
+					</a> / </span> <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,
+												'personnelInformationDto')}" var="personnelInformationDto" />					
 					<span class="fontnormal8ptbold"><c:out
-						value="${personnelBO.displayName}" /></span></td>
+						value="${personnelInformationDto.displayName}" /></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -62,7 +62,7 @@ explanation of the license and how it is applied.
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<tr>
 						<td width="50%" height="23" class="headingorange"><span id="personneldetails.text.fullName"><c:out
-							value="${personnelBO.displayName}" /></span></td>
+							value="${personnelInformationDto.displayName}" /></span></td>
 						<td width="50%" align="right"><a id="personneldetails.link.editUser"
 							href="PersonAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.EditUserInformation"
@@ -75,16 +75,16 @@ explanation of the license and how it is applied.
 					<tr>
 						<td height="23" class="fontnormalbold"><span class="fontnormal"> <c:choose>
 							<%-- Active State --%>
-							<c:when test="${personnelBO.status.id == 1}">
+							<c:when test="${personnelInformationDto.status.id == 1}">
 								<mifos:MifosImage id="active" moduleName="org.mifos.customers.personnel.util.resources.personnelImages" />
 							</c:when>
-							<c:when test="${personnelBO.status.id  == 2}">
+							<c:when test="${personnelInformationDto.status.id  == 2}">
 								<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.personnel.util.resources.personnelImages" />
 							</c:when>
 							<c:otherwise>
 							</c:otherwise>
-						</c:choose> <span id="personneldetails.text.status"><c:out value="${personnelBO.status.name}" /></span> </span>
-						<c:if test="${personnelBO.locked == 'true'}">
+						</c:choose> <span id="personneldetails.text.status"><c:out value="${personnelInformationDto.status.name}" /></span> </span>
+						<c:if test="${personnelInformationDto.locked == 'true'}">
 							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Personnel.Locked" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</span>
@@ -97,70 +97,72 @@ explanation of the license and how it is applied.
 							name="${ConfigurationConstants.GOVERNMENT_ID}"
 							bundle="PersonnelUIResources" keyhm="Personnel.GovernmentId"
 							isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
-						<c:out value="${personnelBO.personnelDetails.governmentIdNumber}" />
+						<c:out value="${personnelInformationDto.personnelDetails.governmentIdNumber}" />
 						<br></td>
 					</tr>
 
 					<tr>
 						<td class="fontnormalbold"><span class="fontnormal"> <mifos:mifoslabel
 							name="Personnel.Email" bundle="PersonnelUIResources"></mifos:mifoslabel>
-						<span id="personneldetails.text.email"><c:out value="${personnelBO.emailId}" /></span> <br>
+						<span id="personneldetails.text.email"><c:out value="${personnelInformationDto.emailId}" /></span> <br>
 
 						<mifos:mifoslabel name="Personnel.DOB"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dob)}" />;
-						<c:out value="${personnelBO.age}" /> <mifos:mifoslabel
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dob)}" />;
+						<c:out value="${personnelInformationDto.age}" /> <mifos:mifoslabel
 							name="Personnel.YearsOld" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						<br>
 
 						<c:forEach
 							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}"
 							var="item">
-							<c:if test="${personnelBO.personnelDetails.gender == item.id}">
+							<c:if test="${personnelInformationDto.personnelDetails.gender == item.id}">
 											${item.name}
 								</c:if>
 						</c:forEach> <c:if
-							test="${!empty personnelBO.personnelDetails.maritalStatus}">
+							test="${!empty personnelInformationDto.personnelDetails.maritalStatus}">
 							<c:out value=";" />
 							<c:forEach
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}"
 								var="item">
 								<c:if
-									test="${personnelBO.personnelDetails.maritalStatus == item.id}">
+									test="${personnelInformationDto.personnelDetails.maritalStatus == item.id}">
 											${item.name}
 								</c:if>
 							</c:forEach>
 						</c:if> <br>
 						<mifos:mifoslabel name="Personnel.LanguagePreferred"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:if
-							test="${!empty personnelBO.preferredLocale}">
+							test="${!empty personnelInformationDto.preferredLocale}">
 							<%--<c:forEach
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
 								var="item">
 
-								<c:if test="${personnelBO.preferredLocale.localeId == item.id}">
+								<c:if test="${personnelInformationDto.preferredLocale.localeId == item.id}">
 											${item.name}
 								</c:if>
 							</c:forEach> --%>
-							${personnelBO.preferredLocale.language.languageName}
+							${personnelInformationDto.preferredLocale.language.languageName}
 						</c:if> <br>
 						<mifos:mifoslabel name="Personnel.DOJMFI"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dateOfJoiningMFI)}" />
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dateOfJoiningMFI)}" />
+
 						<br>
 						<mifos:mifoslabel name="Personnel.DOJBranch"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dateOfJoiningBranch)}" />
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelInformationDto.personnelDetails.dateOfJoiningBranch)}" />
+
 						</span><br>
 						<br>
 						<mifos:mifoslabel name="Personnel.Address"
 							bundle="PersonnelUIResources"></mifos:mifoslabel><br>
-							<c:if test="${ empty personnelBO.personnelDetails.address.displayAddress
-									&&  empty personnelBO.personnelDetails.address.city
-									&&  empty personnelBO.personnelDetails.address.state
-									&&  empty personnelBO.personnelDetails.address.country
-									&&  empty personnelBO.personnelDetails.address.zip
-									&&  empty personnelBO.personnelDetails.address.phoneNumber}">
+							<c:if test="${ empty personnelInformationDto.personnelDetails.address.displayAddress
+									&&  empty personnelInformationDto.personnelDetails.address.city
+									&&  empty personnelInformationDto.personnelDetails.address.state
+									&&  empty personnelInformationDto.personnelDetails.address.country
+									&&  empty personnelInformationDto.personnelDetails.address.zip
+									&&  empty personnelInformationDto.personnelDetails.address.phoneNumber}">
 									<br>
 									<span
 										class="fontnormal"><mifos:mifoslabel name="Personnel.addressnotentered"
@@ -168,33 +170,33 @@ explanation of the license and how it is applied.
 										<br>
 										</c:if>
 						<span class="fontnormal"> <c:if
-							test="${!empty personnelBO.personnelDetails.address.displayAddress}">
+							test="${!empty personnelInformationDto.personnelDetails.address.displayAddress}">
 							<c:out
-								value="${personnelBO.personnelDetails.address.displayAddress}" />
+								value="${personnelInformationDto.personnelDetails.address.displayAddress}" />
 							<br>
 						</c:if> <c:if
-							test="${!empty personnelBO.personnelDetails.address.city}">
-							<c:out value="${personnelBO.personnelDetails.address.city}" />
+							test="${!empty personnelInformationDto.personnelDetails.address.city}">
+							<c:out value="${personnelInformationDto.personnelDetails.address.city}" />
 							<br>
 						</c:if> <c:if
-							test="${!empty personnelBO.personnelDetails.address.state}">
-							<c:out value="${personnelBO.personnelDetails.address.state}" />
+							test="${!empty personnelInformationDto.personnelDetails.address.state}">
+							<c:out value="${personnelInformationDto.personnelDetails.address.state}" />
 							<br>
 						</c:if> <c:if
-							test="${!empty personnelBO.personnelDetails.address.country}">
-							<c:out value="${personnelBO.personnelDetails.address.country}" />
+							test="${!empty personnelInformationDto.personnelDetails.address.country}">
+							<c:out value="${personnelInformationDto.personnelDetails.address.country}" />
 							<br>
 						</c:if> <c:if
-							test="${!empty personnelBO.personnelDetails.address.zip}">
-							<c:out value="${personnelBO.personnelDetails.address.zip}" />
+							test="${!empty personnelInformationDto.personnelDetails.address.zip}">
+							<c:out value="${personnelInformationDto.personnelDetails.address.zip}" />
 							<br>
 						</c:if> <br>
 						</span> <c:if
-							test="${!empty personnelBO.personnelDetails.address.phoneNumber}">
+							test="${!empty personnelInformationDto.personnelDetails.address.phoneNumber}">
 							<span class="fontnormal"> <mifos:mifoslabel
 								name="Personnel.Telephone" bundle="PersonnelUIResources"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:out
-								value="${personnelBO.personnelDetails.address.phoneNumber}" />
+								value="${personnelInformationDto.personnelDetails.address.phoneNumber}" />
 							</span>
 							<br>
 							<br>
@@ -206,13 +208,13 @@ explanation of the license and how it is applied.
 									bundle="PersonnelUIResources"></mifos:mifoslabel> <br>
 								<span class="fontnormal"> <mifos:mifoslabel
 									name="Personnel.Office" bundle="PersonnelUIResources"></mifos:mifoslabel>
-								<c:out value="${personnelBO.office.officeName}" /> <br>
+								<c:out value="${personnelInformationDto.office.officeName}" /> <br>
 								<mifos:mifoslabel name="Personnel.UserTitle"
 									bundle="PersonnelUIResources"></mifos:mifoslabel> <c:forEach
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'titleList')}"
 									var="item">
 
-									<c:if test="${personnelBO.title == item.id}">
+									<c:if test="${personnelInformationDto.title == item.id}">
 											${item.name}
 								</c:if>
 								</c:forEach> <br>
@@ -221,13 +223,13 @@ explanation of the license and how it is applied.
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelLevelList')}"
 									var="item">
 
-									<c:if test="${personnelBO.level.id == item.id}">
+									<c:if test="${personnelInformationDto.level.id == item.id}">
 											${item.name}
 								</c:if>
 								</c:forEach> <br>
 								<mifos:mifoslabel name="Personnel.Roles"
 									bundle="PersonnelUIResources"></mifos:mifoslabel> <c:forEach
-									var="personnelRole" items="${personnelBO.personnelRoles}"
+									var="personnelRole" items="${personnelInformationDto.personnelRoles}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
@@ -248,17 +250,17 @@ explanation of the license and how it is applied.
 							bundle="PersonnelUIResources"></mifos:mifoslabel><br>
 						<span class="fontnormal"> <mifos:mifoslabel
 							name="Personnel.UserName" bundle="PersonnelUIResources"></mifos:mifoslabel>
-						<c:out value="${personnelBO.userName}" /> </span><br>
+						<c:out value="${personnelInformationDto.userName}" /> </span><br>
 						<br>
 						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-						<c:if test="${!empty personnelBO.customFields}">
+						<c:if test="${!empty personnelInformationDto.customFields}">
 							<mifos:mifoslabel name="Personnel.AdditionalInfo"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
 							<br>
 						</c:if> <c:forEach var="cfdef"
 							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<c:forEach var="cf"
-								items="${personnelBO.customFields}">
+								items="${personnelInformationDto.customFields}">
 								<c:if test="${cfdef.fieldId==cf.fieldId}">
 									<span class="fontnormal"> <mifos:mifoslabel
 										name="${cfdef.lookUpEntity.entityType}"
@@ -278,13 +280,14 @@ explanation of the license and how it is applied.
 						</c:forEach> <br>
 						</c:if>
 						<span class="fontnormal"> <html-el:link styleId="personneldetails.link.viewChangeLog"
-							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelBO.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
+							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelInformationDto.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
+
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</html-el:link> </span>
 						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
-							test="${personnelBO.locked == 'true'}">
+							test="${personnelInformationDto.locked == 'true'}">
 							<a id="personneldetails.link.unlockUser" href="PersonAction.do?method=loadUnLockUser&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							 <mifos:mifoslabel
 								name="Personnel.UnlockUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -308,8 +311,8 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td class="paddingL10"><c:choose>
-							<c:when test="${!empty personnelBO.recentPersonnelNotes}">
-								<c:forEach var="note" items="${personnelBO.recentPersonnelNotes}">
+							<c:when test="${!empty personnelInformationDto.recentPersonnelNotes}">
+								<c:forEach var="note" items="${personnelInformationDto.recentPersonnelNotes}">
 									<span class="fontnormal8ptbold"> <c:out
 										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
 									</span>
@@ -329,12 +332,12 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td align="right" class="paddingleft05"><span
-							class="fontnormal8pt"> <c:if test="${!empty personnelBO.recentPersonnelNotes}">
-							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelBO.displayName}"/>"> <mifos:mifoslabel
+							class="fontnormal8pt"> <c:if test="${!empty personnelInformationDto.recentPersonnelNotes}">
+							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelInformationDto.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelInformationDto.displayName}"/>"> <mifos:mifoslabel
 								name="Personnel.SeeAllNotes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
 							<br>
-						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
+						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelInformationDto.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.AddNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</a> </span></td>
 					</tr>
