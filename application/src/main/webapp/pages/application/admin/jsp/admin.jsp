@@ -40,7 +40,7 @@ while(enn.hasMoreElements()){
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="admin" />
+        <span id="page.id" title="admin" ></span>
 		<html-el:form action="AdminAction.do?method=load">
 			<td align="left" valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">
@@ -196,7 +196,7 @@ while(enn.hasMoreElements()){
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 								<td width="97%"><html-el:link styleId="admin.link.viewAdditionalFields"
 								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></a> | <html-el:link
+								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link>| <html-el:link
 								styleId="admin.link.defineAdditionalFields"
 								action="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}" >
 								<mifos:mifoslabel name="admin.defineadditionalfields" /></html-el:link></td>
@@ -407,6 +407,8 @@ while(enn.hasMoreElements()){
 
                 </table>
 			</td>
+			</tr>
+			</table>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

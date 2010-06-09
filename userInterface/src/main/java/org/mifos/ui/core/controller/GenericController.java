@@ -37,6 +37,7 @@ public class GenericController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
         	Map<String, Object> model = new HashMap<String, Object>();
         	model.put("request", request);
+
         	Map<String, Object> status = new HashMap<String, Object>();
         	List<String> errorMessages = new ArrayList<String>();
         	status.put("errorMessages", errorMessages);

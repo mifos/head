@@ -27,7 +27,7 @@ explanation of the license and how it is applied.
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="SysInfo" />
+        <span id="page.id" title="SysInfo"></span>
 		<html-el:form action="systemInfoAction.do?method=load">
 			<td align="left" valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">

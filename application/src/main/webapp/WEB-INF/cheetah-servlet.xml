@@ -59,8 +59,8 @@
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /admin.ftl=genericController
-                /cheetah.css.ftl=genericController
-                /gazelle.css.ftl=genericController 
+                /maincss.css=genericController
+                /screen.css=genericController
                 /ClientLeftPane.ftl=genericController               
             </value>
         </property>
