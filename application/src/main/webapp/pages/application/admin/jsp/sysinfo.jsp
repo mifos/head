@@ -51,7 +51,7 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.driver" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.driverName"><c:out value="${requestScope.systemInfo.driverName} / ${requestScope.systemInfo.driverVersion}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.driverName"><c:out value="${requestScope.systemInfo.databaseDriverName} / ${requestScope.systemInfo.databaseDriverVersion}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.appserver" bundle="adminUIResources" /></span></td>
@@ -79,7 +79,7 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.customreportsdir" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal" id="sysinfo.text.customReportsDir"><c:out value="${requestScope.systemInfo.customReportsDir}"/></span></td>
+						<td><span class="fontnormal" id="sysinfo.text.customReportsDir"><c:out value="${requestScope.systemInfo.customReportsDirectory}"/></span></td>
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.source" bundle="adminUIResources" /></span></td>
