@@ -38,7 +38,6 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -281,12 +280,7 @@ public class MeetingBO extends AbstractBusinessObject {
             }
         }
 
-        boolean isRepaymentIndepOfMeetingEnabled;
-        try {
-            isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        } catch (PersistenceException e) {
-            throw new MeetingException(e);
-        }
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
         if (isRepaymentIndepOfMeetingEnabled) {
             return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0;
         }
@@ -310,12 +304,7 @@ public class MeetingBO extends AbstractBusinessObject {
             currentScheduleDate = findNextMatchingDate(new DateTime(currentScheduleDate)).toDate();
         }
 
-        boolean isRepaymentIndepOfMeetingEnabled;
-        try {
-            isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        } catch (PersistenceException e) {
-            throw new MeetingException(e);
-        }
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
         if (!isRepaymentIndepOfMeetingEnabled) {
             // If repayment date is dependend on meeting date, then they need to
             // match

@@ -62,6 +62,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     public PersonActionStrutsTest() throws Exception {
@@ -525,7 +526,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("globalPersonnelNum", "1");
         actionPerform();
         flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
-        personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+//        personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        // Changed the PersonnelBO to PersonnelInformationDto as the former is no longer stored in session using business key
+        PersonnelInformationDto personnel = (PersonnelInformationDto) SessionUtils.getAttribute("personnelInformationDto", request);
         AuditLog auditLog = new AuditLog(personnel.getPersonnelId().intValue(), EntityType.PERSONNEL.getValue(),
                 "Mifos", new java.sql.Date(System.currentTimeMillis()), Short.valueOf("3"));
         Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
