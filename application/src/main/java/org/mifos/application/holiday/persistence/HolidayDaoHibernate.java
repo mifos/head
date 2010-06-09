@@ -41,7 +41,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class HolidayDaoHibernate implements HolidayDao {
 
@@ -49,6 +48,18 @@ public class HolidayDaoHibernate implements HolidayDao {
 
     public HolidayDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
+    }
+
+    @Override
+    public HolidayBO findHolidayById(Integer id) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("holidayId", id);
+        return (HolidayBO) this.genericDao.executeUniqueResultNamedQuery("findById", queryParameters);
+    }
+
+    @Override
+    public final void save(final Holiday holiday) {
+        this.genericDao.createOrUpdate(holiday);
     }
 
     @SuppressWarnings("unchecked")
@@ -109,11 +120,6 @@ public class HolidayDaoHibernate implements HolidayDao {
     }
 
     @Override
-    public final void save(final Holiday holiday) throws PersistenceException {
-        this.genericDao.createOrUpdate(holiday);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
         Query sqlQuery = ((GenericDaoHibernate) genericDao).getHibernateUtil().getSessionTL().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
@@ -128,5 +134,4 @@ public class HolidayDaoHibernate implements HolidayDao {
 
         return new CalendarEvent(workingDays, upcomingHolidays);
     }
-
 }

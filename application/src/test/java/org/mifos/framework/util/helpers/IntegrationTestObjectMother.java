@@ -33,7 +33,9 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -76,6 +78,7 @@ public class IntegrationTestObjectMother {
     // DAO's for fetching existing data within database
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
+    private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -451,6 +454,10 @@ public class IntegrationTestObjectMother {
 
     public static OfficeBO findOfficeById(Short officeId) {
         return officeDao.findOfficeById(officeId);
+    }
+
+    public static HolidayBO findHolidayById(Integer id) {
+        return holidayDao.findHolidayById(id);
     }
 
     public static void createOffice(OfficeBO office) {

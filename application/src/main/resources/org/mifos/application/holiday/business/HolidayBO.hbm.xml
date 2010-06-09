@@ -19,6 +19,9 @@
 	</class>
 
 	<!-- Holiday Specific Queries  -->
+	<query name="findById">
+		<![CDATA[from HolidayBO h where h.id =: holidayId]]>
+	</query>
 	<query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
    	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
    	       			join office.holidays holidayBO,

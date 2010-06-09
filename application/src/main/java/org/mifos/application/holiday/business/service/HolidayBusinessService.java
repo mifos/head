@@ -26,40 +26,21 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
+/**
+ * remove usage of this in favour of {@link HolidayService}.
+ */
+@Deprecated
 public class HolidayBusinessService implements BusinessService {
 
     @Override
     public AbstractBusinessObject getBusinessObject(final UserContext userContext) {
         return null;
-    }
-
-    public void isValidHolidayState(final Short levelId, final Short stateId, final boolean isCustomer) throws ServiceException {
-        try {
-            Integer records = new HolidayPersistence().isValidHolidayState(levelId, stateId, isCustomer);
-            if (records.intValue() != 0) {
-                throw new ServiceException(HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
-            }
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<HolidayBO> getDistinctYears() throws ServiceException {
-        try {
-            return new HolidayPersistence().getDistinctYears();
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
     }
 
     public List<HolidayBO> getAllPushOutHolidaysContaining (Date date) {
