@@ -1,0 +1,58 @@
+From 85359d1a2f98b2f327994b7c55dd2f2266929c48 Mon Sep 17 00:00:00 2001
+From: vishnu kmit <vishnukmit@gmail.com>
+Date: Thu, 10 Jun 2010 11:30:53 +0530
+Subject: [PATCH 2/2] back to first
+
+---
+ .../src/main/webapp/WEB-INF/cheetah-servlet.xml    |    6 +-----
+ .../org/mifos/ui/freemarker/core/adminLeftPane.ftl |    8 ++++----
+ 2 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/application/src/main/webapp/WEB-INF/cheetah-servlet.xml b/application/src/main/webapp/WEB-INF/cheetah-servlet.xml
+index 5ee77a8..7b8031b 100644
+--- a/application/src/main/webapp/WEB-INF/cheetah-servlet.xml
++++ b/application/src/main/webapp/WEB-INF/cheetah-servlet.xml
+@@ -57,11 +57,7 @@
+                 /ping.ftl=genericController
+                 /adminHome.ftl=genericController  
+                 /cheetah.css.ftl=genericController
+-                /gazelle.css.ftl=genericController
+-                /admin.ftl=genericController
+-                /maincss.css=genericController
+-                /screen.css=genericController
+-                /ClientLeftPane.ftl=genericController               
++                /gazelle.css.ftl=genericController                               
+             </value>
+         </property>
+     </bean>
+diff --git a/userInterface/src/main/resources/org/mifos/ui/freemarker/core/adminLeftPane.ftl b/userInterface/src/main/resources/org/mifos/ui/freemarker/core/adminLeftPane.ftl
+index 7286887..ab01e9e 100644
+--- a/userInterface/src/main/resources/org/mifos/ui/freemarker/core/adminLeftPane.ftl
++++ b/userInterface/src/main/resources/org/mifos/ui/freemarker/core/adminLeftPane.ftl
+@@ -1,12 +1,12 @@
+ [#ftl]
+ [#import "spring.ftl" as spring]
+ [#import "macros.ftl" as mifos]
+-<!--	<div class="left-pane">
++<div class="left-pane">
+ 	  <div class="left-pane-header">[@spring.message "administrativeTasks" /]</div>
+ 	  <div class="left-pane-content">
+    	  </div>
+-	</div>-->
+- <div>
++</div>
++ <!-- <div>
+   <div class="sidebar ht750">
+     <p class="orangetab">[@spring.message "administrativeTasks" /]</p>
+     <p class="paddingLeft"><span class="fontBold">Search by client name, system ID or account number</span><br />
+@@ -15,4 +15,4 @@
+       <input class="buttn" type="button" name="search" value="[@spring.message "search" /]" onclick="#" />
+     </p>
+   </div>
+-</div>
+\ No newline at end of file
++</div>-->
+\ No newline at end of file
+-- 
+1.7.0.2.msysgit.0
+
