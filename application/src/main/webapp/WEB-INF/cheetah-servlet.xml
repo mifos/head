@@ -59,9 +59,6 @@
                 /adminHome.ftl=genericController  
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
-                /admin.ftl=genericController
-                /maincss.css=genericController
-                /screen.css=genericController
                  </value>
         </property>
     </bean>
