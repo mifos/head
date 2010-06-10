@@ -2,6 +2,10 @@ package org.mifos.platform.questionnaire;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
+import java.util.List;
+
 public interface QuestionnaireService {
-    QuestionResponse defineQuestion(QuestionRequest questionRequest) throws ApplicationException;
+    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
+
+    List<QuestionDetail> getAllQuestions();
 }

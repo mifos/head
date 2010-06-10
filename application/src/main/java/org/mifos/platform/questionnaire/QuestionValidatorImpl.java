@@ -5,8 +5,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class QuestionValidatorImpl implements QuestionValidator {
     @Override
-    public void validate(QuestionRequest questionRequest) throws ApplicationException {
-        if (StringUtils.isEmpty(questionRequest.getTitle()))
+    public void validate(QuestionDefinition questionDefinition) throws ApplicationException {
+        if (StringUtils.isEmpty(questionDefinition.getTitle()))
             throw new ApplicationException(QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED);
     }
 }

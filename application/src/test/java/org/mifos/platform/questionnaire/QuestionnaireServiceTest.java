@@ -3,10 +3,13 @@ package org.mifos.platform.questionnaire;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.customers.surveys.business.Question;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -23,7 +26,8 @@ public class QuestionnaireServiceTest {
 
     @Mock
     private QuestionnaireDao questionnaireDao;
-    private static final Integer QUESTION_ID = Integer.valueOf(10);
+
+    private static final String QUESTION_TITLE = "Test QuestionDetail Title";
 
     @Before
     public void setUp() {
@@ -32,27 +36,34 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestion() throws ApplicationException {
-        QuestionRequest questionRequest = new QuestionRequest("Test Question Title");
-        when(questionnaireDao.create(any(org.mifos.customers.surveys.business.Question.class))).thenReturn(QUESTION_ID);
+        QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE);
         try {
-            QuestionResponse questionResponse = questionnaireService.defineQuestion(questionRequest);
-            assertNotNull(questionResponse);
-            assertEquals(QUESTION_ID, questionResponse.getQuestionId());
+            QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
+            verify(questionnaireDao, times(1)).create(any(Question.class));
+            assertNotNull(questionDetail);
+            assertEquals(QUESTION_TITLE, questionDetail.getQuestionText());
+            assertEquals(QUESTION_TITLE, questionDetail.getShortName());
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
-        verify(questionValidator).validate(questionRequest);
+        verify(questionValidator).validate(questionDefinition);
         verify(questionnaireDao).create(any(org.mifos.customers.surveys.business.Question.class));
     }
 
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws ApplicationException {
-        QuestionRequest questionRequest = new QuestionRequest(null);
-        doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionValidator).validate(questionRequest);
-        questionnaireService.defineQuestion(questionRequest);
-        verify(questionValidator).validate(questionRequest);
+        QuestionDefinition questionDefinition = new QuestionDefinition(null);
+        doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionValidator).validate(questionDefinition);
+        questionnaireService.defineQuestion(questionDefinition);
+        verify(questionValidator).validate(questionDefinition);
     }
 
-
+    @Test
+    public void shouldGetAllQuestions() {
+        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        assertNotNull("getAllQuestions should not return null", questionDetails);
+        verify(questionnaireDao, times(1)).getDetailsAll();
+    }
+    
 }
 

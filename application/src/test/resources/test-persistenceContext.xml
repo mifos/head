@@ -119,7 +119,7 @@
 	<!-- ensure that the above transactional advice runs for any execution
 		of an operation defined by the ServiceService interface -->
 	<aop:config>
-		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*ServiceFacade.*(..))"/>
+		<aop:pointcut id="mifosServiceOperation" expression="execution(* org.mifos..*Service.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="mifosServiceOperation"/>
 	</aop:config>
 

@@ -4,17 +4,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.QuestionRequest;
-import org.mifos.platform.questionnaire.QuestionResponse;
+import org.mifos.platform.questionnaire.QuestionDefinition;
+import org.mifos.platform.questionnaire.QuestionDetail;
 import org.mifos.platform.questionnaire.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
@@ -28,20 +30,33 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionnaireDao questionnaireDao;
 
     @Test
-    public void shouldDefineQuestion() {
-        String questionTitle = "Test Question Title";
-        QuestionRequest questionRequest = new QuestionRequest(questionTitle);
-        try {
-            QuestionResponse questionResponse = questionnaireService.defineQuestion(questionRequest);
-            assertNotNull(questionResponse);
-            Integer questionId = questionResponse.getQuestionId();
-            assertNotNull(questionId);
-            Question question = questionnaireDao.getDetails(questionId);
-            assertNotNull(question);
-            assertEquals(questionTitle, question.getShortName());
-            assertEquals(questionTitle, question.getQuestionText());
-        } catch (ApplicationException e) {
-            fail("Should not have thrown the validation exception");
-        }
+    @Transactional
+    public void shouldDefineQuestion() throws ApplicationException {
+        String questionTitle = "Test QuestionDetail Title";
+        QuestionDetail questionDetail = defineQuestion(questionTitle);
+        assertNotNull(questionDetail);
+        Integer questionId = questionDetail.getQuestionId();
+        assertNotNull(questionId);
+        Question questionEntity = questionnaireDao.getDetails(questionId);
+        assertNotNull(questionEntity);
+        assertEquals(questionTitle, questionEntity.getShortName());
+        assertEquals(questionTitle, questionEntity.getQuestionText());
+    }
+
+    @Test
+    @Transactional
+    public void shouldGetAllQuestions() throws ApplicationException {
+        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
+        assertThat(questionDetails.size(), is(0));
+        defineQuestion("Q2");
+        defineQuestion("Q1");
+        questionDetails = questionnaireService.getAllQuestions();
+        assertThat(questionDetails.size(), is(2));
+    }
+
+    private QuestionDetail defineQuestion(String questionTitle) throws ApplicationException {
+        QuestionDefinition questionDefinition = new QuestionDefinition(questionTitle);
+        QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
+        return questionDetail;
     }
 }

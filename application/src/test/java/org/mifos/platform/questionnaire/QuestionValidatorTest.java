@@ -23,7 +23,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldNotThrowExceptionWhenTitleIsProvided(){
         try {
-            questionValidator.validate(new QuestionRequest("Title"));
+            questionValidator.validate(new QuestionDefinition("Title"));
         } catch (ApplicationException e) {
             fail("Should not have thrown the exception");
         }
@@ -32,7 +32,7 @@ public class QuestionValidatorTest {
     @Test
     public void shouldThrowExceptionWhenTitleIsProvided(){
         try {
-            questionValidator.validate(new QuestionRequest(null));
+            questionValidator.validate(new QuestionDefinition(null));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
