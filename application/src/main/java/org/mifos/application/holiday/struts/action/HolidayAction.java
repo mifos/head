@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.persistence.OfficeHoliday;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
@@ -56,7 +57,7 @@ public class HolidayAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return null;
+        return new HolidayBusinessService();
     }
 
     @Override

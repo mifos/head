@@ -38,6 +38,10 @@
     	<constructor-arg ref="holidayDao" />
     </bean>
     
+    <bean id="officeServiceFacade" class="org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier" >
+    	<constructor-arg ref="officeDao" />
+    </bean>
+    
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
     
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" >
