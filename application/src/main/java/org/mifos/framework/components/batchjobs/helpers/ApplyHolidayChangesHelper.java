@@ -278,7 +278,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         getHibernateUtil().getSessionTL();
         getHibernateUtil().startTransaction();
-        holiday.markAsApplied();
+        Holiday updateHoliday = getHolidayDao().findHolidayById(holiday.getId());
+        updateHoliday.markAsApplied();
+        getHolidayDao().save(updateHoliday);
         getHibernateUtil().commitTransaction();
     }
 
