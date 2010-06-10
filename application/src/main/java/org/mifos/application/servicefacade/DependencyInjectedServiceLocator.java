@@ -47,6 +47,8 @@ import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -78,6 +80,7 @@ public class DependencyInjectedServiceLocator {
     private static LoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
     private static HolidayServiceFacade holidayServiceFacade;
+    private static OfficeServiceFacade officeServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -208,6 +211,13 @@ public class DependencyInjectedServiceLocator {
             holidayServiceFacade = new HolidayServiceFacadeWebTier(holidayService, holidayDao);
         }
         return holidayServiceFacade;
+    }
+
+    public static OfficeServiceFacade locateOfficeServiceFacade() {
+        if (officeServiceFacade == null) {
+            officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao);
+        }
+        return officeServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

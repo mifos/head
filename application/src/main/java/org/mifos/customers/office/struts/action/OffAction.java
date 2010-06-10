@@ -48,11 +48,10 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -65,17 +64,17 @@ public class OffAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Office);
+        return new OfficeBusinessService();
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm actionForm = (OffActionForm) form;
         actionForm.clear();
         loadParents(request, actionForm);
@@ -86,33 +85,33 @@ public class OffAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadParent(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
         loadParents(request, offActionForm);
         if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit")) {
             return mapping.findForward(ActionForwards.edit_success.toString());
-        } else {
-            return mapping.findForward(ActionForwards.load_success.toString());
         }
+
+        return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
         OfficeLevel level = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
         OfficeBO parentOffice = ((OfficeBusinessService) getService()).getOffice(getShortValue(offActionForm
@@ -131,8 +130,8 @@ public class OffAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward getAllOffices(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getAllOffices(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
@@ -153,15 +152,15 @@ public class OffAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm actionForm = (OffActionForm) form;
         OfficeBO officeBO = null;
         if (StringUtils.isBlank(actionForm.getOfficeId())) {
@@ -179,40 +178,48 @@ public class OffAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         OffActionForm offActionForm = (OffActionForm) form;
+
         OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
         OfficeBO office = ((OfficeBusinessService) getService()).getOffice(sessionOffice.getOfficeId());
+
         checkVersionMismatch(sessionOffice.getVersionNo(), office.getVersionNo());
         office.setVersionNo(sessionOffice.getVersionNo());
         office.setUserContext(getUserContext(request));
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, office, request);
+
         loadofficeLevels(request);
         loadParents(request, offActionForm);
         loadEditCustomFields(request, offActionForm);
         loadOfficeStatus(request);
+
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward editpreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward editpreview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.editpreview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward editprevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward editprevious(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.editprevious_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
         ActionForward forward = null;
         OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
         OfficeBO office = ((OfficeBusinessService) getService()).getOffice(Short.valueOf(sessionOffice.getOfficeId()));
         checkVersionMismatch(sessionOffice.getVersionNo(), office.getVersionNo());
         office.setVersionNo(sessionOffice.getVersionNo());
@@ -239,8 +246,8 @@ public class OffAction extends BaseAction {
         return forward;
     }
 
-    public ActionForward updateCache(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward updateCache(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         HierarchyManager.getInstance().init();
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -309,8 +316,7 @@ public class OffAction extends BaseAction {
     private void loadCreateCustomFields(OffActionForm actionForm, HttpServletRequest request) throws Exception {
         loadCustomFieldDefinitions(request);
         // Set Default values for custom fields
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = getCustomFieldDefinitionsFromSession(request);
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -326,11 +332,15 @@ public class OffAction extends BaseAction {
         actionForm.setCustomFields(customFields);
     }
 
+    @SuppressWarnings("unchecked")
+    private List<CustomFieldDefinitionEntity> getCustomFieldDefinitionsFromSession(HttpServletRequest request)
+            throws PageExpiredException {
+        return (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+    }
+
     private void loadCustomFieldDefinitions(HttpServletRequest request) throws Exception {
-        MasterDataService masterDataService = (MasterDataService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.MasterDataService);
-        List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
-                .retrieveCustomFieldsDefinition(EntityType.OFFICE);
+        MasterDataService masterDataService = new MasterDataService();
+        List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService.retrieveCustomFieldsDefinition(EntityType.OFFICE);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
     }
 
@@ -344,5 +354,4 @@ public class OffAction extends BaseAction {
                 .getStatusList(getUserContext(request).getLocaleId()), request);
 
     }
-
 }

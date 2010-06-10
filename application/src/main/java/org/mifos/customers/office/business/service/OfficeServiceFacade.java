@@ -18,30 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.persistence;
-
-import java.util.Collection;
-import java.util.List;
+package org.mifos.customers.office.business.service;
 
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeDetailsDto;
-import org.mifos.security.util.UserContext;
 
-public interface OfficeDao {
+public interface OfficeServiceFacade {
 
-    OfficeBO findOfficeById(Short officeIdValue);
+    public String topLevelOfficeNames(String ids);
 
-    OfficeDto findOfficeDtoById(Short valueOf);
+    public OfficeHierarchyDto headOfficeHierarchy();
 
-    List<OfficeBO> findBranchsOnlyWithParentsMatching(String searchId);
-
-    List<OfficeDetailsDto> findActiveOfficeLevels();
-
-    void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
-
-    OfficeHierarchyDto headOfficeHierarchy();
-
-    List<String> topLevelOfficeNames(Collection<Short> idList);
 }

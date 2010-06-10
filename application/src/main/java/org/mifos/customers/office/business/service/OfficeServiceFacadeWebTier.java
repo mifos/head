@@ -24,20 +24,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.customers.office.persistence.OfficeDao;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
 
-public class OfficeFacade {
+    private final OfficeDao officeDao;
 
-    private OfficeBusinessService officeBusinessService;
-
-    public OfficeFacade(OfficeBusinessService officeBusinessService) {
-        this.officeBusinessService = officeBusinessService;
+    public OfficeServiceFacadeWebTier(OfficeDao officeDao) {
+        this.officeDao = officeDao;
     }
 
-    public OfficeHierarchyDto headOfficeHierarchy() throws ServiceException {
-        return officeBusinessService.headOfficeHierarchy();
+    public OfficeHierarchyDto headOfficeHierarchy() {
+        return officeDao.headOfficeHierarchy();
     }
 
     public String topLevelOfficeNames(String ids) {
@@ -46,7 +44,7 @@ public class OfficeFacade {
         for (String id : idArray) {
             idList.add(new Short(id));
         }
-        List<String> topLevelOffices = officeBusinessService.topLevelOfficeNames(idList);
+        List<String> topLevelOffices = officeDao.topLevelOfficeNames(idList);
         StringBuffer stringBuffer = new StringBuffer();
         for (Iterator<String> iterator = topLevelOffices.iterator(); iterator.hasNext();) {
             stringBuffer.append(iterator.next());

@@ -20,16 +20,13 @@
 
 package org.mifos.customers.office.business.service;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
-import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -37,14 +34,16 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-
+/**
+ * for data retrieval use {@link CustomerDao}.
+ */
+@Deprecated
 public class OfficeBusinessService implements BusinessService {
 
     private OfficePersistence officePersistence = new OfficePersistence();
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 
@@ -119,34 +118,5 @@ public class OfficeBusinessService implements BusinessService {
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
-    }
-
-    public OfficeHierarchyDto headOfficeHierarchy() throws ServiceException {
-        OfficeBO headOffice = getHeadOffice();
-        return officeHierarchy(headOffice);
-    }
-
-    private OfficeHierarchyDto officeHierarchy(OfficeBO office) {
-        List<OfficeHierarchyDto> childOfficeList = new LinkedList<OfficeHierarchyDto>();
-        Set<OfficeBO> children = office.getChildren();
-        for (OfficeBO child : children) {
-            childOfficeList.add(officeHierarchy(child));
-        }
-        Collections.sort(childOfficeList);
-        OfficeHierarchyDto hierarchy = new OfficeHierarchyDto(office.getOfficeId(), office.getOfficeName(), office
-                .getSearchId(), office.isActive(), childOfficeList);
-        return hierarchy;
-    }
-
-    public OfficeBO getHeadOffice() throws ServiceException {
-        try {
-            return officePersistence.getHeadOffice();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<String> topLevelOfficeNames(List<Short> ids) {
-        return officePersistence.topLevelOfficeName(ids);
     }
 }
