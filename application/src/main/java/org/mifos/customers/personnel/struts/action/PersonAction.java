@@ -20,7 +20,6 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +56,7 @@ import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
+import org.mifos.customers.personnel.business.service.PersonnelInformationDto;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -305,6 +305,11 @@ public class PersonAction extends SearchAction {
 
         personnelInformationDto.getStatus().setLocaleId(userContext.getLocaleId());
         SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);
+
+
+        // John W - for other actions downstream (like edit) business_key set (until all actions refactored)
+        PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnelInformationDto.getPersonnelId());
+        SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, personnelBO, request);
 
         loadCreateMasterData(request, personActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());

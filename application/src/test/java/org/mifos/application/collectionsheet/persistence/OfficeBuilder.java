@@ -67,6 +67,16 @@ public class OfficeBuilder {
         return this;
     }
 
+    public OfficeBuilder regionalOffice() {
+        this.officeLevel = OfficeLevel.REGIONALOFFICE;
+        return this;
+    }
+
+    public OfficeBuilder subRegionalOffice() {
+        this.officeLevel = OfficeLevel.SUBREGIONALOFFICE;
+        return this;
+    }
+
     public OfficeBuilder areaOffice() {
         this.officeLevel = OfficeLevel.AREAOFFICE;
         return this;
