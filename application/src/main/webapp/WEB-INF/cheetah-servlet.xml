@@ -56,6 +56,7 @@
                 /adminHome.ftl=genericController
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
+                /systemInformation.ftl=systemInformationController
             </value>
         </property>
     </bean>
@@ -77,4 +78,11 @@
     <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
+    
+    <bean id="systemInformationServiceFacade" class="org.mifos.application.admin.business.service.SystemInformationServiceFacadeWebTier"/>
+
+    <bean id="systemInformationController" class="org.mifos.ui.core.controller.SystemInformationController">
+        <property name="systemInformationServiceFacade" ref="systemInformationServiceFacade" />
+    </bean>  
+    
 </beans>
