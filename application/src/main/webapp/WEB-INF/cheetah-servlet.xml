@@ -55,7 +55,6 @@
                 /ping.ftl=genericController
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
-                /v1/**/*=backendBridgeController
             </value>
         </property>
     </bean>
@@ -76,23 +75,5 @@
 
     <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
-    </bean>
-    
-    <bean id="jsonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
-
-    <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate"/>
-
-    <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate">
-        <constructor-arg ref="genericDao"/>
-    </bean>
-
-    <bean id="centerDetailsServiceFacade" class="org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade">
-        <constructor-arg ref="customerDao"/>
-    </bean>
-
-    <bean id="backendBridgeController" class="org.mifos.BackendBridgeController">
-        <!-- FIXME: autowire  --> 
-        <property name="centerDetailsServiceFacade" ref="centerDetailsServiceFacade"/>
-        <property name="jsonObjectMapper" ref="jsonObjectMapper"/>
     </bean>
 </beans>

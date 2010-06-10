@@ -1,7 +1,14 @@
 #!/bin/bash
-refname=$1
-oldhead=$2
-newhead=$3
-for merged in $(git rev-list ${oldhead}..${newhead} | tac) ; do
+
+declare -r null_rev=0000000000000000000000000000000000000000
+
+declare -r refname=$1
+declare -r oldrev=$2
+declare -r newrev=$3
+
+# ref (ie: tag/branch) created or deleted
+[ $newrev == $null_rev ] || [ $oldrev == $null_rev ] && exit 0
+
+for merged in $(git rev-list ${oldrev}..${newrev} | tac) ; do
     /gitrepo/m/mi/mifos/head/hooks/ciabot.bash ${refname} ${merged}
 done
