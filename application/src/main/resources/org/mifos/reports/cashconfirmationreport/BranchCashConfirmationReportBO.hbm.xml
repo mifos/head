@@ -50,59 +50,7 @@ explanation of the license and how it is applied.
 				class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" />
 		</set>
 	</class>
-	<sql-query name="branchCashConfirmationReport.extractCenterRecovery">
-		<return-scalar column="officeId" type="short"/>
-		<return-scalar column="productOfferingName" type="string"/>
-		<return-scalar column="due" type="big_decimal"/>
-		<return-scalar column="actuals" type="big_decimal"/>
-		<return-scalar column="arrears" type="big_decimal"/>
-		<![CDATA[
-			select acc.office_ID as officeId, po.PRD_OFFERING_NAME as productOfferingName, 
-				ifnull(SUM(COALESCE(ls.PRINCIPAL     ,0)+COALESCE(ls.INTEREST     ,0)),0) as due,
-				ifnull(SUM(COALESCE(ls.PRINCIPAL_PAID,0)+COALESCE(ls.INTEREST_PAID,0)),0) as actuals,
-				0.0 as arrears
-				from account acc, loan_account la, prd_offering po, loan_schedule ls, office o
-				where la.ACCOUNT_ID = acc.ACCOUNT_ID
-				and po.PRD_OFFERING_ID=la.PRD_OFFERING_ID
-				and ls.account_id=acc.account_id
-				and acc.office_id=o.office_id
-				and o.office_level_id=:officeLevelId
-				and acc.account_type_id=:accountTypeId 
-				and ls.action_date=:actionDate
-				and po.PRD_OFFERING_ID in (:productOfferingIds)
-				and ls.PRINCIPAL_CURRENCY_ID=:currencyId
-				and ls.INTEREST_CURRENCY_ID=:currencyId
-				and ls.PRINCIPAL_PAID_CURRENCY_ID=:currencyId
-				and ls.INTEREST_PAID_CURRENCY_ID=:currencyId
-				group by po.PRD_OFFERING_ID, acc.office_id
-		]]>
-	</sql-query>
 	
-	<sql-query name="branchCashConfirmationReport.extractDisbursement">
-		<return-scalar column="officeId" type="short"/>
-		<return-scalar column="productOfferingName" type="string"/>
-		<return-scalar column="actuals" type="big_decimal"/>
-		<![CDATA[
-			select acc.OFFICE_ID as officeId, po.PRD_OFFERING_NAME as productOfferingName, 
-				ifnull(SUM(COALESCE(la.LOAN_AMOUNT,0)),0) as actuals 
-				from account acc, loan_account la, prd_offering po, office o
-				where la.ACCOUNT_ID = acc.ACCOUNT_ID
-				and po.PRD_OFFERING_ID=la.PRD_OFFERING_ID
-				and acc.office_id = o.office_id				
-				and o.office_level_id=:officeLevelId
-				and acc.account_type_id=:accountTypeId
-				and la.disbursement_date=:disbursementDate
-				and po.PRD_OFFERING_ID in (:productOfferingIds)
-				and la.LOAN_AMOUNT_CURRENCY_ID=:currencyId
-				group by po.PRD_OFFERING_ID, acc.OFFICE_ID
-		]]>
-	</sql-query>
-	<query name="branchCashConfirmationReport.getReportForDate">
-		<![CDATA[
-			from org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO branchReport 
-				where branchReport.runDate=:RUN_DATE
-		]]>
-	</query>	
 	<query name="branchCashConfirmationReport.getReportForDateAndBranch">
 		<![CDATA[
 			from org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO branchReport 

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -64,6 +65,7 @@ import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -1338,6 +1340,10 @@ public class LoanBO extends AccountBO {
                 || getState() == AccountState.LOAN_ACTIVE_IN_BAD_STANDING;
     }
 
+    /**
+     * use service/dao for saving and creating loans
+     */
+    @Deprecated
     public void save() throws AccountException {
         try {
             this.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(this.getAccountState(), this
@@ -1348,11 +1354,6 @@ public class LoanBO extends AccountBO {
         } catch (PersistenceException e) {
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
         }
-    }
-
-    public void save(final AccountState accountState) throws AccountException {
-        this.setAccountState(new AccountStateEntity(accountState));
-        save();
     }
 
     public void updateLoan(final Boolean interestDeductedAtDisbursement, final Money loanAmount,
@@ -4065,5 +4066,23 @@ public class LoanBO extends AccountBO {
             return true;
         }
         return false;
+    }
+
+    public List<RepaymentScheduleInstallment> toRepaymentScheduleDto() {
+
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+
+        for (AccountActionDateEntity actionDate : this.getAccountActionDates()) {
+            LoanScheduleEntity loanSchedule = (LoanScheduleEntity) actionDate;
+            installments.add(loanSchedule.toDto());
+        }
+
+        Collections.sort(installments, new Comparator<RepaymentScheduleInstallment>() {
+            public int compare(final RepaymentScheduleInstallment act1, final RepaymentScheduleInstallment act2) {
+                return act1.getInstallment().compareTo(act2.getInstallment());
+            }
+        });
+
+        return installments;
     }
 }

@@ -101,7 +101,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
-    @Ignore
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
         createLatestDatabaseWithLatestData();

@@ -17,24 +17,14 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.office.persistence;
 
-public class AccountOffice {
+package org.mifos.customers.personnel.business.service;
 
-    private final Integer accountId;
-    private final Short officeId;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
-    public AccountOffice(Integer accountId, Short officeId) {
-        this.accountId = accountId;
-        this.officeId = officeId;
-    }
-
-    public Integer getAccountId() {
-        return this.accountId;
-    }
-
-    public Short getOfficeId() {
-        return this.officeId;
-    }
+public interface PersonnelDetailsServiceFacade {
+    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, UserContext userContext)
+            throws ServiceException;
 
 }

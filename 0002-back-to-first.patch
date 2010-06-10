@@ -1,7 +1,7 @@
 From 85359d1a2f98b2f327994b7c55dd2f2266929c48 Mon Sep 17 00:00:00 2001
 From: vishnu kmit <vishnukmit@gmail.com>
 Date: Thu, 10 Jun 2010 11:30:53 +0530
-Subject: [PATCH 2/2] back to first
+Subject: [PATCH 2/9] back to first
 
 ---
  .../src/main/webapp/WEB-INF/cheetah-servlet.xml    |    6 +-----

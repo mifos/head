@@ -19,6 +19,16 @@
 	</class>
 
 	<!-- Holiday Specific Queries  -->
+	<query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
+   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       			join office.holidays holidayBO
+                    where holidayBO.holidayThruDate >= date(:CURRENT_DATE)
+		            and office.officeId = :OFFICE_ID
+                    order by holidayBO.holidayFromDate
+   	       ]]>
+	</query>
+	
+	
 	<query name="holiday.getOfficeHolidays">
    	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
    	       			   join office.holidays holidayBO
@@ -32,6 +42,14 @@
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
 	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
 			]]>
+	</query>
+	
+	
+	<query name="holiday.getDistinctYears">
+			<![CDATA[select distinct(holidayBO.holidayThruDate)
+					from org.mifos.application.holiday.business.HolidayBO holidayBO
+					order by holidayBO.holidayThruDate
+   	       ]]>
 	</query>
 
 	<query name="holiday.getAll">
@@ -54,30 +72,4 @@
 			    and
 			    holiday.holiday_name != IFNULL(parent_holiday.holiday_name, '')
 	</sql-query>
-	
-	<query name="holiday.unappliedOfficeHolidays">
-			<![CDATA[
-					select distinct
-						new org.mifos.application.holiday.persistence.OfficeHoliday(office.officeId, holiday)
-					from org.mifos.customers.office.business.OfficeBO office
-						join office.holidays holiday
-	                where office.officeId in (:OFFICE_IDS)
-	                  	and holiday.holidayChangesAppliedFlag = :FLAG
-			]]>
-	</query>
-	
-	<query name="holiday.holidaysForOffices">
-   	       <![CDATA[
-   	       			select distinct
-   	       				new org.mifos.application.holiday.persistence.OfficeHoliday(office.officeId, holiday) 
-   	       			from org.mifos.customers.office.business.OfficeBO office
-   	       			   join office.holidays holiday
-                    where office.officeId in (:OFFICE_IDS)
-                    	and (
-                    		(holiday.holidayThruDate between :START_OF_YEAR and :END_OF_YEAR)
-		            		 or
-		            		(holiday.holidayFromDate between :START_OF_YEAR and :END_OF_YEAR)
-		            	)
-   	       ]]>
-	</query>
 </hibernate-mapping>

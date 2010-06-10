@@ -18,20 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.helpers;
+package org.mifos.application.admin.servicefacade;
 
-import org.mifos.framework.components.batchjobs.MifosTask;
-import org.mifos.framework.components.batchjobs.TaskHelper;
+import java.util.Locale;
 
-/**
- *@deprecated - not invoked from task.xml
- */
-@Deprecated
-public class BranchCashConfirmationTask extends MifosTask {
+import javax.servlet.ServletContext;
 
-    @Override
-    public TaskHelper getTaskHelper() {
-        return new BranchCashConfirmationReportHelper(this);
-    }
-
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+public interface SystemInformationServiceFacade {
+    SystemInformationDto getSystemInformation(ServletContext context, Locale locale) throws Exception;
 }

@@ -63,4 +63,9 @@ public class HolidayPersistence extends MasterPersistence {
         return count;
     }
 
+    public List<HolidayBO> getDistinctYears() throws PersistenceException {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        return executeNamedQuery("holiday.getDistinctYears", parameters);
+    }
+
 }

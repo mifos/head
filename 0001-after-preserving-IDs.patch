@@ -1,7 +1,7 @@
 From 0e15832c8e67d05fe89ed1fb303fbba241a16839 Mon Sep 17 00:00:00 2001
 From: vishnu kmit <vishnukmit@gmail.com>
 Date: Wed, 9 Jun 2010 11:47:37 +0530
-Subject: [PATCH 1/2] after preserving IDs
+Subject: [PATCH 1/9] after preserving IDs
 
 ---
  .../src/main/webapp/WEB-INF/cheetah-servlet.xml    |    4 +-

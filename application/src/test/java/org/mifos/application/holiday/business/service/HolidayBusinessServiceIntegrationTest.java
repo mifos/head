@@ -53,4 +53,9 @@ public class HolidayBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(4, repaymentRules.size());
     }
 
+    public void testGetDistinctYears() throws Exception {
+        List<HolidayBO> distinctYears = new HolidayBusinessService().getDistinctYears();
+        Assert.assertNotNull(distinctYears);
+    }
+
 }

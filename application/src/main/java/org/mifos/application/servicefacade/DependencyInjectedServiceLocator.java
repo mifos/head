@@ -19,6 +19,8 @@
  */
 package org.mifos.application.servicefacade;
 
+import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
+
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
@@ -49,6 +51,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -73,6 +76,7 @@ public class DependencyInjectedServiceLocator {
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
+    private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -168,7 +172,7 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao);
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao);
         }
         return loanServiceFacade;
     }
@@ -188,6 +192,13 @@ public class DependencyInjectedServiceLocator {
         return meetingServiceFacade;
     }
 
+    public static PersonnelDetailsServiceFacade locatePersonnelDetailsServiceFacade() {
+        if (personnelDetailsServiceFacade == null) {
+            personnelDetailsServiceFacade = new PersonnelDetailsServiceFacadeWebTier(personnelDao);
+        }
+        return personnelDetailsServiceFacade;
+    }
+
     public static CustomerDao locateCustomerDao() {
         return customerDao;
     }
@@ -198,5 +209,9 @@ public class DependencyInjectedServiceLocator {
 
     public static GenericDao locateGenericDao() {
         return genericDao;
+    }
+
+    public static PersonnelDao locatePersonnelDao() {
+        return personnelDao;
     }
 }
