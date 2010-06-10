@@ -120,6 +120,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationPreviewDto;
@@ -886,15 +887,18 @@ public class LoanAccountAction extends AccountAppAction {
         UserContext userContext = getUserContext(request);
         List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
         DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()));
-        FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
         Integer customerId = ((CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId();
 
-        LoanCreationResultDto loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund, loanActionForm);
-
+        LoanCreationResultDto loanCreationResultDto = null;
         LoanBO loan;
         if (isRedoOperation(perspective)) {
             loan = redoLoan(loanActionForm, request, SaveLoan.YES);
+            CustomerBO customer = DependencyInjectedServiceLocator.locateCustomerDao().findCustomerById(customerId);
+            loanCreationResultDto = new LoanCreationResultDto(configService.isGlimEnabled(), loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        } else {
+            FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
+            loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund, loanActionForm);
         }
 
         if (loanCreationResultDto.isGlimApplicable()) {

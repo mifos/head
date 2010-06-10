@@ -34,11 +34,22 @@
     	<constructor-arg ref="customerService" />
     </bean>
     
+    <bean id="holidayServiceFacade" class="org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier" >
+    	<constructor-arg ref="holidayService" />
+    	<constructor-arg ref="holidayDao" />
+    </bean>
+    
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
     
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" >
     	<constructor-arg ref="customerDao" />
     	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="officeDao" />
+    	<constructor-arg ref="holidayDao" />
+    	<constructor-arg ref="hibernateTransactionHelper" />
+    </bean>
+    
+    <bean id="holidayService" class="org.mifos.application.holiday.business.service.HolidayServiceImpl" >
     	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="holidayDao" />
     	<constructor-arg ref="hibernateTransactionHelper" />
