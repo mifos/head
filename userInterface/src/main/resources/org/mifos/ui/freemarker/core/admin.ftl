@@ -25,11 +25,11 @@
       <p class="fontBold">[@spring.message "systemusers"/]</p>
       <ul>
         <li type="circle"><a id="admin.link.viewSysUsers" href="PersonAction.do?method=loadSearch&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="PersonAction.do?method=chooseOffice&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">[@spring.message "definenewsystemuser" /]</a></li>
-        <li type="circle"><a id="admin.link.manageRoles" href="/rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "managerolesandpermissions"/]</a></li>
+        <li type="circle"><a id="admin.link.manageRoles" href="rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "managerolesandpermissions"/]</a></li>
       </ul>
       <p><span class="fontBold">[@spring.message "offices"/]</span>
       <ul>
-        <li type="circle"><a id="admin.link.viewOffices" href="/offAction.do?method=getAllOffices">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" action="/offAction.do?method=load">[@spring.message "defineNewOffice"/]</a></li>
+        <li type="circle"><a id="admin.link.viewOffices" href="offAction.do?method=getAllOffices">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" action="/offAction.do?method=load">[@spring.message "defineNewOffice"/]</a></li>
         <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="/offhierarchyaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewofficehierarchy" /]</a></li>
       </ul>
       </p>
