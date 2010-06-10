@@ -52,7 +52,7 @@ public class TestDatabase {
      */
     public static void resetMySQLDatabase() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
-        truncateMySQLDatabase();
+        executeScript("truncate_tables.sql", getJDBCConnection());
         insertTestData();
 
         // If the database is ever blown away, we must re-populate chart of
@@ -65,26 +65,14 @@ public class TestDatabase {
 
     public static void createMySQLTestDatabase() throws Exception {
         dropMySQLDatabase();
-        createLatestSchema();
+        executeScript("latest-schema.sql", getJDBCConnection());
         insertTestData();
     }
 
-    public static void createLatestSchema() throws Exception {
-        Connection connection = getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("latest-schema.sql", connection);
-        connection.commit();
-        connection.close();
-    }
-
     public static void insertTestData() throws Exception {
-        Connection connection = getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("latest-data.sql", connection);
-        executeScript("custom_data.sql", connection);
-        executeScript("testdbinsertionscript.sql", connection);
-        connection.commit();
-        connection.close();
+        executeScript("latest-data.sql", getJDBCConnection());
+        executeScript("custom_data.sql", getJDBCConnection());
+        executeScript("testdbinsertionscript.sql", getJDBCConnection());
     }
 
     /*
@@ -96,19 +84,7 @@ public class TestDatabase {
      */
 
     public static void dropMySQLDatabase() throws Exception {
-        Connection connection = getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("mifosdroptables.sql", connection);
-        connection.commit();
-        connection.close();
-    }
-
-    public static void truncateMySQLDatabase() throws Exception {
-        Connection connection = getJDBCConnection();
-        connection.setAutoCommit(false);
-        executeScript("truncate_tables.sql", connection);
-        connection.commit();
-        connection.close();
+        executeScript("mifosdroptables.sql", getJDBCConnection());
     }
 
     /**
@@ -124,7 +100,6 @@ public class TestDatabase {
         while (rs.next()) {
             getCreateTableDump(rs.getString(1), connection, sb);
         }
-        connection.close();
         return sb.toString();
     }
 
@@ -170,7 +145,17 @@ public class TestDatabase {
     /**
      * Foreign key disabled connection
      */
+
+    private static Connection fkDisabledConnection;
+
     private static Connection getJDBCConnection() throws Exception {
+        if(fkDisabledConnection == null) {
+            fkDisabledConnection = initializeFKDisabledConnection();
+        }
+        return fkDisabledConnection;
+    }
+
+    private static Connection initializeFKDisabledConnection() throws Exception {
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String url = databaseSettings.getProperty("hibernate.connection.url");
         final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";

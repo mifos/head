@@ -35,10 +35,11 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
@@ -281,12 +282,7 @@ public class MeetingBO extends AbstractBusinessObject {
             }
         }
 
-        boolean isRepaymentIndepOfMeetingEnabled;
-        try {
-            isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        } catch (PersistenceException e) {
-            throw new MeetingException(e);
-        }
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
         if (isRepaymentIndepOfMeetingEnabled) {
             return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0;
         }
@@ -310,12 +306,7 @@ public class MeetingBO extends AbstractBusinessObject {
             currentScheduleDate = findNextMatchingDate(new DateTime(currentScheduleDate)).toDate();
         }
 
-        boolean isRepaymentIndepOfMeetingEnabled;
-        try {
-            isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        } catch (PersistenceException e) {
-            throw new MeetingException(e);
-        }
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
         if (!isRepaymentIndepOfMeetingEnabled) {
             // If repayment date is dependend on meeting date, then they need to
             // match
@@ -478,5 +469,24 @@ public class MeetingBO extends AbstractBusinessObject {
         }
 
         return isDifferent;
+    }
+
+    public static MeetingBO fromDto(MeetingUpdateRequest meetingDto) throws MeetingException {
+        MeetingBO meeting = null;
+        Date startDate = new DateTimeService().getCurrentJavaDateTime();
+        if (meetingDto.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
+            meeting = new MeetingBO(meetingDto.getWeekDay(), meetingDto.getRecursEvery(), startDate,
+                    MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+        } else if (meetingDto.getRecurrenceType().equals(RecurrenceType.MONTHLY)) {
+
+            if (meetingDto.getDayOfMonth() != null) {
+                meeting = new MeetingBO(meetingDto.getDayOfMonth(), meetingDto.getRecursEvery(), startDate,
+                        MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+            } else {
+                meeting = new MeetingBO(meetingDto.getMonthWeek(), meetingDto.getRankOfDay(), meetingDto
+                        .getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+            }
+        }
+        return meeting;
     }
 }

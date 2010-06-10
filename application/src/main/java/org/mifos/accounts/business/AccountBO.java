@@ -378,7 +378,7 @@ public class AccountBO extends AbstractBusinessObject {
         return (Date) (closedDate == null ? null : closedDate.clone());
     }
 
-    protected void setGlobalAccountNum(final String globalAccountNum) {
+    public void setGlobalAccountNum(final String globalAccountNum) {
         this.globalAccountNum = globalAccountNum;
     }
 
@@ -400,7 +400,7 @@ public class AccountBO extends AbstractBusinessObject {
         this.closedDate = (Date) (closedDate == null ? null : closedDate.clone());
     }
 
-    protected void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
+    public void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
         if (this.accountStatusChangeHistory == null) {
             this.accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
         }
@@ -1171,7 +1171,7 @@ public class AccountBO extends AbstractBusinessObject {
         getFinancialBusinessService().buildFinancialEntries(accountTrxns);
     }
 
-    protected final String generateId(final String officeGlobalNum) throws AccountException {
+    public final String generateId(final String officeGlobalNum) throws AccountException {
         StringBuilder systemId = new StringBuilder();
         systemId.append(officeGlobalNum);
         try {

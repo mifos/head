@@ -1,16 +1,16 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/Resources.properties, zh/Resources_zh_CN.properties
+#. extracted from Resources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-06-08 18:19+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
 
 #: Next
 msgid "Next"
@@ -137,15 +137,14 @@ msgid "Cancel"
 msgstr "取消"
 
 #: savings_stateid_16
+#, fuzzy
 msgctxt "savings_stateid_16"
-"savings_stateid_16"
-"savings_stateid_16"
 msgid "Active"
 msgstr "活动的"
 
 #: savings_stateid_17
+#, fuzzy
 msgctxt "savings_stateid_17"
-"savings_stateid_17"
 msgid "Closed"
 msgstr "已关闭"
 

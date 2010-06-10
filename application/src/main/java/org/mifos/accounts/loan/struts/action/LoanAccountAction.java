@@ -32,11 +32,8 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.NOTES;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
@@ -58,7 +55,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -96,12 +92,8 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -128,26 +120,28 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.LoanCreationLoanDetailsDto;
+import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
+import org.mifos.application.servicefacade.LoanCreationPreviewDto;
+import org.mifos.application.servicefacade.LoanCreationProductDetailsDto;
+import org.mifos.application.servicefacade.LoanCreationResultDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -159,7 +153,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -168,10 +161,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -258,7 +248,6 @@ public class LoanAccountAction extends AccountAppAction {
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
     private LoanProductService loanProductService;
-    private LoanService loanService;
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -289,7 +278,6 @@ public class LoanAccountAction extends AccountAppAction {
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
         this.loanProductService = loanProductService;
-        this.loanService = loanService;
     }
 
     /**
@@ -352,120 +340,80 @@ public class LoanAccountAction extends AccountAppAction {
             throws Exception {
 
         final LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        final CustomerBO customer = customerDao.findCustomerById(loanActionForm.getCustomerIdValue());
-        final List<LoanOfferingBO> loanOfferings = loanServiceFacade.loadActiveProductsApplicableForCustomer(customer);
 
-        storeCollectionOnSessionForUseInJspPage(request, LoanConstants.LOANPRDOFFERINGS, loanOfferings);
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNER, customer);
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, customer
-                .getCustomerAccount().getNextMeetingDate());
+        Integer customerId = loanActionForm.getCustomerIdValue();
+        LoanCreationProductDetailsDto loanCreationProductDetailsDto = this.loanServiceFacade.retrieveGetProductDetailsForLoanAccountCreation(customerId);
+
+        storeCollectionOnSessionForUseInJspPage(request, LoanConstants.LOANPRDOFFERINGS, loanCreationProductDetailsDto.getLoanProductDtos());
+        storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOANACCOUNTOWNER, loanCreationProductDetailsDto.getCustomerDetailDto());
+        storeObjectOnSessionForUseInJspPage(request, LoanConstants.PROPOSED_DISBURSAL_DATE, loanCreationProductDetailsDto.getNextMeetingDate());
 
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
 
-        if (isGlimEnabled()) {
-            setGlimEnabledSessionAttributes(request, customer);
+        if (loanCreationProductDetailsDto.isGlimEnabled()) {
+            setGlimEnabledSessionAttributes(request, loanCreationProductDetailsDto.isGroup());
             request.setAttribute(METHODCALLED, "getPrdOfferings");
 
-            if (customer.isGroup()) {
+            if (loanCreationProductDetailsDto.isGroup()) {
+                loanActionForm.setClientDetails(loanCreationProductDetailsDto.getClientDetails());
 
-                final LoanCreationGlimDto loanCreationGlimDto = loanServiceFacade
-                        .retrieveGlimSpecificDataForGroup(customer);
-
-                final List<ClientBO> activeClientsOfGroup = loanCreationGlimDto.getActiveClientsOfGroup();
-
-                if (activeClientsOfGroup == null || activeClientsOfGroup.isEmpty()) {
-                    throw new ApplicationException(GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
-                }
-
-                updateLoanCreationFormWithActiveClientsOfGroupToSupportGlim(loanActionForm, activeClientsOfGroup);
-                storeGlimDataOnSessionForUseInJsp(request, loanCreationGlimDto);
+                LoanCreationGlimDto loanCreationGlimDto = loanCreationProductDetailsDto.getLoanCreationGlimDto();
+                storeCollectionOnSessionForUseInJspPage(request, MasterConstants.BUSINESS_ACTIVITIES, loanCreationGlimDto.getLoanPurposes());
+                storeCollectionOnSessionForUseInJspPage(request, LoanConstants.CLIENT_LIST, loanCreationGlimDto.getActiveClientsOfGroup());
+                storeObjectOnSessionForUseInJspPage(request, "clientListSize", loanCreationGlimDto.getActiveClientsOfGroup().size());
             }
         }
 
-        handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, customer);
+        handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, loanCreationProductDetailsDto.getRecurMonth());
 
         return mapping.findForward(ActionForwards.getPrdOfferigs_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        // loan fees
-        loanActionForm.setAdditionalFees(new ArrayList<FeeDto>()); // clear cached additional fees (MIFOS-2547)
-        List<FeeDto> additionalFees = new ArrayList<FeeDto>();
-        List<FeeDto> defaultFees = new ArrayList<FeeDto>();
-        getDefaultAndAdditionalFees(loanActionForm.getPrdOfferingIdValue(), getUserContext(request), defaultFees,
-                additionalFees);
+        loanActionForm.clearDetailsForLoan();
 
-        LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), getUserContext(request)
-                .getLocaleId());
-        if (AccountingRules.isMultiCurrencyEnabled()) {
-            defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
-            additionalFees = getFilteredFeesByCurrency(additionalFees, loanOffering.getCurrency().getCurrencyId());
+        UserContext userContext = getUserContext(request);
+        Integer customerId = loanActionForm.getCustomerIdValue();
+        Short productId = loanActionForm.getPrdOfferingIdValue();
+
+        LoanCreationLoanDetailsDto loanCreationDetailsDto = this.loanServiceFacade.retrieveLoanDetailsForLoanAccountCreation(userContext, customerId, productId);
+
+        if (loanCreationDetailsDto.isRepaymentIndependentOfMeetingEnabled()) {
+            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanCreationDetailsDto.getLoanOfferingMeetingDetail(), loanCreationDetailsDto.getCustomerMeetingDetail());
         }
-        loanActionForm.setDefaultFees(defaultFees);
-        SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, additionalFees, request);
-        // end of load fee
 
-        // setDateIntoForm
-        updateForm(loanOffering, loanActionForm);
-        loanActionForm.setInterestRate(getDoubleStringForInterest(loanOffering.getDefInterestRate()));
-        loanActionForm.setIntDedDisbursement(getStringValue(loanOffering.isIntDedDisbursement()));
-        loanActionForm.setGracePeriodDuration(getStringValue(loanOffering.getGracePeriodDuration()));
-        loanActionForm.setDisbursementDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
-                SessionUtils.getAttribute(PROPOSED_DISBURSAL_DATE, request).toString()));
-        // clean up the cached externalId from previous loan creation
-        // if required loanActionForm.clear() will be created
-        loanActionForm.setExternalId(null);
-        // end of setDateIntoForm
+        loanActionForm.setLoanAmountRange(loanCreationDetailsDto.getEligibleLoanAmount());
+        loanActionForm.setLoanAmount(getDoubleStringForMoney(loanCreationDetailsDto.getEligibleLoanAmount().getDefaultLoanAmount(), loanCreationDetailsDto.getLoanOffering().getCurrency()));
+        loanActionForm.setMaxInterestRate(loanCreationDetailsDto.getLoanOffering().getMaxInterestRate());
+        loanActionForm.setMinInterestRate(loanCreationDetailsDto.getLoanOffering().getMinInterestRate());
 
-        loadMasterData(request);
+        loanActionForm.setInstallmentRange(loanCreationDetailsDto.getEligibleNoOfInstall());
+        loanActionForm.setNoOfInstallments(getStringValue(loanCreationDetailsDto.getEligibleNoOfInstall().getDefaultNoOfInstall()));
+        loanActionForm.setInterestRate(getDoubleStringForInterest(loanCreationDetailsDto.getLoanOffering().getDefInterestRate()));
+        loanActionForm.setIntDedDisbursement(getStringValue(loanCreationDetailsDto.getLoanOffering().isIntDedDisbursement()));
+        loanActionForm.setGracePeriodDuration(getStringValue(loanCreationDetailsDto.getLoanOffering().getGracePeriodDuration()));
+        loanActionForm.setDisbursementDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), SessionUtils.getAttribute(PROPOSED_DISBURSAL_DATE, request).toString()));
 
-        // loadCreateCustomFields
-        loadCustomFieldDefinitions(request);
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CUSTOM_FIELDS, request);
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+        loanActionForm.setCustomFields(loanCreationDetailsDto.getCustomFields());
+        loanActionForm.setDefaultFees(loanCreationDetailsDto.getDefaultFees());
 
-        for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
-                    && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
-                        request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
-            } else {
-                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
-                        .getFieldType()));
-            }
-        }
-        loanActionForm.setCustomFields(customFields);
-        // end of loadCreateCustomFields
-
-        MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
-                .getMeetingDetails();
-        RecurrenceType recurrenceType = loanOfferingMeetingDetail.getRecurrenceTypeEnum();
-
-        SessionUtils.setAttribute(RECURRENCEID, recurrenceType.getValue(), request);
-        request.setAttribute(RECURRENCEID, recurrenceType.getValue());
-        Object object = request.getSession().getAttribute(Constants.BUSINESS_KEY);
-        CustomerBO customerBO = null;
-        if (object instanceof CustomerBO) {
-            customerBO = (CustomerBO) object;
-        }
-        if (customerBO == null) {
-            customerBO = (CustomerBO) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
-
-        }
-        if (configService.isRepaymentIndepOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanOfferingMeetingDetail, customerBO
-                    .getCustomerMeeting().getMeeting().getMeetingDetails());
-        }
+        SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, loanCreationDetailsDto.getCustomFieldDefs(), request);
+        SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, loanCreationDetailsDto.getAdditionalFees(), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, loanCreationDetailsDto.getCollateralTypes(), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, loanCreationDetailsDto.getLoanPurposes(), request);
+        SessionUtils.setAttribute(RECURRENCEID, loanCreationDetailsDto.getLoanProductRecurrenceType().getValue(), request);
+        request.setAttribute(RECURRENCEID, loanCreationDetailsDto.getLoanProductRecurrenceType().getValue());
 
         SessionUtils.removeAttribute(LOANOFFERING, request);
-        SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
-        SessionUtils.setCollectionAttribute(LOANFUNDS, getFunds(loanOffering), request);
+        SessionUtils.setAttribute(LOANOFFERING, loanCreationDetailsDto.getLoanOffering(), request);
+        SessionUtils.setCollectionAttribute(LOANFUNDS, loanCreationDetailsDto.getFunds(), request);
+
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -482,16 +430,6 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
 
-    private List<FeeDto> getFilteredFeesByCurrency(List<FeeDto> defaultFees, Short currencyId) {
-        List<FeeDto> filteredFees = new ArrayList<FeeDto>();
-        for (FeeDto feeDto : defaultFees) {
-            if (feeDto.isValidForCurrency(currencyId)) {
-                filteredFees.add(feeDto);
-            }
-        }
-        return filteredFees;
-    }
-
     private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
         loanActionForm.setMonthDay("");
         loanActionForm.setMonthWeek("0");
@@ -506,125 +444,81 @@ public class LoanAccountAction extends AccountAppAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        CustomerBO customer = getCustomer(request);
-        loanService.validateDisbursementDateForNewLoan (customer.getOfficeId(), getDisbursementDate(loanActionForm, request));
-        if (configService.isGlimEnabled() && customer.isGroup()) {
-            setGlimEnabledSessionAttributes(request, customer);
-            double totalAmount = calculateTotalAmountForGlim(loanActionForm.getClients(), loanActionForm
-                    .getClientDetails());
-            loanActionForm.setLoanAmount(Double.toString(totalAmount));
+        UserContext userContext = getUserContext(request);
+        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
+
+        DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+        FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
+
+        LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = null;
+        if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
+            loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForRedoLoan(userContext, oldCustomer.getCustomerId(), disbursementDate, fund, loanActionForm);
+            loanActionForm.initializeTransactionFields(loanScheduleDetailsDto.getPaymentDataBeans());
+        } else {
+            loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer.getCustomerId(), disbursementDate, fund, loanActionForm);
         }
 
-        LoanBO loan = constructLoan(loanActionForm, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-        List<RepaymentScheduleInstallment> installments = getLoanSchedule(loan);
-        SessionUtils.setCollectionAttribute(REPAYMENTSCHEDULEINSTALLMENTS, installments, request);
+        if (loanScheduleDetailsDto.isGlimApplicable()) {
+            setGlimEnabledSessionAttributes(request, loanScheduleDetailsDto.isGroup());
+            loanActionForm.setLoanAmount(Double.toString(loanScheduleDetailsDto.getGlimLoanAmount()));
+        }
+
         String perspective = request.getParameter(PERSPECTIVE);
         if (perspective != null) {
             request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
         }
-        loanActionForm.initializeTransactionFields(getUserContext(request), installments);
 
-        boolean isPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
-        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
-        if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
-            checkIntervalBetweenTwoDates(getTheFirstRepaymentDay(installments), loanActionForm
-                    .getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
-        }
+        SessionUtils.setCollectionAttribute(REPAYMENTSCHEDULEINSTALLMENTS, loanScheduleDetailsDto.getInstallments(), request);
+        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
+
         return mapping.findForward(ActionForwards.schedulePreview_success.toString());
-    }
-
-    private DateTime getDisbursementDate (final LoanAccountActionForm form, final HttpServletRequest request)
-                throws InvalidDateException {
-        return new DateTime(form.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws PageExpiredException, AccountException, CustomerException,
-            ServiceException, PersistenceException, NumberFormatException, MeetingException, InvalidDateException {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws PageExpiredException,
+            AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException,
+            InvalidDateException {
+
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
+
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
             if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
                 LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-                LoanBO loan = redoLoan(loanActionForm, request, SaveLoan.NO, new CustomerPersistence());
+                LoanBO loan = redoLoan(loanActionForm, request, SaveLoan.NO);
                 SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
             }
 
             request.setAttribute(PERSPECTIVE, perspective);
 
-            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-            CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
-            Integer loanIndividualMonitoringIsEnabled;
-            try {
-                loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
-                        LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
-            } catch (PersistenceException e) {
-                throw new RuntimeException(e);
-            }
-            if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
-                SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled
-                        .intValue(), request);
-                if (customer.getCustomerLevel().isGroup()) {
-                    SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP,
-                            LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
+            List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
+            List<String> selectedClientIds = loanAccountForm.getClients();
+            Integer customerId = loanAccountForm.getCustomerIdValue();
+            List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
+
+            LoanCreationPreviewDto loanPreviewDto = this.loanServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds, businessActEntity);
+
+            if (loanPreviewDto.isGlimEnabled()) {
+                SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
+
+                if (loanPreviewDto.isGroup()) {
+                    SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
+                    SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto.getLoanAccountDetailsView(), request);
                 }
-            }
-
-            request.setAttribute(PERSPECTIVE, perspective);
-
-            if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0
-                    && customer.getCustomerLevel().isGroup()) {
-
-                List<String> ids_clients_selected = loanAccountForm.getClients();
-
-                List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
-                List<LoanAccountDetailsDto> listdetail = loanAccountForm.getClientDetails();
-                for (String index : ids_clients_selected) {
-                    if (isNotEmpty(index)) {
-                        LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
-                        ClientBO clt = clientBusinessService.getClient(getIntegerValue(index));
-                        LoanAccountDetailsDto account = null;
-                        for (LoanAccountDetailsDto tempAccount : listdetail) {
-                            if (tempAccount.getClientId().equals(index)) {
-                                account = tempAccount;
-                            }
-                        }
-                        tempLoanAccount.setClientId(clt.getGlobalCustNum().toString());
-                        tempLoanAccount.setClientName(clt.getDisplayName());
-                        tempLoanAccount
-                                .setLoanAmount((null != account.getLoanAmount()
-                                        && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount()
-                                        : "0.0"));
-
-                        List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
-                                .getAttribute("BusinessActivities", request);
-
-                        String businessActName = null;
-                        for (ValueListElement busact : businessActEntity) {
-
-                            if (busact.getId().toString().equals(account.getBusinessActivity())) {
-                                businessActName = busact.getName();
-
-                            }
-                        }
-                        tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
-                        tempLoanAccount
-                                .setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName
-                                        : "-").toString());
-                        tempLoanAccount.setGovermentId((StringUtils.isNotBlank(clt.getGovernmentId()) ? clt
-                                .getGovernmentId() : "-").toString());
-                        loanAccountDetailsView.add(tempLoanAccount);
-                    }
-                }
-                SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsView, request);
             }
         }
-        return mapping.findForward(ActionForwards.preview_success.toString());
 
+        return mapping.findForward(ActionForwards.preview_success.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<BusinessActivityEntity> retrieveLoanPurposesFromSession(final HttpServletRequest request)
+            throws PageExpiredException {
+        return (List<BusinessActivityEntity>) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -845,63 +739,18 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.beginRedoLoanDisbursal_success.toString());
     }
 
-    private double calculateTotalAmountForGlim(final List<String> ids_clients_selected,
-            final List<LoanAccountDetailsDto> clientDetails) {
-        double totalAmount = new Double(0);
-        for (LoanAccountDetailsDto loanAccount : clientDetails) {
-            if (ids_clients_selected.contains(loanAccount.getClientId())) {
-                if (loanAccount.getLoanAmount() != null) {
-                    totalAmount = totalAmount
-                            + new LocalizationConverter().getDoubleValueForCurrentLocale(loanAccount.getLoanAmount());
-                }
-            }
-
-        }
-        return totalAmount;
-    }
-
-    private static boolean checkIntervalBetweenTwoDates(final Date firstRepaymentDate, final Date disbursementDate)
-            throws PersistenceException, AccountException {
-        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-        Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-        if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate), DateUtils
-                .getDateWithoutTimeStamp(disbursementDate)) < minDaysInterval) {
-            throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
-
-        } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                DateUtils.getDateWithoutTimeStamp(disbursementDate)) > maxDaysInterval) {
-            throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
-
-        }
-
-        return true;
-    }
-
-    private Date getTheFirstRepaymentDay(final List<RepaymentScheduleInstallment> installments) {
-        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
-            return repaymentScheduleInstallment.getDueDate();
-        }
-        return null;
-
-    }
-
-    private CustomerBO getCustomer(final HttpServletRequest request) throws PageExpiredException, ServiceException {
-        CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
+    private CustomerBO retrieveCustomerDetailFromSession(final HttpServletRequest request) throws PageExpiredException, ServiceException {
+        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
         CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
-        customer.getPersonnel().getDisplayName();
-        customer.getOffice().getOfficeName();
-        customer.setVersionNo(oldCustomer.getVersionNo());
         return customer;
     }
 
     private LoanBO constructLoan(final LoanAccountActionForm loanActionForm, final HttpServletRequest request)
-            throws AccountException, ServiceException, PageExpiredException, PersistenceException,
-            NumberFormatException, MeetingException, InvalidDateException {
+            throws AccountException, ServiceException, PageExpiredException, NumberFormatException, MeetingException, InvalidDateException {
+
         boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
-        CustomerBO customer = getCustomer(request);
+        CustomerBO customer = retrieveCustomerDetailFromSession(request);
+
         // Resolve new meeting for repayment day
         MeetingBO newMeetingForRepaymentDay = null;
         if (isRepaymentIndepOfMeetingEnabled) {
@@ -944,10 +793,6 @@ public class LoanAccountAction extends AccountAppAction {
         return loan;
     }
 
-    private void forceException() throws AccountException {
-        int x = 0;
-        throw new AccountException(LoanExceptionConstants.CUSTOMER_LOAN_AMOUNT_FIELD);
-    }
     /**
      * Resolve repayment start date according to given disbursement date
      *
@@ -958,17 +803,16 @@ public class LoanAccountAction extends AccountAppAction {
      * @return Date repaymentStartDate
      * @throws PersistenceException
      */
-    private Date resolveRepaymentStartDate(final Date disbursementDate) throws PersistenceException {
-        int minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+    private Date resolveRepaymentStartDate(final Date disbursementDate) {
+        int minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+
         final GregorianCalendar repaymentStartDate = new GregorianCalendar();
         repaymentStartDate.setTime(disbursementDate);
         repaymentStartDate.add(Calendar.DAY_OF_WEEK, minDaysInterval);
         return repaymentStartDate.getTime();
     }
 
-    private LoanBO redoLoan(final LoanAccountActionForm loanActionForm, final HttpServletRequest request,
-            final SaveLoan save, final CustomerPersistence customerPersistence) throws PageExpiredException,
+    private LoanBO redoLoan(final LoanAccountActionForm loanActionForm, final HttpServletRequest request, final SaveLoan save) throws PageExpiredException,
             AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException,
             InvalidDateException {
         LoanBO loan = constructLoan(loanActionForm, request);
@@ -1005,7 +849,7 @@ public class LoanAccountAction extends AccountAppAction {
 
         List<PaymentDataHtmlBean> paymentDataBeans = loanActionForm.getPaymentDataBeans();
         PaymentData payment;
-        CustomerBO customer = getCustomer(request);
+        CustomerBO customer = retrieveCustomerDetailFromSession(request);
         try {
             for (PaymentDataTemplate template : paymentDataBeans) {
                 if (template.hasValidAmount() && template.getTransactionDate() != null) {
@@ -1025,51 +869,62 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, @SuppressWarnings("unused") final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         String perspective = loanActionForm.getPerspective();
         if (perspective != null) {
             request.setAttribute(PERSPECTIVE, perspective);
         }
-        CustomerBO customer = getCustomer(((CustomerBO) SessionUtils.getAttribute(LOANACCOUNTOWNER, request))
-                .getCustomerId());
+
+        UserContext userContext = getUserContext(request);
+        List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
+        DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+        Integer customerId = ((CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId();
+
+        LoanCreationResultDto loanCreationResultDto = null;
         LoanBO loan;
         if (isRedoOperation(perspective)) {
-            loan = redoLoan(loanActionForm, request, SaveLoan.YES, new CustomerPersistence());
+            loan = redoLoan(loanActionForm, request, SaveLoan.YES);
+            CustomerBO customer = DependencyInjectedServiceLocator.locateCustomerDao().findCustomerById(customerId);
+            loanCreationResultDto = new LoanCreationResultDto(configService.isGlimEnabled(), loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         } else {
-            checkPermissionForCreate(loanActionForm.getState().getValue(), getUserContext(request), null, customer
-                    .getOffice().getOfficeId(), customer.getPersonnel().getPersonnelId());
-            loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-            loan.save(loanActionForm.getState());
-
+            FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
+            loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund, loanActionForm);
         }
-        boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
-        if (configService.isGlimEnabled() && customer.isGroup()) {
-            List<LoanAccountDetailsDto> loanAccountDetailsList = (List<LoanAccountDetailsDto>) SessionUtils
-                    .getAttribute("loanAccountDetailsView", request);
+
+        if (loanCreationResultDto.isGlimApplicable()) {
+            boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
             for (LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
-                createIndividualLoanAccount(loanActionForm, loan, isRepaymentIndepOfMeetingEnabled, loanAccountDetail,
-                        isRedoOperation(perspective));
+                createIndividualLoanAccount(loanActionForm, loanCreationResultDto.getLoan(), isRepaymentIndepOfMeetingEnabled, loanAccountDetail, isRedoOperation(perspective));
             }
         }
+
         if (isRedoOperation(perspective)) {
-            loanDisbursementAndPayments(loanActionForm, request, SaveLoan.YES, loan, getPersonnel(request));
+            loanDisbursementAndPayments(loanActionForm, request, SaveLoan.YES, loanCreationResultDto.getLoan(), getPersonnel(request));
         }
 
-        loanActionForm.setAccountId(loan.getAccountId().toString());
-        request.setAttribute("customer", customer);
-        request.setAttribute(GLOBAL_ACCOUNT_NUM, loan.getGlobalAccountNum());
-        request.setAttribute("loan", loan);
+        loanActionForm.setAccountId(loanCreationResultDto.getAccountId().toString());
+        request.setAttribute(GLOBAL_ACCOUNT_NUM, loanCreationResultDto.getGlobalAccountNum());
+
+        // NOTE: needed for link creation
+        request.setAttribute("customer", loanCreationResultDto.getCustomer());
+
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<LoanAccountDetailsDto> getLoanAccountDetailsFromSession(final HttpServletRequest request)
+            throws PageExpiredException {
+        return (List<LoanAccountDetailsDto>) SessionUtils.getAttribute("loanAccountDetailsView", request);
     }
 
     private boolean isRedoOperation(final String perspective) {
@@ -1124,7 +979,8 @@ public class LoanAccountAction extends AccountAppAction {
             populateGlimAttributes(request, loanActionForm, globalAccountNum, customer);
         }
 
-        handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, customer);
+        String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
+        handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, recurMonth);
 
         LoanBO loanBO = getLoanBO(request);
         loanBO.setUserContext(getUserContext(request));
@@ -1228,8 +1084,7 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     List<LoanAccountDetailsDto> populateClientDetailsFromLoan(final List<ClientBO> activeClientsUnderGroup,
-            final List<LoanBO> individualLoans, final List<ValueListElement> businessActivities)
-            throws ServiceException {
+            final List<LoanBO> individualLoans, final List<ValueListElement> businessActivities) {
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
         for (final ClientBO client : activeClientsUnderGroup) {
             LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
@@ -1305,7 +1160,7 @@ public class LoanAccountAction extends AccountAppAction {
             final LoanAccountActionForm loanAccountForm, final Short localeId) throws ServiceException,
             PageExpiredException {
         CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
-        setGlimEnabledSessionAttributes(request, customer);
+        setGlimEnabledSessionAttributes(request, customer.isGroup());
         if (customer.isGroup()) {
             List<LoanAccountDetailsDto> loanAccountDetailsView = populateDetailsForSelectedClients(localeId,
                     loanAccountForm.getClientDetails(), loanAccountForm.getClients());
@@ -1328,10 +1183,6 @@ public class LoanAccountAction extends AccountAppAction {
 
                 if (matchingClientDetail != null) {
                     setGovernmentIdAndPurpose(matchingClientDetail, localeId);
-                    // matchingClientDetail
-                    // .setClientId(clientBusinessService.getClient(
-                    // getIntegerValue(matchingClientDetail
-                    // .getClientId())).getGlobalCustNum());
                     loanAccountDetailsView.add(matchingClientDetail);
                 }
             }
@@ -1414,8 +1265,7 @@ public class LoanAccountAction extends AccountAppAction {
                 getFund(loanAccountActionForm));
 
         if (configService.isGlimEnabled() && customer.isGroup()) {
-            List<LoanAccountDetailsDto> loanAccountDetailsList = (List<LoanAccountDetailsDto>) SessionUtils
-                    .getAttribute("loanAccountDetailsView", request);
+            List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                     loanBO.getAccountId()).toString());
             handleIndividualLoans(loanBO, loanAccountActionForm, isRepaymentIndepOfMeetingEnabled,
@@ -1441,7 +1291,7 @@ public class LoanAccountAction extends AccountAppAction {
     void handleIndividualLoans(final LoanBO loanBO, final LoanAccountActionForm loanAccountActionForm,
             final boolean isRepaymentIndepOfMeetingEnabled,
             final List<LoanAccountDetailsDto> loanAccountDetailsList, final List<LoanBO> individualLoans)
-            throws AccountException, ServiceException, PropertyNotFoundException {
+            throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
@@ -1477,10 +1327,7 @@ public class LoanAccountAction extends AccountAppAction {
      *
      */
     private MeetingBO createNewMeetingForRepaymentDay(final HttpServletRequest request,
-            final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) // ,
-            // Short
-            // recurrenceId)
-            throws PersistenceException, MeetingException, InvalidDateException {
+            final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) throws MeetingException, InvalidDateException {
         MeetingBO newMeetingForRepaymentDay = null;
         Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
         final Date repaymentStartDate = this.resolveRepaymentStartDate(loanAccountActionForm
@@ -1529,24 +1376,6 @@ public class LoanAccountAction extends AccountAppAction {
         return loanPrdBusinessService.getLoanOffering(loanOfferingId, localeId);
     }
 
-    private void updateForm(final LoanOfferingBO loanOffering, final LoanAccountActionForm loanAccountActionForm)
-            throws Exception {
-        CustomerBO customer = getCustomer(loanAccountActionForm.getCustomerIdValue());
-        LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
-                customer.getMaxLoanCycleForProduct(loanOffering));
-        loanAccountActionForm.setLoanAmountRange(eligibleLoanAmount);
-        loanAccountActionForm.setLoanAmount(getDoubleStringForMoney(eligibleLoanAmount.getDefaultLoanAmount(),
-                loanOffering.getCurrency()));
-        loanAccountActionForm.setMaxInterestRate(loanOffering.getMaxInterestRate());
-        loanAccountActionForm.setMinInterestRate(loanOffering.getMinInterestRate());
-        LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
-                .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
-        loanAccountActionForm.setInstallmentRange(eligibleNoOfInstall);
-        loanAccountActionForm.setNoOfInstallments(getStringValue(eligibleNoOfInstall.getDefaultNoOfInstall()));
-        loanAccountActionForm.setBusinessActivityId(null);
-        loanAccountActionForm.setCollateralTypeId(null);
-    }
-
     private List<FundBO> getFunds(final LoanOfferingBO loanOffering) {
         List<FundBO> funds = new ArrayList<FundBO>();
         if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
@@ -1555,11 +1384,6 @@ public class LoanAccountAction extends AccountAppAction {
             }
         }
         return funds;
-    }
-
-    protected void getDefaultAndAdditionalFees(final Short loanOfferingId, final UserContext userContext,
-            final List<FeeDto> defaultFees, final List<FeeDto> additionalFees) throws ServiceException {
-        loanProductService.getDefaultAndAdditionalFees(loanOfferingId, userContext, defaultFees, additionalFees);
     }
 
     private void loadMasterData(final HttpServletRequest request) throws Exception {
@@ -1588,26 +1412,6 @@ public class LoanAccountAction extends AccountAppAction {
             }
         }
         return null;
-    }
-
-    private List<RepaymentScheduleInstallment> getLoanSchedule(final LoanBO loan) {
-        List<RepaymentScheduleInstallment> schedule = new ArrayList<RepaymentScheduleInstallment>();
-        for (AccountActionDateEntity actionDate : loan.getAccountActionDates()) {
-            LoanScheduleEntity loanSchedule = (LoanScheduleEntity) actionDate;
-            schedule.add(getRepaymentScheduleInstallment(loanSchedule));
-        }
-        Collections.sort(schedule, new Comparator<RepaymentScheduleInstallment>() {
-            public int compare(final RepaymentScheduleInstallment act1, final RepaymentScheduleInstallment act2) {
-                return act1.getInstallment().compareTo(act2.getInstallment());
-            }
-        });
-        return schedule;
-    }
-
-    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(final LoanScheduleEntity loanSchedule) {
-        return new RepaymentScheduleInstallment(loanSchedule.getInstallmentId(), loanSchedule.getActionDate(),
-                loanSchedule.getPrincipal(), loanSchedule.getInterest(), loanSchedule.getTotalFeeDue(), loanSchedule
-                        .getMiscFee(), loanSchedule.getMiscPenalty());
     }
 
     private void setFormAttributes(final LoanBO loan, final ActionForm form, final HttpServletRequest request)
@@ -1662,21 +1466,6 @@ public class LoanAccountAction extends AccountAppAction {
         return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
 
-    protected void checkPermissionForCreate(final Short newState, final UserContext userContext,
-            final Short flagSelected, final Short officeId, final Short loanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
-            final Short loanOfficerId, final boolean saveFlag) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
-                        loanOfficerId));
-    }
-
     private void loadCustomFieldDefinitions(final HttpServletRequest request) throws Exception {
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, getAccountBusinessService().retrieveCustomFieldsDefinition(
                 EntityType.LOAN), request);
@@ -1686,8 +1475,7 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletRequest request) throws ApplicationException {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CUSTOM_FIELDS, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CUSTOM_FIELDS, request);
         Locale locale = getUserContext(request).getPreferredLocale();
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
             for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
@@ -1809,46 +1597,20 @@ public class LoanAccountAction extends AccountAppAction {
         }
     }
 
-    private boolean isGlimEnabled() throws ServiceException {
+    private boolean isGlimEnabled() {
         return new ConfigurationBusinessService().isGlimEnabled();
     }
 
-    private void setGlimEnabledSessionAttributes(final HttpServletRequest request, final CustomerBO customer)
+    private void setGlimEnabledSessionAttributes(final HttpServletRequest request, final boolean isGroup)
             throws PageExpiredException {
-        storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-                LoanConstants.GLIM_ENABLED_VALUE);
-        if (customer.isGroup()) {
-            storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP,
-                    LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
+        storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, LoanConstants.GLIM_ENABLED_VALUE);
+        if (isGroup) {
+            storeObjectOnSessionForUseInJspPage(request, LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
         }
-    }
-
-    private void updateLoanCreationFormWithActiveClientsOfGroupToSupportGlim(
-            final LoanAccountActionForm loanActionForm, final List<ClientBO> activeClientsOfGroup) {
-        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
-        for (ClientBO client : activeClientsOfGroup) {
-            LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
-            clientDetail.setClientId(getStringValue(client.getCustomerId()));
-            clientDetail.setClientName(client.getDisplayName());
-
-            clientDetails.add(clientDetail);
-        }
-        loanActionForm.setClientDetails(clientDetails);
-    }
-
-    private void storeGlimDataOnSessionForUseInJsp(final HttpServletRequest request,
-            final LoanCreationGlimDto loanCreationGlimDto) throws PageExpiredException {
-        storeCollectionOnSessionForUseInJspPage(request, MasterConstants.BUSINESS_ACTIVITIES, loanCreationGlimDto
-                .getLoanPurposes());
-        storeCollectionOnSessionForUseInJspPage(request, LoanConstants.CLIENT_LIST, loanCreationGlimDto
-                .getActiveClientsOfGroup());
-        storeObjectOnSessionForUseInJspPage(request, "clientListSize", loanCreationGlimDto.getActiveClientsOfGroup()
-                .size());
     }
 
     private void handleRepaymentsIndependentOfMeetingIfConfigured(final HttpServletRequest request,
-            final LoanAccountActionForm loanActionForm, final CustomerBO customer) throws ServiceException,
-            PageExpiredException, Exception {
+            final LoanAccountActionForm loanActionForm, final String recurMonth) throws PageExpiredException, Exception {
 
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
 
@@ -1862,8 +1624,7 @@ public class LoanAccountAction extends AccountAppAction {
 
             storeCollectionOnSessionForUseInJspPage(request, MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList());
 
-            loanActionForm.setRecurMonth(customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter()
-                    .toString());
+            loanActionForm.setRecurMonth(recurMonth);
         }
     }
 
