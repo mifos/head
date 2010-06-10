@@ -782,10 +782,21 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
+        validateCollateralNotes(errors, locale);
         validateDefaultFee(errors, locale, currency);
         validateAdditionalFee(errors, locale, currency, request);
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
 
+        }
+    }
+
+    private void validateCollateralNotes(ActionErrors errors, Locale userLocale) {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
+        String note = resources.getString("loan.collateral_notes");
+        String collateralNote = getCollateralNote();
+        if (collateralNote != null && collateralNote.length() > 500) {
+            addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String
+                    .valueOf(LoanConstants.COMMENT_LENGTH));
         }
     }
 
@@ -936,6 +947,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
+        validateCollateralNotes(errors, locale);
     }
 
     private void validateDisbursementDate(ActionErrors errors, CustomerBO customer, java.sql.Date disbursementDateValue)
