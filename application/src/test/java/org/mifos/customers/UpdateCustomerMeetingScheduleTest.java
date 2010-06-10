@@ -22,12 +22,6 @@ package org.mifos.customers;
 
 import static org.mifos.framework.TestUtils.*;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.AfterClass;
@@ -35,7 +29,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.CustomerAccountBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -172,14 +165,15 @@ public class UpdateCustomerMeetingScheduleTest {
         when(customerDao.findCustomerById(customerId)).thenReturn(center);
 
         // pre - verification
-        Set<AccountActionDateEntity> originalCustomerSchedules = center.getCustomerAccount().getAccountActionDates();
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
 
         // exercise test
         customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
 
         // verification
-        Set<AccountActionDateEntity> updatedCustomerSchedules = center.getCustomerAccount().getAccountActionDates();
-        assertThat(originalCustomerSchedules, is(updatedCustomerSchedules));
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
     }
 
     @Test
@@ -201,13 +195,13 @@ public class UpdateCustomerMeetingScheduleTest {
         when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
 
         // pre - verification
-        List<AccountActionDateEntity> originalCustomerSchedules = new ArrayList<AccountActionDateEntity>(center.getCustomerAccount().getAccountActionDates());
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.MONDAY);
 
         // exercise test
         customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
 
         // verification
-        List<AccountActionDateEntity> updatedCustomerSchedules = new ArrayList<AccountActionDateEntity>(center.getCustomerAccount().getAccountActionDates());
-        assertThat(originalCustomerSchedules, is(updatedCustomerSchedules));
+        assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
+        assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.WEDNESDAY);
     }
 }

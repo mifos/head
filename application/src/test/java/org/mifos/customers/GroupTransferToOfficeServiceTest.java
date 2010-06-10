@@ -20,24 +20,19 @@
 
 package org.mifos.customers;
 
+import static org.mockito.Matchers.anyShort;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
-
-
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.center.business.CenterBO;
@@ -48,19 +43,20 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+/**
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
-public class CustomerServiceImplTest {
+public class GroupTransferToOfficeServiceTest {
 
     // class under test
     private CustomerService customerService;
 
-    // collaborators
+    // collaborators (behaviour)
     @Mock
     private CustomerDao customerDao;
 
@@ -76,67 +72,9 @@ public class CustomerServiceImplTest {
     @Mock
     private HibernateTransactionHelper hibernateTransaction;
 
-    private static MifosCurrency oldCurrency;
-
-    @BeforeClass
-    public static void setupDefaultCurrency() {
-        oldCurrency = Money.getDefaultCurrency();
-        Money.setDefaultCurrency(TestUtils.RUPEE);
-    }
-
-    @AfterClass
-    public static void resetDefaultCurrency() {
-        Money.setDefaultCurrency(oldCurrency);
-    }
-
     @Before
     public void setupAndInjectDependencies() {
         customerService = new CustomerServiceImpl(customerDao, personnelDao, officeDao, holidayDao, hibernateTransaction);
-    }
-
-    @Test
-    public void givenCenterIsNullGroupTransferToCenterShouldFailValidation() {
-        // setup
-        GroupBO group = new GroupBuilder().build();
-        CenterBO center = null;
-
-        // exercise test
-        try {
-            customerService.transferGroupTo(group, center);
-            fail("should fail validation");
-        } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.INVALID_PARENT));
-        }
-    }
-
-    @Test
-    public void givenCenterIsSameAsGroupsParentGroupTransferToCenterShouldFailValidation() {
-        // setup
-        CenterBO center = new CenterBuilder().build();
-        GroupBO group = new GroupBuilder().withParentCustomer(center).build();
-
-        // exercise test
-        try {
-            customerService.transferGroupTo(group, center);
-            fail("should fail validation");
-        } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER));
-        }
-    }
-
-    @Test
-    public void givenCenterIsInActiveGroupTransferToCenterShouldFailValidation() {
-        // setup
-        CenterBO center = new CenterBuilder().withName("newCenter").inActive().build();
-        GroupBO group = new GroupBuilder().build();
-
-        // exercise test
-        try {
-            customerService.transferGroupTo(group, center);
-            fail("should fail validation");
-        } catch (CustomerException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE));
-        }
     }
 
     @Test

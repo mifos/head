@@ -22,6 +22,7 @@ package org.mifos.application.collectionsheet.persistence;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -57,6 +58,7 @@ public class CenterBuilder {
      * do not update this value for integration tests.
      */
     private Integer versionNumber = null;
+    private DateTime activationDate = new DateMidnight().toDateTime();
 
     public CenterBO build() {
 
@@ -65,7 +67,7 @@ public class CenterBuilder {
         }
 
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
-                numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId);
+                numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId, activationDate);
         center.updateCustomerStatus(status);
 
         if (versionNumber != null) {
@@ -162,6 +164,11 @@ public class CenterBuilder {
 
     public CenterBuilder withAccount(CustomerAccountBuilder accountBuilder) {
         this.customerAccountBuilder = accountBuilder;
+        return this;
+    }
+
+    public CenterBuilder withActivationDate(DateTime withActivationDate) {
+        this.activationDate = withActivationDate;
         return this;
     }
 }

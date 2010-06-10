@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
@@ -756,7 +757,7 @@ public class CustomerServiceImpl implements CustomerService {
                 CalendarEvent applicableCalendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
                 List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>(customer.getCustomerAccount().getAccountFees());
-                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents);
+                client.getCustomerAccount().createSchedulesAndFeeSchedules(customer, accountFees, customer.getCustomerMeetingValue(), applicableCalendarEvents, new DateMidnight().toDateTime());
 
                 client.setCustomerActivationDate(new DateTimeService().getCurrentJavaDateTime());
 
@@ -866,8 +867,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public final GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
-        group.validateNewCenter(receivingCenter);
-        group.validateForActiveAccounts();
+        group.validateReceivingCenter(receivingCenter);
+        group.validateNoActiveAccountsExist();
 
         if (group.isDifferentBranch(receivingCenter.getOffice())) {
             customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), receivingCenter.getOfficeId());
@@ -875,7 +876,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO oldParent = group.getParentCustomer();
 
-        group.transferTo(receivingCenter);
+        boolean regenerateSchedules = group.transferTo(receivingCenter);
 
         try {
             hibernateTransactionHelper.startTransaction();
@@ -903,6 +904,12 @@ public class CustomerServiceImpl implements CustomerService {
             }
             hibernateTransactionHelper.commitTransaction();
 
+            if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
+                CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(receivingCenter.getOfficeId());
+                handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
+            }
             return group;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
@@ -916,7 +923,7 @@ public class CustomerServiceImpl implements CustomerService {
     public final GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
 
         group.validateNewOffice(transferToOffice);
-        group.validateForActiveAccounts();
+        group.validateNoActiveAccountsExist();
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 
