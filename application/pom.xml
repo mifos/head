@@ -767,7 +767,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testNGArtifactName>null</testNGArtifactName>
-                    <printSummary>false</printSummary>
+                    <printSummary>true</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
                         <include>**/*Test.java</include>
@@ -788,7 +788,7 @@
                         </goals>
                         <configuration>
                             <testNGArtifactName>null</testNGArtifactName>
-                            <printSummary>false</printSummary>
+                            <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>

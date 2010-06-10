@@ -57,7 +57,6 @@ public final class EntityMasterData {
         Session session = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            session.beginTransaction();
             Query query = session.getNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER);
 
             List<EntityMaster> entityMasterData = query.list();
@@ -68,8 +67,6 @@ public final class EntityMasterData {
         } catch (HibernateException e) {
             MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error(
                     "table entity_master could not be fetched", false, null, e);
-        } finally {
-            StaticHibernateUtil.closeSession(session);
         }
     }
 
