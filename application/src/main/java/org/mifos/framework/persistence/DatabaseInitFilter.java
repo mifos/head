@@ -36,6 +36,7 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class DatabaseInitFilter implements Filter {
 
+    private static final int NON_SEQUENTIAL_UPGRADE_CUTOFF = 253;
     private static boolean databaseVerified = false;
     private static int databaseVersion = -1;
 
@@ -99,16 +100,26 @@ public class DatabaseInitFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) {
-        try {
-            DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
-            if (persistence.isVersioned()) {
-                databaseVersion = persistence.read();
-                databaseVerified = (databaseVersion == DatabaseVersionPersistence.APPLICATION_VERSION);
-            } else {
-                databaseVerified = false;
+        if (databaseVersion < NON_SEQUENTIAL_UPGRADE_CUTOFF) {
+            try {
+                DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+                if (persistence.isVersioned()) {
+                    databaseVersion = persistence.read();
+                    databaseVerified = (databaseVersion == DatabaseVersionPersistence.APPLICATION_VERSION);
+                } else {
+                    databaseVerified = false;
+                }
+
+            } catch (Exception e) {
+                filterConfig.getServletContext().log("Failed to check database version", e);
             }
+        }
+
+        DatabaseMigrator migrator = new DatabaseMigrator();
+        try {
+            migrator.checkUnAppliedUpgradesAndUpgrade();
         } catch (Exception e) {
-            filterConfig.getServletContext().log("Failed to check database version", e);
+           filterConfig.getServletContext().log("Failed to apply one or more upgrades",e );
         }
     }
 
