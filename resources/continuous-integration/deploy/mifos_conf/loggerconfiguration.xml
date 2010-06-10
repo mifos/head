@@ -17,7 +17,7 @@ how log4j is setting up logging. -->
     </appender>
 
     <appender name="MifosRollingFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="/tmp/Mifos-v1.6.x.log"/>
+        <param name="File" value="/tmp/Mifos-trunk.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <layout class="org.mifos.framework.components.logger.MifosPatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %-3p, %c, %C{1}, %M, %L, %m%n"/>

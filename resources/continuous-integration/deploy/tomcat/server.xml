@@ -15,10 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<Server port="8109" shutdown="SHUTDOWN">
+<Server port="8084" shutdown="SHUTDOWN">
   <Listener className="org.apache.catalina.core.JasperListener" />
   <Service name="Catalina">
-    <Connector port="8110" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" compression="on" />
+    <Connector port="8085" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" compression="on" />
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true"
