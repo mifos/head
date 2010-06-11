@@ -551,9 +551,14 @@
 		<return-scalar column="meetingId" type="integer" />
 		<![CDATA[select account.account_id as accountId, account.office_id as officeId, loan_account.meeting_id as meetingId
 				from account
-			    join office on account.office_id = office.office_id
-			    join office_holiday on office.office_id = office_holiday.office_id 
-			    							and office_holiday.holiday_id = :HOLIDAY_ID
+                join (select branch.office_id 
+                    	from office ofull
+                    	join office_holiday oh on oh.office_id = ofull.office_id 
+                    			and oh.holiday_id = :HOLIDAY_ID,
+                    	office branch
+                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
+                    			on branch.office_id = account.office_Id
+                    			
                 join loan_account on loan_account.account_id = account.account_id
 			    join loan_schedule schedule on account.account_id = schedule.account_id
 			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
@@ -567,9 +572,14 @@
 		<return-scalar column="meetingId" type="integer" />
 		<![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
 				from account
-			    join office on account.office_id = office.office_id
-			    join office_holiday on office.office_id = office_holiday.office_id 
-			    							and office_holiday.holiday_id = :HOLIDAY_ID
+                join (select branch.office_id 
+                    	from office ofull
+                    	join office_holiday oh on oh.office_id = ofull.office_id 
+                    			and oh.holiday_id = :HOLIDAY_ID,
+                    	office branch
+                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
+                    			on branch.office_id = account.office_Id
+                    			
                 join customer_meeting on customer_meeting.customer_id = account.customer_id
 			    join saving_schedule schedule on account.account_id = schedule.account_id
 			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)
@@ -583,9 +593,14 @@
 		<return-scalar column="meetingId" type="integer" />
 		<![CDATA[select account.account_id as accountId, account.office_id as officeId, customer_meeting.meeting_id as meetingId
 				from account
-			    join office on account.office_id = office.office_id
-			    join office_holiday on office.office_id = office_holiday.office_id 
-			    							and office_holiday.holiday_id = :HOLIDAY_ID
+                join (select branch.office_id 
+                    	from office ofull
+                    	join office_holiday oh on oh.office_id = ofull.office_id 
+                    			and oh.holiday_id = :HOLIDAY_ID,
+                    	office branch
+                    	where branch.search_id like concat(ofull.search_id, '%')) branch 
+                    			on branch.office_id = account.office_Id
+                    			
                 join customer_meeting on customer_meeting.customer_id = account.customer_id
 			    join customer_schedule schedule on account.account_id = schedule.account_id
 			        and schedule.action_date between date(:HOLIDAY_FROM_DATE) and date(:HOLIDAY_THRU_DATE)

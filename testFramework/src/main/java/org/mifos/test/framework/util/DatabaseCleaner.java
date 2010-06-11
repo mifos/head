@@ -95,11 +95,13 @@ public class DatabaseCleaner {
         template.execute("update customer set parent_customer_id = null");
         template.execute("delete from customer");
 
+        template.execute("delete from office_holiday");
+        template.execute("delete from holiday");
+
         template.execute("update office set parent_office_id = null where office_id > 3");
         template.execute("delete from office where office_id > 3");
 
-        template.execute("delete from office_holiday");
-        template.execute("delete from holiday");
+
 
         template.execute("delete from fee_frequency");
         template.execute("delete from fees");
