@@ -27,6 +27,7 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.security.util.UserContext;
 
 public interface OfficeDao {
@@ -44,4 +45,12 @@ public interface OfficeDao {
     OfficeHierarchyDto headOfficeHierarchy();
 
     List<String> topLevelOfficeNames(Collection<Short> idList);
+
+    void validateOfficeNameIsNotTaken(String officeName) throws OfficeException;
+
+    void validateOfficeShortNameIsNotTaken(String shortName) throws OfficeException;
+
+    void validateNoActiveChildrenExist(Short officeId) throws OfficeException;
+
+    void validateNoActivePeronnelExist(Short officeId) throws OfficeException;
 }

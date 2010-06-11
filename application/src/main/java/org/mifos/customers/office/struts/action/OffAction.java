@@ -41,6 +41,7 @@ import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -220,30 +221,31 @@ public class OffAction extends BaseAction {
         ActionForward forward = null;
         OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        OfficeBO office = ((OfficeBusinessService) getService()).getOffice(Short.valueOf(sessionOffice.getOfficeId()));
-        checkVersionMismatch(sessionOffice.getVersionNo(), office.getVersionNo());
-        office.setVersionNo(sessionOffice.getVersionNo());
-        office.setUserContext(getUserContext(request));
-        OfficeStatus newStatus = null;
-        if (getShortValue(offActionForm.getOfficeStatus()) != null) {
-            newStatus = OfficeStatus.getOfficeStatus(getShortValue(offActionForm.getOfficeStatus()));
-        }
-        OfficeLevel newlevel = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
-        OfficeBO parentOffice = null;
-        if (getShortValue(offActionForm.getParentOfficeId()) != null) {
-            parentOffice = ((OfficeBusinessService) getService()).getOffice(getShortValue(offActionForm
-                    .getParentOfficeId()));
-        }
+        UserContext userContext = getUserContext(request);
+        Short officeId = sessionOffice.getOfficeId();
+        Integer versionNum = sessionOffice.getVersionNo();
+        OfficeUpdateRequest officeUpdateRequest = officeUpdateRequestFrom(offActionForm);
 
-        if (parentOffice != null && !office.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId())) {
+        boolean isParentOfficeChanged = this.officeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
+
+        if (isParentOfficeChanged) {
             forward = mapping.findForward(ActionForwards.update_cache_success.toString());
         } else {
             forward = mapping.findForward(ActionForwards.update_success.toString());
         }
 
-        office.update(offActionForm.getOfficeName(), offActionForm.getShortName(), newStatus, newlevel, parentOffice,
-                offActionForm.getAddress(), offActionForm.getCustomFields());
         return forward;
+    }
+
+    private OfficeUpdateRequest officeUpdateRequestFrom(OffActionForm offActionForm) throws OfficeException {
+        OfficeStatus newStatus = null;
+        if (getShortValue(offActionForm.getOfficeStatus()) != null) {
+            newStatus = OfficeStatus.getOfficeStatus(getShortValue(offActionForm.getOfficeStatus()));
+        }
+        OfficeLevel newlevel = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
+
+        Short parentOfficeId = getShortValue(offActionForm.getParentOfficeId());
+        return new OfficeUpdateRequest(offActionForm.getOfficeName(), offActionForm.getShortName(), newStatus, newlevel, parentOfficeId, offActionForm.getAddress(), offActionForm.getCustomFields());
     }
 
     public ActionForward updateCache(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

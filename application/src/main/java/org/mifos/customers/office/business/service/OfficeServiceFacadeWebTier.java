@@ -24,7 +24,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
+import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
 public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
 
@@ -34,10 +41,12 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         this.officeDao = officeDao;
     }
 
+    @Override
     public OfficeHierarchyDto headOfficeHierarchy() {
         return officeDao.headOfficeHierarchy();
     }
 
+    @Override
     public String topLevelOfficeNames(String ids) {
         String[] idArray = ids.split(",");
         List<Short> idList = new LinkedList<Short>();
@@ -53,5 +62,43 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             }
         }
         return stringBuffer.toString();
+    }
+
+    @Override
+    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException {
+
+        boolean isParentOfficeChanged = false;
+
+        OfficeBO office = officeDao.findOfficeById(officeId);
+        office.validateVersion(versionNum);
+
+        OfficeBO parentOffice = null;
+        if (officeUpdateRequest.getParentOfficeId() != null) {
+            parentOffice = officeDao.findOfficeById(officeUpdateRequest.getParentOfficeId());
+        }
+
+        if (office.isNameDifferent(officeUpdateRequest.getOfficeName())) {
+            officeDao.validateOfficeNameIsNotTaken(officeUpdateRequest.getOfficeName());
+        }
+
+        if (office.isShortNameDifferent(officeUpdateRequest.getShortName())) {
+            officeDao.validateOfficeShortNameIsNotTaken(officeUpdateRequest.getShortName());
+        }
+
+        if (!office.isStatusDifferent(officeUpdateRequest.getNewStatus())) {
+
+            if (OfficeStatus.INACTIVE.equals(officeUpdateRequest.getNewStatus())) {
+                officeDao.validateNoActiveChildrenExist(office.getOfficeId());
+                officeDao.validateNoActivePeronnelExist(office.getOfficeId());
+            }
+
+            if (parentOffice.isInActive()) {
+                throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
+            }
+        }
+
+        office.update(userContext, officeUpdateRequest, parentOffice);
+
+        return isParentOfficeChanged;
     }
 }

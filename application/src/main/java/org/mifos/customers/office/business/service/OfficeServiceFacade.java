@@ -21,11 +21,16 @@
 package org.mifos.customers.office.business.service;
 
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
 public interface OfficeServiceFacade {
 
     public String topLevelOfficeNames(String ids);
 
     public OfficeHierarchyDto headOfficeHierarchy();
+
+    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException;
 
 }

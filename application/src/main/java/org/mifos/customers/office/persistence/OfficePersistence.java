@@ -144,6 +144,10 @@ public class OfficePersistence extends Persistence {
 
     }
 
+    /**
+     * use {@link OfficeDao#validateOfficeNameIsNotTaken(String)}
+     */
+    @Deprecated
     public boolean isOfficeNameExist(String officeName) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OFFICE_NAME", officeName);
@@ -154,37 +158,14 @@ public class OfficePersistence extends Persistence {
         return false;
     }
 
+    /**
+     * use {@link OfficeDao#validateOfficeShortNameIsNotTaken(String)}
+     */
+    @Deprecated
     public boolean isOfficeShortNameExist(String shortName) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SHORT_NAME", shortName);
         List queryResult = executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
-        }
-        return false;
-    }
-
-    public boolean hasActiveChildern(Short officeId) throws PersistenceException {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_ID", officeId);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
-        }
-        return false;
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao}
-     */
-    @Deprecated
-    public boolean hasActivePeronnel(Short officeId) throws PersistenceException {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_ID", officeId);
-        queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
         if (queryResult != null && queryResult.size() != 0) {
             return ((Number) queryResult.get(0)).longValue() > 0;
         }

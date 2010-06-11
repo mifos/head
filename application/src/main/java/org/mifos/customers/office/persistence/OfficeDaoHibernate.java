@@ -37,6 +37,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
@@ -169,5 +170,52 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("OFFICE_IDS", ids);
 
         return (List<String>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES, queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateNoActiveChildrenExist(Short officeId) throws OfficeException {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_ID", officeId);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
+        if (queryResult != null && queryResult.size() != 0) {
+            throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateNoActivePeronnelExist(Short officeId) throws OfficeException {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_ID", officeId);
+        queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
+        if (queryResult != null && queryResult.size() != 0) {
+            throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateOfficeNameIsNotTaken(String officeName) throws OfficeException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_NAME", officeName);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICENAMEUNIQUENESS, queryParameters);
+        if (queryResult != null && queryResult.size() != 0) {
+            throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateOfficeShortNameIsNotTaken(String shortName) throws OfficeException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SHORT_NAME", shortName);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS, queryParameters);
+        if (queryResult != null && queryResult.size() != 0) {
+            throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+        }
     }
 }

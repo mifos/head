@@ -20,7 +20,7 @@
 
 package org.mifos.customers.office.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.customers.office.exceptions.OfficeException;
 
 public enum OfficeStatus {
     ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
@@ -34,12 +34,12 @@ public enum OfficeStatus {
         return value;
     }
 
-    public static OfficeStatus getOfficeStatus(Short id) throws PropertyNotFoundException {
+    public static OfficeStatus getOfficeStatus(Short id) throws OfficeException {
         for (OfficeStatus status : OfficeStatus.values()) {
             if (status.value.equals(id)) {
                 return status;
             }
         }
-        throw new PropertyNotFoundException(OfficeConstants.ERROR_STATUS);
+        throw new OfficeException(OfficeConstants.ERROR_STATUS);
     }
 }
