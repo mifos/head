@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mifos.platform.questionnaire.contract.QuestionType.*;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
