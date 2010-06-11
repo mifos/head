@@ -4,6 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.validators.QuestionValidator;
+import org.mifos.platform.questionnaire.validators.QuestionValidatorImpl;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;

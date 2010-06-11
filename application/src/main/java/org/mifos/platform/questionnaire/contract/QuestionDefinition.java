@@ -1,4 +1,4 @@
-package org.mifos.platform.questionnaire;
+package org.mifos.platform.questionnaire.contract;
 
 public class QuestionDefinition {
     private String title;

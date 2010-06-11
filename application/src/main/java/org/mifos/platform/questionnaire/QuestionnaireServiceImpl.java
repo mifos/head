@@ -4,7 +4,11 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionnaireService;
 import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
+import org.mifos.platform.questionnaire.validators.QuestionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

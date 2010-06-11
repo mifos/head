@@ -5,7 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionnaireService;
 import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
+import org.mifos.platform.questionnaire.validators.QuestionValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

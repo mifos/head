@@ -23,6 +23,6 @@
     </bean>
 
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
-    <bean name="questionValidator" class="org.mifos.platform.questionnaire.QuestionValidatorImpl"/>
+    <bean name="questionValidator" class="org.mifos.platform.questionnaire.validators.QuestionValidatorImpl"/>
 
 </beans>

@@ -1,7 +1,10 @@
-package org.mifos.platform.questionnaire;
+package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.validators.QuestionValidator;
 
 public class QuestionValidatorImpl implements QuestionValidator {
     @Override

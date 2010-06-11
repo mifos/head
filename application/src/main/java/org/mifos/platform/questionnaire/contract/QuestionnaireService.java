@@ -1,6 +1,8 @@
-package org.mifos.platform.questionnaire;
+package org.mifos.platform.questionnaire.contract;
 
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 
 import java.util.List;
 
