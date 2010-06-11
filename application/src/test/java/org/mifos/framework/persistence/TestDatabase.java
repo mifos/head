@@ -145,13 +145,11 @@ public class TestDatabase {
     /**
      * Foreign key disabled connection
      */
-<<<<<<< HEAD
-    public static Connection getJDBCConnection() throws Exception {
-=======
+
 
     private static Connection fkDisabledConnection;
 
-    private static Connection getJDBCConnection() throws Exception {
+    public static Connection getJDBCConnection() throws Exception {
         if(fkDisabledConnection == null) {
             fkDisabledConnection = initializeFKDisabledConnection();
         }
@@ -159,7 +157,7 @@ public class TestDatabase {
     }
 
     private static Connection initializeFKDisabledConnection() throws Exception {
->>>>>>> master
+
         final Properties databaseSettings = new StandardTestingService().getDatabaseConnectionSettings();
         final String url = databaseSettings.getProperty("hibernate.connection.url");
         final String param = "&sessionVariables=FOREIGN_KEY_CHECKS=0";
