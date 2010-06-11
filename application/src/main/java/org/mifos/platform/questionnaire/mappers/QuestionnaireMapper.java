@@ -18,11 +18,18 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.validators;
+package org.mifos.platform.questionnaire.mappers;
 
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.customers.surveys.business.Question;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 
-public interface QuestionValidator {
-    void validate(QuestionDefinition questionDefinition) throws ApplicationException;
+import java.util.List;
+
+public interface QuestionnaireMapper {
+    List<QuestionDetail> mapToQuestionDetails(List<Question> questions);
+
+    QuestionDetail mapToQuestionDetail(Question question);
+
+    Question mapToQuestion(QuestionDefinition questionDefinition);
 }

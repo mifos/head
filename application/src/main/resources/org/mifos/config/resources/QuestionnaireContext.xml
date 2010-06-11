@@ -24,5 +24,6 @@
 
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
     <bean name="questionValidator" class="org.mifos.platform.questionnaire.validators.QuestionValidatorImpl"/>
+    <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
 
 </beans>

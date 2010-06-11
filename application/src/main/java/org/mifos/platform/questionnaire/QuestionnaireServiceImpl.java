@@ -1,22 +1,37 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ *  All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ *  explanation of the license and how it is applied.
+ */
+
 package org.mifos.platform.questionnaire;
 
 import org.mifos.customers.surveys.business.Question;
-import org.mifos.customers.surveys.helpers.AnswerType;
-import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionType;
 import org.mifos.platform.questionnaire.contract.QuestionnaireService;
+import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
+import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
 import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
 import org.mifos.platform.questionnaire.validators.QuestionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
-import static org.mifos.customers.surveys.helpers.AnswerType.INVALID;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -25,55 +40,41 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private QuestionnaireDao questionnaireDao;
+    
+    @Autowired
+    private QuestionnaireMapper questionnaireMapper;
 
-    public QuestionnaireServiceImpl() {
+    @SuppressWarnings({"UnusedDeclaration"})
+    private QuestionnaireServiceImpl() {
     }
 
-    public QuestionnaireServiceImpl(QuestionValidator questionValidator, QuestionnaireDao questionnaireDao) {
+    public QuestionnaireServiceImpl(QuestionValidator questionValidator, QuestionnaireDao questionnaireDao,
+                                    QuestionnaireMapperImpl questionnaireMapper) {
         this.questionValidator = questionValidator;
         this.questionnaireDao = questionnaireDao;
+        this.questionnaireMapper = questionnaireMapper;
     }
 
     @Override
     public QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException {
         questionValidator.validate(questionDefinition);
-        Question question = mapToQuestion(questionDefinition);
-        questionnaireDao.create(question);
-        return mapToQuestionDetail(question);
+        Question question = questionnaireMapper.mapToQuestion(questionDefinition);
+        persistQuestion(question);
+        return questionnaireMapper.mapToQuestionDetail(question);
+    }
+
+    private void persistQuestion(Question question) throws ApplicationException {
+        try {
+            questionnaireDao.create(question);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new ApplicationException(QuestionnaireConstants.DUPLICATE_QUESTION, e);
+        }
     }
 
     @Override
     public List<QuestionDetail> getAllQuestions() {
         List<Question> questions = questionnaireDao.getDetailsAll();
-        return mapToQuestionDetails(questions);
+        return questionnaireMapper.mapToQuestionDetails(questions);
     }
-
-    private List<QuestionDetail> mapToQuestionDetails(List<Question> questions) {
-        List<QuestionDetail> questionDetails = new ArrayList<QuestionDetail>();
-        for (Question question : questions) {
-            questionDetails.add(mapToQuestionDetail(question));
-        }
-        return questionDetails;
-    }
-
-    private QuestionDetail mapToQuestionDetail(Question question) {
-        return new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), mapToQuestionType(question.getAnswerTypeAsEnum()));
-    }
-
-    private QuestionType mapToQuestionType(AnswerType answerType) {
-        return answerType == AnswerType.FREETEXT ? QuestionType.FREETEXT : QuestionType.INVALID;
-    }
-
-    private Question mapToQuestion(QuestionDefinition questionDefinition) {
-        Question question = new Question();
-        question.setShortName(questionDefinition.getTitle());
-        question.setQuestionText(questionDefinition.getTitle());
-        question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
-        question.setQuestionState(QuestionState.ACTIVE);
-        return question;
-    }
-
-    private AnswerType mapToAnswerType(QuestionType questionType) {
-        return questionType == QuestionType.FREETEXT ? FREETEXT : INVALID;
-    }
+    
 }
