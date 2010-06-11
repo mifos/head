@@ -24,13 +24,9 @@ import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort
 import static org.mifos.reports.util.helpers.ReportUtils.parseReportDate;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.framework.components.batchjobs.helpers.BranchCashConfirmationReportHelper;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
@@ -38,7 +34,6 @@ import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
-import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportHeader;
 import org.mifos.reports.cashconfirmationreport.persistence.BranchCashConfirmationReportPersistence;
 
@@ -102,49 +97,7 @@ public class BranchCashConfirmationReportService implements IBranchCashConfirmat
         }
     }
 
-    /**
-     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
-     */
-    @Deprecated
-    public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(Date actionDate,
-            AccountTypes accountType, List<Short> prdOfferingsForRecoveries, List<Short> prdOfferingsForIssues,
-            List<Short> prdOfferingsForDisbursements, MifosCurrency currency, Date runDate) throws ServiceException {
-        try {
-            return branchCashConfirmationReportPersistence.extractBranchCashConfirmationReport(actionDate, accountType,
-                    prdOfferingsForRecoveries, prdOfferingsForIssues, prdOfferingsForDisbursements, currency, runDate);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
-     */
-    @Deprecated
-    public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(Date runDate)
-            throws ServiceException {
-        try {
-            return branchCashConfirmationReportPersistence.getBranchCashConfirmationReportsForDate(runDate);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * deprecated - used from {@link BranchCashConfirmationReportHelper} that is no longer invoked from task.xml
-     */
-    @Deprecated
-    public void deleteBranchCashConfirmationReports(List<BranchCashConfirmationReportBO> reports)
-            throws ServiceException {
-        try {
-            for (BranchCashConfirmationReportBO report : reports) {
-                branchCashConfirmationReportPersistence.delete(report);
-            }
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
+    // is used in validate so not sure is it invoked from .rptdesign reports
     public boolean isReportDataPresentForRundateAndBranchId(String branchId, String runDate) {
         try {
             return CollectionUtils

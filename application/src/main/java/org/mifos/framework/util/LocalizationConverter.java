@@ -272,8 +272,6 @@ public class LocalizationConverter {
         return dNum;
     }
 
-    // this method will become private after all the validation is done in
-    // struct
     public Double getDoubleValueForCurrentLocale(String doubleValueString) {
         Double dNum = null;
         try {

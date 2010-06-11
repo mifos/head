@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.ValueListElement;
@@ -149,7 +150,7 @@ public interface CustomerDao {
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
-    boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth);
+    boolean validateGovernmentIdForClient(String governmentId);
 
     Integer getActiveAndOnHoldClientCountForGroup(String searchId, Short branchId);
 
@@ -205,4 +206,8 @@ public interface CustomerDao {
     void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 
     void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
+
+    boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
+
+    boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
 }

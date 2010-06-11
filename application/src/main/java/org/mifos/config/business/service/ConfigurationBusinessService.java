@@ -43,7 +43,7 @@ public class ConfigurationBusinessService implements BusinessService {
     }
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 
@@ -55,20 +55,12 @@ public class ConfigurationBusinessService implements BusinessService {
         }
     }
 
-    public boolean isGlimEnabled() throws ServiceException {
-        try {
-            return configurationPersistence.isGlimEnabled();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
+    public boolean isGlimEnabled() {
+        return configurationPersistence.isGlimEnabled();
     }
 
-    public boolean isRepaymentIndepOfMeetingEnabled() throws ServiceException {
-        try {
-            return new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
+    public boolean isRepaymentIndepOfMeetingEnabled() {
+        return new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
     }
 
 }

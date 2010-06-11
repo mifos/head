@@ -20,30 +20,27 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.calendar.CalendarEvent;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public interface HolidayDao {
+
+    HolidayBO findHolidayById(Integer id);
+
+    void save(Holiday holiday);
+
+    List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId);
 
     List<Holiday> getUnAppliedHolidays();
 
     List<Holiday> findAllHolidaysThisYearAndNext(short officeId);
-
-    void save(Holiday holiday) throws PersistenceException;
 
     List<HolidayBO> findAllHolidays();
 
     List<String> applicableOffices(Integer id);
 
     CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
-
-    Map<Short, List<HolidayBO>> unappliedOfficeHolidays(Collection<Short> officeIds);
-
-    Map<Short, List<HolidayBO>> holidaysForOffices(Collection<Short> officeIds, int startYear, int endYear);
 }

@@ -18,25 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.calendar;
+package org.mifos.customers.personnel.business.service;
 
-/**
- * Switch moratorium-handling on or off. By default, moratorium-handling is switched off.
- *
- */
-public class MoratoriumSwitch {
-    private boolean isOn = true;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.util.UserContext;
 
-    public boolean isOn() {
-        return this.isOn;
-    }
-
-    public void turnOn() {
-        this.isOn = true;
-    }
-
-    public void turnOff() {
-        this.isOn = false;
-    }
+public interface PersonnelDetailsServiceFacade {
+    PersonnelInformationDto getPersonnelInformationDto(String globalCustNum, UserContext userContext)
+            throws ServiceException;
 
 }

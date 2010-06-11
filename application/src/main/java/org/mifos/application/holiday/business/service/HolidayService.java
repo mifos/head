@@ -17,24 +17,16 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.office.persistence;
 
-public class AccountOffice {
+package org.mifos.application.holiday.business.service;
 
-    private final Integer accountId;
-    private final Short officeId;
+import java.util.List;
 
-    public AccountOffice(Integer accountId, Short officeId) {
-        this.accountId = accountId;
-        this.officeId = officeId;
-    }
+import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.framework.exceptions.ApplicationException;
 
-    public Integer getAccountId() {
-        return this.accountId;
-    }
+public interface HolidayService {
 
-    public Short getOfficeId() {
-        return this.officeId;
-    }
+    void create(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException;
 
 }

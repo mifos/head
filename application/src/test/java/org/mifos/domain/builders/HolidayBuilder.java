@@ -25,6 +25,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDetails;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.customers.office.business.OfficeBO;
 
 public class HolidayBuilder {
 
@@ -32,13 +33,18 @@ public class HolidayBuilder {
     private DateTime to;
     private RepaymentRuleTypes repaymentRule = RepaymentRuleTypes.NEXT_WORKING_DAY;
     private String name = "builderCreatedHoliday";
-
-    private final Short officeId = Short.valueOf("1");
+    private OfficeBO office;
 
     public Holiday build() {
-        HolidayBO holidayBO = new HolidayBO(new HolidayDetails(name,from.toDate(), to.toDate(), repaymentRule));
 
-        return holidayBO;
+        HolidayBO holiday = new HolidayBO(new HolidayDetails(this.name, from.toDate(), to.toDate(),
+                repaymentRule));
+
+        if (office != null) {
+            office.addHoliday(holiday);
+        }
+
+        return holiday;
     }
 
     public HolidayBuilder from(final DateTime withFrom) {
@@ -51,7 +57,7 @@ public class HolidayBuilder {
         return this;
     }
 
-    public HolidayBuilder withRepaymentRule (RepaymentRuleTypes rule) {
+    public HolidayBuilder withRepaymentRule(RepaymentRuleTypes rule) {
         this.repaymentRule = rule;
         return this;
     }
@@ -73,6 +79,16 @@ public class HolidayBuilder {
 
     public HolidayBuilder withRepaymentMoratoriumRule() {
         repaymentRule = RepaymentRuleTypes.REPAYMENT_MORATORIUM;
+        return this;
+    }
+
+    public HolidayBuilder withName(String holidayName) {
+        this.name = holidayName;
+        return this;
+    }
+
+    public HolidayBuilder appliesTo(OfficeBO withOffice) {
+        this.office = withOffice;
         return this;
     }
 }

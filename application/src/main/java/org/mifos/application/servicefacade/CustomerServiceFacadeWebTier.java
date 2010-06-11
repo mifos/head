@@ -956,13 +956,20 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         boolean clientPendingApprovalStateEnabled = ProcessFlowRules.isClientPendingApprovalStateEnabled();
         boolean governmentIdValidationFailing = false;
+        boolean duplicateNameOnClosedClient = false;
+        boolean duplicateNameOnBlackListedClient = false;
 
         if (StringUtils.isNotBlank(governmentId)) {
-            governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId, clientName,
-                    dateOfBirth);
+            governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
+            if (!governmentIdValidationFailing) {
+                duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName, dateOfBirth);
+                if (!duplicateNameOnClosedClient) {
+                    duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName, dateOfBirth);
+                }
+            }
         }
 
-        return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing);
+        return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing, duplicateNameOnClosedClient, duplicateNameOnBlackListedClient);
     }
 
     private ClientRulesDto retrieveClientRules() {
@@ -977,16 +984,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
     @Override
     public ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo(ClientDetailDto clientDetailDto) {
-
-        try {
-            DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(clientDetailDto.getDateOfBirth()));
-            this.customerDao.validateGovernmentIdForClient(clientDetailDto.getGovernmentId(), clientDetailDto
-                    .getClientDisplayName(), dateOfBirth);
-
-            return retrieveClientRules();
-        } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
-        }
+        return retrieveClientRules();
     }
 
     @Override
