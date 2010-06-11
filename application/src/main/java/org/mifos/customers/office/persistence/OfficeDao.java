@@ -40,8 +40,6 @@ public interface OfficeDao {
 
     List<OfficeDetailsDto> findActiveOfficeLevels();
 
-    void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
-
     OfficeHierarchyDto headOfficeHierarchy();
 
     List<String> topLevelOfficeNames(Collection<Short> idList);
@@ -53,4 +51,6 @@ public interface OfficeDao {
     void validateNoActiveChildrenExist(Short officeId) throws OfficeException;
 
     void validateNoActivePeronnelExist(Short officeId) throws OfficeException;
+
+    void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
 }

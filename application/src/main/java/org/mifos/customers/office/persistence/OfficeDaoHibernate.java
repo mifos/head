@@ -105,35 +105,6 @@ public class OfficeDaoHibernate implements OfficeDao {
     }
 
     @Override
-    public void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException {
-
-        OfficeBO office = findOfficeById(officeId);
-
-        if (!office.isActive()) {
-            throw new CustomerException(GroupConstants.BRANCH_INACTIVE, new Object[] { MessageLookup.getInstance()
-                    .lookupLabel(ConfigurationConstants.GROUP, userContext) });
-        }
-
-        if (hasActivePeronnel(office.getOfficeId())) {
-            throw new CustomerException(GroupConstants.LOANOFFICER_INACTIVE, new Object[] { MessageLookup.getInstance()
-                    .lookup(ConfigurationConstants.BRANCHOFFICE, userContext) });
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean hasActivePeronnel(Short officeId) {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_ID", officeId);
-        queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
-        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
-        }
-        return false;
-    }
-
-    @Override
     public OfficeHierarchyDto headOfficeHierarchy() {
         OfficeBO headOffice = getHeadOffice();
         return officeHierarchy(headOffice);
@@ -159,15 +130,15 @@ public class OfficeDaoHibernate implements OfficeDao {
             childOfficeList.add(officeHierarchy(child));
         }
         Collections.sort(childOfficeList);
-        OfficeHierarchyDto hierarchy = new OfficeHierarchyDto(office.getOfficeId(), office.getOfficeName(), office.getSearchId(), office.isActive(), childOfficeList);
+        OfficeHierarchyDto hierarchy = new OfficeHierarchyDto(office.getOfficeId(), office.getOfficeName().trim(), office.getSearchId(), office.isActive(), childOfficeList);
         return hierarchy;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<String> topLevelOfficeNames(Collection<Short> ids) {
+    public List<String> topLevelOfficeNames(Collection<Short> officeIds) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_IDS", ids);
+        queryParameters.put("OFFICE_IDS", officeIds);
 
         return (List<String>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES, queryParameters);
     }
@@ -186,17 +157,37 @@ public class OfficeDaoHibernate implements OfficeDao {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void validateNoActivePeronnelExist(Short officeId) throws OfficeException {
+    public void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException {
+
+        OfficeBO office = findOfficeById(officeId);
+
+        if (!office.isActive()) {
+            throw new CustomerException(GroupConstants.BRANCH_INACTIVE, new Object[] { MessageLookup.getInstance()
+                    .lookupLabel(ConfigurationConstants.GROUP, userContext) });
+        }
+
+        if (hasActivePeronnel(office.getOfficeId())) {
+            throw new CustomerException(GroupConstants.LOANOFFICER_INACTIVE, new Object[] { MessageLookup.getInstance()
+                    .lookup(ConfigurationConstants.BRANCHOFFICE, userContext) });
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean hasActivePeronnel(Short officeId) {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OFFICE_ID", officeId);
         queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
-        int activePersonnel = ((Number) queryResult.get(0)).intValue();
 
-        if (activePersonnel > 0) {
+        return ((Number) queryResult.get(0)).longValue() > 0;
+    }
+
+    @Override
+    public void validateNoActivePeronnelExist(Short officeId) throws OfficeException {
+
+        if (hasActivePeronnel(officeId)) {
             throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
         }
     }
