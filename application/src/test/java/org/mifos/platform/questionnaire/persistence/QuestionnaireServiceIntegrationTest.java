@@ -9,6 +9,7 @@ import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -18,7 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mifos.platform.questionnaire.contract.QuestionType.*;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
@@ -32,9 +33,9 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionnaireDao questionnaireDao;
 
     @Test
-    @Transactional
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestion() throws ApplicationException {
-        String questionTitle = "Test QuestionDetail Title";
+        String questionTitle = "Title" + System.currentTimeMillis();
         QuestionDetail questionDetail = defineQuestion(questionTitle);
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
@@ -47,14 +48,13 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     @Test
-    @Transactional
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestions() throws ApplicationException {
-        List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
-        assertThat(questionDetails.size(), is(0));
-        defineQuestion("Q2");
-        defineQuestion("Q1");
-        questionDetails = questionnaireService.getAllQuestions();
-        assertThat(questionDetails.size(), is(2));
+        int initialCountOfQuestions = questionnaireService.getAllQuestions().size();
+        defineQuestion("Q2" + System.currentTimeMillis());
+        defineQuestion("Q1" + System.currentTimeMillis());
+        int finalCountOfQuestions = questionnaireService.getAllQuestions().size();
+        assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
     }
 
     private QuestionDetail defineQuestion(String questionTitle) throws ApplicationException {

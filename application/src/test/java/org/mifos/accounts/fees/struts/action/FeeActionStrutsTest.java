@@ -74,13 +74,9 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     private static ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
             new String[]{"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"});
 
-    private TransactionTemplate transactionTemplate;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        PlatformTransactionManager platformTransactionManager = (PlatformTransactionManager) applicationContext.getBean("platformTransactionManager");
-        transactionTemplate = new TransactionTemplate(platformTransactionManager);
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -99,7 +95,6 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
             TestObjectFactory.cleanUp(fee2);
             TestObjectFactory.cleanUp(fee3);
             StaticHibernateUtil.closeSession();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
