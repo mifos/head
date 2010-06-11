@@ -20,19 +20,9 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.hibernate.Query;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -40,6 +30,10 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class HolidayDaoHibernate implements HolidayDao {
 
@@ -117,8 +111,7 @@ public class HolidayDaoHibernate implements HolidayDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
-        Query sqlQuery = ((GenericDaoHibernate) genericDao).getHibernateUtil().getSessionTL().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
-        return sqlQuery.setInteger("HOLIDAY_ID", id).list();
+        return (List<String>) genericDao.executeNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS, Collections.singletonMap("HOLIDAY_ID", id));
     }
 
     @Override
