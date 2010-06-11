@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.persistence.MasterEntityDaoHibernateImpl;
 import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -19,10 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
-public class MasterEntityDaoTest {
+public class MasterEntityDaoIntegrationTest extends MifosIntegrationTestCase{
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public MasterEntityDaoIntegrationTest() throws Exception {
+        super();
+    }
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)

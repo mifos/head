@@ -6,6 +6,7 @@ import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionType;
 import org.mifos.platform.questionnaire.contract.QuestionnaireService;
 import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
 import org.mifos.platform.questionnaire.validators.QuestionValidator;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
+import static org.mifos.customers.surveys.helpers.AnswerType.INVALID;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -34,7 +38,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException {
         questionValidator.validate(questionDefinition);
         Question question = mapToQuestion(questionDefinition);
-        questionnaireDao.create(question);        
+        questionnaireDao.create(question);
         return mapToQuestionDetail(question);
     }
 
@@ -53,17 +57,23 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     private QuestionDetail mapToQuestionDetail(Question question) {
-        QuestionDetail questionDetail =
-                new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName());
-        return questionDetail;
+        return new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), mapToQuestionType(question.getAnswerTypeAsEnum()));
+    }
+
+    private QuestionType mapToQuestionType(AnswerType answerType) {
+        return answerType == AnswerType.FREETEXT ? QuestionType.FREETEXT : QuestionType.INVALID;
     }
 
     private Question mapToQuestion(QuestionDefinition questionDefinition) {
         Question question = new Question();
         question.setShortName(questionDefinition.getTitle());
         question.setQuestionText(questionDefinition.getTitle());
-        question.setAnswerType(AnswerType.FREETEXT);
+        question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         return question;
+    }
+
+    private AnswerType mapToAnswerType(QuestionType questionType) {
+        return questionType == QuestionType.FREETEXT ? FREETEXT : INVALID;
     }
 }

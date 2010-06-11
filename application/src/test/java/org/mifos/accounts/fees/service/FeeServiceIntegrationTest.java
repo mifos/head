@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
-public class FeeServiceTest {
+public class FeeServiceIntegrationTest {
 
     @Autowired
     private SessionFactory sessionFactory; //to create dummy GLCodeEntity
@@ -62,7 +62,7 @@ public class FeeServiceTest {
         try {
             //FeeService feeService = new FeeServiceImpl(masterEntityDao, feeDao);
             FeeEntity fee = feeService.createOneTimeFee(userCtx,
-                "FeeServiceTest.CreateOnetimeAmountFee", false, //not customer Default Fee,
+                "FeeServiceIntegrationTest.CreateOnetimeAmountFee", false, //not customer Default Fee,
                 false, 0.0, //not a rate fee
                 new Money(TestUtils.RUPEE, "100"),
                 FeeCategory.CENTER, null, //feeFormulaEntity
@@ -81,7 +81,7 @@ public class FeeServiceTest {
     public void shouldCreatePeriodicDefaultFee() throws Exception {
         Short recurAfter = Short.valueOf("1");
         FeeEntity fee = feeService.createPeriodicFee(userCtx,
-                "FeeServiceTest.CreatePeriodicDefaultFee", true,
+                "FeeServiceIntegrationTest.CreatePeriodicDefaultFee", true,
                 true, 100.0, //rate fee
                 null, //no fee money
                 FeeCategory.ALLCUSTOMERS,

@@ -57,7 +57,7 @@ import java.util.Set;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
-public class FeeDaoTest {
+public class FeeDaoIntegrationTest {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -97,7 +97,6 @@ public class FeeDaoTest {
 
     @Test
     @Transactional
-    //@Rollback(false)
     public void shouldRetrieveProductFees() throws Exception {
         int noOfProductFees = feeDao.retrieveProductFees().size();
         FeeEntity fee = createPeriodicFee(false, "shouldRetrieveProductFees", FeeCategory.LOAN);
@@ -192,10 +191,9 @@ public class FeeDaoTest {
 
     @Test
     @Transactional(rollbackFor=DataAccessException.class)
-    //@Rollback(false)
     public void shouldCreatePeriodicCustomerDefaultFee() throws Exception {
         //with customer default fee
-        FeeEntity fee = createPeriodicFee(true, "FeeDaoTest.shouldCreatePeriodicCustomerDefaultFee", FeeCategory.ALLCUSTOMERS);
+        FeeEntity fee = createPeriodicFee(true, "testPeriodicFee", FeeCategory.ALLCUSTOMERS);
         sessionFactory.getCurrentSession().flush();
         FeeEntity newFee = feeDao.getDetails(fee.getFeeId());
         Assert.assertEquals(FeeCategory.ALLCUSTOMERS.getValue(), newFee.getCategoryType().getId());

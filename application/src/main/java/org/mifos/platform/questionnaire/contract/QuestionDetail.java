@@ -1,24 +1,27 @@
 package org.mifos.platform.questionnaire.contract;
 
 public class QuestionDetail {
-    private Integer questionId;
+    private Integer id;
 
-    private String questionText;
+    private String text;
 
     private String shortName;
 
-    public QuestionDetail(Integer questionId, String questionText, String shortName) {
-        this.questionId = questionId;
-        this.questionText = questionText;
+    private QuestionType type;
+
+    public QuestionDetail(Integer id, String text, String shortName, QuestionType type) {
+        this.id = id;
+        this.text = text;
         this.shortName = shortName;
+        this.type = type;
     }
 
-    public Integer getQuestionId() {
-        return questionId;
+    public Integer getId() {
+        return id;
     }
 
-    public String getQuestionText() {
-        return questionText;
+    public String getText() {
+        return text;
     }
 
     public String getShortName() {
@@ -26,4 +29,7 @@ public class QuestionDetail {
     }
 
 
+    public QuestionType getType() {
+        return type;
+    }
 }
