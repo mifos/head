@@ -20,6 +20,10 @@
 
 package org.mifos.customers.office.business;
 
+/**
+ * use builder pattern
+ */
+@Deprecated
 public class OfficecFixture {
 
     public static OfficeBO createOffice(String searchId) {

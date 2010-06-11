@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
@@ -31,6 +32,7 @@ import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
 public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
@@ -97,8 +99,16 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             }
         }
 
-        office.update(userContext, officeUpdateRequest, parentOffice);
-
-        return isParentOfficeChanged;
+        try {
+            StaticHibernateUtil.startTransaction();
+            office.update(userContext, officeUpdateRequest, parentOffice);
+            StaticHibernateUtil.commitTransaction();
+            return isParentOfficeChanged;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 }

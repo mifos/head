@@ -179,7 +179,9 @@ public class OfficeDaoHibernate implements OfficeDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OFFICE_ID", officeId);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
+        int activeChildren = ((Number) queryResult.get(0)).intValue();
+
+        if (activeChildren > 0) {
             throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
         }
     }
@@ -192,7 +194,9 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("OFFICE_ID", officeId);
         queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
+        int activePersonnel = ((Number) queryResult.get(0)).intValue();
+
+        if (activePersonnel > 0) {
             throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
         }
     }
@@ -203,7 +207,10 @@ public class OfficeDaoHibernate implements OfficeDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OFFICE_NAME", officeName);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICENAMEUNIQUENESS, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
+
+        int officeCount = ((Number) queryResult.get(0)).intValue();
+
+        if (officeCount > 0) {
             throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
         }
     }
@@ -214,7 +221,9 @@ public class OfficeDaoHibernate implements OfficeDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SHORT_NAME", shortName);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
+        int officeCount = ((Number) queryResult.get(0)).intValue();
+
+        if (officeCount > 0) {
             throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
         }
     }
