@@ -62,6 +62,7 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
+import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
@@ -1050,8 +1051,16 @@ public class CustomerServiceImpl implements CustomerService {
 
             this.hibernateTransactionHelper.startTransaction();
 
-            MeetingBO meeting = customer.getCustomerMeetingValue();
-            boolean scheduleUpdateRequired = updateMeeting(meeting, meetingUpdateRequest);
+            boolean scheduleUpdateRequired = false;
+            CustomerMeetingEntity meetingEntity = customer.getCustomerMeeting();
+            if (meetingEntity != null) {
+                MeetingBO meeting = customer.getCustomerMeetingValue();
+                scheduleUpdateRequired = updateMeeting(meeting, meetingUpdateRequest);
+            } else {
+                MeetingBO newMeeting = MeetingBO.fromDto(meetingUpdateRequest);
+                CustomerMeetingEntity newMeetingEntity = customer.createCustomerMeeting(newMeeting);
+                customer.setCustomerMeeting(newMeetingEntity);
+            }
             customerDao.save(customer);
 
             if (scheduleUpdateRequired) {

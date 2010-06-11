@@ -23,47 +23,33 @@ package org.mifos.application.holiday.persistence;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- *
- */
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
-    private final OfficePersistence officePersistence;
+    private final HolidayService holidayService;
+    private final HolidayDao holidayDao;
 
-    public HolidayServiceFacadeWebTier(OfficePersistence officePersistence) {
-        this.officePersistence = officePersistence;
+    public HolidayServiceFacadeWebTier(HolidayService holidayService, HolidayDao holidayDao) {
+        this.holidayService = holidayService;
+        this.holidayDao = holidayDao;
     }
 
     @Override
-    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ServiceException {
-        try {
-            holidayDetails.validate();
-            HolidayBO holiday = new HolidayBO(holidayDetails);
-            for (Short officeId : officeIds) {
-                officePersistence.addHoliday(officeId, holiday);
-            }
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        } catch (ValidationException e) {
-            throw new ServiceException(e);
-        }
+    public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) throws ApplicationException {
+
+        this.holidayService.create(holidayDetails, officeIds);
     }
 
     @Override
-    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ServiceException{
-        HolidayDaoHibernate holidayDaoHibernate = new HolidayDaoHibernate(new GenericDaoHibernate());
-        List<HolidayBO> holidays = holidayDaoHibernate.findAllHolidays();
+    public Map<String, List<OfficeHoliday>> holidaysByYear() throws ApplicationException {
+
+        List<HolidayBO> holidays = this.holidayDao.findAllHolidays();
+
         Map<String, List<OfficeHoliday>> holidaysByYear = new TreeMap<String, List<OfficeHoliday>>();
         for (HolidayBO holiday : holidays) {
             HolidayDetails holidayDetail = new HolidayDetails(holiday.getHolidayName(), holiday.getHolidayFromDate(), holiday
@@ -73,10 +59,9 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
             if (holidaysInYear == null) {
                 holidaysInYear = new LinkedList<OfficeHoliday>();
             }
-            holidaysInYear.add(new OfficeHoliday(holidayDetail,holidayDaoHibernate.applicableOffices(holiday.getId())));
+            holidaysInYear.add(new OfficeHoliday(holidayDetail, this.holidayDao.applicableOffices(holiday.getId())));
             holidaysByYear.put(Integer.toString(year), holidaysInYear);
         }
         return holidaysByYear;
     }
-
 }
