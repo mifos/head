@@ -21,7 +21,6 @@
 package org.mifos.customers.business.service;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;

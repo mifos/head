@@ -98,13 +98,13 @@ import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDetails;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -272,9 +272,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         officePersistence.getOffice((short)1).getHolidays().clear();
         officePersistence.getOffice((short)2).getHolidays().clear();
         officePersistence.getOffice((short)3).getHolidays().clear();
-        HolidayPersistence holidayPersistence = new HolidayPersistence();
-        HolidayBO holiday2 = holidayPersistence.getHoliday(holiday.getId());
-        holidayPersistence.delete(holiday2);
+
+        HolidayBO holiday2 = IntegrationTestObjectMother.findHolidayById(holiday.getId());
+        new MasterPersistence().delete(holiday2);
         StaticHibernateUtil.getSessionTL().flush();
         StaticHibernateUtil.commitTransaction();
     }

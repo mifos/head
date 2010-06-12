@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;

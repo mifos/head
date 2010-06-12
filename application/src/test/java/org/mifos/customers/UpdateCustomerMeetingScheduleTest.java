@@ -20,6 +20,8 @@
 
 package org.mifos.customers;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.mifos.framework.TestUtils.*;
 import static org.mockito.Mockito.*;
 
@@ -203,5 +205,30 @@ public class UpdateCustomerMeetingScheduleTest {
         // verification
         assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(center, WeekDay.MONDAY);
         assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(center, WeekDay.WEDNESDAY);
+    }
+
+    @Test
+    public void givenCustomerHasNoExistingMeetingShouldCreateMeetingOnCustomer() throws Exception {
+
+        // setup
+        UserContext userContext = TestUtils.makeUser();
+        Integer customerId = Integer.valueOf(1);
+        CustomerAccountBuilder accountBuilder = new CustomerAccountBuilder();
+
+        CenterBO center = new CenterBuilder().active().withAccount(accountBuilder).build();
+        center.setCustomerMeeting(null);
+
+        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequestBuilder().withCustomerId(customerId).with(WeekDay.WEDNESDAY).build();
+
+        // stubbing
+        when(customerDao.findCustomerById(customerId)).thenReturn(center);
+        when(holidayDao.findCalendarEventsForThisYearAndNext(anyShort())).thenReturn(new CalendarEventBuilder().build());
+
+        // exercise test
+        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+
+        // verification
+        assertThat(center.getCustomerMeeting(), is(notNullValue()));
+        assertThat(center.getCustomerMeetingValue(), is(notNullValue()));
     }
 }

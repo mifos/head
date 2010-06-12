@@ -34,8 +34,12 @@ import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
+import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.holiday.business.service.HolidayServiceImpl;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
+import org.mifos.application.holiday.persistence.HolidayServiceFacade;
+import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -76,11 +80,14 @@ public class DependencyInjectedServiceLocator {
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
+
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
+    private static HolidayServiceFacade holidayServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
     private static CustomerService customerService;
+    private static HolidayService holidayService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -124,6 +131,14 @@ public class DependencyInjectedServiceLocator {
                     hibernateTransactionHelper);
         }
         return customerService;
+    }
+
+    public static HolidayService locateHolidayService() {
+
+        if (holidayService == null) {
+            holidayService = new HolidayServiceImpl(officeDao, holidayDao, hibernateTransactionHelper);
+        }
+        return holidayService;
     }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
@@ -199,6 +214,14 @@ public class DependencyInjectedServiceLocator {
         return personnelDetailsServiceFacade;
     }
 
+    public static HolidayServiceFacade locateHolidayServiceFacade() {
+        if (holidayServiceFacade == null) {
+            holidayService = locateHolidayService();
+            holidayServiceFacade = new HolidayServiceFacadeWebTier(holidayService, holidayDao);
+        }
+        return holidayServiceFacade;
+    }
+
     public static CustomerDao locateCustomerDao() {
         return customerDao;
     }
@@ -213,5 +236,9 @@ public class DependencyInjectedServiceLocator {
 
     public static PersonnelDao locatePersonnelDao() {
         return personnelDao;
+    }
+
+    public static OfficeDao locateOfficeDao() {
+        return officeDao;
     }
 }

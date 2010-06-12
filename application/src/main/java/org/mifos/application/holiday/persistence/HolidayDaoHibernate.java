@@ -29,10 +29,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.hibernate.Query;
-import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -40,10 +40,8 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
 
-public class HolidayDaoHibernate extends Persistence implements HolidayDao {
+public class HolidayDaoHibernate implements HolidayDao {
 
     private final GenericDao genericDao;
 
@@ -51,10 +49,26 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
         this.genericDao = genericDao;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId) {
+    public HolidayBO findHolidayById(Integer id) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("holidayId", id);
+        return (HolidayBO) this.genericDao.executeUniqueResultNamedQuery("findById", queryParameters);
+    }
 
+    @Override
+    public final void save(final Holiday holiday) {
+        this.genericDao.createOrUpdate(holiday);
+    }
+
+    @Override
+    public List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(final Short officeId) {
+
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Holiday> retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(final Short officeId) {
         List<Holiday> orderedHolidays = new ArrayList<Holiday>();
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CURRENT_DATE", new LocalDate().toString());
@@ -67,16 +81,8 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     }
 
     @Override
-    public final List<Holiday> findAllHolidaysThisYearAndNext(short officeId) {
-        DateTime today = new DateTime();
-
-        List<HolidayBO> holidaysThisYear = findAllHolidaysForYear(officeId, today.getYear());
-        List<HolidayBO> holidaysNextYear = findAllHolidaysForYear(officeId, today.plusYears(1).getYear());
-
-        List<Holiday> orderedHolidays = new ArrayList<Holiday>(holidaysThisYear);
-        orderedHolidays.addAll(holidaysNextYear);
-
-        return orderedHolidays;
+    public final List<Holiday> findAllHolidaysThisYearAndNext(final short officeId) {
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
     }
 
     @Override
@@ -109,14 +115,9 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     }
 
     @Override
-    public final void save(final Holiday holiday) throws PersistenceException {
-        createOrUpdate(holiday);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
-        Query sqlQuery = getSession().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
+        Query sqlQuery = ((GenericDaoHibernate) genericDao).getHibernateUtil().getSessionTL().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
         return sqlQuery.setInteger("HOLIDAY_ID", id).list();
     }
 
@@ -124,9 +125,8 @@ public class HolidayDaoHibernate extends Persistence implements HolidayDao {
     public final CalendarEvent findCalendarEventsForThisYearAndNext(short officeId) {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = this.findAllHolidaysThisYearAndNext(officeId);
+        List<Holiday> upcomingHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
 
         return new CalendarEvent(workingDays, upcomingHolidays);
     }
-
 }

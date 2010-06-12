@@ -1,16 +1,16 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties, zh/LookupValueMessages_zh_CN.properties
+#. extracted from LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 14:06-0700\n"
+"POT-Creation-Date: 2010-06-08 18:19+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
 
 #. # Key value pairs in this file are for LOOKUP_VALUE entries
 #. # defined in latest-data.sql.
@@ -782,10 +782,8 @@ msgid "Can blacklist Savings account"
 msgstr "可以管理储蓄账户的黑名单"
 
 #: Permissions-CanChangeStateToPartialApplication
+#, fuzzy
 msgctxt "Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
 msgstr "可以修改部分申请的状态"
 

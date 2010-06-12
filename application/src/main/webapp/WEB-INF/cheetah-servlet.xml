@@ -60,6 +60,7 @@
                 /admin.ftl=genericController
                 /maincss.css=genericController
                 /screen.css=genericController
+                /admin.ftl=genericController  
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /systemInformation.ftl=systemInformationController
