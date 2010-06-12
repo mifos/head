@@ -397,7 +397,6 @@ public interface NamedQueryConstants {
     public String GET_REPAYMENT_RULE = "holiday.getRepaymentRule";
     public String SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS = "savingsScheduleEntity.getScheduleForIds";
     public String LOAN_SCHEDULE_GET_SCHEDULE_FOR_IDS = "loanScheduleEntity.getScheduleForIds";
-    public String GET_HOLIDAYS_BY_FLAG = "holiday.getHoildaysByFlag";
 
     public String GET_ALL_FIELD_CONFIGURATION_LIST = "getAllFieldConfigurationList";
 
