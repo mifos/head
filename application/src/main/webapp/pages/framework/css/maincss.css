@@ -1,5 +1,17 @@
 @charset "utf-8";
 /* CSS Document */
+a {
+	text-decoration:underline; 
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 9pt;
+	color:#000166;
+}
+a:visited{
+	text-decoration:underline; 
+}
+a:hover {
+	text-decoration:none;
+}
 .borders {
 	border:1px #d7deee solid;
 }
@@ -52,6 +64,7 @@
 	color:#CC6601;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-weight: bold;
+	font-size:11pt;
 	
 }
 .silverheading {
@@ -69,8 +82,7 @@
 	background:url(../images/logo.gif) left top no-repeat;
 	width:188px;
 	height:74px;
-	position:absolute;
-	top:18px;
+	position:absolute;	
 	left:0;
 	clear:right;
 }
@@ -157,6 +169,7 @@
 }
 .floatLT {
 	float:left;
+	margin-right:75px;
 }
 .topAlign {
 	float:right;
@@ -183,6 +196,8 @@
 	background-repeat: repeat-x;
 	cursor: pointer;
 	height: 20px;
+	float:right;
+	margin-right:20px;
 }
 .buttn2 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -219,19 +234,19 @@
 	padding-bottom: 6px;
 	padding-right: 15px;
 	background-color:#FF9600;
-	text-decoration:none;
+	text-decoration:underline;
 	color:#FFFFFF;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
+	font-size: 8pt;
 	font-weight: bold;
 	margin-right:1px;
 	
-	border-top-left-radius: 8px;
+	/*border-top-left-radius: 8px;
 	-moz-border-radius-topleft: 8px;
 	-webkit-border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 	-moz-border-radius-topright: 8px;
-	-webkit-border-top-right-radius: 8px;
+	-webkit-border-top-right-radius: 8px;*/
 }
 .tablightorange {
 	padding-left: 15px;
@@ -239,25 +254,25 @@
 	padding-bottom:5px;
 	padding-right: 15px;
 	background-color:#F2D1A6;
-	text-decoration:none;
+	text-decoration:underline;
 	color:#000065;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 9pt;
+	font-size: 8pt;
 	font-weight: bold;
 	margin-right:1px;
 	
-	border-top-left-radius: 8px;
+/*	border-top-left-radius: 8px;
 	-moz-border-radius-topleft: 8px;
 	-webkit-border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 	-moz-border-radius-topright: 8px;
-	-webkit-border-top-right-radius: 8px;
+	-webkit-border-top-right-radius: 8px;*/
 
 }
 .menu {
 	float:left;
 	padding-bottom:5px;
-	margin-top:75px;
+	margin-top:55px;
 	margin-bottom:-1.5px;
 	margin-left:188px;
 	width:600px;
@@ -267,6 +282,9 @@
 	width:174px;
 	background-color:#F2D1A6;
 	float:left;
+}
+.ht600 {
+	height:600px;
 }
 .ht750 {
 	height:750px;
@@ -378,6 +396,8 @@
 }
 .paddingLeft {
 	padding-left:15px;
+	font-weight:bold;
+	font-size:8pt;
 }
 .red { 
 	color:#FF0000;

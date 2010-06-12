@@ -106,7 +106,7 @@ h1 img, h2 img, h3 img, h4 img, h5 img, h6 img {
 	margin:0;
 }
 p {
-	margin:0 0 1.5em;
+	margin:0 0 0;
 }
 p img.left {
 	float:left;
@@ -166,7 +166,7 @@ li ul, li ol {
 }
 ul, ol {
 	margin:0 1.5em 1.5em 0;
-	padding-left:3.333em;
+	padding-left:1.5em;
 }
 ul {
 	list-style-type:disc;
