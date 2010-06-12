@@ -1,0 +1,59 @@
+#!/bin/bash
+# Mifos control script
+#
+# description: Provides easy control of Mifos Tomcat instance(s)
+
+# Variables for use within this script
+DEPLOY_ROOT=@DEPLOY_ROOT@
+JVM_TMPDIR=/tmp/mifos-@INSTANCE_NICKNAME@-tomcat-tmp
+TOMCAT_USER=@UNPRIVILEGED_USER@
+
+# Variables for use by children/successors of this script
+export CATALINA_HOME=$DEPLOY_ROOT/tomcat6
+export CATALINA_PID=$CATALINA_HOME/tomcat.pid
+export CATALINA_OPTS="-Xms1024M -Xmx1024M -XX:MaxPermSize=256m -Djava.io.tmpdir=$JVM_TMPDIR"
+export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
+
+[ -f $CATALINA_HOME/bin/catalina.sh ] || exit 0
+[ -d $JVM_TMPDIR ] || mkdir -p $JVM_TMPDIR || exit 1
+
+start_tomcat() {
+    su -p -s /bin/sh $TOMCAT_USER -c "$CATALINA_HOME/bin/startup.sh"
+}
+
+stop_tomcat() {
+    if [ -e $CATALINA_PID ]
+    then
+        su -p -s /bin/sh $TOMCAT_USER -c "$CATALINA_HOME/bin/shutdown.sh -force"
+        rm -f $CATALINA_PID
+    else
+        su -p -s /bin/sh $TOMCAT_USER -c "$CATALINA_HOME/bin/shutdown.sh"
+    fi
+}
+
+case $1 in
+start)
+    start_tomcat
+    ;;
+stop)
+    stop_tomcat
+    ;;
+status)
+    if [ -e $CATALINA_PID ]
+    then
+        echo "Tomcat appears to be running as process id `cat $CATALINA_PID`"
+    else
+        echo "$CATALINA_PID does not exist, Tomcat probably is not running."
+    fi
+    ;;
+restart)
+    stop_tomcat
+    sleep 5
+    start_tomcat
+    ;;
+*)
+    echo "Usage: $0 {start|stop|status}"
+    exit 1
+    ;;
+esac
+exit 0
