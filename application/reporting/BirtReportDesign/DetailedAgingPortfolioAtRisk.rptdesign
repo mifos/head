@@ -29,40 +29,61 @@
             <property name="dataSetMode">multiple</property>
             <parameters>
                 <scalar-parameter name="branchId" id="39">
+                    <text-property name="helpText">Select Branch</text-property>
                     <text-property name="promptText">Branch Office</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">Branches</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["Name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
+                    <simple-property-list name="defaultValue">
+                        <value type="constant">-2</value>
+                    </simple-property-list>
                     <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
                 </scalar-parameter>
                 <scalar-parameter name="loanOfficerId" id="40">
+                    <text-property name="helpText">Select Loan Officer</text-property>
                     <text-property name="promptText">Loan Officer</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">LoanOfficers</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["Name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
+                    <simple-property-list name="defaultValue">
+                        <value type="constant">-2</value>
+                    </simple-property-list>
                     <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
                 </scalar-parameter>
                 <scalar-parameter name="loanProductId" id="1341">
+                    <text-property name="helpText">Select Loan Product</text-property>
                     <text-property name="promptText">Loan Product</text-property>
                     <property name="valueType">dynamic</property>
                     <property name="isRequired">true</property>
                     <property name="dataSetName">LoanProducts</property>
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
+                    <expression name="sortByColumn">dataSetRow["Name"]</expression>
+                    <property name="sortDirection">asc</property>
                     <property name="dataType">integer</property>
+                    <simple-property-list name="defaultValue">
+                        <value type="constant">-2</value>
+                    </simple-property-list>
                     <property name="controlType">list-box</property>
+                    <property name="fixedOrder">false</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
