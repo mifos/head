@@ -29,6 +29,9 @@ import org.mifos.platform.questionnaire.contract.QuestionType;
 
 import java.util.*;
 
+import static org.mifos.framework.util.CollectionUtils.asMap;
+import static org.mifos.framework.util.MapEntry.*;
+
 public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Map<AnswerType, QuestionType> answerToQuestionType;
     private Map<QuestionType, AnswerType> questionToAnswerType;
@@ -74,19 +77,17 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private void populateAnswerToQuestionTypeMap() {
-        answerToQuestionType = new HashMap<AnswerType, QuestionType>();
-        answerToQuestionType.put(AnswerType.INVALID, QuestionType.INVALID);
-        answerToQuestionType.put(AnswerType.FREETEXT, QuestionType.FREETEXT);
-        answerToQuestionType.put(AnswerType.DATE, QuestionType.DATE);
-        answerToQuestionType.put(AnswerType.NUMBER, QuestionType.NUMERIC);
+        answerToQuestionType = asMap(makeEntry(AnswerType.INVALID, QuestionType.INVALID),
+                                     makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
+                                     makeEntry(AnswerType.DATE, QuestionType.DATE),
+                                     makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
     }
 
     private void populateQuestionToAnswerTypeMap() {
-        questionToAnswerType = new HashMap<QuestionType, AnswerType>();
-        questionToAnswerType.put(QuestionType.INVALID, AnswerType.INVALID);
-        questionToAnswerType.put(QuestionType.FREETEXT, AnswerType.FREETEXT);
-        questionToAnswerType.put(QuestionType.DATE, AnswerType.DATE);
-        questionToAnswerType.put(QuestionType.NUMERIC, AnswerType.NUMBER);
+        questionToAnswerType = asMap(makeEntry(QuestionType.INVALID, AnswerType.INVALID),
+                                     makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
+                                     makeEntry(QuestionType.DATE, AnswerType.DATE),
+                                     makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
     }
 
 }

@@ -20,12 +20,7 @@
 
 package org.mifos.framework.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.Transformer;
@@ -135,16 +130,22 @@ public class CollectionUtils {
         return result;
     }
 
-    public static <T> List<T> makeList (T first, List<T> rest) {
+    public static <K, V> Map<K, V> asOrderedMap(Map.Entry<K, V>... entry) {
+        Map<K, V> map = new LinkedHashMap<K, V>();
+        fillEntries(map, entry);
+        return map;
+    }
 
-        if (rest == null) {
-            throw new IllegalArgumentException("rest cannot be null");
+    public static <K, V> Map<K, V> asMap(Map.Entry<K, V>... entry) {
+        Map<K, V> map = new HashMap<K, V>();
+        fillEntries(map, entry);
+        return map;
+    }
+
+    private static <K, V> void fillEntries(Map<K, V> map, Map.Entry<K, V>... entry) {
+        for (Map.Entry<K, V> _entry : entry) {
+            map.put(_entry.getKey(), _entry.getValue());
         }
-
-        List<T> newList = new ArrayList<T>();
-        newList.add(first);
-        newList.addAll(rest);
-        return newList;
     }
 
 }
