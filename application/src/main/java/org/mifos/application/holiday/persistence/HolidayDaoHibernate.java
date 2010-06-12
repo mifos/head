@@ -137,13 +137,13 @@ public class HolidayDaoHibernate implements HolidayDao {
         List<Holiday> possibleApplicableHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(newParentOfficeId);
 
         if (previousApplicableHolidays.size() != possibleApplicableHolidays.size()) {
-            throw new ApplicationException(OfficeConstants.ERROR_INVLID_PARENT);
+            throw new ApplicationException(OfficeConstants.ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT);
         }
 
         for (Holiday holiday : previousApplicableHolidays) {
             HolidayBO applicableHoliday = (HolidayBO) holiday;
             if (!possibleApplicableHolidays.contains(applicableHoliday)) {
-                throw new ApplicationException(OfficeConstants.ERROR_INVLID_PARENT);
+                throw new ApplicationException(OfficeConstants.ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT);
             }
         }
     }

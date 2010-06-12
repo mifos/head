@@ -489,7 +489,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
                     if (this.getOfficeLevel().getValue().shortValue() < newParent.getOfficeLevel().getValue()
                             .shortValue()) {
-                        throw new OfficeException(OfficeConstants.ERROR_INVLID_PARENT);
+                        throw new OfficeException(OfficeConstants.ERROR_INVALID_PARENT);
                     }
                     OfficeBO oldParent1 = getIfChildPresent(newParent, oldParent);
                     if (oldParent1 == null) {

@@ -145,5 +145,6 @@ public interface OfficeConstants {
     public static final String ERROR_LEVEL = "error.noofficelevel";
     public static final String ERROR_STATUS = "error.noofficestatus";
 
-    public static final String ERROR_INVLID_PARENT = "error.office.invalidparentoffice";
+    public static final String ERROR_INVALID_PARENT = "error.office.invalidparentoffice";
+    public static final String ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT = "error.office.futureholidaysnotthesame";
 }

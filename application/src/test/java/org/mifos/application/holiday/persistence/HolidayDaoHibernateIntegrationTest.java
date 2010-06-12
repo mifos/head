@@ -21,9 +21,7 @@
 package org.mifos.application.holiday.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,9 +42,11 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.domain.builders.HolidayBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -59,7 +59,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/hibernate-daos.xml" })
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml"})
 public class HolidayDaoHibernateIntegrationTest {
 
     @Autowired
@@ -67,6 +68,12 @@ public class HolidayDaoHibernateIntegrationTest {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    private OfficeBO areaOffice1;
+
+    private OfficeBO branch1;
+
+    private OfficeBO areaOffice2;
 
     private static MifosCurrency oldDefaultCurrency;
 
@@ -198,6 +205,55 @@ public class HolidayDaoHibernateIntegrationTest {
         assertThat(myHolidays.get(4).getName(), is("Fifth"));
     }
 
+    @Test
+    public void shouldThrowExceptionWhenFutureHolidaysApplicableToNewParentOfficeDifferFromPreviousParentOffice() throws Exception {
+
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        // setup
+        createOfficeHierarchyUnderHeadOffice(headOffice);
+
+        DateTime tomorrow = new DateTime().plusDays(1);
+        HolidayDetails holidayDetails = new HolidayBuilder().withName("areaOffice2Holiday").from(tomorrow).to(tomorrow).buildDto();
+        IntegrationTestObjectMother.createHoliday(holidayDetails, Arrays.asList(areaOffice2.getOfficeId()));
+
+        HolidayDetails branchOnlyHolidayDetails = new HolidayBuilder().withName("branchOnlyHoliday").from(tomorrow).to(tomorrow).buildDto();
+        IntegrationTestObjectMother.createHoliday(branchOnlyHolidayDetails, Arrays.asList(branch1.getOfficeId()));
+
+        // refetch
+        branch1 = IntegrationTestObjectMother.findOfficeById(branch1.getOfficeId());
+
+        // exercise test
+        try {
+            holidayDao.validateNoExtraFutureHolidaysApplicableOnParentOffice(branch1.getParentOffice().getOfficeId(), areaOffice2.getOfficeId());
+            fail("shouldThrowExceptionWhenFutureHolidaysApplicableToNewParentOfficeDifferFromPreviousParentOffice");
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(OfficeConstants.ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT));
+        }
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenFutureHolidaysApplicableToNewParentOfficeDoNotDifferFromPreviousParentOffice() throws Exception {
+
+        OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
+
+        // setup
+        createOfficeHierarchyUnderHeadOffice(headOffice);
+        DateTime tomorrow = new DateTime().plusDays(1);
+
+        HolidayDetails holidayDetails = new HolidayBuilder().withName("areaOffice2Holiday").from(tomorrow).to(tomorrow).buildDto();
+        IntegrationTestObjectMother.createHoliday(holidayDetails, Arrays.asList(areaOffice2.getOfficeId(), areaOffice1.getOfficeId()));
+
+        HolidayDetails branchOnlyHolidayDetails = new HolidayBuilder().withName("branchOnlyHoliday").from(tomorrow).to(tomorrow).buildDto();
+        IntegrationTestObjectMother.createHoliday(branchOnlyHolidayDetails, Arrays.asList(branch1.getOfficeId()));
+
+        // refetch
+        branch1 = IntegrationTestObjectMother.findOfficeById(branch1.getOfficeId());
+
+        // exercise test
+        holidayDao.validateNoExtraFutureHolidaysApplicableOnParentOffice(branch1.getParentOffice().getOfficeId(), areaOffice2.getOfficeId());
+    }
+
     private void insert(final Holiday holiday) {
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
@@ -206,5 +262,31 @@ public class HolidayDaoHibernateIntegrationTest {
 
         List<Short> officeIds = Arrays.asList(headOffice.getOfficeId());
         IntegrationTestObjectMother.createHoliday(holidayDetails, officeIds);
+    }
+
+    private void createOfficeHierarchyUnderHeadOffice(OfficeBO headOffice) {
+        areaOffice1 = new OfficeBuilder().areaOffice()
+                                                  .withParentOffice(headOffice)
+                                                  .withName("areaOffice1")
+                                                  .withGlobalOfficeNum("x002")
+                                                  .withSearchId("1.1.2")
+                                                  .build();
+        IntegrationTestObjectMother.createOffice(areaOffice1);
+
+        branch1 = new OfficeBuilder().branchOffice()
+                                              .withParentOffice(areaOffice1)
+                                              .withName("branch1")
+                                              .withGlobalOfficeNum("x005")
+                                              .withSearchId("1.1.2.1")
+                                              .build();
+        IntegrationTestObjectMother.createOffice(branch1);
+
+        areaOffice2 = new OfficeBuilder().areaOffice()
+                                                  .withParentOffice(headOffice)
+                                                  .withName("areaOffice2")
+                                                  .withGlobalOfficeNum("x003")
+                                                  .withSearchId("1.1.3")
+                                                  .build();
+        IntegrationTestObjectMother.createOffice(areaOffice2);
     }
 }
