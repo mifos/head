@@ -67,8 +67,8 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -193,7 +193,7 @@ public class SavingsBO extends AccountBO {
             final Short createdByUserId, List<Holiday> holidays) {
 
         super(accountType, accountState, customer, offsettingAllowable, scheduledPayments,
-                new HashSet<AccountFeesEntity>(), null, savingsOfficer, createdDate, createdByUserId);
+                new HashSet<AccountFeesEntity>(), customer.getOffice(), savingsOfficer, createdDate, createdByUserId);
         this.savingsOffering = savingsProduct;
         this.savingsPaymentStrategy = savingsPaymentStrategy;
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
@@ -1892,31 +1892,31 @@ public class SavingsBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-            MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
-            DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
-                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
+        MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
+        DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
+                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    workingDays, holidays);
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
-            int numberOfInstallmentsToGenerate = getLastInstallmentId();
-            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                    startFromMeetingDate, scheduledEvent);
+        int numberOfInstallmentsToGenerate = getLastInstallmentId();
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                startFromMeetingDate, scheduledEvent);
 
-            if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
-                    || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
-                    && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-            } else {
-                List<CustomerBO> children;
-                try {
-                    children = getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
-                } catch (CustomerException ce) {
-                    throw new AccountException(ce);
-                }
-                updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
+        if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
+                || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
+                && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
+            updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
+        } else {
+            List<CustomerBO> children;
+            try {
+                children = getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
+            } catch (CustomerException ce) {
+                throw new AccountException(ce);
             }
+            updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
+        }
 
     }
 
