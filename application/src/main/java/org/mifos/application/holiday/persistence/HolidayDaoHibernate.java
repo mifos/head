@@ -40,6 +40,8 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class HolidayDaoHibernate implements HolidayDao {
 
@@ -128,5 +130,23 @@ public class HolidayDaoHibernate implements HolidayDao {
         List<Holiday> upcomingHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
 
         return new CalendarEvent(workingDays, upcomingHolidays);
+    }
+
+    @Override
+    public void validateNoExtraFutureHolidaysApplicableOnParentOffice(Short oldParentOfficeId, Short newParentOfficeId) throws ApplicationException {
+
+        List<Holiday> previousApplicableHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(oldParentOfficeId);
+        List<Holiday> possibleApplicableHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(newParentOfficeId);
+
+        if (previousApplicableHolidays.size() != possibleApplicableHolidays.size()) {
+            throw new ApplicationException(OfficeConstants.ERROR_INVLID_PARENT);
+        }
+
+        for (Holiday holiday : previousApplicableHolidays) {
+            HolidayBO applicableHoliday = (HolidayBO) holiday;
+            if (!possibleApplicableHolidays.contains(applicableHoliday)) {
+                throw new ApplicationException(OfficeConstants.ERROR_INVLID_PARENT);
+            }
+        }
     }
 }

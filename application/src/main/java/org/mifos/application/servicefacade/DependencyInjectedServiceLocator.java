@@ -215,7 +215,7 @@ public class DependencyInjectedServiceLocator {
 
     public static OfficeServiceFacade locateOfficeServiceFacade() {
         if (officeServiceFacade == null) {
-            officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao);
+            officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
         }
         return officeServiceFacade;
     }

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
@@ -38,9 +39,11 @@ import org.mifos.security.util.UserContext;
 public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
 
     private final OfficeDao officeDao;
+    private final HolidayDao holidayDao;
 
-    public OfficeServiceFacadeWebTier(OfficeDao officeDao) {
+    public OfficeServiceFacadeWebTier(OfficeDao officeDao, HolidayDao holidayDao) {
         this.officeDao = officeDao;
+        this.holidayDao = holidayDao;
     }
 
     @Override
@@ -76,7 +79,12 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
 
         OfficeBO parentOffice = null;
         if (officeUpdateRequest.getParentOfficeId() != null) {
+
             parentOffice = officeDao.findOfficeById(officeUpdateRequest.getParentOfficeId());
+
+            if (office.isDifferentParentOffice(parentOffice)) {
+                holidayDao.validateNoExtraFutureHolidaysApplicableOnParentOffice(office.getParentOffice().getOfficeId(), officeUpdateRequest.getParentOfficeId());
+            }
         }
 
         if (office.isNameDifferent(officeUpdateRequest.getOfficeName())) {
@@ -94,8 +102,10 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
                 officeDao.validateNoActivePeronnelExist(office.getOfficeId());
             }
 
-            if (parentOffice.isInActive()) {
-                throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
+            if (parentOffice != null) {
+                if (parentOffice.isInActive()) {
+                    throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
+                }
             }
         }
 
