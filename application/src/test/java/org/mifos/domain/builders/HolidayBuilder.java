@@ -47,6 +47,10 @@ public class HolidayBuilder {
         return holiday;
     }
 
+    public HolidayDetails buildDto() {
+        return ((HolidayBO) build()).toDto();
+    }
+
     public HolidayBuilder from(final DateTime withFrom) {
         this.from = withFrom;
         return this;
