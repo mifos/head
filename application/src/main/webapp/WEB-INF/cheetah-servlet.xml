@@ -56,14 +56,14 @@
                 /accessDenied.ftl=genericController
                 /pageNotFound.ftl=genericController
                 /ping.ftl=genericController
-                /adminHome.ftl=genericController  
-                /admin.ftl=genericController
+                /adminHome.ftl=genericController                
                 /maincss.css=genericController
                 /screen.css=genericController
                 /admin.ftl=genericController  
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /systemInformation.ftl=systemInformationController
+                /viewOrganizationSettings.ftl=genericController
 </value>
         </property>
     </bean>

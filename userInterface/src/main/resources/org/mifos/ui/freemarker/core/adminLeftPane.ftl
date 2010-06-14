@@ -10,7 +10,7 @@
   <div class="sidebar ht600">
     <p class="orangetab">[@spring.message "administrativeTasks" /]</p>
     <p class="paddingLeft">[@spring.message "searchbynamesystemIDoraccountnumber"/]<br />
-      <input type="text" id="txt" />
+      <input type="text" id="txt" size="15"/>
       <br />
       <input class="buttn" type="button" name="search" value="[@spring.message "search" /]" onclick="#" />
     </p>
