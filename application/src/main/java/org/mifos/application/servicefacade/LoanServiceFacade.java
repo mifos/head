@@ -73,4 +73,6 @@ public interface LoanServiceFacade {
     LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
 
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
+
+    LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId);
 }

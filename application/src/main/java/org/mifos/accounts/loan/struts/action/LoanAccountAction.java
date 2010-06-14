@@ -353,7 +353,16 @@ public class LoanAccountAction extends AccountAppAction {
         LoanCreationLoanDetailsDto loanCreationDetailsDto = this.loanServiceFacade.retrieveLoanDetailsForLoanAccountCreation(userContext, customerId, productId);
 
         if (loanCreationDetailsDto.isRepaymentIndependentOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnFormForLoad(loanActionForm, loanCreationDetailsDto.getLoanOfferingMeetingDetail(), loanCreationDetailsDto.getCustomerMeetingDetail());
+            MeetingDetailsEntity meetingDetail = loanCreationDetailsDto.getLoanOfferingMeetingDetail();
+            loanActionForm.setMonthDay("");
+            loanActionForm.setMonthWeek("0");
+            loanActionForm.setMonthRank("0");
+
+            if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
+                setMonthlySchedule(loanActionForm, meetingDetail);
+            } else {
+                setWeeklySchedule(loanActionForm, loanCreationDetailsDto.getCustomerMeetingDetail());
+            }
         }
 
         loanActionForm.setLoanAmountRange(loanCreationDetailsDto.getEligibleLoanAmount());
@@ -385,31 +394,6 @@ public class LoanAccountAction extends AccountAppAction {
         storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(request);
 
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    private void setRepaymentDayFieldsOnFormForLoad(LoanAccountActionForm loanActionForm,
-            MeetingDetailsEntity meetingDetail, MeetingDetailsEntity customerMeetingDetail) {
-        loanActionForm.setMonthDay("");
-        loanActionForm.setMonthWeek("0");
-        loanActionForm.setMonthRank("0");
-
-        if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
-            setMonthlySchedule(loanActionForm, meetingDetail);
-        } else {
-            setWeeklySchedule(loanActionForm, customerMeetingDetail);
-        }
-    }
-
-    private void setRepaymentDayFieldsOnForm(LoanAccountActionForm loanActionForm, MeetingDetailsEntity meetingDetail) {
-        loanActionForm.setMonthDay("");
-        loanActionForm.setMonthWeek("0");
-        loanActionForm.setMonthRank("0");
-
-        if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
-            setMonthlySchedule(loanActionForm, meetingDetail);
-        } else {
-            setWeeklySchedule(loanActionForm, meetingDetail);
-        }
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -633,21 +617,25 @@ public class LoanAccountAction extends AccountAppAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward getLoanRepaymentSchedule(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-        LoanBO loanBO = loanBusinessService.getAccount(getIntegerValue(request.getParameter(ACCOUNT_ID)));
-        loanBO.setUserContext(getUserContext(request));
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
+
+        UserContext userContext = getUserContext(request);
+        Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId);
+
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+
         return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward viewStatusHistory(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
         loanBusinessService.initialize(loanBO.getAccountStatusChangeHistory());
         loanBO.setUserContext(getUserContext(request));
-        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(
-                loanBO.getAccountStatusChangeHistory());
+        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(loanBO.getAccountStatusChangeHistory());
         SessionUtils.setCollectionAttribute(STATUS_HISTORY, accStatusChangeHistory, request);
         loanBO = null;
         return mapping.findForward(ActionForwards.viewStatusHistory.toString());
@@ -854,7 +842,16 @@ public class LoanAccountAction extends AccountAppAction {
             loanActionForm.setLoanOfferingFund(loanBO.getFund().getFundId().toString());
         }
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
-            setRepaymentDayFieldsOnForm(loanActionForm, loanBO.getLoanMeeting().getMeetingDetails());
+            MeetingDetailsEntity meetingDetail = loanBO.getLoanMeeting().getMeetingDetails();
+            loanActionForm.setMonthDay("");
+            loanActionForm.setMonthWeek("0");
+            loanActionForm.setMonthRank("0");
+
+            if (meetingDetail.getRecurrenceTypeEnum() == RecurrenceType.MONTHLY) {
+                setMonthlySchedule(loanActionForm, meetingDetail);
+            } else {
+                setWeeklySchedule(loanActionForm, meetingDetail);
+            }
         }
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
         loadUpdateMasterData(request);

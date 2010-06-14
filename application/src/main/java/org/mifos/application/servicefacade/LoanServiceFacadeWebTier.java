@@ -814,4 +814,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         return loan.isTrxnDateValid(trxnDate);
     }
+
+    @Override
+    public LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId) {
+        LoanBO loan = this.loanDao.findById(loanId);
+        loan.updateDetails(userContext);
+        return loan;
+    }
 }
