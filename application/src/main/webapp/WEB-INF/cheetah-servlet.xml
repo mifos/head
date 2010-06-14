@@ -13,9 +13,19 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
+                <value>org.mifos.ui.localizedProperties.fees_messages</value>
             </list>
         </property>
     </bean>
+
+    <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    	<property name="exceptionMappings">
+    		<props>
+    			<prop key="java.lang.Exception">unhandledError</prop>
+    		</props>
+    	</property>
+    	<property name="exceptionAttribute"><value>exception</value></property>
+    </bean> 
     
     <bean id="frontExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     	<property name="exceptionMappings">
@@ -25,7 +35,9 @@
     	</property>
     	<property name="exceptionAttribute"><value>exception</value></property>
     </bean> 
-    
+
+    <!--<bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>-->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
     <!-- freemarker config -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -55,6 +67,9 @@
     </bean>
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController"/>
+
+    <!--  <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>  -->
     
     
     <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
@@ -69,6 +84,7 @@
                 /initializeApplication.ftl=initializeApplicationController
                 /runBatchJobs.ftl=batchJobController
                 /accessDenied.ftl=genericController
+
                 /pageNotFound.ftl=genericController
                 /ping.ftl=genericController
                 /cheetah.css.ftl=genericController
@@ -94,4 +110,8 @@
     <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
+
+    <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
+
+
 </beans>

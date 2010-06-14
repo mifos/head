@@ -11,39 +11,20 @@
       http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
       
-    
-	<!-- Executes flows: the entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor"/>
-		<!--  
-		<webflow:flow-execution-listeners>
-			<webflow:listener ref="jpaFlowExecutionListener" />
-			<webflow:listener ref="securityFlowExecutionListener" />
-		</webflow:flow-execution-listeners>
-		-->
-	
-	<!-- The registry of executable flow definitions -->
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
-		<webflow:flow-location-pattern value="/WEB-INF/flows/**-flow.xml"/>
+	   <webflow:flow-location-pattern value="/WEB-INF/flows/**.xml"/>
 	</webflow:flow-registry>
-	
-	<!-- Plugs in a custom creator for Web Flow views -->
 	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" development="true" />
-	
 	<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
-    	<property name="viewResolvers" ref="freemarkerViewResolver"/>
+	   <property name="viewResolvers" ref="freemarkerViewResolver"/>
 	</bean>
-	
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
-		<property name="flowExecutor" ref="flowExecutor" />
+	   <property name="flowExecutor" ref="flowExecutor" />
 	</bean>
-	
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-      <property name="flowRegistry" ref="flowRegistry"/>
-      <property name="order" value="0"/>
-   </bean>
-   
-   <!-- Installs a listener to apply Spring Security authorities
-	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" /> 
-    -->
+	   <property name="flowRegistry" ref="flowRegistry"/>
+	   <property name="order" value="-1"/>
+    </bean>
 	
 </beans>
