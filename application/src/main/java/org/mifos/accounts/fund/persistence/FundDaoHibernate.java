@@ -30,6 +30,7 @@ import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.FundCodeEntity;
+import org.springframework.util.Assert;
 
 public class FundDaoHibernate implements FundDao {
 
@@ -62,8 +63,9 @@ public class FundDaoHibernate implements FundDao {
     }
 
     public FundBO findById(Short fundId) {
+        Assert.notNull(fundId, "fundId cannot be null.");
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("fundId", fundId);
+        queryParameters.put("FUND_ID", fundId);
 
         return (FundBO) this.genericDao.executeUniqueResultNamedQuery("fund.findById", queryParameters);
     }
