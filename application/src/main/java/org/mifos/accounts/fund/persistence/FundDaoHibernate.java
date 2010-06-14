@@ -30,16 +30,10 @@ import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 
 public class FundDaoHibernate implements FundDao {
 
     private GenericDao genericDao;
-
-    public FundDaoHibernate() {
-        // should be injected in but need to remove legacy usage of FundPersistence
-        genericDao = DependencyInjectedServiceLocator.locateGenericDao();
-    }
 
     public FundDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;

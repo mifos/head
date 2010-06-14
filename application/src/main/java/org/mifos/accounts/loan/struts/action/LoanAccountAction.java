@@ -82,7 +82,6 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
@@ -1147,12 +1146,12 @@ public class LoanAccountAction extends AccountAppAction {
         return mapping.findForward(ActionForwards.managepreview_success.toString());
     }
 
-    private FundBO getFund(LoanAccountActionForm loanAccountActionForm) throws PersistenceException {
+    private FundBO getFund(LoanAccountActionForm loanAccountActionForm) {
         FundBO fund = null;
         if (!StringUtils.isBlank(loanAccountActionForm.getLoanOfferingFund())) {
             Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
             if (fundId != 0) {
-                fund = new FundDaoHibernate().findById(fundId);
+                fund = this.fundDao.findById(fundId);
             }
         }
         return fund;

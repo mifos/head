@@ -25,7 +25,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -35,6 +34,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
@@ -165,7 +165,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
-        fund = new FundDaoHibernate().findByName("Fund-2");
+        fund = IntegrationTestObjectMother.findFundByName("Fund-2");
 
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }

@@ -24,9 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.mifos.accounts.fund.exception.FundException;
-import org.mifos.accounts.fund.persistence.FundDaoHibernate;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -86,7 +87,8 @@ public class FundBO extends AbstractBusinessObject {
      */
     @Deprecated
     public void validateDuplicateFundName(String fundName) throws FundException {
-        if (new FundDaoHibernate().countOfFundByName(fundName.trim()) > 0) {
+        FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
+        if (fundDao.countOfFundByName(fundName.trim()) > 0) {
             throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
         }
     }

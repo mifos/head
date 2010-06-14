@@ -37,7 +37,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundDaoHibernate;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanService;
@@ -113,12 +113,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final LoanProductDao loanProductDao;
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
+    private final FundDao fundDao;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao) {
+            PersonnelDao personnelDao, FundDao fundDao) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
+        this.fundDao = fundDao;
     }
 
     @Override
@@ -663,7 +665,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
 
         Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
-        FundBO fund = new FundDaoHibernate().findById(fundId);
+        FundBO fund = this.fundDao.findById(fundId);
 
         LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
                 numOfInstallments, disbursementDate.toDate(),

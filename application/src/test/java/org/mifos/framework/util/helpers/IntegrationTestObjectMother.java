@@ -26,6 +26,7 @@ import java.util.List;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -81,6 +82,7 @@ public class IntegrationTestObjectMother {
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
     private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    private static final FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -495,7 +497,7 @@ public class IntegrationTestObjectMother {
 
         try {
             StaticHibernateUtil.startTransaction();
-            DependencyInjectedServiceLocator.locateFundDao().save(fund);
+            fundDao.save(fund);
             StaticHibernateUtil.commitTransaction();
             return fund;
         } catch (Exception e) {
@@ -517,5 +519,9 @@ public class IntegrationTestObjectMother {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    public static FundBO findFundByName(final String fundName) {
+        return fundDao.findByName(fundName);
     }
 }
