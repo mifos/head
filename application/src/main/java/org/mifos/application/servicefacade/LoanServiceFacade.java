@@ -23,14 +23,18 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
 public interface LoanServiceFacade {
@@ -51,4 +55,8 @@ public interface LoanServiceFacade {
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);
 
     LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
+
+    void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException;
+
+    LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
 }
