@@ -59,6 +59,8 @@ public interface LoanServiceFacade {
 
     LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 
+    LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, LoanAccountActionForm loanActionForm) throws ApplicationException;
+
     void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException;
 
     LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;

@@ -83,6 +83,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -602,6 +603,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 customer);
     }
 
+    @Override
+    public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
+
+        CustomerBO customer = customerDao.findCustomerById(customerId);
+        LoanBO loan = redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
+
+        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled(), loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
+    }
+
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
             final Short loanOfficerId) {
         return AuthorizationManager.getInstance().isActivityAllowed(
@@ -631,9 +641,12 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) throws ApplicationException {
-
         CustomerBO customer = customerDao.findCustomerById(customerId);
+        return redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
+    }
 
+    private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate,
+            UserContext userContext) throws ApplicationException {
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
         MeetingBO newMeetingForRepaymentDay = null;
@@ -686,7 +699,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
 
         // We're assuming cash disbursal for this situation right now
-        redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
+        try {
+            redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
+        } catch (PersistenceException e1) {
+            throw new MifosRuntimeException(e1);
+        }
 
         List<PaymentDataHtmlBean> paymentDataBeans = loanAccountActionForm.getPaymentDataBeans();
         PaymentData payment;
@@ -706,7 +723,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         } catch (MeetingException e) {
             throw new ServiceException(e);
         }
-
         return redoLoan;
     }
 }
