@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;

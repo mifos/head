@@ -51,7 +51,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.branchreport.BranchReportBO;
-import org.mifos.reports.branchreport.BranchReportBOFixture;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
 import org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO;
 import org.mifos.reports.branchreport.BranchReportStaffSummaryBO;
@@ -61,7 +60,6 @@ import org.mifos.reports.branchreport.persistence.BranchReportPersistence;
 import org.mifos.reports.business.dto.BranchReportHeaderDTO;
 import org.mifos.reports.util.helpers.ReportUtils;
 import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
 public class BranchReportServiceIntegrationTest extends BranchReportIntegrationTestCase {
 
     public BranchReportServiceIntegrationTest() throws Exception {

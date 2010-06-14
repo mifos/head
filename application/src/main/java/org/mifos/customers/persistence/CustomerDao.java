@@ -27,7 +27,6 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.ValueListElement;
