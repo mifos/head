@@ -30,6 +30,7 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -259,5 +260,23 @@ public class CalendarUtils {
             throw new IllegalArgumentException("strDate cannot be null or empty");
         }
         return new DateTime(DateUtils.getLocaleDate(locale, strDate).getTime());
+    }
+
+    public static DateTime nearestWorkingDay(DateTime day) {
+
+        if (isWorkingDay(day)) {
+            return day;
+        }
+
+        DateTime nearestWorkingDay = day;
+        do {
+            nearestWorkingDay = nearestWorkingDay.plusDays(1);
+        } while (!isWorkingDay(nearestWorkingDay));
+
+        return nearestWorkingDay;
+    }
+
+    private static boolean isWorkingDay(DateTime day) throws RuntimeException {
+        return new FiscalCalendarRules().isWorkingDay(DateUtils.getCalendar(day.toDate()));
     }
 }

@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -37,6 +38,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.core.MifosRuntimeException;
@@ -480,6 +482,34 @@ public class IntegrationTestObjectMother {
         try {
             StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(officeBuilder.build());
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static FundBO createFund(FundBO fund) throws Exception {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            DependencyInjectedServiceLocator.locateFundDao().save(fund);
+            StaticHibernateUtil.commitTransaction();
+            return fund;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createFundCode(FundCodeEntity fundCode) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(fundCode);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();

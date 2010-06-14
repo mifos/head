@@ -37,6 +37,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -55,6 +56,8 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
@@ -65,6 +68,7 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -84,7 +88,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -543,5 +549,83 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId, final Short loanOfficerId) {
         return AuthorizationManager.getInstance().isActivityAllowed(userContext, new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
+    }
+
+    @Override
+    public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) throws ApplicationException {
+
+        CustomerBO customer = customerDao.findCustomerById(customerId);
+
+        boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+
+        MeetingBO newMeetingForRepaymentDay = null;
+        if (isRepaymentIndepOfMeetingEnabled) {
+            newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(disbursementDate, loanAccountActionForm, customer);
+        }
+
+        Short productId = loanAccountActionForm.getPrdOfferingIdValue();
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+
+        Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountActionForm.getLoanAmount());
+        Short numOfInstallments = loanAccountActionForm.getNoOfInstallmentsValue();
+        boolean isInterestDeductedAtDisbursement = loanAccountActionForm.isInterestDedAtDisbValue();
+        Double interest = loanAccountActionForm.getInterestDoubleValue();
+        Short gracePeriod = loanAccountActionForm.getGracePeriodDurationValue();
+        List<FeeDto> fees = loanAccountActionForm.getFeesToApply();
+        List<CustomFieldDto> customFields = loanAccountActionForm.getCustomFields();
+        Double maxLoanAmount = loanAccountActionForm.getMaxLoanAmountValue();
+        Double minLoanAmount = loanAccountActionForm.getMinLoanAmountValue();
+        Short maxNumOfInstallments = loanAccountActionForm.getMaxNoInstallmentsValue();
+        Short minNumOfShortInstallments = loanAccountActionForm.getMinNoInstallmentsValue();
+        String externalId = loanAccountActionForm.getExternalId();
+        Integer selectedLoanPurpose = loanAccountActionForm.getBusinessActivityIdValue();
+        String collateralNote = loanAccountActionForm.getCollateralNote();
+        Integer selectedCollateralType = loanAccountActionForm.getCollateralTypeIdValue();
+        AccountState accountState = loanAccountActionForm.getState();
+        if (accountState == null) {
+            accountState = AccountState.LOAN_PARTIAL_APPLICATION;
+        }
+
+        Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
+        FundBO fund = new FundDaoHibernate().findById(fundId);
+
+        LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
+                numOfInstallments, disbursementDate.toDate(),
+                isInterestDeductedAtDisbursement,
+                interest, gracePeriod, fund, fees,
+                customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments, minNumOfShortInstallments,
+                isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+        redoLoan.setExternalId(externalId);
+        redoLoan.setBusinessActivityId(selectedLoanPurpose);
+        redoLoan.setCollateralNote(collateralNote);
+        redoLoan.setCollateralTypeId(selectedCollateralType);
+
+        redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)");
+
+        PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
+
+        // We're assuming cash disbursal for this situation right now
+        redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
+
+        List<PaymentDataHtmlBean> paymentDataBeans = loanAccountActionForm.getPaymentDataBeans();
+        PaymentData payment;
+        try {
+            for (PaymentDataTemplate template : paymentDataBeans) {
+                if (template.hasValidAmount() && template.getTransactionDate() != null) {
+                    if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
+                            DateUtils.getLastDayOfNextYear())) {
+                        throw new AccountException("errors.invalidTxndate");
+                    }
+                    payment = PaymentData.createPaymentData(template);
+                    redoLoan.applyPayment(payment, false);
+                }
+            }
+        } catch (InvalidDateException ide) {
+            throw new AccountException(ide);
+        } catch (MeetingException e) {
+            throw new ServiceException(e);
+        }
+
+        return redoLoan;
     }
 }

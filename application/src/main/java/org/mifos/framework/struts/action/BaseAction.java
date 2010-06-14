@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -106,6 +107,8 @@ public abstract class BaseAction extends DispatchAction {
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
 
+    protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
+
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -123,6 +126,8 @@ public abstract class BaseAction extends DispatchAction {
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
             this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
+
+            this.fundDao = springAppContext.getBean(FundDao.class);
         }
 
         if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {

@@ -14,6 +14,9 @@
         <property name="fundName" column="FUND_NAME" type="string" />
         <many-to-one name="fundCode" column="FUNDCODE_ID" class="org.mifos.application.master.business.FundCodeEntity"  unique="true" insert="true" update="false" access="field" />
     </class>
+    <query name="fund.findById">
+            <![CDATA[from org.mifos.accounts.fund.business.FundBO fund where fund.fundId = :fundId]]>
+    </query>
     <query name="fund.getFundForGivenName">
             <![CDATA[from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>
     </query>

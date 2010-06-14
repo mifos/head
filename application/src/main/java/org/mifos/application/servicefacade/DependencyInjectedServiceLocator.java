@@ -21,6 +21,8 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 
+import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
@@ -103,6 +105,7 @@ public class DependencyInjectedServiceLocator {
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
 
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static FundDao fundDao = new FundDaoHibernate(genericDao);
     private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
     private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
@@ -250,5 +253,9 @@ public class DependencyInjectedServiceLocator {
 
     public static OfficeDao locateOfficeDao() {
         return officeDao;
+    }
+
+    public static FundDao locateFundDao() {
+        return fundDao;
     }
 }

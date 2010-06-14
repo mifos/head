@@ -82,7 +82,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundPersistence;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
@@ -479,28 +479,30 @@ public class LoanAccountAction extends AccountAppAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws PageExpiredException,
-            AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException,
-            InvalidDateException {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
 
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
-            if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
-                LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-                LoanBO loan = redoLoan(loanActionForm, request, SaveLoan.NO);
-                SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-            }
-
-            request.setAttribute(PERSPECTIVE, perspective);
 
             List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
             List<String> selectedClientIds = loanAccountForm.getClients();
             Integer customerId = loanAccountForm.getCustomerIdValue();
             List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
 
-            LoanCreationPreviewDto loanPreviewDto = this.loanServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds, businessActEntity);
+            LoanCreationPreviewDto loanPreviewDto;
+            if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
+
+                UserContext userContext = getUserContext(request);
+                DateTime disbursementDate = new DateTime(loanAccountForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+                LoanBO loan = this.loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm, disbursementDate, userContext);
+                SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+            }
+
+            request.setAttribute(PERSPECTIVE, perspective);
+
+            loanPreviewDto = this.loanServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds, businessActEntity);
 
             if (loanPreviewDto.isGlimEnabled()) {
                 SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
@@ -1150,7 +1152,7 @@ public class LoanAccountAction extends AccountAppAction {
         if (!StringUtils.isBlank(loanAccountActionForm.getLoanOfferingFund())) {
             Short fundId = loanAccountActionForm.getLoanOfferingFundValue();
             if (fundId != 0) {
-                fund = new FundPersistence().getFund(fundId);
+                fund = new FundDaoHibernate().findById(fundId);
             }
         }
         return fund;

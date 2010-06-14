@@ -21,24 +21,24 @@
 package org.mifos.accounts.fund.business;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.mifos.accounts.fund.exception.FundException;
-import org.mifos.accounts.fund.persistence.FundPersistence;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class FundBO extends AbstractBusinessObject {
+
     private final Short fundId;
-
     private final FundCodeEntity fundCode;
-
     private String fundName;
 
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
+    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
 
     public FundBO(FundCodeEntity fundCode, String fundName) throws FundException {
         logger.debug("building fund");
@@ -74,50 +74,24 @@ public class FundBO extends AbstractBusinessObject {
         return fundCode;
     }
 
-    public void save() throws FundException {
-        logger.debug("creating the fund ");
-        try {
-            new FundPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new FundException(e);
-        }
-        logger.debug("creating the fund Done : " + getFundName());
-    }
-
-    public void update(String fundName) throws FundException {
-        logger.debug("updating the fund ");
-        validateFundName(fundName);
-        if (!this.fundName.equals(fundName)) {
-            validateDuplicateFundName(fundName);
-        }
-        this.fundName = fundName;
-        try {
-            new FundPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new FundException(e);
-        }
-        logger.debug("updation of the sfund Done : " + getFundName());
-    }
-
-    private void validate(FundCodeEntity fundCode, String fundName) throws FundException {
+    public void validate(FundCodeEntity fundCode, String fundName) throws FundException {
         logger.debug("Validating the fields in Fund");
         validateFundName(fundName);
         validateFundCode(fundCode);
         logger.debug("Validating the fields in Fund done");
     }
 
-    private void validateDuplicateFundName(String fundName) throws FundException {
-        logger.debug("Checking for duplicate Fund name");
-        try {
-            if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(Long.valueOf("0"))) {
-                throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
-            }
-        } catch (PersistenceException e) {
-            throw new FundException(e);
+    /**
+     * FIXME - keithw - loan refactoring - pull up to Dao or service level after refactoring fund creation flow.
+     */
+    @Deprecated
+    public void validateDuplicateFundName(String fundName) throws FundException {
+        if (new FundDaoHibernate().countOfFundByName(fundName.trim()) > 0) {
+            throw new FundException(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);
         }
     }
 
-    private void validateFundName(String fundName) throws FundException {
+    public void validateFundName(String fundName) throws FundException {
         logger.debug("Checking for empty Fund name");
         if (StringUtils.isBlank(fundName)) {
             throw new FundException(FundConstants.INVALID_FUND_NAME);
@@ -129,5 +103,27 @@ public class FundBO extends AbstractBusinessObject {
         if (fundCode == null) {
             throw new FundException(FundConstants.INVALID_FUND_CODE);
         }
+    }
+
+    public boolean isDifferent(String newFundName) {
+        return !newFundName.equals(this.fundName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FundBO rhs = (FundBO) obj;
+        return new EqualsBuilder().append(this.fundId, rhs.fundId).append(this.fundName, rhs.fundName).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int initialNonZeroOddNumber = 7;
+        int multiplierNonZeroOddNumber = 7;
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.fundId).append(this.fundName).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(this.fundId).append(" : ").append(this.fundName).toString();
     }
 }

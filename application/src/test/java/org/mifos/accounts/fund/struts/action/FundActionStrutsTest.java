@@ -25,12 +25,13 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.persistence.FundPersistence;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -87,9 +88,13 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        List<FundCodeEntity> fundCodeList = (List<FundCodeEntity>) SessionUtils.getAttribute(
-                FundConstants.ALL_FUNDLIST, request);
+        List<FundCodeEntity> fundCodeList = retrieveAllFundCodeEntitiesFromSession();
        Assert.assertEquals("The size of master data for funds should be 5", 5, fundCodeList.size());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<FundCodeEntity> retrieveAllFundCodeEntitiesFromSession() throws PageExpiredException {
+        return (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST, request);
     }
 
     public void testPreviewWithOutData() throws Exception {
@@ -160,7 +165,7 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
-        fund = new FundPersistence().getFund("Fund-2");
+        fund = new FundDaoHibernate().findByName("Fund-2");
 
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
@@ -174,8 +179,13 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.viewAllFunds_success.toString());
-        List<FundBO> fundList = (List<FundBO>) SessionUtils.getAttribute(FundConstants.FUNDLIST, request);
+        List<FundBO> fundList = retrieveAllFundsFromSession();
        Assert.assertEquals("The size of master data for funds should be 6", 6, fundList.size());
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<FundBO> retrieveAllFundsFromSession() throws PageExpiredException {
+        return (List<FundBO>) SessionUtils.getAttribute(FundConstants.FUNDLIST, request);
     }
 
     public void testManage() throws Exception {
