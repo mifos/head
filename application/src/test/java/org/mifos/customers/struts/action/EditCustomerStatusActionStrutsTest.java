@@ -49,7 +49,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -847,23 +846,6 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION });
         cleanInitialObjects();
-    }
-
-    public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenOfficeInactiveWhileChangingStatusCancelToPartial() throws Exception {
-        createInitialObjectsOfficeInactive(CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
-        OfficeBO officeBO = group.getOffice();
-        officeBO.update(officeBO.getOfficeName(), officeBO.getShortName(), OfficeStatus.INACTIVE, officeBO
-                .getOfficeLevel(), officeBO.getParentOffice(), null, null);
-        StaticHibernateUtil.commitTransaction();
-        invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
-        setRequestPathInfo("/editCustomerStatusAction.do");
-        addRequestParameter("method", Methods.updateStatus.toString());
-        addRequestParameter("input", "group");
-        actionPerform();
-        Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        verifyActionErrors(new String[] { GroupConstants.BRANCH_INACTIVE });
-        office = (OfficeBO) TestObjectFactory.getObject(OfficeBO.class, office.getOfficeId());
-        cleanInitialObjectsOfficeInactive();
     }
 
     public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial() throws Exception {

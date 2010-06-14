@@ -278,7 +278,9 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         getHibernateUtil().getSessionTL();
         getHibernateUtil().startTransaction();
-        holiday.markAsApplied();
+        Holiday updateHoliday = getHolidayDao().findHolidayById(holiday.getId());
+        updateHoliday.markAsApplied();
+        getHolidayDao().save(updateHoliday);
         getHibernateUtil().commitTransaction();
     }
 
@@ -295,13 +297,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         recordCommittingSize = 500;
         errorList = new ArrayList<String>();
         workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        unappliedHolidays = getUnappliedHolidays();
+        unappliedHolidays = getHolidayDao().getUnAppliedHolidays();
         officeScheduledDateGenerationMap = new HashMap<Short, ScheduledDateGeneration>();
-    }
-
-    private List<Holiday> getUnappliedHolidays() {
-
-        return getHolidayDao().getUnAppliedHolidays();
     }
 
     private void houseKeeping() {

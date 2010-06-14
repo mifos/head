@@ -418,7 +418,10 @@ public class IntegrationTestObjectMother {
           }
     }
 
-
+    /**
+     * remove and use {@link IntegrationTestObjectMother#createHoliday(HolidayDetails, List)}
+     */
+    @Deprecated
     public static void saveHoliday (Holiday holiday) {
         try {
             StaticHibernateUtil.startTransaction();

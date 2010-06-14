@@ -51,8 +51,9 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetActiveParents() throws NumberFormatException, ServiceException {
-        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
-       Assert.assertEquals(2, parents.size());
+        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short
+                .valueOf("1"));
+        Assert.assertEquals(2, parents.size());
         for (OfficeDetailsDto view : parents) {
             if (view.getLevelId().equals(OfficeLevel.HEADOFFICE)) {
                 Assert.assertEquals("Head Office", view.getLevelName());
@@ -68,7 +69,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -76,7 +77,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetActiveLevels() throws NumberFormatException, ServiceException {
-       Assert.assertEquals(4, officeBusinessService.getConfiguredLevels(Short.valueOf("1")).size());
+        Assert.assertEquals(4, officeBusinessService.getConfiguredLevels(Short.valueOf("1")).size());
     }
 
     public void testGetActiveLevelsFailure() throws Exception {
@@ -85,7 +86,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getConfiguredLevels(Short.valueOf("1"));
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -102,7 +103,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE);
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -110,7 +111,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetStatusList() throws NumberFormatException, ServiceException {
-       Assert.assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1")).size());
+        Assert.assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1")).size());
     }
 
     public void testGetStatusListFailure() throws Exception {
@@ -119,7 +120,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getStatusList(Short.valueOf("1"));
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -127,7 +128,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetBranchOffices() throws ServiceException {
-       Assert.assertEquals(1, officeBusinessService.getBranchOffices().size());
+        Assert.assertEquals(1, officeBusinessService.getBranchOffices().size());
     }
 
     public void testGetBranchOfficesFailure() throws Exception {
@@ -136,7 +137,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getBranchOffices();
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -144,7 +145,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     public void testGetOfficesTillBranchOffice() throws ServiceException {
-       Assert.assertEquals(2, officeBusinessService.getOfficesTillBranchOffice().size());
+        Assert.assertEquals(2, officeBusinessService.getOfficesTillBranchOffice().size());
     }
 
     public void testGetOfficesTillBranchOfficeFailure() throws Exception {
@@ -153,7 +154,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getOfficesTillBranchOffice();
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -163,7 +164,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testGetChildOffices() throws ServiceException {
         OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         List<OfficeDetailsDto> officeList = officeBusinessService.getChildOffices(headOffice.getSearchId());
-       Assert.assertEquals(3, officeList.size());
+        Assert.assertEquals(3, officeList.size());
         officeList = null;
         headOffice = null;
     }
@@ -175,7 +176,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getChildOffices(headOffice.getSearchId());
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -185,7 +186,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testGetBranchesUnderUser() throws Exception {
         List<OfficeBO> officeList = officeBusinessService.getActiveBranchesUnderUser(personnel);
         Assert.assertNotNull(officeList);
-       Assert.assertEquals(1, officeList.size());
+        Assert.assertEquals(1, officeList.size());
     }
 
     public void testGetBranchesUnderUserFailure() throws Exception {
@@ -194,7 +195,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
             officeBusinessService.getActiveBranchesUnderUser(personnel);
             Assert.fail();
         } catch (ServiceException e) {
-           Assert.assertTrue(true);
+            Assert.assertTrue(true);
         } finally {
             StaticHibernateUtil.closeSession();
         }
@@ -204,13 +205,6 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testGetAllofficesForCustomFIeld() throws Exception {
         List<OfficeBO> officeList = officeBusinessService.getAllofficesForCustomFIeld();
         Assert.assertNotNull(officeList);
-       Assert.assertEquals(3, officeList.size());
-    }
-
-    public void testShouldReturnHeadOffice() throws ServiceException{
-        OfficeBO headOffice = officeBusinessService.getHeadOffice();
-        assertNotNull(headOffice);
-        assertNull(headOffice.getParentOffice());
-        assertEquals(OfficeLevel.HEADOFFICE,headOffice.getOfficeLevel());
+        Assert.assertEquals(3, officeList.size());
     }
 }
