@@ -807,4 +807,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
         return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
+
+    public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException {
+
+        LoanBO loan = this.loanDao.findById(loanAccountId);
+
+        return loan.isTrxnDateValid(trxnDate);
+    }
 }

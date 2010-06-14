@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -70,4 +71,6 @@ public interface LoanServiceFacade {
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
 
     LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
+
+    boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
 }
