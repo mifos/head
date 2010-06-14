@@ -1,4 +1,4 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.platform.accounts.fees.servicefacade;
 
 
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import org.mifos.accounts.fees.entities.AmountFeeEntity;
 import org.mifos.accounts.fees.entities.FeeEntity;
 import org.mifos.accounts.fees.entities.RateFeeEntity;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.servicefacade.*;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;

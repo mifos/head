@@ -27,7 +27,7 @@
 	<bean name="mifosApplicationContext" class="org.mifos.accounts.fees.servicefacade.MifosApplicationContext"/>
 	
 	<bean name="feeService" class="org.mifos.accounts.fees.servicefacade.FeeServiceImpl"/>
-	<bean name="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebFeeServiceFacade"/>
+	<bean name="feeServiceFacade" class="org.mifos.platform.accounts.fees.servicefacade.WebFeeServiceFacade"/>
     <!--
     <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
     -->
