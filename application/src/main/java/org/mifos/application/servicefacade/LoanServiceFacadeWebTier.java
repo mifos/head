@@ -31,18 +31,24 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanService;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
@@ -67,6 +73,7 @@ import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -115,13 +122,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
+    private final LoanDao loanDao;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao) {
+            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
+        this.loanDao = loanDao;
     }
 
     @Override
@@ -596,7 +605,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             new LoanPersistence().createOrUpdate(loan);
             StaticHibernateUtil.commitTransaction();
         } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
+        } finally {
+            StaticHibernateUtil.closeSession();
         }
 
         return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan,
@@ -608,6 +620,23 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         CustomerBO customer = customerDao.findCustomerById(customerId);
         LoanBO loan = redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
+
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        try {
+            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
+                    .getAccountState(), createdBy, loan));
+            new LoanPersistence().createOrUpdate(loan);
+            StaticHibernateUtil.commitTransaction();
+
+            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
+            new LoanPersistence().createOrUpdate(loan);
+            StaticHibernateUtil.commitTransaction();
+        } catch (PersistenceException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
 
         return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled(), loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
     }
@@ -622,14 +651,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException {
-        LoanBO loan = new LoanBusinessService().getAccount(loanAccountId);
+        LoanBO loan = this.loanDao.findById(loanAccountId);
         new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
-
     }
 
     @Override
     public LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException {
-       LoanBO loan = new LoanBusinessService().getAccount(loanAccountId);
+
+       LoanBO loan = this.loanDao.findById(loanAccountId);
 
        Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
        if (AccountingRules.isBackDatedTxnAllowed()) {
@@ -724,5 +753,58 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             throw new ServiceException(e);
         }
         return redoLoan;
+    }
+
+    @Override
+    public List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        List<LoanActivityEntity> loanAccountActivityDetails = loan.getLoanActivityDetails();
+        List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            loanActivityViewSet.add(loanActivity.toDto());
+        }
+
+        return loanActivityViewSet;
+    }
+
+    @Override
+    public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
+
+        LoanBO loanBO = this.loanDao.findById(accountId);
+
+        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
+        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
+        Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(viewOverDueInstallmentDetails.getSubTotal());
+
+        return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails, totalAmountDue, loanBO.getNextMeetingDate());
+    }
+
+    private InstallmentDetailsDto getUpcomingInstallmentDetails(
+            final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
+        if (upcomingAccountActionDate != null) {
+            LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
+            return new InstallmentDetailsDto(upcomingInstallment.getPrincipalDue(), upcomingInstallment
+                    .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
+                    .getPenaltyDue());
+        }
+        return new InstallmentDetailsDto(new Money(currency), new Money(currency), new Money(currency), new Money(
+                currency));
+    }
+
+    private InstallmentDetailsDto getOverDueInstallmentDetails(
+            final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
+        Money principalDue = new Money(currency);
+        Money interestDue = new Money(currency);
+        Money feesDue = new Money(currency);
+        Money penaltyDue = new Money(currency);
+        for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
+            LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
+            principalDue = principalDue.add(installment.getPrincipalDue());
+            interestDue = interestDue.add(installment.getInterestDue());
+            feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
+            penaltyDue = penaltyDue.add(installment.getPenaltyDue());
+        }
+        return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
 }

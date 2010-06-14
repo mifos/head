@@ -83,6 +83,10 @@ public class LoanPersistence extends Persistence {
         return amount;
     }
 
+    /**
+     * Use {@link LoanDao#findByGlobalAccountNum(String)}
+     */
+    @Deprecated
     public LoanBO findBySystemId(final String accountGlobalNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         queryParameters.put("globalAccountNumber", accountGlobalNum);

@@ -37,7 +37,7 @@ import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanDto;
 import org.mifos.accounts.loan.business.service.LoanService;
-import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
@@ -94,7 +94,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         loanPrdBusinessService = new LoanPrdBusinessService();
         clientBusinessService = new ClientBusinessService();
         loanProductService = new LoanProductService(loanPrdBusinessService, new FeeBusinessService());
-        loanService = new LoanService(loanProductService, new LoanDao());
+        loanService = new LoanService(loanProductService, new LoanDaoLegacyImpl());
     }
 
     @Override

@@ -76,11 +76,11 @@ import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
@@ -98,7 +98,6 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -132,9 +131,6 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -223,8 +219,6 @@ import org.mifos.security.util.UserContext;
  * </ul>
  */
 public class LoanAccountAction extends AccountAppAction {
-
-    private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
@@ -505,30 +499,28 @@ public class LoanAccountAction extends AccountAppAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward getInstallmentDetails(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-        Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
-        LoanBO loanBO = loanBusinessService.getAccount(accountId);
-        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
-                .getDetailsOfNextInstallment(), loanBO.getCurrency());
-        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
-                .getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
-        Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(
-                viewOverDueInstallmentDetails.getSubTotal());
-        SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, viewUpcomingInstallmentDetails, request);
-        SessionUtils.setAttribute(VIEW_OVERDUE_INSTALLMENT_DETAILS, viewOverDueInstallmentDetails, request);
-        SessionUtils.setAttribute(TOTAL_AMOUNT_OVERDUE, totalAmountDue, request);
 
-        SessionUtils.setAttribute(NEXTMEETING_DATE, loanBO.getNextMeetingDate(), request);
-        loanBO = null;
+        Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+
+        LoanInstallmentDetailsDto loanInstallmentDetailsDto = this.loanServiceFacade.retrieveInstallmentDetails(accountId);
+
+        SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getUpcomingInstallmentDetails(), request);
+        SessionUtils.setAttribute(VIEW_OVERDUE_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getOverDueInstallmentDetails(), request);
+        SessionUtils.setAttribute(TOTAL_AMOUNT_OVERDUE, loanInstallmentDetailsDto.getTotalAmountDue(), request);
+        SessionUtils.setAttribute(NEXTMEETING_DATE, loanInstallmentDetailsDto.getNextMeetingDate(), request);
+
         return mapping.findForward(VIEWINSTALLMENTDETAILS_SUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getAllActivity(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-        logger.debug("In loanAccountAction::getAllActivity()");
+
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        SessionUtils.setCollectionAttribute(LOAN_ALL_ACTIVITY_VIEW, loanBusinessService
-                .getAllActivityView(globalAccountNum), request);
+
+        List<LoanActivityDto> allLoanAccountActivities = this.loanServiceFacade.retrieveAllLoanAccountActivities(globalAccountNum);
+
+        SessionUtils.setCollectionAttribute(LOAN_ALL_ACTIVITY_VIEW, allLoanAccountActivities, request);
         return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);
     }
 
@@ -1288,34 +1280,6 @@ public class LoanAccountAction extends AccountAppAction {
         loanAccountActionForm.setCustomFields(createCustomFieldViews(loan.getAccountCustomFields(), request));
 
         loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
-    }
-
-    private InstallmentDetailsDto getUpcomingInstallmentDetails(
-            final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
-        if (upcomingAccountActionDate != null) {
-            LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
-            return new InstallmentDetailsDto(upcomingInstallment.getPrincipalDue(), upcomingInstallment
-                    .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
-                    .getPenaltyDue());
-        }
-        return new InstallmentDetailsDto(new Money(currency), new Money(currency), new Money(currency), new Money(
-                currency));
-    }
-
-    private InstallmentDetailsDto getOverDueInstallmentDetails(
-            final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
-        Money principalDue = new Money(currency);
-        Money interestDue = new Money(currency);
-        Money feesDue = new Money(currency);
-        Money penaltyDue = new Money(currency);
-        for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
-            LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
-            principalDue = principalDue.add(installment.getPrincipalDue());
-            interestDue = interestDue.add(installment.getInterestDue());
-            feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
-            penaltyDue = penaltyDue.add(installment.getPenaltyDue());
-        }
-        return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
 
     private void loadCustomFieldDefinitions(final HttpServletRequest request) throws Exception {
