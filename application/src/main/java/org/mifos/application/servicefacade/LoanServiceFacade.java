@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -62,4 +63,6 @@ public interface LoanServiceFacade {
     void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException;
 
     LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
+
+    boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ServiceException, AccountException;
 }

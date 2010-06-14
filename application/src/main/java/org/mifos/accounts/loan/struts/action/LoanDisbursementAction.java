@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.struts.action;
 
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,8 +43,6 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -60,7 +59,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -74,7 +72,6 @@ import org.mifos.security.util.UserContext;
 
 public class LoanDisbursementAction extends BaseAction {
 
-    private LoanBusinessService loanBusinessService = null;
     private AccountService accountService = null;
 
     public AccountService getAccountService() {
@@ -85,7 +82,6 @@ public class LoanDisbursementAction extends BaseAction {
 
         accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
                 new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
-        this.loanBusinessService = new LoanBusinessService();
     }
 
     public static ActionSecurity getSecurity() {
@@ -129,11 +125,6 @@ public class LoanDisbursementAction extends BaseAction {
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
-    private LoanBO getLoan(final LoanDisbursementActionForm loanDisbursementActionForm) throws ServiceException {
-        return ((LoanBusinessService) getService()).getAccount(Integer.valueOf(loanDisbursementActionForm
-                .getAccountId()));
-    }
-
     private static List<PaymentTypeEntity> getAcceptedPaymentTypes(final Short localeId) throws Exception {
         return AcceptedPaymentTypeService.getAcceptedPaymentTypes(localeId);
     }
@@ -143,8 +134,7 @@ public class LoanDisbursementAction extends BaseAction {
                 .isBackDatedTxnAllowed(), request);
     }
 
-    private void setIsRepaymentScheduleEnabled(final HttpServletRequest request) throws PageExpiredException,
-            PersistenceException {
+    private void setIsRepaymentScheduleEnabled(final HttpServletRequest request) throws PageExpiredException {
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
                 new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
     }
@@ -167,17 +157,15 @@ public class LoanDisbursementAction extends BaseAction {
     public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
 
-        LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         LoanDisbursementActionForm actionForm = (LoanDisbursementActionForm) form;
-        LoanBO loan = getLoan(actionForm);
-        checkVersionMismatch(savedloan.getVersionNo(), loan.getVersionNo());
-        loan.setVersionNo(savedloan.getVersionNo());
+
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc.getPreferredLocale());
         trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
         Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc.getPreferredLocale());
 
-        if (!loan.isTrxnDateValid(trxnDate)) {
+        Integer loanAccountId = Integer.valueOf(actionForm.getAccountId());
+        if (!loanServiceFacade.isTrxnDateValid(loanAccountId, trxnDate)) {
             throw new AccountException("errors.invalidTxndate");
         }
 
@@ -189,8 +177,9 @@ public class LoanDisbursementAction extends BaseAction {
             final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanPaymentTypeDtoForId(Short
                     .valueOf(modeOfPaymentId));
             final String comment = "";
-            payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(loan
-                    .getAccountId()), loan.getLoanAmount().getAmount(), new LocalDate(trxnDate), paymentType, comment,
+            final BigDecimal disbursalAmount = new BigDecimal(actionForm.getLoanAmount());
+            payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
+                    loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
                     new LocalDate(receiptDate), actionForm.getReceiptId()));
             getAccountService().disburseLoans(payment);
 
@@ -214,13 +203,6 @@ public class LoanDisbursementAction extends BaseAction {
         throw new MifosRuntimeException("Expected loan PaymentTypeDto not found for id: " + id);
     }
 
-    private LoanBusinessService getLoanBusinessService() throws ServiceException {
-        if (loanBusinessService == null) {
-            loanBusinessService = new LoanBusinessService();
-        }
-        return loanBusinessService;
-    }
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
@@ -234,7 +216,7 @@ public class LoanDisbursementAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getLoanBusinessService();
+        return null;
     }
 
     @Override

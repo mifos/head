@@ -709,4 +709,13 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         return redoLoan;
     }
+
+    @Override
+    public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ServiceException, AccountException {
+
+        LoanBO loan = new LoanBusinessService().getAccount(loanAccountId);
+
+        return loan.isTrxnDateValid(trxnDate);
+    }
+
 }
