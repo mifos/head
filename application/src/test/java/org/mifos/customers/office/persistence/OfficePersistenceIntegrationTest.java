@@ -127,14 +127,6 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertTrue(getOfficePersistence().isOfficeShortNameExist("MIF2"));
     }
 
-    public void testGetCountActiveChildern() throws Exception {
-       Assert.assertTrue(getOfficePersistence().hasActiveChildern(Short.valueOf("1")));
-    }
-
-    public void testGetCountActivePeronnel() throws Exception {
-       Assert.assertTrue(getOfficePersistence().hasActivePeronnel(Short.valueOf("1")));
-    }
-
     public void testGetActiveParents() throws Exception {
         List<OfficeDetailsDto> parents = getOfficePersistence()
                 .getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
@@ -159,7 +151,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
                 .getActiveLevels(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
        Assert.assertEquals(4, officeLevels.size());
 
-        Set<String> levels = new HashSet();
+        Set<String> levels = new HashSet<String>();
         levels.add("Regional Office");
         levels.add("Divisional Office");
         levels.add("Area Office");
@@ -174,7 +166,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
         List<OfficeDetailsDto> officeLevels = getOfficePersistence().getStatusList(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
        Assert.assertEquals(2, officeLevels.size());
 
-        Set<String> levels = new HashSet();
+        Set<String> levels = new HashSet<String>();
         levels.add("Active");
         levels.add("Inactive");
 

@@ -789,9 +789,15 @@ select coll.*,
         from
                  (select a.customer_id as customer_id, 
                          concat_ws(':',po.prd_offering_short_name, ifnull(round(
-                            sum(l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)),2),0)
+                            sum(
+                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) - 
+                         (l.principal_paid+l.interest_paid+l.penalty_paid+ifnull(l.misc_fees_paid,0))
+                            ),2),0)
                          ) as loandue, 
-                         ifnull(sum(l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)),0)
+                         ifnull(sum(
+                         (l.principal+l.interest+l.penalty+ifnull(l.misc_fees,0)) - 
+                         (l.principal_paid+l.interest_paid+l.penalty_paid+ifnull(l.misc_fees_paid,0))
+                         ),0)
                           as tloandue
                  from customer k
                  join customer_meeting cm on cm.customer_id = k.customer_id

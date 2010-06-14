@@ -18,21 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.business;
+package org.mifos.customers.office.business.service;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mifos.framework.TestUtils;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
-public class OfficeBOTest {
+public interface OfficeServiceFacade {
 
-    @Test
-    @Ignore
-    public void testEqualsAndHashcode() throws Exception {
-        OfficeBO x = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO y = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO z = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO notx = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("2"), null, null);
-        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
-    }
+    public String topLevelOfficeNames(String ids);
+
+    public OfficeHierarchyDto headOfficeHierarchy();
+
+    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException;
+
 }
