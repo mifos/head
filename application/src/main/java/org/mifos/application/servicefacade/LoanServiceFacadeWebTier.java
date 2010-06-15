@@ -833,6 +833,13 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
+    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        loan.updateDetails(userContext);
+        return new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
+    }
+
     public Money getTotalEarlyRepayAmount(String globalAccountNum) {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -846,6 +853,5 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
-
     }
 }

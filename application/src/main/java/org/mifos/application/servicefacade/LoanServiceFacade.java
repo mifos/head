@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
@@ -85,6 +86,8 @@ public interface LoanServiceFacade {
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
 
     LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId);
+
+    List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum);
 
     Money getTotalEarlyRepayAmount(String globalAccountNum);
 
