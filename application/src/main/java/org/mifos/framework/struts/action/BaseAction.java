@@ -95,7 +95,9 @@ public abstract class BaseAction extends DispatchAction {
 
     private static final MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
-    protected abstract BusinessService getService() throws ServiceException;
+    protected BusinessService getService() throws ServiceException {
+        return null;
+    }
 
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
