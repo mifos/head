@@ -29,17 +29,19 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.business.service.FundBusinessService;
 import org.mifos.accounts.fund.struts.actionforms.FundActionForm;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -53,11 +55,11 @@ public class FundAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getFundBizService();
+        return null;
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -110,12 +112,23 @@ public class FundAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start create method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
         FundCodeEntity fundCodeEntity = getFundCode(fundActionForm.getFundCode(), request);
         FundBO fundBO = new FundBO(fundCodeEntity, fundActionForm.getFundName());
-        fundBO.save();
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            this.fundDao.save(fundBO);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -167,7 +180,21 @@ public class FundAction extends BaseAction {
         FundActionForm fundActionForm = (FundActionForm) form;
         Short fundId = getShortValue(fundActionForm.getFundCodeId());
         FundBO fundBO = getFund(fundId);
-        fundBO.update(fundActionForm.getFundName());
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            this.fundDao.update(fundBO, fundActionForm.getFundName());
+            StaticHibernateUtil.commitTransaction();
+        } catch (ApplicationException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new ApplicationException(e.getKey(), e);
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
@@ -182,24 +209,20 @@ public class FundAction extends BaseAction {
         return mapping.findForward(ActionForwards.preview_failure.toString());
     }
 
-    private FundBusinessService getFundBizService() {
-        return new FundBusinessService();
-    }
-
     private void doCleanUp(HttpServletRequest request) {
         SessionUtils.setAttribute(FundConstants.FUND_ACTIONFORM, null, request.getSession());
     }
 
     private List<FundCodeEntity> getFundCodes() throws Exception {
-        return getFundBizService().getFundCodes();
+        return this.fundDao.findAllFundCodes();
     }
 
     private List<FundBO> getFunds() throws Exception {
-        return getFundBizService().getSourcesOfFund();
+        return this.fundDao.findAllFunds();
     }
 
     private FundBO getFund(Short fundId) throws Exception {
-        return getFundBizService().getFund(fundId);
+        return this.fundDao.findById(fundId);
     }
 
     private void setFormAttributes(FundActionForm actionForm, String fundName, String fundCodeValue) {

@@ -26,6 +26,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
@@ -60,5 +62,23 @@ public class FundCodeEntity extends AbstractEntity {
 
     public void setFundCodeValue(String fundCode) {
         this.fundCodeValue = fundCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FundCodeEntity rhs = (FundCodeEntity) obj;
+        return new EqualsBuilder().append(this.fundCodeId, rhs.fundCodeId).append(this.fundCodeValue, rhs.fundCodeValue).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int initialNonZeroOddNumber = 7;
+        int multiplierNonZeroOddNumber = 7;
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.fundCodeId).append(this.fundCodeValue).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(this.fundCodeId).append(" : ").append(this.fundCodeValue).toString();
     }
 }

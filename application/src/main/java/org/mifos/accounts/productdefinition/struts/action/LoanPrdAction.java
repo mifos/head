@@ -39,7 +39,6 @@ import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.business.service.FundBusinessService;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -335,7 +334,7 @@ public class LoanPrdAction extends BaseAction {
         prdDefLogger.debug("start Load master data method of Loan Product Action ");
         LoanPrdBusinessService service = new LoanPrdBusinessService();
         FeeBusinessService feeService = new FeeBusinessService();
-        FundBusinessService fundService = new FundBusinessService();
+
         List<FeeBO> fees = feeService.getAllApplicableFeesForLoanCreation();
         Short localeId = getUserContext(request).getLocaleId();
 
@@ -349,7 +348,7 @@ public class LoanPrdAction extends BaseAction {
                 InterestTypesEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, getMasterEntities(
                 InterestCalcTypeEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, fundService.getSourcesOfFund(),
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, this.fundDao.findAllFunds(),
                 request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANFEESLIST, getFeeViewList(
                 getUserContext(request), fees), request);

@@ -55,7 +55,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -534,20 +533,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, e.getKey());
-        }
-    }
-
-    public void testUpdateBranchFailure_OfficeInactive() throws Exception {
-        createObjectsForClientTransfer();
-        office.update(office.getOfficeName(), office.getShortName(), OfficeStatus.INACTIVE, office.getOfficeLevel(),
-                office.getParentOffice(), null, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        try {
-            client.transferToBranch(office);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, e.getKey());
         }
     }
 
