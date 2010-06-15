@@ -821,4 +821,13 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         loan.updateDetails(userContext);
         return loan;
     }
+
+    @Override
+    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+//        loanBusinessService.initialize(loanBO.getAccountStatusChangeHistory());
+        loan.updateDetails(userContext);
+        return new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
+    }
 }
