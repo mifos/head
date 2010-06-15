@@ -24,6 +24,10 @@ import java.util.List;
 
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
+import org.mifos.application.servicefacade.FeeDetailsForLoadDto;
+import org.mifos.application.servicefacade.FeeDetailsForManageDto;
+import org.mifos.application.servicefacade.FeeDetailsForPreviewDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
@@ -41,4 +45,9 @@ public interface FeeServiceFacade {
 
     public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException;
 
+    public FeeDetailsForLoadDto retrieveDetailsForFeeLoad(Short localeId) throws ApplicationException;
+
+    public FeeDetailsForPreviewDto retrieveDetailsforFeePreview(Short currencyId);
+
+    public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId, Short localeId) throws ApplicationException;
 }
