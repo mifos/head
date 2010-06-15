@@ -321,11 +321,10 @@ public abstract class BaseAction extends DispatchAction {
 
     /**
      * This should return true if we don't want to the automatic conversion of
-     * forms to business objects (for example, if the data from the form ends up
-     * in several business objects)
+     * forms to business objects (for example, if the data from the form ends up in several business objects)
      */
     protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return false;
+        return true;
     }
 
     protected UserContext getUserContext(HttpServletRequest request) {

@@ -54,11 +54,6 @@ public class FeeAction extends BaseAction {
     public FeeAction() throws Exception {
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
-
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("feeaction");
         security.allow("search", SecurityConstants.VIEW);
