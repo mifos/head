@@ -160,4 +160,30 @@ public class LoanActivityEntity extends AbstractEntity {
         return trxnCreatedDate;
     }
 
+    public LoanActivityDto toDto() {
+        LoanActivityDto loanActivityDto = new LoanActivityDto(this.account.getCurrency());
+        loanActivityDto.setId(this.account.getAccountId());
+        loanActivityDto.setActionDate(this.trxnCreatedDate);
+        loanActivityDto.setActivity(this.comments);
+        loanActivityDto.setPrincipal(removeSign(this.principal));
+        loanActivityDto.setInterest(removeSign(this.interest));
+        loanActivityDto.setPenalty(removeSign(this.penalty));
+        loanActivityDto.setFees(removeSign(this.fee));
+        loanActivityDto.setTotal(removeSign(this.fee).add(removeSign(this.penalty)).add(removeSign(this.principal)).add(removeSign(this.interest)));
+        loanActivityDto.setTimeStamp(this.trxnCreatedDate);
+        loanActivityDto.setRunningBalanceInterest(this.interestOutstanding);
+        loanActivityDto.setRunningBalancePrinciple(this.principalOutstanding);
+        loanActivityDto.setRunningBalanceFees(this.feeOutstanding);
+        loanActivityDto.setRunningBalancePenalty(this.penaltyOutstanding);
+
+        return loanActivityDto;
+    }
+
+    private Money removeSign(final Money amount) {
+        if (amount != null && amount.isLessThanZero()) {
+            return amount.negate();
+        }
+
+        return amount;
+    }
 }

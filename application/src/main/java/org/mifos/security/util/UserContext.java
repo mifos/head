@@ -20,7 +20,6 @@
 
 package org.mifos.security.util;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -53,7 +52,7 @@ public class UserContext implements Serializable {
     /**
      * Set of roles id's associated with the user
      */
-    private Set roles;
+    private Set<Short> roles;
 
     private Short branchId;
 
@@ -160,11 +159,11 @@ public class UserContext implements Serializable {
         this.name = name;
     }
 
-    public Set getRoles() {
+    public Set<Short> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set roles) {
+    public void setRoles(Set<Short> roles) {
         this.roles = roles;
     }
 
@@ -225,10 +224,8 @@ public class UserContext implements Serializable {
 
     }
 
-    public void dump(PrintStream out) throws IOException {
+    public void dump(PrintStream out) {
         out.print("User " + name + ", id=" + id + ", global=" + userGlobalNo + "\n");
-        // out.print("MFI locale ID=" + mfiLocaleId +
-        // ", locale=" + mfiLocale + "\n");
         out.print("Locale ID=" + localeId + ", locale=" + preferredLocale + "\n");
     }
 

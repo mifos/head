@@ -9,6 +9,8 @@
     	<constructor-arg ref="customerDao" />
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="fundDao" />
+    	<constructor-arg ref="loanDao" />
     </bean>
     
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" >
@@ -36,6 +38,11 @@
     
     <bean id="holidayServiceFacade" class="org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier" >
     	<constructor-arg ref="holidayService" />
+    	<constructor-arg ref="holidayDao" />
+    </bean>
+    
+    <bean id="officeServiceFacade" class="org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier" >
+    	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="holidayDao" />
     </bean>
     

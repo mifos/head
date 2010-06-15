@@ -73,7 +73,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -172,7 +172,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private RoundingMode savedFinalRoundingMode = null;
     private Short savedDigitAfterDecimal;
 
-    private LoanDao loanDao;
+    private LoanDaoLegacyImpl loanDao;
     private AccountPersistence accountPersistence = null;
 
     @Override
@@ -195,7 +195,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         AccountingRules.setFinalRoundingMode(RoundingMode.CEILING);
         AccountingRules.setDigitsAfterDecimal((short) 1);
 
-        loanDao = new LoanDao();
+        loanDao = new LoanDaoLegacyImpl();
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public class OfficeStatusEntity extends MasterDataEntity {
 
@@ -41,11 +40,7 @@ public class OfficeStatusEntity extends MasterDataEntity {
     }
 
     public OfficeStatus getStatus() throws OfficeException {
-        try {
-            return OfficeStatus.getOfficeStatus(this.getId());
-        } catch (PropertyNotFoundException e) {
-            throw new OfficeException(e);
-        }
+        return OfficeStatus.getOfficeStatus(this.getId());
     }
 
     private Short localeId;

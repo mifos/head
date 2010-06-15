@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
@@ -37,6 +39,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDetails;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.core.MifosRuntimeException;
@@ -79,6 +82,7 @@ public class IntegrationTestObjectMother {
     private static final OfficePersistence officePersistence = new OfficePersistence();
     private static final OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
     private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    private static final FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -418,7 +422,10 @@ public class IntegrationTestObjectMother {
           }
     }
 
-
+    /**
+     * remove and use {@link IntegrationTestObjectMother#createHoliday(HolidayDetails, List)}
+     */
+    @Deprecated
     public static void saveHoliday (Holiday holiday) {
         try {
             StaticHibernateUtil.startTransaction();
@@ -484,5 +491,37 @@ public class IntegrationTestObjectMother {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    public static FundBO createFund(FundBO fund) throws Exception {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            fundDao.save(fund);
+            StaticHibernateUtil.commitTransaction();
+            return fund;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createFundCode(FundCodeEntity fundCode) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            customerPersistence.createOrUpdate(fundCode);
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static FundBO findFundByName(final String fundName) {
+        return fundDao.findByName(fundName);
     }
 }

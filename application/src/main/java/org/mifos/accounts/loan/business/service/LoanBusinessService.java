@@ -29,6 +29,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.config.business.service.ConfigurationBusinessService;
@@ -95,6 +96,10 @@ public class LoanBusinessService implements BusinessService {
         return null;
     }
 
+    /**
+     * @deprecated use {@link LoanDao#findByGlobalAccountNum(String)}
+     */
+    @Deprecated
     public LoanBO findBySystemId(final String accountGlobalNum) throws ServiceException {
         try {
             return getLoanPersistence().findBySystemId(accountGlobalNum);
@@ -128,6 +133,9 @@ public class LoanBusinessService implements BusinessService {
         return recentActivityView;
     }
 
+    /**
+     */
+    @Deprecated
     public List<LoanActivityDto> getAllActivityView(final String globalAccountNumber) throws ServiceException {
         LoanBO loanBO = findBySystemId(globalAccountNumber);
         List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
@@ -166,6 +174,10 @@ public class LoanBusinessService implements BusinessService {
         return amount;
     }
 
+    /**
+     * @deprecated - use {@link LoanDao#findById(Integer)}
+     */
+    @Deprecated
     public LoanBO getAccount(final Integer accountId) throws ServiceException {
         try {
             return getLoanPersistence().getAccount(accountId);

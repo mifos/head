@@ -62,7 +62,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;

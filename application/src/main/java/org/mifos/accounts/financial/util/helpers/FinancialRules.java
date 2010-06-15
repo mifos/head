@@ -23,7 +23,6 @@ package org.mifos.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.spring.SpringUtil;
 
 /**

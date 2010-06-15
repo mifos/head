@@ -168,7 +168,7 @@ public class ViewOrganizationSettingsAction extends BaseAction {
         return processFlowRules;
     }
 
-    private Properties getMiscRules(HttpSession httpSession) throws ServiceException {
+    private Properties getMiscRules(HttpSession httpSession) {
         Properties misc = new Properties();
 
         Integer timeoutVal = httpSession.getMaxInactiveInterval() / 60;
