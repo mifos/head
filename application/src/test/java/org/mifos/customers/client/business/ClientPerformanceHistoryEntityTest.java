@@ -26,18 +26,12 @@ import static org.mockito.Mockito.*;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.service.test.TestMode;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

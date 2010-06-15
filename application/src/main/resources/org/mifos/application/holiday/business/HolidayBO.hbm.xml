@@ -19,6 +19,22 @@
 	</class>
 
 	<!-- Holiday Specific Queries  -->
+	<query name="findById">
+		<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
+	                  where holidayBO.id = :holidayId]]>
+	</query>
+	<query name="holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst">
+   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       			join office.holidays holidayBO,
+   	       			org.mifos.customers.office.business.OfficeBO branch
+                    where holidayBO.holidayThruDate >= date(:CURRENT_DATE)
+					and branch.searchId like concat(office.searchId, '%')
+					and branch.officeId = :OFFICE_ID
+                    order by holidayBO.holidayFromDate
+   	       ]]>
+	</query>
+	
+	
 	<query name="holiday.getOfficeHolidays">
    	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
    	       			   join office.holidays holidayBO
@@ -28,9 +44,10 @@
                        order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
-	<query name="holiday.getHoildaysByFlag">
+	<query name="holiday.getUnappliedHolidaysEarliestFirst">
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
-	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
+	                  where holidayBO.holidayChangesAppliedFlag = 0
+                       order by holidayBO.holidayFromDate
 			]]>
 	</query>
 	

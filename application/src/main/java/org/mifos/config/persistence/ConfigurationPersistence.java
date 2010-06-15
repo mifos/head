@@ -32,9 +32,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.business.ConfigurationKeyValueInteger;
 import org.mifos.config.util.helpers.ConfigConstants;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -43,12 +41,12 @@ import org.mifos.framework.persistence.Persistence;
  * {@link ConfigurationKeyValueInteger} and friends.
  */
 public class ConfigurationPersistence extends Persistence {
-    private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 
     private static final String KEY_QUERY_PARAMETER = "KEY";
 
     public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 
+    @SuppressWarnings("unchecked")
     public MifosCurrency getCurrency(String currencyCode) throws RuntimeException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("currencyCode", currencyCode);
@@ -76,12 +74,16 @@ public class ConfigurationPersistence extends Persistence {
      * @return if the key is found return the corresponding
      *         ConfigurationKeyValueInteger, if not then return null.
      */
-    public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key) throws PersistenceException {
+    public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key) {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(KEY_QUERY_PARAMETER, key);
-        ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
-                NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
-        return keyValue;
+        try {
+            ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
+                    NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);
+            return keyValue;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     /**
@@ -90,13 +92,14 @@ public class ConfigurationPersistence extends Persistence {
      * @throws RuntimeException
      *             thrown if no value is found for the key.
      */
-    public int getConfigurationValueInteger(String key) throws PersistenceException {
+    public int getConfigurationValueInteger(String key) {
         ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+
         if (keyValue != null) {
             return keyValue.getValue();
-        } else {
-            throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
         }
+
+        throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
     }
 
     /**
@@ -125,20 +128,20 @@ public class ConfigurationPersistence extends Persistence {
     }
 
     /**
-     * Helper method for loan repayments independent of meeting schedule. TODO
-     * Find a better home for me
+     * Helper method for loan repayments independent of meeting schedule.
      */
-    public boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
+    public boolean isRepaymentIndepOfMeetingEnabled() {
         Integer repIndepOfMeetingEnabled = getConfigurationKeyValueInteger(
                 REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
         return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
     }
 
+    @SuppressWarnings("unchecked")
     public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
     }
 
-    public boolean isGlimEnabled() throws PersistenceException {
+    public boolean isGlimEnabled() {
         return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED) == LoanConstants.GLIM_ENABLED_VALUE);
     }
 }

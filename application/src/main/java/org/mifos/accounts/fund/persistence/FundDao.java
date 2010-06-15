@@ -18,21 +18,28 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.business;
+package org.mifos.accounts.fund.persistence;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.mifos.framework.TestUtils;
+import java.util.List;
 
-public class OfficeBOTest {
+import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.exception.FundException;
+import org.mifos.application.master.business.FundCodeEntity;
 
-    @Test
-    @Ignore
-    public void testEqualsAndHashcode() throws Exception {
-        OfficeBO x = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO y = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO z = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("1"), null, null);
-        OfficeBO notx = OfficeBO.makeForTest(TestUtils.makeUser(), Short.valueOf("2"), null, null);
-        TestUtils.assertEqualsAndHashContract(x, notx, y, z);
-    }
+public interface FundDao {
+
+    public FundBO findById(Short fundId);
+
+    public FundBO findByName(String fundName);
+
+    public int countOfFundByName(String fundName);
+
+    public List<FundCodeEntity> findAllFundCodes();
+
+    public List<FundBO> findAllFunds();
+
+    public void save(FundBO fund);
+
+    public void update(FundBO fund, String fundName) throws FundException;
+
 }

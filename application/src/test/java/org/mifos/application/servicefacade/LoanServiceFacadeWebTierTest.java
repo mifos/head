@@ -29,9 +29,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -40,6 +42,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -60,6 +63,12 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private CustomerDao customerDao;
 
+    @Mock
+    private PersonnelDao personnelDao;
+
+    @Mock
+    private FundDao fundDao;
+
     // test data
     @Mock
     private CustomerBO customer;
@@ -74,7 +83,7 @@ public class LoanServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao);
     }
 
     @Test
@@ -94,11 +103,10 @@ public class LoanServiceFacadeWebTierTest {
         when(activeLoanProduct.getLoanOfferingMeetingValue()).thenReturn(meeting);
 
         // exercise test
-        List<LoanOfferingBO> activeLoanProductsForCustomer = loanServiceFacade
-                .loadActiveProductsApplicableForCustomer(customer);
+        List<PrdOfferingDto> activeLoanProductsForCustomer = loanServiceFacade.retrieveActiveLoanProductsApplicableForCustomer(customer);
 
         // verification
-        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct));
+        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct.toDto()));
     }
 
     @Test

@@ -1131,8 +1131,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
         return NOOFINSTALL_UNKNOWN.equals(checkNoOfInstallType());
     }
 
-    // FIXME: move this into test code.
-
     public void setLoanAmountSameForAllLoan(final LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
         getLoanAmountSameForAllLoan().clear();
         getLoanAmountSameForAllLoan().add(loanAmountSameForAllLoan);
@@ -1142,5 +1140,4 @@ public class LoanOfferingBO extends PrdOfferingBO {
         getNoOfInstallSameForAllLoan().clear();
         getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
     }
-
 }

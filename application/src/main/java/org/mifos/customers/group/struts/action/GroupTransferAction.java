@@ -38,7 +38,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -239,30 +238,26 @@ public class GroupTransferAction extends BaseAction {
 
     }
 
-    private void checkBeforeRemoving(CustomerBO customerBO, @SuppressWarnings("unused") GroupTransferActionForm actionForm,
+    private void checkBeforeRemoving(CustomerBO customerBO,
+            @SuppressWarnings("unused") GroupTransferActionForm actionForm,
             @SuppressWarnings("unused") HttpServletRequest request) throws CustomerException {
 
         if (customerBO.hasActiveLoanAccounts()) {
             throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
         }
 
-        try {
+        if (customerBO.getParentCustomer() != null) {
 
-            if (customerBO.getParentCustomer() != null) {
+            boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
 
-                boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
-
-                if (glimEnabled) {
-                    if (customerIsMemberOfAnyExistingGlimLoanAccount(customerBO, customerBO.getParentCustomer())) {
-                        throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-                    }
-                } else if (customerBO.getParentCustomer().hasActiveLoanAccounts()) {
-                    // not glim - then disallow removing client from group with active account
+            if (glimEnabled) {
+                if (customerIsMemberOfAnyExistingGlimLoanAccount(customerBO, customerBO.getParentCustomer())) {
                     throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
                 }
+            } else if (customerBO.getParentCustomer().hasActiveLoanAccounts()) {
+                // not glim - then disallow removing client from group with active account
+                throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
             }
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
         }
     }
 

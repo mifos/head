@@ -29,7 +29,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 
@@ -63,13 +62,10 @@ public class LoanUIHelperFn {
 
     static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState,
             ConfigurationBusinessService configService) {
-        try {
-            if (!configService.isGlimEnabled()) {
-                return false;
-            }
-        } catch (ServiceException e) {
-            throw new RuntimeException(e);
+        if (!configService.isGlimEnabled()) {
+            return false;
         }
+
         if (accountState == null) {
             return false;
         }

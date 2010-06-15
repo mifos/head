@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
@@ -364,18 +365,18 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         prdLogger.debug("getting the Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_ACTIVE;
-        } else {
-            return PrdStatus.SAVINGS_ACTIVE;
         }
+
+        return PrdStatus.SAVINGS_ACTIVE;
     }
 
     private PrdStatus getInActivePrdStatus(final ProductTypeEntity prdType) {
         prdLogger.debug("getting the In Active Product status for product Type :" + prdType.getProductTypeID());
         if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue())) {
             return PrdStatus.LOAN_INACTIVE;
-        } else {
-            return PrdStatus.SAVINGS_INACTIVE;
         }
+
+        return PrdStatus.SAVINGS_INACTIVE;
     }
 
     private void validateDuplicateProductOfferingName(final String productOfferingName) throws ProductDefinitionException {
@@ -488,5 +489,9 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         }
 
         return true;
+    }
+
+    public PrdOfferingDto toDto() {
+        return new PrdOfferingDto(this.prdOfferingId, this.prdOfferingName, this.globalPrdOfferingNum);
     }
 }

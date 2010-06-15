@@ -22,11 +22,9 @@ package org.mifos.application.holiday.struts.action;
 
 import junit.framework.Assert;
 
-import org.mifos.accounts.fund.struts.action.FundAction;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;

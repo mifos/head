@@ -38,6 +38,10 @@ public interface Holiday {
 
     RepaymentRuleTypes getRepaymentRuleType();
 
+    Integer getId();
+
+    String getName();
+
     DateTime getFromDate();
 
     DateTime getThruDate();

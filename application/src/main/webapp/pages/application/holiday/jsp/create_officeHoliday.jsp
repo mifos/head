@@ -31,21 +31,11 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
         <span id="page.id" title="create_officeHoliday" />
 		<SCRIPT>
-	function ViewHolidays(){
-	    //alert("ViewHolidays() have been called");
-		holidayActionForm.action="holidayAction.do?method=get";
-		//alert("ViewHolidays() will submit");
-		holidayActionForm.submit();
-	}
-
-	function ViewHolidays(form){
-		//alert("ViewHolidays(form) have been called");
-		holidayActionForm.action="holidayAction.do?method=get";
-		holidayActionForm.submit();
-		//form.action="holidayAction.do?method=get";
-		//form.submit();
-	}
-</SCRIPT>
+            function fun_cancel()
+            {
+                location.href="AdminAction.do?method=load";
+            }
+        </SCRIPT>
 	  <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	  <script type="text/javascript" src="pages/framework/js/jquery/jquery-1.4.2.min.js"></script>
 	  <script type="text/javascript" src="pages/framework/js/jstree/jquery.jstree.js"></script>
@@ -162,22 +152,11 @@ explanation of the license and how it is applied.
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:otherwise>
-							</c:choose> &nbsp; <c:choose>
-								<c:when test="${param.input == 'loan'}">
+							</c:choose> &nbsp;
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										onclick="ViewHolidays()"><!--ViewHolidays(this.form)"-->
+										onclick="javascript:fun_cancel()">
 										<mifos:mifoslabel name="holiday.button.cancel" bundle="HolidayUIResources"></mifos:mifoslabel>
-									</html-el:button>
-
-								</c:when>
-								<c:otherwise>
-									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										onclick="ViewHolidays()">
-										<mifos:mifoslabel name="holiday.button.cancel" bundle="HolidayUIResources"></mifos:mifoslabel>
-									</html-el:button>
-
-								</c:otherwise>
-							</c:choose></td>
+									</html-el:button></td>
 						</tr>
 					</table>
 					</td>

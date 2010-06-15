@@ -22,7 +22,6 @@ package org.mifos.accounts.persistence;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +51,7 @@ import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerScheduleEntity;
@@ -67,6 +67,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -101,12 +102,13 @@ public class AccountPersistence extends Persistence {
         queryParameters.put("savingsAccountTypeId", AccountTypes.SAVINGS_ACCOUNT.getValue());
         queryParameters.put("productShortName", productShortName);
         Object queryResult = execUniqueResultNamedQuery(
-                NamedQueryConstants.FIND_SAVINGS_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME, queryParameters);
+                NamedQueryConstants.FIND_SAVINGS_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME,
+                queryParameters);
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
-    public AccountBO findLoanByClientGovernmentIdAndProductShortName(String clientGovernmentId,
-            String productShortName) throws PersistenceException {
+    public AccountBO findLoanByClientGovernmentIdAndProductShortName(String clientGovernmentId, String productShortName)
+            throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("clientGovernmentId", clientGovernmentId);
         queryParameters.put("loanAccountTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
@@ -461,121 +463,55 @@ public class AccountPersistence extends Persistence {
         }
     }
 
-    public List<Integer> getListOfAccountIdsHavingLoanSchedulesWithinDates(final Date fromDate, final Date thruDate)
-            throws PersistenceException {
-
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingLoanSchedulesWithinDates",
-                fromDate, thruDate);
-    }
-
-    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesWithinDates(final Date fromDate, final Date thruDate)
-            throws PersistenceException {
-
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingSavingsSchedulesWithinDates",
-                fromDate, thruDate);
-    }
-
-    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesWithinDates(final Date fromDate, final Date thruDate)
-            throws PersistenceException {
-
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingCustomerSchedulesWithinDates",
-                fromDate, thruDate);
-    }
-
     @SuppressWarnings("unchecked")
-    private List<Integer> getListOfAccountIdsHavingSchedulesWithinDates(final String queryName, final Date fromDate,
-            final Date thruDate) throws PersistenceException {
+    private List<Object[]> getListOfAccountIdsHavingSchedulesWithinAHoliday(final String queryName, final Holiday holiday)
+            throws PersistenceException {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FROM_DATE", fromDate);
-        parameters.put("THRU_DATE", thruDate);
+        parameters.put("HOLIDAY_ID", holiday.getId());
+        parameters.put("HOLIDAY_FROM_DATE", DateUtils.getLocalDateFromDate(holiday.getFromDate().toDate()).toString());
+        parameters.put("HOLIDAY_THRU_DATE", DateUtils.getLocalDateFromDate(holiday.getThruDate().toDate()).toString());
 
-        List<Integer> queryResult = executeNamedQuery(queryName, parameters);
-
-        List<Integer> accountIds = new ArrayList<Integer>();
-        for (Integer obj : queryResult) {
-            accountIds.add(obj);
+        List<Object[]> queryResult = executeNamedQuery(queryName, parameters);
+        if (queryResult != null) {
+            return queryResult;
         }
 
-        return accountIds;
+        return new ArrayList<Object[]>();
     }
 
-    public List<Integer> getListOfAccountIdsHavingLoanSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+    public List<Object[]> getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(final Holiday holiday)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingLoanSchedulesWithinDates",
-                fromDate, thruDate);
+        return getListOfAccountIdsHavingSchedulesWithinAHoliday("getListOfAccountIdsHavingLoanSchedulesWithinAHoliday",
+                holiday);
     }
 
-    public List<Integer> getListOfAccountIdsHavingSavingsSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+    public List<Object[]> getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday(final Holiday holiday)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingSavingsSchedulesWithinDates",
-                fromDate, thruDate);
+        return getListOfAccountIdsHavingSchedulesWithinAHoliday(
+                "getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday", holiday);
     }
 
-    public List<Integer> getListOfAccountIdsHavingCustomerSchedulesWithinDates(final DateTime fromDate, final DateTime thruDate)
+    public List<Object[]> getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(final Holiday holiday)
             throws PersistenceException {
 
-        return getListOfAccountIdsHavingSchedulesWithinDates("getListOfAccountIdsHavingCustomerSchedulesWithinDates",
-                fromDate, thruDate);
+        return getListOfAccountIdsHavingSchedulesWithinAHoliday(
+                "getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday", holiday);
     }
 
-    @SuppressWarnings("unchecked")
-    private List<Integer> getListOfAccountIdsHavingSchedulesWithinDates(final String queryName, final DateTime fromDate,
-            final DateTime thruDate) throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("FROM_DATE", fromDate.toDate());
-        parameters.put("THRU_DATE", thruDate.toDate());
-
-        List<Integer> queryResult = executeNamedQuery(queryName, parameters);
-
-        List<Integer> accountIds = new ArrayList<Integer>();
-        for (Integer obj : queryResult) {
-            accountIds.add(obj);
-        }
-
-        return accountIds;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<LoanScheduleEntity> getLoanSchedulesForAccountThatAreWithinDates(Integer accountId, Date fromDate,
-            Date thruDate) throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate);
-        parameters.put("THRU_DATE", thruDate);
-
-        return executeNamedQuery("getLoanSchedulesForAccountThatAreWithinDates", parameters);
-    }
-
-    /**
-     * variant of above method that uses DateTime
-     */
     @SuppressWarnings("unchecked")
     public List<LoanScheduleEntity> getLoanSchedulesForAccountThatAreWithinDates(Integer accountId, DateTime fromDate,
             DateTime thruDate) throws PersistenceException {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate.toDate());
-        parameters.put("THRU_DATE", thruDate.toDate());
+        parameters.put("FROM_DATE", DateUtils.getLocalDateFromDate(fromDate.toDate()).toString());
+        parameters.put("THRU_DATE", DateUtils.getLocalDateFromDate(thruDate.toDate()).toString());
 
         return executeNamedQuery("getLoanSchedulesForAccountThatAreWithinDates", parameters);
-    }
 
-    @SuppressWarnings("unchecked")
-    public List<SavingsScheduleEntity> getSavingsSchedulesForAccountThatAreWithinDates(Integer accountId,
-            Date fromDate, Date thruDate) throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate);
-        parameters.put("THRU_DATE", thruDate);
-
-        return executeNamedQuery("getSavingsSchedulesForAccountThatAreWithinDates", parameters);
     }
 
     @SuppressWarnings("unchecked")
@@ -584,22 +520,10 @@ public class AccountPersistence extends Persistence {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate.toDate());
-        parameters.put("THRU_DATE", thruDate.toDate());
+        parameters.put("FROM_DATE", DateUtils.getLocalDateFromDate(fromDate.toDate()).toString());
+        parameters.put("THRU_DATE", DateUtils.getLocalDateFromDate(thruDate.toDate()).toString());
 
         return executeNamedQuery("getSavingsSchedulesForAccountThatAreWithinDates", parameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<CustomerScheduleEntity> getCustomerSchedulesForAccountThatAreWithinDates(Integer accountId,
-            Date fromDate, Date thruDate) throws PersistenceException {
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate);
-        parameters.put("THRU_DATE", thruDate);
-
-        return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
 
     @SuppressWarnings("unchecked")
@@ -608,8 +532,8 @@ public class AccountPersistence extends Persistence {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("ACCOUNT_ID", accountId);
-        parameters.put("FROM_DATE", fromDate.toDate());
-        parameters.put("THRU_DATE", thruDate.toDate());
+        parameters.put("FROM_DATE", DateUtils.getLocalDateFromDate(fromDate.toDate()).toString());
+        parameters.put("THRU_DATE", DateUtils.getLocalDateFromDate(thruDate.toDate()).toString());
 
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }

@@ -143,8 +143,7 @@ public class LoanService implements Service {
         validateDisbursementDateIsNotInHoliday(disbursementDate, holidays);
     }
 
-    //package-level visibility for testing
-    void validateDisbursementDateIsWorkingDay(DateTime disbursementDate, List<Days> workingDays) throws ApplicationException {
+    public void validateDisbursementDateIsWorkingDay(DateTime disbursementDate, List<Days> workingDays) throws ApplicationException {
         if (WorkingDay.isNotWorkingDay(disbursementDate, workingDays)) {
             throw new ApplicationException(LoanExceptionConstants.DISBURSEMENTDATE_MUST_BE_A_WORKING_DAY);
         }

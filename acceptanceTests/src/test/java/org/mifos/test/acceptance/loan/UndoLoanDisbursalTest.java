@@ -97,7 +97,7 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
     }
 
 
-    @SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "unused" })
+    @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
     private void verifyLoanData(String resultDataSet) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { ACCOUNT,

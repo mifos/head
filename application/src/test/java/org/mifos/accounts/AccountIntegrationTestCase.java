@@ -35,6 +35,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -59,6 +60,7 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     protected GroupBO group;
     protected ClientBO client;
     protected MeetingBO meeting;
+    protected Holiday holiday;
     protected AccountPersistence accountPersistence;
 
     @Override
@@ -73,6 +75,8 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
+            this.getBranchOffice().setHolidays(null);
+            TestObjectFactory.cleanUp(holiday);
             TestObjectFactory.cleanUp(groupLoan);
             TestObjectFactory.cleanUp(clientLoan);
             TestObjectFactory.cleanUp(savingsBO);

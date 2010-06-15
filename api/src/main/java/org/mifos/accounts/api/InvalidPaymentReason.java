@@ -21,8 +21,8 @@
 package org.mifos.accounts.api;
 
 /**
- * The Enum InvalidPaymentReason lists the reasons a payment can be rejected as
- * invalid.
+ * Reasons a loan payment, savings deposit/withdrawl or loan disbursal can be rejected as invalid. API consumers are
+ * expected to use this enum and, for instance, craft error messages with domain-specific information.
  */
 public enum InvalidPaymentReason {
     /** The payment is invalid because the payment date is invalid. */
@@ -30,5 +30,9 @@ public enum InvalidPaymentReason {
     /** The payment is invalid because the payment type is not supported. */
     UNSUPPORTED_PAYMENT_TYPE,
     /** The payment is invalid because the payment amount is not valid. */
-    INVALID_PAYMENT_AMOUNT;
+    INVALID_PAYMENT_AMOUNT,
+    /** The payment amount indicates an amount disbursed, but this amount is invalid. */
+    INVALID_LOAN_DISBURSAL_AMOUNT,
+    /** Loans may only be disbursed if they are in a particular state. */
+    INVALID_LOAN_STATE;
 }

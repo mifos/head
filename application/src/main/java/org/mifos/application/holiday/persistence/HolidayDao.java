@@ -25,15 +25,19 @@ import java.util.List;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.calendar.CalendarEvent;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public interface HolidayDao {
+
+    HolidayBO findHolidayById(Integer id);
+
+    void save(Holiday holiday);
+
+    List<Holiday> findCurrentAndFutureOfficeHolidaysEarliestFirst(Short officeId);
 
     List<Holiday> getUnAppliedHolidays();
 
     List<Holiday> findAllHolidaysThisYearAndNext(short officeId);
-
-    void save(Holiday holiday) throws PersistenceException;
 
     List<HolidayBO> findAllHolidays();
 
@@ -41,5 +45,5 @@ public interface HolidayDao {
 
     CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
 
-
+    void validateNoExtraFutureHolidaysApplicableOnParentOffice(Short oldParentOfficeId, Short newParentOfficeId) throws ApplicationException;
 }

@@ -31,11 +31,11 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
@@ -43,7 +43,6 @@ import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
@@ -69,7 +68,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     private OfficeAddressEntity address;
     private Set<OfficeCustomFieldEntity> customFields;
     private Set<OfficeBO> children;
-    private Set<HolidayBO> holidays;
+    private Set<HolidayBO> holidays = new HashSet<HolidayBO>();
 
     public static List<OfficeHierarchyDto> convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(
             List<OfficeBO> branchParents) {
@@ -105,9 +104,11 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     /**
      * minimal legal constructor
+     *
      * @param officeId
      */
-    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum, OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
+    public OfficeBO(Short officeId, final String name, final String shortName, String globalOfficeNum,
+            OfficeBO parentOffice, OfficeLevel officeLevel, String searchId, OfficeStatus status) {
         this.officeId = officeId;
         this.officeName = name;
         this.shortName = shortName;
@@ -211,11 +212,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public OfficeStatus getOfficeStatus() throws OfficeException {
-        try {
-            return OfficeStatus.getOfficeStatus(status.getId());
-        } catch (PropertyNotFoundException e) {
-            throw new OfficeException(e);
-        }
+        return OfficeStatus.getOfficeStatus(status.getId());
     }
 
     public OfficeStatusEntity getStatus() {
@@ -310,6 +307,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public Set<OfficeBO> getChildren() {
+        if (children == null) {
+            children = new HashSet<OfficeBO>();
+        }
         return children;
     }
 
@@ -319,7 +319,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     private void removeChild(final OfficeBO office) {
         Set<OfficeBO> childerns = null;
-        if (getChildren() != null && getChildren().size() > 0) {
+        if (getChildren().size() > 0) {
             childerns = getChildren();
             childerns.remove(office);
         }
@@ -327,12 +327,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     private void addChild(final OfficeBO office) {
-        Set<OfficeBO> childerns = null;
-        if (getChildren() == null) {
-            childerns = new HashSet<OfficeBO>();
-        } else {
-            childerns = getChildren();
-        }
+        Set<OfficeBO> childerns = getChildren();
         office.setParentOffice(this);
         childerns.add(office);
         setChildren(childerns);
@@ -440,100 +435,50 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     }
 
-    private void changeStatus(final OfficeStatus status) throws OfficeException {
-        if (!this.status.getId().equals(status.getValue())) {
-
-            if (status == OfficeStatus.INACTIVE) {
-                canInactivateOffice();
-            } else {
-                canActivateOffice();
-            }
-            try {
-                this.status = (OfficeStatusEntity) new MasterPersistence().getPersistentObject(
-                        OfficeStatusEntity.class, status.getValue());
-            } catch (PersistenceException e) {
-                throw new OfficeException(e);
-            }
-        }
-    }
-
-    private void canInactivateOffice() throws OfficeException {
-        OfficePersistence officePersistence = new OfficePersistence();
-        try {
-            if (officePersistence.hasActiveChildern(this.officeId)) {
-                throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
-            }
-
-            if (officePersistence.hasActivePeronnel(this.officeId)) {
-                throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
-
-            }
-        } catch (PersistenceException e) {
-            throw new OfficeException(e);
-        }
-    }
-
-    private void canActivateOffice() throws OfficeException {
-
-        if (parentOffice.getOfficeStatus().equals(OfficeStatus.INACTIVE)) {
-            throw new OfficeException(OfficeConstants.KEYPARENTNOTACTIVE);
-        }
-    }
-
     public boolean isActive() {
+        return OfficeStatus.ACTIVE.getValue().equals(this.status.getId());
+    }
 
-        return getStatus().getId().equals(OfficeStatus.ACTIVE.getValue());
+    public boolean isInActive() {
+        return OfficeStatus.INACTIVE.getValue().equals(this.status.getId());
+    }
 
+    public void update(UserContext userContext, OfficeUpdateRequest officeUpdateRequest, OfficeBO newParentOffice) throws OfficeException {
+        updateDetails(userContext);
+        update(officeUpdateRequest.getOfficeName(), officeUpdateRequest.getShortName(), officeUpdateRequest.getNewStatus(), officeUpdateRequest.getNewlevel() , newParentOffice, officeUpdateRequest.getAddress(), officeUpdateRequest.getCustomFields());
     }
 
     public void update(final String newName, final String newShortName, final OfficeStatus newStatus,
             final OfficeLevel newLevel, final OfficeBO newParent, final Address address,
             final List<CustomFieldDto> customFileds) throws OfficeException {
-        changeOfficeName(newName);
-        changeOfficeShortName(newShortName);
 
-        updateLevel(newLevel);
-        if (!this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE)) {
+        this.officeName = newName;
+        this.shortName = newShortName;
+
+        if (isDifferentOfficeLevel(newLevel)) {
+
+            if (!canUpdateLevel(newLevel)) {
+                throw new OfficeException(OfficeConstants.ERROR_INVALID_LEVEL);
+            }
+
+            this.level = new OfficeLevelEntity(newLevel);
+        }
+
+        if (isNotHeadOffice()) {
             updateParent(newParent);
         }
 
-        changeStatus(newStatus);
+        this.status = new OfficeStatusEntity(newStatus);
         updateAddress(address);
         updateCustomFields(customFileds);
-        setUpdateDetails();
-        try {
-            new OfficePersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new OfficeException(e);
-        }
     }
 
-    private void changeOfficeName(final String newName) throws OfficeException {
-
-        if (!this.officeName.equalsIgnoreCase(newName)) {
-            try {
-                if (new OfficePersistence().isOfficeNameExist(newName)) {
-                    throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
-                }
-            } catch (PersistenceException e) {
-                throw new OfficeException(e);
-            }
-            this.officeName = newName;
-        }
+    private boolean isNotHeadOffice() {
+        return !isHeadOffice();
     }
 
-    private void changeOfficeShortName(final String newShortName) throws OfficeException {
-
-        if (!this.shortName.equalsIgnoreCase(newShortName)) {
-            try {
-                if (new OfficePersistence().isOfficeShortNameExist(newShortName)) {
-                    throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
-                }
-            } catch (PersistenceException e) {
-                throw new OfficeException(e);
-            }
-            this.shortName = newShortName;
-        }
+    private boolean isHeadOffice() {
+        return this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE);
     }
 
     private void updateParent(final OfficeBO newParent) throws OfficeException {
@@ -544,7 +489,7 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
                     if (this.getOfficeLevel().getValue().shortValue() < newParent.getOfficeLevel().getValue()
                             .shortValue()) {
-                        throw new OfficeException(OfficeConstants.ERROR_INVLID_PARENT);
+                        throw new OfficeException(OfficeConstants.ERROR_INVALID_PARENT);
                     }
                     OfficeBO oldParent1 = getIfChildPresent(newParent, oldParent);
                     if (oldParent1 == null) {
@@ -576,22 +521,6 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
             }
 
-        }
-    }
-
-    private void updateLevel(final OfficeLevel level) throws OfficeException {
-
-        if (this.getOfficeLevel() != level) {
-
-            if (!canUpdateLevel(level)) {
-                throw new OfficeException(OfficeConstants.ERROR_INVALID_LEVEL);
-            }
-            try {
-                this.level = (OfficeLevelEntity) new MasterPersistence().getPersistentObject(OfficeLevelEntity.class,
-                        level.getValue());
-            } catch (PersistenceException e) {
-                throw new OfficeException(e);
-            }
         }
     }
 
@@ -635,11 +564,9 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public Set<OfficeBO> getBranchOnlyChildren() {
         Set<OfficeBO> offices = new HashSet<OfficeBO>();
-        if (getChildren() != null) {
-            for (OfficeBO office : getChildren()) {
-                if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
-                    offices.add(office);
-                }
+        for (OfficeBO office : getChildren()) {
+            if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE)) {
+                offices.add(office);
             }
         }
         return offices;
@@ -656,35 +583,73 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
     }
 
     public OfficeBO getIfChildPresent(final OfficeBO parent, final OfficeBO child) {
-        if (parent.getChildren() != null) {
-            for (OfficeBO childl : parent.getChildren()) {
-                if (childl.getOfficeId().equals(child.getOfficeId())) {
-                    return childl;
-                }
-                return getIfChildPresent(childl, child);
+        for (OfficeBO childl : parent.getChildren()) {
+            if (childl.getOfficeId().equals(child.getOfficeId())) {
+                return childl;
             }
+            return getIfChildPresent(childl, child);
         }
+
         return null;
     }
 
     public boolean isParent(final OfficeBO child) {
         boolean isParent = false;
-        if (getChildren() != null) {
-            for (OfficeBO children : getChildren()) {
-                if (children.equals(child)) {
-                    return true;
-                }
-                isParent = children.isParent(child);
-                if (isParent) {
-                    return true;
-                }
-
+        for (OfficeBO children : getChildren()) {
+            if (children.equals(child)) {
+                return true;
+            }
+            isParent = children.isParent(child);
+            if (isParent) {
+                return true;
             }
         }
+
         return isParent;
     }
 
-    public void addHoliday(HolidayBO holiday){
+    public void addHoliday(HolidayBO holiday) {
         getHolidays().add(holiday);
+    }
+
+    public boolean hasChildWithAnyOf(List<Short> officeIds) {
+        boolean childFound = false;
+
+        for (OfficeBO child : getChildren()) {
+            if (officeIds.contains(child.getOfficeId())) {
+                childFound = true;
+                return childFound;
+            }
+
+            childFound = child.hasChildWithAnyOf(officeIds);
+        }
+
+        return childFound;
+    }
+
+    public void validateVersion(Integer previousVersionNum) throws OfficeException {
+        if (!this.versionNo.equals(previousVersionNum)) {
+            throw new OfficeException(Constants.ERROR_VERSION_MISMATCH);
+        }
+    }
+
+    public boolean isNameDifferent(String newOfficeName) {
+        return !this.officeName.equalsIgnoreCase(newOfficeName);
+    }
+
+    public boolean isShortNameDifferent(String newShortName) {
+        return !this.shortName.equalsIgnoreCase(newShortName);
+    }
+
+    private boolean isDifferentOfficeLevel(OfficeLevel newLevel) {
+        return !this.level.getLevel().equals(newLevel);
+    }
+
+    public boolean isStatusDifferent(OfficeStatus newStatus) {
+        return !newStatus.getValue().equals(this.status.getId());
+    }
+
+    public boolean isDifferentParentOffice(OfficeBO newParentOffice) {
+        return !newParentOffice.equals(this.parentOffice);
     }
 }

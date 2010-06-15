@@ -32,6 +32,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.LoanPaymentData;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
@@ -451,4 +452,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return sortedList;
     }
 
+    public RepaymentScheduleInstallment toDto() {
+        return new RepaymentScheduleInstallment(this.installmentId, this.actionDate, this.principal, this.interest, this.getTotalFeeDue(), this.miscFee, this.miscPenalty);
+    }
 }

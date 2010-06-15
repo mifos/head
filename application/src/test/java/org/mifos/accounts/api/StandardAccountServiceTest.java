@@ -22,7 +22,6 @@ package org.mifos.accounts.api;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyShort;
@@ -35,7 +34,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,11 +45,6 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
@@ -184,15 +177,29 @@ public class StandardAccountServiceTest {
 
     }
 
-    @Test(expected = AccountException.class)
-    public void testThrowsExceptionWhenDisbursalAmountDoesNotMatchLoanAmount() throws Exception {
-        final int accountId = 1;
-        final LoanBO loan = new LoanAccountBuilder().approved().build();
-        when(loanPersistence.getAccount(accountId)).thenReturn(loan);
+    @Mock
+    LoanBO mockLoanAccount;
+
+    @Test
+    public void testDisbursalAmountMustMatchFullLoanAmount() throws Exception {
+        when(mockLoanAccount.getLoanAmount()).thenReturn(new Money(TestUtils.EURO, "300"));
         AccountPaymentParametersDto disbursal = new AccountPaymentParametersDto(new UserReferenceDto((short) 1),
-                new AccountReferenceDto(accountId), new BigDecimal("299"), new LocalDate(), new PaymentTypeDto(
+                new AccountReferenceDto(1), new BigDecimal("299"), new LocalDate(), new PaymentTypeDto(
                         (short) 1, "CASH"), "");
-        standardAccountService.validateLoanDisbursement(disbursal);
+        List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
+        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal, errors, mockLoanAccount);
+        assertThat(errors.get(0), is(InvalidPaymentReason.INVALID_LOAN_DISBURSAL_AMOUNT));
+    }
+
+    @Test
+    public void testDisbursalAmountScaleDifferenceDoesNotMatter() throws Exception {
+        when(mockLoanAccount.getLoanAmount()).thenReturn(new Money(TestUtils.EURO, "300"));
+        AccountPaymentParametersDto disbursal = new AccountPaymentParametersDto(new UserReferenceDto((short) 1),
+                new AccountReferenceDto(1), new BigDecimal("300.0000000000000"), new LocalDate(), new PaymentTypeDto(
+                        (short) 1, "CASH"), "");
+        List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
+        standardAccountService.disbursalAmountMatchesFullLoanAmount(disbursal, errors, mockLoanAccount);
+        assertThat(errors.isEmpty(), is(true));
     }
 
     @Test
@@ -212,56 +219,5 @@ public class StandardAccountServiceTest {
         when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(null);
         AccountReferenceDto accountReferenceDto = standardAccountService
                 .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
-    }
-
-    private class PrivateLoanAccountBuilder {
-
-        private LoanOfferingBO loanProduct = new LoanProductBuilder().buildForUnitTests();
-        private final Short numOfInstallments = Short.valueOf("5");
-        private final GraceType gracePeriodType = GraceType.NONE;
-        private final AccountTypes accountType = AccountTypes.LOAN_ACCOUNT;
-        private final AccountState accountState = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
-        private CustomerBO customer;
-        private final Integer offsettingAllowable = Integer.valueOf(1);
-
-        private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-        private final java.util.Date createdDate = new DateTime().minusDays(14).toDate();
-        private final Money loanAmount = new Money(TestUtils.RUPEE, "1000");
-        private final boolean noInterestDeductedAtDisbursement = false;
-        private final double interestRate = 20;
-        private final short gracePeriodDuration = 0;
-        private final double maxLoan = 10000.0;
-        private final double minLoan = 100.0;
-        private final double maxInterestRate = 5.0;
-        private final double minInterestRate = 0.0;
-        private final short maxInstall = 100;
-        private final short minInstall = 2;
-
-        /*
-         * public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
-         * final AccountState accountState, final Money loanAmount, final Short noOfinstallments, final Date
-         * disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate, final Short
-         * gracePeriodDuration, final FundBO fund, final List<FeeDto> feeViews, final List<CustomFieldDto> customFields,
-         * final Boolean isRedone, final Double maxLoanAmount, final Double minLoanAmount, final Short maxNoOfInstall,
-         * final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO
-         * newMeetingForRepaymentDay)
-         */
-        public LoanBO build() throws AccountException {
-            final LoanBO loanAccount = new LoanBO(TestUtils.makeUserWithLocales(), loanProduct, customer, accountState,
-                    loanAmount, numOfInstallments, createdDate, noInterestDeductedAtDisbursement, interestRate,
-                    gracePeriodDuration, null, null, null, false, maxLoan, minLoan, maxInterestRate, minInterestRate,
-                    maxInstall, minInstall, false, null);
-            return loanAccount;
-        }
-
-        public PrivateLoanAccountBuilder withLoanProduct(final LoanOfferingBO withLoanProduct) {
-            this.loanProduct = withLoanProduct;
-            return this;
-        }
-
-        public PrivateLoanAccountBuilder withCustomer(final CustomerBO withCustomer) {
-            this.customer = withCustomer;
-            return this;
-        }
     }
 }

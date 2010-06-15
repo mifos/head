@@ -38,7 +38,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -53,6 +55,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacade;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -101,7 +104,10 @@ public abstract class BaseAction extends DispatchAction {
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
+    protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
 
+    protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -118,6 +124,10 @@ public abstract class BaseAction extends DispatchAction {
             this.groupDetailsServiceFacade = springAppContext.getBean(GroupDetailsServiceFacade.class);
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
+            this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
+            this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
+
+            this.fundDao = springAppContext.getBean(FundDao.class);
         }
 
         if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {
@@ -203,7 +213,7 @@ public abstract class BaseAction extends DispatchAction {
         }
     }
 
-    private void createToken(HttpServletRequest request) throws PageExpiredException {
+    private void createToken(HttpServletRequest request) {
         String flowKey = String.valueOf(new DateTimeService().getCurrentDateTime().getMillis());
         FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
         if (flowManager == null) {
@@ -225,7 +235,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     protected void postHandleTransaction(HttpServletRequest request, TransactionDemarcate annotation)
-            throws SystemException, ApplicationException {
+            throws SystemException {
         if (null != annotation && annotation.validateAndResetToken()) {
             FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
             flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -312,7 +322,7 @@ public abstract class BaseAction extends DispatchAction {
      * forms to business objects (for example, if the data from the form ends up
      * in several business objects)
      */
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return false;
     }
 

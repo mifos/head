@@ -47,7 +47,6 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -67,13 +66,11 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -558,19 +555,8 @@ public class LoanAccountActionForm extends BaseActionForm {
         return false;
     }
 
-    public void initializeTransactionFields(UserContext userContext, List<RepaymentScheduleInstallment> installments) {
-        this.paymentDataBeans = new ArrayList<PaymentDataHtmlBean>(installments.size());
-        PersonnelBO personnel;
-        try {
-            personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
-        } catch (PersistenceException e) {
-            throw new IllegalArgumentException("bad UserContext id");
-        }
-
-        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
-            this.paymentDataBeans
-                    .add(new PaymentDataHtmlBean(userContext.getPreferredLocale(), personnel, repaymentScheduleInstallment));
-        }
+    public void initializeTransactionFields(List<PaymentDataHtmlBean> paymentDataBeans) {
+        this.paymentDataBeans = paymentDataBeans;
     }
 
     public List<FeeDto> getFeesToApply() {
@@ -782,10 +768,21 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
+        validateCollateralNotes(errors, locale);
         validateDefaultFee(errors, locale, currency);
         validateAdditionalFee(errors, locale, currency, request);
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
 
+        }
+    }
+
+    private void validateCollateralNotes(ActionErrors errors, Locale userLocale) {
+        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
+        String note = resources.getString("loan.collateral_notes");
+        String collateralNote = getCollateralNote();
+        if (collateralNote != null && collateralNote.length() > 500) {
+            addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH, note, String
+                    .valueOf(LoanConstants.COMMENT_LENGTH));
         }
     }
 
@@ -936,6 +933,7 @@ public class LoanAccountActionForm extends BaseActionForm {
         validateExternalIDFields(errors, getMandatoryFields(request));
         validateLoanAmount(errors, locale, currency);
         validateInterest(errors, locale);
+        validateCollateralNotes(errors, locale);
     }
 
     private void validateDisbursementDate(ActionErrors errors, CustomerBO customer, java.sql.Date disbursementDateValue)
@@ -1141,37 +1139,32 @@ public class LoanAccountActionForm extends BaseActionForm {
     }
 
     private void validateRepaymentDayRequired(ActionErrors errors) {
-        try {
-            Short recurrenceId = RecurrenceType.WEEKLY.getValue();
-            if (null != this.getRecurrenceId()) {
-                recurrenceId = new Short(this.getRecurrenceId());
-            }
-            if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
-                if (StringUtils.isBlank(this.getFrequency())) {
+        Short recurrenceId = RecurrenceType.WEEKLY.getValue();
+        if (null != this.getRecurrenceId()) {
+            recurrenceId = new Short(this.getRecurrenceId());
+        }
+        if (new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
+            if (StringUtils.isBlank(this.getFrequency())) {
+                addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
+            } else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+                if (StringUtils.isBlank(this.getRecurWeek()) || StringUtils.isBlank(this.getWeekDay())) {
                     addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
-                } else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-                    if (StringUtils.isBlank(this.getRecurWeek()) || StringUtils.isBlank(this.getWeekDay())) {
+                }
+            } else {
+                if (getMonthType().equals("1")) {
+                    // "10th day of the month"
+                    if (StringUtils.isBlank(this.getMonthDay()) || StringUtils.isBlank(this.getDayRecurMonth())) {
                         addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
                 } else {
-                    if (getMonthType().equals("1")) {
-                        // "10th day of the month"
-                        if (StringUtils.isBlank(this.getMonthDay()) || StringUtils.isBlank(this.getDayRecurMonth())) {
-                            addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
-                        }
-                    } else {
-                        // "1st Monday of every month"
-                        if (StringUtils.isBlank(this.getMonthRank()) || StringUtils.isBlank(this.getMonthWeek())
-                                || StringUtils.isBlank(this.getRecurMonth())) {
-                            addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
-                        }
+                    // "1st Monday of every month"
+                    if (StringUtils.isBlank(this.getMonthRank()) || StringUtils.isBlank(this.getMonthWeek())
+                            || StringUtils.isBlank(this.getRecurMonth())) {
+                        addError(errors, "", LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
                     }
                 }
             }
-        } catch (PersistenceException e) {
-            throw new IllegalStateException(e);
         }
-
     }
 
     private void validateIndividualLoanFieldsForGlim(ActionErrors errors, Locale locale, MifosCurrency currency) {
@@ -1313,31 +1306,23 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
-        return getCustomerBusinessService().getCustomer(customerId);
+    private CustomerBO getCustomer(Integer customerId) throws ServiceException {
+        return new CustomerBusinessService().getCustomer(customerId);
     }
 
-    protected CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
-    }
-
+    /**
+     * FIXME - keithw - loan refactoring - try to remove this usage from validation stages
+     */
+    @Deprecated
     private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, ServiceException {
-        CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
+        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
         Integer oldCustomerId;
         if (oldCustomer == null) {
             oldCustomerId = Integer.parseInt(getCustomerId());
         } else {
             oldCustomerId = oldCustomer.getCustomerId();
         }
-        CustomerBO customer = getCustomer(oldCustomerId);
-        customer.getPersonnel().getDisplayName();
-        customer.getOffice().getOfficeName();
-        // TODO: I'm not sure why we're resetting version number - need to
-        // investigate this
-        if (oldCustomer != null) {
-            customer.setVersionNo(oldCustomer.getVersionNo());
-        }
-        return customer;
+        return getCustomer(oldCustomerId);
     }
 
     public String getPerspective() {
@@ -1470,5 +1455,13 @@ public class LoanAccountActionForm extends BaseActionForm {
             LoanAccountDetailsDto loanDetail = ((LoanAccountDetailsDto) object);
             return !(!clients2.contains(loanDetail.getClientId()) && (loanDetail.isEmpty()));
         }
+    }
+
+    public void clearDetailsForLoan() {
+        // clear cached additional fees (MIFOS-2547)
+        this.additionalFees = new ArrayList<FeeDto>();
+        this.externalId = null;
+        this.businessActivityId = null;
+        this.collateralTypeId = null;
     }
 }

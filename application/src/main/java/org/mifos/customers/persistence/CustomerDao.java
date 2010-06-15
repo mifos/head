@@ -149,7 +149,7 @@ public interface CustomerDao {
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
-    boolean validateGovernmentIdForClient(String governmentId, String clientName, DateTime dateOfBirth);
+    boolean validateGovernmentIdForClient(String governmentId);
 
     Integer getActiveAndOnHoldClientCountForGroup(String searchId, Short branchId);
 
@@ -205,4 +205,8 @@ public interface CustomerDao {
     void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
 
     void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
+
+    boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
+
+    boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
 }

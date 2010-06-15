@@ -37,7 +37,6 @@ public class PrdOfferingDto implements DataTransferObject {
 
     public PrdOfferingDto() {
         super();
-
     }
 
     public PrdOfferingDto(Short prdOfferingId, String prdOfferingName, String globalPrdOfferingNum) {
@@ -70,5 +69,4 @@ public class PrdOfferingDto implements DataTransferObject {
     public void setPrdOfferingName(String prdOfferingName) {
         this.prdOfferingName = prdOfferingName;
     }
-
 }
