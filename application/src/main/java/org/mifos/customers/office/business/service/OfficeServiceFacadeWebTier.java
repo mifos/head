@@ -114,6 +114,9 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             office.update(userContext, officeUpdateRequest, parentOffice);
             StaticHibernateUtil.commitTransaction();
             return isParentOfficeChanged;
+        } catch (ApplicationException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new ApplicationException(e.getKey(), e);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e.getMessage(), e);
