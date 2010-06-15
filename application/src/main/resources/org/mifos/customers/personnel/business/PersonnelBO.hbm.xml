@@ -32,7 +32,7 @@
 		<property name="displayName" column="DISPLAY_NAME"
 			type="string" />
 		<many-to-one name="status" column="PERSONNEL_STATUS"
-			class="org.mifos.customers.personnel.business.PersonnelStatusEntity" />
+			class="org.mifos.customers.personnel.business.PersonnelStatusEntity" lazy="false" />
 		<property name="title" column="TITLE" type="integer" />
 		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"
