@@ -29,8 +29,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -45,6 +43,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -53,17 +52,11 @@ import org.mifos.security.util.UserContext;
 
 public class RepayLoanAction extends BaseAction {
 
-    private LoanBusinessService loanBusinessService;
-
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-
-    public RepayLoanAction() throws ServiceException {
-        loanBusinessService = new LoanBusinessService();
-    }
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return loanBusinessService;
+        return null;
     }
 
     public static ActionSecurity getSecurity() {
@@ -80,17 +73,17 @@ public class RepayLoanAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         clearActionForm(form);
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Loading repay loan page");
-        String globalAccountNum = request.getParameter("globalAccountNum");
+
+        Money earlyRepayAmount = loanServiceFacade.getTotalEarlyRepayAmount(request.getParameter("globalAccountNum"));
+        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, earlyRepayAmount, request);
+
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
-        SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, loanBO.getTotalEarlyRepayAmount(), request);
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
         SessionUtils
                 .setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
                         .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
                         request);
 
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
@@ -98,21 +91,23 @@ public class RepayLoanAction extends BaseAction {
     @CloseSession
     public ActionForward makeRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info("Performing loan repayment");
-        String globalAccountNum = request.getParameter("globalAccountNum");
+
+        SessionUtils.removeAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, request);
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
-        checkVersionMismatch(loanBOInSession.getVersionNo(), loanBO.getVersionNo());
+
         RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
         Date receiptDate = null;
         if (repayLoanActionForm.getReceiptDate() != null && repayLoanActionForm.getReceiptDate() != "") {
             receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(),
                     repayLoanActionForm.getReceiptDate()).getTime());
         }
-        loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(), repayLoanActionForm.getReceiptNumber(),
-                receiptDate, repayLoanActionForm.getPaymentTypeId(), uc.getId());
+
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        loanServiceFacade
+                .makeEarlyRepayment(globalAccountNum, repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                        receiptDate, repayLoanActionForm.getPaymentTypeId(), uc.getId());
+
         return mapping.findForward(Constants.UPDATE_SUCCESS);
     }
 
