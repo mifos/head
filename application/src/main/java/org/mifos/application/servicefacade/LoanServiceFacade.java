@@ -20,13 +20,16 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
@@ -59,7 +62,17 @@ public interface LoanServiceFacade {
 
     LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 
+    LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, LoanAccountActionForm loanActionForm) throws ApplicationException;
+
     void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException;
 
     LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
+
+    List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
+
+    LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
+
+    boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
+
+    LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId);
 }

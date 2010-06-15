@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -69,6 +70,9 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private FundDao fundDao;
 
+    @Mock
+    private LoanDao loanDao;
+
     // test data
     @Mock
     private CustomerBO customer;
@@ -83,7 +87,7 @@ public class LoanServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
     }
 
     @Test
