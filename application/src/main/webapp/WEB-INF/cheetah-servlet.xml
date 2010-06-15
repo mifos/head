@@ -7,6 +7,8 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+    <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
+    
     <context:annotation-config/>
     	 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -34,12 +36,8 @@
     		</props>
     	</property>
     	<property name="exceptionAttribute"><value>exception</value></property>
-    </bean> 
+    </bean>
 
-    <!--<bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>-->
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-
-    <!-- freemarker config -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPaths">
             <list>
@@ -67,51 +65,35 @@
     </bean>
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
-    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController"/>
 
-    <!--  <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>  -->
-    
-    
-    <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>
+    <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
-    <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-    <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <value>
-                /customPropertiesUpdate.ftl=customPropertiesUpdateController
-                /dateTimeUpdate.ftl=dateTimeUpdateController
-                /initializeApplication.ftl=initializeApplicationController
-                /runBatchJobs.ftl=batchJobController
-                /accessDenied.ftl=genericController
+    <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
-                /pageNotFound.ftl=genericController
-                /ping.ftl=genericController
-                /cheetah.css.ftl=genericController
-                /gazelle.css.ftl=genericController
-            </value>
-        </property>
-    </bean>
+    <context:component-scan base-package="org.mifos.ui.core.controller"/>
 
-    <bean id="testingService" class="org.mifos.framework.util.StandardTestingService"/>
+    <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
-    <bean id="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
+    <bean name="feeController" class="org.mifos.ui.core.controller.FeeController"/>
+
+    <bean name="questionnaireController" class="org.mifos.ui.core.controller.QuestionnaireController"/>
+
+    <bean name="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
+    <bean name="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
+    <bean name="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
+    <bean name="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
-
-    <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
-
 
 </beans>

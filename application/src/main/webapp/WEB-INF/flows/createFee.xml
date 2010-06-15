@@ -2,11 +2,9 @@
 <flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
-
-	<!--   <secured attributes="ROLE_USER" /> -->
-	<!--  <input name="hotelId" required="true" />  -->
 	
 	<var name="feeDefintion" class="org.mifos.accounts.fees.struts.actionforms.FeeActionForm"/>
+    
 	<on-start>
 	   <evaluate expression="externalContext.sessionMap.get('UserContext').localeId" result ="flowScope.localeId" />
 	   <evaluate expression="feeServiceFacade.getFeeParameters(flowScope.localeId)" result ="flowScope.FeeParameters" />

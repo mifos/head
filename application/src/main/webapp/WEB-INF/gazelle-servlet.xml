@@ -58,7 +58,7 @@
     </bean>
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
-    <bean name="feeController" class="org.mifos.accounts.fees.servicefacade.FeeController"/>
+    <bean name="feeController" class="org.mifos.ui.core.controller.FeeController"/>
     
     <!--  <context:component-scan base-package="org.mifos.accounts.fees.servicefacade"/>  -->
     
