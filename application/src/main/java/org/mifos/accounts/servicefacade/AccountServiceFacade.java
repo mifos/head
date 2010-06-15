@@ -20,8 +20,12 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.List;
+
 import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.accounts.util.helpers.ApplicableCharge;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
@@ -35,5 +39,12 @@ public interface AccountServiceFacade {
             String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception;
 
     boolean isPaymentPermitted(final AccountReferenceDto accountReferenceDto, final UserContext userContext) throws ServiceException;
+
+    List<ApplicableCharge> getApplicableFees(Integer accountId, UserContext userContext) throws ServiceException;
+
+    void applyCharge(Integer accountId, UserContext userContext, Short feeId, Double chargeAmount) throws ServiceException, ApplicationException;
+
+    AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId) throws ServiceException;
+
 
 }

@@ -20,24 +20,26 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.accounts.servicefacade.AccountTypeCustomerLevelDto;
+import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -45,7 +47,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -53,7 +54,7 @@ public class ApplyChargeAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getAccountBusinessService();
+        return null;
     }
 
     @Override
@@ -75,9 +76,11 @@ public class ApplyChargeAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         Integer accountId = Integer.valueOf(request.getParameter("accountId"));
-        SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, getAccountBusinessService()
-                .getAppllicableFees(accountId, userContext), request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, getAccountBusinessService().getAccount(accountId), request);
+
+        AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+        List<ApplicableCharge> applicableCharges = accountServiceFacade.getApplicableFees(accountId, userContext);
+        SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST, applicableCharges, request);
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -85,42 +88,33 @@ public class ApplyChargeAction extends BaseAction {
     @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
+
         Short feeId = Short.valueOf(applyChargeActionForm.getFeeId());
         Double chargeAmount = getDoubleValue(request.getParameter("charge"));
-        AccountBO accountBO = getAccountBusinessService().getAccount(
-                Integer.valueOf(applyChargeActionForm.getAccountId()));
-        accountBO.setUserContext(userContext);
 
-        CustomerLevel customerLevel = null;
-        if (accountBO.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            customerLevel = accountBO.getCustomer().getLevel();
-        }
-        if (accountBO.getPersonnel() != null) {
-            checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext, accountBO.getOffice()
-                    .getOfficeId(), accountBO.getPersonnel().getPersonnelId());
-        } else {
-            checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext, accountBO.getOffice()
-                    .getOfficeId(), userContext.getId());
-        }
+        Integer accountId = Integer.valueOf(applyChargeActionForm.getAccountId());
+        AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+        accountServiceFacade.applyCharge(accountId, userContext, feeId, chargeAmount);
 
-        accountBO.applyCharge(feeId, chargeAmount);
-        accountBO.update();
-        return mapping.findForward(getDetailAccountPage(accountBO));
+        return mapping
+                .findForward(getDetailAccountPage(accountServiceFacade.getAccountTypeCustomerLevelDto(accountId)));
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         request.removeAttribute(AccountConstants.APPLICABLE_CHARGE_LIST);
-        AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        return mapping.findForward(getDetailAccountPage(accountBO));
-    }
 
-    private AccountBusinessService getAccountBusinessService() throws ServiceException {
-        return new AccountBusinessService();
+        ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
+        Integer accountId = Integer.valueOf(applyChargeActionForm.getAccountId());
+
+        AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+        return mapping
+                .findForward(getDetailAccountPage(accountServiceFacade.getAccountTypeCustomerLevelDto(accountId)));
     }
 
     private void doCleanUp(HttpServletRequest request, ActionForm form) {
@@ -144,30 +138,17 @@ public class ApplyChargeAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
-    private String getDetailAccountPage(AccountBO account) {
-        if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+    private String getDetailAccountPage(AccountTypeCustomerLevelDto accountTypeCustomerLevel) {
+        if (accountTypeCustomerLevel.getAccountType().equals(AccountTypes.LOAN_ACCOUNT.getValue())) {
             return "loanDetails_success";
+        }
+        if (accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue())) {
+            return "clientDetails_success";
+        } else if (accountTypeCustomerLevel.getCustomerLevelId().equals(CustomerLevel.GROUP.getValue())) {
+            return "groupDetails_success";
         } else {
-            if (account.getCustomer().getLevel() == CustomerLevel.CLIENT) {
-                return "clientDetails_success";
-            } else if (account.getCustomer().getLevel() == CustomerLevel.GROUP) {
-                return "groupDetails_success";
-            } else {
-                return "centerDetails_success";
-            }
+            return "centerDetails_success";
         }
     }
 
-    private void checkPermissionForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel,
-            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(AccountTypes accountTypes, CustomerLevel customerLevel,
-            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isApplyChargesPermittedForAccounts(accountTypes, customerLevel,
-                userContext, recordOfficeId, recordLoanOfficerId);
-    }
 }
