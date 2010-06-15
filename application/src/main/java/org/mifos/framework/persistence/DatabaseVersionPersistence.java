@@ -401,6 +401,7 @@ public class DatabaseVersionPersistence {
         return foundColumns;
     }
 
+
     public List<Upgrade> scripts(int applicationVersion, int databaseVersion) {
         if (applicationVersion < databaseVersion) {
             /*

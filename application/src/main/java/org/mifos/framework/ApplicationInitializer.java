@@ -56,6 +56,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -143,20 +144,21 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 // if a database upgrade loads an instance of Money then MoneyCompositeUserType needs the default currency
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
+                DatabaseMigrator migrator = new DatabaseMigrator();
                 DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
                 try {
                     /*
                      * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
                      * Hibernate session may not actually connect to the database.
                      */
-                    persistence.isVersioned();
+                    migrator.isNSDU();
                 } catch (Throwable t) {
                     setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE, "Unable to connect to database.", t);
                 }
 
                 if (!databaseError.isError) {
                     try {
-                        persistence.upgradeDatabase();
+                        migrator.upgrade();
                     } catch (Throwable t) {
                         setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
                     }

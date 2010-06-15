@@ -41,7 +41,7 @@ public class DatabaseMigratorIntegrationTest {
     public void beforeClass() throws Exception {
         connection = TestDatabase.getJDBCConnection();
         connection.setAutoCommit(false);
-        databaseMigrator = new DatabaseMigrator();
+        databaseMigrator = new DatabaseMigrator(connection);
     }
 
     @AfterClass
@@ -64,7 +64,7 @@ public class DatabaseMigratorIntegrationTest {
 
         connection.createStatement().execute("drop table  if exists foo");
 
-        databaseMigrator.checkUnAppliedUpgradesAndUpgrade();
+        databaseMigrator.upgrade();
         IDataSet dump = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(latestDump, dump);
         // check if database is upgraded to 1274761395
@@ -106,7 +106,7 @@ public class DatabaseMigratorIntegrationTest {
        loadNonSeqDatabaseSchema();
 
        connection.createStatement().execute("drop table  if exists foo");
-       databaseMigrator.checkUnAppliedUpgradesAndUpgrade();
+       databaseMigrator.upgrade();
 
        IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
        Assertion.assertEquals(expected, dump2.getTable("baz"));

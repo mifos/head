@@ -53,6 +53,16 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 public class DatabaseMigrator {
 
+    private Connection connection;
+
+    public DatabaseMigrator() {
+        this(StaticHibernateUtil.getSessionTL().connection());
+    }
+
+    public DatabaseMigrator(Connection connection){
+        this.connection = connection;
+    }
+
     private Map<Integer, String> getAvailableUpgrades() throws IOException {
         Reader reader = null;
         BufferedReader bufferedReader = null;
@@ -83,7 +93,7 @@ public class DatabaseMigrator {
         return upgrades;
     }
 
-    public void checkUnAppliedUpgradesAndUpgrade() throws Exception {
+    public void upgrade() throws Exception {
         Map<Integer, String> availableUpgrades = getAvailableUpgrades();
         List<Integer> appliedUpgrades = getAppliedUpgrades();
 
@@ -94,10 +104,23 @@ public class DatabaseMigrator {
         }
     }
 
-    private void applyUpgrade(int upgradeNumber, String type) throws Exception {
+    public boolean checkForUnAppliedUpgrades() throws Exception{
+        boolean unAppliedUpgrades = false;
 
-        Connection connection = TestDatabase.getJDBCConnection();
-        connection.setAutoCommit(false);
+        Map<Integer, String> availableUpgrades = getAvailableUpgrades();
+        List<Integer> appliedUpgrades = getAppliedUpgrades();
+
+        for (int i : availableUpgrades.keySet()) {
+            if (!appliedUpgrades.contains(i)) {
+                return true;
+            }
+        }
+
+        return unAppliedUpgrades;
+
+    }
+
+    private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
         if ("sql".equals(type)) {
 
@@ -183,5 +206,17 @@ public class DatabaseMigrator {
         return appliedUpgrades;
 
     }
+
+    public boolean isNSDU() throws SQLException{
+        return isNSDU(connection);
+    }
+
+    public boolean isNSDU(Connection conn) throws SQLException {
+        ResultSet results = conn.getMetaData().getColumns(null, null, "APPLIED_UPGRADES", "UPGRADES");
+        boolean foundColumns = results.next();
+        results.close();
+        return foundColumns;
+    }
+
 
 }
