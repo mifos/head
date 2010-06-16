@@ -61,7 +61,7 @@ public class GlimLoanUpdater {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
         individualLoan.updateLoan(loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
-                .valueOf(loanAccountDetail.getBusinessActivity()) : 0);
+                .valueOf(loanAccountDetail.getBusinessActivity()) : null);
     }
 
     private boolean businessActivityIsEmpty(LoanAccountDetailsDto loanAccountDetail) {
