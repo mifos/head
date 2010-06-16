@@ -18,16 +18,8 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.contract;
+package org.mifos.platform.questionnaire.domain;
 
-import org.mifos.framework.exceptions.ApplicationException;
-
-import java.util.List;
-
-public interface QuestionnaireService {
-    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
-
-    List<QuestionDetail> getAllQuestions();
-
-    QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
+public enum QuestionGroupState {
+    INACTIVE, ACTIVE
 }

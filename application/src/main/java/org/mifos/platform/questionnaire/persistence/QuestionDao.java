@@ -18,11 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.validators;
+package org.mifos.platform.questionnaire.persistence;
 
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.customers.surveys.business.Question;
+import org.mifos.platform.persistence.GenericDao;
 
-public interface QuestionValidator {
-    void validate(QuestionDefinition questionDefinition) throws ApplicationException;
+public interface QuestionDao extends GenericDao<Question, Integer> {
 }

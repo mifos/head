@@ -18,25 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.mappers;
+package org.mifos.platform.questionnaire.persistence;
 
-import org.mifos.customers.surveys.business.Question;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
+import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 
-import java.util.List;
-
-public interface QuestionnaireMapper {
-    List<QuestionDetail> mapToQuestionDetails(List<Question> questions);
-
-    QuestionDetail mapToQuestionDetail(Question question);
-
-    Question mapToQuestion(QuestionDefinition questionDefinition);
-
-    QuestionGroup mapToQuestionGroup(QuestionGroupDefinition questionGroupDefinition);
-
-    QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup);
+public interface QuestionGroupDao extends GenericDao<QuestionGroup, Integer> {
 }

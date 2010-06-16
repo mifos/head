@@ -13,8 +13,8 @@
       
   	<context:annotation-config/>  
   	
-    <bean id="questionnaireDao" parent="abstractDao">
-       <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionnaireDao"/>
+    <bean id="questionDao" parent="abstractDao">
+       <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionDao"/>
        <property name="target">
            <bean parent="abstractDaoTarget">
               <constructor-arg><value>org.mifos.customers.surveys.business.Question</value></constructor-arg>
@@ -22,8 +22,17 @@
        </property>
     </bean>
 
+    <bean id="questionGroupDao" parent="abstractDao">
+       <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.QuestionGroupDao"/>
+       <property name="target">
+           <bean parent="abstractDaoTarget">
+              <constructor-arg><value>org.mifos.platform.questionnaire.domain.QuestionGroup</value></constructor-arg>
+           </bean>
+       </property>
+    </bean>
+
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
-    <bean name="questionValidator" class="org.mifos.platform.questionnaire.validators.QuestionValidatorImpl"/>
+    <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
     <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
 
 </beans>

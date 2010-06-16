@@ -27,16 +27,17 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionType;
-import org.mifos.platform.questionnaire.contract.QuestionnaireService;
+import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Calendar;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -54,7 +55,10 @@ public class QuestionnaireServiceIntegrationTest {
     private QuestionnaireService questionnaireService;
 
     @Autowired
-    private QuestionnaireDao questionnaireDao;
+    private QuestionDao questionDao;
+
+    @Autowired
+    private QuestionGroupDao questionGroupDao;
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
@@ -64,11 +68,26 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionDetail);
         Integer questionId = questionDetail.getId();
         assertNotNull(questionId);
-        Question questionEntity = questionnaireDao.getDetails(questionId);
+        Question questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
         assertEquals(questionTitle, questionEntity.getShortName());
         assertEquals(questionTitle, questionEntity.getQuestionText());
         assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldDefineQuestionGroup() throws ApplicationException {
+        String questionTitle = "Title" + System.currentTimeMillis();
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(questionTitle);
+        assertNotNull(questionGroupDetail);
+        Integer questionGroupId = questionGroupDetail.getId();
+        assertNotNull(questionGroupId);
+        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
+        assertNotNull(questionGroup);
+        assertEquals(questionTitle, questionGroup.getTitle());
+        assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
+        verifyCreationDate(questionGroup);
     }
 
     @Test
@@ -96,8 +115,19 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
-        QuestionDefinition questionDefinition = new QuestionDefinition(questionTitle, questionType);
-        QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-        return questionDetail;
+        return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
+    }
+
+    private QuestionGroupDetail defineQuestionGroup(String title) throws ApplicationException {
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title));
+    }
+
+    private void verifyCreationDate(QuestionGroup questionGroup) {
+        Calendar creationDate = Calendar.getInstance();
+        creationDate.setTime(questionGroup.getDateOfCreation());
+        Calendar currentDate = Calendar.getInstance();
+        assertThat(creationDate.get(Calendar.DATE), is(currentDate.get(Calendar.DATE)));
+        assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
+        assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
     }
 }

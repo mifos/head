@@ -20,14 +20,20 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-import org.mifos.framework.exceptions.ApplicationException;
+public class QuestionGroupDetail {
+    private String title;
+    private Integer id;
 
-import java.util.List;
+    public QuestionGroupDetail(Integer id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 
-public interface QuestionnaireService {
-    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
+    public String getTitle() {
+        return title;
+    }
 
-    List<QuestionDetail> getAllQuestions();
-
-    QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
+    public Integer getId() {
+        return id;
+    }
 }

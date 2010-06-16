@@ -25,12 +25,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireService;
+import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
-import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
-import org.mifos.platform.questionnaire.validators.QuestionValidator;
+import org.mifos.platform.questionnaire.persistence.QuestionDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -38,6 +38,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -48,18 +49,22 @@ public class QuestionnaireServiceTest {
     private QuestionnaireService questionnaireService;
 
     @Mock
-    private QuestionValidator questionValidator;
+    private QuestionnaireValidator questionnaireValidator;
 
     @Mock
-    private QuestionnaireDao questionnaireDao;
+    private QuestionDao questionDao;
+
+    @Mock
+    private QuestionGroupDao questionGroupDao;
 
     private QuestionnaireMapperImpl questionnaireMapper = new QuestionnaireMapperImpl();
 
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
+    private static final String QUESTION_GROUP_TITLE = "Question Group Title";
 
     @Before
     public void setUp() {
-        questionnaireService = new QuestionnaireServiceImpl(questionValidator, questionnaireDao, questionnaireMapper);
+        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao);
     }
 
     @Test
@@ -67,7 +72,7 @@ public class QuestionnaireServiceTest {
         QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, FREETEXT);
         try {
             QuestionDetail questionDetail = questionnaireService.defineQuestion(questionDefinition);
-            verify(questionnaireDao, times(1)).create(any(Question.class));
+            verify(questionDao, times(1)).create(any(Question.class));
             assertNotNull(questionDetail);
             assertEquals(QUESTION_TITLE, questionDetail.getText());
             assertEquals(QUESTION_TITLE, questionDetail.getShortName());
@@ -75,24 +80,46 @@ public class QuestionnaireServiceTest {
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
-        verify(questionValidator).validate(questionDefinition);
-        verify(questionnaireDao).create(any(org.mifos.customers.surveys.business.Question.class));
+        verify(questionnaireValidator).validate(questionDefinition);
+        verify(questionDao).create(any(org.mifos.customers.surveys.business.Question.class));
     }
 
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws ApplicationException {
         QuestionDefinition questionDefinition = new QuestionDefinition(null, INVALID);
-        doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionValidator).validate(questionDefinition);
+        doThrow(new ApplicationException(QUESTION_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionDefinition);
         questionnaireService.defineQuestion(questionDefinition);
-        verify(questionValidator).validate(questionDefinition);
+        verify(questionnaireValidator).validate(questionDefinition);
     }
 
     @Test
     public void shouldGetAllQuestions() {
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         assertNotNull("getAllQuestions should not return null", questionDetails);
-        verify(questionnaireDao, times(1)).getDetailsAll();
+        verify(questionDao, times(1)).getDetailsAll();
     }
-    
+
+    @Test
+    public void shouldDefineQuestionGroup() throws ApplicationException {
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE);
+
+        try {
+            QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
+            verify(questionnaireValidator).validate(questionGroupDefinition);
+            verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
+            assertNotNull(questionGroupDetail);
+            assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
+        } catch (ApplicationException e) {
+            fail("Should not have thrown the validation exception");
+        }
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws ApplicationException {
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(null);
+        doThrow(new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionGroupDefinition);
+        questionnaireService.defineQuestionGroup(questionGroupDefinition);
+        verify(questionnaireValidator).validate(questionGroupDefinition);
+    }
 }
 

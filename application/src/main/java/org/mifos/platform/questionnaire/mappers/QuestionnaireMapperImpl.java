@@ -23,9 +23,9 @@ package org.mifos.platform.questionnaire.mappers;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionType;
+import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 
 import java.util.*;
 
@@ -66,6 +66,20 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         question.setAnswerType(mapToAnswerType(questionDefinition.getType()));
         question.setQuestionState(QuestionState.ACTIVE);
         return question;
+    }
+
+    @Override
+    public QuestionGroup mapToQuestionGroup(QuestionGroupDefinition questionGroupDefinition) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(questionGroupDefinition.getTitle());
+        questionGroup.setState(QuestionGroupState.ACTIVE);
+        questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
+        return questionGroup;
+    }
+
+    @Override
+    public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle());
     }
 
     private QuestionType mapToQuestionType(AnswerType answerType) {

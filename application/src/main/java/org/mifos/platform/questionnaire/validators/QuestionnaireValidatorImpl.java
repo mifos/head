@@ -22,17 +22,30 @@ package org.mifos.platform.questionnaire.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
 
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 
-public class QuestionValidatorImpl implements QuestionValidator {
+public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @Override
     public void validate(QuestionDefinition questionDefinition) throws ApplicationException {
         validateQuestionTitle(questionDefinition);
         validateQuestionType(questionDefinition);
+    }
+
+    @Override
+    public void validate(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
+        validateQuestionGroupTitle(questionGroupDefinition);
+    }
+
+    private void validateQuestionGroupTitle(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
+        if (StringUtils.isEmpty(questionGroupDefinition.getTitle()))
+            throw new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED);
     }
 
     private void validateQuestionType(QuestionDefinition questionDefinition) throws ApplicationException {

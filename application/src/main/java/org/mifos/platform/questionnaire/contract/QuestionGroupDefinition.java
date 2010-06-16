@@ -18,10 +18,16 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.persistence;
+package org.mifos.platform.questionnaire.contract;
 
-import org.mifos.customers.surveys.business.Question;
-import org.mifos.platform.persistence.GenericDao;
+public class QuestionGroupDefinition {
+    private String title;
 
-public interface QuestionnaireDao extends GenericDao<Question, Integer> {
+    public QuestionGroupDefinition(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }

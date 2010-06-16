@@ -22,13 +22,13 @@ package org.mifos.platform.questionnaire;
 
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionnaireService;
+import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
-import org.mifos.platform.questionnaire.persistence.QuestionnaireDao;
-import org.mifos.platform.questionnaire.validators.QuestionValidator;
+import org.mifos.platform.questionnaire.persistence.QuestionDao;
+import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
+import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -36,11 +36,14 @@ import java.util.List;
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
-    private QuestionValidator questionValidator;
+    private QuestionnaireValidator questionnaireValidator;
 
     @Autowired
-    private QuestionnaireDao questionnaireDao;
+    private QuestionDao questionDao;
     
+    @Autowired
+    private QuestionGroupDao questionGroupDao;
+
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
 
@@ -48,33 +51,42 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private QuestionnaireServiceImpl() {
     }
 
-    public QuestionnaireServiceImpl(QuestionValidator questionValidator, QuestionnaireDao questionnaireDao,
-                                    QuestionnaireMapperImpl questionnaireMapper) {
-        this.questionValidator = questionValidator;
-        this.questionnaireDao = questionnaireDao;
+    public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
+                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao) {
+        this.questionnaireValidator = questionnaireValidator;
+        this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
+        this.questionGroupDao = questionGroupDao;
     }
 
     @Override
     public QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException {
-        questionValidator.validate(questionDefinition);
+        questionnaireValidator.validate(questionDefinition);
         Question question = questionnaireMapper.mapToQuestion(questionDefinition);
         persistQuestion(question);
         return questionnaireMapper.mapToQuestionDetail(question);
     }
 
+    @Override
+    public List<QuestionDetail> getAllQuestions() {
+        List<Question> questions = questionDao.getDetailsAll();
+        return questionnaireMapper.mapToQuestionDetails(questions);
+    }
+
+    @Override
+    public QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
+        questionnaireValidator.validate(questionGroupDefinition);
+        QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
+        questionGroupDao.create(questionGroup);
+        return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
+    }
+
     private void persistQuestion(Question question) throws ApplicationException {
         try {
-            questionnaireDao.create(question);
+            questionDao.create(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new ApplicationException(QuestionnaireConstants.DUPLICATE_QUESTION, e);
         }
     }
 
-    @Override
-    public List<QuestionDetail> getAllQuestions() {
-        List<Question> questions = questionnaireDao.getDetailsAll();
-        return questionnaireMapper.mapToQuestionDetails(questions);
-    }
-    
 }
