@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -54,6 +55,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacade;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -103,7 +105,9 @@ public abstract class BaseAction extends DispatchAction {
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
+    protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
 
+    protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -121,6 +125,9 @@ public abstract class BaseAction extends DispatchAction {
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
+            this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
+
+            this.fundDao = springAppContext.getBean(FundDao.class);
         }
 
         if (MifosTask.isBatchJobRunningThatRequiresExclusiveAccess()) {

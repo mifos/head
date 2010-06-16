@@ -20,17 +20,27 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.productdefinition.util.helpers.PrdOfferingDto;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public interface LoanServiceFacade {
@@ -39,16 +49,48 @@ public interface LoanServiceFacade {
 
     LoanCreationGlimDto retrieveGlimSpecificDataForGroup(CustomerBO customer);
 
-    LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId) throws ApplicationException;
+    LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId)
+            throws ApplicationException;
 
-    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId, Short productId) throws ApplicationException;
+    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId,
+            Short productId) throws ApplicationException;
 
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
+            Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
+            throws ApplicationException;
 
     LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(UserContext userContext, Integer customerId,
             DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 
-    LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);
+    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm,
+            DateTime disbursementDate, UserContext userContext) throws ApplicationException;
 
-    LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
+    LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails,
+            List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);
+
+    LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
+            FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
+
+    LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
+            LoanAccountActionForm loanActionForm) throws ApplicationException;
+
+    void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
+            AccountException;
+
+    LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
+
+    List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
+
+    LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
+
+    boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
+
+    LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId);
+
+    List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum);
+
+    Money getTotalEarlyRepayAmount(String globalAccountNum);
+
+    void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
+            java.sql.Date receiptDate, String paymentTypeId, Short id) throws AccountException;
 }

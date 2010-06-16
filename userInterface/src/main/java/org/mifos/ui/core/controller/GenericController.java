@@ -49,6 +49,6 @@ public class GenericController extends AbstractController {
 	}
 
 	public String getPageToDisplay(HttpServletRequest request) {
-		return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
+		return request.getRequestURI().replaceFirst("/mifos.*/","").replace(".ftl", "");
 	}
 }

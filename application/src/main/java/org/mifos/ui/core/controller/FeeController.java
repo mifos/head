@@ -1,7 +1,10 @@
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.ui.core.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.accounts.fees.servicefacade.FeeCreateRequest;
+import org.mifos.accounts.fees.servicefacade.FeeDto;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.config.AccountingRules;

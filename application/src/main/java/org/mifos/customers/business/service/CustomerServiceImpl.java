@@ -264,9 +264,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.addAccount(customerAccount);
 
             this.customerDao.save(customer);
-            this.hibernateTransactionHelper.commitTransaction();
+            this.hibernateTransactionHelper.flushSession();
 
-            this.hibernateTransactionHelper.startTransaction();
             customer.generateGlobalCustomerNumber();
             this.customerDao.save(customer);
 

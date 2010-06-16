@@ -21,7 +21,11 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 
+import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -49,6 +53,8 @@ import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacade;
+import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -83,6 +89,7 @@ public class DependencyInjectedServiceLocator {
 
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
     private static HolidayServiceFacade holidayServiceFacade;
+    private static OfficeServiceFacade officeServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -100,6 +107,8 @@ public class DependencyInjectedServiceLocator {
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
 
     private static GenericDao genericDao = new GenericDaoHibernate();
+    private static FundDao fundDao = new FundDaoHibernate(genericDao);
+    private static LoanDao loanDao = new LoanDaoHibernate(genericDao);
     private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
     private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
@@ -187,7 +196,7 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao);
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
         }
         return loanServiceFacade;
     }
@@ -222,6 +231,13 @@ public class DependencyInjectedServiceLocator {
         return holidayServiceFacade;
     }
 
+    public static OfficeServiceFacade locateOfficeServiceFacade() {
+        if (officeServiceFacade == null) {
+            officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
+        }
+        return officeServiceFacade;
+    }
+
     public static CustomerDao locateCustomerDao() {
         return customerDao;
     }
@@ -240,5 +256,9 @@ public class DependencyInjectedServiceLocator {
 
     public static OfficeDao locateOfficeDao() {
         return officeDao;
+    }
+
+    public static FundDao locateFundDao() {
+        return fundDao;
     }
 }
