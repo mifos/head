@@ -48,7 +48,6 @@ import org.mifos.reports.struts.actionforms.ReportsUserParamsActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ReportActionSecurity;
-import org.mifos.security.util.ReportSecurityConstants;
 import org.mifos.security.util.SecurityConstants;
 
 /**
@@ -80,36 +79,12 @@ public class ReportsUserParamsAction extends BaseAction {
 
         // map the report id to it's corrosponding activity id. though it's
         // rough but it works :->
-        // security.allowReport(1,
-        // ReportSecurityConstants.CLIENT_SUMMARY_AND_HISTORY_REPORT);
-        security.allowReport(1, ReportSecurityConstants.COLLECTION_SHEET_REPORT);
-        security.allowReport(2, ReportSecurityConstants.BRANCH_CASH_CONFIRMATION_REPORT);
-        security.allowReport(3, ReportSecurityConstants.BRANCH_PROGRESS_REPORT);
-        security.allowReport(4, ReportSecurityConstants.CLIENT_LOAN_REPAYMENT_SCHEDULE);
-        security.allowReport(5, ReportSecurityConstants.CLIENT_FEES_CHARGES_AND_PENALTIES_REPORT);
-        security.allowReport(6, ReportSecurityConstants.CLIENT_PENDING_APPROVAL_REPORT);
-        security.allowReport(7, ReportSecurityConstants.CLIENTS_WITHOUT_SAVINGS_ACCOUNT);
-        security.allowReport(8, ReportSecurityConstants.BRANCH_PERFORMANCE_STATUS_REPORT);
-        security.allowReport(9, ReportSecurityConstants.AREA_PERFORMANCE_STATUS_REPORT);
-        security.allowReport(10, ReportSecurityConstants.DIVISION_PERFORMANCE_STATUS_REPORT);
-        security.allowReport(11, ReportSecurityConstants.REGION_PERFORMANCE_STATUS_REPORT);
-        security.allowReport(12, ReportSecurityConstants.GRAMEEN_KOOTA_PERFORMANCE_STATUS_REPORT);
-        security.allowReport(13, ReportSecurityConstants.STAFF_PERFORMANCE_REPORT);
-        security.allowReport(14, ReportSecurityConstants.OUTREACH_REPORT);
-        security.allowReport(15, ReportSecurityConstants.CENTER_SUMMARY_REPORT);
-        security.allowReport(16, ReportSecurityConstants.COLLECTION_SHEET);
-        security.allowReport(17, ReportSecurityConstants.LOAN_PRODUCT_DISTRIBUTION);
-        security.allowReport(18, ReportSecurityConstants.BRANCH_DUE_DISBURSEMENT_REPORT);
-        security.allowReport(19, ReportSecurityConstants.LOANS_PENDING_APPROVAL_REPORT);
-        security.allowReport(20, ReportSecurityConstants.LOAN_ACCOUNTS_REPORTS);
-        security.allowReport(21, ReportSecurityConstants.DAILY_CASH_CONFIRMATION_REPORT_STAFF_WISE);
-        security.allowReport(22, ReportSecurityConstants.DAILY_CASH_FLOW_REPORT_BRANCH);
-        security.allowReport(23, ReportSecurityConstants.FUND_REQUIREMENT_REPORT);
-        security.allowReport(24, ReportSecurityConstants.DAILY_TRANSACTION_SUMMARY_REPORT);
-        security.allowReport(25, ReportSecurityConstants.DAILY_PORTFOLIO_QUALITY_DATA_REPORT);
-        security.allowReport(26, ReportSecurityConstants.CENTER_MEETING_SCHEDULE);
-        security.allowReport(28, ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK);
-        security.allowReport(29, ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER);
+        security.allowReport(1, SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT);
+        security.allowReport(2, SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT);
+        security.allowReport(3, SecurityConstants.CAN_VIEW_BRANCH_REPORT);
+        security.allowReport(4, SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK);
+        security.allowReport(5, SecurityConstants.CAN_VIEW_GENERAL_LEDGER);
+
 
         for (ReportsBO report : getNewUploadedReport()) {
             security.allowReport(report.getReportId().intValue(), report.getActivityId());

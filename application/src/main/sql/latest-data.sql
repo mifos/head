@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(254);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(256);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1642,6 +1642,8 @@ INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(626, 91, 'Repay
 -- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 -- VALUES(957, 1, 626, NULL);
 
+
+
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
 (620, 92, 'Together'),
 (621, 92, 'NotTogether'),
@@ -3115,3 +3117,24 @@ INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME) VALUES(51,'Hunga
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(624,74,'Language-Hungarian');
 INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES(11,'Hungarian','hu',624);
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(47,51,11,'Hungarian-Hungary',0);
+
+/* Upgrade 255,256 START*/
+INSERT INTO LOOKUP_VALUE VALUES 
+(628,87,'Permissions-CanViewDetailedAgingPortfolioAtRiskReport'),
+(629,87,'Permissions-CanViewGeneralLedgerReport');
+INSERT INTO LOOKUP_VALUE_LOCALE VALUES
+(958,1,628,NULL),
+(959,1,629,NULL);
+INSERT INTO ACTIVITY VALUES
+(236,150,628,628),
+(237,150,629,629);
+INSERT INTO ROLES_ACTIVITY VALUES
+(236,1),
+(237,1);
+INSERT INTO REPORT VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk','detailed_aging_portfolio_at_risk',236,1),
+(5,6,'General Ledger Report','general_ledger_report',237,1);
+INSERT INTO REPORT_JASPER_MAP VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk','detailed_aging_portfolio_at_risk','DetailedAgingPortfolioAtRiskReport.rptdesign'),
+(5,6,'General Ledger Report','general_ledger_report','GeneralLedgerReport.rptdesign');
+/* Upgrade 255,256 END*/

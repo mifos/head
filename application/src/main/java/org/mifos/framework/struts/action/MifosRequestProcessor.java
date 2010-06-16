@@ -104,8 +104,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
         }
     }
 
-    protected boolean checkProcessRoles(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping)
-            throws IOException, ServletException {
+    protected boolean checkProcessRoles(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping) {
         boolean returnValue = true;
         if (request.getSession() != null && request.getSession().getAttribute("UserContext") != null)
 
@@ -120,32 +119,31 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
                     && (method.equals("cancel") || method.equals("validate") || method.equals("searchPrev") || method
                             .equals("searchNext"))) {
                 return true;
+            }
+            String activityKey = null;
+
+            if (isReportRequest(request)) {
+                String reportId = request.getParameter("reportId");
+                activityKey = key + "-" + reportId;
+                activityId = activityMapper.getActivityId(activityKey);
             } else {
-                String activityKey = null;
+                activityId = activityMapper.getActivityId(key);
+                request.setAttribute(Globals.ERROR_KEY, null);
+            }
 
-                if (isReportRequest(request)) {
-                    String reportId = request.getParameter("reportId");
-                    activityKey = key + "-" + reportId;
-                    activityId = activityMapper.getActivityId(activityKey);
-                } else {
-                    activityId = activityMapper.getActivityId(key);
-                    request.setAttribute(Globals.ERROR_KEY, null);
-                }
-
-                if (null == activityId) {
-                    activityKey = path + "-" + request.getParameter("viewPath");
-                    activityId = activityMapper.getActivityId(activityKey);
-                }
-                // Check for fine-grained permissions
-                if (null == activityId) {
-                    activityKey = key + "-" + session.getAttribute(SecurityConstants.SECURITY_PARAM);
-                    activityId = activityMapper.getActivityId(activityKey);
-                }
-                if (null == activityId) {
-                    return false;
-                } else if (activityId.shortValue() == 0) {
-                    return true;
-                }
+            if (null == activityId) {
+                activityKey = path + "-" + request.getParameter("viewPath");
+                activityId = activityMapper.getActivityId(activityKey);
+            }
+            // Check for fine-grained permissions
+            if (null == activityId) {
+                activityKey = key + "-" + session.getAttribute(SecurityConstants.SECURITY_PARAM);
+                activityId = activityMapper.getActivityId(activityKey);
+            }
+            if (null == activityId) {
+                return false;
+            } else if (activityId.shortValue() == 0) {
+                return true;
             }
             returnValue = AuthorizationManager.getInstance().isActivityAllowed(
                     (UserContext) session.getAttribute("UserContext"),

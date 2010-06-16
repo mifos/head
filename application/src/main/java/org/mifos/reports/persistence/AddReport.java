@@ -40,15 +40,6 @@ public class AddReport extends Upgrade {
     private final String design;
     private Short activityId;
 
-    /**
-     * Activity ID is non-null for Database version > 184. Please use the other
-     * contructor.
-     */
-    @Deprecated
-    public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design) {
-        this(higherVersion, newId, category, name, identifier, design, null);
-    }
-
     public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design,
             Short activityId) {
         super(higherVersion);
