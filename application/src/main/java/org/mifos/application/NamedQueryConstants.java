@@ -233,9 +233,6 @@ public interface NamedQueryConstants {
     // fee related m2
     public static final String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
 
-    // Seems not to be used by anything
-    public static final String GET_FEE_UPDATETYPE = "getFeeUpdateType";
-
     public static final String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";
 
     public static final String APPLICABLE_LOAN_PRODUCTS = "loanOffering.getApplicableProducts";
