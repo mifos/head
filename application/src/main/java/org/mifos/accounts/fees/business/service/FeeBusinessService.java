@@ -40,29 +40,9 @@ public class FeeBusinessService implements BusinessService {
     }
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     };
-
-    public FeeBO getFee(Short feeId) {
-        return feePersistence.getFee(feeId);
-    }
-
-    public List<FeeBO> retrieveCustomerFees() throws ServiceException {
-        try {
-            return feePersistence.retrieveCustomerFees();
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    public List<FeeBO> retrieveProductFees() throws ServiceException {
-        try {
-            return feePersistence.retrieveProductFees();
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
 
     public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws ServiceException {
         try {

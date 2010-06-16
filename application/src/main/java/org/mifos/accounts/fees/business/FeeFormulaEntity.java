@@ -22,6 +22,7 @@ package org.mifos.accounts.fees.business;
 
 import java.util.Set;
 
+import org.mifos.accounts.fees.servicefacade.FeeFormulaDto;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -64,7 +65,7 @@ public class FeeFormulaEntity extends MasterDataEntity {
         return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
     }
 
-    public String getFormulaString(Short locale) {
+    public String getFormulaStringThatHasName() {
         return "Formula: % " + getName();
     }
 
@@ -109,5 +110,12 @@ public class FeeFormulaEntity extends MasterDataEntity {
 
     protected void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
+
+    public FeeFormulaDto toDto() {
+        FeeFormulaDto feeFormulaDto = new FeeFormulaDto();
+        feeFormulaDto.setId(this.id);
+        feeFormulaDto.setName(this.getName());
+        return feeFormulaDto;
     }
 }

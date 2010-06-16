@@ -27,20 +27,18 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
-import org.mifos.accounts.financial.business.service.FinancialBusinessService;
-import org.mifos.accounts.financial.servicefacade.GLCodeDto;
+import org.mifos.accounts.financial.business.service.GeneralLedgerService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -57,155 +55,50 @@ import org.mifos.application.servicefacade.FeeDetailsForPreviewDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 public class WebTierFeeServiceFacade implements FeeServiceFacade {
 
-    private FeeBusinessService feeBusinessService = new FeeBusinessService();
     private MasterDataService masterDataService = new MasterDataService();
-    private FinancialBusinessService financeService = new FinancialBusinessService();
 
-    public WebTierFeeServiceFacade() {
-        super();
+    private final FeeDao feeDao;
+    private final GeneralLedgerService generalLedgerService;
+
+    public WebTierFeeServiceFacade(FeeDao feeDao, GeneralLedgerService generalLedgerService) {
+        this.feeDao = feeDao;
+        this.generalLedgerService = generalLedgerService;
     }
 
-    /**
-     * FIXME: only used in test... remove when wired via Spring
-     */
-    public WebTierFeeServiceFacade(FeeBusinessService feeBusinessService) {
-        super();
-        this.feeBusinessService = feeBusinessService;
-    }
-    public List<FeeDto> getProductFees() throws ServiceException {
-        List<FeeBO> feeBOs = feeBusinessService.retrieveProductFees();
-        try {
-            return mapFeeDtos(feeBOs);
-        } catch (PropertyNotFoundException e) {
-            throw new ServiceException(e);
-        }
+    public List<FeeDto> getProductFees() {
+
+        return this.feeDao.retrieveAllProductFees();
     }
 
-    public List<FeeDto> getCustomerFees() throws ServiceException {
-        List<FeeBO> feeBOs = feeBusinessService.retrieveCustomerFees();
-        try {
-            return mapFeeDtos(feeBOs);
-        } catch (PropertyNotFoundException e) {
-            throw new ServiceException(e);
-        }
-    }
+    public List<FeeDto> getCustomerFees() {
 
-    private List<FeeDto> mapFeeDtos(List<FeeBO> feeBOs) throws PropertyNotFoundException {
-        List<FeeDto> fees = new ArrayList<FeeDto>();
-        for (FeeBO feeBO : feeBOs) {
-            fees.add(mapFeeDto(feeBO));
-        }
-        return fees;
-    }
-
-    private FeeDto mapFeeDto(FeeBO feeBO) throws PropertyNotFoundException {
-        FeeDto feeDto = new FeeDto();
-        feeDto.setId(Short.toString(feeBO.getFeeId()));
-        feeDto.setName(feeBO.getFeeName());
-        feeDto.setCategoryType(feeBO.getCategoryType().getName());
-        feeDto.setFeeStatus(mapFeeStatusDto(feeBO));
-        feeDto.setOneTime(feeBO.isOneTime());
-        feeDto.setFeeFrequency(mapFeeFrequencyDto(feeBO.getFeeFrequency()));
-        feeDto.setActive(feeBO.isActive());
-        feeDto.setGlCode(feeBO.getGlCode().getGlcode());
-        feeDto.setCustomerDefaultFee(feeBO.isCustomerDefaultFee());
-        feeDto.setRateBasedFee(feeBO instanceof RateFeeBO);
-
-        feeDto.setChangeType(feeBO.getFeeChangeType().getValue());
-        feeDto.setFeeFrequencyType(feeBO.getFeeFrequency().getFeeFrequencyType().getName());
-        feeDto.setGlCodeDto(mapGLCodeDto(feeBO.getGlCode()));
-
-        feeDto.setOneTime(feeBO.getFeeFrequency().isOneTime());
-        feeDto.setPeriodic(feeBO.getFeeFrequency().isPeriodic());
-        feeDto.setTimeOfDisbursement(feeBO.getFeeFrequency().isTimeOfDisbursement());
-
-        if (feeBO instanceof AmountFeeBO) {
-            feeDto.setAmount(((AmountFeeBO) feeBO).getFeeAmount());
-        } else {
-            RateFeeBO rateFeeBo = (RateFeeBO) feeBO;
-            feeDto.setRate(rateFeeBo.getRate());
-            feeDto.setFeeFormula(mapFeeFormulaDto(rateFeeBo.getFeeFormula()));
-        }
-        return feeDto;
-    }
-
-    private FeeFormulaDto mapFeeFormulaDto(FeeFormulaEntity feeFormula) {
-        FeeFormulaDto feeFormulaDto = new FeeFormulaDto();
-        feeFormulaDto.setId(feeFormula.getId());
-        feeFormulaDto.setName(feeFormula.getName());
-        return feeFormulaDto;
-    }
-
-    private FeeFrequencyDto mapFeeFrequencyDto(FeeFrequencyEntity feeFrequencyEntity) {
-        FeeFrequencyDto feeFrequencyDto = new FeeFrequencyDto();
-        FeeFrequencyTypeEntity feeFrequencyType = feeFrequencyEntity.getFeeFrequencyType();
-        feeFrequencyDto.setType(feeFrequencyType.getName());
-        if (feeFrequencyType.isOneTime()) {
-            feeFrequencyDto.setPayment(feeFrequencyEntity.getFeePayment().getName());
-        } else {
-            MeetingBO feeMeetingFrequency = feeFrequencyEntity.getFeeMeetingFrequency();
-            feeFrequencyDto.setMonthly(feeMeetingFrequency.isMonthly());
-            feeFrequencyDto.setWeekly(feeMeetingFrequency.isWeekly());
-            feeFrequencyDto.setRecurAfterPeriod(feeMeetingFrequency.getRecurAfter().toString());
-        }
-        return feeFrequencyDto;
-    }
-
-
-    private GLCodeDto mapGLCodeDto(GLCodeEntity glCode) {
-        GLCodeDto glCodeDto = new GLCodeDto();
-        glCodeDto.setGlcode(glCode.getGlcode());
-        glCodeDto.setGlcodeId(glCode.getGlcodeId());
-        return glCodeDto;
-    }
-
-    private FeeStatusDto mapFeeStatusDto(FeeBO feeBO) {
-        FeeStatusDto feeStatus = new FeeStatusDto();
-        FeeStatusEntity feeStatusBO = feeBO.getFeeStatus();
-        feeStatus.setId(Short.toString(feeStatusBO.getId()));
-        feeStatus.setName(feeStatusBO.getName());
-        return feeStatus;
+        return this.feeDao.retrieveAllCustomerFees();
     }
 
     @Override
-    public FeeParameters parameters(Short localeId) throws ServiceException {
-        List<GLCodeEntity> glCodes = retrieveGlCodes();
-        List<CategoryTypeEntity> categories = masterDataService.retrieveMasterEntities(CategoryTypeEntity.class,
-                localeId);
-        List<FeeFormulaEntity> formulas = masterDataService.retrieveMasterEntities(FeeFormulaEntity.class, localeId);
-        List<FeeFrequencyTypeEntity> frequencies = masterDataService.retrieveMasterEntities(
-                FeeFrequencyTypeEntity.class, localeId);
-        List<FeePaymentEntity> timesOfCharging = masterDataService.retrieveMasterEntities(FeePaymentEntity.class,
-                localeId);
+    public FeeParameters parameters(Short localeId) throws ApplicationException {
+        List<GLCodeEntity> glCodes = generalLedgerService.retreiveGlCodesBy(FinancialActionConstants.FEEPOSTING, FinancialConstants.CREDIT);
+
+        List<CategoryTypeEntity> categories = this.feeDao.retrieveFeeCategories();
+        List<FeeFormulaEntity> formulas = this.feeDao.retrieveFeeFormulae();
+        List<FeeFrequencyTypeEntity> frequencies = this.feeDao.retrieveFeeFrequencies();
+        List<FeePaymentEntity> timesOfCharging = this.feeDao.retrieveFeePayments();
+
         List<MasterDataEntity> timesOfChargeingCustomer = new ArrayList<MasterDataEntity>();
         for (MasterDataEntity timeOfCharging : timesOfCharging) {
             if (timeOfCharging.getId().equals(FeePayment.UPFRONT.getValue())) {
                 timesOfChargeingCustomer.add(timeOfCharging);
             }
         }
-        return new FeeParameters(categories, timesOfCharging, timesOfChargeingCustomer, formulas, frequencies, glCodes);
-    }
 
-    private List<GLCodeEntity> retrieveGlCodes() throws ServiceException {
-        // FIXME: Should General ledger code retrieval logic be here? As in should one service call another service
-        List<GLCodeEntity> glCodes;
-        try {
-            glCodes = financeService.getGLCodes(FinancialActionConstants.FEEPOSTING, FinancialConstants.CREDIT);
-        } catch (SystemException e) {
-            throw new ServiceException(e);
-        } catch (ApplicationException e) {
-            throw new ServiceException(e);
-        }
-        return glCodes;
+        return new FeeParameters(categories, timesOfCharging, timesOfChargeingCustomer, formulas, frequencies, glCodes);
     }
 
     private MifosCurrency getCurrency(Short currencyId) {
@@ -220,12 +113,9 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     }
 
     @Override
-    public FeeDto getFeeDetails(Short feeId) throws ServiceException {
-        try {
-            return mapFeeDto(feeBusinessService.getFee(feeId));
-        } catch (PropertyNotFoundException e) {
-            throw new ServiceException(e);
-        }
+    public FeeDto getFeeDetails(Short feeId) {
+
+        return this.feeDao.findDtoById(feeId);
     }
 
 
@@ -244,14 +134,12 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
                 feeBO = createPeriodicFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext);
             }
 
-            return mapFeeDto(feeBO);
+            return feeBO.toDto();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         } catch (FeeException e) {
             throw new ServiceException(e);
         } catch (MeetingException e) {
-            throw new ServiceException(e);
-        } catch (PropertyNotFoundException e) {
             throw new ServiceException(e);
         }
     }
@@ -312,7 +200,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         /*
          * Move the following logic into FeeBusinessService.updateFee(feeId)
          */
-        FeeBO feeBo = feeBusinessService.getFee(feeUpdateRequest.getFeeId());
+        FeeBO feeBo = this.feeDao.findById(feeUpdateRequest.getFeeId());
         feeBo.setUserContext(userContext);
         FeeChangeType feeChangeType;
         if (feeBo.getFeeType().equals(RateAmountFlag.AMOUNT)) {

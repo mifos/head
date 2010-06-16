@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
@@ -143,6 +144,10 @@ public class MasterPersistence extends Persistence {
         return entityList;
     }
 
+    /**
+     * use Dao specific calls - see {@link FeeDao#retrieveFeeCategories()}, {@link FeeDao#retrieveFeeFrequencies()} etc
+     */
+    @Deprecated
     public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) throws PersistenceException {
         try {
             Session session = getSession();

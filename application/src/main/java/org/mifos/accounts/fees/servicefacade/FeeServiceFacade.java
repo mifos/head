@@ -33,15 +33,15 @@ import org.mifos.security.util.UserContext;
 
 public interface FeeServiceFacade {
 
-    public List<FeeDto> getProductFees() throws ServiceException;
+    public List<FeeDto> getProductFees();
 
-    public List<FeeDto> getCustomerFees() throws ServiceException;
+    public List<FeeDto> getCustomerFees();
 
-    public FeeParameters parameters(Short localeId) throws ServiceException;
+    public FeeParameters parameters(Short localeId) throws ApplicationException;
 
     public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
 
-    public FeeDto getFeeDetails(Short feeId) throws ServiceException;
+    public FeeDto getFeeDetails(Short feeId);
 
     public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException;
 

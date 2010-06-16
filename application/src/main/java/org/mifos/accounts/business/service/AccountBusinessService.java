@@ -226,8 +226,7 @@ public class AccountBusinessService implements BusinessService {
             applicableCharge.setFeeName(fee.getFeeName());
             if (fee.getFeeType().getValue().equals(RateAmountFlag.RATE.getValue())) {
                 applicableCharge.setAmountOrRate(new LocalizationConverter().getDoubleStringForInterest(((RateFeeBO) fee).getRate()));
-                applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula().getFormulaString(
-                        userContext.getLocaleId()));
+                applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula().getFormulaStringThatHasName());
                 applicableCharge.setIsRateType(true);
             } else {
                 applicableCharge.setAmountOrRate(((AmountFeeBO) fee).getFeeAmount().toString());
