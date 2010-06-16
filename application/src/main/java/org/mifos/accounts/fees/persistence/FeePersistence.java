@@ -40,6 +40,10 @@ import org.mifos.framework.persistence.Persistence;
 
 public class FeePersistence extends Persistence {
 
+    /**
+     * use {@link FeeDao#findById(Short)}
+     */
+    @Deprecated
     public FeeBO getFee(Short feeId) {
         Session session = StaticHibernateUtil.getSessionTL();
         return (FeeBO) session.get(FeeBO.class, feeId);
@@ -64,16 +68,6 @@ public class FeePersistence extends Persistence {
         queryParameters.put("ID", id);
         return (ApplicableAccountsTypeEntity) executeNamedQuery(NamedQueryConstants.GET_FEE_UPDATETYPE, queryParameters)
                 .get(0);
-    }
-
-    public List<FeeBO> retrieveCustomerFees() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
-    }
-
-    public List<FeeBO> retrieveProductFees() throws PersistenceException {
-
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES, null);
-
     }
 
     public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws PersistenceException {

@@ -74,7 +74,7 @@ public class FinancialBusinessService implements BusinessService {
     }
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 
@@ -124,6 +124,10 @@ public class FinancialBusinessService implements BusinessService {
         }
     }
 
+    /**
+     * @deprecated - use {@link GeneralLedgerService#retreiveGlCodesBy(FinancialActionConstants, FinancialConstants)}
+     */
+    @Deprecated
     public List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction, FinancialConstants debitCredit)
             throws SystemException, ApplicationException {
         List<GLCodeEntity> glCodeList = new ArrayList<GLCodeEntity>();

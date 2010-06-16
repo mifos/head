@@ -17,10 +17,17 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 
+import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.persistence.FeeDaoHibernate;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
+import org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade;
+import org.mifos.accounts.financial.business.service.GeneralLedgerService;
+import org.mifos.accounts.financial.business.service.GeneralLedgerServiceImpl;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
@@ -90,11 +97,13 @@ public class DependencyInjectedServiceLocator {
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
     private static HolidayServiceFacade holidayServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
+    private static FeeServiceFacade feeServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
     private static CustomerService customerService;
     private static HolidayService holidayService;
+    private static GeneralLedgerService generalLedgerService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -109,6 +118,7 @@ public class DependencyInjectedServiceLocator {
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static FundDao fundDao = new FundDaoHibernate(genericDao);
     private static LoanDao loanDao = new LoanDaoHibernate(genericDao);
+    private static FeeDao feeDao = new FeeDaoHibernate(genericDao);
     private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
     private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
@@ -140,6 +150,13 @@ public class DependencyInjectedServiceLocator {
                     hibernateTransactionHelper);
         }
         return customerService;
+    }
+
+    public static GeneralLedgerService locateGeneralLedgerService() {
+        if (generalLedgerService == null) {
+            generalLedgerService = new GeneralLedgerServiceImpl();
+        }
+        return generalLedgerService;
     }
 
     public static HolidayService locateHolidayService() {
@@ -236,6 +253,14 @@ public class DependencyInjectedServiceLocator {
             officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
         }
         return officeServiceFacade;
+    }
+
+    public static FeeServiceFacade locateFeeServiceFacade() {
+        if (feeServiceFacade == null) {
+            generalLedgerService = locateGeneralLedgerService();
+            feeServiceFacade = new WebTierFeeServiceFacade(feeDao, generalLedgerService);
+        }
+        return feeServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

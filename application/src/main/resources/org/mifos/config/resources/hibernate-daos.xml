@@ -13,6 +13,10 @@
     	<constructor-arg ref="genericDao" />
     </bean>
     
+    <bean id="feeDao" class="org.mifos.accounts.fees.persistence.FeeDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
     <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>

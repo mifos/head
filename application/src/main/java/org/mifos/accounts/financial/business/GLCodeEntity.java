@@ -30,6 +30,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.mifos.accounts.financial.servicefacade.GLCodeDto;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
@@ -86,5 +87,12 @@ public class GLCodeEntity extends AbstractEntity {
     @Override
     public String toString() {
         return glcode;
+    }
+
+    public GLCodeDto toDto() {
+        GLCodeDto glCodeDto = new GLCodeDto();
+        glCodeDto.setGlcode(this.glcode);
+        glCodeDto.setGlcodeId(this.glcodeId);
+        return glCodeDto;
     }
 }

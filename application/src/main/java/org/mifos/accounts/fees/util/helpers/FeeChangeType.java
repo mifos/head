@@ -26,7 +26,7 @@ public enum FeeChangeType {
 
     NOT_UPDATED((short) 0), AMOUNT_UPDATED((short) 1), STATUS_UPDATED((short) 2), AMOUNT_AND_STATUS_UPDATED((short) 3);
 
-    Short value;
+    private Short value;
 
     FeeChangeType(Short value) {
         this.value = value;
@@ -45,4 +45,25 @@ public enum FeeChangeType {
         throw new PropertyNotFoundException("FeeChangeType");
     }
 
+    public static FeeChangeType fromInt(final int value) {
+        FeeChangeType feeChangeType = NOT_UPDATED;
+        switch (value) {
+        case 0:
+            feeChangeType = NOT_UPDATED;
+            break;
+        case 1:
+            feeChangeType = AMOUNT_UPDATED;
+            break;
+        case 2:
+            feeChangeType = STATUS_UPDATED;
+            break;
+        case 3:
+            feeChangeType = AMOUNT_AND_STATUS_UPDATED;
+            break;
+        default:
+            feeChangeType = NOT_UPDATED;
+            break;
+        }
+        return feeChangeType;
+    }
 }

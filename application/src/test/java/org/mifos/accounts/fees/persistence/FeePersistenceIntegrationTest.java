@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.fees.persistence;
 
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.mifos.accounts.fees.business.ApplicableAccountsTypeEntity;
@@ -95,28 +93,6 @@ public class FeePersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testGetUpdateTypeEntity() throws NumberFormatException, PersistenceException {
         ApplicableAccountsTypeEntity feeUpdateType = feePersistence.getUpdateTypeEntity(Short.valueOf("1"));
        Assert.assertEquals(1, feeUpdateType.getId().intValue());
-    }
-
-    public void testRetrieveFeesForCustomer() throws Exception {
-        fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
-                RecurrenceType.MONTHLY, Short.valueOf("2"));
-        fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
-                RecurrenceType.MONTHLY, Short.valueOf("2"));
-        StaticHibernateUtil.commitTransaction();
-
-        List<FeeBO> feeList = feePersistence.retrieveCustomerFees();
-       Assert.assertEquals(1, feeList.size());
-       Assert.assertEquals("CustomerFee1", feeList.get(0).getFeeName());
-    }
-
-    public void testRetrieveFeesForProduct() throws Exception {
-        fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200",
-                RecurrenceType.MONTHLY, Short.valueOf("2"));
-        fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400",
-                RecurrenceType.MONTHLY, Short.valueOf("2"));
-        List<FeeBO> feeList = feePersistence.retrieveProductFees();
-       Assert.assertEquals(1, feeList.size());
-       Assert.assertEquals("ProductFee1", feeList.get(0).getFeeName());
     }
 
     public void testGetFee() throws Exception {
