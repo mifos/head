@@ -154,7 +154,7 @@ public class FeeAction extends BaseAction {
         FeeActionForm feeActionForm = (FeeActionForm) form;
 
         Short feeId = Short.valueOf(feeActionForm.getFeeId());
-        FeeDetailsForManageDto feeDetailsForManage = feeServiceFacade.retrieveDetailsForFeeManage(feeId, getUserContext(request).getLocaleId());
+        FeeDetailsForManageDto feeDetailsForManage = feeServiceFacade.retrieveDetailsForFeeManage(feeId);
 
         SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, feeDetailsForManage.getFeeStatuses(), request);
         feeActionForm.updateWithFee(feeDetailsForManage.getFee());

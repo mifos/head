@@ -119,14 +119,6 @@ public class MasterDataService implements BusinessService {
         }
     }
 
-    public GLCodeEntity findGLCodeEntity(Short id) {
-       return new MasterPersistence().retrieveGLCodeEntity(id);
-    }
-
-    /* protected MasterDataEntity getMasterEntities(Short entityId, Class clazz, Short localeId) throws PersistenceException {
-        return new MasterPersistence().retrieveMasterEntity(entityId, clazz, localeId);
-    }*/
-
     public <T extends MasterDataEntity>  T retrieveMasterEntity(Class<T> entityType, Short entityId, Short localeId)
       throws PersistenceException {
         return new MasterPersistence().retrieveMasterEntity(entityType, entityId, localeId);

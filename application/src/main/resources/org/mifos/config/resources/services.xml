@@ -6,8 +6,9 @@
     					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
+    	<constructor-arg ref="feeService" />
     	<constructor-arg ref="feeDao" />
-    	<constructor-arg ref="generalLedgerService" />
+    	<constructor-arg ref="generalLedgerDao" />
     </bean>
     
     <bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" >
@@ -67,6 +68,9 @@
     	<constructor-arg ref="hibernateTransactionHelper" />
     </bean>
     
-   <bean id="generalLedgerService" class="org.mifos.accounts.financial.business.service.GeneralLedgerServiceImpl" />
-
+    <bean id="feeService" class="org.mifos.accounts.fees.business.service.FeeServiceImpl" >
+    	<constructor-arg ref="feeDao" />
+    	<constructor-arg ref="generalLedgerDao" />
+    	<constructor-arg ref="hibernateTransactionHelper" />
+    </bean>
 </beans>

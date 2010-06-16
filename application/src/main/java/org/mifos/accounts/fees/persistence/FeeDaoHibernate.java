@@ -20,13 +20,17 @@
 
 package org.mifos.accounts.fees.persistence;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.fees.business.CategoryTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.persistence.FeeDao;
 
 import java.util.ArrayList;
@@ -35,6 +39,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.fees.servicefacade.FeeDto;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
@@ -63,6 +71,12 @@ public class FeeDaoHibernate implements FeeDao {
         return fee.toDto();
     }
 
+
+    @Override
+    public void save(FeeBO fee) {
+        this.genericDao.createOrUpdate(fee);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<FeeDto> retrieveAllProductFees() {
@@ -89,31 +103,67 @@ public class FeeDaoHibernate implements FeeDao {
 
     @Override
     public List<CategoryTypeEntity> retrieveFeeCategories() {
-        return retreiveMasterDataEntityTypes(CategoryTypeEntity.class);
+        return retrieveListOfMasterDataFor(CategoryTypeEntity.class);
     }
 
     @Override
     public List<FeeFormulaEntity> retrieveFeeFormulae() {
-        return retreiveMasterDataEntityTypes(FeeFormulaEntity.class);
+        return retrieveListOfMasterDataFor(FeeFormulaEntity.class);
     }
 
     @Override
     public List<FeeFrequencyTypeEntity> retrieveFeeFrequencies() {
-        return retreiveMasterDataEntityTypes(FeeFrequencyTypeEntity.class);
+        return retrieveListOfMasterDataFor(FeeFrequencyTypeEntity.class);
     }
 
     @Override
     public List<FeePaymentEntity> retrieveFeePayments() {
-        return retreiveMasterDataEntityTypes(FeePaymentEntity.class);
+        return retrieveListOfMasterDataFor(FeePaymentEntity.class);
+    }
+
+    @Override
+    public List<FeeStatusEntity> findAllFeeStatuses() {
+        return retrieveListOfMasterDataFor(FeeStatusEntity.class);
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends MasterDataEntity> List<T> retreiveMasterDataEntityTypes(Class<T> type) {
+    private <T extends MasterDataEntity> List<T> retrieveListOfMasterDataFor(Class<T> type) {
         Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());
         }
         return masterEntities;
+    }
+
+    @Override
+    public FeeFrequencyTypeEntity findFeeFrequencyEntityByType(FeeFrequencyType feeFrequencyType) {
+        return retrieveMasterEntity(FeeFrequencyTypeEntity.class, feeFrequencyType.getValue());
+    }
+
+    @Override
+    public CategoryTypeEntity findFeeCategoryTypeEntityByType(FeeCategory categoryType) {
+        return retrieveMasterEntity(CategoryTypeEntity.class, categoryType.getValue());
+    }
+
+    @Override
+    public FeeFormulaEntity findFeeFormulaEntityByType(FeeFormula feeFormula) {
+        return retrieveMasterEntity(FeeFormulaEntity.class, feeFormula.getValue());
+    }
+
+    @Override
+    public FeePaymentEntity findFeePaymentEntityByType(FeePayment feePayment) {
+        return retrieveMasterEntity(FeePaymentEntity.class, feePayment.getValue());
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends MasterDataEntity> T retrieveMasterEntity(final Class<T> entityType, final Short entityId) {
+
+        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Criteria criteriaQuery = session.createCriteria(entityType);
+        criteriaQuery.add(Restrictions.eq("id", entityId));
+        criteriaQuery.setFetchMode("lookUpValue", FetchMode.JOIN);
+
+        return (T) criteriaQuery.uniqueResult();
     }
 }

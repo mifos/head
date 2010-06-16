@@ -361,13 +361,4 @@ public class MasterPersistence extends Persistence {
         }
         return null;
     }
-
-    public GLCodeEntity retrieveGLCodeEntity(Short id) {
-        //TODO: Move this to appropriate place
-        Session session = StaticHibernateUtil.getSessionTL();
-        Query query = session.getNamedQuery(NamedQueryConstants.GL_CODE_BY_ID);
-        query.setParameter("glcodeId", id);
-        return (GLCodeEntity)query.uniqueResult();
-    }
-
 }

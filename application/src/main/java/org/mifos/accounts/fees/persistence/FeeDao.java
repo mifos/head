@@ -27,13 +27,20 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
+import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
 
 public interface FeeDao {
 
     FeeBO findById(Short feeId);
 
     FeeDto findDtoById(Short feeId);
+
+    void save(FeeBO feeBO);
 
     List<FeeDto> retrieveAllProductFees();
 
@@ -46,4 +53,14 @@ public interface FeeDao {
     List<FeeFrequencyTypeEntity> retrieveFeeFrequencies();
 
     List<FeePaymentEntity> retrieveFeePayments();
+
+    List<FeeStatusEntity> findAllFeeStatuses();
+
+    FeeFrequencyTypeEntity findFeeFrequencyEntityByType(FeeFrequencyType feeFrequencyType);
+
+    CategoryTypeEntity findFeeCategoryTypeEntityByType(FeeCategory categoryType);
+
+    FeeFormulaEntity findFeeFormulaEntityByType(FeeFormula feeFormula);
+
+    FeePaymentEntity findFeePaymentEntityByType(FeePayment feePaymentType);
 }

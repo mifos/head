@@ -22,12 +22,14 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 
+import org.mifos.accounts.fees.business.service.FeeService;
+import org.mifos.accounts.fees.business.service.FeeServiceImpl;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.persistence.FeeDaoHibernate;
 import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade;
-import org.mifos.accounts.financial.business.service.GeneralLedgerService;
-import org.mifos.accounts.financial.business.service.GeneralLedgerServiceImpl;
+import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
+import org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
@@ -103,7 +105,7 @@ public class DependencyInjectedServiceLocator {
     private static CollectionSheetService collectionSheetService;
     private static CustomerService customerService;
     private static HolidayService holidayService;
-    private static GeneralLedgerService generalLedgerService;
+    private static FeeService feeService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -127,6 +129,7 @@ public class DependencyInjectedServiceLocator {
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static AuthenticationDao authenticationDao = new AuthenticationDaoHibernate();
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
+    private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
@@ -152,19 +155,20 @@ public class DependencyInjectedServiceLocator {
         return customerService;
     }
 
-    public static GeneralLedgerService locateGeneralLedgerService() {
-        if (generalLedgerService == null) {
-            generalLedgerService = new GeneralLedgerServiceImpl();
-        }
-        return generalLedgerService;
-    }
-
     public static HolidayService locateHolidayService() {
 
         if (holidayService == null) {
             holidayService = new HolidayServiceImpl(officeDao, holidayDao, hibernateTransactionHelper);
         }
         return holidayService;
+    }
+
+    public static FeeService locateFeeService() {
+
+        if (feeService == null) {
+            feeService = new FeeServiceImpl(feeDao, generalLedgerDao, hibernateTransactionHelper);
+        }
+        return feeService;
     }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
@@ -257,8 +261,8 @@ public class DependencyInjectedServiceLocator {
 
     public static FeeServiceFacade locateFeeServiceFacade() {
         if (feeServiceFacade == null) {
-            generalLedgerService = locateGeneralLedgerService();
-            feeServiceFacade = new WebTierFeeServiceFacade(feeDao, generalLedgerService);
+            feeService = locateFeeService();
+            feeServiceFacade = new WebTierFeeServiceFacade(feeService, feeDao, generalLedgerDao);
         }
         return feeServiceFacade;
     }

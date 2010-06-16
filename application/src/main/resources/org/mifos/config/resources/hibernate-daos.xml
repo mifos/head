@@ -40,4 +40,8 @@
     <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>
+    
+    <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate" >
+        <constructor-arg ref="genericDao" />
+    </bean>
 </beans>
