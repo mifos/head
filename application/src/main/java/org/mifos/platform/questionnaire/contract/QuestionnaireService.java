@@ -30,4 +30,6 @@ public interface QuestionnaireService {
     List<QuestionDetail> getAllQuestions();
 
     QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
+
+    List<QuestionGroupDetail> getAllQuestionGroups();
 }

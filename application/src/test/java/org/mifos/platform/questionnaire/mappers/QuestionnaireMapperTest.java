@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
@@ -103,6 +102,26 @@ public class QuestionnaireMapperTest {
         QuestionGroupDetail questionGroupDetail = questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
         assertThat(questionGroupDetail, is (not(nullValue())));
         assertThat(questionGroupDetail.getTitle(), is(TITLE));
+    }
+
+    @Test
+    public void shouldMapQuestionGroupsToQuestionGroupDetails() {
+        int countOfQuestions = 10;
+        List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
+        for (int i = 0; i < countOfQuestions; i++) {
+            questionGroups.add(getQuestionGroup(TITLE + i));
+        }
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+        assertThat(questionGroupDetails, is(notNullValue()));
+        for (int i = 0; i < countOfQuestions; i++) {
+            assertThat(questionGroupDetails.get(i).getTitle(), is(TITLE + i));
+        }
+    }
+
+    private QuestionGroup getQuestionGroup(String title) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(title);
+        return questionGroup;
     }
 
     private void assertQuestionType(QuestionType questionType, AnswerType answerType) {

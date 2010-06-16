@@ -82,6 +82,15 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle());
     }
 
+    @Override
+    public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
+        List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
+        for (QuestionGroup questionGroup : questionGroups) {
+            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle()));
+        }
+        return questionGroupDetails;
+    }
+
     private QuestionType mapToQuestionType(AnswerType answerType) {
         return answerToQuestionType.get(answerType);
     }

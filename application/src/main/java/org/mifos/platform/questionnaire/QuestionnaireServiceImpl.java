@@ -81,6 +81,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
     }
 
+    @Override
+    public List<QuestionGroupDetail> getAllQuestionGroups() {
+        List<QuestionGroup> questionGroups = questionGroupDao.getDetailsAll();
+        return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
+    }
+
     private void persistQuestion(Question question) throws ApplicationException {
         try {
             questionDao.create(question);

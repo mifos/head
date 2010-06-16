@@ -121,5 +121,11 @@ public class QuestionnaireServiceTest {
         questionnaireService.defineQuestionGroup(questionGroupDefinition);
         verify(questionnaireValidator).validate(questionGroupDefinition);
     }
-}
 
+    @Test
+    public void shouldGetAllQuestionGroups() {
+        List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getAllQuestionGroups();
+        assertNotNull("getAllQuestionGroups should not return null", questionGroupDetails);
+        verify(questionGroupDao, times(1)).getDetailsAll();
+    }
+}

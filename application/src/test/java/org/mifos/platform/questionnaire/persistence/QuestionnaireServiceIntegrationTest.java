@@ -94,10 +94,20 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestions() throws ApplicationException {
         int initialCountOfQuestions = questionnaireService.getAllQuestions().size();
-        defineQuestion("Q2" + System.currentTimeMillis(), FREETEXT);
         defineQuestion("Q1" + System.currentTimeMillis(), NUMERIC);
+        defineQuestion("Q2" + System.currentTimeMillis(), FREETEXT);
         int finalCountOfQuestions = questionnaireService.getAllQuestions().size();
         assertThat(finalCountOfQuestions - initialCountOfQuestions, is(2));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetAllQuestionGroups() throws ApplicationException {
+        int initialCount = questionnaireService.getAllQuestionGroups().size();
+        defineQuestionGroup("QG1" + System.currentTimeMillis());
+        defineQuestionGroup("QG2" + System.currentTimeMillis());
+        int finalCount = questionnaireService.getAllQuestionGroups().size();
+        assertThat(finalCount - initialCount, is(2));
     }
 
     @Test
