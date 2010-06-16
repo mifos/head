@@ -129,7 +129,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     @Override
     public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId) throws ApplicationException {
         FeeDto fee = getFeeDetails(feeId);
-        List<FeeStatusEntity> feeStatuses = this.feeDao.findAllFeeStatuses();
+        List<FeeStatusEntity> feeStatuses = this.feeDao.retrieveFeeStatuses();
 
         return new FeeDetailsForManageDto(fee, feeStatuses);
     }

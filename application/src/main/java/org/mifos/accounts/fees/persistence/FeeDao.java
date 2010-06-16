@@ -54,7 +54,7 @@ public interface FeeDao {
 
     List<FeePaymentEntity> retrieveFeePayments();
 
-    List<FeeStatusEntity> findAllFeeStatuses();
+    List<FeeStatusEntity> retrieveFeeStatuses();
 
     FeeFrequencyTypeEntity findFeeFrequencyEntityByType(FeeFrequencyType feeFrequencyType);
 

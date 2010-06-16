@@ -45,7 +45,6 @@ import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeDaoHibernate implements FeeDao {
@@ -67,7 +66,16 @@ public class FeeDaoHibernate implements FeeDao {
 
     @Override
     public FeeDto findDtoById(Short feeId) {
-        FeeBO fee = findById(feeId);
+
+        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Criteria criteriaQuery = session.createCriteria(FeeBO.class);
+        criteriaQuery.add(Restrictions.eq("id", feeId));
+        criteriaQuery.setFetchMode("lookUpValue", FetchMode.JOIN);
+        criteriaQuery.setFetchMode("categoryType", FetchMode.JOIN);
+        criteriaQuery.setFetchMode("feeStatus", FetchMode.JOIN);
+        criteriaQuery.setFetchMode("feeFrequency", FetchMode.JOIN);
+
+        FeeBO fee = (FeeBO) criteriaQuery.uniqueResult();
         return fee.toDto();
     }
 
@@ -80,7 +88,7 @@ public class FeeDaoHibernate implements FeeDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<FeeDto> retrieveAllProductFees() {
-        List<FeeBO> allProductFees = (List<FeeBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES, null);
+        List<FeeBO> allProductFees = (List<FeeBO>) this.genericDao.executeNamedQuery("retrieveProductFees", null);
 
         return assembleFeeDto(allProductFees);
     }
@@ -88,7 +96,7 @@ public class FeeDaoHibernate implements FeeDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<FeeDto> retrieveAllCustomerFees() {
-        List<FeeBO> allCustomerFees = (List<FeeBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
+        List<FeeBO> allCustomerFees = (List<FeeBO>) this.genericDao.executeNamedQuery("retrieveCustomerFees", null);
 
         return assembleFeeDto(allCustomerFees);
     }
@@ -122,7 +130,7 @@ public class FeeDaoHibernate implements FeeDao {
     }
 
     @Override
-    public List<FeeStatusEntity> findAllFeeStatuses() {
+    public List<FeeStatusEntity> retrieveFeeStatuses() {
         return retrieveListOfMasterDataFor(FeeStatusEntity.class);
     }
 

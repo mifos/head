@@ -237,8 +237,6 @@ public interface NamedQueryConstants {
     public static final String GET_FEE_UPDATETYPE = "getFeeUpdateType";
 
     public static final String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";
-    public static final String RETRIEVE_CUSTOMER_FEES = "retrieveCustomerFees";
-    public static final String RETRIEVE_PRODUCT_FEES = "retrieveProductFees";
 
     public static final String APPLICABLE_LOAN_PRODUCTS = "loanOffering.getApplicableProducts";
 

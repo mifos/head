@@ -25,6 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
@@ -321,7 +324,6 @@ public abstract class FeeBO extends AbstractBusinessObject {
         feeDto.setCategoryType(this.categoryType.getName());
         feeDto.setFeeStatus(this.feeStatus.toDto());
 
-
         FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
         feeDto.setFeeFrequency(this.feeFrequency.toDto());
         feeDto.setActive(isActive());
@@ -347,5 +349,23 @@ public abstract class FeeBO extends AbstractBusinessObject {
             feeDto.setFeeFormula(rateFeeBo.getFeeFormula().toDto());
         }
         return feeDto;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FeeBO rhs = (FeeBO) obj;
+        return new EqualsBuilder().append(this.feeId, rhs.feeId).append(this.feeName, rhs.feeName).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int initialNonZeroOddNumber = 7;
+        int multiplierNonZeroOddNumber = 7;
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.feeId).append(this.feeName).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).toString();
     }
 }
