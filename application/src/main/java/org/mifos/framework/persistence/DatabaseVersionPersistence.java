@@ -67,7 +67,7 @@ import org.mifos.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 254;
+    public static final int APPLICATION_VERSION = 256;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
@@ -90,10 +90,10 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade104());
         register106(register);
         register115(register);
-        register117(register);
+     //   register117(register);
         register118(register);
         register119(register);
-        register120(register);
+     //   register120(register);
         register123(register);
         register124(register);
         register126(register);
@@ -133,6 +133,8 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade238());
         register(register, new Upgrade240());
         register248(register);
+        register255(register);
+        register256(register);
         return Collections.unmodifiableMap(register);
     }
 
@@ -169,13 +171,13 @@ public class DatabaseVersionPersistence {
                 SecurityConstants.CLIENTS, ENGLISH_LOCALE, "Can remove clients from groups"));
     }
 
-    private static void register117(Map<Integer, Upgrade> register) {
+/*    private static void register117(Map<Integer, Upgrade> register) {
         register(register, new CompositeUpgrade(new AddReport(117, (short) 28, ReportsCategoryBO.ANALYSIS,
                 "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
                 "DetailedAgingPortfolioAtRisk.rptdesign"), new AddActivity(117,
                 SecurityConstants.CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK, SecurityConstants.ANALYSIS,
                 ENGLISH_LOCALE, "Can view Detailed Aging of Portfolio at Risk")));
-    }
+    }*/
 
     private static void register118(Map<Integer, Upgrade> register) {
         register(register, new AddActivity(118, SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS, SecurityConstants.CLIENTS,
@@ -190,12 +192,12 @@ public class DatabaseVersionPersistence {
                 "Can Edit product mix")));
     }
 
-    private static void register120(Map<Integer, Upgrade> register) {
+   /* private static void register120(Map<Integer, Upgrade> register) {
         register(register, new CompositeUpgrade(new AddReport(120, (short) 29, ReportsCategoryBO.ANALYSIS,
                 "Active Loans By Loan Officer", "active_loans_by_loan_officer", "ActiveLoansByLoanOfficer.rptdesign"),
                 new AddActivity(120, SecurityConstants.CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER,
                         SecurityConstants.ANALYSIS, ENGLISH_LOCALE, "Can view Active Loans By Loan Officer")));
-    }
+    }*/
 
     private static void register123(Map<Integer, Upgrade> register) {
         register(register, new AddActivity(123, SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS,
@@ -341,6 +343,22 @@ public class DatabaseVersionPersistence {
 //                new AddActivity(248, SecurityConstants.PRODUCT_MIX, null, ENGLISH_LOCALE, "Product mix"),
 //                new AddActivity(248, SecurityConstants.CAN_DEFINE_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Define product mix"),
 //                new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Edit product mix")));
+    }
+
+    private static void register255(Map<Integer, Upgrade> register) {
+        register(register, new CompositeUpgrade(new AddActivity(255,
+                "Permissions-CanViewDetailedAgingPortfolioAtRiskReport", SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK,
+                SecurityConstants.ANALYSIS), new AddReport(255, (short) 0, ReportsCategoryBO.ANALYSIS,
+                "Detailed Aging Of Portfolio At Risk", "detailed_aging_portfolio_at_risk", "DetailedAgingPortfolioAtRiskReport.rptdesign",
+                SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK)));
+    }
+
+    private static void register256(Map<Integer, Upgrade> register) {
+        register(register, new CompositeUpgrade( new AddActivity(256,
+                "Permissions-CanViewGeneralLedgerReport", SecurityConstants.CAN_VIEW_GENERAL_LEDGER,
+                SecurityConstants.ANALYSIS), new AddReport(256, (short) 0, ReportsCategoryBO.ANALYSIS,
+                "General Ledger Report", "general_ledger_report", "GeneralLedgerReport.rptdesign",
+                SecurityConstants.CAN_VIEW_GENERAL_LEDGER)));
     }
 
     public DatabaseVersionPersistence() {

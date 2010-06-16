@@ -39,7 +39,7 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     private static final short ACTIVITY_ID = 1;
     private static final int HIGHER_UPGRADE_VERSION = 185;
     private static final short REPORT_CATEGORY_ID = (short) 6;
-    private static final short TEST_REPORT_ID = (short) 4;
+    private static final short TEST_REPORT_ID = (short) 6;
     private static final int LOWER_UPGRADE_VERSION = 184;
     private Session session;
     private Transaction transaction;
