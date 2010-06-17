@@ -1100,6 +1100,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     @Deprecated
     public void removeGroupMemberShip(final PersonnelBO personnel, final String comment) throws PersistenceException,
             CustomerException {
+
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
+
+        String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+        this.setSearchId(searchId);
+
         PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
         CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment, new DateTimeService()
                 .getCurrentJavaSqlDate(), user, this);
@@ -1111,7 +1118,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         setPersonnel(personnel);
         setParentCustomer(null);
-        generateSearchId();
+//        generateSearchId();
         update();
     }
 

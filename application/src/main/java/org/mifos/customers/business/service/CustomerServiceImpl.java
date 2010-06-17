@@ -994,12 +994,8 @@ public class CustomerServiceImpl implements CustomerService {
             oldParentOfGroup.incrementChildCount();
             searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
         } else {
-            try {
-                int newSearchIdSuffix = new CustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, group.getOffice().getOfficeId()) + 1;
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
+            int newSearchIdSuffix = this.customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(group.getOfficeId());
+            searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
         }
         group.setSearchId(searchId);
 

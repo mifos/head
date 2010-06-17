@@ -20,25 +20,13 @@
 package org.mifos.customers.business;
 
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.argThat;
-
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -56,9 +44,6 @@ public class CustomerDaoHibernateTest {
 
     @Mock
     private CustomerBO customer;
-
-    @Mock
-    private ClientBO client;
 
     @Before
     public void setupAndInjectCollaborators() {
@@ -86,55 +71,5 @@ public class CustomerDaoHibernateTest {
 
         // exercise test
         customerDao.findActiveClientsUnderGroup(customer);
-    }
-
-    @Test
-    public void shouldValidateClientForDuplicateNameOrGovtId() {
-        when(client.getGovernmentId()).thenReturn("    GovID ");
-        when(client.getDisplayName()).thenReturn(" abc     ");
-        when(client.getDateOfBirth()).thenReturn(new Date(System.currentTimeMillis()));
-        setUpGenericDAOExpectationsForGovtLookup("GovID");
-        setUpGenericDAOExpectationsForNameLookup("abc");
-        try {
-            customerDao.validateClientForDuplicateNameOrGovtId(client);
-        } catch (CustomerException e) {
-            Assert.fail("An exception should not have occured here");
-        }
-    }
-
-    private void setUpGenericDAOExpectationsForNameLookup(String name) {
-        List resultSet = new LinkedList();
-        resultSet.add(Long.valueOf(0));
-        when(genericDao.executeNamedQuery(anyString(), argThat(new IsMapOfGivenElements(name)))).thenReturn(resultSet);
-    }
-
-    private void setUpGenericDAOExpectationsForGovtLookup(String govtId) {
-        List resultSet = new LinkedList();
-        resultSet.add(Long.valueOf(0));
-        when(genericDao.executeNamedQuery(anyString(), argThat(new IsMapOfGivenElements(govtId)))).thenReturn(resultSet);
-    }
-
-    private class IsMapOfGivenElements extends ArgumentMatcher<Map> {
-
-        private final Object[] arguments;
-
-        public IsMapOfGivenElements(Object... arguments) {
-            this.arguments = arguments;
-        }
-
-        @Override
-        public boolean matches(Object argument) {
-            if (!(argument instanceof Map)) {
-                return false;
-            }
-            Map map = (Map)argument;
-            for(Object arg: arguments) {
-                if (!map.containsValue(arg)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
     }
 }

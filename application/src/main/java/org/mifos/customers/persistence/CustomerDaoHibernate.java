@@ -1529,14 +1529,26 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public int retrieveLastSearchIdValueForNonParentCustomersInOffice(final Short officeId) {
         final int maxCustomerId = maxIdOfCustomersWithNoParentWithinOffice(officeId);
-        int valueAssociatedWithLastEnteredCustomer = 0;
+        int maxValue = 0;
         if (maxCustomerId > 0) {
             final CustomerBO lastEnteredNonParentCustomerUnderOffice = findCustomerById(maxCustomerId);
             final String searchId = lastEnteredNonParentCustomerUnderOffice.getSearchId();
-            valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(
-                    GroupConstants.PREFIX_SEARCH_STRING, ""));
+
+            int suffixValue = 0;
+            if (searchId.startsWith(GroupConstants.PREFIX_SEARCH_STRING) && searchId.lastIndexOf('.') == 1) {
+                suffixValue = Integer.parseInt(searchId.substring(2));
+            } else if (searchId.startsWith(GroupConstants.PREFIX_SEARCH_STRING)) {
+                // legacy format 1.x.y instead of just 1.x for customers directly under office (don't care about level)
+                String nextWholeNumber = searchId.substring(2, searchId.indexOf('.', 2));
+                suffixValue = Integer.parseInt(nextWholeNumber) + 25;
+            }
+
+            if (suffixValue > maxValue) {
+                maxValue = suffixValue;
+            }
+
         }
-        return valueAssociatedWithLastEnteredCustomer;
+        return maxValue;
     }
 
     @Override
