@@ -45,6 +45,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
+import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
@@ -340,7 +341,7 @@ public class ClientCustActionForm extends CustomerActionForm {
             validateDateOfBirth(errors, resources);
             validateGender(errors, resources);
             if (!ClientRules.isFamilyDetailsRequired()) {
-                validateSpouseNames(errors, resources);
+                validateSpouseNames(errors, resources, request);
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
             validateCustomFieldsForCustomers(request, errors);
@@ -438,16 +439,39 @@ public class ClientCustActionForm extends CustomerActionForm {
         }
     }
 
-    private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
-        if (spouseName.getNameType() == null) {
+    @SuppressWarnings({"unchecked"})
+    private void validateSpouseNames(ActionErrors errors, ResourceBundle resources, HttpServletRequest request) {
+        boolean mandatorySpouseType = false;
+        Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+                .getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+
+        List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.CLIENT.getValue());
+        for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
+            if (HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION.equals(fieldConfigurationEntity.getFieldName())) {
+                 if (fieldConfigurationEntity.isMandatory()) {
+                    mandatorySpouseType = true;
+                    break;
+                }
+            }
+        }
+
+        // issue 2929: when the spouse/father fields are hidden, then the values are null instead empty string - this need to be fixed here
+        if (spouseName.getFirstName() == null) spouseName.setFirstName("");
+        if (spouseName.getMiddleName() == null) spouseName.setMiddleName("");
+        if (spouseName.getSecondLastName() == null) spouseName.setSecondLastName("");
+        if (spouseName.getLastName() == null) spouseName.setLastName("");
+        
+        if (spouseName.getNameType() == null && (mandatorySpouseType ||
+                !StringUtils.isBlank(spouseName.getFirstName()) || !StringUtils.isBlank(spouseName.getMiddleName()) ||
+                !StringUtils.isBlank(spouseName.getSecondLastName()) || !StringUtils.isBlank(spouseName.getLastName()))) {
             errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, resources
                     .getString("Customer.SpouseType")));
         }
-        if (StringUtils.isBlank(spouseName.getFirstName())) {
+        if (mandatorySpouseType && StringUtils.isBlank(spouseName.getFirstName())) {
             errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseFirstName")));
         }
-        if (StringUtils.isBlank(spouseName.getLastName())) {
+        if (mandatorySpouseType && StringUtils.isBlank(spouseName.getLastName())) {
             errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(CustomerConstants.ERRORS_MANDATORY,
                     resources.getString("Customer.SpouseLastName")));
         }

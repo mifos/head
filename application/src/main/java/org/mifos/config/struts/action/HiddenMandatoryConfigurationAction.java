@@ -34,6 +34,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.struts.actionform.HiddenMandatoryConfigurationActionForm;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -50,8 +51,10 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
+import org.mifos.customers.client.util.helpers.ClientConstants;
 
 public class HiddenMandatoryConfigurationAction extends BaseAction {
 
@@ -85,12 +88,17 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         logger.debug("Inside load method");
+
         HiddenMandatoryConfigurationActionForm actionForm = (HiddenMandatoryConfigurationActionForm) form;
         actionForm.clear();
         List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
                 .getAllConfigurationFieldList();
         populateActionForm(actionForm, confFieldList);
+
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),request);
+
         logger.debug("Outside load method");
+        
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -279,6 +287,14 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
             fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientPovertyStatus()),
                     getShortValue(actionForm.getHideClientPovertyStatus()));
         } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientSpouseFatherInformation()),
+                    getShortValue(actionForm.getHideClientSpouseFatherInformation()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS)) {
+            fieldConfiguration.update(getShortValue(actionForm.getMandatoryClientFamilyDetails()),
+                    fieldConfiguration.getHiddenFlag());
+        } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
             fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(), getShortValue(actionForm
                     .getHideClientSpouseFatherMiddleName()));
@@ -381,6 +397,13 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
         } else if (fieldConfiguration.getFieldName().equals(HiddenMandatoryFieldNamesConstants.POVERTY_STATUS)) {
             actionForm.setHideClientPovertyStatus(getStringValue(fieldConfiguration.getHiddenFlag()));
             actionForm.setMandatoryClientPovertyStatus(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION)) {
+            actionForm.setHideClientSpouseFatherInformation(getStringValue(fieldConfiguration.getHiddenFlag()));
+            actionForm.setMandatoryClientSpouseFatherInformation(getStringValue(fieldConfiguration.getMandatoryFlag()));
+        } else if (fieldConfiguration.getFieldName().equals(
+                HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS)) {
+            actionForm.setMandatoryClientFamilyDetails(getStringValue(fieldConfiguration.getMandatoryFlag()));
         } else if (fieldConfiguration.getFieldName().equals(
                 HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_MIDDLE_NAME)) {
             actionForm.setHideClientSpouseFatherMiddleName(getStringValue(fieldConfiguration.getHiddenFlag()));

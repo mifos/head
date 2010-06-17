@@ -1249,9 +1249,11 @@ public class CustomerDaoHibernate implements CustomerDao {
             List<Object[]> clientNameDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
                     "getClientNameDetailDto", queryParameters);
 
-            final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
-            spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
-            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+            if (clientNameDetailsQueryResult.size() > 0) {
+                final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
+                spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
+                spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+            }
         }
 
         return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,

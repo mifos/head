@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(256);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(257);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -2651,6 +2651,11 @@ INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_F
 /* Added for jira issues 2814 and 2930 */
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)VALUES
 (83,'ExternalId',22,0,0);
+
+/* Added for jira issue 2929 */
+INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)VALUES
+(84,'SpouseFatherInformation',1,1,0),
+(85,'FamilyDetails',1,1,0);
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 -- this row was CollectionSheetHelper.daysInAdvance
