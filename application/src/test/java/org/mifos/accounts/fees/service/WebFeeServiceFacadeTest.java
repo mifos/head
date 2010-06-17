@@ -1,5 +1,6 @@
 package org.mifos.accounts.fees.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/FeeContext.xml", "/test-persistenceContext.xml"})
 @TransactionConfiguration(transactionManager="platformTransactionManager", defaultRollback=true)
+@Ignore("add tests")
 public class WebFeeServiceFacadeTest {
 
     @Autowired

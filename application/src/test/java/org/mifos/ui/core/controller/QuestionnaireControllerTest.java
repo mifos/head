@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
@@ -33,13 +34,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.binding.message.DefaultMessageResolver;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageResolver;
+import org.springframework.ui.ModelMap;
 import org.springframework.webflow.execution.RequestContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -53,10 +57,16 @@ public class QuestionnaireControllerTest {
 
     @Mock
     private QuestionnaireServiceFacade questionnaireServiceFacade;
-    
+
     private static final String TITLE = "Title";
     @Mock
     private MessageContext messageContext;
+
+    @Mock
+    private ModelMap model;
+    
+    @Mock
+    private HttpServletRequest httpServletRequest;
 
     @Before
     public void setUp() throws Exception {
@@ -194,6 +204,26 @@ public class QuestionnaireControllerTest {
         verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupForm>anyObject());
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
+    }
+
+    @Test
+    public void testViewAllQuestionsSuccess() {
+        when(questionnaireServiceFacade.viewAllQuestions()).thenReturn(asList(getQuestionDetail("title1"), getQuestionDetail("title2")));
+        List<Question> questionList = questionnaireController.viewAllQuestions();
+        verify(questionnaireServiceFacade).viewAllQuestions();
+        assertNotNull(questionList);
+        assertThat(questionList.size(), is(2));
+    }
+
+    @Test
+    public void testShouldGetAllQuestions(){
+        String view = questionnaireController.getAllQuestions(model, httpServletRequest);
+        assertThat(view, is("viewQuestions"));
+        verify(model).addAttribute(eq("questions"),anyList());
+    }
+
+    private QuestionDetail getQuestionDetail(String title) {
+        return new QuestionDetail(null, title, title, null);
     }
 
     private QuestionForm getQuestionForm(String title) {

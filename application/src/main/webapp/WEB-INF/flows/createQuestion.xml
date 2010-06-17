@@ -3,24 +3,31 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="questionDefinition" class="org.mifos.ui.core.controller.QuestionForm" />
+	<var name="qd" class="org.mifos.ui.core.controller.QuestionForm"/>
 
-	<view-state id="createQuestion" model="questionDefinition">
+    <on-start>
+        <set name="flowScope.questionDefinition" value="qd"/>
+    </on-start>
+
+	<view-state id="createQuestion" model="flowScope.questionDefinition">
 		<transition on="addQuestion" to="addQuestion" />
 		<transition on="createQuestions" to="createQuestions" />
 		<transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
 
     <action-state id="addQuestion">
-        <evaluate expression="questionnaireController.addQuestion(questionDefinition, flowRequestContext)" result="flowScope.questionDefinition"/>
+        <evaluate expression="questionnaireController.addQuestion(flowScope.questionDefinition, flowRequestContext)"/>
         <transition on="success" to="createQuestion" />
         <transition on="failure" to="createQuestion" />
     </action-state>
 
     <action-state id="createQuestions">
-        <evaluate expression="questionnaireController.createQuestions(questionDefinition, flowRequestContext)" />
+        <evaluate expression="questionnaireController.createQuestions(flowScope.questionDefinition, flowRequestContext)" />
         <transition on="success" to="createQuestionSuccess" />
         <transition on="failure" to="createQuestion" />
+        <on-exit>
+            <evaluate expression="questionnaireController.viewAllQuestions()" result="flowScope.questions"/>
+        </on-exit>
     </action-state>
 
     <end-state id="createQuestionSuccess" view="viewQuestions" />

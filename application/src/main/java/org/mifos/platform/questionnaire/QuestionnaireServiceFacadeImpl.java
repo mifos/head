@@ -57,4 +57,9 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     public void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException {
         questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(questionGroupForm.getTitle()));
     }
+
+    @Override
+    public List<QuestionDetail> viewAllQuestions() {
+        return questionnaireService.getAllQuestions();
+    }
 }

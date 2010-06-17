@@ -1,6 +1,8 @@
 [#ftl]
 [#import "spring.ftl" as spring]
-<html lang="EN">
+<html lang="EN" xmlns:html-el="http://www.w3.org/1999/xhtml" xmlns:html-el="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://www.springframework.org/schema/webflow" xmlns:c="http://www.w3.org/1999/XSL/Transform"
+      xmlns:fmt="http://jboss.org/xml/ns/javax/validation/mapping" xmlns:fmt="http://java.sun.com/JSP/Page">
 <head>
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -84,90 +86,56 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="createQuestion"/>
-            <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
+            <span id="page.id" title="view_questions"/>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
-                        <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> Create Question </span>
+      <span class="fontnormal8pt">
+          <a href="AdminAction.do?method=load">Admin</a> /
+      </span>
+      <span class="fontnormal8ptbold">
+          View Questions
+      </span>
                     </td>
                 </tr>
             </table>
+
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td align="left" valign="top" class="paddingL15T15">
-                        <table width="95%" border="0" cellpadding="3" cellspacing="0">
+                    <td width="70%" align="left" valign="middle" class="paddingL15T15">
+                        <div style="padding:3px" class="headingorange">
+                            View Questions
+                            <br/>
+                            <br/>
+            <span class="fontnormal">
+                Click on a question below to view details and make changes or
+                <a href="createQuestion.ftl">
+                    define a new question
+                </a>
+            </span>
+                            <br/>
+            <span class="fontnormal">
+                Note\: questions flagged as PPI may not be attached to general surveys.
+            </span>
+                        </div>
+
+
+                        <br/>
+
+                        <br>
+                        <table width="95%" border="0" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td class="headingorange"><span class="headingorange"> Add Questions </span></td>
+                                <td align="center" class="blueline">&nbsp;</td>
                             </tr>
-                            <tr class="fontnormal">
-                                <td align="left" valign="top" class="paddingL15T15">
-                                    <form name="createquestionform"
-                                          action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
-                                          focus="questionText">
-                                        <table width="98%" border="0" cellpadding="3" cellspacing="0">
-                                            <tr class="fontnormal">
-                                                <td width="24%" align="right"><span class="mandatorytext"><font
-                                                        color="#FF0000">*</font></span>Question Titile:
-                                                </td>
-                                                <td width="76%">
-                                                    <script src="pages/framework/js/func.js"></script>
-                                                    <script src="pages/framework/js/func_en_GB.js"></script>
-                                                    [@spring.formInput "questionDefinition.title",
-                                                    'maxlength="50"
-                                                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
-                                                    onblur="return FnCheckNumChars(event,this);return
-                                                    FnEscape(event,this)"'/]
-                                                    [@spring.showErrors "<br>","fontnormalRedBold" /]
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>&nbsp;</td>
-                                                <td>
-                                                    <input type="submit" name="_eventId_createQuestions"
-                                                           value="Submit"
-                                                           class="buttn">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" class="blueline" align="left">&nbsp;</td>
-                                            </tr>
-                                        </table>
-                                        <table width="98%" border="0" cellpadding="3" cellspacing="0">
-                                                      <tr>
-                                                        <td class="drawtablehd">Question Name</td>
-                                                      </tr>
-
-                                                      [#list questionDefinition.questions as question]
-                                                      <tr>
-                                                          <td class="drawtablerow">${question.title}</td>
-                                                      </tr>
-                                                      [/#list]
-                                                      <tr>
-
-                                                        <td class="drawtablerow">&nbsp;</td>
-                                                      </tr>
-                                                    </table>
-
-
-
-                                        <br>
-                                    </form>
-                                    <br>
-                                </td>
                         </table>
                         <br>
+                        [#list questions as question]
+                          ${question.title}
+                          <br/>
+                        [/#list]
                     </td>
                 </tr>
             </table>
-            <br>
-            <input type="hidden" name="h_user_locale" value="en_GB">
         </td>
     </tr>
 </table>

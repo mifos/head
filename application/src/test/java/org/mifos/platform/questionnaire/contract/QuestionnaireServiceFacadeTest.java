@@ -32,7 +32,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -71,6 +73,13 @@ public class QuestionnaireServiceFacadeTest {
     public void testShouldCheckDuplicates(){
         questionnaireServiceFacade.isDuplicateQuestion(TITLE);
         verify(questionnaireService).isDuplicateQuestion(any(QuestionDefinition.class));
+    }
+
+    @Test
+    public void testViewAllQuestion(){
+        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.viewAllQuestions();
+        assertNotNull(questionDetailList);
+        verify(questionnaireService).getAllQuestions();
     }
 
     private Question getQuestion(String title) {

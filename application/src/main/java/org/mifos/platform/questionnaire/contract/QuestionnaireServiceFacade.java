@@ -32,4 +32,6 @@ public interface QuestionnaireServiceFacade {
     boolean isDuplicateQuestion(String title);
 
     void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException;
+
+    List<QuestionDetail> viewAllQuestions();
 }

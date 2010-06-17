@@ -23,12 +23,19 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.contract.QuestionDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class QuestionnaireController {
@@ -110,5 +117,29 @@ public class QuestionnaireController {
             return true;
         }
         return false;
+    }
+
+    @RequestMapping("/viewQuestions.ftl")
+    public String getAllQuestions(ModelMap model, HttpServletRequest request){
+        model.addAttribute("questions", viewAllQuestions());
+        return "viewQuestions";
+    }
+
+    public List<Question> viewAllQuestions() {
+        return mapToQuestions(questionnaireServiceFacade.viewAllQuestions());
+    }
+
+    private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {
+        LinkedList<Question> questions = new LinkedList<Question>();
+        for (QuestionDetail questionDetail : questionDetails) {
+            questions.add(mapToQuestion(questionDetail));
+        }
+        return questions;
+    }
+
+    private Question mapToQuestion(QuestionDetail questionDetail) {
+        Question question = new Question();
+        question.setTitle(questionDetail.getText());
+        return question;
     }
 }
