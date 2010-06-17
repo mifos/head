@@ -32,14 +32,15 @@ public class ViewOrganizationSettingsController extends AbstractController{
         HttpSession httpsession=request.getSession();
         Properties p=null;
         // TODO Auto-generated method stub
-        //ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings","properties",p);
+        ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings");
         try {
             p=viewOrganizationSettingsServiceFacade.getOrganizationSettings(httpsession);
+            modelAndView.addObject("properties",p);
             } catch (Exception e) {
             // TODO Auto-generated catch block
            System.out.println("in catch of try");
         }
-        return new ModelAndView("viewOrganizationSettings","properties",p);
+        return modelAndView;
     }
 
 }

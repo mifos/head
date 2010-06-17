@@ -11,19 +11,17 @@
   <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24">
-  		<div class="span-22 bluedivs paddingLeft"><a href="admin.html">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "organizationalSettings"/]</span></div>
+  		<div class="span-22 bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "organizationalSettings"/]</span></div>
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "organizationalSettings"/] </span></p>
-        
-        <p class="span-24">0
+        <p class="span-24">
         	<div class="fontBold">[@spring.message "fiscalyear"/] </div>
         	<div><span>[@spring.message "workingdays"/]</span>&nbsp;:&nbsp;<span>${properties.workingDays}</span></div>
             <div><span>[@spring.message "allowcalendardefinitionfornextyear"/]</span>&nbsp;:&nbsp;<span> 30 days before end of current year</span></div>
             <div><span>[@spring.message "startofWeek"/]</span>&nbsp;:&nbsp;<span>${properties.startOfWeek}</span></div>
             <div><span>[@spring.message "offdays"/]</span>&nbsp;:&nbsp;<span>${properties.offDays}</span></div>
             <div><span>[@spring.message "meetingincaseofaholiday"/]</span>&nbsp;:&nbsp;<span>${properties.holidayMeeting} </span></div>          
-        </p><br>        
-        <br>
+        </p>
         <p class="span-24">
         	<div class="fontBold">[@spring.message "locale"/] </div>
         	<div><span>[@spring.message "country"/]</span>&nbsp;:&nbsp;<span>${properties.localeCountryCode}</span></div>
@@ -31,10 +29,10 @@
         </p>
         <p class="span-24">
         	<div class="fontBold">[@spring.message "accountingrules"/] </div>
-        	<div><span>[@spring.message "currency"/]</span>&nbsp;:&nbsp;<span><!--${properties.currencies.get(0).code}-->Currency code</span></div>
+        	<div><span>[@spring.message "currency"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).code-->Currency code</span></div>
             <div><span>[@spring.message "maximumInterest"/]</span>&nbsp;:&nbsp;<span>${properties.maxInterest}</span></div>
             <div><span>[@spring.message "minimumInterest"/]</span>&nbsp;:&nbsp;<span>${properties.minInterest}</span></div>
-            <div><span>[@spring.message "numberofdigitsafterdecimal"/]</span>&nbsp;:&nbsp;<span><!--${properties.currencies.get(0).digitsAfterDecimal}-->digitsAfterDecimal</span></div>
+            <div><span>[@spring.message "numberofdigitsafterdecimal"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).digitsAfterDecimal-->digitsAfterDecimal</span></div>
             <div><span>[@spring.message "numberofdigitsbeforedecimal"/]</span>&nbsp;:&nbsp;<span>${properties.digitsBeforeDecimal}</span></div>
             <div><span>[@spring.message "numberofdigitsafterdecimalforinterest"/]</span>&nbsp;:&nbsp;<span>${properties.intDigitsAfterDecimal}</span></div>
             <div><span>[@spring.message "numberofdigitsbeforedecimalforinterest"/]</span>&nbsp;:&nbsp;<span>${properties.intDigitsBeforeDecimal}</span></div>
@@ -42,8 +40,8 @@
             <div><span>[@spring.message "currencyRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.currencyRoundingMode}</span></div>
             <div><span>[@spring.message "initialRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.initialRoundingMode}</span></div>
             <div><span>[@spring.message "finalRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.finalRoundingMode}</span></div>
-            <div><span>[@spring.message "finalRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--${properties.currencies.get(0).finalRoundOffMultiple}-->finalRoundOffMultiple</span></div>
-            <div><span>[@spring.message "initialRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--${properties.currencies.get(0).initialRoundOffMultiple}-->initialRoundOffMultiple</span></div>
+            <div><span>[@spring.message "finalRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).finalRoundOffMultiple-->finalRoundOffMultiple</span></div>
+            <div><span>[@spring.message "initialRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).initialRoundOffMultiple-->initialRoundOffMultiple</span></div>
         </p>
         
         <p class="span-24">
@@ -78,8 +76,4 @@
 	</div>
    	</form> 
   </div><!--Main Content Ends-->
-  <#assign seq = ${properties.currencies}>
-<#list seq as x>
-  ${x.code}<#if x_has_next>,</#if>
-</#list>  
   [@mifos.footer/]
