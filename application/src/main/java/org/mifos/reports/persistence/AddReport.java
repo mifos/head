@@ -22,105 +22,90 @@ package org.mifos.reports.persistence;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.reports.business.ReportsBO;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.security.util.SecurityConstants;
 
 public class AddReport extends Upgrade {
 
-    private static final int HIGHER_VERSION = 185;
-    private short newId;
+    private short lookupId;
+    private short lookupValueId;
+    private short reportId;
+    private short activityId;
+    private short parentId;
     private final short category;
     private final String name;
+    private final String lookupValue;
+    private final String lookupName;
     private final String identifier;
-    private final String design;
-    private Short activityId;
+    private final String fileName;
 
-    public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design,
-            Short activityId) {
+    public AddReport(int higherVersion, short category, String name, String fileName) {
         super(higherVersion);
-        this.newId = newId;
         this.category = category;
+        this.parentId = getParentId(category);
         this.name = name;
-        this.identifier = identifier;
-        this.design = design;
-        this.activityId = activityId;
+        this.lookupValue = "Can View " + name;
+        this.lookupName = "Permissions." + lookupValue.replace(" ", "");
+        this.identifier = name.replace(" ", "_").toLowerCase();
+        this.fileName = fileName;
+    }
+
+    private short getParentId(short category) {
+        if (category == ReportsCategoryBO.ANALYSIS) {
+            return SecurityConstants.ANALYSIS;
+        }
+        throw new RuntimeException("Unimplemented category");
     }
 
     @Override
-    public void upgrade(Connection connection)
-            throws IOException, SQLException {
+    public void upgrade(Connection connection) throws IOException, SQLException {
+        this.lookupId = getNextId(connection, "LOOKUP_ID", "LOOKUP_VALUE");
+        this.lookupValueId = getNextId(connection, "LOOKUP_VALUE_ID", "LOOKUP_VALUE_LOCALE");
+        this.reportId = getNextId(connection, "REPORT_ID", "REPORT");
+        this.activityId = getNextId(connection, "ACTIVITY_ID", "ACTIVITY");
         doUpgrade(connection);
+        upgradeVersion(connection);
     }
 
-    void doUpgrade(Connection connection) throws SQLException {
-        insertIntoReport(connection);
-        insertIntoReportJasperMap(connection);
-    }
-
-    private short getNextReportId(Connection connection) throws SQLException {
+    private short getNextId(Connection connection, String idName, String table) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "SELECT MAX(REPORT_ID) FROM REPORT";
-        short reportId = 0;
+        String query = "SELECT MAX(" + idName + ") FROM " + table;
+        short id = 0;
         ResultSet results = statement.executeQuery(query);
         if (results.next()) {
-            reportId = results.getShort(1);
-            reportId++;
+            id = results.getShort(1);
+            id++;
             statement.close();
         } else {
             statement.close();
-            throw new RuntimeException("unable to find max report id to upgrade");
+            throw new RuntimeException("unable to find max " + idName + " from " + table);
         }
-
-        return reportId;
+        return id;
     }
 
-    private void insertIntoReport(Connection connection) throws SQLException {
-        if (newId == 0) {
-            newId = getNextReportId(connection);
-        }
-        PreparedStatement statement = connection.prepareStatement(isLowerVersion() ? getSqlForLowerVersion()
-                : getSqlForHigherVersion());
-        statement.setShort(1, newId);
-        statement.setShort(2, category);
-        statement.setString(3, name);
-        statement.setString(4, identifier);
-        if (!isLowerVersion()) {
-            statement.setShort(5, ReportsBO.ACTIVE);
-            statement.setShort(6, activityId);
-        }
-        statement.executeUpdate();
-        statement.close();
+    void doUpgrade(Connection connection) throws SQLException {
+        String sql = "INSERT INTO LOOKUP_VALUE (LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) VALUES (" + lookupId + ",87,'"
+                + lookupName + "')";
+        connection.createStatement().executeUpdate(sql);
+        sql = "INSERT INTO LOOKUP_VALUE_LOCALE (LOOKUP_VALUE_ID, LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) VALUES   ("
+                + lookupValueId + ",1," + lookupId + ",'" + lookupValue + "')";
+        connection.createStatement().executeUpdate(sql);
+        sql = "INSERT INTO ACTIVITY (ACTIVITY_ID, PARENT_ID, ACTIVITY_NAME_LOOKUP_ID, DESCRIPTION_LOOKUP_ID) VALUES ("
+                + activityId + "," + parentId + "," + lookupId + "," + lookupId + ")";
+        connection.createStatement().executeUpdate(sql);
+        sql = "INSERT INTO ROLES_ACTIVITY (ACTIVITY_ID, ROLE_ID) VALUES (" + activityId + ",1)";
+        connection.createStatement().executeUpdate(sql);
+        sql = "INSERT INTO REPORT (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) VALUES ("
+                + reportId + "," + category + ",'" + name + "','" + identifier + "'," + activityId + ",1)";
+        connection.createStatement().executeUpdate(sql);
+        sql = "INSERT INTO REPORT_JASPER_MAP (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, REPORT_JASPER) VALUES  ("
+                + reportId + "," + category + ",'" + name + "','" + identifier + "','" + fileName + "')";
+        connection.createStatement().executeUpdate(sql);
     }
 
-    private boolean isLowerVersion() {
-        return higherVersion() < HIGHER_VERSION;
-    }
-
-    private String getSqlForLowerVersion() {
-        return "INSERT INTO REPORT(REPORT_ID, REPORT_CATEGORY_ID," + "REPORT_NAME,REPORT_IDENTIFIER)"
-                + "VALUES(?,?,?,?)";
-    }
-
-    private String getSqlForHigherVersion() {
-        return "INSERT INTO REPORT(REPORT_ID, REPORT_CATEGORY_ID,"
-                + "REPORT_NAME,REPORT_IDENTIFIER, REPORT_ACTIVE, ACTIVITY_ID)" + "VALUES(?,?,?,?,?,?)";
-    }
-
-    private void insertIntoReportJasperMap(Connection connection) throws SQLException {
-        PreparedStatement statement = connection
-                .prepareStatement("INSERT INTO report_jasper_map(REPORT_ID,REPORT_CATEGORY_ID,"
-                        + "REPORT_NAME, REPORT_IDENTIFIER, REPORT_JASPER) " + "VALUES (?,?,?,?,?)");
-        statement.setShort(1, newId);
-        statement.setShort(2, category);
-        statement.setString(3, name);
-        statement.setString(4, identifier);
-        statement.setString(5, design);
-        statement.executeUpdate();
-        statement.close();
-    }
 }

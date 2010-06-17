@@ -3119,22 +3119,22 @@ INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES(11,'Hun
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(47,51,11,'Hungarian-Hungary',0);
 
 /* Upgrade 255,256 START*/
-INSERT INTO LOOKUP_VALUE VALUES 
-(628,87,'Permissions-CanViewDetailedAgingPortfolioAtRiskReport'),
-(629,87,'Permissions-CanViewGeneralLedgerReport');
-INSERT INTO LOOKUP_VALUE_LOCALE VALUES
-(958,1,628,NULL),
-(959,1,629,NULL);
-INSERT INTO ACTIVITY VALUES
+INSERT INTO LOOKUP_VALUE (LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) VALUES 
+(628,87,'Permissions.CanViewDetailedAgingOfPortfolioAtRiskReport'),
+(629,87,'Permissions.CanViewGeneralLedgerReport');
+INSERT INTO LOOKUP_VALUE_LOCALE (LOOKUP_VALUE_ID, LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) VALUES
+(958,1,628,'Can View Detailed Aging Of Portfolio At Risk Report'),
+(959,1,629,'Can View General Ledger Report');
+INSERT INTO ACTIVITY (ACTIVITY_ID, PARENT_ID, ACTIVITY_NAME_LOOKUP_ID, DESCRIPTION_LOOKUP_ID) VALUES
 (236,150,628,628),
 (237,150,629,629);
-INSERT INTO ROLES_ACTIVITY VALUES
+INSERT INTO ROLES_ACTIVITY (ACTIVITY_ID, ROLE_ID) VALUES
 (236,1),
 (237,1);
-INSERT INTO REPORT VALUES 
-(4,6,'Detailed Aging Of Portfolio At Risk','detailed_aging_portfolio_at_risk',236,1),
+INSERT INTO REPORT (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report',236,1),
 (5,6,'General Ledger Report','general_ledger_report',237,1);
-INSERT INTO REPORT_JASPER_MAP VALUES 
-(4,6,'Detailed Aging Of Portfolio At Risk','detailed_aging_portfolio_at_risk','DetailedAgingPortfolioAtRiskReport.rptdesign'),
+INSERT INTO REPORT_JASPER_MAP (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, REPORT_JASPER) VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report','DetailedAgingPortfolioAtRiskReport.rptdesign'),
 (5,6,'General Ledger Report','general_ledger_report','GeneralLedgerReport.rptdesign');
 /* Upgrade 255,256 END*/
