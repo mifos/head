@@ -53,9 +53,9 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
 
     public void testStartFromStandardStore() throws Exception {
         short newId = 17032;
-        AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
-                ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
-                "DetailedAgingPortfolioAtRisk.rptdesign",(short) 43);
+        AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
+                ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk",
+                "DetailedAgingPortfolioAtRisk.rptdesign");
         upgrade.upgrade(session.connection());
         ReportsBO fetched = (ReportsBO) session.get(ReportsBO.class, newId);
        Assert.assertEquals(newId, (int) fetched.getReportId());

@@ -28,7 +28,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.reports.business.ReportsBO;
+import org.mifos.reports.business.ReportsCategoryBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
@@ -36,11 +38,6 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         super();
     }
 
-    private static final short ACTIVITY_ID = 1;
-    private static final int HIGHER_UPGRADE_VERSION = 185;
-    private static final short REPORT_CATEGORY_ID = (short) 6;
-    private static final short TEST_REPORT_ID = (short) 6;
-    private static final int LOWER_UPGRADE_VERSION = 184;
     private Session session;
     private Transaction transaction;
     private Connection connection;
@@ -53,28 +50,16 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         transaction = session.beginTransaction();
     }
 
-    public void testShouldNotThrowErrorWhenUpgradingForVer184WithActivityIdNull() throws Exception {
-        AddReport addReport = createReport(LOWER_UPGRADE_VERSION);
-
-        try {
-            addReport.doUpgrade(connection);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            Assert.fail("Should not throw error when inserting report:");
-        }
-    }
-
     private AddReport createReport(int version) {
-        return new AddReport(version, TEST_REPORT_ID, REPORT_CATEGORY_ID, "TestReportForUpgrade",
-                "test_report_upgrade", "design string", ACTIVITY_ID);
+        return new AddReport(version, ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
     }
 
-    public void testShouldUpgradeForDBVersion185OrMoreWithAcivityId() throws Exception {
-        AddReport addReport = createReport(HIGHER_UPGRADE_VERSION);
-        addReport.doUpgrade(connection);
-        ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
+    public void testShouldUpgrade() throws Exception {
+        AddReport addReport = createReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1);
+        addReport.upgrade(connection);
+        ReportsBO report = new ReportsPersistence().getReport(ReportsCategoryBO.ANALYSIS);
         Assert.assertNotNull(report.getActivityId());
-        Assert.assertNotNull(report.getIsActive());
+        Assert.assertTrue(report.getIsActive() == (short)1);
     }
 
     @Override

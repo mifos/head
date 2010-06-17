@@ -76,8 +76,6 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
                 .shortValue());
        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_REPORT, security.get("loadAddList-3").shortValue());
-       Assert.assertEquals(SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK, security.get("loadAddList-4").shortValue());
-       Assert.assertEquals(SecurityConstants.CAN_VIEW_GENERAL_LEDGER, security.get("loadAddList-5").shortValue());
 
     }
 

@@ -115,12 +115,12 @@ public class DatabaseVersionPersistence {
         register(register, new Upgrade176());
         register179(register);
         register(register, new Upgrade183());
-        register185(register);
+       // register185(register);
         register187(register);
         register195(register);
         register(register, new Upgrade198());
-        register203(register);
-        register204(register);
+       // register203(register);
+       // register204(register);
         register(register, new Upgrade208());
         register(register, new Upgrade209());
         register(register, new Upgrade211());
@@ -280,14 +280,14 @@ public class DatabaseVersionPersistence {
                 "Permissions-CanViewSystemInformation", SecurityConstants.CAN_VIEW_SYSTEM_INFO,
                 SecurityConstants.SYSTEM_INFORMATION)));
     }
-
-    private static void register185(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddReport(185, (short) 0, ReportsCategoryBO.ANALYSIS,
-                "Collection Sheet Report", "collection_sheet_report", "CollectionSheetReport.rptdesign",
-                SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
-                "Permissions-CanViewCollectionSheetReport", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
-                SecurityConstants.ANALYSIS)));
-    }
+//
+//    private static void register185(Map<Integer, Upgrade> register) {
+//        register(register, new CompositeUpgrade(new AddReport(185, (short) 0, ReportsCategoryBO.ANALYSIS,
+//                "Collection Sheet Report", "collection_sheet_report", "CollectionSheetReport.rptdesign",
+//                SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
+//                "Permissions-CanViewCollectionSheetReport", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
+//                SecurityConstants.ANALYSIS)));
+//    }
 
     /**
      * Adds activity/role/permission data for viewing of install-time
@@ -307,21 +307,21 @@ public class DatabaseVersionPersistence {
                 AccountActionTypes.LOAN_RESCHEDULED.getValue(), "AccountAction-LoanRescheduled")));
     }
 
-    private static void register203(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddReport(203, (short) 0, ReportsCategoryBO.ANALYSIS,
-                "Branch Cash Confirmation Report", "branch_cash_confirmation_report",
-                "BranchCashConfirmationReport.rptdesign", SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT),
-                new AddActivity(203, "Permissions-CanViewBranchCashConfirmationReport",
-                        SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, SecurityConstants.ANALYSIS)));
-    }
-
-    private static void register204(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddReport(204, (short) 0, ReportsCategoryBO.ANALYSIS,
-                "Branch Progress Report", "branch_progress_report", "ProgressReport.rptdesign",
-                SecurityConstants.CAN_VIEW_BRANCH_REPORT), new AddActivity(204,
-                "Permissions-CanViewBranchProgressReport", SecurityConstants.CAN_VIEW_BRANCH_REPORT,
-                SecurityConstants.ANALYSIS)));
-    }
+//    private static void register203(Map<Integer, Upgrade> register) {
+//        register(register, new CompositeUpgrade(new AddReport(203, (short) 0, ReportsCategoryBO.ANALYSIS,
+//                "Branch Cash Confirmation Report", "branch_cash_confirmation_report",
+//                "BranchCashConfirmationReport.rptdesign", SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT),
+//                new AddActivity(203, "Permissions-CanViewBranchCashConfirmationReport",
+//                        SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, SecurityConstants.ANALYSIS)));
+//    }
+//
+//    private static void register204(Map<Integer, Upgrade> register) {
+//        register(register, new CompositeUpgrade(new AddReport(204, (short) 0, ReportsCategoryBO.ANALYSIS,
+//                "Branch Progress Report", "branch_progress_report", "ProgressReport.rptdesign",
+//                SecurityConstants.CAN_VIEW_BRANCH_REPORT), new AddActivity(204,
+//                "Permissions-CanViewBranchProgressReport", SecurityConstants.CAN_VIEW_BRANCH_REPORT,
+//                SecurityConstants.ANALYSIS)));
+//    }
 
     /**
      * Adds activity/role/permission data for transactions import bulk settings.
@@ -346,19 +346,15 @@ public class DatabaseVersionPersistence {
     }
 
     private static void register255(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(255,
-                "Permissions-CanViewDetailedAgingPortfolioAtRiskReport", SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK,
-                SecurityConstants.ANALYSIS), new AddReport(255, (short) 0, ReportsCategoryBO.ANALYSIS,
-                "Detailed Aging Of Portfolio At Risk", "detailed_aging_portfolio_at_risk", "DetailedAgingPortfolioAtRiskReport.rptdesign",
-                SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK)));
+        register(register, new AddReport(255, ReportsCategoryBO.ANALYSIS,
+                "Detailed Aging Of Portfolio At Risk Report",
+                "DetailedAgingPortfolioAtRiskReport.rptdesign"));
     }
 
     private static void register256(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade( new AddActivity(256,
-                "Permissions-CanViewGeneralLedgerReport", SecurityConstants.CAN_VIEW_GENERAL_LEDGER,
-                SecurityConstants.ANALYSIS), new AddReport(256, (short) 0, ReportsCategoryBO.ANALYSIS,
-                "General Ledger Report", "general_ledger_report", "GeneralLedgerReport.rptdesign",
-                SecurityConstants.CAN_VIEW_GENERAL_LEDGER)));
+        register(register, new AddReport(256, ReportsCategoryBO.ANALYSIS,
+                "General Ledger Report",
+                "GeneralLedgerReport.rptdesign"));
     }
 
     public DatabaseVersionPersistence() {
@@ -392,9 +388,8 @@ public class DatabaseVersionPersistence {
             }
             statement.close();
             return version;
-        } else {
-            throw new RuntimeException("No row in DATABASE_VERSION");
         }
+        throw new RuntimeException("No row in DATABASE_VERSION");
     }
 
     public void write(int version) throws SQLException {

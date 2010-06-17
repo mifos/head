@@ -57,7 +57,7 @@ public class ReportsUserParamsAction extends BaseAction {
 
     private final ReportsBusinessService reportsBusinessService;
 
-    private final ReportsPersistence reportsPersistence;
+    private static ReportsPersistence reportsPersistence;
 
     private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
@@ -77,16 +77,7 @@ public class ReportsUserParamsAction extends BaseAction {
         // FIXME: no associated activity exists for this constant
         security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
 
-        // map the report id to it's corrosponding activity id. though it's
-        // rough but it works :->
-        security.allowReport(1, SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT);
-        security.allowReport(2, SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT);
-        security.allowReport(3, SecurityConstants.CAN_VIEW_BRANCH_REPORT);
-        security.allowReport(4, SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK);
-        security.allowReport(5, SecurityConstants.CAN_VIEW_GENERAL_LEDGER);
-
-
-        for (ReportsBO report : getNewUploadedReport()) {
+        for (ReportsBO report : new ReportsPersistence().getAllReports()) {
             security.allowReport(report.getReportId().intValue(), report.getActivityId());
         }
 
@@ -217,15 +208,5 @@ public class ReportsUserParamsAction extends BaseAction {
             forward = ReportsConstants.ADDLISTREPORTSUSERPARAMS;
         }
         return mapping.findForward(forward);
-    }
-
-    private static List<ReportsBO> getNewUploadedReport() {
-        List<ReportsBO> newReports = new ArrayList<ReportsBO>();
-        for (ReportsBO report : new ReportsPersistence().getAllReports()) {
-            if (report.getActivityId() < 0) {
-                newReports.add(report);
-            }
-        }
-        return newReports;
     }
 }
