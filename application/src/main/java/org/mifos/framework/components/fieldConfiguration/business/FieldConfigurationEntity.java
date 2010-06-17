@@ -70,7 +70,7 @@ public class FieldConfigurationEntity {
     public boolean isMandatory() {
         // TODO: what about null and other values besides 0 or 1?
         // should those be an exception (can't happen) or what?
-        return mandatoryFlag == FieldConfigurationConstant.YES;
+        return FieldConfigurationConstant.YES.equals(mandatoryFlag);
     }
 
     @SuppressWarnings("unused")

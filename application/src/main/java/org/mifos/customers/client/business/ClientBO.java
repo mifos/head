@@ -653,7 +653,7 @@ public class ClientBO extends CustomerBO {
         List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
         for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
             // Ignoring name entities of client type
-            if (!clientNameDetailEntity.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (!ClientConstants.CLIENT_NAME_TYPE.equals(clientNameDetailEntity.getNameType())) {
                 if (!isKeyExists(clientNameDetailEntity.getCustomerNameId(), primaryKeys)) {
                     deleteNameDetailEntity.add(clientNameDetailEntity);
                 }
@@ -738,7 +738,7 @@ public class ClientBO extends CustomerBO {
 
     public ClientNameDetailEntity getClientName() {
         for (ClientNameDetailEntity nameDetail : nameDetailSet) {
-            if (nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
         }
@@ -747,7 +747,7 @@ public class ClientBO extends CustomerBO {
 
     public ClientNameDetailEntity getSpouseName() {
         for (ClientNameDetailEntity nameDetail : nameDetailSet) {
-            if (!nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (!ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
         }
@@ -1144,10 +1144,15 @@ public class ClientBO extends CustomerBO {
         ClientNameDetailDto clientName = null;
         ClientNameDetailDto spouseName = null;
         for (ClientNameDetailDto nameView : clientNameViews) {
-            if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
-                clientName = nameView;
-            } else if (!isFamilyDetailsRequired) {
-                spouseName = nameView;
+            if (nameView.getNameType() != null) {
+                if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+                    clientName = nameView;
+                } else if (!isFamilyDetailsRequired) {
+                    spouseName = nameView;
+                }
+            }
+            else {
+                spouseName = new ClientNameDetailDto();
             }
         }
 
