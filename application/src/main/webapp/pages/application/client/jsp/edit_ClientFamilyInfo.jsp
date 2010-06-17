@@ -146,6 +146,7 @@ explanation of the license and how it is applied.
 						<tr class="fontnormal">		
 										<td>
 											<table border="0" cellspacing="0" cellpadding="0">
+                                                <c:if test="${sessionScope.clientCustActionForm.familySize >= 0}">
 												<tr class="fontnormal">
 												<td class="paddingL10">
 												<mifos:mifoslabel name="client.FamilyRelationship" mandatory="yes"
@@ -263,7 +264,7 @@ explanation of the license and how it is applied.
 															</mifos:select>		
 														</td>
 														<td class="paddingL10">
-															<c:if test="${row>=1}">
+															<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsMandatory') || row>=1}">
 																<html-el:link href="javascript:deleteThisRow(${row})" styleId="edit_ClientFamilyInfo.button.deleteRow"
 																	 property="editButton" >
 																	<mifos:mifoslabel name="button.deleterow" bundle="ClientUIResources"></mifos:mifoslabel>
@@ -272,6 +273,7 @@ explanation of the license and how it is applied.
 														</td>
 													</tr>
 						 						</c:forEach>
+                                                </c:if>
 											</table>
 										</td>
 								</tr>	

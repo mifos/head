@@ -56,6 +56,8 @@ public interface ClientConstants {
     public static final String FAMILY_DETAIL_ENTITY="familyDetailEntity";
     public static final String MAXIMUM_NUMBER_OF_FAMILY_MEMBERS="familyMembers";
     public static final String ARE_FAMILY_DETAILS_REQUIRED="areFamilyDetailsRequired";
+    public static final String ARE_FAMILY_DETAILS_MANDATORY="areFamilyDetailsMandatory";
+    public static final String ARE_FAMILY_DETAILS_HIDDEN="areFamilyDetailsHidden";
     public static final String GENDER_ENTITY_NAME = "genderEntityName";
     public static final String BUSINESS_ACTIVITIES_ENTITY_NAME = "businessActivitiesEntityName";
     public static final String HANDICAPPED_ENTITY_NAME = "handicappedEntityName";
