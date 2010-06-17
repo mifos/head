@@ -54,7 +54,7 @@ public class QuestionnaireControllerTest {
     @Mock
     private QuestionnaireServiceFacade questionnaireServiceFacade;
     
-    private static final String TITLE = "First Question";
+    private static final String TITLE = "Title";
     @Mock
     private MessageContext messageContext;
 
@@ -77,18 +77,6 @@ public class QuestionnaireControllerTest {
         assertThat(questions, is(notNullValue()));
         assertThat(questions.size(), is(1));
         assertThat(result, is("success"));
-    }
-
-    private QuestionForm getQuestionForm(String title) {
-        QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle(title);
-        return questionForm;
-    }
-
-    private Question getQuestion(String title) {
-        Question question = new Question();
-        question.setTitle(title);
-        return question;
     }
 
     @Test
@@ -158,14 +146,6 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
-    public void testCreateQuestionSuccess() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE);
-        String result = questionnaireController.createQuestions(questionForm, requestContext);
-        assertThat(result, is("success"));
-        verify(questionnaireServiceFacade).createQuestions(questionForm.getQuestions());
-    }
-
-    @Test
     public void testCreateQuestionFailure() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -175,6 +155,63 @@ public class QuestionnaireControllerTest {
         verify(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
+    }
+
+    @Test
+    public void testCreateQuestionSuccess() throws Exception {
+        QuestionForm questionForm = getQuestionForm(TITLE);
+        String result = questionnaireController.createQuestions(questionForm, requestContext);
+        assertThat(result, is("success"));
+        verify(questionnaireServiceFacade).createQuestions(questionForm.getQuestions());
+    }
+
+    @Test
+    public void testCreateQuestionGroupSuccess() throws Exception {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
+        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        assertThat(result, is("success"));
+        verify(questionnaireServiceFacade).createQuestionGroup(questionGroupForm);
+    }
+
+    @Test
+    public void testCreateQuestionGroupForFailureWhenQuestionGroupTitleNotProvided() throws Exception {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is("failure"));
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
+    }
+
+    @Test
+    public void testCreateQuestionGroupFailure() throws Exception {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupForm>anyObject());
+        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        assertThat(result, is("failure"));
+        verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupForm>anyObject());
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
+    }
+
+    private QuestionForm getQuestionForm(String title) {
+        QuestionForm questionForm = new QuestionForm();
+        questionForm.setTitle(title);
+        return questionForm;
+    }
+
+    private QuestionGroupForm getQuestionGroupForm(String title) {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        questionGroupForm.setTitle(title);
+        return questionGroupForm;
+    }
+
+    private Question getQuestion(String title) {
+        Question question = new Question();
+        question.setTitle(title);
+        return question;
     }
 
     private class MessageMatcher extends ArgumentMatcher<MessageResolver> {

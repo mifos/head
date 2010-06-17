@@ -17,14 +17,13 @@
  *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  *  explanation of the license and how it is applied.
  */
+
 package org.mifos.platform.questionnaire;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionType;
-import org.mifos.platform.questionnaire.contract.QuestionnaireService;
-import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.ui.core.controller.Question;
+import org.mifos.ui.core.controller.QuestionGroupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -38,6 +37,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         this.questionnaireService = questionnaireService;
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireServiceFacadeImpl() {
     }
 
@@ -51,5 +51,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public boolean isDuplicateQuestion(String title) {
         return questionnaireService.isDuplicateQuestion(new QuestionDefinition(title));
+    }
+
+    @Override
+    public void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException {
+        questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(questionGroupForm.getTitle()));
     }
 }

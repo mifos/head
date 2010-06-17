@@ -414,6 +414,10 @@ while(enn.hasMoreElements()){
                       <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                       <td width="97%"><a id="admin.link.questions" href="viewQuestions.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questions" /></a> | <html-el:link styleId="admin.link.defineNewQuestion" href="createQuestion.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.question" /></html-el:link></td>
                     </tr>
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questiongroups" /></a> | <html-el:link styleId="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.questiongroup" /></html-el:link></td>
+                    </tr>
                 </table>
 			</td>
 		</html-el:form>

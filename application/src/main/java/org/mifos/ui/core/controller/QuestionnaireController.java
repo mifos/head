@@ -55,11 +55,26 @@ public class QuestionnaireController {
             questionForm.addCurrentQuestion();
             questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
         } catch (ApplicationException e) {
-            constructMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
-            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            constructAndLogSystemError(requestContext, e);
             return "failure";
         }
         return "success";
+    }
+
+    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+        if (questionGroupFormHasErrors(questionGroupForm, requestContext)) return "failure";
+        try {
+            questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
+        } catch (ApplicationException e) {
+            constructAndLogSystemError(requestContext, e);
+            return "failure";
+        }
+        return "success";
+    }
+
+    private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
+        constructMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
+        MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
     }
 
     private boolean isDuplicateQuestion(QuestionForm questionForm) {
@@ -67,8 +82,8 @@ public class QuestionnaireController {
         return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
     }
 
-    private boolean isInvalid(QuestionForm questionForm) {
-        return StringUtils.isEmpty(questionForm.getTitle());
+    private boolean isInvalidTitle(String title) {
+        return StringUtils.isEmpty(title);
     }
 
     private void constructMessage(RequestContext requestContext, String code, String source, String message) {
@@ -77,8 +92,16 @@ public class QuestionnaireController {
         requestContext.getMessageContext().addMessage(messageResolver);
     }
 
+    private boolean questionGroupFormHasErrors(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
+        if (isInvalidTitle(questionGroupForm.getTitle())) {
+            constructMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
+            return true;
+        }
+        return false;
+    }
+
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
-        if (isInvalid(questionForm)) {
+        if (isInvalidTitle(questionForm.getTitle())) {
             constructMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
             return true;
         }
@@ -88,5 +111,4 @@ public class QuestionnaireController {
         }
         return false;
     }
-
 }

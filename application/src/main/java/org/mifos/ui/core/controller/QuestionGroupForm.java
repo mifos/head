@@ -18,18 +18,19 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.contract;
+package org.mifos.ui.core.controller;
 
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+import java.io.Serializable;
 
-import java.util.List;
+public class QuestionGroupForm implements Serializable {
+    private static final long serialVersionUID = 9142463851744584305L;
+    private String title;
 
-public interface QuestionnaireServiceFacade {
-    void createQuestions(List<Question> questions) throws ApplicationException;
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    boolean isDuplicateQuestion(String title);
-
-    void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException;
+    public String getTitle() {
+        return title;
+    }
 }

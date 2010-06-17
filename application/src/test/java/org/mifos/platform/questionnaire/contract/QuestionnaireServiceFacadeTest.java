@@ -19,19 +19,21 @@
  */
 package org.mifos.platform.questionnaire.contract;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.ui.core.controller.Question;
+import org.mifos.ui.core.controller.QuestionGroupForm;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,6 +43,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Mock
     private QuestionnaireService questionnaireService;
+
     private static final String TITLE = "Title";
 
     @Before
@@ -49,12 +52,19 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
+    public void shouldCreateQuestionGroup() throws ApplicationException {
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
+        questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
+        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE)));
+    }
+
+    @Test
     public void testShouldCreateQuestions() throws ApplicationException {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
         questionnaireServiceFacade.createQuestions(Arrays.asList(getQuestion(title1), getQuestion(title2)));
-        verify(questionnaireService, times(2)).defineQuestion(Matchers.argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT)));
+        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT)));
     }
 
     @Test
@@ -69,11 +79,16 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
+    private QuestionGroupForm getQuestionGroupForm(String title) {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        questionGroupForm.setTitle(title);
+        return questionGroupForm;
+    }
+
     private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
         private QuestionType questionType;
 
         public QuestionDefinitionMatcher(QuestionType questionType) {
-
             this.questionType = questionType;
         }
 
@@ -82,6 +97,23 @@ public class QuestionnaireServiceFacadeTest {
             if (argument instanceof QuestionDefinition) {
                 QuestionDefinition questionDefinition = (QuestionDefinition) argument;
                 return questionDefinition.getType() == questionType;
+            }
+            return false;
+        }
+    }
+
+    private class QuestionGroupDefinitionMatcher extends ArgumentMatcher<QuestionGroupDefinition> {
+        private String title;
+
+        public QuestionGroupDefinitionMatcher(String title) {
+            this.title = title;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (argument instanceof QuestionGroupDefinition) {
+                QuestionGroupDefinition questionGroupDefinition = (QuestionGroupDefinition) argument;
+                return StringUtils.equals(questionGroupDefinition.getTitle(), title);
             }
             return false;
         }
