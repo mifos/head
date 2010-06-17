@@ -63,7 +63,7 @@
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /systemInformation.ftl=systemInformationController
-                /viewOrganizationSettings.ftl=genericController
+                /viewOrganizationSettings.ftl=viewOrganizationSettingsController
 </value>
         </property>
     </bean>
@@ -90,6 +90,12 @@
 
     <bean id="systemInformationController" class="org.mifos.ui.core.controller.SystemInformationController">
         <property name="systemInformationServiceFacade" ref="systemInformationServiceFacade" />
+    </bean>
+    
+    <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
+
+    <bean id="viewOrganizationSettingsController" class="org.mifos.ui.core.controller.ViewOrganizationSettingsController">
+        <property name="viewOrganizationSettingsServiceFacade" ref="viewOrganizationSettingsServiceFacade" />
     </bean>  
     
 </beans>
