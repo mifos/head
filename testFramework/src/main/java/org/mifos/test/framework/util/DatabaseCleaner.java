@@ -54,8 +54,11 @@ public class DatabaseCleaner {
         template.execute("delete from account_status_change_history");
         template.execute("delete from loan_summary");
         template.execute("delete from loan_perf_history");
-//        template.execute("delete from max_min_loan_amount");
-//        template.execute("delete from max_min_no_of_install");
+
+        template.execute("delete from max_min_interest_rate");
+        template.execute("delete from max_min_loan_amount");
+        template.execute("delete from max_min_no_of_install");
+        template.execute("delete from loan_activity_details");
         template.execute("delete from loan_account");
 
         template.execute("delete from saving_schedule");
@@ -92,6 +95,9 @@ public class DatabaseCleaner {
         template.execute("delete from customer_hierarchy");
         template.execute("delete from customer_movement");
         template.execute("delete from customer_custom_field");
+        template.execute("delete from customer_family_detail");
+        template.execute("delete from customer_name_detail");
+        template.execute("delete from customer_detail");
 
         template.execute("update customer set parent_customer_id = null");
         template.execute("delete from customer");
@@ -102,12 +108,12 @@ public class DatabaseCleaner {
         template.execute("update office set parent_office_id = null where office_id > 3");
         template.execute("delete from office where office_id > 3");
 
-
-
         template.execute("delete from fee_frequency");
         template.execute("delete from fees");
 
         // couldn't track down test that is changing state of custom_field_definition data so forced it to be reset here
         template.execute("update custom_field_definition set mandatory_flag = 0 where entity_type in (1, 12, 20)");
+        template.execute("delete from fund where fund_id > 5");
+        template.execute("delete from fund_code where fundcode_id > 5");
     }
 }
