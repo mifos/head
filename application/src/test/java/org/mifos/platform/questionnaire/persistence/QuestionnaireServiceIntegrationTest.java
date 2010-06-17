@@ -41,10 +41,7 @@ import java.util.Calendar;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
-import static org.mifos.platform.questionnaire.contract.QuestionType.NUMERIC;
-import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
+import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
@@ -124,6 +121,17 @@ public class QuestionnaireServiceIntegrationTest {
         }
     }
 
+    @Test
+    @Transactional
+    public void testIsDuplicateQuestion() throws ApplicationException {
+        String questionTitle = "Title" + System.currentTimeMillis();
+        boolean result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
+        assertThat(result, is(false));
+        defineQuestion(questionTitle, DATE);
+        result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
+        assertThat(result, is(true));
+    }
+    
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
         return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
     }

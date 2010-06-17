@@ -32,6 +32,7 @@
     </bean>
 
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
+    <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl"/>
     <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>
     <bean name="questionnaireMapper" class="org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl"/>
 

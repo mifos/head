@@ -16,6 +16,7 @@
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
                 <value>org.mifos.ui.localizedProperties.fees_messages</value>
+                <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
     </bean>

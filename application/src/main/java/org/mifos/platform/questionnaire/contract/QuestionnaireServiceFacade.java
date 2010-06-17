@@ -17,21 +17,15 @@
  *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  *  explanation of the license and how it is applied.
  */
-
 package org.mifos.platform.questionnaire.contract;
 
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.ui.core.controller.Question;
 
 import java.util.List;
 
-public interface QuestionnaireService {
-    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
+public interface QuestionnaireServiceFacade {
+    void createQuestions(List<Question> questions) throws ApplicationException;
 
-    List<QuestionDetail> getAllQuestions();
-
-    QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
-
-    List<QuestionGroupDetail> getAllQuestionGroups();
-
-    boolean isDuplicateQuestion(QuestionDefinition questionDefinition);
+    boolean isDuplicateQuestion(String title);
 }

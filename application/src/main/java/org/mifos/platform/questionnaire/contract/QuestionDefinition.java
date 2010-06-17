@@ -25,6 +25,10 @@ public class QuestionDefinition {
 
     private QuestionType type;
 
+    public QuestionDefinition(String title) {
+        this(title, QuestionType.INVALID);
+    }
+
     public QuestionDefinition(String title, QuestionType type) {
         this.title = title;
         this.type = type;

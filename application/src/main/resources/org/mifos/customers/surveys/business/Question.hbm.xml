@@ -34,5 +34,8 @@
      <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
     </query>  
-      
+     <query name="Question.retrieveCountOfQuestionsWithTitle">
+       <![CDATA[select count(*) from Question as question where question.shortName=?]]>
+    </query>
+
 </hibernate-mapping>

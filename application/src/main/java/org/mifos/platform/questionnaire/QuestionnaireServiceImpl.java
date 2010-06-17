@@ -87,6 +87,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
     }
 
+    @Override
+    public boolean isDuplicateQuestion(QuestionDefinition questionDefinition) {
+        List result = questionDao.retrieveCountOfQuestionsWithTitle(questionDefinition.getTitle());
+        return (Long) result.get(0) > 0;
+    }
+
     private void persistQuestion(Question question) throws ApplicationException {
         try {
             questionDao.create(question);

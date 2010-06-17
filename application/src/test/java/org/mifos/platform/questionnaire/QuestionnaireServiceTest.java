@@ -36,10 +36,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.contract.QuestionType.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
+import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -128,4 +130,14 @@ public class QuestionnaireServiceTest {
         assertNotNull("getAllQuestionGroups should not return null", questionGroupDetails);
         verify(questionGroupDao, times(1)).getDetailsAll();
     }
+
+    @Test
+    public void shouldCheckDuplicates(){
+        QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, FREETEXT);
+        when(questionDao.retrieveCountOfQuestionsWithTitle(QUESTION_TITLE)).thenReturn(asList((long) 0)).thenReturn(asList((long) 1));
+        assertEquals(false, questionnaireService.isDuplicateQuestion(questionDefinition));
+        assertEquals(true, questionnaireService.isDuplicateQuestion(questionDefinition));
+        verify(questionDao, times(2)).retrieveCountOfQuestionsWithTitle(QUESTION_TITLE);
+    }
+    
 }

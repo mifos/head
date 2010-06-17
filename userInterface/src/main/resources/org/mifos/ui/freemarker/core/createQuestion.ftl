@@ -84,15 +84,13 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="viewFees"/>
-            <script>
-            </script>
-            <script src="pages/application/fees/js/Fees.js"></script>
+            <span id="page.id" title="createQuestion"/>
+            <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
                         <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> View Fees </span>
+                        <span class="fontnormal8ptbold"> Create Question </span>
                     </td>
                 </tr>
             </table>
@@ -101,69 +99,50 @@
                     <td align="left" valign="top" class="paddingL15T15">
                         <table width="95%" border="0" cellpadding="3" cellspacing="0">
                             <tr>
-                                <td class="headingorange"><span class="headingorange"> View Fees </span></td>
+                                <td class="headingorange"><span class="headingorange"> Add Questions </span></td>
                             </tr>
-                            <tr>
-                                <td class="fontnormalbold">
-								<span class="fontnormal"> Click on a fee  below to view details and make changes or
-								  <a href="createFee.ftl">define a new fee</a> <br>
-								</span>
-								<span class="fontnormalbold">
-									<span class="fontnormalbold"> <br> </span>
-								</span>
-                                    <span class="fontnormalbold"> </span>
-                                    <span class="fontnormal"> </span>
-								<span class="fontnormalbold">
-									<span class="fontnormalbold">
-										<font class="fontnormalRedBold"> </font>
-									</span>
-								</span>
-								<span class="fontnormalbold">
-									<span class="fontnormalbold"> Product Fees<br> </span>
-								</span>
-                                    <span class="fontnormalbold"> </span>
-                                    <table id="productFeeTable" width="90%" border="0" cellspacing="0" cellpadding="0">
-                                        [#list productFees as prodFee]
-                                        <tr class="fontnormal">
-                                            <td width="1%">
-                                                <img src="pages/framework/images/bullet_circle.gif" width="9"
-                                                     height="11">
-                                            </td>
-                                            <td width="99%">
-                                                <a href="feeaction.do?method=get&feeId=${prodFee.id}">${prodFee.name}</a>
-                                                ( ${prodFee.categoryType} )
-                                                [#if prodFee.active]
-                                                <img src="pages/framework/images/status_closedblack.gif" width="8"
-                                                     height="9"/>
-                                                &nbsp;${prodFee.feeStatus.name}
-                                                [/#if]
-                                            </td>
-                                        </tr>
-                                        [/#list]
-                                    </table>
+                            <tr class="fontnormal">
+                                <td align="left" valign="top" class="paddingL15T15">
+                                    <form name="createquestionform"
+                                          action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
+                                          focus="questionText">
+                                        <table width="98%" border="0" cellpadding="3" cellspacing="0">
+                                            <tr class="fontnormal">
+                                                <td width="24%" align="right"><span class="mandatorytext"><font
+                                                        color="#FF0000">*</font></span>Question Titile:
+                                                </td>
+                                                <td width="76%">
+                                                    <script src="pages/framework/js/func.js"></script>
+                                                    <script src="pages/framework/js/func_en_GB.js"></script>
+                                                    [@spring.formInput "questionDefinition.title",
+                                                    'maxlength="50"
+                                                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
+                                                    onblur="return FnCheckNumChars(event,this);return
+                                                    FnEscape(event,this)"'/]
+                                                    [@spring.showErrors "<br>","fontnormalRedBold" /]
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>
+                                                    <input type="submit" name="_eventId_createQuestions"
+                                                           value="Submit"
+                                                           class="buttn">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" class="blueline" align="left">&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                        <br>
+                                    </form>
                                     <br>
-                                    Client Fees <br>
-                                    <table id="clientFeeTable" width="90%" border="0" cellspacing="0" cellpadding="0">
-                                        [#list customerFees as custFee]
-                                        <tr class="fontnormal">
-                                            <td width="1%">
-                                                <img src="pages/framework/images/bullet_circle.gif" width="9"
-                                                     height="11">
-                                            </td>
-                                            <td width="99%">
-                                                <a href="feeaction.do?method=get&feeId=${custFee.id}">${custFee.name}</a>
-                                                ( ${custFee.categoryType} )
-                                                [#if custFee.active]
-                                                <img src="pages/framework/images/status_closedblack.gif" width="8"
-                                                     height="9"/>
-                                                &nbsp;${custFee.feeStatus.name}
-                                                [/#if]
-                                            </td>
-                                        </tr>
-                                        [/#list]
-                                    </table>
                                 </td>
-                            </tr>
                         </table>
                         <br>
                     </td>

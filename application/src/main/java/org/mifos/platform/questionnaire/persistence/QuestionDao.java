@@ -23,5 +23,8 @@ package org.mifos.platform.questionnaire.persistence;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.platform.persistence.GenericDao;
 
+import java.util.List;
+
 public interface QuestionDao extends GenericDao<Question, Integer> {
+    List retrieveCountOfQuestionsWithTitle(String questionTitle);
 }

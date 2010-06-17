@@ -11,4 +11,5 @@
 	<import resource="classpath:org/mifos/config/resources/hibernate-daos.xml" />
 	<import resource="classpath:org/mifos/config/resources/persistenceContext.xml" />
 	<import resource="classpath:org/mifos/config/resources/FeeContext.xml" />
+	<import resource="classpath:org/mifos/config/resources/QuestionnaireContext.xml" />
 </beans>
