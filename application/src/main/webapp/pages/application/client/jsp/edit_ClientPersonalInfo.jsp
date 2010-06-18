@@ -292,11 +292,11 @@ explanation of the license and how it is applied.
 						</tr>
 						--%>
 						<%-- Spouse/Father details --%>
-						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+						<c:if test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired') &&
+								!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsHidden')}">
 						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="client.SpouseFatherName" mandatory="yes"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
+							<td align="right" class="fontnormal"><mifos:mifoslabel keyhm="Client.SpouseFatherInformation"
+								name="client.SpouseFatherName" bundle="ClientUIResources"/></td>
 							<td>
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
@@ -313,7 +313,7 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td class="paddingL10">
 													<span id="edit_ClientPersonalInfo.label.spouseFirstName">
-													<mifos:mifoslabel name="client.SpouseFirstName" mandatory="yes"
+													<mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseFirstName"
 														bundle="ClientUIResources">
 													</mifos:mifoslabel>
 													</span>
@@ -366,8 +366,8 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td class="paddingL10">
 													<span id="edit_ClientPersonalInfo.label.spouseLastName">
-													<mifos:mifoslabel name="client.SpouseLastName"
-													   mandatory="yes"	bundle="ClientUIResources">
+													<mifos:mifoslabel keyhm="Client.SpouseFatherInformation" name="client.SpouseLastName"
+                                                                      bundle="ClientUIResources">
 													   </mifos:mifoslabel>
 													</span>
 												</td>

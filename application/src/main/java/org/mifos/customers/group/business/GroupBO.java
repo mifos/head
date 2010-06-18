@@ -321,6 +321,10 @@ public class GroupBO extends CustomerBO {
         }
     }
 
+    /**
+     * called from deprecated constructors so not used in production
+     */
+    @Deprecated
     private void setValues(final boolean trained, final Date trainedDate) throws CustomerException {
 
         String searchId = null;

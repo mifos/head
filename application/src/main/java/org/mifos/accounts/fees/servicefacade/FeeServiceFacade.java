@@ -22,23 +22,30 @@ package org.mifos.accounts.fees.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.struts.action.FeeParameters;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.application.servicefacade.FeeDetailsForLoadDto;
+import org.mifos.application.servicefacade.FeeDetailsForManageDto;
+import org.mifos.application.servicefacade.FeeDetailsForPreviewDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 
 public interface FeeServiceFacade {
 
-    public List<FeeDto> getProductFees() throws ServiceException;
+    public List<FeeDto> getProductFees();
 
-    public List<FeeDto> getCustomerFees() throws ServiceException;
+    public List<FeeDto> getCustomerFees();
 
-    public FeeParameters getFeeParameters(Short localeId) throws ServiceException;
+    public FeeParameters parameters(Short localeId) throws ApplicationException;
 
-    public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException;
+    public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ApplicationException;
 
-    public FeeDto getFeeDetails(Short feeId) throws ServiceException;
+    public FeeDto getFeeDetails(Short feeId);
 
-    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws FeeException;
+    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ApplicationException;
 
+    public FeeDetailsForLoadDto retrieveDetailsForFeeLoad(Short localeId) throws ApplicationException;
+
+    public FeeDetailsForPreviewDto retrieveDetailsforFeePreview(Short currencyId);
+
+    public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId) throws ApplicationException;
 }

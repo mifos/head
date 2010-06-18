@@ -21,14 +21,18 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.calendar.CalendarEvent;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.framework.components.batchjobs.MifosTask;
@@ -46,12 +50,18 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
     private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
     private final AccountPersistence accountPersistence = new AccountPersistence();
 
+    private List<Days> workingDays;
+    private Map<Short, List<Holiday>> officeCurrentAndFutureHolidays;
+
     public GenerateMeetingsForCustomerAndSavingsHelper(final MifosTask mifosTask) {
         super(mifosTask);
     }
 
     @Override
     public void execute(@SuppressWarnings("unused") final long timeInMillis) throws BatchJobException {
+
+        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
+        officeCurrentAndFutureHolidays = new HashMap<Short, List<Holiday>>();
 
         long taskStartTime = new DateTimeService().getCurrentDateTime().getMillis();
 
@@ -84,14 +94,16 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                 currentAccountId = accountId;
                 AccountBO accountBO = accountPersistence.getAccount(accountId);
 
-                CalendarEvent calendarEvent = holidayDao.findCalendarEventsForThisYearAndNext(accountBO.getOffice().getOfficeId());
-                ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvent.getWorkingDays(), calendarEvent.getHolidays());
+                List<Holiday> currentAndFutureHolidays = getOfficeCurrentAndFutureHolidays(accountBO.getOffice()
+                        .getOfficeId());
+                ScheduledDateGeneration scheduleGenerationStrategy = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                        workingDays, currentAndFutureHolidays);
 
                 if (accountBO instanceof CustomerAccountBO) {
                     ((CustomerAccountBO) accountBO).generateNextSetOfMeetingDates(scheduleGenerationStrategy);
                     updatedRecordCount++;
                 } else if (accountBO instanceof SavingsBO) {
-                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates(calendarEvent.getWorkingDays(), calendarEvent.getHolidays());
+                    ((SavingsBO) accountBO).generateNextSetOfMeetingDates(workingDays, currentAndFutureHolidays);
                     updatedRecordCount++;
                 }
 
@@ -112,20 +124,18 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
                     String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
                             + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
                             + " ms";
-                    getLogger().info(message);
+                    logMessage(message);
                     startTime = time;
                 }
             }
             StaticHibernateUtil.commitTransaction();
             long time = System.currentTimeMillis();
             String message = "" + currentRecordNumber + " processed, " + (accountCount - currentRecordNumber)
-                    + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime)
-                    + " ms";
-            getLogger().info(message);
-
+                    + " remaining, " + updatedRecordCount + " updated, batch time: " + (time - startTime) + " ms";
+            logMessage(message);
 
         } catch (Exception e) {
-            getLogger().info("account " + currentAccountId.intValue() + " exception " + e.getMessage());
+            logMessage("account " + currentAccountId.intValue() + " exception " + e.getMessage());
             StaticHibernateUtil.rollbackTransaction();
             errorList.add(currentAccountId.toString());
             getLogger().error("Unable to generate schedules for account with ID " + currentAccountId, e);
@@ -137,34 +147,54 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
             throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
         }
 
-        getLogger().info(
-                "GenerateMeetingsForCustomerAndSavings ran in "
-                        + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime));
+        logMessage("GenerateMeetingsForCustomerAndSavings ran in "
+                + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime));
 
     }
 
     private void infoLogBatchParameters(int accountCount, int outputIntervalForBatchJobs, int batchSize,
             int recordCommittingSize) {
-        getLogger().info(
-                "Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
-                        + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
-                        + recordCommittingSize);
+        logMessage("Using parameters:" + "\n  OutputIntervalForBatchJobs: " + outputIntervalForBatchJobs
+                + "\n  BatchSizeForBatchJobs: " + batchSize + "\n  RecordCommittingSizeForBatchJobs: "
+                + recordCommittingSize);
         String initial_message = "" + accountCount + " accounts to process, results output every "
                 + outputIntervalForBatchJobs + " accounts";
-        getLogger().info(initial_message);
+        logMessage(initial_message);
     }
 
-    private List<Integer> findActiveCustomerAndSavingsAccountIdsThatRequiredMeetingsToBeGenerated() throws BatchJobException {
+    private List<Integer> findActiveCustomerAndSavingsAccountIdsThatRequiredMeetingsToBeGenerated()
+            throws BatchJobException {
         List<Integer> customerAndSavingsAccountIds = new ArrayList<Integer>();
         try {
             long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-            customerAndSavingsAccountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+            customerAndSavingsAccountIds = accountPersistence
+                    .getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
             long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
-            getLogger().info("Time to execute the query " + duration + " . Got " + customerAndSavingsAccountIds.size() + " accounts.");
+            logMessage("Time to execute the query " + duration + " . Got " + customerAndSavingsAccountIds.size()
+                    + " accounts.");
         } catch (PersistenceException e) {
             throw new BatchJobException(e);
         }
         return customerAndSavingsAccountIds;
+    }
+
+    private List<Holiday> getOfficeCurrentAndFutureHolidays(Short officeId) {
+
+        List<Holiday> currentAndFutureHolidays = officeCurrentAndFutureHolidays.get(officeId);
+
+        if (currentAndFutureHolidays != null) {
+            return currentAndFutureHolidays;
+        }
+
+        List<Holiday> futureHolidays = holidayDao.findCurrentAndFutureOfficeHolidaysEarliestFirst(officeId);
+        officeCurrentAndFutureHolidays.put(officeId, futureHolidays);
+
+        return futureHolidays;
+    }
+
+    private void logMessage(String finalMessage) {
+        System.out.println(finalMessage);
+        getLogger().info(finalMessage);
     }
 
     @Override

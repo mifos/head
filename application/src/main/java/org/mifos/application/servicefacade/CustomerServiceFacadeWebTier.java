@@ -394,7 +394,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                         customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
             } else {
 
-                // create group with center
                 loanOfficerId = actionForm.getLoanOfficerIdValue() != null ? actionForm.getLoanOfficerIdValue()
                         : userContext.getId();
                 officeId = actionForm.getOfficeIdValue();

@@ -21,6 +21,7 @@
 package org.mifos.accounts.fees.business;
 
 import org.mifos.accounts.fees.exceptions.FeeException;
+import org.mifos.accounts.fees.servicefacade.FeeFrequencyDto;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.AbstractEntity;
@@ -93,5 +94,18 @@ public class FeeFrequencyEntity extends AbstractEntity {
         if (frequencyType.isPeriodic() && feeFrequency == null) {
             throw new FeeException(FeeConstants.INVALID_FEE_FREQUENCY);
         }
+    }
+
+    public FeeFrequencyDto toDto() {
+        FeeFrequencyDto feeFrequencyDto = new FeeFrequencyDto();
+        feeFrequencyDto.setType(this.feeFrequencyType.getName());
+        if (this.feeFrequencyType.isOneTime()) {
+            feeFrequencyDto.setPayment(this.feePayment.getName());
+        } else {
+            feeFrequencyDto.setMonthly(this.feeMeetingFrequency.isMonthly());
+            feeFrequencyDto.setWeekly(this.feeMeetingFrequency.isWeekly());
+            feeFrequencyDto.setRecurAfterPeriod(this.feeMeetingFrequency.getRecurAfter().toString());
+        }
+        return feeFrequencyDto;
     }
 }

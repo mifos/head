@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -333,9 +333,8 @@ public class LoanPrdAction extends BaseAction {
     private void loadMasterData(HttpServletRequest request) throws Exception {
         prdDefLogger.debug("start Load master data method of Loan Product Action ");
         LoanPrdBusinessService service = new LoanPrdBusinessService();
-        FeeBusinessService feeService = new FeeBusinessService();
 
-        List<FeeBO> fees = feeService.getAllApplicableFeesForLoanCreation();
+        List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
         Short localeId = getUserContext(request).getLocaleId();
 
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
