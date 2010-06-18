@@ -20,6 +20,8 @@
 
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 
 public class Question implements Serializable{
@@ -32,5 +34,9 @@ public class Question implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void trimTitle() {
+        this.title = StringUtils.trim(this.title);
     }
 }

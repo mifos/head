@@ -27,19 +27,21 @@ public class QuestionFormTest {
         assertThat(questionForm.isDuplicateTitle(TITLE + 3), is(false));
     }
 
+    @Test
+    public void testAddCurrentQuestion(){
+        QuestionForm questionForm = new QuestionForm();
+        questionForm.setTitle("  Q1 ");
+        questionForm.addCurrentQuestion();
+        List<Question> questionList = questionForm.getQuestions();
+        assertThat(questionList.size(), is(1));
+        String title = questionList.get(0).getTitle();
+        assertNotSame(title, questionForm.getTitle());
+        assertThat(title, is("Q1"));
+    }
+
     private Question getQuestion(String title) {
         Question question = new Question();
         question.setTitle(title);
         return question;
-    }
-
-    @Test
-    public void testAddCurrentQuestion(){
-        QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle("Q1");
-        questionForm.addCurrentQuestion();
-        List<Question> questionList = questionForm.getQuestions();
-        assertThat(questionList.size(), is(1));
-        assertNotSame(questionList.get(0).getTitle(), questionForm.getTitle());
     }
 }

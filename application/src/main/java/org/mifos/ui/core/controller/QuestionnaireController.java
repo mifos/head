@@ -67,6 +67,7 @@ public class QuestionnaireController {
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
         if (questionGroupFormHasErrors(questionGroupForm, requestContext)) return "failure";
         try {
+            questionGroupForm.trimTitle();
             questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext, e);
@@ -81,12 +82,12 @@ public class QuestionnaireController {
     }
 
     private boolean isDuplicateQuestion(QuestionForm questionForm) {
-        String title = questionForm.getTitle();
+        String title = StringUtils.trim(questionForm.getTitle());
         return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
     }
 
     private boolean isInvalidTitle(String title) {
-        return StringUtils.isEmpty(title);
+        return StringUtils.isEmpty(StringUtils.trimToNull(title));
     }
 
     private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {

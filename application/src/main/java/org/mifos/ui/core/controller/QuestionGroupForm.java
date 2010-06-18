@@ -20,6 +20,8 @@
 
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 
 public class QuestionGroupForm implements Serializable {
@@ -32,5 +34,9 @@ public class QuestionGroupForm implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public void trimTitle() {
+        this.title = StringUtils.trim(this.title);
     }
 }

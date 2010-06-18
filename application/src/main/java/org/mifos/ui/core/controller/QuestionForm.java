@@ -47,6 +47,7 @@ public class QuestionForm implements Serializable{
     }
 
     public void addCurrentQuestion() {
+        currentQuestion.trimTitle();
         questions.add(currentQuestion);
         currentQuestion = new Question();
     }

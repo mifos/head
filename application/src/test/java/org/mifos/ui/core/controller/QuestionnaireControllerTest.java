@@ -100,6 +100,19 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void testAddQuestionForFailureWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
+        QuestionForm questionForm = new QuestionForm();
+        questionForm.setTitle("      ");
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionnaireController.addQuestion(questionForm, requestContext);
+        assertThat(questionForm.getQuestions().size(), is(0));
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is("failure"));
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
+    }
+
+    @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInDB() throws Exception {
         QuestionForm questionForm = new QuestionForm();
         questionForm.setTitle(TITLE);
@@ -116,7 +129,7 @@ public class QuestionnaireControllerTest {
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInForm() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle(TITLE);
+        questionForm.setTitle("  " + TITLE + "    ");
         questionForm.setQuestions(asList(getQuestion(TITLE)));
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
@@ -149,10 +162,10 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testCreateQuestionGroupSuccess() throws Exception {
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm("   " + TITLE + " ");
         String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
         assertThat(result, is("success"));
-        verify(questionnaireServiceFacade).createQuestionGroup(questionGroupForm);
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupFormMatcher(TITLE)));
     }
 
     @Test
@@ -258,6 +271,24 @@ public class QuestionnaireControllerTest {
                 return true;
             }
             return true;
+        }
+    }
+
+    private class QuestionGroupFormMatcher extends ArgumentMatcher<QuestionGroupForm> {
+        private String title;
+
+        public QuestionGroupFormMatcher(String title) {
+            this.title = title;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (argument instanceof QuestionGroupForm) {
+                QuestionGroupForm questionGroupForm = (QuestionGroupForm) argument;
+                return StringUtils.equalsIgnoreCase(this.title, questionGroupForm.getTitle());
+            }
+            return false;
+
         }
     }
 }
