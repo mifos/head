@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -54,6 +55,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 public class DatabaseMigrator {
 
     private Connection connection;
+    private Map<Integer, Integer> legacyUpgrades;
 
     public DatabaseMigrator() {
         this(StaticHibernateUtil.getSessionTL().connection());
@@ -61,6 +63,7 @@ public class DatabaseMigrator {
 
     public DatabaseMigrator(Connection connection){
         this.connection = connection;
+
     }
 
     private Map<Integer, String> getAvailableUpgrades() throws IOException {
@@ -68,7 +71,7 @@ public class DatabaseMigrator {
         BufferedReader bufferedReader = null;
         Map<Integer, String> upgrades = new HashMap<Integer, String>();
         try {
-            reader = ClasspathResource.getInstance("/sql/").getAsReader("upgrades-non-sequential-checkpoint.txt");
+            reader = ClasspathResource.getInstance("/sql/").getAsReader("upgrades-checkpoint.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {
@@ -105,6 +108,12 @@ public class DatabaseMigrator {
     }
 
     public boolean checkForUnAppliedUpgrades() throws Exception{
+        if (false == this.isNSDU()){
+            createAppliedUpgradesTable();
+        }
+
+        checkForUnAppliedLegacyUpgrades();
+
         boolean unAppliedUpgrades = false;
 
         Map<Integer, String> availableUpgrades = getAvailableUpgrades();
@@ -118,6 +127,74 @@ public class DatabaseMigrator {
 
         return unAppliedUpgrades;
 
+    }
+
+    private void checkForUnAppliedLegacyUpgrades() {
+        //on first run, add entries in applied upgrades table
+        // and delete DATABASE_VERSION table
+
+        //otherwise, check
+
+    }
+
+    public void firstRun(Map<Integer, Integer> legacyUpgrades) throws Exception {
+        createAppliedUpgradesTable();
+
+        //check version number
+        int databaseVersion = readDatabaseVersion();
+
+        //insert all upgrades below version number in applied upgrades table
+        Set<Integer> appliedUpgrades = legacyUpgrades.keySet();
+        for(Integer i:appliedUpgrades){
+            if (i <= databaseVersion){
+                connection.createStatement().execute("insert into APPLIED_UPGRADES values("+legacyUpgrades.get(i)+")");
+            }
+        }
+
+        //remove database version table
+
+        connection.createStatement().execute("drop table database_version");
+
+
+
+        if (!isNSDU()){
+            throw new RuntimeException("Failed to migrate schema to NSDU");
+        }
+    }
+
+    public Map<Integer, Integer> getLegacyUpgradesMap(){
+        // TODO
+        return null;
+    }
+
+    public int readDatabaseVersion() throws SQLException {
+        return readDatabaseVersion(connection);
+    }
+
+    public int readDatabaseVersion(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet results = statement.executeQuery("select DATABASE_VERSION from DATABASE_VERSION");
+        if (results.next()) {
+            int version = results.getInt("DATABASE_VERSION");
+            if (results.next()) {
+                throw new RuntimeException("too many rows in DATABASE_VERSION");
+            }
+            statement.close();
+            return version;
+        }
+        throw new RuntimeException("No row in DATABASE_VERSION");
+    }
+
+    private void createAppliedUpgradesTable() {
+        try {
+            connection.createStatement().execute("CREATE TABLE  APPLIED_UPGRADES" +
+                    "( UPGRADE_ID INTEGER NOT NULL,"+
+                    "PRIMARY KEY(UPGRADE_ID)"+
+                    ")ENGINE=InnoDB CHARACTER SET utf8;");
+            connection.commit();
+        } catch (SQLException e) {
+            System.err.print("Unable to create APPLIED_UPGRADES table for NSDU");
+        }
     }
 
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
@@ -212,7 +289,7 @@ public class DatabaseMigrator {
     }
 
     public boolean isNSDU(Connection conn) throws SQLException {
-        ResultSet results = conn.getMetaData().getColumns(null, null, "APPLIED_UPGRADES", "UPGRADES");
+        ResultSet results = conn.getMetaData().getColumns(null, null, "APPLIED_UPGRADES", "UPGRADE_ID");
         boolean foundColumns = results.next();
         results.close();
         return foundColumns;

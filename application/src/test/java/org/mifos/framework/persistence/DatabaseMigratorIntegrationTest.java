@@ -21,13 +21,17 @@
 package org.mifos.framework.persistence;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -53,8 +57,6 @@ public class DatabaseMigratorIntegrationTest {
      * Demonstrate the simplest possible non-sequential database upgrade works. For example, upgrading a schema from
      * "1274760000" to "1274761395".
      */
-    @Test (enabled=true)
-
     public void testHappyPath() throws Exception {
         loadNonSeqDatabaseSchema();
         createFooTable(connection);
@@ -86,12 +88,12 @@ public class DatabaseMigratorIntegrationTest {
     }
 
     private void loadNonSeqDatabaseSchema() throws Exception {
-        DatabaseSetup.executeScript("mifosdroptables-non-seq.sql", connection);
-        DatabaseSetup.executeScript("latest-schema-non-sequential.sql", connection);
+        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+        DatabaseSetup.executeScript("latest-schema.sql", connection);
         connection.commit();
     }
 
-    @Test
+
     public void testJavaBasedUpgrade() throws Exception{
        loadNonSeqDatabaseSchema();
        connection.createStatement().execute("drop table if exists baz");
@@ -112,7 +114,45 @@ public class DatabaseMigratorIntegrationTest {
        Assertion.assertEquals(expected, dump2.getTable("baz"));
     }
 
-    @Test (enabled=false)
+
     public void testMergedUpgrade() throws Exception {
+    }
+
+
+    public void testFirstRun() throws Exception {
+        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+
+        // load dummy schema containing database_version & applied_upgrades tables
+        connection.createStatement().execute(
+                "create table database_version(" +
+                "database_version integer)" +
+                "engine=innodb character set utf8;" );
+
+        connection.createStatement().execute(
+                "create table applied_upgrades(" +
+                "upgrade_id integer)" +
+                "engine=innodb character set utf8;");
+
+        // insert database version
+        connection.createStatement().execute("insert into database_version values(253)");
+
+        // call firstRun with dummy upgrades map
+        Map<Integer, Integer> legacyUpgradesMap = new HashMap<Integer, Integer>(5);
+        legacyUpgradesMap.put(142, 1276821345);
+        legacyUpgradesMap.put(153, 1276821391);
+        legacyUpgradesMap.put(170, 1276821409);
+        legacyUpgradesMap.put(201, 1276821432);
+        legacyUpgradesMap.put(253, 1276821600);
+
+        DatabaseMigrator migrator = new DatabaseMigrator(connection);
+        connection.commit();
+
+        migrator.firstRun(legacyUpgradesMap);
+
+        // check appliedUPgrades table contains unix tStamps for upgrades
+        ResultSet rs = connection.createStatement().executeQuery("select count(*) from applied_upgrades");
+        rs.next();
+       Assert.assertEquals(rs.getInt("count(*)"), 5);
+
     }
 }

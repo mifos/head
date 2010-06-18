@@ -145,7 +145,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                 MoneyCompositeUserType.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
                 AccountingRules.init(); // load the additional currencies
                 DatabaseMigrator migrator = new DatabaseMigrator();
-                DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
                 try {
                     /*
                      * This is an easy way to force an actual database query to happen via Hibernate. Simply opening a
@@ -158,6 +157,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
                 if (!databaseError.isError) {
                     try {
+                        if(!migrator.isNSDU()){
+                            migrator.firstRun(migrator.getLegacyUpgradesMap());
+                        }
                         migrator.upgrade();
                     } catch (Throwable t) {
                         setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
