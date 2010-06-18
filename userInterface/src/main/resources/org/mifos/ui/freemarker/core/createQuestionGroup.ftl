@@ -90,7 +90,7 @@
                 <tr>
                     <td class="bluetablehead05">
                         <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> Create Question Group </span>
+                        <span class="fontnormal8ptbold"> Add Question Group </span>
                     </td>
                 </tr>
             </table>
@@ -118,6 +118,7 @@
                                                     onkeypress="return FnCheckNumCharsOnPress(event,this);"
                                                     onblur="return FnCheckNumChars(event,this);return
                                                     FnEscape(event,this)"'/]
+                                                    <br/>
                                                     [@spring.showErrors "<br>","fontnormalRedBold" /]
                                                 </td>
                                             </tr>
@@ -136,7 +137,7 @@
                                                 <td align="center">
                                                     <input type="submit" name="_eventId_cancel"
                                                            value="Cancel"
-                                                           class="buttn">
+                                                           class="cancelbuttn">
                                                 </td>
                                             </tr>
                                             <tr>

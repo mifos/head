@@ -116,14 +116,10 @@
             </span>
                             <br/>
             <span class="fontnormal">
-                Note\: questions flagged as PPI may not be attached to general surveys.
+                Note: questions flagged as PPI may not be attached to general surveys.
             </span>
                         </div>
 
-
-                        <br/>
-
-                        <br>
                         <table width="95%" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td align="center" class="blueline">&nbsp;</td>

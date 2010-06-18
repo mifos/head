@@ -5,9 +5,9 @@
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
+    <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 </head>
-
-<body>
+<body onload="disableSubmitButtonOnEmptyQuestionList()">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
         <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
@@ -90,7 +90,7 @@
                 <tr>
                     <td class="bluetablehead05">
                         <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> Create Question </span>
+                        <span class="fontnormal8ptbold"> Add Questions </span>
                     </td>
                 </tr>
             </table>
@@ -109,7 +109,7 @@
                                         <table width="98%" border="0" cellpadding="3" cellspacing="0">
                                             <tr class="fontnormal">
                                                 <td width="24%" align="right"><span class="mandatorytext"><font
-                                                        color="#FF0000">*</font></span>Question Titile:
+                                                        color="#FF0000">*</font></span>Question Title:
                                                 </td>
                                                 <td width="76%">
                                                     <script src="pages/framework/js/func.js"></script>
@@ -123,7 +123,6 @@
                                                     [@spring.showErrors "<br/>","fontnormalRedBold" /]
                                                 </td>
                                             </tr>
-
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
@@ -140,9 +139,9 @@
                                                 <td colspan="2" class="blueline" align="left">&nbsp;</td>
                                             </tr>
                                         </table>
-                                        <table width="98%" border="0" cellpadding="3" cellspacing="0">
+                                        <table id="questions.table" name="questions.table" width="98%" border="0" cellpadding="3" cellspacing="0">
                                                       <tr>
-                                                        <td class="drawtablehd">Question Name</td>
+                                                        <td class="drawtablehd">Question Title</td>
                                                       </tr>
 
                                                       [#list questionDefinition.questions as question]
@@ -161,14 +160,14 @@
                                         <table width="93%" border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="center">
-                                                    <input type="submit" name="_eventId_createQuestions"
+                                                    <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions"
                                                            value="Submit"
                                                            class="buttn">
                                                 </td>
                                                 <td align="center">
-                                                    <input type="submit" name="_eventId_cancel"
+                                                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
                                                            value="Cancel"
-                                                           class="buttn">
+                                                           class="cancelbuttn">
                                                 </td>
                                             </tr>
                                         </table>

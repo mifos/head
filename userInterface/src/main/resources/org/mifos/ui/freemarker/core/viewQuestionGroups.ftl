@@ -107,7 +107,6 @@
                         <div style="padding:3px" class="headingorange">
                             View Question Groups
                             <br/>
-                            <br/>
             <span class="fontnormal">
                 Click on a question group below to view details and make changes or
                 <a href="createQuestionGroup.ftl">
@@ -115,7 +114,6 @@
                 </a>
             </span>
                         </div>
-                        <br>
                         <table width="95%" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td align="center" class="blueline">&nbsp;</td>
