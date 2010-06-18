@@ -33,7 +33,7 @@ public interface QuestionnaireServiceFacade {
 
     void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException;
 
-    List<QuestionDetail> getAllQuestions();
+    List<Question> getAllQuestions();
 
-    List<QuestionGroupDetail> getAllQuestionGroups();
+    List<QuestionGroupForm> getAllQuestionGroups();
 }

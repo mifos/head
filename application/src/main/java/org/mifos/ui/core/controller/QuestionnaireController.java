@@ -23,8 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -35,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 public class QuestionnaireController {
@@ -121,37 +116,13 @@ public class QuestionnaireController {
 
     @RequestMapping("/viewQuestions.ftl")
     public String getAllQuestions(ModelMap model, HttpServletRequest request){
-        model.addAttribute("questions", mapToQuestions(questionnaireServiceFacade.getAllQuestions()));
+        model.addAttribute("questions", questionnaireServiceFacade.getAllQuestions());
         return "viewQuestions";
     }
 
     @RequestMapping("/viewQuestionGroups.ftl")
     public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
-        model.addAttribute("questionGroups", mapToQuestionGroups(questionnaireServiceFacade.getAllQuestionGroups()));
+        model.addAttribute("questionGroups", questionnaireServiceFacade.getAllQuestionGroups());
         return "viewQuestionGroups";
-    }
-
-    private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
-        List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-            questionGroupForm.setTitle(questionGroupDetail.getTitle());
-            questionGroupForms.add(questionGroupForm);
-        }
-        return questionGroupForms;
-    }
-
-    private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {
-        LinkedList<Question> questions = new LinkedList<Question>();
-        for (QuestionDetail questionDetail : questionDetails) {
-            questions.add(mapToQuestion(questionDetail));
-        }
-        return questions;
-    }
-
-    private Question mapToQuestion(QuestionDetail questionDetail) {
-        Question question = new Question();
-        question.setTitle(questionDetail.getText());
-        return question;
     }
 }

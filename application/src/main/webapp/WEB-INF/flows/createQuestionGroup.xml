@@ -16,7 +16,7 @@
         <transition on="failure" to="createQuestionGroup" />
     </action-state>
 
-    <end-state id="defineQuestionGroupSuccess" view="viewQuestionGroups" />
+    <end-state id="defineQuestionGroupSuccess" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />
     <end-state id="cancel" view="externalRedirect:contextRelative:/AdminAction.do?method=load" />
 
 </flow>

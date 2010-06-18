@@ -79,15 +79,17 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestion(){
-        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
+        when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(0, "title", "title", QuestionType.NUMERIC)));
+        List<Question> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
+        assertThat(questionDetailList.get(0).getTitle(), is("title"));
         verify(questionnaireService).getAllQuestions();
     }
 
     @Test
     public void testGetAllQuestionGroups() {
         when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail("title1"), new QuestionGroupDetail("title2")));
-        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
+        List<QuestionGroupForm> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
         assertNotNull(questionGroups);
         assertThat(questionGroups.get(0).getTitle(), is("title1"));
         assertThat(questionGroups.get(1).getTitle(), is("title2"));

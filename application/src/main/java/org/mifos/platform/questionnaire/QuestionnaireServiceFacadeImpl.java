@@ -26,6 +26,7 @@ import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
@@ -59,12 +60,32 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public List<QuestionDetail> getAllQuestions() {
-        return questionnaireService.getAllQuestions();
+    public List<Question> getAllQuestions() {
+        return mapToQuestions(questionnaireService.getAllQuestions());
+    }
+
+    private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {
+        List<Question> questions = new ArrayList<Question>();
+        for (QuestionDetail questionDetail : questionDetails) {
+            Question question = new Question();
+            question.setTitle(questionDetail.getText());
+            questions.add(question);
+        }
+        return questions;
     }
 
     @Override
-    public List<QuestionGroupDetail> getAllQuestionGroups() {
-        return questionnaireService.getAllQuestionGroups();
+    public List<QuestionGroupForm> getAllQuestionGroups() {
+        return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
+    }
+
+    private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
+        List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+            QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+            questionGroupForm.setTitle(questionGroupDetail.getTitle());
+            questionGroupForms.add(questionGroupForm);
+        }
+        return questionGroupForms;
     }
 }

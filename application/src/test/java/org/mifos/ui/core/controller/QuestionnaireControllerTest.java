@@ -25,8 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.contract.QuestionDetail;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
@@ -183,7 +181,7 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQuestions(){
-        when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail("title1"), getQuestionDetail("title2")));
+        when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestion("title1"), getQuestion("title2")));
         String view = questionnaireController.getAllQuestions(model, httpServletRequest);
         assertThat(view, is("viewQuestions"));
         verify(questionnaireServiceFacade).getAllQuestions();
@@ -192,19 +190,11 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroupDetail("title1"), getQuestionGroupDetail("title2")));
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroupForm("title1"), getQuestionGroupForm("title2")));
         String view = questionnaireController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
         verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfTitlesMatcher("title1", "title2")));
-    }
-
-    private QuestionGroupDetail getQuestionGroupDetail(String title) {
-        return new QuestionGroupDetail(title);
-    }
-
-    private QuestionDetail getQuestionDetail(String title) {
-        return new QuestionDetail(null, title, title, null);
     }
 
     private QuestionForm getQuestionForm(String title) {

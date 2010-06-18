@@ -133,6 +133,11 @@
                                                            value="Submit"
                                                            class="buttn">
                                                 </td>
+                                                <td align="center">
+                                                    <input type="submit" name="_eventId_cancel"
+                                                           value="Cancel"
+                                                           class="buttn">
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2" class="blueline" align="left">&nbsp;</td>
