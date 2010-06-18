@@ -683,9 +683,15 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <cell id="115">
                                         <text id="842">
                                             <property name="fontWeight">bold</property>
-                                            <property name="contentType">html</property>
-                                            <text-property name="content"><![CDATA[Branch office: <value-of>params["branchId"].displayText</value-of>]]></text-property>
-                                        </text>
+                                            <property name="contentType">auto</property>
+                                            <text-property name="content"><![CDATA[Branch office: ]]></text-property>
+                                            <method name="onPrepare">
+                                            <!-- FIXME Bad solution of MIFOS-3083 -->
+                                            <![CDATA[
+                                            branch = new Packages.java.lang.Short(params["branchId"].value);
+                                            officePersistence = Packages.org.mifos.customers.office.persistence.OfficePersistence();
+                                            this.content += officePersistence.getOffice(branch).getOfficeName();
+                                            ]]></method>                                        </text>
                                     </cell>
                                     <cell id="116">
                                         <text id="844">
@@ -700,8 +706,19 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <cell id="846">
                                         <text id="848">
                                             <property name="fontWeight">bold</property>
-                                            <property name="contentType">html</property>
-                                            <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
+                                            <text-property name="content"><![CDATA[Loan officer: ]]></text-property>
+                                            <property name="contentType">auto</property>
+                                            <method name="onPrepare">
+                                            <!-- FIXME Bad solution of MIFOS-3083 -->
+                                            <![CDATA[
+                                            if(params["loanOfficerId"].displayText == "ALL") {
+                                               this.content += "ALL";
+                                            } else {
+                                               loanOfficer = new Packages.java.lang.Short(params["loanOfficerId"].value);
+                                               personnelPersistence = Packages.org.mifos.customers.personnel.persistence.PersonnelPersistence();
+                                               this.content += personnelPersistence.getPersonnel(loanOfficer).getDisplayName();
+                                            }
+                                            ]]></method>
                                         </text>
                                     </cell>
                                     <cell id="847"/>
@@ -711,8 +728,19 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <cell id="118">
                                         <text id="843">
                                             <property name="fontWeight">bold</property>
-                                            <property name="contentType">html</property>
-                                            <text-property name="content"><![CDATA[Product: <value-of>params["loanProductId"].displayText</value-of>]]></text-property>
+                                            <property name="contentType">auto</property>
+                                            <text-property name="content"><![CDATA[Product: ]]></text-property>
+                                            <method name="onPrepare">
+                                            <!-- FIXME Bad solution of MIFOS-3083 -->
+                                            <![CDATA[
+                                            if(params["loanProductId"].displayText == "ALL") {
+                                               this.content += "ALL";
+                                            } else {
+                                               loanProduct = new Packages.java.lang.Short(params["loanProductId"].value);
+                                               loanPrdPersistence = Packages.org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence();
+                                               this.content += loanPrdPersistence.getLoanOffering(loanProduct).getPrdOfferingName();
+                                            }
+                                            ]]></method>
                                         </text>
                                     </cell>
                                     <cell id="119"/>
