@@ -29,10 +29,8 @@
         </p>
         <p class="span-24">
         	<div class="fontBold">[@spring.message "accountingrules"/] </div>
-        	<div><span>[@spring.message "currency"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).code-->Currency code</span></div>
             <div><span>[@spring.message "maximumInterest"/]</span>&nbsp;:&nbsp;<span>${properties.maxInterest}</span></div>
             <div><span>[@spring.message "minimumInterest"/]</span>&nbsp;:&nbsp;<span>${properties.minInterest}</span></div>
-            <div><span>[@spring.message "numberofdigitsafterdecimal"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).digitsAfterDecimal-->digitsAfterDecimal</span></div>
             <div><span>[@spring.message "numberofdigitsbeforedecimal"/]</span>&nbsp;:&nbsp;<span>${properties.digitsBeforeDecimal}</span></div>
             <div><span>[@spring.message "numberofdigitsafterdecimalforinterest"/]</span>&nbsp;:&nbsp;<span>${properties.intDigitsAfterDecimal}</span></div>
             <div><span>[@spring.message "numberofdigitsbeforedecimalforinterest"/]</span>&nbsp;:&nbsp;<span>${properties.intDigitsBeforeDecimal}</span></div>
@@ -40,8 +38,16 @@
             <div><span>[@spring.message "currencyRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.currencyRoundingMode}</span></div>
             <div><span>[@spring.message "initialRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.initialRoundingMode}</span></div>
             <div><span>[@spring.message "finalRoundingMode"/]</span>&nbsp;:&nbsp;<span>${properties.finalRoundingMode}</span></div>
-            <div><span>[@spring.message "finalRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).finalRoundOffMultiple-->finalRoundOffMultiple</span></div>
-            <div><span>[@spring.message "initialRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span><!--properties.currencies.get(0).initialRoundOffMultiple-->initialRoundOffMultiple</span></div>
+       </p>
+
+        <p class="span-24">
+        	<div class="fontBold">[@spring.message "currencies"/] </div>
+        	[#list properties.currencies as currency]
+	        	<div><span>[@spring.message "currency"/]</span>&nbsp;:&nbsp;<span>${currency.code}</span></div>
+	            <div><span>[@spring.message "numberofdigitsafterdecimal"/]</span>&nbsp;:&nbsp;<span>${currency.digitsAfterDecimal}</span></div>
+	            <div><span>[@spring.message "finalRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span>${currency.finalRoundOffMultiple}</span></div>
+	            <div><span>[@spring.message "initialRoundOffMultiple"/]</span>&nbsp;:&nbsp;<span>${currency.initialRoundOffMultiple}</span></div>
+            [/#list]
         </p>
         
         <p class="span-24">
