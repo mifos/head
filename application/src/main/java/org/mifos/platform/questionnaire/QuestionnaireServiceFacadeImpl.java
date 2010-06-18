@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire;
 
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroupForm;
@@ -28,24 +29,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
 
     @Autowired
     private QuestionnaireService questionnaireService;
+    private Map<String,QuestionType> questionTypeMap;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
+        populateQuestionTypeMap();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireServiceFacadeImpl() {
+        this(null);
     }
 
     @Override
     public void createQuestions(List<Question> questions) throws ApplicationException {
         for (Question question: questions){
-            questionnaireService.defineQuestion(new QuestionDefinition(question.getTitle(), QuestionType.FREETEXT));
+            questionnaireService.defineQuestion(mapToQuestionDefinition(question));
         }
     }
 
@@ -87,5 +94,15 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
             questionGroupForms.add(questionGroupForm);
         }
         return questionGroupForms;
+    }
+
+    private void populateQuestionTypeMap() {
+        questionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
+                makeEntry("Date", QuestionType.DATE),
+                makeEntry("Number", QuestionType.NUMERIC));
+    }
+
+    private QuestionDefinition mapToQuestionDefinition(Question question) {
+        return new QuestionDefinition(question.getTitle(), questionTypeMap.get(question.getType()));
     }
 }

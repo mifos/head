@@ -109,7 +109,7 @@
                                         <table width="98%" border="0" cellpadding="3" cellspacing="0">
                                             <tr class="fontnormal">
                                                 <td width="24%" align="right"><span class="mandatorytext"><font
-                                                        color="#FF0000">*</font></span>Question Titile:
+                                                        color="#FF0000">*</font></span>Question Titile
                                                 </td>
                                                 <td width="76%">
                                                     <script src="pages/framework/js/func.js"></script>
@@ -122,6 +122,16 @@
                                                     <br/>
                                                     [@spring.showErrors "<br/>","fontnormalRedBold" /]
                                                 </td>
+                                            </tr>
+
+                                            <tr class="fontnormal">
+                                                <td width="24%" align="right"><span class="mandatorytext"><font
+                                                        color="#FF0000">*</font></span>Answer type
+                                                </td>
+                                              <td>
+                                                [@spring.formSingleSelect "questionDefinition.type", ["Free text", "Date"], 'styleId="answerType" onchange="setDisable();"' /]
+                                                [@spring.showErrors "<br>","fontnormalRedBold" /]
+                                              </td>
                                             </tr>
 
                                             <tr>
@@ -143,21 +153,20 @@
                                         <table width="98%" border="0" cellpadding="3" cellspacing="0">
                                                       <tr>
                                                         <td class="drawtablehd">Question Name</td>
+                                                        <td class="drawtablehd">Answer type</td>
                                                       </tr>
-
                                                       [#list questionDefinition.questions as question]
                                                       <tr>
                                                           <td class="drawtablerow">${question.title}</td>
+                                                          <td class="drawtablerow">${question.type}</td>
                                                       </tr>
                                                       [/#list]
                                                       <tr>
-
+                                                        <td class="drawtablerow">&nbsp;</td>
                                                         <td class="drawtablerow">&nbsp;</td>
                                                       </tr>
                                                     </table>
-
                                         <br>
-
                                         <table width="93%" border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="center">

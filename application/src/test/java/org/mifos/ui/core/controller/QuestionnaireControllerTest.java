@@ -77,7 +77,7 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testAddQuestionForSuccess() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE);
+        QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(false);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         List<Question> questions = questionForm.getQuestions();
@@ -142,7 +142,7 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testCreateQuestionFailure() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE);
+        QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<Question>>anyObject());
         String result = questionnaireController.createQuestions(questionForm, requestContext);
@@ -154,7 +154,7 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testCreateQuestionSuccess() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE);
+        QuestionForm questionForm = getQuestionForm(TITLE, "Date");
         String result = questionnaireController.createQuestions(questionForm, requestContext);
         assertThat(result, is("success"));
         verify(questionnaireServiceFacade).createQuestions(questionForm.getQuestions());
@@ -210,9 +210,10 @@ public class QuestionnaireControllerTest {
         verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfTitlesMatcher("title1", "title2")));
     }
 
-    private QuestionForm getQuestionForm(String title) {
+    private QuestionForm getQuestionForm(String title, String type) {
         QuestionForm questionForm = new QuestionForm();
         questionForm.setTitle(title);
+        questionForm.setType(type);
         return questionForm;
     }
 
