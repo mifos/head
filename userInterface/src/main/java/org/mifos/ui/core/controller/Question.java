@@ -27,6 +27,7 @@ import java.io.Serializable;
 public class Question implements Serializable{
     private String title;
     private static final long serialVersionUID = -2584259958410679795L;
+    private String type;
 
     public String getTitle() {
         return title;
@@ -38,5 +39,13 @@ public class Question implements Serializable{
 
     public void trimTitle() {
         this.title = StringUtils.trim(this.title);
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

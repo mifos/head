@@ -64,4 +64,11 @@ public class QuestionForm implements Serializable{
         return false;
     }
 
+    public void setType(String type) {
+        currentQuestion.setType(type);
+    }
+
+    public String getType() {
+        return currentQuestion.getType();
+    }
 }

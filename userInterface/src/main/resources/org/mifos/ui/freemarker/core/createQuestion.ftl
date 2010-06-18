@@ -123,6 +123,16 @@
                                                     [@spring.showErrors "<br/>","fontnormalRedBold" /]
                                                 </td>
                                             </tr>
+                                            <tr class="fontnormal">
+                                                <td width="24%" align="right"><span class="mandatorytext"><font
+                                                        color="#FF0000">*</font></span>Answer type
+                                                </td>
+                                              <td>
+                                                [@spring.formSingleSelect "questionDefinition.type", ["Free text", "Date"], 'styleId="answerType" onchange="setDisable();"' /]
+                                                [@spring.showErrors "<br>","fontnormalRedBold" /]
+                                              </td>
+                                            </tr>
+
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
@@ -142,21 +152,20 @@
                                         <table id="questions.table" name="questions.table" width="98%" border="0" cellpadding="3" cellspacing="0">
                                                       <tr>
                                                         <td class="drawtablehd">Question Title</td>
+                                                        <td class="drawtablehd">Answer type</td>
                                                       </tr>
-
                                                       [#list questionDefinition.questions as question]
                                                       <tr>
                                                           <td class="drawtablerow">${question.title}</td>
+                                                          <td class="drawtablerow">${question.type}</td>
                                                       </tr>
                                                       [/#list]
                                                       <tr>
-
+                                                        <td class="drawtablerow">&nbsp;</td>
                                                         <td class="drawtablerow">&nbsp;</td>
                                                       </tr>
                                                     </table>
-
                                         <br>
-
                                         <table width="93%" border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="center">

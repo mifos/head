@@ -31,6 +31,8 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -67,8 +69,8 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestion(title1), getQuestion(title2)));
-        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT)));
+        questionnaireServiceFacade.createQuestions(asList(getQuestion(title1, "Free text"), getQuestion(title2, "Date")));
+        verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT, QuestionType.DATE)));
     }
 
     @Test
@@ -96,9 +98,10 @@ public class QuestionnaireServiceFacadeTest {
         verify(questionnaireService).getAllQuestionGroups();
     }
 
-    private Question getQuestion(String title) {
+    private Question getQuestion(String title, String type) {
         Question question = new Question();
         question.setTitle(title);
+        question.setType(type);
         return question;
     }
 
@@ -109,17 +112,22 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
-        private QuestionType questionType;
+        private List<QuestionType> questionType;
 
-        public QuestionDefinitionMatcher(QuestionType questionType) {
-            this.questionType = questionType;
+        public QuestionDefinitionMatcher(QuestionType... questionType) {
+            this.questionType = new ArrayList<QuestionType>();
+            this.questionType.addAll(Arrays.asList(questionType));
         }
 
         @Override
         public boolean matches(Object argument) {
             if (argument instanceof QuestionDefinition) {
                 QuestionDefinition questionDefinition = (QuestionDefinition) argument;
-                return questionDefinition.getType() == questionType;
+                if (questionType.get(0) == questionDefinition.getType()) {
+                    questionType.remove(questionDefinition.getType());
+                    questionType.add(questionDefinition.getType());
+                    return true;
+                }
             }
             return false;
         }
