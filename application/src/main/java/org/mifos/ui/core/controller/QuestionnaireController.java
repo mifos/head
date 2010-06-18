@@ -60,9 +60,7 @@ public class QuestionnaireController {
     }
 
     public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
-        if (questionFormHasErrors(questionForm, requestContext)) return "failure";
         try {
-            questionForm.addCurrentQuestion();
             questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext, e);
@@ -83,7 +81,7 @@ public class QuestionnaireController {
     }
 
     private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
-        constructMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
+        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
         MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
     }
 
@@ -96,15 +94,14 @@ public class QuestionnaireController {
         return StringUtils.isEmpty(title);
     }
 
-    private void constructMessage(RequestContext requestContext, String code, String source, String message) {
-        MessageBuilder messageBuilder = new MessageBuilder().error().code(code).source(source).defaultText(message);
-        MessageResolver messageResolver = messageBuilder.build();
+    private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {
+        MessageResolver messageResolver = new MessageBuilder().error().code(code).source(source).defaultText(message).build();
         requestContext.getMessageContext().addMessage(messageResolver);
     }
 
     private boolean questionGroupFormHasErrors(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
         if (isInvalidTitle(questionGroupForm.getTitle())) {
-            constructMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
+            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
             return true;
         }
         return false;
@@ -112,11 +109,11 @@ public class QuestionnaireController {
 
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
         if (isInvalidTitle(questionForm.getTitle())) {
-            constructMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
+            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
             return true;
         }
         if (isDuplicateQuestion(questionForm)) {
-            constructMessage(requestContext, "questionnaire.error.duplicate.question.title", "title", "The name specified already exists.");
+            constructErrorMessage(requestContext, "questionnaire.error.duplicate.question.title", "title", "The name specified already exists.");
             return true;
         }
         return false;

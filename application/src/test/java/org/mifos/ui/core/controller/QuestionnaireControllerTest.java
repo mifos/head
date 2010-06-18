@@ -130,32 +130,6 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
-    public void testCreateQuestionsForFailureWhenQuestionTitleNotProvided() throws Exception {
-        QuestionForm questionForm = new QuestionForm();
-        when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionnaireController.createQuestions(questionForm, requestContext);
-        assertThat(questionForm.getQuestions().size(), is(0));
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is("failure"));
-        verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
-    }
-
-    @Test
-    public void testCreateQuestionsForFailureWhenQuestionTitleIsDuplicateInDB() throws Exception {
-        QuestionForm questionForm = new QuestionForm();
-        questionForm.setTitle(TITLE);
-        when(requestContext.getMessageContext()).thenReturn(messageContext);
-        when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
-        String result = questionnaireController.createQuestions(questionForm, requestContext);
-        assertThat(questionForm.getQuestions().size(), is(0));
-        assertThat(result, is(notNullValue()));
-        assertThat(result, is("failure"));
-        verify(requestContext).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.title")));
-    }
-
-    @Test
     public void testCreateQuestionFailure() throws Exception {
         QuestionForm questionForm = getQuestionForm(TITLE);
         when(requestContext.getMessageContext()).thenReturn(messageContext);

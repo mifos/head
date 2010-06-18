@@ -48,6 +48,7 @@ public class QuestionForm implements Serializable{
 
     public void addCurrentQuestion() {
         questions.add(currentQuestion);
+        currentQuestion = new Question();
     }
 
     public boolean isDuplicateTitle(String questionTitle) {
@@ -61,4 +62,5 @@ public class QuestionForm implements Serializable{
         }
         return false;
     }
+
 }

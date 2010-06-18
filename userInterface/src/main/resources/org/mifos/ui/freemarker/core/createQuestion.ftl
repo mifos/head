@@ -103,7 +103,7 @@
                             </tr>
                             <tr class="fontnormal">
                                 <td align="left" valign="top" class="paddingL15T15">
-                                    <form name="createquestionform"
+                                        <form name="createquestionform"
                                           action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
                                           focus="questionText">
                                         <table width="98%" border="0" cellpadding="3" cellspacing="0">
@@ -119,7 +119,8 @@
                                                     onkeypress="return FnCheckNumCharsOnPress(event,this);"
                                                     onblur="return FnCheckNumChars(event,this);return
                                                     FnEscape(event,this)"'/]
-                                                    [@spring.showErrors "<br>","fontnormalRedBold" /]
+                                                    <br/>
+                                                    [@spring.showErrors "<br/>","fontnormalRedBold" /]
                                                 </td>
                                             </tr>
 
@@ -130,8 +131,8 @@
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>
-                                                    <input type="submit" name="_eventId_createQuestions"
-                                                           value="Submit"
+                                                    <input type="submit" name="_eventId_addQuestion"
+                                                           value="Add Question"
                                                            class="buttn">
                                                 </td>
                                             </tr>
@@ -155,9 +156,22 @@
                                                       </tr>
                                                     </table>
 
-
-
                                         <br>
+
+                                        <table width="93%" border="0" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td align="center">
+                                                    <input type="submit" name="_eventId_createQuestions"
+                                                           value="Submit"
+                                                           class="buttn">
+                                                </td>
+                                                <td align="center">
+                                                    <input type="submit" name="_eventId_cancel"
+                                                           value="Cancel"
+                                                           class="buttn">
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </form>
                                     <br>
                                 </td>
