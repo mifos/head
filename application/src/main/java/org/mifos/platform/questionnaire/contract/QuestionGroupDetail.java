@@ -29,6 +29,10 @@ public class QuestionGroupDetail {
         this.title = title;
     }
 
+    public QuestionGroupDetail(String title) {
+        this(0, title);
+    }
+
     public String getTitle() {
         return title;
     }

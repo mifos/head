@@ -24,6 +24,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class QuestionnaireController {
     @Autowired
     private QuestionnaireServiceFacade questionnaireServiceFacade;
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireController() {
     }
 
@@ -121,12 +124,24 @@ public class QuestionnaireController {
 
     @RequestMapping("/viewQuestions.ftl")
     public String getAllQuestions(ModelMap model, HttpServletRequest request){
-        model.addAttribute("questions", viewAllQuestions());
+        model.addAttribute("questions", mapToQuestions(questionnaireServiceFacade.getAllQuestions()));
         return "viewQuestions";
     }
 
-    public List<Question> viewAllQuestions() {
-        return mapToQuestions(questionnaireServiceFacade.viewAllQuestions());
+    @RequestMapping("/viewQuestionGroups.ftl")
+    public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
+        model.addAttribute("questionGroups", mapToQuestionGroups(questionnaireServiceFacade.getAllQuestionGroups()));
+        return "viewQuestionGroups";
+    }
+
+    private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
+        List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
+        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
+            QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+            questionGroupForm.setTitle(questionGroupDetail.getTitle());
+            questionGroupForms.add(questionGroupForm);
+        }
+        return questionGroupForms;
     }
 
     private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {

@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
@@ -43,7 +44,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -194,6 +194,7 @@ public class QuestionnaireControllerTest {
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.emptytitle")));
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionGroupFailure() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
@@ -207,19 +208,25 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
-    public void testViewAllQuestionsSuccess() {
-        when(questionnaireServiceFacade.viewAllQuestions()).thenReturn(asList(getQuestionDetail("title1"), getQuestionDetail("title2")));
-        List<Question> questionList = questionnaireController.viewAllQuestions();
-        verify(questionnaireServiceFacade).viewAllQuestions();
-        assertNotNull(questionList);
-        assertThat(questionList.size(), is(2));
+    public void shouldGetAllQuestions(){
+        when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestionDetail("title1"), getQuestionDetail("title2")));
+        String view = questionnaireController.getAllQuestions(model, httpServletRequest);
+        assertThat(view, is("viewQuestions"));
+        verify(questionnaireServiceFacade).getAllQuestions();
+        verify(model).addAttribute(eq("questions"),argThat(new ListOfTitlesMatcher("title1", "title2")));
     }
 
     @Test
-    public void testShouldGetAllQuestions(){
-        String view = questionnaireController.getAllQuestions(model, httpServletRequest);
-        assertThat(view, is("viewQuestions"));
-        verify(model).addAttribute(eq("questions"),anyList());
+    public void shouldGetAllQuestionGroups() {
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroupDetail("title1"), getQuestionGroupDetail("title2")));
+        String view = questionnaireController.getAllQuestionGroups(model, httpServletRequest);
+        assertThat(view, is("viewQuestionGroups"));
+        verify(questionnaireServiceFacade).getAllQuestionGroups();
+        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfTitlesMatcher("title1", "title2")));
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(String title) {
+        return new QuestionGroupDetail(title);
     }
 
     private QuestionDetail getQuestionDetail(String title) {
@@ -259,6 +266,34 @@ public class QuestionnaireControllerTest {
             DefaultMessageResolver messageResolver = (DefaultMessageResolver) argument;
             String[] codes = messageResolver.getCodes();
             return codes.length == 1 && StringUtils.equals(codes[0], errorCode);
+        }
+    }
+
+    private class ListOfTitlesMatcher extends ArgumentMatcher<List> {
+        private String[] titles;
+
+        public ListOfTitlesMatcher(String... titles) {
+            this.titles = titles;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (argument instanceof List) {
+                List questionList = (List) argument;
+                for (int i = 0, questionListSize = questionList.size(); i < questionListSize; i++) {
+                    Object obj = questionList.get(i);
+                    if (obj instanceof Question) {
+                        Question question = (Question) obj;
+                        if (!StringUtils.equalsIgnoreCase(question.getTitle(), titles[i])) return false;
+                    }
+                    else if (obj instanceof QuestionGroupForm) {
+                        QuestionGroupForm questionGroupForm = (QuestionGroupForm) obj;
+                        if (!StringUtils.equalsIgnoreCase(questionGroupForm.getTitle(), titles[i])) return false;
+                    }
+                }
+                return true;
+            }
+            return true;
         }
     }
 }

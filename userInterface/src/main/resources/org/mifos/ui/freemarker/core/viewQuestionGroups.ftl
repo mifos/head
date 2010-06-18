@@ -87,7 +87,7 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="view_questions"/>
+            <span id="page.id" title="view_question_groups"/>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
@@ -95,7 +95,7 @@
           <a href="AdminAction.do?method=load">Admin</a> /
       </span>
       <span class="fontnormal8ptbold">
-          View Questions
+          View Question Groups
       </span>
                     </td>
                 </tr>
@@ -105,24 +105,16 @@
                 <tr>
                     <td width="70%" align="left" valign="middle" class="paddingL15T15">
                         <div style="padding:3px" class="headingorange">
-                            View Questions
+                            View Question Groups
                             <br/>
                             <br/>
             <span class="fontnormal">
-                Click on a question below to view details and make changes or
-                <a href="createQuestion.ftl">
-                    define a new question
+                Click on a question group below to view details and make changes or
+                <a href="createQuestionGroup.ftl">
+                    define a new question group
                 </a>
             </span>
-                            <br/>
-            <span class="fontnormal">
-                Note\: questions flagged as PPI may not be attached to general surveys.
-            </span>
                         </div>
-
-
-                        <br/>
-
                         <br>
                         <table width="95%" border="0" cellpadding="0" cellspacing="0">
                             <tr>
@@ -130,8 +122,8 @@
                             </tr>
                         </table>
                         <br>
-                        [#list questions as question]
-                          ${question.title}
+                        [#list questionGroups as questionGroup]
+                          ${questionGroup.title}
                           <br/>
                         [/#list]
                     </td>

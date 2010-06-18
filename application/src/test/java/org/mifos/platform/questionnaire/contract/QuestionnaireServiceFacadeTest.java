@@ -31,10 +31,12 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -65,7 +67,7 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(Arrays.asList(getQuestion(title1), getQuestion(title2)));
+        questionnaireServiceFacade.createQuestions(asList(getQuestion(title1), getQuestion(title2)));
         verify(questionnaireService, times(2)).defineQuestion(argThat(new QuestionDefinitionMatcher(QuestionType.FREETEXT)));
     }
 
@@ -76,10 +78,20 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    public void testViewAllQuestion(){
-        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.viewAllQuestions();
+    public void testGetAllQuestion(){
+        List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
         verify(questionnaireService).getAllQuestions();
+    }
+
+    @Test
+    public void testGetAllQuestionGroups() {
+        when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail("title1"), new QuestionGroupDetail("title2")));
+        List<QuestionGroupDetail> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
+        assertNotNull(questionGroups);
+        assertThat(questionGroups.get(0).getTitle(), is("title1"));
+        assertThat(questionGroups.get(1).getTitle(), is("title2"));
+        verify(questionnaireService).getAllQuestionGroups();
     }
 
     private Question getQuestion(String title) {
