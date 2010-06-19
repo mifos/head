@@ -64,7 +64,9 @@ public class HibernateUtil {
 
     /**
      * Close a session. Do nothing if the session is null or already closed.
+     * @deprecated use only {@link StaticHibernateUtil#closeSession()} for session retrieved by {@link StaticHibernateUtil#getSessionTL()}
      */
+    @Deprecated
     public void closeSession(Session session) throws HibernateProcessException {
         try {
             if (session != null && session.isOpen()) {
@@ -118,6 +120,14 @@ public class HibernateUtil {
         return transaction;
     }
 
+    /**
+     * @deprecated use only<br>
+     * {@link StaticHibernateUtil#startTransaction()}<br>
+     * {@link StaticHibernateUtil#commitTransaction()}<br>
+     * {@link StaticHibernateUtil#rollbackTransaction()}<br>
+     * @return
+     */
+    @Deprecated
     public Transaction getTransaction() {
         return getSessionTL().getTransaction();
     }
