@@ -48,12 +48,13 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.startTransaction();
         acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.rollbackTransaction();
         super.tearDown();
     }
 
