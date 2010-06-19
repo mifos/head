@@ -56,7 +56,6 @@ import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -395,7 +394,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                         customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
             } else {
 
-                // create group with center
                 loanOfficerId = actionForm.getLoanOfficerIdValue() != null ? actionForm.getLoanOfficerIdValue()
                         : userContext.getId();
                 officeId = actionForm.getOfficeIdValue();

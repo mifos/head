@@ -124,6 +124,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -2023,9 +2024,18 @@ public class TestObjectFactory {
 
     public static FundBO createFund(final FundCodeEntity fundCode, final String fundName) throws Exception {
         FundBO fundBO = new FundBO(fundCode, fundName);
-        fundBO.save();
-        StaticHibernateUtil.commitTransaction();
-        return fundBO;
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            DependencyInjectedServiceLocator.locateFundDao().save(fundBO);
+            StaticHibernateUtil.commitTransaction();
+            return fundBO;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 
     public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,

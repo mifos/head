@@ -43,6 +43,7 @@ import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.CalendarEvent;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.domain.builders.CalendarEventBuilder;
@@ -173,6 +174,8 @@ public class CustomerAccountCreationTest {
         assertThat(customerAccount.getAccountActionDates().isEmpty(), is(false));
 
         List<AccountActionDateEntity> customerSchedules = new ArrayList<AccountActionDateEntity>(customerAccount.getAccountActionDates());
-        assertThat(new LocalDate(customerSchedules.get(0).getActionDate()), is(new LocalDate()));
+
+        LocalDate activationDate = new LocalDate(CalendarUtils.nearestWorkingDay(new DateTime()));
+        assertThat(new LocalDate(customerSchedules.get(0).getActionDate()), is(activationDate));
     }
 }

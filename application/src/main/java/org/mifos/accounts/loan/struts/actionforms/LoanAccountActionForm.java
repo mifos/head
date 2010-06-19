@@ -47,7 +47,6 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -67,14 +66,11 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -1310,14 +1306,14 @@ public class LoanAccountActionForm extends BaseActionForm {
         }
     }
 
-    protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
-        return getCustomerBusinessService().getCustomer(customerId);
+    private CustomerBO getCustomer(Integer customerId) throws ServiceException {
+        return new CustomerBusinessService().getCustomer(customerId);
     }
 
-    protected CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
-    }
-
+    /**
+     * FIXME - keithw - loan refactoring - try to remove this usage from validation stages
+     */
+    @Deprecated
     private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, ServiceException {
         CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
         Integer oldCustomerId;

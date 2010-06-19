@@ -92,6 +92,18 @@ public class AddActivity extends Upgrade {
         this.activityName = null;
     }
 
+    public AddActivity(int higherVersion, String activityNameKey, short newActivityId, Short parentActivity, String activityName) {
+        super(higherVersion);
+        if (!validateLookupValueKey(keyFormat, activityNameKey)) {
+            throw new RuntimeException(wrongLookupValueKeyFormat);
+        }
+        this.newActivityId = newActivityId;
+        this.parentActivity = parentActivity;
+        this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
+        this.activityNameKey = activityNameKey;
+        this.activityName = activityName;
+    }
+
     @Override
     public void upgrade(Connection connection)
             throws IOException, SQLException {
@@ -146,10 +158,9 @@ public class AddActivity extends Upgrade {
             short lookupId = results.getShort("ACTIVITY_NAME_LOOKUP_ID");
             statement.close();
             return lookupId;
-        } else {
-            statement.close();
-            throw new RuntimeException("unable to downgrade: no activity with id " + activityId);
         }
+        statement.close();
+        throw new RuntimeException("unable to downgrade: no activity with id " + activityId);
     }
 
     private void deleteFromActivity(Connection connection) throws SQLException {
