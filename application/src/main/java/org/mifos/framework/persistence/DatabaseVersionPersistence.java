@@ -31,34 +31,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.accounts.business.AddAccountStateFlag;
-import org.mifos.accounts.business.AddFinancialAction;
-import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.accounts.productdefinition.business.AddInterestCalcRule;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productsmix.persistence.Upgrade127;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.holiday.persistence.Upgrade104;
-import org.mifos.application.master.persistence.Upgrade155;
-import org.mifos.application.master.persistence.Upgrade167;
-import org.mifos.application.master.persistence.Upgrade169;
-import org.mifos.application.master.persistence.Upgrade173;
-import org.mifos.application.master.persistence.Upgrade176;
-import org.mifos.application.master.persistence.Upgrade183;
-import org.mifos.application.master.persistence.Upgrade198;
-import org.mifos.application.master.persistence.Upgrade208;
-import org.mifos.application.master.persistence.Upgrade209;
-import org.mifos.application.master.persistence.Upgrade211;
 import org.mifos.application.master.persistence.Upgrade213;
 import org.mifos.application.master.persistence.Upgrade223;
 import org.mifos.application.master.persistence.Upgrade225;
 import org.mifos.application.master.persistence.Upgrade237;
 import org.mifos.application.master.persistence.Upgrade238;
 import org.mifos.application.master.persistence.Upgrade240;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.persistence.AddReport;
@@ -84,46 +62,6 @@ public class DatabaseVersionPersistence {
 
     public static Map<Integer, Upgrade> masterRegister() {
         Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
-        register101(register);
-        register102(register);
-        register103(register);
-        register(register, new Upgrade104());
-        register106(register);
-        register115(register);
-     //   register117(register);
-        register118(register);
-        register119(register);
-     //   register120(register);
-        register123(register);
-        register124(register);
-        register126(register);
-        register(register, new Upgrade127());
-        register130(register);
-        register136(register);
-        register141(register);
-        register142(register);
-        register143(register);
-        register144(register);
-        register145(register);
-        register146(register);
-        register(register, new Upgrade155());
-        register(register, new Upgrade167());
-        register(register, new Upgrade169());
-        register170(register);
-        register(register, new Upgrade173());
-        register175(register);
-        register(register, new Upgrade176());
-        register179(register);
-        register(register, new Upgrade183());
-       // register185(register);
-        register187(register);
-        register195(register);
-        register(register, new Upgrade198());
-       // register203(register);
-       // register204(register);
-        register(register, new Upgrade208());
-        register(register, new Upgrade209());
-        register(register, new Upgrade211());
         register(register, new Upgrade213());
         register216(register);
         register(register, new Upgrade223());
@@ -138,190 +76,6 @@ public class DatabaseVersionPersistence {
         return Collections.unmodifiableMap(register);
     }
 
-    private static void register101(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(101, SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS,
-                SecurityConstants.BULK, ENGLISH_LOCALE, "Can create multiple Loan accounts"));
-    }
-
-    private static void register102(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(102, SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL,
-                SecurityConstants.LOAN_MANAGEMENT, ENGLISH_LOCALE, "Can reverse Loan disbursals"),
-                new AddAccountStateFlag(102, AccountStateFlag.LOAN_REVERSAL.getValue(), "Loan reversal",
-                        ENGLISH_LOCALE, "Loan reversal"), new AddAccountAction(102, AccountActionTypes.LOAN_REVERSAL
-                        .getValue(), ENGLISH_LOCALE, "Loan Reversal"), new AddAccountAction(102,
-                        AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue(), ENGLISH_LOCALE,
-                        "Disrbursal amount Reversal")));
-    }
-
-    private static void register103(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(103, SecurityConstants.CONFIGURATION_MANAGEMENT, null,
-                ENGLISH_LOCALE, "Configuration Management"), new AddActivity(103, SecurityConstants.CAN_DEFINE_LABELS,
-                SecurityConstants.CONFIGURATION_MANAGEMENT, ENGLISH_LOCALE, "Can define labels")));
-    }
-
-    private static void register106(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(106,
-                SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS, SecurityConstants.CONFIGURATION_MANAGEMENT,
-                ENGLISH_LOCALE, "Can define hidden/mandatory fields"), new AddField(106, 74, "AssignClients",
-                EntityType.CLIENT, false, false)));
-    }
-
-    private static void register115(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(115, SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS,
-                SecurityConstants.CLIENTS, ENGLISH_LOCALE, "Can remove clients from groups"));
-    }
-
-/*    private static void register117(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddReport(117, (short) 28, ReportsCategoryBO.ANALYSIS,
-                "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
-                "DetailedAgingPortfolioAtRisk.rptdesign"), new AddActivity(117,
-                SecurityConstants.CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK, SecurityConstants.ANALYSIS,
-                ENGLISH_LOCALE, "Can view Detailed Aging of Portfolio at Risk")));
-    }*/
-
-    private static void register118(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(118, SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS, SecurityConstants.CLIENTS,
-                ENGLISH_LOCALE, "Can add an existing client to a group"));
-    }
-
-    private static void register119(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(119, SecurityConstants.PRODUCT_MIX, null,
-                ENGLISH_LOCALE, "Product mix"), new AddActivity(119, SecurityConstants.CAN_DEFINE_PRODUCT_MIX,
-                SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Define product mix"), new AddActivity(119,
-                SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE,
-                "Can Edit product mix")));
-    }
-
-   /* private static void register120(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddReport(120, (short) 29, ReportsCategoryBO.ANALYSIS,
-                "Active Loans By Loan Officer", "active_loans_by_loan_officer", "ActiveLoansByLoanOfficer.rptdesign"),
-                new AddActivity(120, SecurityConstants.CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER,
-                        SecurityConstants.ANALYSIS, ENGLISH_LOCALE, "Can view Active Loans By Loan Officer")));
-    }*/
-
-    private static void register123(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(123, SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS,
-                SecurityConstants.CONFIGURATION_MANAGEMENT, ENGLISH_LOCALE, "Can Define Lookup Values"));
-    }
-
-    private static void register124(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(124, SecurityConstants.UPLOAD_REPORT_TEMPLATE,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can upload report template"));
-    }
-
-    private static void register126(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(126, SecurityConstants.VIEW_REPORTS,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can view reports"), new AddActivity(126,
-                SecurityConstants.EDIT_REPORT_INFORMATION, SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
-                "Can edit report information")));
-    }
-
-    private static void register130(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(130, SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET,
-                SecurityConstants.REPORTS_MANAGEMENT, // ???
-                ENGLISH_LOCALE, "Can adjust payment when account status " + "is \"closed-obligation met\""));
-    }
-
-    private static void register136(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(136, SecurityConstants.CAN_REDO_LOAN_DISPURSAL,
-                SecurityConstants.LOAN_MANAGEMENT, ENGLISH_LOCALE, "Can redo Loan disbursals"));
-    }
-
-    private static void register141(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(141, SecurityConstants.CAN_DEFINE_ACCEPTED_PAYMENT_TYPE,
-                SecurityConstants.ORGANIZATION_MANAGEMENT, ENGLISH_LOCALE, "Can define Accepted Payment Type"));
-    }
-
-    private static void register142(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(142, SecurityConstants.DEFINE_REPORT_CATEGORY,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can define new report category"));
-    }
-
-    private static void register143(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(143, SecurityConstants.VIEW_REPORT_CATEGORY,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can view report category"));
-    }
-
-    private static void register144(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(144, SecurityConstants.DELETE_REPORT_CATEGORY,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can delete report category"));
-    }
-
-    private static void register145(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(145, SecurityConstants.DOWNLOAD_REPORT_TEMPLATE,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can download report template"));
-    }
-
-    private static void register146(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(146, SecurityConstants.CAN_DEFINE_CUSTOM_FIELD,
-                SecurityConstants.CONFIGURATION_MANAGEMENT, ENGLISH_LOCALE, "Can define custom fields"));
-    }
-
-    private static void register170(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddActivity(170, SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS,
-                SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE, "Can upload admin documents"), new AddActivity(
-                170, SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS, SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
-                "Can view admin documents")));
-
-    }
-
-    private static void register175(Map<Integer, Upgrade> register) {
-        register(register, new AddInterestCalcRule(175, InterestType.DECLINING_EPI.getValue(), 1,
-                "InterestTypes-DecliningBalance-EqualPrincipalInstallment",
-                "Declining Balance-Equal Principal Installment"));
-    }
-
-    private static void register179(Map<Integer, Upgrade> register) {
-        // FIXME: instead of having a new "system information" category for
-        // the role/permission, just put it under
-        // SecurityConstants.CONFIGURATION_MANAGEMENT
-        register(register, new CompositeUpgrade(new AddActivity(179, "Permissions-SystemInformation",
-                SecurityConstants.SYSTEM_INFORMATION, null), new AddActivity(179,
-                "Permissions-CanViewSystemInformation", SecurityConstants.CAN_VIEW_SYSTEM_INFO,
-                SecurityConstants.SYSTEM_INFORMATION)));
-    }
-//
-//    private static void register185(Map<Integer, Upgrade> register) {
-//        register(register, new CompositeUpgrade(new AddReport(185, (short) 0, ReportsCategoryBO.ANALYSIS,
-//                "Collection Sheet Report", "collection_sheet_report", "CollectionSheetReport.rptdesign",
-//                SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
-//                "Permissions-CanViewCollectionSheetReport", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
-//                SecurityConstants.ANALYSIS)));
-//    }
-
-    /**
-     * Adds activity/role/permission data for viewing of install-time
-     * configuration settings.
-     */
-    private static void register187(Map<Integer, Upgrade> register) {
-        register(register, new AddActivity(187, "Permissions-CanViewOrganizationSettings",
-                SecurityConstants.CAN_VIEW_ORGANIZATION_SETTINGS, SecurityConstants.CONFIGURATION_MANAGEMENT));
-    }
-
-    /**
-     * Add the Loan reschedule account and financial actions.
-     */
-    private static void register195(Map<Integer, Upgrade> register) {
-        register(register, new CompositeUpgrade(new AddFinancialAction(195, FinancialActionConstants.RESCHEDULE
-                .getValue(), "FinancialAction-LoanRescheduled"), new AddAccountAction(195,
-                AccountActionTypes.LOAN_RESCHEDULED.getValue(), "AccountAction-LoanRescheduled")));
-    }
-
-//    private static void register203(Map<Integer, Upgrade> register) {
-//        register(register, new CompositeUpgrade(new AddReport(203, (short) 0, ReportsCategoryBO.ANALYSIS,
-//                "Branch Cash Confirmation Report", "branch_cash_confirmation_report",
-//                "BranchCashConfirmationReport.rptdesign", SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT),
-//                new AddActivity(203, "Permissions-CanViewBranchCashConfirmationReport",
-//                        SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, SecurityConstants.ANALYSIS)));
-//    }
-//
-//    private static void register204(Map<Integer, Upgrade> register) {
-//        register(register, new CompositeUpgrade(new AddReport(204, (short) 0, ReportsCategoryBO.ANALYSIS,
-//                "Branch Progress Report", "branch_progress_report", "ProgressReport.rptdesign",
-//                SecurityConstants.CAN_VIEW_BRANCH_REPORT), new AddActivity(204,
-//                "Permissions-CanViewBranchProgressReport", SecurityConstants.CAN_VIEW_BRANCH_REPORT,
-//                SecurityConstants.ANALYSIS)));
-//    }
 
     /**
      * Adds activity/role/permission data for transactions import bulk settings.
@@ -380,22 +134,22 @@ public class DatabaseVersionPersistence {
 
     public int read(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select DATABASE_VERSION from DATABASE_VERSION");
+        ResultSet results = statement.executeQuery("select database_version from database_version");
         if (results.next()) {
-            int version = results.getInt("DATABASE_VERSION");
+            int version = results.getInt("database_version");
             if (results.next()) {
-                throw new RuntimeException("too many rows in DATABASE_VERSION");
+                throw new RuntimeException("too many rows in database_version");
             }
             statement.close();
             return version;
         }
-        throw new RuntimeException("No row in DATABASE_VERSION");
+        throw new RuntimeException("No row in database_version");
     }
 
     public void write(int version) throws SQLException {
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
-        int rows = statement.executeUpdate("update DATABASE_VERSION set DATABASE_VERSION = " + version);
+        int rows = statement.executeUpdate("update database_version set database_version = " + version);
         statement.close();
         if (rows != 1) {
             throw new RuntimeException("Unable to update database version (" + rows + " rows updated)");
@@ -408,7 +162,7 @@ public class DatabaseVersionPersistence {
     }
 
     boolean isVersioned(Connection conn) throws SQLException {
-        ResultSet results = conn.getMetaData().getColumns(null, null, "DATABASE_VERSION", "DATABASE_VERSION");
+        ResultSet results = conn.getMetaData().getColumns(null, null, "database_version", "database_version");
         boolean foundColumns = results.next();
         results.close();
         return foundColumns;

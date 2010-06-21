@@ -52,7 +52,7 @@ public class Upgrade223 extends Upgrade {
     }
 
     private void insertIntoSpouseFatherLookup(Connection connection,int spouseFatherId, int lookUpId ) throws SQLException {
-        String sql = "INSERT INTO SPOUSE_FATHER_LOOKUP(SPOUSE_FATHER_ID,LOOKUP_ID) VALUES(?,?)";
+        String sql = "insert into spouse_father_lookup(spouse_father_id,lookup_id) value(?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1,spouseFatherId);
         statement.setInt(2, lookUpId);

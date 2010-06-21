@@ -96,16 +96,16 @@ public abstract class LanguageUpgrade extends Upgrade {
     private void insertLanguageAndLookupValue(Connection connection, int languageId, String languageName,
             String languageCode) throws SQLException {
         int lookupId = insertLookupValue(connection, LANGUAGE_ENTITY_NUMBER, "Language-" + languageName);
-        String insertLanguageSql = "INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES("
+        String insertLanguageSql = "insert into language(lang_id,lang_name,lang_short_name,lookup_id) values("
                 + languageId + ", '" + languageName + "','" + languageCode + "'," + lookupId + ")";
         execute(connection, insertLanguageSql);
     }
 
     private int getLargestLanguageId(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select max(LANG_ID) from LANGUAGE");
+        ResultSet results = statement.executeQuery("select max(lang_id) from language");
         if (!results.next()) {
-            throw new SystemException(SystemException.DEFAULT_KEY, "Did not find an existing LANG_ID in LANGUAGE table");
+            throw new SystemException(SystemException.DEFAULT_KEY, "Did not find an existing lang_id in language table");
         }
         int largestLangId = results.getInt(1);
         results.close();

@@ -131,7 +131,7 @@ public class AddActivity extends Upgrade {
 
     private void allowActivity(Connection connection, short activityId, int roleId) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("insert into ROLES_ACTIVITY(ACTIVITY_ID, ROLE_ID) VALUES(?, ?)");
+                .prepareStatement("insert into roles_activity(activity_id, role_id) values(?, ?)");
         statement.setShort(1, activityId);
         statement.setInt(2, roleId);
         statement.executeUpdate();
@@ -139,8 +139,8 @@ public class AddActivity extends Upgrade {
     }
 
     private void addActivityEntity(Connection connection, int lookupId) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("insert into ACTIVITY(" + "ACTIVITY_ID,PARENT_ID,"
-                + "ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) " + "VALUES(?,?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("insert into activity(" + "activity_id,parent_id,"
+                + "activity_name_lookup_id,DESCRIPTION_lookup_id) " + "values(?,?,?,?)");
         statement.setShort(1, newActivityId);
         statement.setObject(2, parentActivity, Types.SMALLINT);
         statement.setInt(3, lookupId);
@@ -150,12 +150,12 @@ public class AddActivity extends Upgrade {
     }
 
     private static short findLookupId(Connection connection, short activityId) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("select ACTIVITY_NAME_LOOKUP_ID "
-                + "from ACTIVITY where activity_id = ?");
+        PreparedStatement statement = connection.prepareStatement("select activity_name_lookup_id "
+                + "from activity where activity_id = ?");
         statement.setShort(1, activityId);
         ResultSet results = statement.executeQuery();
         if (results.next()) {
-            short lookupId = results.getShort("ACTIVITY_NAME_LOOKUP_ID");
+            short lookupId = results.getShort("activity_name_lookup_id");
             statement.close();
             return lookupId;
         }
@@ -164,7 +164,7 @@ public class AddActivity extends Upgrade {
     }
 
     private void deleteFromActivity(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("delete from ACTIVITY where ACTIVITY_ID = ?");
+        PreparedStatement statement = connection.prepareStatement("delete from activity where activity_id = ?");
         statement.setInt(1, newActivityId);
         statement.executeUpdate();
         statement.close();
@@ -178,7 +178,7 @@ public class AddActivity extends Upgrade {
 
     public static void reparentActivity(Connection connection, short activityId, Short newParent) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("update ACTIVITY set PARENT_ID = ? where ACTIVITY_ID = ?");
+                .prepareStatement("update activity set parent_id = ? where activity_id = ?");
         statement.setObject(1, newParent, Types.SMALLINT);
         statement.setShort(2, activityId);
         statement.executeUpdate();
