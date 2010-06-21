@@ -89,8 +89,8 @@ public abstract class Upgrade {
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     private void changeVersion(Connection connection, int newVersion, int existingVersion) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("update DATABASE_VERSION "
-                + "set DATABASE_VERSION = ? where DATABASE_VERSION = ?");
+        PreparedStatement statement = connection.prepareStatement("update database_version "
+                + "set database_version = ? where database_version = ?");
         statement.setInt(1, newVersion);
         statement.setInt(2, existingVersion);
         statement.executeUpdate();
@@ -101,8 +101,8 @@ public abstract class Upgrade {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void insertMessage(Connection connection, int lookupId, Short localeToInsert, String message)
             throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("insert into LOOKUP_VALUE_LOCALE("
-                + "LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) " + "VALUES(?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("insert into lookup_value_locale("
+                + "locale_id,lookup_id,lookup_value) " + "VALUES(?,?,?)");
         statement.setInt(1, localeToInsert);
         statement.setInt(2, lookupId);
         statement.setString(3, message);
@@ -114,8 +114,8 @@ public abstract class Upgrade {
             "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" }, justification = "The statement is closed and the query cannot be static.")
     protected static void updateMessage(Connection connection, int lookupId, int locale, String newMessage)
             throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("update LOOKUP_VALUE_LOCALE set LOOKUP_VALUE = ? "
-                + "where LOCALE_ID = ? and LOOKUP_ID = ?");
+        PreparedStatement statement = connection.prepareStatement("update lookup_value_locale set lookup_value = ? "
+                + "where locale_id = ? and lookup_id = ?");
         statement.setString(1, newMessage);
         statement.setInt(2, locale);
         statement.setInt(3, lookupId);
@@ -167,8 +167,8 @@ public abstract class Upgrade {
         int largestLookupId = largestLookupId(connection);
 
         int newLookupId = largestLookupId + 1;
-        PreparedStatement statement = connection.prepareStatement("insert into LOOKUP_VALUE("
-                + "LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) " + "VALUES(?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("insert into lookup_value("
+                + "lookup_id,entity_id,lookup_name) " + "value(?,?,?)");
         statement.setInt(1, newLookupId);
         statement.setInt(2, lookupEntity);
         statement.setString(3, lookupKey);
@@ -182,7 +182,7 @@ public abstract class Upgrade {
     @SuppressWarnings("PMD.CloseResource")
     protected int largestLookupId(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
+        ResultSet results = statement.executeQuery("select max(lookup_id) from lookup_value");
         if (!results.next()) {
             throw new SystemException(SystemException.DEFAULT_KEY,
                     "Did not find an existing lookup_id in lookup_value table");
@@ -197,7 +197,7 @@ public abstract class Upgrade {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void deleteFromLookupValueLocale(Connection connection, int lookupId) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("delete from LOOKUP_VALUE_LOCALE where lookup_id = ?");
+                .prepareStatement("delete from lookup_value_locale where lookup_id = ?");
         statement.setInt(1, lookupId);
         statement.executeUpdate();
         statement.close();
@@ -206,7 +206,7 @@ public abstract class Upgrade {
     @SuppressWarnings("PMD.CloseResource")
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void deleteFromLookupValue(Connection connection, int lookupId) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("delete from LOOKUP_VALUE where lookup_id = ?");
+        PreparedStatement statement = connection.prepareStatement("delete from lookup_value where lookup_id = ?");
         statement.setInt(1, lookupId);
         statement.executeUpdate();
         statement.close();
@@ -221,7 +221,7 @@ public abstract class Upgrade {
     protected void addLookupEntity(Connection connection, int entityId, String name, String description)
             throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)" + "VALUES(?,?,?)");
+                .prepareStatement("insert into lookup_entity(entity_id,entity_name,description) values(?,?,?)");
         statement.setInt(1, entityId);
         statement.setString(2, name);
         statement.setString(3, description);
@@ -232,7 +232,7 @@ public abstract class Upgrade {
     @SuppressWarnings("PMD.CloseResource")
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void removeLookupEntity(Connection connection, int entityId) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM LOOKUP_ENTITY WHERE ENTITY_ID = ?");
+        PreparedStatement statement = connection.prepareStatement("delete from lookup_entity where entity_id = ?");
         statement.setInt(1, entityId);
         statement.executeUpdate();
         statement.close();
@@ -281,7 +281,7 @@ public abstract class Upgrade {
     protected int addLookupEntity(Connection connection, String name, String description)  throws SQLException {
        int newId = -1;
        PreparedStatement statement = connection.prepareStatement(
-               "INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) VALUES(NULL,?,?)",
+               "insert into lookup_entity(entity_id,entity_name,description) values(null,?,?)",
                 PreparedStatement.RETURN_GENERATED_KEYS);
        statement.setString(1, name);
        statement.setString(2, description);

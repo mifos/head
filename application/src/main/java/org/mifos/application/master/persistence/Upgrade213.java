@@ -49,35 +49,35 @@ public class Upgrade213 extends Upgrade {
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
 
-        if (!hasIndex(connection, "CUSTOMER", "CUSTOMER_BRANCH_SEARCH_IDX")) {
+        if (!hasIndex(connection, "customer", "customer_branch_search_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part1.sql");
 
             upgrade.runScript(connection);
         }
 
-        if (!hasIndex(connection, "CUSTOMER", "CUSTOMER_DOB_STATUS_IDX")) {
+        if (!hasIndex(connection, "customer", "customer_branch_search_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part2.sql");
 
             upgrade.runScript(connection);
         }
 
-        if (!hasIndex(connection, "CUSTOMER_ATTENDANCE", "CUSTOMER_ATTENDANCE_MEETING_DATE_IDX")) {
+        if (!hasIndex(connection, "customer_attendance", "customer_attendance_meeting_date_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part3.sql");
 
             upgrade.runScript(connection);
         }
 
-        if (!hasIndex(connection, "LOAN_COUNTER", "LOAN_COUNTER_CLIENT_PERF_IDX")) {
+        if (!hasIndex(connection, "loan_counter", "loan_counter_client_pref_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part4.sql");
 
             upgrade.runScript(connection);
         }
 
-        if (!hasIndex(connection, "LOOKUP_ENTITY", "LOOKUP_ENTITYNAME_IDX")) {
+        if (!hasIndex(connection, "lookup_entity", "lookup_entityname_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part5.sql");
 
