@@ -118,7 +118,7 @@
                                                     'maxlength="50"
                                                     onkeypress="return FnCheckNumCharsOnPress(event,this);"
                                                     onblur="return FnCheckNumChars(event,this);return
-                                                    FnEscape(event,this)"'/]
+                                                    FnEscape(event,this)"' /]
                                                     <br/>
                                                     [@spring.showErrors "<br/>","fontnormalRedBold" /]
                                                 </td>
@@ -142,7 +142,7 @@
                                                 <td>
                                                     <input type="submit" name="_eventId_addQuestion"
                                                            value="Add Question"
-                                                           class="buttn">
+                                                           class="buttn" id="_eventId_addQuestion">
                                                 </td>
                                             </tr>
                                             <tr>
