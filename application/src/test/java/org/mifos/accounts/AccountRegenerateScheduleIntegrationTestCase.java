@@ -64,10 +64,13 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -405,7 +408,10 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         }
 
         new DateTimeService().setCurrentDateTime(dateWhenMeetingWillBeChanged.toDateTimeAtStartOfDay());
-        center.updateMeeting(newMeeting);
+
+        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequest(center.getCustomerId(), center.getVersionNo(), newMeeting.getRecurrenceType(), newMeeting.getMeetingPlace(), newMeeting.getRecurAfter(), newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingDetails().getDayNumber(), newMeeting.getMeetingDetails().getWeekDay(), newMeeting.getMeetingDetails().getWeekRank());
+        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, TestUtils.makeUser());
 
         TestObjectFactory.updateObject(center);
 

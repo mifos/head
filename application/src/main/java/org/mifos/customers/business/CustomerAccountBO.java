@@ -577,12 +577,9 @@ public class CustomerAccountBO extends AccountBO {
         if (!this.getCustomer().getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())
                 && !this.getCustomer().getCustomerStatus().getId().equals(GroupConstants.CLOSED)) {
 
-            try {
-                getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-                getCustomer().changeUpdatedMeeting();
-            } catch (CustomerException ce) {
-                throw new AccountException(ce);
-            }
+            getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
+            // FIXME - keithw - 00001 -
+            // getCustomer().changeUpdatedMeeting();
 
             int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
@@ -613,16 +610,6 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         return customerSchedulePayments;
-    }
-
-    @Override
-    protected void resetUpdatedFlag() throws AccountException {
-        try {
-            getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
-            getCustomer().changeUpdatedMeeting();
-        } catch (CustomerException ce) {
-            throw new AccountException(ce);
-        }
     }
 
     public void generateNextSetOfMeetingDates(ScheduledDateGeneration scheduleGenerationStrategy) {
