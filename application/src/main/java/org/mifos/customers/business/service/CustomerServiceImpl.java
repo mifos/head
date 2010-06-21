@@ -937,8 +937,8 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
 
-            client.resetPositions(oldParent);
             if (oldParent != null) {
+                client.resetPositions(oldParent);
                 oldParent.updateDetails(client.getUserContext());
 
                 if (oldParent.getParentCustomer() != null) {
@@ -956,14 +956,14 @@ public class CustomerServiceImpl implements CustomerService {
             client.updateDetails(userContext);
             customerDao.save(client);
 
-            hibernateTransactionHelper.commitTransaction();
+            hibernateTransactionHelper.flush();
 
             if (regenerateSchedules) {
-                hibernateTransactionHelper.startTransaction();
+                client = customerDao.findClientBySystemId(clientGlobalCustNum);
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(client.getOfficeId());
                 handleChangeInMeetingSchedule(client, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-                hibernateTransactionHelper.commitTransaction();
             }
+            hibernateTransactionHelper.commitTransaction();
             return client;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();

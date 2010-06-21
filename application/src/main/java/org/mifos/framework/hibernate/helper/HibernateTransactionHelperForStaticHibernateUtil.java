@@ -52,4 +52,9 @@ public class HibernateTransactionHelperForStaticHibernateUtil implements Hiberna
     public void closeSession() {
         StaticHibernateUtil.closeSession();
     }
+
+    @Override
+    public void flush() {
+        StaticHibernateUtil.flushAndClearSession();
+    }
 }

@@ -23,7 +23,6 @@ package org.mifos.customers.business;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingTypeEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
@@ -60,7 +59,7 @@ public class CustomerMeetingEntity extends AbstractEntity {
         return meeting;
     }
 
-    void setMeeting(final MeetingBO meeting) {
+    public void setMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
     }
 
