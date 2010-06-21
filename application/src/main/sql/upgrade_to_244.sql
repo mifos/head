@@ -1,43 +1,43 @@
-SET FOREIGN_KEY_CHECKS=0;
-ALTER TABLE loan_account DROP FOREIGN KEY fk_loan_rankday;
-ALTER TABLE loan_account DROP INDEX fk_loan_rankday;
-ALTER TABLE loan_account DROP FOREIGN KEY fk_loan_monthweek;
-ALTER TABLE loan_account DROP INDEX fk_loan_monthweek;
+set foreign_key_checks=0;
+alter table loan_account drop foreign key fk_loan_rankday;
+alter table loan_account drop index fk_loan_rankday;
+alter table loan_account drop foreign key fk_loan_monthweek;
+alter table loan_account drop index fk_loan_monthweek;
 
-ALTER TABLE recur_on_day DROP FOREIGN KEY recur_on_day_ibfk_2;
-ALTER TABLE recur_on_day DROP INDEX DAYS;
-ALTER TABLE recur_on_day DROP FOREIGN KEY recur_on_day_ibfk_3;
-ALTER TABLE recur_on_day DROP INDEX RANK_OF_DAYS;
+alter table recur_on_day drop foreign key recur_on_day_ibfk_2;
+alter table recur_on_day drop index days;
+alter table recur_on_day drop foreign key recur_on_day_ibfk_3;
+alter table recur_on_day drop index rank_of_days;
 
-DELETE FROM lookup_value_locale 
-WHERE LOOKUP_VALUE_ID = 143 
-OR LOOKUP_VALUE_ID = 145 
-OR LOOKUP_VALUE_ID = 147
-OR LOOKUP_VALUE_ID = 149 
-OR LOOKUP_VALUE_ID = 151
-OR LOOKUP_VALUE_ID = 153 
-OR LOOKUP_VALUE_ID = 155
-OR LOOKUP_VALUE_ID = 179 
-OR LOOKUP_VALUE_ID = 181 
-OR LOOKUP_VALUE_ID = 183
-OR LOOKUP_VALUE_ID = 185 
-OR LOOKUP_VALUE_ID = 187;
+delete from lookup_value_locale 
+where lookup_value_id = 143 
+or lookup_value_id = 145 
+or lookup_value_id = 147
+or lookup_value_id = 149 
+or lookup_value_id = 151
+or lookup_value_id = 153 
+or lookup_value_id = 155
+or lookup_value_id = 179 
+or lookup_value_id = 181 
+or lookup_value_id = 183
+or lookup_value_id = 185 
+or lookup_value_id = 187;
 
-DELETE FROM lookup_value 
-WHERE LOOKUP_ID = 72
-OR LOOKUP_ID = 73 
-OR LOOKUP_ID = 74 
-OR LOOKUP_ID = 75 
-OR LOOKUP_ID = 76
-OR LOOKUP_ID = 77 
-OR LOOKUP_ID = 78
-OR LOOKUP_ID = 99
-OR LOOKUP_ID = 100 
-OR LOOKUP_ID = 101 
-OR LOOKUP_ID = 102 
-OR LOOKUP_ID = 103;
+delete from lookup_value 
+where lookup_id = 72
+or lookup_id = 73 
+or lookup_id = 74 
+or lookup_id = 75 
+or lookup_id = 76
+or lookup_id = 77 
+or lookup_id = 78
+or lookup_id = 99
+or lookup_id = 100 
+or lookup_id = 101 
+or lookup_id = 102 
+or lookup_id = 103;
 
-DROP TABLE week_days_master;
-DROP TABLE rank_days_master;
-SET FOREIGN_KEY_CHECKS=1;
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 244 WHERE DATABASE_VERSION = 243;
+drop table week_days_master;
+drop table rank_days_master;
+set foreign_key_checks=1;
+update database_version set database_version = 244 where database_version = 243;
