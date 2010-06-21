@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -32,11 +33,13 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
-public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
+public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, OfficeServiceFacade {
 
     private final OfficeDao officeDao;
     private final HolidayDao holidayDao;
@@ -123,5 +126,11 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    @Override
+    public OfficeHierarchyByLevelDto retrieveAllOffices() {
+        List<OfficeDto> allOffices = this.officeDao.findAllOffices();
+        return null;
     }
 }

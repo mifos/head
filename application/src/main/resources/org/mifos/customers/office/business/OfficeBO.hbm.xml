@@ -22,7 +22,7 @@
 		<property name="updatedBy" column="UPDATED_BY" />
 		<property name="shortName" column="OFFICE_SHORT_NAME" type="string" />
 		
-		 <many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
+		<many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
 		<many-to-one name="parentOffice"  class="org.mifos.customers.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true" cascade="none" />
 		<many-to-one name="status"	class="org.mifos.customers.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" />
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD" order-by="FIELD_ID">
@@ -56,6 +56,7 @@
     <query name="office.getOfficeSearchId">
             <![CDATA[select office.searchId from org.mifos.customers.office.business.OfficeBO office where office.officeId = :OFFICE_ID]]>
     </query>
+    
     <query name="office.getAllOffices">
             <![CDATA[select new org.mifos.security.util.OfficeCacheDto(office.officeId, office.parentOffice.officeId, office.searchId) from org.mifos.customers.office.business.OfficeBO office]]>
     </query>
@@ -124,7 +125,10 @@
 		<![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
     </query>
     <query name="findOfficeDtoById">
-		<![CDATA[select new org.mifos.customers.office.persistence.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o where o.officeId = :OFFICE_ID]]>
+		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o where o.officeId = :OFFICE_ID]]>
+    </query>
+    <query name="findAllOffices">
+		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o order by o.level.id]]>
     </query>
     <query name="masterdata.activeLevels">
         <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>

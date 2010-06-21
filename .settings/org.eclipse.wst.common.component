@@ -23,5 +23,6 @@
         <wb-resource deploy-path="/" source-path="/spi/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/api/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/api/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/test"/>
     </wb-module>
 </project-modules>

@@ -42,6 +42,7 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -88,6 +89,12 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("OFFICE_ID", officeId);
 
         return (OfficeDto) genericDao.executeUniqueResultNamedQuery("findOfficeDtoById", queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<OfficeDto> findAllOffices() {
+        return (List<OfficeDto>) genericDao.executeNamedQuery("findAllOffices", null);
     }
 
     @SuppressWarnings("unchecked")

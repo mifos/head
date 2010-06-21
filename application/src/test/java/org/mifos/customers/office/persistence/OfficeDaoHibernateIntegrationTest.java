@@ -42,6 +42,7 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
@@ -191,6 +192,15 @@ public class OfficeDaoHibernateIntegrationTest {
     public void shouldThrowOfficeExceptionWhenOfficeShortNameDoesExist() throws Exception {
 
         officeDao.validateOfficeShortNameIsNotTaken(headOffice.getShortName());
+    }
+
+    @Test
+    public void shouldRetrieveAllOfficesAsOfficeDtos() throws Exception {
+
+        List<OfficeDto> allOffices = officeDao.findAllOffices();
+
+        // verification
+        assertThat(allOffices.size(), is(9));
     }
 
     public void createOfficeHierarchy() {

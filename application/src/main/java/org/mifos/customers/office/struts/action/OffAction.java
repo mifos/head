@@ -48,6 +48,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -66,11 +67,6 @@ public class OffAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return new OfficeBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -134,21 +130,21 @@ public class OffAction extends BaseAction {
     public ActionForward getAllOffices(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-        List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService())
-                .getOfficesTillBranchOffice());
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,
-                OfficeLevel.HEADOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,
-                OfficeLevel.REGIONALOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,
-                OfficeLevel.SUBREGIONALOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,
-                OfficeLevel.AREAOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,
-                ((OfficeBusinessService) getService()).getBranchOffices()), request);
-        loadofficeLevels(request);
+        UserContext userContext = getUserContext(request);
+
+        List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
+
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,OfficeLevel.HEADOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,OfficeLevel.REGIONALOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,((OfficeBusinessService) getService()).getBranchOffices()), request);
+
+        // FIXME - keithw - finish spring mvc example for offices
+        OfficeHierarchyByLevelDto officeHierarchyStructure = this.officeServiceFacade.retrieveAllOffices();
+
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
+
         return mapping.findForward(ActionForwards.search_success.toString());
     }
 
@@ -226,7 +222,7 @@ public class OffAction extends BaseAction {
         Integer versionNum = sessionOffice.getVersionNo();
         OfficeUpdateRequest officeUpdateRequest = officeUpdateRequestFrom(offActionForm);
 
-        boolean isParentOfficeChanged = this.officeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
+        boolean isParentOfficeChanged = this.legacyOfficeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
 
         if (isParentOfficeChanged) {
             forward = mapping.findForward(ActionForwards.update_cache_success.toString());
