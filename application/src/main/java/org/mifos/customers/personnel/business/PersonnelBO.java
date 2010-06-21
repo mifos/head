@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -125,7 +126,7 @@ public class PersonnelBO extends AbstractBusinessObject {
                 if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
                         && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
                     try {
-                        view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                        view.convertDateToUniformPattern(Locale.getDefault());
                     } catch (InvalidDateException e) {
                         throw new ValidationException(e.toString());
                     }
