@@ -56,7 +56,7 @@ public class Upgrade213 extends Upgrade {
             upgrade.runScript(connection);
         }
 
-        if (!hasIndex(connection, "customer", "customer_branch_search_idx")) {
+        if (!hasIndex(connection, "customer", "customer_dob_status_idx")) {
             SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
                     "upgrade_to_213_part2.sql");
 
