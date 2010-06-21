@@ -1,333 +1,333 @@
-DROP TABLE IF EXISTS PRD_OFFERING_MIX;
+drop table if exists prd_offering_mix;
 
-DROP TABLE IF EXISTS CUSTOMER_FAMILY_DETAIL;
+drop table if exists customer_family_detail;
 
-DROP TABLE IF EXISTS PPI_LIKELIHOODS;
-DROP TABLE IF EXISTS PPI_SURVEY;
-DROP TABLE IF EXISTS SURVEY_RESPONSE_DATE;
-DROP TABLE IF EXISTS SURVEY_RESPONSE_NUMBER;
-DROP TABLE IF EXISTS SURVEY_RESPONSE_FREETEXT;
-DROP TABLE IF EXISTS SURVEY_RESPONSE;
-DROP TABLE IF EXISTS QUESTION_CHOICES;
-DROP TABLE IF EXISTS SURVEY_RESPONSE_CHOICE;
-DROP TABLE IF EXISTS SURVEY_QUESTIONS;
-DROP TABLE IF EXISTS QUESTIONS;
-DROP TABLE IF EXISTS PPI_SURVEY_INSTANCE;
-DROP TABLE IF EXISTS SURVEY_INSTANCE;
-DROP TABLE IF EXISTS SURVEY;
+drop table if exists ppi_likelihoods;
+drop table if exists ppi_survey;
+drop table if exists survey_response_date;
+drop table if exists survey_response_number;
+drop table if exists survey_response_freetext;
+drop table if exists survey_response;
+drop table if exists question_choices;
+drop table if exists survey_response_choice;
+drop table if exists survey_questions;
+drop table if exists questions;
+drop table if exists ppi_survey_instance;
+drop table if exists survey_instance;
+drop table if exists survey;
 
-DROP TABLE IF EXISTS  FINANCIAL_TRXN;
-DROP TABLE IF EXISTS  COAHIERARCHY;
-DROP TABLE IF EXISTS  FINANCIAL_ACTION;
-DROP TABLE IF EXISTS  COA_IDMAPPER;
-DROP TABLE IF EXISTS  COA;
+drop table if exists  financial_trxn;
+drop table if exists  coahierarchy;
+drop table if exists  financial_action;
+drop table if exists  coa_idmapper;
+drop table if exists  coa;
 
-DROP TABLE IF EXISTS CUSTOMER_ATTENDANCE;
+drop table if exists customer_attendance;
 
-DROP TABLE IF EXISTS PRODUCT_OFFERING_MANDATORY_SAVINGS;
-DROP TABLE IF EXISTS PRD_OFFERING_MEETING;
+drop table if exists product_offering_mandatory_savings;
+drop table if exists prd_offering_meeting;
 
-DROP TABLE IF EXISTS CUSTOMER_LOAN_ACCOUNT_DETAIL;
+drop table if exists customer_loan_account_detail;
 
-DROP TABLE IF EXISTS LOAN_TRXN_DETAIL;
+drop table if exists loan_trxn_detail;
 
-DROP TABLE IF EXISTS SAVINGS_TRXN_DETAIL;
+drop table if exists savings_trxn_detail;
 
-DROP TABLE IF EXISTS CUSTOMER_TRXN_DETAIL;
+drop table if exists customer_trxn_detail;
 
-DROP TABLE IF EXISTS LOAN_ARREARS_AGING;
+drop table if exists loan_arrears_aging;
 
-DROP TABLE IF EXISTS ACCOUNT_FEES_ACTION_DETAIL;
+drop table if exists account_fees_action_detail;
 
-DROP TABLE IF EXISTS LOAN_FEE_SCHEDULE;
+drop table if exists loan_fee_schedule;
 
-DROP TABLE IF EXISTS CUSTOMER_FEE_SCHEDULE;
+drop table if exists customer_fee_schedule;
 
-DROP TABLE IF EXISTS FEE_TRXN_DETAIL;
+drop table if exists fee_trxn_detail;
 
-DROP TABLE IF EXISTS ACCOUNT_TRXN;
+drop table if exists account_trxn;
 
-DROP TABLE IF EXISTS SAVINGS_ACTIVITY_DETAILS;
+drop table if exists savings_activity_details;
 
-DROP TABLE IF EXISTS SAVINGS_ACCOUNT;
+drop table if exists savings_account;
 
-DROP TABLE IF EXISTS ACCOUNT_FEES;
+drop table if exists account_fees;
 
-DROP TABLE IF EXISTS CUSTOMER_CHECKLIST;
+drop table if exists customer_checklist;
 
-DROP TABLE IF EXISTS ACCOUNT_ACTIONS_DATE;
+drop table if exists account_actions_date;
 
-DROP TABLE IF EXISTS CUSTOMER_SCHEDULE;
-DROP TABLE IF EXISTS LOAN_SCHEDULE;
-DROP TABLE IF EXISTS SAVING_SCHEDULE;
+drop table if exists customer_schedule;
+drop table if exists loan_schedule;
+drop table if exists saving_schedule;
 
-DROP TABLE IF EXISTS ACCOUNT_SURVEY;
+drop table if exists account_survey;
 
-DROP TABLE IF EXISTS ACCOUNT_PAYMENT;
+drop table if exists account_payment;
 
-DROP TABLE IF EXISTS PRD_CHECKLIST;
+drop table if exists prd_checklist;
 
-DROP TABLE IF EXISTS LOAN_PENALTY;
+drop table if exists loan_penalty;
 
-DROP TABLE IF EXISTS CHECKLIST_DETAIL;
+drop table if exists checklist_detail;
 
-DROP TABLE IF EXISTS ATTENDANCE;
+drop table if exists attendance;
 
-DROP TABLE IF EXISTS CUSTOMER_ACCOUNT_ACTIVITY;
+drop table if exists customer_account_activity;
 
-DROP TABLE IF EXISTS CUSTOMER_ACCOUNT;
+drop table if exists customer_account;
 
-DROP TABLE IF EXISTS CHANGE_LOG_DETAIL;
+drop table if exists change_log_detail;
 
-DROP TABLE IF EXISTS LOAN_SUMMARY;
+drop table if exists loan_summary;
 
-DROP TABLE IF EXISTS WAIVE_OFF_HISTORY;
+drop table if exists waive_off_history;
 
-DROP TABLE IF EXISTS ACCOUNT_NON_TRXN_DETAILS;
+drop table if exists account_non_trxn_details;
 
-DROP TABLE IF EXISTS LOAN_ACTIVITY_DETAILS;
+drop table if exists loan_activity_details;
 
-DROP TABLE IF EXISTS LOAN_PERF_HISTORY;
+drop table if exists loan_perf_history;
 
-DROP TABLE IF EXISTS MAX_MIN_NO_OF_INSTALL;
+drop table if exists max_min_no_of_install;
 
-DROP TABLE IF EXISTS MAX_MIN_INTEREST_RATE;
+drop table if exists max_min_interest_rate;
 
-DROP TABLE IF EXISTS MAX_MIN_LOAN_AMOUNT;
+drop table if exists max_min_loan_amount;
 
-DROP TABLE IF EXISTS LOAN_ACCOUNT;
+drop table if exists loan_account;
 
-DROP TABLE IF EXISTS CUSTOMER_MOVEMENT;
+drop table if exists customer_movement;
 
-DROP TABLE IF EXISTS ACCOUNT_NOTES;
+drop table if exists account_notes;
 
-DROP TABLE IF EXISTS ACCOUNT_FLAG_DETAIL;
+drop table if exists account_flag_detail;
 
-DROP TABLE IF EXISTS ACCOUNT_STATUS_CHANGE_HISTORY;
+drop table if exists account_status_change_history;
 
-DROP TABLE IF EXISTS ACCOUNT_STATE_FLAG;
+drop table if exists account_state_flag;
 
-DROP TABLE IF EXISTS ACCOUNT_ACTIVITY;
+drop table if exists account_activity;
 
-DROP TABLE IF EXISTS SAVINGS_PERFORMANCE;
+drop table if exists savings_performance;
 
-DROP TABLE IF EXISTS ACCOUNT_CUSTOM_FIELD;
+drop table if exists account_custom_field;
 
-DROP TABLE IF EXISTS ACCOUNT;
+drop table if exists account;
 
-DROP TABLE IF EXISTS CHECKLIST;
-DROP TABLE IF EXISTS SPOUSE_FATHER_LOOKUP;
-DROP TABLE IF EXISTS CUSTOMER_ATTENDANCE_TYPES;
-DROP TABLE IF EXISTS CUSTOMER_NAME_DETAIL;
+drop table if exists checklist;
+drop table if exists spouse_father_lookup;
+drop table if exists customer_attendance_types;
+drop table if exists customer_name_detail;
 
-DROP TABLE IF EXISTS CUSTOMER_FLAG_DETAIL;
+drop table if exists customer_flag_detail;
 
-DROP TABLE IF EXISTS CUSTOMER_HIERARCHY;
+drop table if exists customer_hierarchy;
 
-DROP TABLE IF EXISTS OFFICE_HIERARCHY;
+drop table if exists office_hierarchy;
 
 -- DROP TABLE IF EXISTS PRD_SURVEY;
 
-DROP TABLE IF EXISTS PRD_FEE_FREQUENCY;
+drop table if exists prd_fee_frequency;
 
-DROP TABLE IF EXISTS CUSTOMER_POSITION;
+drop table if exists customer_position;
 
-DROP TABLE IF EXISTS CUSTOMER_NOTE;
+drop table if exists customer_note;
 
-DROP TABLE IF EXISTS LOAN_OFFERING_FUND;
+drop table if exists loan_offering_fund;
 
-DROP TABLE IF EXISTS CUSTOMER_PROGRAM;
+drop table if exists customer_program;
 
-DROP TABLE IF EXISTS CUSTOMER_MEETING_DETAIL;
+drop table if exists customer_meeting_detail;
 
-DROP TABLE IF EXISTS INHERITED_MEETING;
+drop table if exists inherited_meeting;
 
-DROP TABLE IF EXISTS CUSTOMER_MEETING;
+drop table if exists customer_meeting;
 
-DROP TABLE IF EXISTS RECUR_ON_DAY;
+drop table if exists recur_on_day;
 
-DROP TABLE IF EXISTS RECURRENCE_DETAIL;
+drop table if exists recurrence_detail;
 
-DROP TABLE IF EXISTS FEE_FREQUENCY;
+drop table if exists fee_frequency;
 
-DROP TABLE IF EXISTS MEETING;
+drop table if exists meeting;
 
-DROP TABLE IF EXISTS PERSONNEL_ROLE;
-DROP TABLE IF EXISTS PERSONNEL_STATUS;
-DROP TABLE IF EXISTS ROLES_ACTIVITY;
+drop table if exists personnel_role;
+drop table if exists personnel_status;
+drop table if exists roles_activity;
 
-DROP TABLE IF EXISTS PERSONNEL_CUSTOM_FIELD;
+drop table if exists personnel_custom_field;
 
-DROP TABLE IF EXISTS PROGRAM_FUND;
+drop table if exists program_fund;
 
-DROP TABLE IF EXISTS PRD_OFFERING_FEES;
+drop table if exists prd_offering_fees;
 
-DROP TABLE IF EXISTS OFFERING_FUND;
+drop table if exists offering_fund;
 
-DROP TABLE IF EXISTS CUSTOMER_CUSTOM_FIELD;
+drop table if exists customer_custom_field;
 
-DROP TABLE IF EXISTS CUSTOMER_ADDRESS_DETAIL;
+drop table if exists customer_address_detail;
 
-DROP TABLE IF EXISTS CUSTOMER_HISTORICAL_DATA;
+drop table if exists customer_historical_data;
 
-DROP TABLE IF EXISTS CUSTOMER_PICTURE;
+drop table if exists customer_picture;
 
-DROP TABLE IF EXISTS FIELD_CONFIGURATION;
+drop table if exists field_configuration;
 
-DROP TABLE IF EXISTS CUSTOM_FIELD_DEFINITION;
+drop table if exists custom_field_definition;
 
-DROP TABLE IF EXISTS ENTITY_MASTER;
+drop table if exists entity_master;
 
-DROP TABLE IF EXISTS SYSTEM_CONFIGURATION;
+drop table if exists system_configuration;
 
-DROP TABLE IF EXISTS CONFIG_KEY_VALUE_INTEGER;
+drop table if exists config_key_value_integer;
 
-DROP TABLE IF EXISTS CHANGE_LOG;
+drop table if exists change_log;
 
-DROP TABLE IF EXISTS PERSONNEL_NOTES;
+drop table if exists personnel_notes;
 
-DROP TABLE IF EXISTS PERSONNEL_MOVEMENT;
+drop table if exists personnel_movement;
 
-DROP TABLE IF EXISTS PERSONNEL_DETAILS;
+drop table if exists personnel_details;
 
-DROP TABLE IF EXISTS INSURANCE_OFFERING;
+drop table if exists insurance_offering;
 
-DROP TABLE IF EXISTS SAVINGS_OFFERING;
+drop table if exists savings_offering;
 
-DROP TABLE IF EXISTS NO_OF_INSTALL_SAME_FOR_ALL_LOAN;
+drop table if exists no_of_install_same_for_all_loan;
 
-DROP TABLE IF EXISTS LOAN_AMOUNT_SAME_FOR_ALL_LOAN;
+drop table if exists loan_amount_same_for_all_loan;
 
-DROP TABLE IF EXISTS NO_OF_INSTALL_FROM_LOAN_CYCLE ;
+drop table if exists no_of_install_from_loan_cycle ;
 
-DROP TABLE IF EXISTS LOAN_AMOUNT_FROM_LOAN_CYCLE;
+drop table if exists loan_amount_from_loan_cycle;
 
-DROP TABLE IF EXISTS NO_OF_INSTALL_FROM_LAST_LOAN ;
+drop table if exists no_of_install_from_last_loan ;
 
-DROP TABLE IF EXISTS LOAN_AMOUNT_FROM_LAST_LOAN ;
+drop table if exists loan_amount_from_last_loan ;
 
-DROP TABLE IF EXISTS LOAN_OFFERING;
+drop table if exists loan_offering;
 
-DROP TABLE IF EXISTS CLIENT_INITIAL_SAVINGS_OFFERING;
+drop table if exists client_initial_savings_offering;
 
-DROP TABLE IF EXISTS PRD_OFFERING;
+drop table if exists prd_offering;
 
-DROP TABLE IF EXISTS CUSTOMER_DETAIL;
+drop table if exists customer_detail;
 
-DROP TABLE IF EXISTS CUSTOMER_SURVEY;
+drop table if exists customer_survey;
 
-DROP TABLE IF EXISTS CUST_PERF_HISTORY;
+drop table if exists cust_perf_history;
 
-DROP TABLE IF EXISTS CLIENT_PERF_HISTORY;
+drop table if exists client_perf_history;
 
-DROP TABLE IF EXISTS GROUP_PERF_HISTORY;
+drop table if exists group_perf_history;
 
-DROP TABLE IF EXISTS CUSTOMER;
+drop table if exists customer;
 
-DROP TABLE IF EXISTS OFFICE_ACTION_PAYMENT_TYPE;
+drop table if exists office_action_payment_type;
 
-DROP TABLE IF EXISTS PENALTY;
+drop table if exists penalty;
 
-DROP TABLE IF EXISTS ROLE;
+drop table if exists role;
 
-DROP TABLE IF EXISTS PERSONNEL_HIERARCHY;
+drop table if exists personnel_hierarchy;
 
-DROP TABLE IF EXISTS FEE_FREQUENCY_TYPE;
-DROP TABLE IF EXISTS FEELEVEL;
-DROP TABLE IF EXISTS FEES;
-DROP TABLE IF EXISTS FEE_STATUS;
-DROP TABLE IF EXISTS FEE_FORMULA_MASTER;
-DROP TABLE IF EXISTS FEE_UPDATE_TYPE;
+drop table if exists fee_frequency_type;
+drop table if exists feelevel;
+drop table if exists fees;
+drop table if exists fee_status;
+drop table if exists fee_formula_master;
+drop table if exists fee_update_type;
 
-DROP TABLE IF EXISTS IMPORTED_TRANSACTIONS_FILES;
+drop table if exists imported_transactions_files;
 
-DROP TABLE IF EXISTS PERSONNEL;
+drop table if exists personnel;
 
-DROP TABLE IF EXISTS PROGRAM;
+drop table if exists program;
 
-DROP TABLE IF EXISTS CUSTOMER_STATE_FLAG;
+drop table if exists customer_state_flag;
 
-DROP TABLE IF EXISTS LOOKUP_LABEL;
+drop table if exists lookup_label;
 
-DROP TABLE IF EXISTS LOOKUP_VALUE_LOCALE;
+drop table if exists lookup_value_locale;
 
-DROP TABLE IF EXISTS BRANCH_HO_UPDATE;
+drop table if exists branch_ho_update;
 
-DROP TABLE IF EXISTS HOLIDAY;
-DROP TABLE IF EXISTS REPAYMENT_RULE;
+drop table if exists holiday;
+drop table if exists repayment_rule;
 
-DROP TABLE IF EXISTS MFI_ATTRIBUTE;
+drop table if exists mfi_attribute;
 
-DROP TABLE IF EXISTS OFFICE_ADDRESS;
+drop table if exists office_address;
 
-DROP TABLE IF EXISTS  OFFICE_CUSTOM_FIELD;
+drop table if exists  office_custom_field;
 
-DROP TABLE IF EXISTS OFFICE;
+drop table if exists office;
 
-DROP TABLE IF EXISTS OFFICE_STATUS;
+drop table if exists office_status;
 
-DROP TABLE IF EXISTS OFFICE_CODE;
+drop table if exists office_code;
 
 
-DROP TABLE IF EXISTS INTEREST_CALC_RULE;
+drop table if exists interest_calc_rule;
 
-DROP TABLE IF EXISTS FEE_PAYMENTS_CATEGORIES_TYPE;
+drop table if exists fee_payments_categories_type;
 
-DROP TABLE IF EXISTS SUPPORTED_LOCALE;
+drop table if exists supported_locale;
 
-DROP TABLE IF EXISTS CUSTOMER_STATE;
+drop table if exists customer_state;
 
-DROP TABLE IF EXISTS INTEREST_TYPES;
+drop table if exists interest_types;
 
-DROP TABLE IF EXISTS PRD_STATUS;
+drop table if exists prd_status;
 
-DROP TABLE IF EXISTS PRD_PMNT_TYPE;
+drop table if exists prd_pmnt_type;
 
-DROP TABLE IF EXISTS ACCEPTED_PAYMENT_TYPE;
+drop table if exists accepted_payment_type;
 
-DROP TABLE IF EXISTS ADMIN_DOCUMENT_ACC_STATE_MIX;
+drop table if exists admin_document_acc_state_mix;
 
-DROP TABLE IF EXISTS ACCOUNT_STATE;
+drop table if exists account_state;
 
-DROP TABLE IF EXISTS CUSTOMER_LEVEL;
+drop table if exists customer_level;
 
-DROP TABLE IF EXISTS CATEGORY_TYPE;
+drop table if exists category_type;
 
-DROP TABLE IF EXISTS POSITION;
+drop table if exists position;
 
-DROP TABLE IF EXISTS PRD_CATEGORY;
+drop table if exists prd_category;
 
-DROP TABLE IF EXISTS PRD_APPLICABLE_MASTER;
+drop table if exists prd_applicable_master;
 
-DROP TABLE IF EXISTS OFFICE_LEVEL;
+drop table if exists office_level;
 
-DROP TABLE IF EXISTS PERSONNEL_LEVEL;
+drop table if exists personnel_level;
 
-DROP TABLE IF EXISTS SAVINGS_TYPE;
+drop table if exists savings_type;
 
-DROP TABLE IF EXISTS YES_NO_MASTER;
+drop table if exists yes_no_master;
 
-DROP TABLE IF EXISTS PRD_STATE;
+drop table if exists prd_state;
 
-DROP TABLE IF EXISTS PRD_CATEGORY_STATUS;
+drop table if exists prd_category_status;
 
-DROP TABLE IF EXISTS RECOMMENDED_AMNT_UNIT;
+drop table if exists recommended_amnt_unit;
 
-DROP TABLE IF EXISTS PRD_TYPE;
+drop table if exists prd_type;
 
-DROP TABLE IF EXISTS GRACE_PERIOD_TYPE;
+drop table if exists grace_period_type;
 
-DROP TABLE IF EXISTS INTEREST_CALCULATION_TYPES;
+drop table if exists interest_calculation_types;
 
-DROP TABLE IF EXISTS FUND;
+drop table if exists fund;
 
-DROP TABLE IF EXISTS FEE_PAYMENT;
+drop table if exists fee_payment;
 
-DROP TABLE IF EXISTS FREQ_OF_DEPOSITS;
+drop table if exists freq_of_deposits;
 
-DROP TABLE IF EXISTS FEE_TYPE;
+drop table if exists fee_type;
 
-DROP TABLE IF EXISTS ACCOUNT_TYPE;
+drop table if exists account_type;
 
 
 
@@ -335,76 +335,76 @@ DROP TABLE IF EXISTS ACCOUNT_TYPE;
 
 
 
-DROP TABLE IF EXISTS MEETING_TYPE;
+drop table if exists meeting_type;
 
-DROP TABLE IF EXISTS FINANICAL_ACTION;
+drop table if exists finanical_action;
 
-DROP TABLE IF EXISTS LANGUAGE;
+drop table if exists language;
 
-DROP TABLE IF EXISTS ACCOUNT_ACTION;
+drop table if exists account_action;
 
-DROP TABLE IF EXISTS SURVEY_TEMPLATE;
+drop table if exists survey_template;
 
-DROP TABLE IF EXISTS RECURRENCE_TYPE;
+drop table if exists recurrence_type;
 
-DROP TABLE IF EXISTS REPORT;
-DROP TABLE IF EXISTS report_datasource;
-DROP TABLE IF EXISTS report_parameter;
-DROP TABLE IF EXISTS report_jasper_map;
-DROP TABLE IF EXISTS REPORT_CATEGORY;
-DROP TABLE IF EXISTS report_parameter_map;
+drop table if exists report;
+drop table if exists report_datasource;
+drop table if exists report_parameter;
+drop table if exists report_jasper_map;
+drop table if exists report_category;
+drop table if exists report_parameter_map;
 
-DROP TABLE IF EXISTS ACTIVITY;
+drop table if exists activity;
 
-DROP TABLE IF EXISTS GL_CODE;
+drop table if exists gl_code;
 
-DROP TABLE IF EXISTS COUNTRY;
+drop table if exists country;
 
-DROP TABLE IF EXISTS SUPPORTED_MODES;
+drop table if exists supported_modes;
 
-DROP TABLE IF EXISTS TRANSACTION_TYPE;
+drop table if exists transaction_type;
 
-DROP TABLE IF EXISTS PAYMENT_TYPE;
+drop table if exists payment_type;
 
-DROP TABLE IF EXISTS LOOKUP_VALUE;
+drop table if exists lookup_value;
 
-DROP TABLE IF EXISTS LOOKUP_ENTITY;
+drop table if exists lookup_entity;
 
 
 
-DROP TABLE IF EXISTS SCHEDULED_TASKS;
+drop table if exists scheduled_tasks;
 
-DROP TABLE IF EXISTS TEMP_ID;
+drop table if exists temp_id;
 
-DROP TABLE IF EXISTS CURRENCY;
+drop table if exists currency;
 
-DROP TABLE IF EXISTS GLCODE;
+drop table if exists glcode;
 
 
-DROP TABLE IF EXISTS FUND_CODE;
+drop table if exists fund_code;
 
-DROP TABLE IF EXISTS LOAN_COUNTER;
-DROP TABLE IF EXISTS GROUP_LOAN_COUNTER;
+drop table if exists loan_counter;
+drop table if exists group_loan_counter;
 
-DROP TABLE IF EXISTS LOAN_MONITORING;
+drop table if exists loan_monitoring;
 
-DROP TABLE IF EXISTS ADMIN_DOCUMENT;
+drop table if exists admin_document;
 
-DROP TABLE IF EXISTS DATABASE_VERSION;
+drop table if exists database_version;
 
-DROP TABLE IF EXISTS BATCH_CLIENT_SUMMARY;
-DROP TABLE IF EXISTS BATCH_STAFF_SUMMARY;
-DROP TABLE IF EXISTS BATCH_LOAN_ARREARS_AGING;
-DROP TABLE IF EXISTS BATCH_STAFFING_LEVEL_SUMMARY;
-DROP TABLE IF EXISTS BATCH_LOAN_DETAILS;
-DROP TABLE IF EXISTS BATCH_LOAN_ARREARS_PROFILE;
-DROP TABLE IF EXISTS BATCH_BRANCH_REPORT;
+drop table if exists batch_client_summary;
+drop table if exists batch_staff_summary;
+drop table if exists batch_loan_arrears_aging;
+drop table if exists batch_staffing_level_summary;
+drop table if exists batch_loan_details;
+drop table if exists batch_loan_arrears_profile;
+drop table if exists batch_branch_report;
 
-DROP TABLE IF EXISTS BATCH_BRANCH_CONFIRMATION_RECOVERY;
-DROP TABLE IF EXISTS BATCH_BRANCH_CONFIRMATION_ISSUE;
-DROP TABLE IF EXISTS BATCH_BRANCH_CONFIRMATION_DISBURSEMENT;
-DROP TABLE IF EXISTS BATCH_BRANCH_CASH_CONFIRMATION_REPORT;
-DROP TABLE IF EXISTS OFFICE_HOLIDAY;
+drop table if exists batch_branch_confirmation_recovery;
+drop table if exists batch_branch_confirmation_issue;
+drop table if exists batch_branch_confirmation_disbursement;
+drop table if exists batch_branch_cash_confirmation_report;
+drop table if exists office_holiday;
 
 
 

@@ -1,6 +1,6 @@
-UPDATE LOAN_FEE_SCHEDULE SET AMOUNT_PAID = 0 WHERE AMOUNT_PAID IS NULL;
-UPDATE LOAN_FEE_SCHEDULE LFS SET AMOUNT_PAID_CURRENCY_ID = LFS.AMOUNT_CURRENCY_ID WHERE AMOUNT_PAID_CURRENCY_ID IS NULL;
-ALTER TABLE LOAN_FEE_SCHEDULE MODIFY COLUMN AMOUNT_PAID DECIMAL(21,4) NOT NULL;
-ALTER TABLE LOAN_FEE_SCHEDULE MODIFY COLUMN AMOUNT_PAID_CURRENCY_ID SMALLINT NOT NULL;
+update loan_fee_schedule set amount_paid = 0 where amount_paid is null;
+update loan_fee_schedule lfs set amount_paid_currency_id = lfs.amount_currency_id where amount_paid_currency_id is null;
+alter table loan_fee_schedule modify column amount_paid decimal(21,4) not null;
+alter table loan_fee_schedule modify column amount_paid_currency_id smallint not null;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 235 WHERE DATABASE_VERSION = 234;
+update database_version set database_version = 235 where database_version = 234;

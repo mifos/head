@@ -1,17 +1,17 @@
-CREATE TABLE CUSTOMER_FAMILY_DETAIL (
-CUSTOMER_FAMILY_ID INTEGER AUTO_INCREMENT NOT NULL,
-CUSTOMER_ID INTEGER,
-CUSTOMER_NAME_ID INTEGER,
-RELATIONSHIP SMALLINT,
-GENDER SMALLINT,
-DATE_OF_BIRTH DATE,
-LIVING_STATUS SMALLINT,
-PRIMARY KEY (CUSTOMER_FAMILY_ID),
-FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMER(CUSTOMER_ID) ON DELETE NO ACTION ON UPDATE NO ACTION,
-FOREIGN KEY (CUSTOMER_NAME_ID) REFERENCES CUSTOMER_NAME_DETAIL(CUSTOMER_NAME_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table customer_family_detail (
+customer_family_id integer auto_increment not null,
+customer_id integer,
+customer_name_id integer,
+relationship smallint,
+gender smallint,
+date_of_birth date,
+living_status smallint,
+primary key (customer_family_id),
+foreign key (customer_id) references customer(customer_id) on delete no action on update no action,
+foreign key (customer_name_id) references customer_name_detail(customer_name_id) on delete no action on update no action
+)engine=innodb character set utf8;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 222 WHERE DATABASE_VERSION = 221;
+update database_version set database_version = 222 where database_version = 221;
 
 
 

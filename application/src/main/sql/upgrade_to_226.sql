@@ -1,5 +1,5 @@
-ALTER TABLE PRD_OFFERING ADD COLUMN CURRENCY_ID SMALLINT;
+alter table prd_offering add column currency_id smallint;
 
-ALTER TABLE PRD_OFFERING ADD CONSTRAINT FOREIGN KEY (CURRENCY_ID) REFERENCES CURRENCY(CURRENCY_ID) ON DELETE NO ACTION ON UPDATE NO ACTION;
+alter table prd_offering add constraint foreign key (currency_id) references currency(currency_id) on delete no action on update no action;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 226 WHERE DATABASE_VERSION = 225;
+update database_version set database_version = 226 where database_version = 225;

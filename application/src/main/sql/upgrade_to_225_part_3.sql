@@ -1,1 +1,1 @@
-INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(47,51,11,'Hungarian-Hungary',0);
+insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(47,51,11,'Hungarian-Hungary',0);

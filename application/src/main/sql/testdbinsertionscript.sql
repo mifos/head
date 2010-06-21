@@ -3,194 +3,194 @@ This file contains test data for the junit tests.
 */
 
 /* Area office It belongs to the head office created by master scripts */
-INSERT INTO OFFICE(OFFICE_ID, PARENT_OFFICE_ID, GLOBAL_OFFICE_NUM, STATUS_ID, OFFICE_CODE_ID, OFFICE_LEVEL_ID,  SEARCH_ID, OFFICE_SHORT_NAME, MAX_CHILD_COUNT,LOCAL_REMOTE_FLAG, DISPLAY_NAME, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, VERSION_NO)
- 		VALUES(2,1,'0002',1,NULL,4,'1.1.1.','MIF2',2,1,'TestAreaOffice',NULL,NULL,NULL,NULL,1);
+insert into office(office_id, parent_office_id, global_office_num, status_id, office_code_id, office_level_id,  search_id, office_short_name, max_child_count,local_remote_flag, display_name, created_by, created_date, updated_by, updated_date, version_no)
+ 		values(2,1,'0002',1,null,4,'1.1.1.','MIF2',2,1,'TestAreaOffice',null,null,null,null,1);
  		
-INSERT INTO OFFICE_ADDRESS (OFFICE_ADDRESS_ID, OFFICE_ID, ADDRESS_1, ADDRESS_2, ADDRESS_3, 
-CITY, STATE, COUNTRY, ZIP, TELEPHONE) 
-VALUES(2,2,'add2',null,null,null,null,null,null,null);
+insert into office_address (office_address_id, office_id, address_1, address_2, address_3, 
+city, state, country, zip, telephone) 
+values(2,2,'add2',null,null,null,null,null,null,null);
 
 /* Branch office It belongs to the area office created by test script statements above*/
-INSERT INTO OFFICE(OFFICE_ID, PARENT_OFFICE_ID, GLOBAL_OFFICE_NUM, STATUS_ID, OFFICE_CODE_ID, OFFICE_LEVEL_ID,  SEARCH_ID, OFFICE_SHORT_NAME, MAX_CHILD_COUNT,LOCAL_REMOTE_FLAG, DISPLAY_NAME, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, VERSION_NO)
- 		VALUES(3,2,'0003',1,NULL,5,'1.1.1.1.','MIF3',2,1,'TestBranchOffice',NULL,NULL,NULL,NULL,1); 		
+insert into office(office_id, parent_office_id, global_office_num, status_id, office_code_id, office_level_id,  search_id, office_short_name, max_child_count,local_remote_flag, display_name, created_by, created_date, updated_by, updated_date, version_no)
+ 		values(3,2,'0003',1,null,5,'1.1.1.1.','MIF3',2,1,'TestBranchOffice',null,null,null,null,1); 		
 
-INSERT INTO OFFICE_ADDRESS (OFFICE_ADDRESS_ID, OFFICE_ID, ADDRESS_1, ADDRESS_2, ADDRESS_3, 
-CITY, STATE, COUNTRY, ZIP, TELEPHONE) 
-VALUES(3,3,'add3',null,null,null,null,null,null,null);
+insert into office_address (office_address_id, office_id, address_1, address_2, address_3, 
+city, state, country, zip, telephone) 
+values(3,3,'add3',null,null,null,null,null,null,null);
 
 
  
  /*Non loan officer belonging to branch office with office id 3 */		
-INSERT INTO PERSONNEL(PERSONNEL_ID,LEVEL_ID,GLOBAL_PERSONNEL_NUM,OFFICE_ID,
-	TITLE,PERSONNEL_STATUS,PREFERRED_LOCALE,
-	SEARCH_ID,MAX_CHILD_COUNT,PASSWORD,LOGIN_NAME,EMAIL_ID,PASSWORD_CHANGED,
-	DISPLAY_NAME,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,
-	NO_OF_TRIES,LAST_LOGIN,LOCKED,VERSION_NO)
-VALUES(2,2,'2',3,
+insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
+	title,personnel_status,preferred_locale,
+	search_id,max_child_count,password,login_name,email_id,password_changed,
+	display_name,created_by,created_date,updated_by,updated_date,
+	no_of_tries,last_login,locked,version_no)
+values(2,2,'2',3,
 	1,1,1,
-	null,1,null,'nonloanofficer',NULL,1,
-	'non loan officer',1,NULL,1,NULL,
-	4,NULL,0,0);
+	null,1,null,'nonloanofficer',null,1,
+	'non loan officer',1,null,1,null,
+	4,null,0,0);
 
-INSERT INTO PERSONNEL_DETAILS VALUES(2,'testnon loan officer',NULL,NULL,'MFI','123','1979-12-12',NULL,50,NULL,NULL,NULL,'Bangalore',NULL,NULL,'Bangalore','Bangalore','Bangalore',null,NULL);	
+insert into personnel_details values(2,'testnon loan officer',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);	
 
-INSERT INTO PERSONNEL_ROLE (PERSONNEL_ROLE_ID, ROLE_ID, PERSONNEL_ID) 
-VALUES(2,1,2);
+insert into personnel_role (personnel_role_id, role_id, personnel_id) 
+values(2,1,2);
 /*Loan officer belonging to branch*/
-INSERT INTO PERSONNEL(PERSONNEL_ID,LEVEL_ID,GLOBAL_PERSONNEL_NUM,OFFICE_ID,
-	TITLE,PERSONNEL_STATUS,PREFERRED_LOCALE,
-	SEARCH_ID,MAX_CHILD_COUNT,PASSWORD,LOGIN_NAME,EMAIL_ID,PASSWORD_CHANGED,
-	DISPLAY_NAME,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,
-	NO_OF_TRIES,LAST_LOGIN,LOCKED,VERSION_NO) 
-VALUES(3,1,'3',3,
+insert into personnel(personnel_id,level_id,global_personnel_num,office_id,
+	title,personnel_status,preferred_locale,
+	search_id,max_child_count,password,login_name,email_id,password_changed,
+	display_name,created_by,created_date,updated_by,updated_date,
+	no_of_tries,last_login,locked,version_no) 
+values(3,1,'3',3,
 	1,1,1,
-	null,1,null,'loanofficer',NULL,1,
-	'loan officer',1,NULL,1,NULL,
-	4,NULL,0,0);
+	null,1,null,'loanofficer',null,1,
+	'loan officer',1,null,1,null,
+	4,null,0,0);
 
-INSERT INTO PERSONNEL_DETAILS VALUES(3,'testloan officer',NULL,NULL,'MFI','123','1979-12-12',NULL,50,NULL,NULL,NULL,'Bangalore',NULL,NULL,'Bangalore','Bangalore','Bangalore',null,NULL);
+insert into personnel_details values(3,'testloan officer',null,null,'MFI','123','1979-12-12',null,50,null,null,null,'Bangalore',null,null,'Bangalore','Bangalore','Bangalore',null,null);
 
-INSERT INTO PERSONNEL_ROLE (PERSONNEL_ROLE_ID, ROLE_ID, PERSONNEL_ID) 
-VALUES(3,1,3);
+insert into personnel_role (personnel_role_id, role_id, personnel_id) 
+values(3,1,3);
 
-INSERT INTO ROLE(ROLE_ID,ROLE_NAME,VERSION_NO,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE)
-VALUES(2,'SavingTestPermisson',1,NULL,NULL,NULL,NULL);
-INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
-VALUES(182,2);
-INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
-VALUES(183,2);
+insert into role(role_id,role_name,version_no,created_by,created_date,updated_by,updated_date)
+values(2,'SavingTestPermisson',1,null,null,null,null);
+insert into roles_activity(activity_id,role_id)
+values(182,2);
+insert into roles_activity(activity_id,role_id)
+values(183,2);
 
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'SecondLastName' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'SecondLastName' AND ENTITY_ID = 17;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'GovernmentId' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'GovernmentId' AND ENTITY_ID = 17;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ExternalId' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ExternalId' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ExternalId' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ExternalId' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Ethinicity' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Citizenship' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Handicapped' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'BusinessActivities' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'EducationLevel' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Photo' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'SpouseFatherSecondLastName' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Trained' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Trained' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'TrainedDate' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'TrainedDate' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address1' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address1' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address1' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address2' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address2' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address2' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address3' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address3' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address3' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address3' AND ENTITY_ID = 15;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Address3' AND ENTITY_ID = 17;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'City' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'City' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'City' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'State' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'State' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'State' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Country' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Country' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'Country' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PostalCode' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PostalCode' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 0
-  WHERE FIELD_NAME = 'PostalCode' AND ENTITY_ID = 20;  
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PhoneNumber' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PhoneNumber' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PhoneNumber' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'PhoneNumber' AND ENTITY_ID = 17;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 0
-  WHERE FIELD_NAME = 'PurposeOfLoan' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'CollateralType' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'CollateralNotes' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 21;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptId' AND ENTITY_ID = 23;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 1;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 12;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 20;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 21;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 22;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 0, HIDDEN_FLAG = 1
-  WHERE FIELD_NAME = 'ReceiptDate' AND ENTITY_ID = 23;
-UPDATE FIELD_CONFIGURATION SET MANDATORY_FLAG = 1, HIDDEN_FLAG = 0
-  WHERE FIELD_NAME = 'SourceOfFund' AND ENTITY_ID = 22;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'SecondLastName' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'SecondLastName' and entity_id = 17;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'GovernmentId' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'GovernmentId' and entity_id = 17;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'ExternalId' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'ExternalId' and entity_id = 12;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'ExternalId' and entity_id = 20;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'ExternalId' and entity_id = 22;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'Ethinicity' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'Citizenship' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'Handicapped' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'BusinessActivities' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'EducationLevel' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Photo' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'SpouseFatherSecondLastName' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Trained' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Trained' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'TrainedDate' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'TrainedDate' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address1' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'Address1' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address1' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address2' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address2' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address2' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address3' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address3' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address3' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address3' and entity_id = 15;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Address3' and entity_id = 17;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'City' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'City' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'City' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'State' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'State' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'State' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Country' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'Country' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'Country' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'PostalCode' and entity_id = 1;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'PostalCode' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 0
+  where field_name = 'PostalCode' and entity_id = 20;  
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'PhoneNumber' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'PhoneNumber' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'PhoneNumber' and entity_id = 20;
+update field_configuration set mandatory_flag = 1, hidden_flag = 1
+  where field_name = 'PhoneNumber' and entity_id = 17;
+update field_configuration set mandatory_flag = 1, hidden_flag = 0
+  where field_name = 'PurposeOfLoan' and entity_id = 22;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'CollateralType' and entity_id = 22;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'CollateralNotes' and entity_id = 22;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 21;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 22;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptId' and entity_id = 23;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 1;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 12;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 20;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 21;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 22;
+update field_configuration set mandatory_flag = 0, hidden_flag = 1
+  where field_name = 'ReceiptDate' and entity_id = 23;
+update field_configuration set mandatory_flag = 1, hidden_flag = 0
+  where field_name = 'SourceOfFund' and entity_id = 22;
 
 /* make a listdatasource for test*/
-Insert into report_datasource (DATASOURCE_ID,NAME,DRIVER,URL,USERNAME,PASSWORD) values(1,'test','test','test
+insert into report_datasource (datasource_id,name,driver,url,username,password) values(1,'test','test','test
 ','test','test');
 
 /* retain default custom fields for testing purposes */
-INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)VALUES
+insert into lookup_entity(entity_id,entity_name,description)values
 (58,'ReplacementStatus','Custom Field ReplacementStatus for Client'),
 (59,'GRTStaffId','Custom Field GRTStaffId for Group'),
 (60,'MeetingTime','Custom Field Meeting Time for Center'),
@@ -202,7 +202,7 @@ INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)VALUES
 (67,'ExternalSavingsId','Custom Field ExternalSavingsId');
 
 
-INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)VALUES
+insert into lookup_label(label_id,entity_id,locale_id,entity_name)values
 (108,58,1,'Replacement Status'),
 (110,59,1,'GRT Staff Id'),
 (112,60,1,'Meeting Time for Center'),
@@ -216,30 +216,30 @@ INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)VALUES
 
 /* The table Custom Field Definition will contain the additional information fields that an MFI configure Mifosthat will be required to be shown for a client , group etc for the MFI - Configuration */
 /* Client*/
-INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE) VALUES 
-(3,58,2,1,0,1,NULL),
+insert into custom_field_definition(field_id,entity_id,field_type,entity_type,mandatory_flag,level_id,default_value) values 
+(3,58,2,1,0,1,null),
 /*Group*/
-(4,59,2,12,0,2,NULL),
+(4,59,2,12,0,2,null),
 /*Center*/
-(5,60,2,20,0,3,NULL),
-(6,61,1,20,0,3,NULL),
+(5,60,2,20,0,3,null),
+(6,61,1,20,0,3,null),
 /*Personnel*/
-(9,62,2,17,0,1,NULL),
+(9,62,2,17,0,1,null),
 /*Office*/
-(10,62,2,15,0,1,NULL),
-(11,63,1,15,1,2,NULL),
-(12,64,1,15,1,2,NULL),
-(13,65,1,15,0,2,NULL),
+(10,62,2,15,0,1,null),
+(11,63,1,15,1,2,null),
+(12,64,1,15,1,2,null),
+(13,65,1,15,0,2,null),
 /*Loan*/
-(7,66,2,22,0,1,NULL),
+(7,66,2,22,0,1,null),
 /*Savings*/
-(8,67,2,21,0,1,NULL);
+(8,67,2,21,0,1,null);
 
 /* The table Personnelcustom field contains the additional information of the default user  - Configuration */
-INSERT INTO PERSONNEL_CUSTOM_FIELD (FIELD_ID,PERSONNEL_ID,FIELD_VALUE)
-VALUES(9,1,'');
+insert into personnel_custom_field (field_id,personnel_id,field_value)
+values(9,1,'');
 
-INSERT INTO OFFICE_CUSTOM_FIELD (OFFICE_ID,FIELD_ID,FIELD_VALUE) VALUES
+insert into office_custom_field (office_id,field_id,field_value) values
 (1,10,''),
 (1,11,''),
 (1,12,''),

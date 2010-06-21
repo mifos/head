@@ -1,3 +1,3 @@
-ALTER TABLE customer_position CHANGE COLUMN CUSTOMER_POSITION_ID CUSTOMER_POSITION_ID INTEGER NOT NULL AUTO_INCREMENT;
+alter table customer_position change column customer_position_id customer_position_id integer not null auto_increment;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 220 WHERE DATABASE_VERSION = 219;
+update database_version set database_version = 220 where database_version = 219;

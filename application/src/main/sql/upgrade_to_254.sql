@@ -1,3 +1,3 @@
-ALTER TABLE LOAN_ACCOUNT CHANGE COLLATERAL_NOTE COLLATERAL_NOTE VARCHAR(500);
+alter table loan_account change collateral_note collateral_note varchar(500);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 254 WHERE DATABASE_VERSION = 253;
+update database_version set database_version = 254 where database_version = 253;

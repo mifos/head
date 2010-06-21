@@ -1,14 +1,14 @@
 /* Tables removed from latest-schema.sql should be added here */
-DROP TABLE IF EXISTS collateral_type;
-DROP TABLE IF EXISTS logmessages;
-DROP TABLE IF EXISTS mis_bank;
-DROP TABLE IF EXISTS mis_bankbranch;
-DROP TABLE IF EXISTS mis_geographicalarea;
-DROP TABLE IF EXISTS mis_geographicalareatype;
-DROP TABLE IF EXISTS mis_shgmemberprofile;
-DROP TABLE IF EXISTS mis_shgprofile;
+drop table if exists collateral_type;
+drop table if exists logmessages;
+drop table if exists mis_bank;
+drop table if exists mis_bankbranch;
+drop table if exists mis_geographicalarea;
+drop table if exists mis_geographicalareatype;
+drop table if exists mis_shgmemberprofile;
+drop table if exists mis_shgprofile;
 
-DROP TABLE IF EXISTS COLL_SHEET_SAVINGS_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_LOAN_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_CUSTOMER;
-DROP TABLE IF EXISTS COLL_SHEET;
+drop table if exists coll_sheet_savings_details;
+drop table if exists coll_sheet_loan_details;
+drop table if exists coll_sheet_customer;
+drop table if exists coll_sheet;

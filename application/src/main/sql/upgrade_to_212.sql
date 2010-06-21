@@ -1,3 +1,3 @@
-DROP TABLE IF EXISTS LOGMESSAGES;
+drop table if exists logmessages;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 212 WHERE DATABASE_VERSION = 211;
+update database_version set database_version = 212 where database_version = 211;

@@ -5,4 +5,4 @@
 --    http://thread.gmane.org/gmane.comp.finance.mifos.functional/983
 --    http://thread.gmane.org/gmane.comp.finance.mifos.devel/4545
 --    http://mifos.org/developers/wiki/ImprovePasswordInitialization
-UPDATE personnel SET PASSWORD=0x22648CA42330A561964DBE32F54E6A04A49D03F203CA64B2515338D9 WHERE PERSONNEL_ID=1;
+update personnel set password=0x22648ca42330a561964dbe32f54e6a04a49d03f203ca64b2515338d9 where personnel_id=1;

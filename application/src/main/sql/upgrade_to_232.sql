@@ -1,1 +1,1 @@
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 232 WHERE DATABASE_VERSION = 231;
+update database_version set database_version = 232 where database_version = 231;

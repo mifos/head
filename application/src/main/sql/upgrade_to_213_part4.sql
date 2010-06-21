@@ -1,1 +1,1 @@
-CREATE INDEX LOAN_COUNTER_CLIENT_PERF_IDX ON LOAN_COUNTER (CLIENT_PERF_ID);
+create index loan_counter_client_perf_idx on loan_counter (client_perf_id);

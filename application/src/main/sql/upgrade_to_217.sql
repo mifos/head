@@ -1,9 +1,9 @@
-ALTER TABLE report_parameter_map ENGINE = InnoDB;
-ALTER TABLE report_parameter ENGINE = InnoDB;
-ALTER TABLE report_parameter_map CONVERT TO CHARACTER SET utf8;
-ALTER TABLE report_parameter CONVERT TO CHARACTER SET utf8;
-ALTER TABLE report_parameter CHANGE COLUMN DATA DATA text;
-ALTER TABLE report_datasource CONVERT TO CHARACTER SET utf8;
+alter table report_parameter_map engine = innodb;
+alter table report_parameter engine = innodb;
+alter table report_parameter_map convert to character set utf8;
+alter table report_parameter convert to character set utf8;
+alter table report_parameter change column data data text;
+alter table report_datasource convert to character set utf8;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 217 WHERE DATABASE_VERSION = 216;
+update database_version set database_version = 217 where database_version = 216;
 

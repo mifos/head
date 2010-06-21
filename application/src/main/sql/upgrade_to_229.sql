@@ -1,3 +1,3 @@
-INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG) VALUES(79,'City',15,0,0);
+insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag) values(79,'City',15,0,0);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 229 WHERE DATABASE_VERSION = 228;
+update database_version set database_version = 229 where database_version = 228;

@@ -1,10 +1,10 @@
-SET FOREIGN_KEY_CHECKS=0;
+set foreign_key_checks=0;
 
-DROP TABLE IF EXISTS COLL_SHEET_SAVINGS_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_LOAN_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_CUSTOMER;
-DROP TABLE IF EXISTS COLL_SHEET;
+drop table if exists coll_sheet_savings_details;
+drop table if exists coll_sheet_loan_details;
+drop table if exists coll_sheet_customer;
+drop table if exists coll_sheet;
 
-SET FOREIGN_KEY_CHECKS=1;
+set foreign_key_checks=1;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 245 WHERE DATABASE_VERSION = 244;
+update database_version set database_version = 245 where database_version = 244;

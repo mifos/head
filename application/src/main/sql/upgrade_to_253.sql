@@ -4,4 +4,4 @@ alter table customer_meeting drop foreign key customer_meeting_ibfk_3;
 alter table customer_meeting drop column updated_meeting_id;
 alter table customer_meeting drop column updated_flag;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 253 WHERE DATABASE_VERSION = 252;
+update database_version set database_version = 253 where database_version = 252;

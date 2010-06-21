@@ -1,1 +1,1 @@
-CREATE INDEX CUSTOMER_DOB_STATUS_IDX ON CUSTOMER (DATE_OF_BIRTH,STATUS_ID);
+create index customer_dob_status_idx on customer (date_of_birth,status_id);

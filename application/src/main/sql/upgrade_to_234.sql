@@ -1,3 +1,3 @@
-CREATE INDEX CUST_GOVERNMENT_IDX ON CUSTOMER (GOVERNMENT_ID);
+create index cust_government_idx on customer (government_id);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 234 WHERE DATABASE_VERSION = 233;
+update database_version set database_version = 234 where database_version = 233;

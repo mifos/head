@@ -2,18 +2,18 @@
 -- test/demo/developer database and is not intended to be loaded in production
 
 -- Entity: Salutation
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (47, 15, 'Salutation-Mr'),
 (48, 15, 'Salutation-Mrs'),
 (228, 15, 'Salutation-Ms');
 
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values
 (93,1,47,'Mr'),
 (95,1,48,'Mrs'),
 (438,1,228,'Ms');
 
 -- Entity: PersonnelTitles
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (57, 29, 'PersonnelTitles-Cashier'),
 (58, 29, 'PersonnelTitles-CenterManager'),
 (59, 29, 'PersonnelTitles-BranchManager'),
@@ -24,12 +24,12 @@ INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
 (544, 29, 'PersonnelTitles-MisTeam'),
 (545, 29, 'PersonnelTitles-ItTeam');
 
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)values
 (113,1,57,'Cashier'),
 (114,1,58,'Center Manager'),
 (115,1,59,'Branch Manager');
 
-INSERT INTO LOOKUP_VALUE_LOCALE VALUES
+insert into lookup_value_locale values
 (878,1,540,'Area Manager'),
 (879,1,541,'Divisional Manager'),
 (880,1,542,'Regional Manager'),
@@ -38,48 +38,48 @@ INSERT INTO LOOKUP_VALUE_LOCALE VALUES
 (883,1,545,'IT Team');
 
 -- Entity: MaritalStatus
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (66, 17, 'MaritalStatus-Married'),
 (67, 17, 'MaritalStatus-Unmarried'),
 (220, 17, 'MaritalStatus-Widowed');
 
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values
 (131,1,66,'Married'),
 (133,1,67,'UnMarried'),
 (426,1,220,'Widowed');
 
 -- Entity: Citizenship
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (130, 18, 'Citizenship-Hindu'),
 (131, 18, 'Citizenship-Muslim'),
 (221, 18, 'Citizenship-Christian');
 
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values
 (239,1,130,'Hindu'),
 (241,1,131,'Muslim'),
 (428,1,221,'Christian');
 
 -- Entity: EducationLevel
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (134, 20, 'EducationLevel-OnlyClient'),
 (135, 20, 'EducationLevel-OnlyHusband'),
 (226, 20, 'EducationLevel-BothLiterate'),
 (227, 20, 'EducationLevel-BothIlliterate');
 
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)values
 (247,1,134,'Only Client'),
 (249,1,135,'Only Husband'),
 (434,1,226,'Both Literate'),
 (436,1,227,'Both Illiterate');
 
 -- Entity: Ethinicity
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (132, 19, 'Ethinicity-Sc'),
 (133, 19, 'Ethinicity-Bc'),
 (217, 19, 'Ethinicity-St'),
 (218, 19, 'Ethinicity-Obc'),
 (219, 19, 'Ethinicity-Fc');
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)values
 (243,1,132,'SC'),
 (245,1,133,'BC'),
 (420,1,217,'ST'),
@@ -87,7 +87,7 @@ INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE
 (424,1,219,'FC');
 
 -- Entity: LoanPurposes
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (230, 82, 'LoanPurposes-0000AnimalHusbandry'),
 (231, 82, 'LoanPurposes-0001CowPurchase'),
 (232, 82, 'LoanPurposes-0002BuffaloPurchase'),
@@ -218,7 +218,7 @@ INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
 (359, 82, 'LoanPurposes-1019FerBusiness2'),
 (360, 82, 'LoanPurposes-1020SesionalBusiness');
 /*Loan Purposes*/
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)values
 (441,1,230,'0000-Animal Husbandry'),
 (443,1,231,'0001-Cow Purchase'),
 (445,1,232,'0002-Buffalo Purchase'),
@@ -353,50 +353,50 @@ INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE
 (697,1,360,'1020-Sesional Business');
 
 -- Entity: Handicapped
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (138, 22, 'Handicapped-Yes'),
 (139, 22, 'Handicapped-No');
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value) values
 (255,1,138,'Yes'),
 (257,1,139,'No');
 
 -- Entity: Titles
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (39, 9, 'Titles-President'),
 (40, 9, 'Titles-VicePresident');
-INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)VALUES
+insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)values
 (77,1,39,'President'),
 (79,1,40,'Vice President');
 
 -- BusinessActivities
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(136, 21, 'BusinessActivities-DailyLabour');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(251, 1, 136, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(137, 21, 'BusinessActivities-Agriculture');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(253, 1, 137, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(144, 21, 'BusinessActivities-AnimalHusbandry');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(265, 1, 144, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(145, 21, 'BusinessActivities-MicroEnterprise');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(266, 1, 145, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(222, 21, 'BusinessActivities-Production');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(430, 1, 222, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(225, 21, 'BusinessActivities-Trading');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(432, 1, 225, NULL);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(136, 21, 'BusinessActivities-DailyLabour');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(251, 1, 136, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(137, 21, 'BusinessActivities-Agriculture');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(253, 1, 137, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(144, 21, 'BusinessActivities-AnimalHusbandry');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(265, 1, 144, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(145, 21, 'BusinessActivities-MicroEnterprise');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(266, 1, 145, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(222, 21, 'BusinessActivities-Production');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(430, 1, 222, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(225, 21, 'BusinessActivities-Trading');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(432, 1, 225, null);
 
 -- CollateralTypes
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(109, 43, 'CollateralTypes-Type1');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(199, 1, 109, NULL);
- INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(110, 43, 'CollateralTypes-Type2');
- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
- VALUES(200, 1, 110, NULL);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(109, 43, 'CollateralTypes-Type1');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(199, 1, 109, null);
+ insert into lookup_value(lookup_id,entity_id,lookup_name) values(110, 43, 'CollateralTypes-Type2');
+ insert into lookup_value_locale(lookup_value_id,locale_id,lookup_id,lookup_value)
+ values(200, 1, 110, null);
  
-INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
+insert into lookup_value(lookup_id,entity_id,lookup_name) values
 (65, 34, 'DBUpgrade.OfficeLevels.Unsued'),
 (71, 35, 'DBUpgrade.PrdApplicableMaster.Unused'),
 (90, 39, 'DBUpgrade.InterestCalcRule.Unused'),

@@ -1,5 +1,5 @@
-ALTER TABLE CUSTOMER ADD CONSTRAINT FOREIGN KEY(PARENT_CUSTOMER_ID) REFERENCES CUSTOMER(CUSTOMER_ID) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE CUSTOMER_POSITION ADD CONSTRAINT FOREIGN KEY(PARENT_CUSTOMER_ID) REFERENCES CUSTOMER(CUSTOMER_ID) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE GROUP_LOAN_COUNTER ADD CONSTRAINT FOREIGN KEY(GROUP_PERF_ID) REFERENCES GROUP_PERF_HISTORY(ID) ON DELETE NO ACTION ON UPDATE NO ACTION;
+alter table customer add constraint foreign key(parent_customer_id) references customer(customer_id) on delete no action on update no action;
+alter table customer_position add constraint foreign key(parent_customer_id) references customer(customer_id) on delete no action on update no action;
+alter table group_loan_counter add constraint foreign key(group_perf_id) references group_perf_history(id) on delete no action on update no action;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 239 WHERE DATABASE_VERSION = 238;
+update database_version set database_version = 239 where database_version = 238;

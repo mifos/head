@@ -1,3 +1,3 @@
-INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(46,25,1,'English-Lebanon-AlMajmoua',0);
+insert into supported_locale(locale_id,country_id,lang_id,locale_name,default_locale) values(46,25,1,'English-Lebanon-AlMajmoua',0);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 224 WHERE DATABASE_VERSION = 223;
+update database_version set database_version = 224 where database_version = 223;

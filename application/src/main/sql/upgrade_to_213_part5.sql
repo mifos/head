@@ -1,1 +1,1 @@
-CREATE INDEX LOOKUP_ENTITYNAME_IDX ON LOOKUP_ENTITY (ENTITY_NAME);
+create index lookup_entityname_idx on lookup_entity (entity_name);

@@ -1,1 +1,1 @@
-CREATE INDEX CUSTOMER_ATTENDANCE_MEETING_DATE_IDX ON CUSTOMER_ATTENDANCE (MEETING_DATE,CUSTOMER_ID);
+create index customer_attendance_meeting_date_idx on customer_attendance (meeting_date,customer_id);

@@ -1,283 +1,283 @@
 
-ALTER TABLE FEES 
-MODIFY FEE_AMOUNT DECIMAL(21,4);
+alter table fees 
+modify fee_amount decimal(21,4);
 
-ALTER TABLE CUST_PERF_HISTORY 
-MODIFY LAST_LOAN_AMNT DECIMAL(21,4),
-MODIFY TOTAL_SAVINGS_AMNT DECIMAL(21,4),
-MODIFY DELINQUINT_PORTFOLIO DECIMAL(21,4);
+alter table cust_perf_history 
+modify last_loan_amnt decimal(21,4),
+modify total_savings_amnt decimal(21,4),
+modify delinquint_portfolio decimal(21,4);
 
-ALTER TABLE CUSTOMER_DETAIL 
-MODIFY POVERTY_LHOOD_PCT DECIMAL(21,4);
+alter table customer_detail 
+modify poverty_lhood_pct decimal(21,4);
 
-ALTER TABLE LOAN_OFFERING 
-MODIFY MIN_LOAN_AMOUNT DECIMAL(21,4) DEFAULT null,
-MODIFY MAX_LOAN_AMNT DECIMAL(21,4) DEFAULT null,
-MODIFY DEFAULT_LOAN_AMOUNT DECIMAL(21,4) DEFAULT null;
+alter table loan_offering 
+modify min_loan_amount decimal(21,4) default null,
+modify max_loan_amnt decimal(21,4) default null,
+modify default_loan_amount decimal(21,4) default null;
 
-ALTER TABLE SAVINGS_OFFERING 
-MODIFY RECOMMENDED_AMOUNT DECIMAL(21,4),
-MODIFY MAX_AMNT_WITHDRAWL DECIMAL(21,4),
-MODIFY MIN_AMNT_FOR_INT DECIMAL(21,4);
+alter table savings_offering 
+modify recommended_amount decimal(21,4),
+modify max_amnt_withdrawl decimal(21,4),
+modify min_amnt_for_int decimal(21,4);
 
-ALTER TABLE CUSTOMER_HISTORICAL_DATA 
-MODIFY LOAN_AMOUNT DECIMAL(21,4),
-MODIFY TOTAL_AMOUNT_PAID DECIMAL(21,4),
-MODIFY INTEREST_PAID DECIMAL(21,4);
+alter table customer_historical_data 
+modify loan_amount decimal(21,4),
+modify total_amount_paid decimal(21,4),
+modify interest_paid decimal(21,4);
 
-ALTER TABLE ACCOUNT_ACTIVITY 
-MODIFY PRINCIPAL DECIMAL(21,4),
-MODIFY PRINCIPAL_OUTSTANDING DECIMAL(21,4);
+alter table account_activity 
+modify principal decimal(21,4),
+modify principal_outstanding decimal(21,4);
 
-ALTER TABLE LOAN_ACCOUNT 
-MODIFY LOAN_AMOUNT DECIMAL(21,4),
-MODIFY LOAN_BALANCE DECIMAL(21,4);
+alter table loan_account 
+modify loan_amount decimal(21,4),
+modify loan_balance decimal(21,4);
 
-ALTER TABLE LOAN_ACTIVITY_DETAILS 
-MODIFY PRINCIPAL_AMOUNT DECIMAL(21,4),
-MODIFY INTEREST_AMOUNT DECIMAL(21,4),
-MODIFY PENALTY_AMOUNT DECIMAL(21,4),
-MODIFY FEE_AMOUNT DECIMAL(21,4),
-MODIFY BALANCE_PRINCIPAL_AMOUNT DECIMAL(21,4),
-MODIFY BALANCE_INTEREST_AMOUNT DECIMAL(21,4),
-MODIFY BALANCE_PENALTY_AMOUNT DECIMAL(21,4),
-MODIFY BALANCE_FEE_AMOUNT DECIMAL(21,4);
+alter table loan_activity_details 
+modify principal_amount decimal(21,4),
+modify interest_amount decimal(21,4),
+modify penalty_amount decimal(21,4),
+modify fee_amount decimal(21,4),
+modify balance_principal_amount decimal(21,4),
+modify balance_interest_amount decimal(21,4),
+modify balance_penalty_amount decimal(21,4),
+modify balance_fee_amount decimal(21,4);
 
-ALTER TABLE LOAN_SUMMARY 
-MODIFY ORIG_PRINCIPAL DECIMAL(21,4), 
-MODIFY ORIG_INTEREST DECIMAL(21,4), 
-MODIFY ORIG_FEES DECIMAL(21,4), 
-MODIFY ORIG_PENALTY DECIMAL(21,4), 
-MODIFY PRINCIPAL_PAID DECIMAL(21,4),
-MODIFY INTEREST_PAID DECIMAL(21,4),
-MODIFY FEES_PAID DECIMAL(21,4),
-MODIFY PENALTY_PAID DECIMAL(21,4),
-MODIFY RAW_AMOUNT_TOTAL DECIMAL(21,4);
+alter table loan_summary 
+modify orig_principal decimal(21,4), 
+modify orig_interest decimal(21,4), 
+modify orig_fees decimal(21,4), 
+modify orig_penalty decimal(21,4), 
+modify principal_paid decimal(21,4),
+modify interest_paid decimal(21,4),
+modify fees_paid decimal(21,4),
+modify penalty_paid decimal(21,4),
+modify raw_amount_total decimal(21,4);
 
-ALTER TABLE CUSTOMER_ACCOUNT_ACTIVITY 
-MODIFY AMOUNT DECIMAL(21,4);
+alter table customer_account_activity 
+modify amount decimal(21,4);
 
-ALTER TABLE ACCOUNT_PAYMENT 
-MODIFY AMOUNT DECIMAL(21,4) NOT NULL;
+alter table account_payment 
+modify amount decimal(21,4) not null;
 
-ALTER TABLE CUSTOMER_SCHEDULE
-MODIFY MISC_FEES DECIMAL(21,4),
-MODIFY MISC_FEES_PAID DECIMAL(21,4), 
-MODIFY MISC_PENALTY DECIMAL(21,4),
-MODIFY MISC_PENALTY_PAID DECIMAL(21,4);
+alter table customer_schedule
+modify misc_fees decimal(21,4),
+modify misc_fees_paid decimal(21,4), 
+modify misc_penalty decimal(21,4),
+modify misc_penalty_paid decimal(21,4);
 
-ALTER TABLE LOAN_SCHEDULE 
-MODIFY PRINCIPAL DECIMAL(21,4) NOT NULL,
-MODIFY INTEREST DECIMAL(21,4) NOT NULL,
-MODIFY PENALTY DECIMAL(21,4) NOT NULL,
-MODIFY MISC_FEES DECIMAL(21,4), 
-MODIFY MISC_FEES_PAID DECIMAL(21,4),
-MODIFY MISC_PENALTY DECIMAL(21,4),
-MODIFY MISC_PENALTY_PAID DECIMAL(21,4),
-MODIFY PRINCIPAL_PAID DECIMAL(21,4),
-MODIFY INTEREST_PAID DECIMAL(21,4),
-MODIFY PENALTY_PAID DECIMAL(21,4);
+alter table loan_schedule 
+modify principal decimal(21,4) not null,
+modify interest decimal(21,4) not null,
+modify penalty decimal(21,4) not null,
+modify misc_fees decimal(21,4), 
+modify misc_fees_paid decimal(21,4),
+modify misc_penalty decimal(21,4),
+modify misc_penalty_paid decimal(21,4),
+modify principal_paid decimal(21,4),
+modify interest_paid decimal(21,4),
+modify penalty_paid decimal(21,4);
 
-ALTER TABLE SAVING_SCHEDULE 
-MODIFY DEPOSIT DECIMAL(21,4) NOT NULL,
-MODIFY DEPOSIT_PAID DECIMAL(21,4);
+alter table saving_schedule 
+modify deposit decimal(21,4) not null,
+modify deposit_paid decimal(21,4);
 
-ALTER TABLE ACCOUNT_FEES 
-MODIFY ACCOUNT_FEE_AMNT DECIMAL(21,4) NOT NULL,
-MODIFY FEE_AMNT DECIMAL(21,4) NOT NULL;
+alter table account_fees 
+modify account_fee_amnt decimal(21,4) not null,
+modify fee_amnt decimal(21,4) not null;
 
-ALTER TABLE SAVINGS_ACCOUNT 
-MODIFY SAVINGS_BALANCE DECIMAL(21,4),
-MODIFY RECOMMENDED_AMOUNT DECIMAL(21,4),
-MODIFY INT_TO_BE_POSTED DECIMAL(21,4),
-MODIFY MIN_AMNT_FOR_INT DECIMAL(21,4);
+alter table savings_account 
+modify savings_balance decimal(21,4),
+modify recommended_amount decimal(21,4),
+modify int_to_be_posted decimal(21,4),
+modify min_amnt_for_int decimal(21,4);
 
-ALTER TABLE SAVINGS_ACTIVITY_DETAILS 
-MODIFY AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY BALANCE_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table savings_activity_details 
+modify amount decimal(21,4) not null,
+modify balance_amount decimal(21,4) not null;
 
-ALTER TABLE SAVINGS_PERFORMANCE 
-MODIFY TOTAL_DEPOSITS DECIMAL(21,4),
-MODIFY TOTAL_WITHDRAWALS DECIMAL(21,4),
-MODIFY TOTAL_INTEREST_EARNED DECIMAL(21,4);
+alter table savings_performance 
+modify total_deposits decimal(21,4),
+modify total_withdrawals decimal(21,4),
+modify total_interest_earned decimal(21,4);
 
-ALTER TABLE ACCOUNT_TRXN 
-MODIFY AMOUNT DECIMAL(21,4) NOT NULL;
+alter table account_trxn 
+modify amount decimal(21,4) not null;
 
-ALTER TABLE FEE_TRXN_DETAIL
-MODIFY FEE_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table fee_trxn_detail
+modify fee_amount decimal(21,4) not null;
 
-ALTER TABLE LOAN_FEE_SCHEDULE 
-MODIFY AMOUNT DECIMAL(21,4),
-MODIFY AMOUNT_PAID DECIMAL(21,4) NOT NULL;
+alter table loan_fee_schedule 
+modify amount decimal(21,4),
+modify amount_paid decimal(21,4) not null;
 
-ALTER TABLE CUSTOMER_FEE_SCHEDULE
-MODIFY AMOUNT DECIMAL(21,4),
-MODIFY AMOUNT_PAID DECIMAL(21,4);
+alter table customer_fee_schedule
+modify amount decimal(21,4),
+modify amount_paid decimal(21,4);
 
-ALTER TABLE SAVINGS_TRXN_DETAIL
-MODIFY DEPOSIT_AMOUNT DECIMAL(21,4) ,
-MODIFY WITHDRAWAL_AMOUNT DECIMAL(21,4) ,
-MODIFY INTEREST_AMOUNT DECIMAL(21,4) ,
-MODIFY BALANCE DECIMAL(21,4);
+alter table savings_trxn_detail
+modify deposit_amount decimal(21,4) ,
+modify withdrawal_amount decimal(21,4) ,
+modify interest_amount decimal(21,4) ,
+modify balance decimal(21,4);
 
-ALTER TABLE LOAN_TRXN_DETAIL
-MODIFY PRINCIPAL_AMOUNT DECIMAL(21,4),
-MODIFY INTEREST_AMOUNT DECIMAL(21,4),
-MODIFY PENALTY_AMOUNT DECIMAL(21,4),
-MODIFY MISC_FEE_AMOUNT DECIMAL(21,4),
-MODIFY MISC_PENALTY_AMOUNT DECIMAL(21,4);
+alter table loan_trxn_detail
+modify principal_amount decimal(21,4),
+modify interest_amount decimal(21,4),
+modify penalty_amount decimal(21,4),
+modify misc_fee_amount decimal(21,4),
+modify misc_penalty_amount decimal(21,4);
 
-ALTER TABLE CUSTOMER_TRXN_DETAIL
-MODIFY TOTAL_AMOUNT DECIMAL(21,4),
-MODIFY MISC_FEE_AMOUNT DECIMAL(21,4),
-MODIFY MISC_PENALTY_AMOUNT DECIMAL(21,4);
+alter table customer_trxn_detail
+modify total_amount decimal(21,4),
+modify misc_fee_amount decimal(21,4),
+modify misc_penalty_amount decimal(21,4);
 
-ALTER TABLE CUSTOMER_LOAN_ACCOUNT_DETAIL
-MODIFY PRINCIPAL DECIMAL(21,4) NOT NULL,
-MODIFY INTEREST DECIMAL(21,4) NOT NULL,
-MODIFY PENALTY DECIMAL(21,4) NOT NULL;
+alter table customer_loan_account_detail
+modify principal decimal(21,4) not null,
+modify interest decimal(21,4) not null,
+modify penalty decimal(21,4) not null;
 
-ALTER TABLE FINANCIAL_TRXN
-MODIFY POSTED_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY BALANCE_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table financial_trxn
+modify posted_amount decimal(21,4) not null,
+modify balance_amount decimal(21,4) not null;
 
-ALTER TABLE COLL_SHEET_CUSTOMER
-MODIFY TOTAL_DUE_SAVINGS_LOAN DECIMAL(21,4) ,
-MODIFY CUST_ACCNT_FEE DECIMAL(21,4),
-MODIFY CUST__ACCNT_PENALTY DECIMAL(21,4) ,
-MODIFY COLLECTIVE_LN_AMNT_DUE DECIMAL(21,4),
-MODIFY COLLECTIVE_LN_DISBURSAL DECIMAL(21,4),
-MODIFY COLLECTIVE_SAVINGS_DUE DECIMAL(21,4),
-MODIFY COLLECTIVE_ACCNT_CHARGES DECIMAL(21,4),
-MODIFY COLLECTIVE_TOTAL_CHARGES DECIMAL(21,4),
-MODIFY COLLECTIVE_NET_CASH_IN DECIMAL(21,4);
+alter table coll_sheet_customer
+modify total_due_savings_loan decimal(21,4) ,
+modify cust_accnt_fee decimal(21,4),
+modify cust__accnt_penalty decimal(21,4) ,
+modify collective_ln_amnt_due decimal(21,4),
+modify collective_ln_disbursal decimal(21,4),
+modify collective_savings_due decimal(21,4),
+modify collective_accnt_charges decimal(21,4),
+modify collective_total_charges decimal(21,4),
+modify collective_net_cash_in decimal(21,4);
 
-ALTER TABLE COLL_SHEET_LOAN_DETAILS
-MODIFY TOTAL_PRIN_DUE DECIMAL(21,4) NOT NULL,
-MODIFY ORIG_LOAN_AMNT DECIMAL(21,4) NOT NULL, 
-MODIFY AMNT_TO_CLOSE_LOAN DECIMAL(21,4) NOT NULL,
-MODIFY PRINCIPAL_DUE DECIMAL(21,4),
-MODIFY INTEREST_DUE DECIMAL(21,4), 
-MODIFY FEES_DUE DECIMAL(21,4),
-MODIFY PENALTY_DUE DECIMAL(21,4),
-MODIFY TOTAL_SCHEDULED_AMNT_DUE DECIMAL(21,4),
-MODIFY PRINCIPAL_OVERDUE DECIMAL(21,4),
-MODIFY INTEREST_OVERDUE DECIMAL(21,4),
-MODIFY FEES_OVERDUE DECIMAL(21,4),
-MODIFY PENALTY_OVERDUE DECIMAL(21,4),
-MODIFY TOTAL_AMNT_OVERDUE DECIMAL(21,4),
-MODIFY TOTAL_AMNT_DUE DECIMAL(21,4),
-MODIFY AMNT_TOBE_DISBURSED DECIMAL(21,4);
+alter table coll_sheet_loan_details
+modify total_prin_due decimal(21,4) not null,
+modify orig_loan_amnt decimal(21,4) not null, 
+modify amnt_to_close_loan decimal(21,4) not null,
+modify principal_due decimal(21,4),
+modify interest_due decimal(21,4), 
+modify fees_due decimal(21,4),
+modify penalty_due decimal(21,4),
+modify total_scheduled_amnt_due decimal(21,4),
+modify principal_overdue decimal(21,4),
+modify interest_overdue decimal(21,4),
+modify fees_overdue decimal(21,4),
+modify penalty_overdue decimal(21,4),
+modify total_amnt_overdue decimal(21,4),
+modify total_amnt_due decimal(21,4),
+modify amnt_tobe_disbursed decimal(21,4);
 
-ALTER TABLE COLL_SHEET_SAVINGS_DETAILS 
-MODIFY ACCNT_BALANCE DECIMAL(21,4), 
-MODIFY RECOMMENDED_AMNT_DUE DECIMAL(21,4),
-MODIFY AMNT_OVERDUE DECIMAL(21,4),
-MODIFY TOTAL_SAVINGS_AMNT_DUE DECIMAL(21,4);
+alter table coll_sheet_savings_details 
+modify accnt_balance decimal(21,4), 
+modify recommended_amnt_due decimal(21,4),
+modify amnt_overdue decimal(21,4),
+modify total_savings_amnt_due decimal(21,4);
 
-ALTER TABLE CLIENT_PERF_HISTORY 
-MODIFY LAST_LOAN_AMNT DECIMAL(21,4),
-MODIFY TOTAL_SAVINGS_AMNT DECIMAL(21,4),
-MODIFY DELINQUINT_PORTFOLIO DECIMAL(21,4);
+alter table client_perf_history 
+modify last_loan_amnt decimal(21,4),
+modify total_savings_amnt decimal(21,4),
+modify delinquint_portfolio decimal(21,4);
 
-ALTER TABLE GROUP_PERF_HISTORY 
-MODIFY LAST_GROUP_LOAN_AMNT_DISB DECIMAL(21,4),
-MODIFY AVG_LOAN_SIZE DECIMAL(21,4),
-MODIFY TOTAL_OUTSTAND_LOAN_AMNT DECIMAL(21,4),
-MODIFY PORTFOLIO_AT_RISK DECIMAL(21,4),
-MODIFY TOTAL_SAVINGS_AMNT DECIMAL(21,4);
+alter table group_perf_history 
+modify last_group_loan_amnt_disb decimal(21,4),
+modify avg_loan_size decimal(21,4),
+modify total_outstand_loan_amnt decimal(21,4),
+modify portfolio_at_risk decimal(21,4),
+modify total_savings_amnt decimal(21,4);
 
-ALTER TABLE LOAN_ARREARS_AGING 
-MODIFY OVERDUE_PRINCIPAL DECIMAL(21,4), 
-MODIFY OVERDUE_INTEREST DECIMAL(21,4),
-MODIFY OVERDUE_BALANCE DECIMAL(21,4),
-MODIFY UNPAID_PRINCIPAL DECIMAL(21,4),
-MODIFY UNPAID_INTEREST DECIMAL(21,4),
-MODIFY UNPAID_BALANCE DECIMAL(21,4);
+alter table loan_arrears_aging 
+modify overdue_principal decimal(21,4), 
+modify overdue_interest decimal(21,4),
+modify overdue_balance decimal(21,4),
+modify unpaid_principal decimal(21,4),
+modify unpaid_interest decimal(21,4),
+modify unpaid_balance decimal(21,4);
 
 
-ALTER TABLE PPI_SURVEY_INSTANCE 
-MODIFY BOTTOM_HALF_BELOW DECIMAL(21,4),
-MODIFY TOP_HALF_BELOW DECIMAL(21,4);
+alter table ppi_survey_instance 
+modify bottom_half_below decimal(21,4),
+modify top_half_below decimal(21,4);
 
-ALTER TABLE PPI_LIKELIHOODS 
-MODIFY BOTTOM_HALF_BELOW DECIMAL(21,4) NOT NULL,
-MODIFY TOP_HALF_BELOW DECIMAL(21,4) NOT NULL;
+alter table ppi_likelihoods 
+modify bottom_half_below decimal(21,4) not null,
+modify top_half_below decimal(21,4) not null;
 
-ALTER TABLE LOAN_AMOUNT_FROM_LAST_LOAN 
-MODIFY START_RANGE DECIMAL(21,4) NOT NULL,
-MODIFY END_RANGE DECIMAL(21,4) NOT NULL,
-MODIFY MIN_LOAN_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY MAX_LOAN_AMNT DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_LOAN_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table loan_amount_from_last_loan 
+modify start_range decimal(21,4) not null,
+modify end_range decimal(21,4) not null,
+modify min_loan_amount decimal(21,4) not null,
+modify max_loan_amnt decimal(21,4) not null,
+modify default_loan_amount decimal(21,4) not null;
 
-ALTER TABLE NO_OF_INSTALL_FROM_LAST_LOAN 
-MODIFY START_RANGE DECIMAL(21,4) NOT NULL,
-MODIFY END_RANGE DECIMAL(21,4) NOT NULL,
-MODIFY MIN_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY MAX_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_NO_INSTALL DECIMAL(21,4) NOT NULL;
+alter table no_of_install_from_last_loan 
+modify start_range decimal(21,4) not null,
+modify end_range decimal(21,4) not null,
+modify min_no_install decimal(21,4) not null,
+modify max_no_install decimal(21,4) not null,
+modify default_no_install decimal(21,4) not null;
 
-ALTER TABLE LOAN_AMOUNT_FROM_LOAN_CYCLE 
-MODIFY MIN_LOAN_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY MAX_LOAN_AMNT DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_LOAN_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table loan_amount_from_loan_cycle 
+modify min_loan_amount decimal(21,4) not null,
+modify max_loan_amnt decimal(21,4) not null,
+modify default_loan_amount decimal(21,4) not null;
 
-ALTER TABLE NO_OF_INSTALL_FROM_LOAN_CYCLE
-MODIFY MIN_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY MAX_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY RANGE_INDEX DECIMAL(21,4) NOT NULL;
+alter table no_of_install_from_loan_cycle
+modify min_no_install decimal(21,4) not null,
+modify max_no_install decimal(21,4) not null,
+modify default_no_install decimal(21,4) not null,
+modify range_index decimal(21,4) not null;
 
-ALTER TABLE LOAN_AMOUNT_SAME_FOR_ALL_LOAN 
-MODIFY MIN_LOAN_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY MAX_LOAN_AMNT DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_LOAN_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table loan_amount_same_for_all_loan 
+modify min_loan_amount decimal(21,4) not null,
+modify max_loan_amnt decimal(21,4) not null,
+modify default_loan_amount decimal(21,4) not null;
 
-ALTER TABLE NO_OF_INSTALL_SAME_FOR_ALL_LOAN 
-MODIFY MIN_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY MAX_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY DEFAULT_NO_INSTALL DECIMAL(21,4) NOT NULL;
+alter table no_of_install_same_for_all_loan 
+modify min_no_install decimal(21,4) not null,
+modify max_no_install decimal(21,4) not null,
+modify default_no_install decimal(21,4) not null;
 
-ALTER TABLE MAX_MIN_LOAN_AMOUNT 
-MODIFY MIN_LOAN_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY MAX_LOAN_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table max_min_loan_amount 
+modify min_loan_amount decimal(21,4) not null,
+modify max_loan_amount decimal(21,4) not null;
 
-ALTER TABLE MAX_MIN_NO_OF_INSTALL 
-MODIFY MIN_NO_INSTALL DECIMAL(21,4) NOT NULL,
-MODIFY MAX_NO_INSTALL DECIMAL(21,4) NOT NULL;
+alter table max_min_no_of_install 
+modify min_no_install decimal(21,4) not null,
+modify max_no_install decimal(21,4) not null;
 
-ALTER TABLE BATCH_LOAN_ARREARS_AGING 
-MODIFY AMOUNT_AGING DECIMAL(21,4) NOT NULL,
-MODIFY AMOUNT_OUTSTANDING_AGING DECIMAL(21,4) NOT NULL,
-MODIFY INTEREST_AGING DECIMAL(21,4) NOT NULL;
+alter table batch_loan_arrears_aging 
+modify amount_aging decimal(21,4) not null,
+modify amount_outstanding_aging decimal(21,4) not null,
+modify interest_aging decimal(21,4) not null;
 
-ALTER TABLE BATCH_STAFF_SUMMARY 
-MODIFY LOAN_AMOUNT_OUTSTANDING DECIMAL(21,4) NOT NULL,
-MODIFY INTEREST_FEES_OUTSTANDING DECIMAL(21,4) NOT NULL,
-MODIFY PORTFOLIO_AT_RISK DECIMAL(21,4) NOT NULL,
-MODIFY   LOAN_ARREARS_AMOUNT DECIMAL(21,4) NOT NULL;
+alter table batch_staff_summary 
+modify loan_amount_outstanding decimal(21,4) not null,
+modify interest_fees_outstanding decimal(21,4) not null,
+modify portfolio_at_risk decimal(21,4) not null,
+modify   loan_arrears_amount decimal(21,4) not null;
 
-ALTER TABLE BATCH_LOAN_DETAILS 
-MODIFY LOAN_AMOUNT_ISSUED DECIMAL(21,4) NOT NULL,
-MODIFY LOAN_INTEREST_ISSUED DECIMAL(21,4) NOT NULL,
-MODIFY LOAN_OUTSTANDING_AMOUNT DECIMAL(21,4) NOT NULL,
-MODIFY LOAN_OUTSTANDING_INTEREST DECIMAL(21,4) NOT NULL;
+alter table batch_loan_details 
+modify loan_amount_issued decimal(21,4) not null,
+modify loan_interest_issued decimal(21,4) not null,
+modify loan_outstanding_amount decimal(21,4) not null,
+modify loan_outstanding_interest decimal(21,4) not null;
 
-ALTER TABLE BATCH_LOAN_ARREARS_PROFILE
-MODIFY OVERDUE_BALANCE DECIMAL(21,4) NOT NULL,
-MODIFY UNPAID_BALANCE DECIMAL(21,4) NOT NULL,
-MODIFY OUTSTANDING_AMOUNT_AT_RISK DECIMAL(21,4) NOT NULL,
-MODIFY OVERDUE_AMOUNT_AT_RISK DECIMAL(21,4) NOT NULL;
+alter table batch_loan_arrears_profile
+modify overdue_balance decimal(21,4) not null,
+modify unpaid_balance decimal(21,4) not null,
+modify outstanding_amount_at_risk decimal(21,4) not null,
+modify overdue_amount_at_risk decimal(21,4) not null;
 
-ALTER TABLE BATCH_BRANCH_CONFIRMATION_RECOVERY
-MODIFY  DUE DECIMAL(21,4) NOT NULL,
-MODIFY  ACTUAL DECIMAL(21,4) NOT NULL,
-MODIFY  ARREARS DECIMAL(21,4) NOT NULL;
+alter table batch_branch_confirmation_recovery
+modify  due decimal(21,4) not null,
+modify  actual decimal(21,4) not null,
+modify  arrears decimal(21,4) not null;
 
-ALTER TABLE BATCH_BRANCH_CONFIRMATION_ISSUE
-MODIFY ACTUAL DECIMAL(21,4) NOT NULL;
+alter table batch_branch_confirmation_issue
+modify actual decimal(21,4) not null;
 
-ALTER TABLE BATCH_BRANCH_CONFIRMATION_DISBURSEMENT
-MODIFY ACTUAL DECIMAL(21,4) NOT NULL;
+alter table batch_branch_confirmation_disbursement
+modify actual decimal(21,4) not null;
