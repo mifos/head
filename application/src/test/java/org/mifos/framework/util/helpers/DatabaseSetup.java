@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import org.hibernate.cfg.Configuration;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
@@ -37,13 +36,6 @@ import org.mifos.framework.persistence.SqlResource;
 public class DatabaseSetup {
 
     public static void initializeHibernate() {
-        if (HibernateSessionFactory.isConfigured()) {
-            return;
-        }
-            setMysql();
-    }
-
-    public static void setMysql() {
         StaticHibernateUtil.initialize();
     }
 
