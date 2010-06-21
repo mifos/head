@@ -125,35 +125,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
-    public void testRemoveClientFromGroup() throws Exception {
-        createInitialObjects();
-        client.updateClientFlag();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-    }
-
-    public void testSuccessfulAddClientToGroupWithMeeting() throws Exception {
-        createObjectsForTransferToGroup_WithMeeting();
-        Assert.assertEquals(0, group1.getMaxChildCount().intValue());
-
-        client.addClientToGroup(group1);
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        Assert.assertNotNull(client.getParentCustomer());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(true, client.isClientUnderGroup());
-    }
-
     public void testSuccessfulValidateBeforeAddingClientToGroup_Client() throws Exception {
         String oldMeetingPlace = "Tunisia";
         MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(),
@@ -501,21 +472,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
-    /**
-     * Transfer a client created outside a group to a group. This was originally created to address <a
-     * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=2184">issue 2184</a>.
-     * <p>
-     * In the UI, the second transfer is what causes the the null pointer exception to be thrown.
-     */
-    public void testSuccessfulTransferToGroupFromOutsideGroup() throws Exception {
-        createObjectsForTransferToGroup_OutsideGroup();
-
-        client.addClientToGroup((GroupBO) group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-    }
-
-
     public void testUpdateBranchFailure_OfficeNULL() throws Exception {
         createInitialObjects();
         try {
@@ -592,30 +548,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         client = TestObjectFactory.createClient("client_to_transfer", getMeeting(), CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_WithMeeting() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, null,
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
-                getMeeting(), personnel);
-        client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
-                new java.util.Date());
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_OutsideGroup() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, getMeeting(),
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
-                getMeeting(), personnel);
-        client = TestObjectFactory
-                .createClient("new client", CustomerStatus.CLIENT_PARTIAL, null, new java.util.Date());
         StaticHibernateUtil.closeSession();
     }
 
