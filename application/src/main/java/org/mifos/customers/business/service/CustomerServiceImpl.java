@@ -908,7 +908,7 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            //hibernateTransactionHelper.closeSession();
         }
     }
 
