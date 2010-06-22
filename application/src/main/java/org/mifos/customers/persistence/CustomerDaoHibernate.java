@@ -881,7 +881,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         List queryResult = this.genericDao.executeNamedQuery("Customer.getGroupCountByGroupNameAndOffice", queryParameters);
 
         if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
-            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, new Object[] {displayName});
         }
     }
 
@@ -895,7 +895,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         List queryResult = this.genericDao.executeNamedQuery("Customer.getCenterCount", queryParameters);
 
         if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
-            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, new Object[] {displayName});
         }
 
     }
