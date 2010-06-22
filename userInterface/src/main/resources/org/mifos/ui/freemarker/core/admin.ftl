@@ -13,7 +13,8 @@
     <p class="paddingLeft"><span class="fontBold">Search by client name, system ID or account number</span><br />
       <input type="text" id="txt" />
       <br />
-      <input class="buttn" type="button" name="search" value="Search"    onclick="location.href='searched.html'" />
+      <input class="buttn" typ
+      e="button" name="search" value="Search"    onclick="location.href='searched.html'" />
     </p>
   </div>-->
   <!--  Left Sidebar Ends-->
@@ -43,7 +44,7 @@
         <li type="circle"><a id="admin.link.viewChecklists" href="chkListAction.do?method=loadAllChecklist&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}" >[@spring.message "viewchecklists"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewChecklist" href="chkListAction.do?method=load">[@spring.message "definenewchecklist"/]</a></li>
         <li type="circle"><a id="admin.link.viewHolidays" href="holidayAction.do?method=get" >[@spring.message "viewholidays"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewHoliday" href="holidayAction.do?method=load">[@spring.message "definenewholidays"/]</a></li>
         <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="acceptedPaymentTypeAction.do?method=load" >[@spring.message "defineacceptedpayments"/]</a></li>
-        <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettingsAction.do?method=get" >[@spring.message "vieworganizationsettings"/]</a></li>
+        <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl" >[@spring.message "viewOrganizationSettings"/]</a></li>
         <li type="circle"><a id="admin.link.viewPPI" href="ppiAction.do?method=get" >[@spring.message "viewPPIsettings" /]</a>&nbsp;|&nbsp;<a Id="admin.link.configurePPI" href="ppiAction.do?method=configure">[@spring.message "ConfigurePPIsettings"/]</a></li>
       </ul>
       </p>
@@ -69,7 +70,7 @@
       <p class="orangeheading">[@spring.message "manageProducts"/]</p>
       <p><span class="fontBold">[@spring.message "productrulesattributes"/]</span>
       <ul>
-        <li type="circle"><a id="admin.link.viewProductCategories" href="productCategoryAction.do?method=getAllCategories&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewproductcategories"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewcategory"/]</a></li>
+        <li type="circle"><a id="admin.link.viewProductCategories" href="viewProductCategories.ftl">[@spring.message "viewproductcategories"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewProductCategory" href="productCategoryAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewcategory"/]</a></li>
         <li type="circle"><a id="admin.link.viewLatenessDormancyDefinition" href="prdconfaction.do?method=load">[@spring.message "viewlatenessdormancydefinition"/]</a></li>
       </ul>
       </p>

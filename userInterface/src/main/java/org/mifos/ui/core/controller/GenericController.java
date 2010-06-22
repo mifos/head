@@ -33,16 +33,24 @@ import org.springframework.web.servlet.mvc.AbstractController;
 @SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
 public class GenericController extends AbstractController {
 
+    BreadCrumbsLinks linksList;
+
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
         	Map<String, Object> model = new HashMap<String, Object>();
         	model.put("request", request);
+
+        	//creating links object
+            linksList=new BreadCrumbsLinks();
+            //adding the present page's message into the list
+            linksList.setWay(getPageToDisplay(request));
 
         	Map<String, Object> status = new HashMap<String, Object>();
         	List<String> errorMessages = new ArrayList<String>();
         	status.put("errorMessages", errorMessages);
         	ModelAndView modelAndView = new ModelAndView(getPageToDisplay(request), "model", model);
         	modelAndView.addObject("status", status);
+        	modelAndView.addObject("breadcrumbs",linksList.getWay());
         	return modelAndView;
 	}
 

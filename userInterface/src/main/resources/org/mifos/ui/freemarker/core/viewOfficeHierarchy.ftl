@@ -6,7 +6,7 @@
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" /]
    <div class="content leftMargin180">
-    [@mifos.crumb url="viewofficehierarchy" /]
+<div class="bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">View office hierarchy</span></div> 
       <div class="marginTop10">&nbsp;</div> 
     <form action="" >
     <div class="span-19">

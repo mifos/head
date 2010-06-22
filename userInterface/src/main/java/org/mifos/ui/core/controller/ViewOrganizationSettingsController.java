@@ -15,6 +15,8 @@ public class ViewOrganizationSettingsController extends AbstractController{
 
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
+    BreadCrumbsLinks linksList;
+
     public ViewOrganizationSettingsServiceFacade getViewOrganzationSettingsSeviceFacade(){
         return this.viewOrganizationSettingsServiceFacade;
     }
@@ -30,16 +32,24 @@ public class ViewOrganizationSettingsController extends AbstractController{
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
      {
         HttpSession httpsession=request.getSession();
+       //creating links object
+        linksList=new BreadCrumbsLinks();
+        //adding the present page's message into the list
+        linksList.setWay(getPageToDisplay(request));
         Properties p=null;
-        // TODO Auto-generated method stub
-        ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings");
+        //adding the list to the modelAndView.
+        ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings","breadcrumbs",linksList.getWay());
         try {
             p=viewOrganizationSettingsServiceFacade.getOrganizationSettings(httpsession);
             modelAndView.addObject("properties",p);
             } catch (Exception e) {
-            // TODO Auto-generated catch block
         }
         return modelAndView;
+    }
+
+    public String getPageToDisplay(HttpServletRequest request) {
+        System.out.println(request.getRequestURI());
+        return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
     }
 
 }
