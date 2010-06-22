@@ -57,20 +57,6 @@ public class CenterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testIsCenterExists_true() throws Exception {
-        String centerName = "NewCenter";
-        center = TestObjectFactory.createWeeklyFeeCenter(centerName, getMeeting());
-        StaticHibernateUtil.closeSession();
-        Assert.assertTrue(new CenterPersistence().isCenterExists(centerName));
-    }
-
-    public void testIsCenterExists_false() throws PersistenceException {
-        String centerName = "NewCenter";
-        center = TestObjectFactory.createWeeklyFeeCenter(centerName, getMeeting());
-        StaticHibernateUtil.closeSession();
-        Assert.assertFalse(new CenterPersistence().isCenterExists("NewCenter11"));
-    }
-
     public void testGetCenter() throws Exception {
         String centerName = "NewCenter";
         center = TestObjectFactory.createWeeklyFeeCenter(centerName, getMeeting());

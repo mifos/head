@@ -1304,7 +1304,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
                 if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
                     try {
-                        DateUtils.getDate(centerCustomField.getFieldValue());
+                        // is set as database format coming in...
+                        String userFormattedDate = DateUtils.convertDbToUserFmt(centerCustomField.getFieldValue(), "dd/MM/yyyy");
+                        DateUtils.getDate(userFormattedDate);
                     } catch (Exception e) {
                         throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
                     }
