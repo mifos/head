@@ -39,7 +39,7 @@ public abstract class LanguageUpgrade extends Upgrade {
     private int databaseVersion;
 
     public LanguageUpgrade(int databaseVersion) {
-        super(databaseVersion);
+        super();
         this.databaseVersion = databaseVersion;
     }
 
@@ -58,7 +58,6 @@ public abstract class LanguageUpgrade extends Upgrade {
         addCountryCodes(connection, databaseVersion);
         addLanguageDescriptionLookupValues(connection);
         addLocales(connection, databaseVersion);
-        upgradeVersion(connection);
     }
 
     private void addLanguageDescriptionLookupValues(Connection connection) throws SQLException {
@@ -85,12 +84,12 @@ public abstract class LanguageUpgrade extends Upgrade {
             int upgradeVersion) throws IOException, SQLException {
         upgradePart(connection, "upgrade_to_" + upgradeVersion + "_part_3.sql");
     }
-
+//TODO Update for NSDU
     private void upgradePart(Connection connection,
             String sqlUpgradeScriptFilename) throws IOException, SQLException {
-        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
-                sqlUpgradeScriptFilename);
-        upgradePart.runScript(connection);
+//        SqlUpgrade upgradePart = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+//                sqlUpgradeScriptFilename);
+//        upgradePart.runScript(connection);
     }
 
     private void insertLanguageAndLookupValue(Connection connection, int languageId, String languageName,

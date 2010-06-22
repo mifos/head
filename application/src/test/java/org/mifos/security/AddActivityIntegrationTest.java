@@ -85,7 +85,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     private Upgrade upgradeAndCheck() throws IOException, SQLException, ApplicationException {
         short newId = 17032;
         int databaseVersion = 172;
-        AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, SecurityConstants.LOAN_MANAGEMENT,
+        AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT,
                 TEST_LOCALE, "Can use the executive washroom");
         upgrade.upgrade(session.connection());
 
@@ -112,7 +112,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     public void testNoParent() throws Exception {
         short newId = 17032;
         int databaseVersion = 172;
-        AddActivity upgrade = new AddActivity(databaseVersion + 1, newId, null, TEST_LOCALE,
+        AddActivity upgrade = new AddActivity(newId, null, TEST_LOCALE,
                 "Can use the executive washroom");
         upgrade.upgrade(session.connection());
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
@@ -130,24 +130,17 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     public void testConstructorTest() throws Exception {
         short newId = 30000;
         AddActivity upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, null, TEST_LOCALE,
-                    "NewActivity");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddActivity.wrongConstructor);
-        }
         String invalidKey = "NewActivity";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, invalidKey, newId, null);
+            upgrade = new AddActivity(invalidKey, newId, null);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
         }
         String goodKey = "Permissions-NewActivity";
         // use valid construtor and valid key
-        upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);
+        upgrade = new AddActivity(goodKey, newId, null);
         upgrade.upgrade(session.connection());
         ActivityEntity fetched = (ActivityEntity) session.get(ActivityEntity.class, newId);
        Assert.assertEquals(null, fetched.getParent());

@@ -51,7 +51,7 @@ public class AddReport extends Upgrade {
 
     public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design,
             Short activityId) {
-        super(higherVersion);
+        super();
         this.newId = newId;
         this.category = category;
         this.name = name;
@@ -106,8 +106,9 @@ public class AddReport extends Upgrade {
         statement.close();
     }
 
+    // TODO Update for NSDU
     private boolean isLowerVersion() {
-        return higherVersion() < HIGHER_VERSION;
+        return 0 < HIGHER_VERSION;
     }
 
     private String getSqlForLowerVersion() {

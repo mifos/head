@@ -26,7 +26,7 @@ import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
 public class SqlUpgradeScriptFinder {
-    public static SqlUpgrade findUpgradeScript(int higherVersion, String scriptName) {
+    public static SqlUpgrade findUpgradeScript(String scriptName) {
         // Currently, SQL files are located in the same package as
         // SqlUpgradeScriptFinder so we need to load the file from this
         // class
@@ -34,9 +34,10 @@ public class SqlUpgradeScriptFinder {
         boolean foundInSql = url != null;
 
         if (foundInSql) {
-            return new SqlUpgrade(url, higherVersion);
+            return new SqlUpgrade(url);
         } else {
-            throw new IllegalStateException("Did not find upgrade to " + higherVersion + " in java or in an sql file");
+          //TODO Update for NSDU
+            throw new IllegalStateException("Did not find upgrade to  in java or in an sql file");
         }
     }
 

@@ -35,12 +35,6 @@ import org.mifos.framework.exceptions.SystemException;
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Upgrade {
 
-    @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
-    // Rationale TODO: rename higherVersion and lowerVersion to getXXX.
-    private final int higherVersion;
-    protected static final int LOOKUP_VALUE_CHANGE_VERSION = 174;
-    public static final String wrongConstructor = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
-
     /*
      * FIXME: use MifosLogger instead. And note that this will require pulling
      * lots of code into the common module, and/or an extensive refactor of
@@ -50,10 +44,6 @@ public abstract class Upgrade {
 
     protected Logger getLogger() {
         return logger;
-    }
-
-    protected Upgrade(int higherVersion) {
-        this.higherVersion = higherVersion;
     }
 
     @SuppressWarnings("PMD.AbstractNaming")
@@ -75,28 +65,6 @@ public abstract class Upgrade {
         return true;
     }
 
-    public int higherVersion() {
-        return higherVersion;
-    }
-
-    public int lowerVersion() {
-        return higherVersion - 1;
-    }
-
-    protected void upgradeVersion(Connection connection) throws SQLException {
-        changeVersion(connection, higherVersion(), lowerVersion());
-    }
-
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
-    private void changeVersion(Connection connection, int newVersion, int existingVersion) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("update DATABASE_VERSION "
-                + "set DATABASE_VERSION = ? where DATABASE_VERSION = ?");
-        statement.setInt(1, newVersion);
-        statement.setInt(2, existingVersion);
-        statement.executeUpdate();
-        connection.commit();
-        statement.close();
-    }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OBL_UNSATISFIED_OBLIGATION" }, justification = "The statement is closed.")
     protected void insertMessage(Connection connection, int lookupId, Short localeToInsert, String message)
@@ -292,5 +260,6 @@ public abstract class Upgrade {
        statement.close();
        return newId;
     }
+
 
 }

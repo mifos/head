@@ -42,11 +42,8 @@ public class AddAccountAction extends Upgrade {
      * This constructor is used for version 174 and lower. And it must not be
      * used afterward
      */
-    public AddAccountAction(int higherVersion, int action, Short locale, String message) {
-        super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
-        }
+    public AddAccountAction(int action, Short locale, String message) {
+        super();
         this.action = action;
         this.locale = locale;
         this.message = message;
@@ -57,8 +54,8 @@ public class AddAccountAction extends Upgrade {
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format AccountAction-...
      */
-    public AddAccountAction(int higherVersion, int action, String lookupValueKey) {
-        super(higherVersion);
+    public AddAccountAction(int action, String lookupValueKey) {
+        super();
         if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
@@ -76,7 +73,6 @@ public class AddAccountAction extends Upgrade {
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
         insertMessage(connection, lookupId, locale, message);
         addAction(connection, action, lookupId);
-        upgradeVersion(connection);
     }
 
     private void addAction(Connection connection, int actionId, int lookupId) throws SQLException {

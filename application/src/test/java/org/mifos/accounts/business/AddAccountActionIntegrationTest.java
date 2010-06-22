@@ -60,7 +60,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void startFromStandardStore() throws Exception {
-        Upgrade upgrade = new AddAccountAction(72, SEND_TO_ORPHANS, TEST_LOCALE, "Send money to orphans");
+        Upgrade upgrade = new AddAccountAction(SEND_TO_ORPHANS, TEST_LOCALE, "Send money to orphans");
         upgradeAndCheck(upgrade);
     }
 
@@ -83,13 +83,6 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
     public void testConstructor() throws Exception {
         short newId = 31000;
         AddAccountAction upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, TEST_LOCALE,
-                    "NewAccountAction");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountAction.wrongConstructor);
-        }
         String invalidKey = "NewAccountAction";
 
         try {
@@ -100,7 +93,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
         }
         String goodKey = "AccountAction-NewAccountAction";
         // use valid construtor and valid key
-        upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey);
+        upgrade = new AddAccountAction(newId, goodKey);
         upgrade.upgrade(connection);
 
         AccountActionEntity action = (AccountActionEntity) session.get(AccountActionEntity.class, newId);

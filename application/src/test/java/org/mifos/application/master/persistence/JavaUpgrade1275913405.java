@@ -9,13 +9,9 @@ import org.mifos.framework.persistence.Upgrade;
 class JavaUpgrade1275913405 extends Upgrade{
 
     public JavaUpgrade1275913405(){
-        super(1275913405);
+//        super();
     }
 
-    protected JavaUpgrade1275913405(int higherVersion) {
-        super(higherVersion);
-        // TODO Auto-generated constructor stub
-    }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {

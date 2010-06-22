@@ -287,7 +287,7 @@ public class DatabaseVersionPersistenceIntegrationTest {
     public void testErrorWrapping() throws Exception {
         connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
         connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
-        Upgrade upgrade = new Upgrade(79) {
+        Upgrade upgrade = new Upgrade() {
 
             @Override
             public void upgrade(Connection connection) {
@@ -340,7 +340,7 @@ public class DatabaseVersionPersistenceIntegrationTest {
     }
 
     private DatabaseVersionPersistence javaOnlyPersistence(Connection connection) {
-        return javaOnlyPersistence(connection, new DummyUpgrade(69));
+        return javaOnlyPersistence(connection, new DummyUpgrade());
     }
 
     private DatabaseVersionPersistence javaOnlyPersistence(Connection connection, Upgrade upgrade) {
@@ -369,7 +369,7 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     private DatabaseVersionPersistence javaAndSqlPersistence(Connection connection) {
         Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
-        DatabaseVersionPersistence.register(registrations, new DummyUpgrade(69));
+        DatabaseVersionPersistence.register(registrations, new DummyUpgrade());
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection, registrations) {
             @Override
             URL getSqlResourceLocation(String name) {
@@ -411,9 +411,9 @@ public class DatabaseVersionPersistenceIntegrationTest {
     @Test
     public void testDuplicateRegistration() throws Exception {
         Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
-        DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
+        DatabaseVersionPersistence.register(register, new DummyUpgrade());
         try {
-            DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
+            DatabaseVersionPersistence.register(register, new DummyUpgrade());
             Assert.fail();
         } catch (IllegalStateException e) {
             Assert.assertEquals("already have an upgrade to 70", e.getMessage());

@@ -28,23 +28,9 @@ public class CompositeUpgrade extends Upgrade {
 
     private final Upgrade[] upgrades;
 
-    public static int findVersion(Upgrade... upgrades) {
-        if (upgrades.length == 0) {
-            throw new RuntimeException("must specify at least one upgrade");
-        }
-        int version = upgrades[0].higherVersion();
-        for (int i = 1; i < upgrades.length; ++i) {
-            int thisVersion = upgrades[i].higherVersion();
-            if (thisVersion != version) {
-                throw new RuntimeException("got upgrades to " + version + " and " + thisVersion
-                        + " but expected matching versions");
-            }
-        }
-        return version;
-    }
 
     protected CompositeUpgrade(Upgrade... upgrades) {
-        super(findVersion(upgrades));
+        super();
         this.upgrades = upgrades;
     }
 

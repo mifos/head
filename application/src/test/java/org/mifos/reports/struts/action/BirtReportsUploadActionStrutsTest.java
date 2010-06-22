@@ -132,7 +132,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         // Simulate an future activities upgrade
         AddActivity activity = null;
         try {
-            activity = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION, (short) newActivityId,
+            activity = new AddActivity((short) newActivityId,
                     SecurityConstants.ORGANIZATION_MANAGEMENT, DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 

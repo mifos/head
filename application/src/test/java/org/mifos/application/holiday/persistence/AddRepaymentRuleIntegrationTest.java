@@ -20,12 +20,10 @@
 
 package org.mifos.application.holiday.persistence;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
@@ -43,18 +41,12 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
     public void testConstructor() throws Exception {
         AddRepaymentRule upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-                    RepaymentRuleTypes.SAME_DAY, TEST_LOCALE, "SameDayValue");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongConstructor);
-        }
+
         String invalidKey = "SameDay";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
+            upgrade = new AddRepaymentRule(
                     RepaymentRuleTypes.SAME_DAY, invalidKey);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongLookupValueKeyFormat);
@@ -62,7 +54,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
         String goodKey = "RepaymentRule-NextWorkingDayTest";
         // use valid construtor and valid key
-        upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
+        upgrade = new AddRepaymentRule(
                 RepaymentRuleTypes.NEXT_WORKING_DAY, goodKey);
     }
 }

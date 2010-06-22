@@ -26,8 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddRepaymentRule extends Upgrade {
@@ -39,30 +39,15 @@ public class AddRepaymentRule extends Upgrade {
     protected static final String wrongLookupValueKeyFormat = "The key format must be RepaymentRule-...";
     protected static final String keyFormat = "RepaymentRule-";
 
-    /*
-     * This constructor is used for version 174 and lower. And it must not be
-     * used afterward
-     */
-    public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, short locale, String message) {
-        super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
-        }
-        this.type = type;
-        this.locale = locale;
-        this.message = message;
-        this.lookupKey = " ";
-    }
+
 
     /*
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format RepaymentRule-...
      */
-    public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, String lookupKey) {
-        super(higherVersion);
-        if (!validateLookupValueKey(keyFormat, lookupKey)) {
-            throw new RuntimeException(wrongLookupValueKeyFormat);
-        }
+    public AddRepaymentRule(RepaymentRuleTypes type, String lookupKey) {
+        super();
+
         this.type = type;
         this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
         this.lookupKey = lookupKey;
@@ -77,8 +62,6 @@ public class AddRepaymentRule extends Upgrade {
         int lookupId = insertLookupValue(connection, lookupEntity, lookupKey);
         insertMessage(connection, lookupId, locale, message);
         addRepaymentRule(connection, lookupId);
-
-        upgradeVersion(connection);
     }
 
     private void addRepaymentRule(Connection connection, int lookupId) throws SQLException {

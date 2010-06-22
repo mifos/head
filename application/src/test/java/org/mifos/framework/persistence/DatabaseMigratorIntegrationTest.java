@@ -25,6 +25,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
@@ -36,16 +38,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+@Test
 public class DatabaseMigratorIntegrationTest {
 
     private static java.sql.Connection connection;
-    private DatabaseMigrator databaseMigrator;
 
     @BeforeClass
     public void beforeClass() throws Exception {
         connection = TestDatabase.getJDBCConnection();
         connection.setAutoCommit(false);
-        databaseMigrator = new DatabaseMigrator(connection);
+
     }
 
     @AfterClass
@@ -57,7 +59,8 @@ public class DatabaseMigratorIntegrationTest {
      * Demonstrate the simplest possible non-sequential database upgrade works. For example, upgrading a schema from
      * "1274760000" to "1274761395".
      */
-    public void testHappyPath() throws Exception {
+
+    public void testSimpleSQLUpgrade() throws Exception {
         loadNonSeqDatabaseSchema();
         createFooTable(connection);
         IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
@@ -66,7 +69,12 @@ public class DatabaseMigratorIntegrationTest {
 
         connection.createStatement().execute("drop table  if exists foo");
 
-        databaseMigrator.upgrade();
+        SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
+        upgrades.put(1274760000, DatabaseMigrator.SCRIPT_UPGRADE_TYPE);
+
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades);
+        migrator.upgrade();
+
         IDataSet dump = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(latestDump, dump);
         // check if database is upgraded to 1274761395
@@ -88,8 +96,20 @@ public class DatabaseMigratorIntegrationTest {
     }
 
     private void loadNonSeqDatabaseSchema() throws Exception {
+
+        //drop tables
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
-        DatabaseSetup.executeScript("latest-schema.sql", connection);
+        connection.createStatement().execute("drop table if exists foo");
+        connection.createStatement().execute("drop table if exists bar");
+//        connection.createStatement().execute(
+//                "create table database_version(" +
+//                "database_version integer)" +
+//                "engine=innodb character set utf8;" );
+
+        connection.createStatement().execute(
+                "create table applied_upgrades(" +
+                "upgrade_id integer)" +
+                "engine=innodb character set utf8;");
         connection.commit();
     }
 
@@ -108,7 +128,10 @@ public class DatabaseMigratorIntegrationTest {
        loadNonSeqDatabaseSchema();
 
        connection.createStatement().execute("drop table  if exists foo");
-       databaseMigrator.upgrade();
+       SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
+       upgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);
+
+       new DatabaseMigrator(connection, upgrades).upgrade();
 
        IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
        Assertion.assertEquals(expected, dump2.getTable("baz"));
@@ -116,6 +139,7 @@ public class DatabaseMigratorIntegrationTest {
 
 
     public void testMergedUpgrade() throws Exception {
+
     }
 
 
@@ -144,15 +168,30 @@ public class DatabaseMigratorIntegrationTest {
         legacyUpgradesMap.put(201, 1276821432);
         legacyUpgradesMap.put(253, 1276821600);
 
-        DatabaseMigrator migrator = new DatabaseMigrator(connection);
         connection.commit();
 
-        migrator.firstRun(legacyUpgradesMap);
+        new DatabaseMigrator(connection, null).firstRun(legacyUpgradesMap);
 
         // check appliedUPgrades table contains unix tStamps for upgrades
         ResultSet rs = connection.createStatement().executeQuery("select count(*) from applied_upgrades");
         rs.next();
-       Assert.assertEquals(rs.getInt("count(*)"), 5);
+       Assert.assertEquals(rs.getInt(1), 5);
 
+    }
+
+    public void testMethodUpgrade() throws Exception{
+
+        loadNonSeqDatabaseSchema();
+
+        SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
+        upgrades.put(1277124044, DatabaseMigrator.METHOD_UPGRADE_TYPE);
+
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, upgrades);
+
+        migrator.upgrade();
+
+        ResultSet rs = connection.createStatement().executeQuery("select count(*) from foo");
+        rs.next();
+        Assert.assertEquals(rs.getInt(1), 2);
     }
 }

@@ -32,19 +32,18 @@ import org.mifos.framework.util.SqlUpgradeScriptFinder;
 public class Upgrade237 extends Upgrade {
 
     public Upgrade237() {
-        super(237);
+        super();
     }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
 
         if (!alreadyUpgraded(connection)) {
-            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(this.higherVersion(),
+            SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript(
                     "upgrade_to_237_conditional.sql");
             upgrade.runScript(connection);
         }
 
-        upgradeVersion(connection);
     }
 
     /*

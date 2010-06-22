@@ -51,10 +51,7 @@ public class AddAccountStateFlag extends Upgrade {
      * used afterward
      */
     public AddAccountStateFlag(int higherVersion, int newFlagId, String description, Short locale, String message) {
-        super(higherVersion);
-        if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
-        }
+        super();
         this.newFlagId = newFlagId;
         this.description = description;
         this.locale = locale;
@@ -67,8 +64,8 @@ public class AddAccountStateFlag extends Upgrade {
      * in the format AccountFlags-...
      */
 
-    public AddAccountStateFlag(int higherVersion, int newFlagId, String description, String lookupValueKey) {
-        super(higherVersion);
+    public AddAccountStateFlag(int newFlagId, String description, String lookupValueKey) {
+        super();
         if (!validateLookupValueKey(keyFormat, lookupValueKey)) {
             throw new RuntimeException(wrongLookupValueKeyFormat);
         }
@@ -88,7 +85,6 @@ public class AddAccountStateFlag extends Upgrade {
         int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
         insertMessage(connection, lookupId, locale, message);
         addFlag(connection, newFlagId, description, lookupId);
-        upgradeVersion(connection);
     }
 
     private void addFlag(Connection connection, int newFlagId, String description, int lookupId) throws SQLException {

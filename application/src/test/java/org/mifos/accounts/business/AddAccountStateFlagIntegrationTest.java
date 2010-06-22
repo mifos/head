@@ -27,7 +27,6 @@ import org.hibernate.Session;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -87,25 +86,19 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     public void testConstructor() throws Exception {
         short newId = 31500;
         AddAccountStateFlag upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
-                    "NewAccountStateFlag", TEST_LOCALE, "NewAccountStateFlag");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongConstructor);
-        }
+
         String invalidKey = "NewAccountStateFlag";
 
         try {
             // use invalid lookup key format
-            upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey,
+            upgrade = new AddAccountStateFlag(newId, invalidKey,
                     invalidKey);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
         }
         String goodKey = "AccountFlags-NewAccountStateFlag";
         // use valid construtor and valid key
-        upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey, goodKey);
+        upgrade = new AddAccountStateFlag( newId, goodKey, goodKey);
         upgrade.upgrade(session.connection());
         AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(AccountStateFlagEntity.class, newId);
         Assert.assertEquals(goodKey, flag.getLookUpValue().getLookUpName());

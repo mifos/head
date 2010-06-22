@@ -42,9 +42,9 @@ public class AddField extends Upgrade {
      * probably sufficient to identify the records.
      */
 
-    public AddField(int higherVersion, int newFieldId, String fieldName, EntityType type, boolean isMandatory,
+    public AddField( int newFieldId, String fieldName, EntityType type, boolean isMandatory,
             boolean isHidden) {
-        super(higherVersion);
+        super();
         this.newFieldId = newFieldId;
         this.fieldName = fieldName;
         this.type = type;

@@ -32,8 +32,8 @@ public class SqlUpgrade extends Upgrade {
 
     private final URL script;
 
-    public SqlUpgrade(URL sqlScript, int higherVersion) {
-        super(higherVersion);
+    public SqlUpgrade(URL sqlScript) {
+        super();
         this.script = sqlScript;
     }
 

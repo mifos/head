@@ -48,7 +48,7 @@ public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
      */
     public void testStartFromStandardStore() throws Exception {
         int newId = 203;
-        AddField upgrade = new AddField(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, "AssignClients",
+        AddField upgrade = new AddField(newId, "AssignClients",
                 EntityType.CLIENT, false, false);
         upgrade.upgrade(session.connection());
         FieldConfigurationEntity fetched = (FieldConfigurationEntity) session.get(FieldConfigurationEntity.class, newId);

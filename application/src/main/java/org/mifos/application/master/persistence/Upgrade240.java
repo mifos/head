@@ -41,13 +41,12 @@ import org.mifos.framework.persistence.Upgrade;
 public class Upgrade240 extends Upgrade {
 
     public Upgrade240() {
-        super(240);
+        super();
     }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
         fixDuplicateGroupSearchIds(connection);
-        upgradeVersion(connection);
     }
 
 

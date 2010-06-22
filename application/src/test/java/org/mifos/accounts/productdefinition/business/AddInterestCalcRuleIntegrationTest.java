@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -49,13 +48,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         short categoryId = 1;
         String description = "DecliningBalance";
         AddInterestCalcRule upgrade = null;
-        try {
-            // use deprecated construtor
-            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
-                    categoryId, "DecliningBalance", description, TEST_LOCALE, "DecliningBalance");
-        } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
-        }
+
         String invalidKey = "DecliningBalance";
 
         try {

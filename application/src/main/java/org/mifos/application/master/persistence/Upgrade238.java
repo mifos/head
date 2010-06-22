@@ -36,7 +36,7 @@ public class Upgrade238 extends Upgrade {
 
     public Upgrade238() {
         //FIXME: KRP -- change this number to latestversion+1 just prior to committing
-        super(238);
+        super();
     }
 
     @Override
@@ -45,7 +45,6 @@ public class Upgrade238 extends Upgrade {
         int moratoriumRepaymentLookupRuleId = insertLookupValue(connection, 91, "RepaymentRule-RepaymentMoratorium");
 
         insertIntoRepaymentRuleLookup(connection,4, moratoriumRepaymentLookupRuleId);
-        upgradeVersion(connection);
     }
 
     private void insertIntoRepaymentRuleLookup(Connection connection,int repaymentRuleId, int lookUpId )
