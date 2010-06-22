@@ -21,7 +21,7 @@
 package org.mifos.customers.surveys.helpers;
 
 public enum AnswerType {
-    MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5);
+    INVALID(0), MULTISELECT(1), FREETEXT(2), NUMBER(3), CHOICE(4), DATE(5);
 
     private int value;
 
