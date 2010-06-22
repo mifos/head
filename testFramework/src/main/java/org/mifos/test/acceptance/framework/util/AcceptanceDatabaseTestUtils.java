@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.sql.SQLException;
 
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
@@ -39,6 +40,7 @@ public class AcceptanceDatabaseTestUtils {
         StringReader dataSetXmlStream = new StringReader("<dataset><" + tableName + "/></dataset>");
         IDataSet dataSet = new FlatXmlDataSet(dataSetXmlStream);
         IDatabaseConnection databaseConnection = new DatabaseDataSourceConnection(dataSource);
+        databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
         DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
     }
 }

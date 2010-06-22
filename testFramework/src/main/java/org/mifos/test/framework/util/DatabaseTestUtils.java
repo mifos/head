@@ -33,6 +33,7 @@ import org.dbunit.Assertion;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.IDatabaseTester;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
@@ -94,6 +95,7 @@ public class DatabaseTestUtils {
         try {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, replacementDataSet);
         }
         finally {
@@ -157,6 +159,7 @@ public class DatabaseTestUtils {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
             IDatabaseConnection databaseConnection = databaseTester.getConnection();
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             IDataSet databaseDataSet = databaseConnection.createDataSet();
             ITable actualTable = databaseDataSet.getTable(tableName);
             IDataSet expectedDataSet = new FlatXmlDataSet(dataSetXmlStream);

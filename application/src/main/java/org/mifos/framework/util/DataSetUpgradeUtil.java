@@ -42,6 +42,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -173,6 +174,7 @@ public class DataSetUpgradeUtil {
             jdbcConnection.commit();
             jdbcConnection.setAutoCommit(true);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
         }
         finally {
