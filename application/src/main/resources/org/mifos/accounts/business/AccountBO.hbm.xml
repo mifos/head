@@ -4,119 +4,119 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.AccountBO" table="ACCOUNT">
-		<id name="accountId" column="ACCOUNT_ID" type="integer" access="field">
+	<class name="org.mifos.accounts.business.AccountBO" table="account">
+		<id name="accountId" column="account_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer"
+		<version name="versionNo" column="version_no" type="integer"
 			unsaved-value="null" />
 
-		<property name="offsettingAllowable" column="OFFSETTING_ALLOWABLE"
+		<property name="offsettingAllowable" column="offsetting_allowable"
 			type="integer" />
-		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"
+		<property name="globalAccountNum" column="global_account_num"
 			access="field" />
-		<property name="externalId" column="EXTERNAL_ID" access="field" />
-		<property name="createdBy" column="CREATED_BY" not-null="true"
+		<property name="externalId" column="external_id" access="field" />
+		<property name="createdBy" column="created_by" not-null="true"
 			update="false" lazy="true" />
-		<property name="createdDate" column="CREATED_DATE" not-null="true"
+		<property name="createdDate" column="created_date" not-null="true"
 			update="false" lazy="true" />
-		<property name="updatedBy" column="UPDATED_BY" lazy="true" />
-		<property name="updatedDate" column="UPDATED_DATE" lazy="true" />
-		<property name="closedDate" column="CLOSED_DATE" lazy="true" />
+		<property name="updatedBy" column="updated_by" lazy="true" />
+		<property name="updatedDate" column="updated_date" lazy="true" />
+		<property name="closedDate" column="closed_date" lazy="true" />
 
-		<many-to-one name="customer" column="CUSTOMER_ID"
+		<many-to-one name="customer" column="customer_id"
 			class="org.mifos.customers.business.CustomerBO" cascade="none"
 			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="office" column="OFFICE_ID"
+		<many-to-one name="office" column="office_id"
 			class="org.mifos.customers.office.business.OfficeBO" cascade="none"
 			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="accountState" column="ACCOUNT_STATE_ID"
+		<many-to-one name="accountState" column="account_state_id"
 			class="org.mifos.accounts.business.AccountStateEntity" cascade="none"
 			update="true" insert="true" unique="true" />
-		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID"
+		<many-to-one name="accountType" column="account_type_id"
 			class="org.mifos.accounts.business.AccountTypeEntity" cascade="none"
 			update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="personnel" column="PERSONNEL_ID"
+		<many-to-one name="personnel" column="personnel_id"
 			class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none"
 			update="true" insert="true" unique="true" access="field" />
 
-		<set name="accountNotes" cascade="all" inverse="true" table="ACCOUNT_NOTES"
+		<set name="accountNotes" cascade="all" inverse="true" table="account_notes"
 			lazy="true" order-by="ACCOUNT_NOTES_ID desc" access="field">
-			<key column="ACCOUNT_ID" />
+			<key column="account_id" />
 			<many-to-many class="org.mifos.accounts.business.AccountNotesEntity"
-				column="ACCOUNT_NOTES_ID" />
+				column="account_notes_id" />
 		</set>
 		<set name="accountFees" cascade="all" inverse="true" lazy="true"
-			table="ACCOUNT_FEES" access="field">
-			<key column="ACCOUNT_ID" />
+			table="account_fees" access="field">
+			<key column="account_id" />
 			<many-to-many class="org.mifos.accounts.business.AccountFeesEntity"
-				column="ACCOUNT_FEE_ID" />
+				column="account_fee_id" />
 		</set>
 		<bag name="accountPayments" cascade="all" inverse="true"
-			table="ACCOUNT_PAYMENT" lazy="true" order-by="PAYMENT_ID desc">
-			<key column="ACCOUNT_ID" />
+			table="account_payment" lazy="true" order-by="PAYMENT_ID desc">
+			<key column="account_id" />
 			<one-to-many class="org.mifos.accounts.business.AccountPaymentEntity" />
 		</bag>
 		<set name="accountCustomFields" cascade="all" inverse="true" lazy="true"
 			access="field">
-			<key column="ACCOUNT_ID" />
+			<key column="account_id" />
 			<one-to-many class="org.mifos.accounts.business.AccountCustomFieldEntity" />
 		</set>
 		<bag name="accountStatusChangeHistory" cascade="all" inverse="true"
-			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true"
+			table="account_status_change_history" lazy="true"
 			order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
-			<key column="ACCOUNT_ID" />
+			<key column="account_id" />
 			<one-to-many
 				class="org.mifos.accounts.business.AccountStatusChangeHistoryEntity" />
 		</bag>
 		<set name="accountFlags" cascade="all" lazy="true" access="field">
-			<key column="ACCOUNT_ID" not-null="true" />
+			<key column="account_id" not-null="true" />
 			<one-to-many class="org.mifos.accounts.business.AccountFlagMapping" />
 		</set>
 		<!-- This is for loan account-->
 		<joined-subclass name="org.mifos.accounts.loan.business.LoanBO"
-			table="LOAN_ACCOUNT">
-			<key column="ACCOUNT_ID" />
+			table="loan_account">
+			<key column="account_id" />
 
-			<property name="redone" column="REDONE" type="boolean" />
-			<property name="groupFlag" column="GROUP_FLAG" />
-			<property name="businessActivityId" column="BUSINESS_ACTIVITIES_ID" />
-			<property name="interestRate" column="INTEREST_RATE" lazy="true" />
-			<property name="noOfInstallments" column="NO_OF_INSTALLMENTS"
+			<property name="redone" column="redone" type="boolean" />
+			<property name="groupFlag" column="group_flag" />
+			<property name="businessActivityId" column="business_activities_id" />
+			<property name="interestRate" column="interest_rate" lazy="true" />
+			<property name="noOfInstallments" column="no_of_installments"
 				not-null="true" />
-			<property name="disbursementDate" column="DISBURSEMENT_DATE" />
-			<property name="collateralNote" column="COLLATERAL_NOTE" />
-			<property name="collateralTypeId" column="COLLATERAL_TYPE_ID" />
-			<property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" />
+			<property name="disbursementDate" column="disbursement_date" />
+			<property name="collateralNote" column="collateral_note" />
+			<property name="collateralTypeId" column="collateral_type_id" />
+			<property name="gracePeriodDuration" column="grace_period_duration" />
 			<property name="intrestAtDisbursement" access="field"
-				column="INTEREST_AT_DISB" />
-			<property name="gracePeriodPenalty" column="GRACE_PERIOD_PENALTY"
+				column="interest_at_disb" />
+			<property name="gracePeriodPenalty" column="grace_period_penalty"
 				update="false" />
 
 			<property name="loanAmount"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="LOAN_AMOUNT_CURRENCY_ID" />
-				<column name="LOAN_AMOUNT" />
+				<column name="loan_amount_currency_id" />
+				<column name="loan_amount" />
 			</property>
 			<property name="loanBalance"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="LOAN_BALANCE_CURRENCY_ID" />
-				<column name="LOAN_BALANCE" />
+				<column name="loan_balance_currency_id" />
+				<column name="loan_balance" />
 			</property>
 
-			<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+			<many-to-one name="loanOffering" column="prd_offering_id"
 				class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 				unique="true" cascade="none" insert="true" update="false" access="field" />
-			<many-to-one name="fund" column="FUND_ID"
+			<many-to-one name="fund" column="fund_id"
 				class="org.mifos.accounts.fund.business.FundBO" cascade="none"
 				insert="true" unique="true" />
-			<many-to-one name="loanMeeting" column="MEETING_ID"
+			<many-to-one name="loanMeeting" column="meeting_id"
 				access="field" class="org.mifos.application.meeting.business.MeetingBO"
 				unique="true" insert="true" cascade="all" />
-			<many-to-one name="gracePeriodType" column="GRACE_PERIOD_TYPE_ID"
+			<many-to-one name="gracePeriodType" column="grace_period_type_id"
 				class="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity"
 				unique="true" cascade="none" insert="true" update="true" />
-			<many-to-one name="interestType" column="INTEREST_TYPE_ID"
+			<many-to-one name="interestType" column="interest_type_id"
 				class="org.mifos.application.master.business.InterestTypesEntity"
 				cascade="none" update="false" insert="true" unique="true" />
 			<one-to-one name="loanSummary"
@@ -140,108 +140,108 @@
 
 
 			<bag name="loanActivityDetails" cascade="all" inverse="true"
-				access="field" table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
-				<key column="ACCOUNT_ID" />
+				access="field" table="loan_activity_details" lazy="true" order-by="ID desc">
+				<key column="account_id" />
 				<one-to-many class="org.mifos.accounts.loan.business.LoanActivityEntity" />
 			</bag>
 			<set name="accountActionDates" cascade="all" inverse="true" lazy="true"
 				order-by="INSTALLMENT_ID asc" access="field">
-				<key column="ACCOUNT_ID" />
+				<key column="account_id" />
 				<one-to-many class="org.mifos.accounts.loan.business.LoanScheduleEntity" />
 			</set>
 
-			<many-to-one name="parentAccount" column="PARENT_ACCOUNT_ID"
+			<many-to-one name="parentAccount" column="parent_account_id"
 				class="org.mifos.accounts.loan.business.LoanBO" not-null="false">
 			</many-to-one>
 
-			<property name="recurMonth" column="RECUR_MONTH" type="short" />
-			<property name="monthWeek" column="MONTH_WEEK"
+			<property name="recurMonth" column="recur_month" type="short" />
+			<property name="monthWeek" column="month_week"
 				type="org.mifos.application.meeting.util.helpers.WeekDayUserType" />
-			<property name="monthRank" column="MONTH_RANK"
+			<property name="monthRank" column="month_rank"
 				type="org.mifos.application.meeting.util.helpers.RankOfDayUserType" />
 
 		</joined-subclass>
 		<!-- This is for savings account-->
 		<joined-subclass name="org.mifos.accounts.savings.business.SavingsBO"
-			table="SAVINGS_ACCOUNT">
-			<key column="ACCOUNT_ID" />
+			table="savings_account">
+			<key column="account_id" />
 			<property name="recommendedAmount"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="RECOMMENDED_AMOUNT_CURRENCY_ID" />
-				<column name="RECOMMENDED_AMOUNT" />
+				<column name="recommended_amount_currency_id" />
+				<column name="recommended_amount" />
 			</property>
 			<property name="savingsBalance"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="SAVINGS_BALANCE_CURRENCY_ID" />
-				<column name="SAVINGS_BALANCE" />
+				<column name="savings_balance_currency_id" />
+				<column name="savings_balance" />
 			</property>
 			<property name="interestToBePosted"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="INT_TO_BE_POSTED_CURRENCY_ID" />
-				<column name="INT_TO_BE_POSTED" />
+				<column name="int_to_be_posted_currency_id" />
+				<column name="int_to_be_posted" />
 			</property>
 			<property name="minAmntForInt"
 				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
-				<column name="MIN_AMNT_FOR_INT_CURRENCY_ID" />
-				<column name="MIN_AMNT_FOR_INT" />
+				<column name="min_amnt_for_int_currency_id" />
+				<column name="min_amnt_for_int" />
 			</property>
-			<property name="interestRate" column="INTEREST_RATE" lazy="true" />
-			<property name="activationDate" column="ACTIVATION_DATE"
+			<property name="interestRate" column="interest_rate" lazy="true" />
+			<property name="activationDate" column="activation_date"
 				lazy="true" />
-			<property name="lastIntCalcDate" column="LAST_INT_CALC_DATE"
+			<property name="lastIntCalcDate" column="last_int_calc_date"
 				lazy="true" />
-			<property name="lastIntPostDate" column="LAST_INT_POST_DATE"
+			<property name="lastIntPostDate" column="last_int_post_date"
 				lazy="true" />
-			<property name="nextIntCalcDate" column="NEXT_INT_CALC_DATE"
+			<property name="nextIntCalcDate" column="next_int_calc_date"
 				lazy="true" />
-			<property name="nextIntPostDate" column="NEXT_INT_POST_DATE"
+			<property name="nextIntPostDate" column="next_int_post_date"
 				lazy="true" />
-			<property name="interIntCalcDate" column="INTER_INT_CALC_DATE"
+			<property name="interIntCalcDate" column="inter_int_calc_date"
 				lazy="true" />
 
-			<many-to-one name="timePerForInstcalc" column="TIME_PER_FOR_INT_CALC"
+			<many-to-one name="timePerForInstcalc" column="time_per_for_int_calc"
 				class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
 				insert="true" update="true" unique="true" />
-			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID"
+			<many-to-one name="interestCalcType" column="interest_calculation_type_id"
 				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" />
-			<many-to-one name="recommendedAmntUnit" column="RECOMMENDED_AMNT_UNIT_ID"
+			<many-to-one name="recommendedAmntUnit" column="recommended_amnt_unit_id"
 				class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
 				insert="true" update="false" cascade="none" />
-			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID"
+			<many-to-one name="savingsType" column="savings_type_id"
 				class="org.mifos.accounts.productdefinition.business.SavingsTypeEntity"
 				insert="true" update="false" cascade="none" />
-			<many-to-one name="savingsOffering" column="PRD_OFFERING_ID"
+			<many-to-one name="savingsOffering" column="prd_offering_id"
 				class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO"
 				unique="true" cascade="none" insert="true" update="false" />
 			<one-to-one name="savingsPerformance"
 				class="org.mifos.accounts.savings.business.SavingsPerformanceEntity"
 				cascade="all" property-ref="savings" />
 			<set name="savingsActivityDetails" cascade="all" inverse="true"
-				table="SAVINGS_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
-				<key column="ACCOUNT_ID" />
+				table="savings_activity_details" lazy="true" order-by="ID desc">
+				<key column="account_id" />
 				<one-to-many
 					class="org.mifos.accounts.savings.business.SavingsActivityEntity" />
 			</set>
 			<set name="accountActionDates" cascade="all" inverse="true" lazy="true"
 				order-by="INSTALLMENT_ID asc" access="field">
-				<key column="ACCOUNT_ID" />
+				<key column="account_id" />
 				<one-to-many
 					class="org.mifos.accounts.savings.business.SavingsScheduleEntity" />
 			</set>
 		</joined-subclass>
 		<!-- This is for customer account-->
 		<joined-subclass name="org.mifos.customers.business.CustomerAccountBO"
-			table="CUSTOMER_ACCOUNT">
-			<key column="ACCOUNT_ID" />
+			table="customer_account">
+			<key column="account_id" />
 			<bag name="customerActivitDetails" cascade="all" inverse="true"
-				table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true" order-by="CREATED_DATE desc">
-				<key column="ACCOUNT_ID" />
+				table="customer_account_activity" lazy="true" order-by="CREATED_DATE desc">
+				<key column="account_id" />
 				<one-to-many class="org.mifos.customers.business.CustomerActivityEntity" />
 			</bag>
 			<set name="accountActionDates" cascade="all" inverse="true"
-				table="CUSTOMER_SCHEDULE" lazy="true" order-by="INSTALLMENT_ID asc"
+				table="customer_schedule" lazy="true" order-by="INSTALLMENT_ID asc"
 				access="field">
-				<key column="ACCOUNT_ID" />
+				<key column="account_id" />
 				<one-to-many class="org.mifos.customers.business.CustomerScheduleEntity" />
 			</set>
 		</joined-subclass>

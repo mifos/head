@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.personnel.business.PersonnelRoleEntity" table="PERSONNEL_ROLE">
-        <id name="personnelRoleId" column="PERSONNEL_ROLE_ID" type="integer" unsaved-value="-1" access="field">
+    <class name="org.mifos.customers.personnel.business.PersonnelRoleEntity" table="personnel_role">
+        <id name="personnelRoleId" column="personnel_role_id" type="integer" unsaved-value="-1" access="field">
                 <generator class="native"/>
         </id>
-     	<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO" access="field"/>
-        <many-to-one  name="role"  column="ROLE_ID" class="org.mifos.security.rolesandpermission.business.RoleBO" lazy="false" access="field"/>
+     	<many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" access="field"/>
+        <many-to-one  name="role"  column="role_id" class="org.mifos.security.rolesandpermission.business.RoleBO" lazy="false" access="field"/>
    </class>
    <query name="getPersonnelRoleCount">
    		<![CDATA[select count(*) from org.mifos.customers.personnel.business.PersonnelRoleEntity personnelRole where personnelRole.role.id=:roleId ]]>

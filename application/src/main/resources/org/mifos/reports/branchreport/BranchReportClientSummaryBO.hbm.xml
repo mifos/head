@@ -25,20 +25,20 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportClientSummaryBO"
-		table="BATCH_CLIENT_SUMMARY">
-		<id name="clientSummaryId" column="CLIENT_SUMMARY_ID"
+		table="batch_client_summary">
+		<id name="clientSummaryId" column="client_summary_id"
 			type="integer" access="field">
 			<generator class="native" />
 		</id>
 
-		<property name="fieldName" column="FIELD_NAME" type="string"
+		<property name="fieldName" column="field_name" type="string"
 			access="field" />
-		<property name="total" column="TOTAL" type="string"
+		<property name="total" column="total" type="string"
 			access="field" />
-		<property name="veryPoorTotal" column="VPOOR_TOTAL"
+		<property name="veryPoorTotal" column="vpoor_total"
 			type="string" access="field" />
 
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+		<many-to-one name="branchReport" column="branch_report_id" access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>
 	</class>

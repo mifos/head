@@ -8,16 +8,16 @@
 
 	<class
 		name="org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO"
-		table="NO_OF_INSTALL_FROM_LOAN_CYCLE">
+		table="no_of_install_from_loan_cycle">
 		<id name="noOfInstallFromLoanCycleID"
-			column="NO_OF_INSTALL_FROM_LOAN_CYCLE_ID" access="field">
+			column="no_of_install_from_loan_cycle_id" access="field">
 			<generator class="native" />
 		</id>
-		<property name="minNoOfInstall" column="MIN_NO_INSTALL " />
-		<property name="maxNoOfInstall" column=" MAX_NO_INSTALL" />
-		<property name="defaultNoOfInstall" column="DEFAULT_NO_INSTALL" />
-		<property name="rangeIndex" column="RANGE_INDEX" />
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID "
+		<property name="minNoOfInstall" column="min_no_install " />
+		<property name="maxNoOfInstall" column=" max_no_install" />
+		<property name="defaultNoOfInstall" column="default_no_install" />
+		<property name="rangeIndex" column="range_index" />
+		<many-to-one name="loanOffering" column="prd_offering_id "
 			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			unique="true" lazy="false" cascade="none" insert="true" update="true"
 			access="field" />

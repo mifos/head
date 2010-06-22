@@ -6,16 +6,16 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.personnel.business.PersonnelMovementEntity" table="PERSONNEL_MOVEMENT">
-        <id name="personnelMovementId" column="PERSONNEL_MOVEMENT_ID" type="short" access="field">
+    <class name="org.mifos.customers.personnel.business.PersonnelMovementEntity" table="personnel_movement">
+        <id name="personnelMovementId" column="personnel_movement_id" type="short" access="field">
             <generator class="native"/>
         </id>
-		 <property name="status" column="STATUS" type="short" access="field"/>
-		<property name="startDate" column="START_DATE" type="date" access="field"/>                                        
-        <property name="endDate" column="END_DATE" type="date" />                                        
-        <property name="updatedBy" column="UPDATED_BY" type="short" access="field"/>                                     
-        <property name="updatedDate" column="UPDATED_DATE" type="date" access="field"/>      
-        <many-to-one name="personnel"  column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" access="field"/>
-        <many-to-one name="office"  column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field"/>
+		 <property name="status" column="status" type="short" access="field"/>
+		<property name="startDate" column="start_date" type="date" access="field"/>                                        
+        <property name="endDate" column="end_date" type="date" />                                        
+        <property name="updatedBy" column="updated_by" type="short" access="field"/>                                     
+        <property name="updatedDate" column="updated_date" type="date" access="field"/>      
+        <many-to-one name="personnel"  column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" access="field"/>
+        <many-to-one name="office"  column="office_id" class="org.mifos.customers.office.business.OfficeBO" cascade="none" access="field"/>
     </class>
 </hibernate-mapping>

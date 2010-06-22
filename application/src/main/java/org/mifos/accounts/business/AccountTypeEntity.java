@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,18 +34,16 @@ import org.mifos.framework.business.AbstractEntity;
  * {@link AccountTypes}.
  */
 @Entity
-@Table(name = "ACCOUNT_TYPE")
+@Table(name = "account_type")
 public class AccountTypeEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ACCOUNT_TYPE_ID")
     private Short accountTypeId;
 
     private String description;
 
     @NotNull
-    @Column(name = "LOOKUP_ID")
     private Integer lookupId;
 
     public AccountTypeEntity() {

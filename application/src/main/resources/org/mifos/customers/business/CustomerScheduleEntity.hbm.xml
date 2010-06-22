@@ -6,41 +6,41 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.customers.business.CustomerScheduleEntity" table="CUSTOMER_SCHEDULE">
-		<id name="actionDateId" column="ID" type="integer" unsaved-value="-1" access="field">
+	<class name="org.mifos.customers.business.CustomerScheduleEntity" table="customer_schedule">
+		<id name="actionDateId" column="id" type="integer" unsaved-value="-1" access="field">
 			<generator class="native" />
 		</id>
 
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
 
 		<!-- Not a true identifier, just a counter. Another name for this 
 		property might be "installmentNumber". -->
-		<property name="installmentId" column="INSTALLMENT_ID" access="field" />
-		<property name="actionDate" column="ACTION_DATE" />
-		<property name="paymentStatus" column="PAYMENT_STATUS" />
-		<property name="paymentDate" column="PAYMENT_DATE" lazy="true" />
+		<property name="installmentId" column="installment_id" access="field" />
+		<property name="actionDate" column="action_date" />
+		<property name="paymentStatus" column="payment_status" />
+		<property name="paymentDate" column="payment_date" lazy="true" />
 
 		<property name="miscFee" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="MISC_FEES_CURRENCY_ID" />
-			<column name="MISC_FEES" />
+			<column name="misc_fees_currency_id" />
+			<column name="misc_fees" />
 		</property>
 		<property name="miscFeePaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="MISC_FEES_PAID_CURRENCY_ID" />
-			<column name="MISC_FEES_PAID" />
+			<column name="misc_fees_paid_currency_id" />
+			<column name="misc_fees_paid" />
 		</property>
 		<property name="miscPenalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="MISC_PENALTY_CURRENCY_ID" />
-			<column name="MISC_PENALTY" />
+			<column name="misc_penalty_currency_id" />
+			<column name="misc_penalty" />
 		</property>
 		<property name="miscPenaltyPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="MISC_PENALTY_PAID_CURRENCY_ID" />
-			<column name="MISC_PENALTY_PAID" />
+			<column name="misc_penalty_paid_currency_id" />
+			<column name="misc_penalty_paid" />
 		</property>
 
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" access="field" />
+		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
+		<many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" access="field" />
 		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
-			<key column="ID" update="false" />
+			<key column="id" update="false" />
 			<one-to-many class="org.mifos.customers.business.CustomerFeeScheduleEntity" />
 		</set>
 

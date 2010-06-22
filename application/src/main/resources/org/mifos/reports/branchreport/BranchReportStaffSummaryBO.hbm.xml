@@ -25,35 +25,35 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportStaffSummaryBO"
-		table="BATCH_STAFF_SUMMARY">
-		<id name="staffSummaryId" column="STAFF_SUMMARY_ID"
+		table="batch_staff_summary">
+		<id name="staffSummaryId" column="staff_summary_id"
 			type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="personnelId" column="PERSONNEL_ID" access="field"/>
-		<property name="personnelName" column="PERSONNEL_NAME" access="field"/>
-		<property name="joiningDate" column="JOINING_DATE" access="field"/>
-		<property name="activeBorrowersCount" column="ACTIVE_BORROWERS" access="field"/>
-		<property name="activeLoansCount" column="ACTIVE_LOANS" access="field"/>
-		<property name="centerCount" column="CENTER_COUNT" access="field"/>
-		<property name="clientCount" column="CLIENT_COUNT" access="field"/>
+		<property name="personnelId" column="personnel_id" access="field"/>
+		<property name="personnelName" column="personnel_name" access="field"/>
+		<property name="joiningDate" column="joining_date" access="field"/>
+		<property name="activeBorrowersCount" column="active_borrowers" access="field"/>
+		<property name="activeLoansCount" column="active_loans" access="field"/>
+		<property name="centerCount" column="center_count" access="field"/>
+		<property name="clientCount" column="client_count" access="field"/>
 		<property name="loanAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_AMOUNT_OUTSTANDING_CURRENCY_ID"/> 
-			<column name="LOAN_AMOUNT_OUTSTANDING"/> 
+			<column name="loan_amount_outstanding_currency_id"/> 
+			<column name="loan_amount_outstanding"/> 
 		</property>
 		<property name="interestAndFeesAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="INTEREST_FEES_OUTSTANDING_CURRENCY_ID"/>
-			<column name="INTEREST_FEES_OUTSTANDING"/>
+			<column name="interest_fees_outstanding_currency_id"/>
+			<column name="interest_fees_outstanding"/>
 		</property>
-		<property name="portfolioAtRisk" column="PORTFOLIO_AT_RISK" access="field"/>
-		<property name="totalClientsEnrolled" column="TOTAL_CLIENTS_ENROLLED" access="field"/>
-		<property name="clientsEnrolledThisMonth" column="CLiENTS_ENROLLED_THIS_MONTH" access="field"/>
+		<property name="portfolioAtRisk" column="portfolio_at_risk" access="field"/>
+		<property name="totalClientsEnrolled" column="total_clients_enrolled" access="field"/>
+		<property name="clientsEnrolledThisMonth" column="clients_enrolled_this_month" access="field"/>
 		<property name="loanArrearsAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_ARREARS_AMOUNT_CURRENCY_ID"/> 
-			<column name="LOAN_ARREARS_AMOUNT"/> 
+			<column name="loan_arrears_amount_currency_id"/> 
+			<column name="loan_arrears_amount"/> 
 		</property>		
 		
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+		<many-to-one name="branchReport" column="branch_report_id" access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>		
 	</class>

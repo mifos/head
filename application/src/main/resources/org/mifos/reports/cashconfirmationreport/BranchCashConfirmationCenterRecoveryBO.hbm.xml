@@ -24,29 +24,29 @@ explanation of the license and how it is applied.
 -->                            
 <hibernate-mapping>
 	<class name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO"
-		table="BATCH_BRANCH_CONFIRMATION_RECOVERY">
+		table="batch_branch_confirmation_recovery">
 		<id name="recoveryId" access="field"
-			column="RECOVERY_ID">
+			column="recovery_id">
 			<generator class="native" />
 		</id>
 		
-		<property name="productOffering" column="PRODUCT_NAME" access="field"></property>
+		<property name="productOffering" column="product_name" access="field"></property>
 		<property name="due" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="DUE_CURRENCY_ID"/>
-			<column name="DUE"/>
+			<column name="due_currency_id"/>
+			<column name="due"/>
 		</property>
 
 		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="ACTUAL_CURRENCY_ID"/>
-			<column name="ACTUAL"/>
+			<column name="actual_currency_id"/>
+			<column name="actual"/>
 		</property>
 		
 		<property name="arrears" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="ARREARS_CURRENCY_ID"/>
-			<column name="ARREARS"/>
+			<column name="arrears_currency_id"/>
+			<column name="arrears"/>
 		</property>
 		
-		<many-to-one name="branchCashConfirmationReport" column="BRANCH_CASH_CONFIRMATION_REPORT_ID" access="field"
+		<many-to-one name="branchCashConfirmationReport" column="branch_cash_confirmation_report_id" access="field"
 			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
 		</many-to-one>		
 	</class>

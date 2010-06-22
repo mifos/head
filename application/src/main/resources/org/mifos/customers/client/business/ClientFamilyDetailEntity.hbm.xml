@@ -7,17 +7,17 @@
 <hibernate-mapping>
 
     <class name="org.mifos.customers.client.business.ClientFamilyDetailEntity" 
-        table="CUSTOMER_FAMILY_DETAIL">
-        <id name="customerFamilyId" column="CUSTOMER_FAMILY_ID" 
+        table="customer_family_detail">
+        <id name="customerFamilyId" column="customer_family_id" 
             type="integer" access="field">
             <generator class="native"/>
         </id>       
-        <property name="relationship" column="RELATIONSHIP" type="short" />
-        <property name="gender" column="GENDER" type="short"/>
-        <property name="dateOfBirth" column="DATE_OF_BIRTH" type="date" />
-        <property name="livingStatus" column="LIVING_STATUS" type="short" />
-        <many-to-one name="client" column="CUSTOMER_ID" class="org.mifos.customers.client.business.ClientBO" insert="true" update="true"  access="field"/>
-        <many-to-one name="clientName" column="CUSTOMER_NAME_ID" class="org.mifos.customers.client.business.ClientNameDetailEntity" insert="true" update="true"  access="field"/>
+        <property name="relationship" column="relationship" type="short" />
+        <property name="gender" column="gender" type="short"/>
+        <property name="dateOfBirth" column="date_of_birth" type="date" />
+        <property name="livingStatus" column="living_status" type="short" />
+        <many-to-one name="client" column="customer_id" class="org.mifos.customers.client.business.ClientBO" insert="true" update="true"  access="field"/>
+        <many-to-one name="clientName" column="customer_name_id" class="org.mifos.customers.client.business.ClientNameDetailEntity" insert="true" update="true"  access="field"/>
     </class>
     
 </hibernate-mapping>

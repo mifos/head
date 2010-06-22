@@ -3,41 +3,41 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.fees.business.FeeBO" table="FEES">
-		<id name="feeId" column="FEE_ID" type="short" unsaved-value="null" access="field">
+	<class name="org.mifos.accounts.fees.business.FeeBO" table="fees">
+		<id name="feeId" column="fee_id" type="short" unsaved-value="null" access="field">
 			<generator class="native" />
 		</id>
 		<discriminator>
-			<column name="DISCRIMINATOR" />
+			<column name="discriminator" />
 		</discriminator>
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
 
-		<property name="createdDate" column="CREATED_DATE" />
-		<property name="createdBy" column="CREATED_BY" />
-		<property name="updatedDate" column="UPDATED_DATE" />
-		<property name="updatedBy" column="UPDATED_BY" />
-		<property name="feeName" column="FEE_NAME" access="field" />
-		<property name="changeType" column="UPDATE_FLAG" access="field" />
+		<property name="createdDate" column="created_date" />
+		<property name="createdBy" column="created_by" />
+		<property name="updatedDate" column="updated_date" />
+		<property name="updatedBy" column="updated_by" />
+		<property name="feeName" column="fee_name" access="field" />
+		<property name="changeType" column="update_flag" access="field" />
 		
-		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO" insert="true" update="false" access="field" />
-		<many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.accounts.fees.business.CategoryTypeEntity" update="false" insert="true" access="field" />
-		<many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
+		<many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO" insert="true" update="false" access="field" />
+		<many-to-one name="categoryType" column="category_id" class="org.mifos.accounts.fees.business.CategoryTypeEntity" update="false" insert="true" access="field" />
+		<many-to-one name="glCode" column="glcode_id" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
 		<one-to-one name="feeFrequency" class="org.mifos.accounts.fees.business.FeeFrequencyEntity" cascade="all" property-ref="fee" lazy="false" access="field" />
-		<many-to-one name="feeStatus" column="STATUS" class="org.mifos.accounts.fees.business.FeeStatusEntity" insert="true" update="true" />
-        <set name="feeLevels" cascade="all" inverse="true" table="FEELEVEL" access="field">
-			<key column="FEE_ID" not-null="false" />
+		<many-to-one name="feeStatus" column="status" class="org.mifos.accounts.fees.business.FeeStatusEntity" insert="true" update="true" />
+        <set name="feeLevels" cascade="all" inverse="true" table="feelevel" access="field">
+			<key column="fee_id" not-null="false" />
 			<one-to-many class="org.mifos.accounts.fees.business.FeeLevelEntity" />
 		</set>
 
 		<subclass name="org.mifos.accounts.fees.business.RateFeeBO" discriminator-value="RATE">
-			<property name="rate" column="RATE" />
-			<many-to-one name="feeFormula" column="FORMULA_ID" class="org.mifos.accounts.fees.business.FeeFormulaEntity"  lazy="false" insert="true" update="false" access="field" />
+			<property name="rate" column="rate" />
+			<many-to-one name="feeFormula" column="formula_id" class="org.mifos.accounts.fees.business.FeeFormulaEntity"  lazy="false" insert="true" update="false" access="field" />
 		</subclass>
 
 		<subclass name="org.mifos.accounts.fees.business.AmountFeeBO" discriminator-value="AMOUNT">
 			<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="FEE_AMOUNT_CURRENCY_ID" />
-				<column name="FEE_AMOUNT" />
+				<column name="fee_amount_currency_id" />
+				<column name="fee_amount" />
 			</property>
 		</subclass>
 	</class>
