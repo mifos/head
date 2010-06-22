@@ -94,7 +94,7 @@ public class OfficeDaoHibernate implements OfficeDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<OfficeDto> findAllOffices() {
-        return (List<OfficeDto>) genericDao.executeNamedQuery("findAllOffices", null);
+        return (List<OfficeDto>) genericDao.executeNamedQuery("findAllOfficesApplicableToOfficeHierarchy", null);
     }
 
     @SuppressWarnings("unchecked")

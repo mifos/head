@@ -19,6 +19,7 @@
  */
 package org.mifos.customers.office.business.service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
@@ -131,6 +133,30 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeHierarchyByLevelDto retrieveAllOffices() {
         List<OfficeDto> allOffices = this.officeDao.findAllOffices();
-        return null;
+        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices));
+    }
+
+    private List<OfficeDto> regionalOfficeSpecification(List<OfficeDto> allOffices) {
+        List<OfficeDto> regionalOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.REGIONALOFFICE.getValue().equals(officeDto.getLevelId())) {
+                regionalOffices.add(officeDto);
+            }
+        }
+
+        return regionalOffices;
+    }
+
+    private List<OfficeDto> headOfficeSpecification(List<OfficeDto> allOffices) {
+        List<OfficeDto> headOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.HEADOFFICE.getValue().equals(officeDto.getLevelId())) {
+                headOffices.add(officeDto);
+            }
+        }
+
+        return headOffices;
     }
 }

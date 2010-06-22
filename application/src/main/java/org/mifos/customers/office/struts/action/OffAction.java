@@ -132,16 +132,16 @@ public class OffAction extends BaseAction {
 
         UserContext userContext = getUserContext(request);
 
+        // FIXME - keithw - finish spring mvc example for offices
+        OfficeHierarchyByLevelDto officeHierarchyStructure = this.officeServiceFacade.retrieveAllOffices();
+
         List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
 
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,OfficeLevel.HEADOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,OfficeLevel.REGIONALOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, officeHierarchyStructure.getHeadOffices(), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, officeHierarchyStructure.getRegionalOffices(), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,((OfficeBusinessService) getService()).getBranchOffices()), request);
-
-        // FIXME - keithw - finish spring mvc example for offices
-        OfficeHierarchyByLevelDto officeHierarchyStructure = this.officeServiceFacade.retrieveAllOffices();
 
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
 

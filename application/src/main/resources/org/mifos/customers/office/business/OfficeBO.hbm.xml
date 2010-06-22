@@ -125,10 +125,10 @@
 		<![CDATA[from OfficeBO o where o.officeId = :OFFICE_ID]]>
     </query>
     <query name="findOfficeDtoById">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o where o.officeId = :OFFICE_ID]]>
+		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.officeId = :OFFICE_ID]]>
     </query>
-    <query name="findAllOffices">
-		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId) from OfficeBO o order by o.level.id]]>
+    <query name="findAllOfficesApplicableToOfficeHierarchy">
+		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id) from OfficeBO o where o.level.configured=1 order by o.level.id]]>
     </query>
     <query name="masterdata.activeLevels">
         <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>

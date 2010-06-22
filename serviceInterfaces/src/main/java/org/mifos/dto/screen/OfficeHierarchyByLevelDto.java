@@ -20,7 +20,26 @@
 
 package org.mifos.dto.screen;
 
+import java.util.List;
+
+import org.mifos.dto.domain.OfficeDto;
+
 @SuppressWarnings("PMD")
 public class OfficeHierarchyByLevelDto {
 
+    private final List<OfficeDto> headOffices;
+    private final List<OfficeDto> regionalOffices;
+
+    public OfficeHierarchyByLevelDto(List<OfficeDto> headOffices, List<OfficeDto> regionalOffices) {
+        this.headOffices = headOffices;
+        this.regionalOffices = regionalOffices;
+    }
+
+    public List<OfficeDto> getHeadOffices() {
+        return this.headOffices;
+    }
+
+    public List<OfficeDto> getRegionalOffices() {
+        return this.regionalOffices;
+    }
 }
