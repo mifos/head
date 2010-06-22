@@ -43,6 +43,7 @@ import org.dbunit.Assertion;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.IDatabaseTester;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
@@ -199,6 +200,7 @@ public class DbUnitUtilities {
         try {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
         }
         finally {
@@ -264,6 +266,7 @@ public class DbUnitUtilities {
             jdbcConnection = DataSourceUtils.getConnection(driverManagerDataSource);
             IDatabaseTester databaseTester = new DataSourceDatabaseTester(driverManagerDataSource);
             IDatabaseConnection databaseConnection = databaseTester.getConnection();
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             databaseDataSet = databaseConnection.createDataSet(tableNames);
         }
         finally {
@@ -285,6 +288,7 @@ public class DbUnitUtilities {
 
     public void dumpDatabase(String fileName, Connection jdbcConnection) throws SQLException, DatabaseUnitException, FileNotFoundException, IOException {
         IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+        connection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
         IDataSet fullDataSet = connection.createDataSet();
         FlatXmlDataSet.write(fullDataSet, new FileOutputStream(fileName));
     }
