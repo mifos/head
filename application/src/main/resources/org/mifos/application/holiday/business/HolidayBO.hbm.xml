@@ -77,6 +77,6 @@
 			where
 			    holiday.holiday_id = :HOLIDAY_ID
 			    and
-			    holiday.holiday_name != IFNULL(parent_holiday.holiday_name, '')
+			    holiday.holiday_name != ifnull(parent_holiday.holiday_name, '')
 	</sql-query>
 </hibernate-mapping>

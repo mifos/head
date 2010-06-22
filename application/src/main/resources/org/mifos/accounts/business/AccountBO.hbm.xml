@@ -707,7 +707,7 @@ select coll.*,
        ifnull(ld.loanfees,0) as loanfees, 
        round(ifnull(ld.tloanfees,0),null) as tloanfees from
        
-       (SELECT concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
+       (select concat(right(date(:MEETING_DATE),2), "-",left(right(date(:MEETING_DATE),5),2),"-",
         left(date(:MEETING_DATE),4)) as colldate ,        
         o.office_id as offid, 
         o.display_name as offname,
@@ -720,7 +720,7 @@ select coll.*,
         m.customer_id as Memid, 
         m.display_name as Memname
         
-	FROM customer k
+	from customer k
 	 left join personnel p on k.loan_officer_id = p.personnel_id
 	 left join office o on p.office_id = o.office_id
 	 left join customer g on g.parent_customer_id = k.customer_id
@@ -732,8 +732,8 @@ select coll.*,
 	 where o.office_id = :BRANCH_ID
        
 	 and p.personnel_status = 1
-	 and p.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then p.personnel_id else (:PERSONNEL_ID) end)
-	 and k.customer_id = (case (:CENTER_ID)  when 'ALL' then k.customer_id else (:CENTER_ID) end)
+	 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+	 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
      and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
      and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
      and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1
@@ -742,7 +742,7 @@ select coll.*,
      order by k.customer_id, g.customer_id, m.customer_id) coll
        
 	left join
-	(SELECT a.customer_id as customer_id, 
+	(select a.customer_id as customer_id, 
 	 	group_concat(
 	 	  concat_ws(':',po.prd_offering_short_name, 
 	 	    round(ls.orig_principal + ls.orig_interest + ls.orig_fees + 
@@ -772,8 +772,8 @@ select coll.*,
      and a.account_type_id = 1
            
 	 and p.personnel_status = 1
-	 and p.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then p.personnel_id else (:PERSONNEL_ID) end)
-	 and k.customer_id = (case (:CENTER_ID)  when 'ALL' then k.customer_id else (:CENTER_ID) end)
+	 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+	 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
      and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
      and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
      and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1
@@ -819,8 +819,8 @@ select coll.*,
                  and a.account_type_id = 1      
                  
                  and p.personnel_status = 1
-                 and p.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then p.personnel_id else (:PERSONNEL_ID) end)
-                 and k.customer_id = (case (:CENTER_ID)  when 'ALL' then k.customer_id else (:CENTER_ID) end)
+                 and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+                 and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
                  and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
                  and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
                  and m.status_id = 3  and m.branch_id =:BRANCH_ID and m.customer_level_id = 1
@@ -862,8 +862,8 @@ select coll.*,
 			    and a.account_type_id = 1 
                 
                 and p.personnel_status = 1 
-                and p.personnel_id = (case(:PERSONNEL_ID) when 'ALL'  then p.personnel_id else (:PERSONNEL_ID) end)
-                and k.customer_id = (case (:CENTER_ID)  when 'ALL' then k.customer_id else (:CENTER_ID) end)
+                and p.personnel_id = (case(:PERSONNEL_ID) when 'all'  then p.personnel_id else (:PERSONNEL_ID) end)
+                and k.customer_id = (case (:CENTER_ID)  when 'all' then k.customer_id else (:CENTER_ID) end)
                 and k.status_id = 13 and k.branch_id = :BRANCH_ID and k.customer_level_id = 3
                 and g.status_id = 9  and g.branch_id = :BRANCH_ID and g.customer_level_id = 2
                 and m.status_id = 3  and m.branch_id = :BRANCH_ID and m.customer_level_id = 1

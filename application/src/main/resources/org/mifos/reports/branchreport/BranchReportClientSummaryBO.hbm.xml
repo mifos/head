@@ -47,11 +47,11 @@ explanation of the license and how it is applied.
 		name="branchReport.getBranchReportClientSummaryForDateAndBranch">
 		<load-collection alias="clientSummaries"
 			role="org.mifos.reports.branchreport.BranchReportBO.clientSummaries" />
-		<![CDATA[ SELECT {clientSummaries.*} FROM BATCH_CLIENT_SUMMARY as clientSummaries, 
-			BATCH_BRANCH_REPORT as branchReport WHERE 
-			branchReport.BRANCH_REPORT_ID=clientSummaries.BRANCH_REPORT_ID 
-			AND branchReport.RUN_DATE=:RUN_DATE 
-			AND branchReport.BRANCH_ID=:BRANCH_ID
+		<![CDATA[ SELECT {clientSummaries.*} from batch_client_summary as clientSummaries, 
+			batch_branch_report as branchReport where 
+			branchReport.branch_report_id=clientSummaries.branch_report_id 
+			and branchReport.run_date=:RUN_DATE 
+			and branchReport.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 	
@@ -74,7 +74,7 @@ explanation of the license and how it is applied.
 				            where
 				                acc.account_state_id in (:loanActiveInBadStanding)
                             and
-                                (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
+                                (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
 				            and 
 				                cust.customer_level_id=:customerLevelId
 				            and
@@ -95,7 +95,7 @@ explanation of the license and how it is applied.
 				            where
 				                acc.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding)
                             and
-                                (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
+                                (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
 				            and
 				                cust.customer_level_id=:customerLevelId
 				            and

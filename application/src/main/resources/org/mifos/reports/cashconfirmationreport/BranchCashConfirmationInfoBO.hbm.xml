@@ -60,22 +60,22 @@ explanation of the license and how it is applied.
 	<sql-query name="branchCashConfirmationReport.getCenterIssues">	    
 		<load-collection alias="centerIssues"
 			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerIssues" />
-		<![CDATA[ SELECT {centerIssues.*} FROM BATCH_BRANCH_CONFIRMATION_ISSUE as centerIssues, 
-			BATCH_BRANCH_CASH_CONFIRMATION_REPORT as report WHERE 
-			report.BRANCH_CASH_CONFIRMATION_REPORT_ID=centerIssues.BRANCH_CASH_CONFIRMATION_REPORT_ID
-			AND report.RUN_DATE=:RUN_DATE 
-			AND report.BRANCH_ID=:BRANCH_ID
+		<![CDATA[ SELECT {centerIssues.*} from batch_branch_confirmation_issue as centerIssues, 
+			batch_branch_cash_confirmation_report as report where 
+			report.branch_cash_confirmation_report_id=centerIssues.branch_cash_confirmation_report_id
+			and report.run_date=:RUN_DATE 
+			and report.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 
 	<sql-query name="branchCashConfirmationReport.getDisbursements">	    
 		<load-collection alias="disbursements"
 			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.disbursements" />
-		<![CDATA[ SELECT {disbursements.*} FROM BATCH_BRANCH_CONFIRMATION_DISBURSEMENT as disbursements, 
-			BATCH_BRANCH_CASH_CONFIRMATION_REPORT as report WHERE 
-			report.BRANCH_CASH_CONFIRMATION_REPORT_ID=disbursements.BRANCH_CASH_CONFIRMATION_REPORT_ID
-			AND report.RUN_DATE=:RUN_DATE 
-			AND report.BRANCH_ID=:BRANCH_ID
+		<![CDATA[ SELECT {disbursements.*} from batch_branch_confirmation_disbursement as disbursements, 
+			batch_branch_cash_confirmation_report as report where 
+			report.branch_cash_confirmation_report_id=disbursements.branch_cash_confirmation_report_id
+			and report.run_date=:RUN_DATE 
+			and report.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 </hibernate-mapping>

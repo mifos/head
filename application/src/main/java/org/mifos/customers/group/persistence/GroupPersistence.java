@@ -163,16 +163,16 @@ public class GroupPersistence extends Persistence {
             short userId = 1; // this is bach job, so no user
             java.sql.Date currentDate = new DateTimeService().getCurrentJavaSqlDate();
 
-            int rows = statement.executeUpdate("UPDATE CUSTOMER SET UPDATED_BY = " + userId + ", UPDATED_DATE='"
-                    + currentDate + "' WHERE CUSTOMER_ID=" + groupId.toString());
+            int rows = statement.executeUpdate("update customer set updated_by = " + userId + ", updated_date='"
+                    + currentDate + "' where customer_id=" + groupId.toString());
 
             statement.close();
             if (rows != 1) {
                 throw new PersistenceException("Unable to update group table for group id " + groupId.toString());
             }
             statement = connection.createStatement();
-            rows = statement.executeUpdate("UPDATE GROUP_PERF_HISTORY SET PORTFOLIO_AT_RISK = " + portfolioAtRisk
-                    + " WHERE CUSTOMER_ID=" + groupId.toString());
+            rows = statement.executeUpdate("update group_perf_history set portfolio_at_risk = " + portfolioAtRisk
+                    + " where customer_id=" + groupId.toString());
 
             statement.close();
             if (rows != 1) {

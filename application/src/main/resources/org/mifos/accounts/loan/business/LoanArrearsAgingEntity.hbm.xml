@@ -50,10 +50,10 @@
 	</sql-query>
 	<sql-query name="generateLoanArrearsAging">
 		<![CDATA[
-				insert into LOAN_ARREARS_AGING(ACCOUNT_ID, CUSTOMER_ID, CUSTOMER_NAME, PARENT_CUSTOMER_ID, OFFICE_ID,
-  				DAYS_IN_ARREARS, OVERDUE_PRINCIPAL, OVERDUE_PRINCIPAL_CURRENCY_ID, OVERDUE_INTEREST, OVERDUE_INTEREST_CURRENCY_ID,
-  				OVERDUE_BALANCE, OVERDUE_BALANCE_CURRENCY_ID,  UNPAID_PRINCIPAL,  UNPAID_PRINCIPAL_CURRENCY_ID, UNPAID_INTEREST,
-  				UNPAID_INTEREST_CURRENCY_ID, UNPAID_BALANCE, UNPAID_BALANCE_CURRENCY_ID)
+				insert into loan_arrears_aging(account_id, customer_id, customer_name, parent_customer_id, office_id,
+  				days_in_arrears, overdue_principal, overdue_principal_currency_id, overdue_interest, overdue_interest_currency_id,
+  				overdue_balance, overdue_balance_currency_id,  unpaid_principal,  unpaid_principal_currency_id, unpaid_interest,
+  				unpaid_interest_currency_id, unpaid_balance, unpaid_balance_currency_id)
   
 				/*all currency_id s must be the same, so just using one*/
 				select a.account_id, c.customer_id, c.display_name as customer_name, c.parent_customer_id, c.branch_id as office_id,

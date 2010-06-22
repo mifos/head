@@ -15,29 +15,29 @@
 
 	<sql-query name="SelectionItem.get_active_offices">
 		<return alias="branchOffice" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT OFFICE_ID as {branchOffice.id}, DISPLAY_NAME as
+		SELECT office_id as {branchOffice.id}, display_name as
 		{branchOffice.displayName} from office
-		where SEARCH_ID like :officeSearchId and
-		OFFICE_LEVEL_ID=:officeLevelId and STATUS_ID=:ACTIVE order by office.DISPLAY_NAME
+		where search_id like :officeSearchId and
+		office_level_id=:officeLevelId and status_id=:ACTIVE order by office.display_name
 	</sql-query>
 
 	<sql-query name="SelectionItem.get_active_loanofficers_under_office">
 		<return alias="loanOfficer" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT PERSONNEL_ID as {loanOfficer.id}, DISPLAY_NAME as
-		{loanOfficer.displayName} from PERSONNEL
-		where PERSONNEL.LEVEL_ID=:personnelLevelId and
-		PERSONNEL.OFFICE_ID=:officeId and PERSONNEL.PERSONNEL_STATUS=:ACTIVE
-		order by PERSONNEL.DISPLAY_NAME
+		SELECT personnel_id as {loanOfficer.id}, display_name as
+		{loanOfficer.displayName} from personnel
+		where personnel.level_id=:personnelLevelId and
+		personnel.office_id=:officeId and personnel.personnel_status=:ACTIVE
+		order by personnel.display_name
 	</sql-query>
 
 	<sql-query name="SelectionItem.get_active_customers_under_loanofficers">
 		<return alias="center" class="org.mifos.reports.ui.SelectionItem" />
-		SELECT CUSTOMER_ID as {center.id}, DISPLAY_NAME as
-		{center.displayName} from CUSTOMER
-		where CUSTOMER.LOAN_OFFICER_ID=:personnelId and
-		CUSTOMER.BRANCH_ID=:officeId and
-		CUSTOMER.CUSTOMER_LEVEL_ID=:customerLevelId
-		and CUSTOMER.STATUS_ID=:ACTIVE
+		SELECT customer_id as {center.id}, display_name as
+		{center.displayName} from customer
+		where customer.loan_officer_id=:personnelId and
+		customer.branch_id=:officeId and
+		customer.customer_level_id=:customerLevelId
+		and customer.status_id=:ACTIVE
 
 	</sql-query>
 </hibernate-mapping>

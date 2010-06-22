@@ -54,11 +54,11 @@ explanation of the license and how it is applied.
 		name="branchCashConfirmationReport.getCenterRecoveries">
 		<load-collection alias="centerRecoveries"
 			role="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO.centerRecoveries"/>
-		<![CDATA[ SELECT {centerRecoveries.*} FROM BATCH_BRANCH_CONFIRMATION_RECOVERY as centerRecoveries, 
-			BATCH_BRANCH_CASH_CONFIRMATION_REPORT as report WHERE 
-			report.BRANCH_CASH_CONFIRMATION_REPORT_ID=centerRecoveries.BRANCH_CASH_CONFIRMATION_REPORT_ID
-			AND report.RUN_DATE=:RUN_DATE 
-			AND report.BRANCH_ID=:BRANCH_ID
+		<![CDATA[ SELECT {centerRecoveries.*} from batch_branch_confirmation_recovery as centerRecoveries, 
+			batch_branch_cash_confirmation_report as report where 
+			report.branch_cash_confirmation_report_id=centerRecoveries.branch_cash_confirmation_report_id
+			and report.run_date=:RUN_DATE 
+			and report.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 </hibernate-mapping>
