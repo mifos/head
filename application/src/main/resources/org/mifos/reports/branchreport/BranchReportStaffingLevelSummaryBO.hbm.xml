@@ -42,11 +42,11 @@ explanation of the license and how it is applied.
 		name="branchReport.getBranchReportStaffingLevelSummaryForDateAndBranch">
 		<load-collection alias="staffingLevelSummaries"
 			role="org.mifos.reports.branchreport.BranchReportBO.staffingLevelSummaries" />
-		<![CDATA[ SELECT {staffingLevelSummaries.*} FROM BATCH_STAFFING_LEVEL_SUMMARY as staffingLevelSummaries, 
-			BATCH_BRANCH_REPORT as branchReport WHERE 
-			branchReport.BRANCH_REPORT_ID=staffingLevelSummaries.BRANCH_REPORT_ID 
-			AND branchReport.RUN_DATE=:RUN_DATE 
-			AND branchReport.BRANCH_ID=:BRANCH_ID
+		<![CDATA[ SELECT {staffingLevelSummaries.*} from batch_staffing_level_summary as staffingLevelSummaries, 
+			batch_branch_report as branchReport where 
+			branchReport.branch_report_id=staffingLevelSummaries.branch_report_id 
+			and branchReport.run_date=:RUN_DATE 
+			and branchReport.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>			
 

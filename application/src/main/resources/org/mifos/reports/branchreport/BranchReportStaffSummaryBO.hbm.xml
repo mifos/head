@@ -61,11 +61,11 @@ explanation of the license and how it is applied.
 		name="branchReport.getBranchReportStaffSummaryForDateAndBranch">
 		<load-collection alias="staffSummary"
 			role="org.mifos.reports.branchreport.BranchReportBO.staffSummaries" />
-		<![CDATA[SELECT {staffSummary.*} FROM BATCH_STAFF_SUMMARY as staffSummary, BATCH_BRANCH_REPORT as branchReport WHERE 
-			branchReport.BRANCH_REPORT_ID=staffSummary.BRANCH_REPORT_ID 
-			AND branchReport.RUN_DATE=:RUN_DATE 
-			AND branchReport.BRANCH_ID=:BRANCH_ID
-			ORDER BY staffSummary.PERSONNEL_NAME
+		<![CDATA[SELECT {staffSummary.*} from batch_staff_summary as staffSummary, batch_branch_report as branchReport where 
+			branchReport.branch_report_id=staffSummary.branch_report_id 
+			and branchReport.run_date=:RUN_DATE 
+			and branchReport.branch_id=:BRANCH_ID
+			order by staffSummary.personnel_name
 		]]>
 	</sql-query>
 	
@@ -75,25 +75,25 @@ explanation of the license and how it is applied.
 	    <return-scalar column="personnelJoiningDate" type="date"/>
 	    <return-scalar column="activeBorrowersCount" type="integer"/>
 	    <return-scalar column="activeLoansCount" type="integer"/>
-	    <![CDATA[select personnel.PERSONNEL_ID as personnelId, personnel.DISPLAY_NAME as personnelName,
-	      			personnel_details.DATE_OF_JOINING_MFI as personnelJoiningDate, 
+	    <![CDATA[select personnel.personnel_id as personnelId, personnel.display_name as personnelName,
+	      			personnel_details.date_of_joining_mfi as personnelJoiningDate, 
 					ifnull(staff_summary.activeBorrowersCount,0) as activeBorrowersCount,
 					ifnull(staff_summary.activeLoansCount,0) as activeLoansCount					
 					from personnel left join 
-						(select p.PERSONNEL_ID as personnelId,
-			            ifnull(count(distinct c.CUSTOMER_ID),0) as activeBorrowersCount,
-	                    ifnull(count(acc.ACCOUNT_ID),0) as activeLoansCount
+						(select p.personnel_id as personnelId,
+			            ifnull(count(distinct c.customer_id),0) as activeBorrowersCount,
+	                    ifnull(count(acc.account_id),0) as activeLoansCount
 	        			from customer c, customer_state cs, account acc, personnel p
-				        where c.BRANCH_ID=:officeId and c.CUSTOMER_LEVEL_ID=1
-					    and c.CUSTOMER_ID=acc.CUSTOMER_ID and (acc.ACCOUNT_STATE_ID=5 or  acc.ACCOUNT_STATE_ID=9) 
-				        and c.LOAN_OFFICER_ID=p.PERSONNEL_ID 
-	 			        and cs.STATUS_ID=c.STATUS_ID and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
-					    group by c.LOAN_OFFICER_ID) staff_summary
-			     	on personnel.PERSONNEL_ID=staff_summary.PERSONNELID, personnel_details
-				    where personnel.PERSONNEL_ID=personnel_details.PERSONNEL_ID
-				    and personnel.OFFICE_ID=:officeId
-				    and personnel.PERSONNEL_STATUS=1
-				    and personnel.LEVEL_ID = 1
+				        where c.branch_id=:officeId and c.customer_level_id=1
+					    and c.customer_id=acc.customer_id and (acc.account_state_id=5 or  acc.account_state_id=9) 
+				        and c.loan_officer_id=p.personnel_id 
+	 			        and cs.status_id=c.status_id and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
+					    group by c.loan_officer_id) staff_summary
+			     	on personnel.personnel_id=staff_summary.personnelid, personnel_details
+				    where personnel.personnel_id=personnel_details.personnel_id
+				    and personnel.office_id=:officeId
+				    and personnel.personnel_status=1
+				    and personnel.level_id = 1
 	          ]]>
 	</sql-query>
 	
@@ -103,43 +103,43 @@ explanation of the license and how it is applied.
 	    <return-scalar column="clientCount" type="integer"/>	
 	    <![CDATA[
 		    SELECT 
-					p.PERSONNEL_ID as personnelId, 
-					(SELECT 
-							COUNT(centers.CUSTOMER_ID) 
-						FROM 
+					p.personnel_id as personnelId, 
+					(select 
+							count(centers.customer_id) 
+						from 
 							customer centers 
-						LEFT JOIN
+						left join
 							customer_state cs on cs.status_id=centers.status_id
-						WHERE 
+						where 
 							cs.description='Customer Was Active'
-						AND    
-							centers.CUSTOMER_LEVEL_ID=3 
-						AND 
-							centers.LOAN_OFFICER_ID=p.PERSONNEL_ID
+						and    
+							centers.customer_level_id=3 
+						and 
+							centers.loan_officer_id=p.personnel_id
 					) as centerCount, 
-					(SELECT 
-							COUNT(clients.CUSTOMER_ID) 
-						FROM 
-							Customer clients 
-						LEFT JOIN
+					(select 
+							count(clients.customer_id) 
+						from 
+							customer clients 
+						left join
 							customer_state cs on cs.status_id=clients.status_id
-						WHERE 
+						where 
 							cs.description='Customer Was Active'
-						AND    
-							clients.CUSTOMER_LEVEL_ID=1 
-						AND 
-							clients.LOAN_OFFICER_ID=p.PERSONNEL_ID
+						and    
+							clients.customer_level_id=1 
+						and 
+							clients.loan_officer_id=p.personnel_id
 					) as clientCount 
 				from 
-					PERSONNEL p 
+					personnel p 
 				where 
-					p.OFFICE_ID = :officeId
+					p.office_id = :officeId
 				and 
-					p.PERSONNEL_STATUS=1 
+					p.personnel_status=1 
 				and 
-					p.LEVEL_ID=1
+					p.level_id=1
 				group by 
-					p.PERSONNEL_ID
+					p.personnel_id
                  ]]>
 	</sql-query>
 	<!--
@@ -177,7 +177,7 @@ explanation of the license and how it is applied.
 				and 
 					act.account_state_id=5
 				and 
-					c.CUSTOMER_LEVEL_ID=1
+					c.customer_level_id=1
 				and 
 					p.personnel_status=1
 				and 
@@ -210,64 +210,64 @@ explanation of the license and how it is applied.
 		<return-scalar column="portfolioAtRisk" type="big_decimal"/>	
 		<![CDATA[
 			SELECT 
-			        p1.PERSONNEL_ID as personnelId,
-			        sum(ROUND(IFNULL((num.un_prin/den.un_prin)* 100, 0) ,2)) AS portfolioAtRisk 
+			        p1.personnel_id as personnelId,
+			        sum(round(ifnull((num.un_prin/den.un_prin)* 100, 0) ,2)) as portfolioAtRisk 
 			from 
 				personnel p1
 			left join 
-				(SELECT 
-			                    SUM(laa.unpaid_principal) as un_prin,
+				(select 
+			                    sum(laa.unpaid_principal) as un_prin,
 			                    c.loan_officer_id as personnel_id
-			            FROM 
+			            from 
 			                    loan_arrears_aging laa
-				    LEFT JOIN
+				    left join
 				            customer c on c.customer_id=laa.customer_id
-				    LEFT JOIN
+				    left join
 				            account acc on acc.account_id=laa.account_id
-				    LEFT JOIN
+				    left join
 				            customer_state cs on cs.status_id=c.status_id
-			            WHERE 
+			            where 
 			                    cs.description='Customer Was Active'
-				    AND
+				    and
 			                    acc.account_state_id in (9)
-				    AND
+				    and
 			                    c.customer_level_id=1 
-			            AND 
+			            and 
 			                    c.branch_id=:officeId
-			            AND 
+			            and 
 			                    laa.days_in_arrears>=:daysInArrears
 			            group by 
 			                    c.loan_officer_id
 			        ) num
 			        on p1.personnel_id=num.personnel_id,
-			        (SELECT 
-			                    SUM(ls.orig_principal-ls.principal_paid) as un_prin
-			            FROM 
+			        (select 
+			                    sum(ls.orig_principal-ls.principal_paid) as un_prin
+			            from 
 			                    loan_summary ls
-				    LEFT JOIN
+				    left join
 			                    account acc on acc.account_id=ls.account_id
-				    LEFT JOIN
-			                    customer c on c.CUSTOMER_ID=acc.CUSTOMER_ID
-				    LEFT JOIN
+				    left join
+			                    customer c on c.customer_id=acc.customer_id
+				    left join
 			                    customer_state cs on cs.status_id=c.status_id
-				                                WHERE 
+				                                where 
 			                    cs.description='Customer Was Active'
-				    AND
+				    and
 				            acc.account_state_id in (5,9)
-			            AND 
+			            and 
 			                    c.branch_id=:officeId
-			            AND 
+			            and 
 			                    c.customer_level_id=1
 			            ) den   
 			
-			WHERE 
-			        p1.LEVEL_ID=1 
-			AND 
-			        p1.OFFICE_ID=:officeId
-			AND 
-			        p1.PERSONNEL_STATUS=1 
-			GROUP BY 
-			        p1.PERSONNEL_ID	
+			where 
+			        p1.level_id=1 
+			and 
+			        p1.office_id=:officeId
+			and 
+			        p1.personnel_status=1 
+			group by 
+			        p1.personnel_id	
 		]]>
 	</sql-query>
 	<!--
@@ -308,8 +308,8 @@ explanation of the license and how it is applied.
 		    select customer_formedby_id as personnelId, count(customer_formedby_id) as clientsFormedThisMonth
 		     from customer c where customer_formedby_id in (:personnelIdList)
    		     and c.customer_level_id = 1
-		     and c.customer_activation_date between DATE(CONCAT(YEAR(CURRENT_DATE),'-',MONTH(CURRENT_DATE),'-01')) and 
-					LAST_DAY(CURRENT_DATE)
+		     and c.customer_activation_date between date(concat(year(current_date),'-',month(current_date),'-01')) and 
+					last_day(current_date)
 		    group by customer_formedby_id
 		]]>
 	</sql-query>	
@@ -337,7 +337,7 @@ explanation of the license and how it is applied.
 			and
 				c.customer_level_id = 1
 		    and cs.status_id=c.status_id
-		    and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
+		    and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
 			group by 
 				c.loan_officer_id				
 		]]>

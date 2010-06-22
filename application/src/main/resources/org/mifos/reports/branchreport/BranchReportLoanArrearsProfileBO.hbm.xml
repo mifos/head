@@ -64,11 +64,11 @@ explanation of the license and how it is applied.
 		name="branchReport.getBranchReportLoanArrearsProfileForDateAndBranch">
 		<load-collection alias="loanArrearsProfile"
 			role="org.mifos.reports.branchreport.BranchReportBO.loanArrearsProfile" />
-		<![CDATA[SELECT {loanArrearsProfile.*} FROM BATCH_LOAN_ARREARS_PROFILE as loanArrearsProfile, 
-		 	BATCH_BRANCH_REPORT as branchReport WHERE 
-			branchReport.BRANCH_REPORT_ID=loanArrearsProfile.BRANCH_REPORT_ID 
-			AND branchReport.RUN_DATE=:RUN_DATE 
-			AND branchReport.BRANCH_ID=:BRANCH_ID
+		<![CDATA[SELECT {loanArrearsProfile.*} from batch_loan_arrears_profile as loanArrearsProfile, 
+		 	batch_branch_report as branchReport where 
+			branchReport.branch_report_id=loanArrearsProfile.branch_report_id 
+			and branchReport.run_date=:RUN_DATE 
+			and branchReport.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 
@@ -78,23 +78,23 @@ explanation of the license and how it is applied.
 		<return-scalar column="overDueBalance" type="big_decimal" />
 		<return-scalar column="unpaidBalance" type="big_decimal" />
 		<![CDATA[
-			SELECT COUNT(*) as loansInArrears, 
-				    COUNT(DISTINCT la.CUSTOMER_ID) as clientsInArrears, 
-				    ROUND(IFNULL(SUM(COALESCE(OVERDUE_PRINCIPAL,0)),0),3) as overDueBalance,
-				    ROUND(IFNULL(SUM(COALESCE(UNPAID_PRINCIPAL,0)),0),3) as unpaidBalance
-				    FROM 
-				    	LOAN_ARREARS_AGING la 
-				    LEFT JOIN 
-				    	ACCOUNT acc on acc.account_id=la.account_id 
-			    	LEFT JOIN 
-			        	CUSTOMER cust on cust.customer_id=la.customer_id	
-					LEFT JOIN 
+			SELECT count(*) as loansInArrears, 
+				    count(distinct la.customer_id) as clientsInArrears, 
+				    round(ifnull(sum(coalesce(overdue_principal,0)),0),3) as overDueBalance,
+				    round(ifnull(sum(coalesce(unpaid_principal,0)),0),3) as unpaidBalance
+				    from 
+				    	loan_arrears_aging la 
+				    left join 
+				    	account acc on acc.account_id=la.account_id 
+			    	left join 
+			        	customer cust on cust.customer_id=la.customer_id	
+					left join 
 						customer_state cs on cs.status_id=cust.status_id
-			        WHERE 
-				        la.OFFICE_ID=:officeId
+			        where 
+				        la.office_id=:officeId
 				        and acc.account_state_id in (9)
 				        and cust.customer_level_id = 1
-				        and (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
+				        and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
 		]]>
 	</sql-query>
 
@@ -103,38 +103,38 @@ explanation of the license and how it is applied.
 		<return-scalar column="outstandingAmountAtRisk" type="big_decimal" />
 		<return-scalar column="overdueAmountAtRisk" type="big_decimal" />
 		<![CDATA[SELECT 
-			        COUNT(*) AS loansAtRisk,
-			        ROUND(IFNULL(SUM(COALESCE(unpaid_principal)),0),3) AS outstandingAmountAtRisk,
-			        ROUND(IFNULL(SUM(COALESCE(overdue_principal)),0),3) AS overdueAmountAtRisk
-			    FROM 
+			        count(*) as loansAtRisk,
+			        round(ifnull(sum(coalesce(unpaid_principal)),0),3) as outstandingAmountAtRisk,
+			        round(ifnull(sum(coalesce(overdue_principal)),0),3) as overdueAmountAtRisk
+			    from 
 			        loan_arrears_aging laa
-			    LEFT JOIN 
-			    	ACCOUNT acc on acc.account_id=laa.account_id 
-		    	LEFT JOIN 
-		        	CUSTOMER cust on cust.customer_id=laa.customer_id	
-				LEFT JOIN 
+			    left join 
+			    	account acc on acc.account_id=laa.account_id 
+		    	left join 
+		        	customer cust on cust.customer_id=laa.customer_id	
+				left join 
 					customer_state cs on cs.status_id=cust.status_id			        
-			    WHERE cust.customer_level_id= :customerLevelId
-			    AND laa.office_id = :officeId
-			    AND days_in_arrears >= :daysInArrears
-				AND acc.account_state_id in (9)
-		        AND (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')			        
+			    where cust.customer_level_id= :customerLevelId
+			    and laa.office_id = :officeId
+			    and days_in_arrears >= :daysInArrears
+				and acc.account_state_id in (9)
+		        and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')			        
 		]]>
 	</sql-query>
 
 	<sql-query name="branchReport.extractLoanArrearsProfileClientsAtRiskForBranch">
 		<return-scalar column="clientsAtRisk" type="integer" />
 		<![CDATA[	
-			SELECT COUNT(distinct laa.customer_id) AS clientsAtRisk
-				FROM loan_arrears_aging laa, customer c, customer_state cs, account acc
-				WHERE laa.customer_id=c.customer_id
+			SELECT count(distinct laa.customer_id) as clientsAtRisk
+				from loan_arrears_aging laa, customer c, customer_state cs, account acc
+				where laa.customer_id=c.customer_id
 				and cs.status_id=c.status_id		
 				and acc.account_id=laa.account_id 
-				AND c.customer_level_id=:customerLevelId
-				AND c.branch_id = :officeId
-				AND days_in_arrears >= :daysInArrears
-				AND acc.account_state_id in (9)
-		        AND (cs.description='Customer Was Active' OR cs.description='Customer Was Hold')
+				and c.customer_level_id=:customerLevelId
+				and c.branch_id = :officeId
+				and days_in_arrears >= :daysInArrears
+				and acc.account_state_id in (9)
+		        and (cs.description='Customer Was Active' or cs.description='Customer Was Hold')
 		]]>
 	</sql-query>
 </hibernate-mapping>

@@ -93,7 +93,7 @@ public class AddAccountStateFlag extends Upgrade {
 
     private void addFlag(Connection connection, int newFlagId, String description, int lookupId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("insert into account_state_flag("
-                + "  flag_id,lookup_id,status_id,flag_description,return_flag)" + "values(?,?,?,?,?)");
+                + "  flag_id,lookup_id,status_id,flag_description,retain_flag)" + "values(?,?,?,?,?)");
         statement.setInt(1, newFlagId);
         statement.setInt(2, lookupId);
         statement.setInt(3, STATUS_10);

@@ -56,7 +56,7 @@ public class AddField extends Upgrade {
     public void upgrade(Connection connection)
             throws IOException, SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("insert field_configuration(field_config_id,filed_name,"
+                .prepareStatement("insert field_configuration(field_config_id,field_name,"
                         + "  entity_id,mandatory_flag,hidden_flag)" + "  values(?,?,?,?,?)");
         statement.setInt(1, newFieldId);
         statement.setString(2, fieldName);

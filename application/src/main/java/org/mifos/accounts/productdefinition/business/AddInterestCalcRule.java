@@ -94,8 +94,8 @@ public class AddInterestCalcRule extends Upgrade {
 
     private void addInterestType(Connection connection, int newRuleId, String description, int lookupId)
             throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("insert into interest_type("
-                + "  interest_type_id,lookup_id,category_id,description)" + "values(?,?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("insert into interest_types("
+                + "  interest_type_id,lookup_id,category_id,descripton)" + "values(?,?,?,?)");
         statement.setInt(1, newRuleId);
         statement.setInt(2, lookupId);
         statement.setInt(3, categoryId);
