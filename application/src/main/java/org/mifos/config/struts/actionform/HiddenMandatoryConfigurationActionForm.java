@@ -96,6 +96,12 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     private String mandatoryClientPovertyStatus;
 
+    private String mandatoryClientFamilyDetails;
+
+    private String hideClientSpouseFatherInformation;
+
+    private String mandatoryClientSpouseFatherInformation;
+
     private String hideClientSpouseFatherMiddleName;
 
     private String hideClientSpouseFatherSecondLastName;
@@ -162,6 +168,14 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
     public void setHideClientSecondLastName(String hideClientSecondLastName) {
         this.hideClientSecondLastName = hideClientSecondLastName;
+    }
+
+    public String getHideClientSpouseFatherInformation() {
+        return hideClientSpouseFatherInformation;
+    }
+
+    public void setHideClientSpouseFatherInformation(String hideClientSpouseFatherInformation) {
+        this.hideClientSpouseFatherInformation = hideClientSpouseFatherInformation;
     }
 
     public String getHideClientSpouseFatherMiddleName() {
@@ -340,6 +354,22 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.mandatoryClientSpouseFatherSecondLastName = mandatoryClientSpouseFatherSecondLastName;
     }
 
+    public String getMandatoryClientFamilyDetails() {
+        return mandatoryClientFamilyDetails;
+    }
+
+    public void setMandatoryClientFamilyDetails(String mandatoryClientFamilyDetails) {
+        this.mandatoryClientFamilyDetails = mandatoryClientFamilyDetails;
+    }
+
+    public String getMandatoryClientSpouseFatherInformation() {
+        return mandatoryClientSpouseFatherInformation;
+    }
+
+    public void setMandatoryClientSpouseFatherInformation(String mandatoryClientSpouseFatherInformation) {
+        this.mandatoryClientSpouseFatherInformation = mandatoryClientSpouseFatherInformation;
+    }
+
     public String getMandatoryClientTrained() {
         return mandatoryClientTrained;
     }
@@ -487,6 +517,9 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
         this.mandatoryMaritalStatus = "0";
         this.hideClientPovertyStatus = "0";
         this.mandatoryClientPovertyStatus = "0";
+        this.hideClientSpouseFatherInformation = "0";
+        this.mandatoryClientSpouseFatherInformation = "0";
+        this.mandatoryClientFamilyDetails = "0";
         this.hideClientSpouseFatherMiddleName = "0";
         this.hideClientSpouseFatherSecondLastName = "0";
         this.mandatoryClientSpouseFatherSecondLastName = "0";

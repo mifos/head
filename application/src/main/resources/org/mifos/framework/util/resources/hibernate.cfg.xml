@@ -127,7 +127,6 @@
 		<mapping resource="org/mifos/accounts/fees/business/FeeBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeStatusEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/fees/business/FeeTypeEntity.hbm.xml" />
-		<mapping resource="org/mifos/accounts/fees/business/ApplicableAccountsTypeEntity.hbm.xml" />
 
 		<!-- Mapping files for collection sheet retrieve and save-->
 		<mapping

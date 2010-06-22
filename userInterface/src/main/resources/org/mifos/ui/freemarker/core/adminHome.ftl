@@ -3,7 +3,7 @@
 [#import "macros.ftl" as mifos]
 
 [@mifos.header "title" /]
-  [@mifos.topNavigation currentTab="Admin" /]
+  [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" ] 
         
 	<div id="page-content">
@@ -11,7 +11,10 @@
 		<h2 id="adminHome.heading">[@spring.message "administrativeTasks" /]</h2>
 		
 			<p>
-			[@spring.message "administrativeTasksWelcome" /]
+			[@spring.message "administrativeTasksWelcome" /] 
+			</p>
+			<p>
+			Branch id/User id: ${model.request.getSession().getAttribute("UserContext").branchId} / ${model.request.getSession().getAttribute("UserContext").id}
 			</p>
 		
 			<h3>[@spring.message "manageOrganization" /]</h3>

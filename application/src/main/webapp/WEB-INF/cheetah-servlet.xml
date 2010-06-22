@@ -11,6 +11,7 @@
             </list>
         </property>
     </bean>
+    
 
     <!-- freemarker config -->
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -31,7 +32,7 @@
     </bean>
 
     <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="cache" value="true"/>
+        <property name="cache" value="false"/>
         <property name="prefix" value=""/>
         <property name="suffix" value=".ftl"/>
         <property name="contentType" value="text/html; charset=UTF-8" />
@@ -42,6 +43,8 @@
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
     <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+    
+    
 
     <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
@@ -53,9 +56,15 @@
                 /accessDenied.ftl=genericController
                 /pageNotFound.ftl=genericController
                 /ping.ftl=genericController
+                /adminHome.ftl=genericController                
+                /maincss.css=genericController
+                /screen.css=genericController
+                /admin.ftl=genericController  
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
-            </value>
+                /systemInformation.ftl=systemInformationController
+                /viewOrganizationSettings.ftl=viewOrganizationSettingsController
+</value>
         </property>
     </bean>
 
@@ -76,4 +85,17 @@
     <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
+    
+    <bean id="systemInformationServiceFacade" class="org.mifos.application.admin.business.service.SystemInformationServiceFacadeWebTier"/>
+
+    <bean id="systemInformationController" class="org.mifos.ui.core.controller.SystemInformationController">
+        <property name="systemInformationServiceFacade" ref="systemInformationServiceFacade" />
+    </bean>
+    
+    <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
+
+    <bean id="viewOrganizationSettingsController" class="org.mifos.ui.core.controller.ViewOrganizationSettingsController">
+        <property name="viewOrganizationSettingsServiceFacade" ref="viewOrganizationSettingsServiceFacade" />
+    </bean>  
+    
 </beans>

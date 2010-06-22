@@ -12,7 +12,7 @@
 [#macro topNavigation currentTab]
 <div id = "homePageHeader">
 	<IMG id="logo" height=74 alt=""
-					src="images/logo.gif" width=188></td>
+					src="pages/framework/images/logo.gif" width=188></td>
 	
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
@@ -57,6 +57,7 @@
     <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
     <link href="cheetah.css.ftl" rel="stylesheet" type="text/css" />
     <link href="gazelle.css.ftl" rel="stylesheet" type="text/css" />
+   
   </head>
   <body>
 [/#macro]

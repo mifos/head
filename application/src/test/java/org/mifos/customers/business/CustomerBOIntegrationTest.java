@@ -104,22 +104,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         super.tearDown();
     }
 
-    public void testRemoveGroupMemberShip() throws Exception {
-        createInitialObjects();
-        client.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
-        createPersonnel(PersonnelLevel.LOAN_OFFICER);
-        client.removeGroupMemberShip(loanOfficer, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-        Assert.assertEquals(loanOfficer.getPersonnelId(), client.getPersonnel().getPersonnelId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-
-        TestObjectFactory.cleanUpChangeLog();
-    }
-
     public void testHasActiveLoanAccounts() throws Exception {
         createInitialObjects();
         client.setUserContext(TestUtils.makeUser());

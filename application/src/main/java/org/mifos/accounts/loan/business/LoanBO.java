@@ -791,7 +791,8 @@ public class LoanBO extends AccountBO {
      * Remove the fee from all unpaid current or future installments, and update the loan accordingly.
      */
     @Override
-    public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId, final Short personnelId) throws AccountException {
+    public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId,
+            final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
         Money totalFeeAmount = new Money(getCurrency());
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
@@ -1569,6 +1570,11 @@ public class LoanBO extends AccountBO {
     @Override
     protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
             throws AccountException {
+
+        Money increaseInterest = new Money(this.getCurrency());
+        Money increaseFees = new Money(this.getCurrency());
+        Money increasePenalty = new Money(this.getCurrency());
+
         int numberOfFullPayments = 0;
         List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 
@@ -1593,7 +1599,24 @@ public class LoanBO extends AccountBO {
                                 .getInterestAmount(), loanTrxn.getPenaltyAmount(), loanTrxn.getMiscPenaltyAmount(),
                                 loanTrxn.getMiscFeeAmount());
 
+                        /*
+                         * John W - mifos-1986 - when adjusting a loan that is LOAN_CLOSED_OBLIGATIONS_MET and was
+                         * closed by applying an early repayment... need to increase loan summary figures by the amount
+                         * that they were decreased for future payments.
+                         *
+                         * This means... for paid installments add up the amount due (for interest, fees and penalties).
+                         * The amount due is not necessarily zero for this case.
+                         *
+                         * So, calculate that amount here (though not sure at this point whether it is reopened or not.
+                         */
+                        if (accntActionDate.isPaid()) {
+                            increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
+                            increaseFees = increaseFees.add(accntActionDate.getTotalFeeDueWithMiscFeeDue());
+                            increasePenalty = increasePenalty.add(accntActionDate.getPenaltyDue());
+                        }
+
                         accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
+
                         accntActionDate.setPaymentDate(null);
                         if (null != accntActionDate.getAccountFeesActionDetails()
                                 && accntActionDate.getAccountFeesActionDetails().size() > 0) {
@@ -1649,6 +1672,13 @@ public class LoanBO extends AccountBO {
                         .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
                                 this.getCustomer().getCustomerId(), this.getAccountId());
                 groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
+            }
+
+            /*
+             * John W - mifos-1986 - see related comment above
+             */
+            if (accountReOpened) {
+                loanSummary.increaseBy(null, increaseInterest, increasePenalty, increaseFees);
             }
 
             // Reverse just one payment when reopening an account
@@ -1720,22 +1750,22 @@ public class LoanBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-            int numberOfInstallmentsToGenerate = getLastInstallmentId();
+        int numberOfInstallmentsToGenerate = getLastInstallmentId();
 
-            MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
-                    getLoanMeeting().getMeetingStartDate());
+        MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
+                getLoanMeeting().getMeetingStartDate());
 
-            DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
-                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
+        DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
+                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
 
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    workingDays, holidays);
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
+                workingDays, holidays);
 
-            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                    startFromMeetingDate, scheduledEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
+                startFromMeetingDate, scheduledEvent);
 
-            updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
+        updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }
 
     private int calculateDays(final Date fromDate, final Date toDate) {

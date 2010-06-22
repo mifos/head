@@ -59,7 +59,7 @@ public class CustomerMeetingEntity extends AbstractEntity {
         return meeting;
     }
 
-    void setMeeting(final MeetingBO meeting) {
+    public void setMeeting(final MeetingBO meeting) {
         this.meeting = meeting;
     }
 

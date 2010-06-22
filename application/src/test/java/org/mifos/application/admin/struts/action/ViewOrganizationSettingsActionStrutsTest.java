@@ -20,8 +20,6 @@
 
 package org.mifos.application.admin.struts.action;
 
-import junit.framework.Assert;
-
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -30,6 +28,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import junit.framework.Assert;
 
 public class ViewOrganizationSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     public ViewOrganizationSettingsActionStrutsTest() throws Exception {
@@ -53,7 +53,6 @@ public class ViewOrganizationSettingsActionStrutsTest extends MifosMockStrutsTes
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
     }
 
-    @Override
     protected void tearDown() throws Exception {
         StaticHibernateUtil.closeSession();
         super.tearDown();

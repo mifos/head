@@ -1,6 +1,8 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "macros.ftl" as mifos]
+<html>
+<body>
 	<div class="left-pane">
 	  <div class="left-pane-header">[@spring.message "quickStart" /]</div>
 	  <div class="left-pane-content">
@@ -15,3 +17,5 @@
 	      </div>
    	  </div>
 	</div>
+	</body>
+</html>

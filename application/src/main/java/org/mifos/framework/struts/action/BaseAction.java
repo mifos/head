@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.holiday.persistence.HolidayServiceFacade;
@@ -108,6 +109,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
+    protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -128,6 +130,7 @@ public abstract class BaseAction extends DispatchAction {
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
             this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
+            this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }
