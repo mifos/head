@@ -7,14 +7,14 @@
 <hibernate-mapping>
     <class name="org.mifos.accounts.acceptedpaymenttype.business.AcceptedPaymentType" table="accepted_payment_type" >
         <id name="acceptedPaymentTypeId" type="java.lang.Short" access="field">
-            <column name="ACCEPTED_PAYMENT_TYPE_ID" />
+            <column name="accepted_payment_type_id" />
             <generator class="native" />
         </id>
         <many-to-one name="transactionTypeEntity" class="org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity" fetch="select">
-            <column name="TRANSACTION_ID" not-null="true" />
+            <column name="transaction_id" not-null="true" />
         </many-to-one>
         <many-to-one name="paymentTypeEntity" class="org.mifos.application.master.business.PaymentTypeEntity" fetch="select">
-            <column name="PAYMENT_TYPE_ID" not-null="true" />
+            <column name="payment_type_id" not-null="true" />
         </many-to-one>
     </class>
     <query name="acceptedpaymenttype.getAcceptedPaymentType"> 

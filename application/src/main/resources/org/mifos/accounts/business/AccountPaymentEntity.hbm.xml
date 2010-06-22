@@ -8,35 +8,35 @@
 
 	<class
 		name="org.mifos.accounts.business.AccountPaymentEntity"
-		table="ACCOUNT_PAYMENT" >
-		<id name="paymentId" column="PAYMENT_ID" type="integer" access="field">
+		table="account_payment" >
+		<id name="paymentId" column="payment_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
 
-		<!-- <property name="amount" column="AMOUNT" type="double" />-->
-		<property name="receiptNumber" column="RECEIPT_NUMBER"
+		<!-- <property name="amount" column="amount" type="double" />-->
+		<property name="receiptNumber" column="receipt_number"
 			type="string" access="field"/>
-		<property name="voucherNumber" column="VOUCHER_NUMBER"
+		<property name="voucherNumber" column="voucher_number"
 			type="string" access="field"/>
-		<property name="checkNumber" column="CHECK_NUMBER"
+		<property name="checkNumber" column="check_number"
 			type="string" access="field"/>
-		<property name="bankName" column="BANK_NAME" type="string" access="field"/>
-		<property name="paymentDate" column="PAYMENT_DATE" type="date" access="field"/>
-		<property name="receiptDate" column="RECEIPT_DATE" type="date" access="field"/>
+		<property name="bankName" column="bank_name" type="string" access="field"/>
+		<property name="paymentDate" column="payment_date" type="date" access="field"/>
+		<property name="receiptDate" column="receipt_date" type="date" access="field"/>
 		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-		 <column name="CURRENCY_ID" /> 
-		 <column name="AMOUNT" />
+		 <column name="currency_id" /> 
+		 <column name="amount" />
 		</property>
-		<property name="comment" column="COMMENT" type="string" access="field"/>
-		<many-to-one name="paymentType" column="PAYMENT_TYPE_ID"
+		<property name="comment" column="comment" type="string" access="field"/>
+		<many-to-one name="paymentType" column="payment_type_id"
 			class="org.mifos.application.master.business.PaymentTypeEntity"
 			cascade="none" update="false" insert="true" access="field"/>
-		<many-to-one name="account" column="ACCOUNT_ID"
+		<many-to-one name="account" column="account_id"
 			class="org.mifos.accounts.business.AccountBO" access="field"/>
 
 		<set name="accountTrxns" cascade="all" inverse="true"
-			table="ACCOUNT_TRXN" order-by="ACCOUNT_TRXN_ID desc">
-			<key column="PAYMENT_ID" />
+			table="account_trxn" order-by="ACCOUNT_TRXN_ID desc">
+			<key column="payment_id" />
 			<one-to-many
 				class="org.mifos.accounts.business.AccountTrxnEntity" />
 		</set>

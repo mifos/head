@@ -6,18 +6,18 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerHierarchyEntity" table="CUSTOMER_HIERARCHY">
-        <id name="hierarchyId" column="HIERARCHY_ID" type="integer" access="field">
+    <class name="org.mifos.customers.business.CustomerHierarchyEntity" table="customer_hierarchy">
+        <id name="hierarchyId" column="hierarchy_id" type="integer" access="field">
             <generator class="native"/>
         </id>
  
         
-        <property name="status" column="STATUS" type="short" access="field"/>
-        <property name="createdDate" column="START_DATE" type="date" />
-        <property name="endDate" column="END_DATE" type="date"   />
-        <property name="updatedBy" column="UPDATED_BY" type="short" />
-        <property name="updatedDate" column="UPDATED_DATE" type="date" />
-        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
-        <many-to-one name="parentCustomer" column="PARENT_ID" class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
+        <property name="status" column="status" type="short" access="field"/>
+        <property name="createdDate" column="start_date" type="date" />
+        <property name="endDate" column="end_date" type="date"   />
+        <property name="updatedBy" column="updated_by" type="short" />
+        <property name="updatedDate" column="updated_date" type="date" />
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
+        <many-to-one name="parentCustomer" column="parent_id" class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
     </class>
 </hibernate-mapping>

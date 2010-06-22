@@ -6,17 +6,17 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.fees.business.FeePaymentsCategoriesTypeEntity" table="FEE_PAYMENTS_CATEGORIES_TYPE">
-        <id name="feePaymentsCategoryTypeId" column="FEE_PAYMENTS_CATEGORY_TYPE_ID" type="short">
+    <class name="org.mifos.accounts.fees.business.FeePaymentsCategoriesTypeEntity" table="fee_payments_categories_type">
+        <id name="feePaymentsCategoryTypeId" column="fee_payments_category_type_id" type="short">
             <generator class="native"/>
         </id>
  
  
-        <many-to-one name="feeType" column="FEE_TYPE_ID" class="org.mifos.accounts.fees.business.FeeTypeEntity"  not-null="true" />
+        <many-to-one name="feeType" column="fee_type_id" class="org.mifos.accounts.fees.business.FeeTypeEntity"  not-null="true" />
  
-        <many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.accounts.fees.business.CategoryTypeEntity"  not-null="true" />
+        <many-to-one name="categoryType" column="category_id" class="org.mifos.accounts.fees.business.CategoryTypeEntity"  not-null="true" />
  
-        <many-to-one name="feePayment" column="FEE_PAYMENT_ID" class="org.mifos.accounts.fees.business.FeePaymentEntity"  not-null="true" />
+        <many-to-one name="feePayment" column="fee_payment_id" class="org.mifos.accounts.fees.business.FeePaymentEntity"  not-null="true" />
     </class>
     
 </hibernate-mapping>

@@ -6,18 +6,18 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.framework.components.audit.business.AuditLog" table="CHANGE_LOG">
-        <id name="id" column="CHANGE_LOG_ID" type="integer" unsaved-value="null" access="field">
+    <class name="org.mifos.framework.components.audit.business.AuditLog" table="change_log">
+        <id name="id" column="change_log_id" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
-        <property name="entityId" column="ENTITY_ID" access="field"/>
-        <property name="entityType" column="ENTITY_TYPE" access="field"/>
-        <property name="modifierName" column="MODIFIER_NAME" access="field"/>
-	    <property name="updatedBy" column="CHANGED_BY" type="short" access="field"/>
-        <property name="updatedDate" column="CHANGED_DATE" access="field"/>
+        <property name="entityId" column="entity_id" access="field"/>
+        <property name="entityType" column="entity_type" access="field"/>
+        <property name="modifierName" column="modifier_name" access="field"/>
+	    <property name="updatedBy" column="changed_by" type="short" access="field"/>
+        <property name="updatedDate" column="changed_date" access="field"/>
         
-        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="CHANGE_LOG_DETAIL" access="field" order-by="SEQUENCE_NUM">
-            <key column="CHANGE_LOG_ID"  />
+        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="change_log_detail" access="field" order-by="SEQUENCE_NUM">
+            <key column="change_log_id"  />
             <one-to-many   class="org.mifos.framework.components.audit.business.AuditLogRecord"   />
     	</set>	
        

@@ -6,14 +6,14 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.productdefinition.business.ProductTypeEntity" table="PRD_TYPE">
-        <id name="productTypeID" column="PRD_TYPE_ID" type="short">
+    <class name="org.mifos.accounts.productdefinition.business.ProductTypeEntity" table="prd_type">
+        <id name="productTypeID" column="prd_type_id" type="short">
             <generator class="native"/>
         </id>
-         <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
-        <property name="latenessDays" column="LATENESS_DAYS" type="short"  not-null="false" />
-        <property name="dormancyDays" column="DORMANCY_DAYS" type="short"  not-null="false" />
-        <many-to-one name="lookUpValue" column="PRD_TYPE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
+         <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+        <property name="latenessDays" column="lateness_days" type="short"  not-null="false" />
+        <property name="dormancyDays" column="dormancy_days" type="short"  not-null="false" />
+        <many-to-one name="lookUpValue" column="prd_type_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
         
      </class>
      <!--Get the lateness days value for a Loan product -->

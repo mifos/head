@@ -4,12 +4,12 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
- <class name="org.mifos.security.util.OfficeSearch" table="OFFICE">
-     <id name="officeId" type="short" column="OFFICE_ID">
+ <class name="org.mifos.security.util.OfficeSearch" table="office">
+     <id name="officeId" type="short" column="office_id">
       <generator class="native"/>
     </id>
-   <property name="searchId" type="string" column="SEARCH_ID" />
-   <property name="parentOfficeId" type="short" column="PARENT_OFFICE_ID" />
+   <property name="searchId" type="string" column="search_id" />
+   <property name="parentOfficeId" type="short" column="parent_office_id" />
  </class>
  
     <query name="getOfficeSearch">

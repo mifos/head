@@ -6,18 +6,18 @@
 
 <hibernate-mapping>
     <class name="org.mifos.customers.business.CustomerStatusFlagEntity" 
-		table="CUSTOMER_STATE_FLAG">
-        <id name="id" column="FLAG_ID" type="short">
+		table="customer_state_flag">
+        <id name="id" column="flag_id" type="short">
             <generator class="native"/>
         </id>
-      	<property name="blacklisted" column="ISBLACKLISTED" type="short" 
+      	<property name="blacklisted" column="isblacklisted" type="short" 
       		access="field"/>
-      	<property name="flagDescription" column="FLAG_DESCRIPTION" 
+      	<property name="flagDescription" column="flag_description" 
       		type="string" access="field"/>
-	  	<many-to-one name="lookUpValue" column="FLAG_LOOKUP_ID" 
+	  	<many-to-one name="lookUpValue" column="flag_lookup_id" 
 	  		class="org.mifos.application.master.business.LookUpValueEntity" 
     		cascade="none" update="false" unique="true"/>
-	  	<many-to-one name="customerStatus" column="STATUS_ID" 
+	  	<many-to-one name="customerStatus" column="status_id" 
 	  		class="org.mifos.customers.business.CustomerStatusEntity" 
 	  		access="field" />
     </class>

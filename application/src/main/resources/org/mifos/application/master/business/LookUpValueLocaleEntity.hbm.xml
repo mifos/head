@@ -5,15 +5,15 @@
   
 <hibernate-mapping > 
   <class name="org.mifos.application.master.business.LookUpValueLocaleEntity" 
-    table="LOOKUP_VALUE_LOCALE" >
-  	<id column="LOOKUP_VALUE_ID" name="lookUpValueId" type="java.lang.Integer" > 
+    table="lookup_value_locale" >
+  	<id column="lookup_value_id" name="lookUpValueId" type="java.lang.Integer" > 
 		<generator class="native"></generator>
     </id>
-    <property column="LOOKUP_ID"  name="lookUpId"  />
-    <property column="LOOKUP_VALUE"  name="lookUpValue"  type="java.lang.String"/>
-    <property column="LOCALE_ID"  name="localeId" />
+    <property column="lookup_id"  name="lookUpId"  />
+    <property column="lookup_value"  name="lookUpValue"  type="java.lang.String"/>
+    <property column="locale_id"  name="localeId" />
     
-    <many-to-one name="locale" column="LOCALE_ID" 
+    <many-to-one name="locale" column="locale_id" 
       class="org.mifos.application.master.business.SupportedLocalesEntity"
       unique="true" insert="false" update="false"/>    
   

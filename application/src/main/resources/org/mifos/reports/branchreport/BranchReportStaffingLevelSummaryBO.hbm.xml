@@ -25,15 +25,15 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO"
-		table="BATCH_STAFFING_LEVEL_SUMMARY">
-		<id name="staffingLevelSummaryId" column="STAFFING_LEVEL_SUMMARY_ID"
+		table="batch_staffing_level_summary">
+		<id name="staffingLevelSummaryId" column="staffing_level_summary_id"
 			type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="isTotal" column="ROLE_ID" type="integer" access="field" />
-		<property name="titleName" column="ROLE_NAME" type="string" access="field" />
-		<property name="personnelCount" column="PERSONNEL_COUNT" type="integer" access="field" />		 
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+		<property name="isTotal" column="role_id" type="integer" access="field" />
+		<property name="titleName" column="role_name" type="string" access="field" />
+		<property name="personnelCount" column="personnel_count" type="integer" access="field" />		 
+		<many-to-one name="branchReport" column="branch_report_id" access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>		
 	</class>

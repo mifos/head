@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.fees.business.CategoryTypeEntity" table="CATEGORY_TYPE">
-        <id name="id" column="CATEGORY_ID" type="short">
+    <class name="org.mifos.accounts.fees.business.CategoryTypeEntity" table="category_type">
+        <id name="id" column="category_id" type="short">
             <generator class="native"/>
         </id>
-	 <many-to-one name="lookUpValue" column="CATEGORY_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+	 <many-to-one name="lookUpValue" column="category_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>
     </class>
     

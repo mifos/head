@@ -19,7 +19,6 @@
  */
 package org.mifos.application.master.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,18 +27,15 @@ import javax.persistence.Table;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
-@Table(name = "COUNTRY")
+@Table(name = "country")
 public class CountryEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "COUNTRY_ID", nullable = false)
     private Short countryId;
 
-    @Column(name = "COUNTRY_NAME")
     private String countryName;
 
-    @Column(name = "COUNTRY_SHORT_NAME")
     private String countryShortName;
 
     public CountryEntity() {

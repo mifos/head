@@ -6,33 +6,33 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerHistoricalDataEntity" table="CUSTOMER_HISTORICAL_DATA">
-        <id name="historicalId" column="HISTORICAL_ID" access="field">
+    <class name="org.mifos.customers.business.CustomerHistoricalDataEntity" table="customer_historical_data">
+        <id name="historicalId" column="historical_id" access="field">
             <generator class="native"/>
         </id>
-        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
-        <property name="productName" column="PRODUCT_NAME" />
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+        <property name="productName" column="product_name" />
         <property name="loanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="LOAN_AMOUNT_CURRENCY_ID" />
-			<column name="LOAN_AMOUNT" />
+			<column name="loan_amount_currency_id" />
+			<column name="loan_amount" />
 		</property>
         <property name="totalAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="TOTAL_AMOUNT_PAID_CURRENCY_ID" />
-			<column name="TOTAL_AMOUNT_PAID" />
+			<column name="total_amount_paid_currency_id" />
+			<column name="total_amount_paid" />
 		</property>
 		<property name="interestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="INTEREST_PAID_CURRENCY_ID" />
-			<column name="INTEREST_PAID" />
+			<column name="interest_paid_currency_id" />
+			<column name="interest_paid" />
 		</property>
-        <property name="missedPaymentsCount" column="MISSED_PAYMENTS_COUNT" />
-	    <property name="totalPaymentsCount" column="TOTAL_PAYMENTS_COUNT" />
-	    <property name="notes" column="NOTES"    />
-	    <property name="loanCycleNumber" column="LOAN_CYCLE_NUMBER"  />
-	    <property name="createdDate" column="CREATED_DATE"  />
-     	<property name="updatedDate" column="UPDATED_DATE"  />
-    	<property name="createdBy" column="CREATED_BY"  />
-    	<property name="updatedBy" column="UPDATED_BY"  />
-       <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
+        <property name="missedPaymentsCount" column="missed_payments_count" />
+	    <property name="totalPaymentsCount" column="total_payments_count" />
+	    <property name="notes" column="notes"    />
+	    <property name="loanCycleNumber" column="loan_cycle_number"  />
+	    <property name="createdDate" column="created_date"  />
+     	<property name="updatedDate" column="updated_date"  />
+    	<property name="createdBy" column="created_by"  />
+    	<property name="updatedBy" column="updated_by"  />
+       <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
     </class>
     
 </hibernate-mapping>

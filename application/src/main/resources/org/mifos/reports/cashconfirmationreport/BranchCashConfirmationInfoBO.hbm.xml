@@ -24,35 +24,35 @@ explanation of the license and how it is applied.
 -->                            
 <hibernate-mapping>
 	<class
-		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO" table="BATCH_BRANCH_CONFIRMATION_ISSUE">
-		<id name="id" access="field" column="ID">
+		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO" table="batch_branch_confirmation_issue">
+		<id name="id" access="field" column="id">
 			<generator class="native" />
 		</id>
-		<property name="productOffering" column="PRODUCT_NAME"
+		<property name="productOffering" column="product_name"
 			access="field" />
 		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="ACTUAL_CURRENCY_ID"/>
-			<column name="ACTUAL"/>
+			<column name="actual_currency_id"/>
+			<column name="actual"/>
 		</property>			
 		<many-to-one name="branchCashConfirmationReport"
-			column="BRANCH_CASH_CONFIRMATION_REPORT_ID" access="field"
+			column="branch_cash_confirmation_report_id" access="field"
 			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
 		</many-to-one>
     </class>
     
 	<class
-		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" table="BATCH_BRANCH_CONFIRMATION_DISBURSEMENT">
-		<id name="id" access="field" column="ID">
+		name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" table="batch_branch_confirmation_disbursement">
+		<id name="id" access="field" column="id">
 			<generator class="native" />
 		</id>
-		<property name="productOffering" column="PRODUCT_NAME"
+		<property name="productOffering" column="product_name"
 			access="field" />
 		<property name="actual" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="ACTUAL_CURRENCY_ID"/>
-			<column name="ACTUAL"/>
+			<column name="actual_currency_id"/>
+			<column name="actual"/>
 		</property>			
 		<many-to-one name="branchCashConfirmationReport"
-			column="BRANCH_CASH_CONFIRMATION_REPORT_ID" access="field"
+			column="branch_cash_confirmation_report_id" access="field"
 			class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO">
 		</many-to-one>
     </class>    

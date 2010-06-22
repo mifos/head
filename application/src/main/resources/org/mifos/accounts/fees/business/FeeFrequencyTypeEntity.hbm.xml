@@ -5,11 +5,11 @@
 
 
 <hibernate-mapping >
-    <class name="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" table="FEE_FREQUENCY_TYPE">
-        <id name="id" column="FEE_FREQUENCY_ID" unsaved-value="null">
+    <class name="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" table="fee_frequency_type">
+        <id name="id" column="fee_frequency_id" unsaved-value="null">
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+        <many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     		cascade="none" update="false" unique="true"/>
 	</class>
 </hibernate-mapping>

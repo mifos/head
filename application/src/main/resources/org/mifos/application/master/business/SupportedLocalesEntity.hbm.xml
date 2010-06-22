@@ -5,14 +5,14 @@
     
     
 <hibernate-mapping > 
-  <class name="org.mifos.application.master.business.SupportedLocalesEntity" table="SUPPORTED_LOCALE" >
-    <id column="LOCALE_ID" name="localeId" type="java.lang.Short" > 
+  <class name="org.mifos.application.master.business.SupportedLocalesEntity" table="supported_locale" >
+    <id column="locale_id" name="localeId" type="java.lang.Short" > 
 		<generator class="native"></generator>
     </id>
-	<property column="LOCALE_NAME"  name="localeName"  type="java.lang.String"/>
-	<property column="DEFAULT_LOCALE"  name="defaultLocale"  type="java.lang.Short"/>
-	<many-to-one name="country" column="COUNTRY_ID"  class="org.mifos.application.master.business.CountryEntity" cascade="save-update" unique="true" lazy="false"/>
-	<many-to-one name="language" column="LANG_ID"   class="org.mifos.application.master.business.LanguageEntity" cascade="save-update" unique="true" lazy="false"/>
+	<property column="locale_name"  name="localeName"  type="java.lang.String"/>
+	<property column="default_locale"  name="defaultLocale"  type="java.lang.Short"/>
+	<many-to-one name="country" column="country_id"  class="org.mifos.application.master.business.CountryEntity" cascade="save-update" unique="true" lazy="false"/>
+	<many-to-one name="language" column="lang_id"   class="org.mifos.application.master.business.LanguageEntity" cascade="save-update" unique="true" lazy="false"/>
   </class> 
   <query name="supportedlocales">
 	  <![CDATA[from  org.mifos.application.master.business.SupportedLocalesEntity locales]]>

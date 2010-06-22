@@ -4,24 +4,24 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
- <class name="org.mifos.security.util.PersonRoles" table="PERSONNEL">
-     <id name="id" type="short" column="PERSONNEL_ID">
+ <class name="org.mifos.security.util.PersonRoles" table="personnel">
+     <id name="id" type="short" column="personnel_id">
       <generator class="native"/>
     </id>
-   <property name="displayName" type="string" column="DISPLAY_NAME" />
-   <property name="loginName" type="string"  column="LOGIN_NAME" />
-   <property name="password" type="binary"  column="PASSWORD" />
-   <property name="preferedLocale" type="short"  column="PREFERRED_LOCALE" />
-   <property name="officeid" type="short"  column="OFFICE_ID" />
-   <property name="noOfTries" type="short"  column="NO_OF_TRIES" />
-   <property name="passwordChanged" type="short"  column="PASSWORD_CHANGED" />
-   <property name="personnelStatus" type="short"  column="PERSONNEL_STATUS" />
-   <property name="levelId" type="short"  column="LEVEL_ID" />
-   <property name="locked" type="short"  column="LOCKED" />
-   <property name="lastLogin" type="date"  column="LAST_LOGIN" />
-   <set name="roles" lazy="false" table="PERSONNEL_ROLE" >
-    <key column="PERSONNEL_ID"/>
-    <element type="short" column="ROLE_ID" not-null="true"/>
+   <property name="displayName" type="string" column="display_name" />
+   <property name="loginName" type="string"  column="login_name" />
+   <property name="password" type="binary"  column="password" />
+   <property name="preferedLocale" type="short"  column="preferred_locale" />
+   <property name="officeid" type="short"  column="office_id" />
+   <property name="noOfTries" type="short"  column="no_of_tries" />
+   <property name="passwordChanged" type="short"  column="password_changed" />
+   <property name="personnelStatus" type="short"  column="personnel_status" />
+   <property name="levelId" type="short"  column="level_id" />
+   <property name="locked" type="short"  column="locked" />
+   <property name="lastLogin" type="date"  column="last_login" />
+   <set name="roles" lazy="false" table="personnel_role" >
+    <key column="personnel_id"/>
+    <element type="short" column="role_id" not-null="true"/>
     </set>
  </class>
        <query name="getPersonRoles">

@@ -39,15 +39,14 @@ import org.mifos.framework.business.AbstractEntity;
  }
 )
 @Entity
-@Table(name = "ENTITY_MASTER")
+@Table(name = "entity_master")
 public class EntityMaster extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ENTITY_TYPE_ID", nullable = false)
+    @Column(name = "entity_type_id")
     private Short id;
 
-    @Column(name = "ENTITY_TYPE")
     private String entityType;
 
     public Short getId() {

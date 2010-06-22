@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity" table="PRD_APPLICABLE_MASTER">
-		<id name="id" column="PRD_APPLICABLE_MASTER_ID">
+	<class name="org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity" table="prd_applicable_master">
+		<id name="id" column="prd_applicable_master_id">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
 	</class>
 </hibernate-mapping>

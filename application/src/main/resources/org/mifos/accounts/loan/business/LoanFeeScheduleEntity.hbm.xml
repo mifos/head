@@ -5,26 +5,26 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.loan.business.LoanFeeScheduleEntity" table="LOAN_FEE_SCHEDULE">
-		<id name="accountFeesActionDetailId" column="ACCOUNT_FEES_DETAIL_ID" type="integer" unsaved-value="null" access="field">
+	<class name="org.mifos.accounts.loan.business.LoanFeeScheduleEntity" table="loan_fee_schedule">
+		<id name="accountFeesActionDetailId" column="account_fees_detail_id" type="integer" unsaved-value="null" access="field">
 			<generator class="native" />
 		</id>
 
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
 
-		<property name="installmentId" column="INSTALLMENT_ID" access="field"/>
+		<property name="installmentId" column="installment_id" access="field"/>
 		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="AMOUNT_CURRENCY_ID" />
-			<column name="AMOUNT" />
+			<column name="amount_currency_id" />
+			<column name="amount" />
 		</property>
 		<property name="feeAmountPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="AMOUNT_PAID_CURRENCY_ID" />
-			<column name="AMOUNT_PAID" />
+			<column name="amount_paid_currency_id" />
+			<column name="amount_paid" />
 		</property>
 
-		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.accounts.business.AccountFeesEntity" access="field"/>
-		<many-to-one name="accountActionDate" column="ID" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.accounts.fees.business.FeeBO" access="field"/>
+		<many-to-one name="accountFee" column="account_fee_id" class="org.mifos.accounts.business.AccountFeesEntity" access="field"/>
+		<many-to-one name="accountActionDate" column="id" class="org.mifos.accounts.loan.business.LoanScheduleEntity" access="field"/>
+		<many-to-one name="fee" column="fee_id" class="org.mifos.accounts.fees.business.FeeBO" access="field"/>
 
 	</class>
 </hibernate-mapping>

@@ -6,16 +6,16 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.application.holiday.business.HolidayBO" table="HOLIDAY">
-        <id name="id" column="HOLIDAY_ID" type="int">
+	<class name="org.mifos.application.holiday.business.HolidayBO" table="holiday">
+        <id name="id" column="holiday_id" type="int">
             <generator class="native"/>
         </id>
-	    <property name="holidayFromDate" column="HOLIDAY_FROM_DATE" type="date" />
-	    <property name="holidayThruDate" column="HOLIDAY_THRU_DATE" type="date" />
-		<property name="holidayName" column="HOLIDAY_NAME" type="string" />
-        <property name="repaymentRuleType" column="REPAYMENT_RULE_ID"
+	    <property name="holidayFromDate" column="holiday_from_date" type="date" />
+	    <property name="holidayThruDate" column="holiday_thru_date" type="date" />
+		<property name="holidayName" column="holiday_name" type="string" />
+        <property name="repaymentRuleType" column="repayment_rule_id"
             type="org.mifos.application.holiday.util.helpers.RepaymentRuleUserType" not-null="true"/>
-		<property name="holidayChangesAppliedFlag" column="HOLIDAY_CHANGES_APPLIED_FLAG"/>        
+		<property name="holidayChangesAppliedFlag" column="holiday_changes_applied_flag"/>        
 	</class>
 
 	<!-- Holiday Specific Queries  -->

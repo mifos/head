@@ -4,13 +4,13 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
   
 <hibernate-mapping > 
-  <class name="org.mifos.application.master.business.LanguageEntity" table="LANGUAGE" >
-    <id column="LANG_ID" name="id" type="java.lang.Short" > 
+  <class name="org.mifos.application.master.business.LanguageEntity" table="language" >
+    <id column="lang_id" name="id" type="java.lang.Short" > 
 		<generator class="native"></generator>
     </id>
-	<property column="LANG_NAME"  name="languageName"  type="java.lang.String" access="field"/>
-	<property column="LANG_SHORT_NAME"  name="languageShortName"  type="java.lang.String" access="field"/>
-    <many-to-one name="lookUpValue" column="LOOKUP_ID"
+	<property column="lang_name"  name="languageName"  type="java.lang.String" access="field"/>
+	<property column="lang_short_name"  name="languageShortName"  type="java.lang.String" access="field"/>
+    <many-to-one name="lookUpValue" column="lookup_id"
 			class="org.mifos.application.master.business.LookUpValueEntity"
 			cascade="none" update="false" unique="true" />
   </class>

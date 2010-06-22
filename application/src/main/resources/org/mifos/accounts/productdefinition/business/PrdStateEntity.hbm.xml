@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.productdefinition.business.PrdStateEntity" table="PRD_STATE">
-        <id name="id" column="PRD_STATE_ID" type="short">
+    <class name="org.mifos.accounts.productdefinition.business.PrdStateEntity" table="prd_state">
+        <id name="id" column="prd_state_id" type="short">
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" column="PRD_STATE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" />
+        <many-to-one name="lookUpValue" column="prd_state_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" />
     </class>
     
 </hibernate-mapping>

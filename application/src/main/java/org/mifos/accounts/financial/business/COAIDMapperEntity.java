@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.financial.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -45,16 +44,15 @@ import org.mifos.framework.business.AbstractEntity;
  }
 )
 @Entity
-@Table(name = "COA_IDMAPPER")
+@Table(name = "coa_idmapper")
 public class COAIDMapperEntity  extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "CONSTANT_ID", nullable = false)
     private Short constantId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COA_ID", unique = true, insertable = false, updatable = false)
+    @JoinColumn(name = "coa_id", unique = true, insertable = false, updatable = false)
     private COABO coa;
 
     protected COAIDMapperEntity() {

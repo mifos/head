@@ -3,15 +3,15 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-       <class name="org.mifos.customers.surveys.business.QuestionChoice" table="QUESTION_CHOICES"
+       <class name="org.mifos.customers.surveys.business.QuestionChoice" table="question_choices"
        		discriminator-value="N">
-               <id name="choiceId" column="CHOICE_ID" type="integer" unsaved-value="0" access="field">
+               <id name="choiceId" column="choice_id" type="integer" unsaved-value="0" access="field">
                        <generator class="native"/>
                </id>
-               <discriminator column="PPI" type="yes_no"/>
-               <property name="choiceText" column="CHOICE_TEXT" not-null="true"/>
+               <discriminator column="ppi" type="yes_no"/>
+               <property name="choiceText" column="choice_text" not-null="true"/>
                <subclass name="org.mifos.customers.ppi.business.PPIChoice" discriminator-value="Y">
-               		<property name="points" column="PPI_POINTS" />
+               		<property name="points" column="ppi_points" />
                </subclass>
        </class>
 </hibernate-mapping>

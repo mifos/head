@@ -7,23 +7,23 @@
 <hibernate-mapping>
 
     <class name="org.mifos.customers.client.business.ClientNameDetailEntity" 
-        table="CUSTOMER_NAME_DETAIL">
-        <id name="customerNameId" column="CUSTOMER_NAME_ID" 
+        table="customer_name_detail">
+        <id name="customerNameId" column="customer_name_id" 
             type="integer" access="field">
             <generator class="native"/>
         </id>
-        <property name="nameType" column="NAME_TYPE" type="short" />
-        <property name="salutation" column="SALUTATION" type="integer"   />
+        <property name="nameType" column="name_type" type="short" />
+        <property name="salutation" column="salutation" type="integer"   />
 
-        <property name="secondMiddleName" column="SECOND_MIDDLE_NAME" type="string"   />
-        <property name="displayName" column="DISPLAY_NAME" type="string"   />
+        <property name="secondMiddleName" column="second_middle_name" type="string"   />
+        <property name="displayName" column="display_name" type="string"   />
 		<component name="name" class="org.mifos.framework.business.util.Name">
-			<property name="firstName" column="FIRST_NAME" type="string" />
- 	       	<property name="middleName" column="MIDDLE_NAME" type="string"   />
-	        <property name="lastName" column="LAST_NAME" type="string" />
-	        <property name="secondLastName" column="SECOND_LAST_NAME" type="string"   />
+			<property name="firstName" column="first_name" type="string" />
+ 	       	<property name="middleName" column="middle_name" type="string"   />
+	        <property name="lastName" column="last_name" type="string" />
+	        <property name="secondLastName" column="second_last_name" type="string"   />
 		</component>
-        <many-to-one name="client" column="CUSTOMER_ID" class="org.mifos.customers.client.business.ClientBO" insert="true" update="true"  access="field"/>
+        <many-to-one name="client" column="customer_id" class="org.mifos.customers.client.business.ClientBO" insert="true" update="true"  access="field"/>
     </class>
     
 </hibernate-mapping>

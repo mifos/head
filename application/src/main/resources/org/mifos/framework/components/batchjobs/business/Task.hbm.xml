@@ -4,15 +4,15 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.framework.components.batchjobs.business.Task" 
-		table="SCHEDULED_TASKS">
-		<id name="id" column="TASKID" type="integer" unsaved-value="null">
+		table="scheduled_tasks">
+		<id name="id" column="taskid" type="integer" unsaved-value="null">
 			<generator class="native" />
 		</id>
-		<property name="task" column="TASKNAME" type="string" />
-		<property name="startTime" column="STARTTIME" type="timestamp" />
-		<property name="endTime" column="ENDTIME" type="timestamp" />
-		<property name="status" column="STATUS" type="short" />
-		<property name="description" column="DESCRIPTION" type="string" />
+		<property name="task" column="taskname" type="string" />
+		<property name="startTime" column="starttime" type="timestamp" />
+		<property name="endTime" column="endtime" type="timestamp" />
+		<property name="status" column="status" type="short" />
+		<property name="description" column="description" type="string" />
 	</class>
 	
 	<query name="scheduledTasks.getLatestTask">

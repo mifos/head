@@ -6,13 +6,13 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.fund.business.FundBO" table="FUND">
-        <id name="fundId" column="FUND_ID" type="short" access="field">
+    <class name="org.mifos.accounts.fund.business.FundBO" table="fund">
+        <id name="fundId" column="fund_id" type="short" access="field">
             <generator class="native"/>
         </id>
-        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
-        <property name="fundName" column="FUND_NAME" type="string" />
-        <many-to-one name="fundCode" column="FUNDCODE_ID" class="org.mifos.application.master.business.FundCodeEntity"  unique="true" insert="true" update="false" access="field" />
+        <version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
+        <property name="fundName" column="fund_name" type="string" />
+        <many-to-one name="fundCode" column="fundcode_id" class="org.mifos.application.master.business.FundCodeEntity"  unique="true" insert="true" update="false" access="field" />
     </class>
     <query name="fund.getFundForGivenName">
             <![CDATA[from org.mifos.accounts.fund.business.FundBO fund where fund.fundName = :FUND_NAME]]>

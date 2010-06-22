@@ -5,17 +5,17 @@
 
 
 <hibernate-mapping>
-    <class name="org.mifos.customers.business.CustomerStatusEntity" table="CUSTOMER_STATE">
-        <id name="id" column="STATUS_ID" type="short">
+    <class name="org.mifos.customers.business.CustomerStatusEntity" table="customer_state">
+        <id name="id" column="status_id" type="short">
             <generator class="native"/>
         </id>
-        <property name="optional" column="CURRENTLY_IN_USE" type="short" access="field"/>
-	    <property name="description" column="DESCRIPTION" access="field"/>
-	  	<many-to-one name="lookUpValue" column="STATUS_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+        <property name="optional" column="currently_in_use" type="short" access="field"/>
+	    <property name="description" column="description" access="field"/>
+	  	<many-to-one name="lookUpValue" column="status_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>
-	  	<many-to-one name="customerLevel" column="LEVEL_ID" class="org.mifos.customers.business.CustomerLevelEntity"  access="field" />
-	  	<set name="flagSet" table="CUSTOMER_STATE_FLAG" >
-			<key column="STATUS_ID"/>
+	  	<many-to-one name="customerLevel" column="level_id" class="org.mifos.customers.business.CustomerLevelEntity"  access="field" />
+	  	<set name="flagSet" table="customer_state_flag" >
+			<key column="status_id"/>
 			<one-to-many class="org.mifos.customers.business.CustomerStatusFlagEntity"/>
 		</set>
     </class>

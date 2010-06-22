@@ -4,10 +4,10 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-    <class name="org.mifos.application.importexport.business.ImportedFilesEntity" table="IMPORTED_TRANSACTIONS_FILES">
-        <id name="fileName" column="FILE_NAME" type="string" access="field" />
-        <property name="submittedOn" column="SUBMITTED_ON" type="timestamp" access="field" />
-        <many-to-one name="submittedBy" column="SUBMITTED_BY" class="org.mifos.customers.personnel.business.PersonnelBO"
+    <class name="org.mifos.application.importexport.business.ImportedFilesEntity" table="imported_transactions_files">
+        <id name="fileName" column="file_name" type="string" access="field" />
+        <property name="submittedOn" column="submitted_on" type="timestamp" access="field" />
+        <many-to-one name="submittedBy" column="submitted_by" class="org.mifos.customers.personnel.business.PersonnelBO"
             unique="true" lazy="false" />
     </class>
 

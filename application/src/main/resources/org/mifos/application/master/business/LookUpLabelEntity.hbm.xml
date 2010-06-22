@@ -4,14 +4,14 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
   
 <hibernate-mapping > 
-  <class name="org.mifos.application.master.business.LookUpLabelEntity" table="LOOKUP_LABEL" >
-     <id name="LookUpLabelId" column="LABEL_ID" >
+  <class name="org.mifos.application.master.business.LookUpLabelEntity" table="lookup_label" >
+     <id name="LookUpLabelId" column="label_id" >
             <generator class="native" />
         </id>
-    <property column="ENTITY_NAME"  name="labelName"  type="java.lang.String"/>
-    <property column="LOCALE_ID"  name="localeId" />
-     <many-to-one name="locale" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" insert="false" update="false"/>    
-     <many-to-one name="lookUpEntity"  column="ENTITY_ID" class="org.mifos.application.master.business.LookUpEntity" />    
+    <property column="entity_name"  name="labelName"  type="java.lang.String"/>
+    <property column="locale_id"  name="localeId" />
+     <many-to-one name="locale" column="locale_id" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" insert="false" update="false"/>    
+     <many-to-one name="lookUpEntity"  column="entity_id" class="org.mifos.application.master.business.LookUpEntity" />    
   </class> 
 
 

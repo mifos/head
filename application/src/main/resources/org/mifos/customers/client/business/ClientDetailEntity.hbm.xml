@@ -5,25 +5,25 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.client.business.ClientDetailEntity" table="CUSTOMER_DETAIL">
-       <id name="customerId" column="CUSTOMER_ID" type="integer" access="field">
+    <class name="org.mifos.customers.client.business.ClientDetailEntity" table="customer_detail">
+       <id name="customerId" column="customer_id" type="integer" access="field">
             <generator class="foreign">
             	<param name="property">client</param>
             </generator>
         </id>
  		
-        <property name="ethinicity" column="ETHINICITY" type="integer"   />
-        <property name="citizenship" column="CITIZENSHIP" type="integer"  />
-        <property name="handicapped" column="HANDICAPPED" type="integer"   />
-        <property name="businessActivities" column="BUSINESS_ACTIVITIES" type="integer"   />
-        <property name="maritalStatus" column="MARITAL_STATUS" type="integer"   />
-        <property name="educationLevel" column="EDUCATION_LEVEL" type="integer"   />
-        <property name="numChildren" column="NUM_CHILDREN" type="short"   />
-        <property name="gender" column="GENDER" type="short" />
-        <property name="dateStarted" column="DATE_STARTED" type="date" />
-        <property name="handicappedDetails" column="HANDICAPPED_DETAILS" type="string"  />
-        <property name="povertyStatus" column="POVERTY_STATUS" />
-        <property name="povertyLikelihoodPercent" column="POVERTY_LHOOD_PCT" />
+        <property name="ethinicity" column="ethinicity" type="integer"   />
+        <property name="citizenship" column="citizenship" type="integer"  />
+        <property name="handicapped" column="handicapped" type="integer"   />
+        <property name="businessActivities" column="business_activities" type="integer"   />
+        <property name="maritalStatus" column="marital_status" type="integer"   />
+        <property name="educationLevel" column="education_level" type="integer"   />
+        <property name="numChildren" column="num_children" type="short"   />
+        <property name="gender" column="gender" type="short" />
+        <property name="dateStarted" column="date_started" type="date" />
+        <property name="handicappedDetails" column="handicapped_details" type="string"  />
+        <property name="povertyStatus" column="poverty_status" />
+        <property name="povertyLikelihoodPercent" column="poverty_lhood_pct" />
         <one-to-one name="client" class="org.mifos.customers.client.business.ClientBO" cascade="all" access="field"/>
     </class>
          

@@ -6,16 +6,16 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerMovementEntity" table="CUSTOMER_MOVEMENT">
-  		<id name="customerMovementId" column="CUSTOMER_MOVEMENT_ID" type="integer" unsaved-value="-1" access="field">
+    <class name="org.mifos.customers.business.CustomerMovementEntity" table="customer_movement">
+  		<id name="customerMovementId" column="customer_movement_id" type="integer" unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
-        <property name="status" column="STATUS" type="short" access="field"/>
-        <property name="startDate" column="START_DATE" type="date" access="field"/>
-        <property name="endDate" column="END_DATE" type="date"  />
-        <property name="updatedBy" column="UPDATED_BY" />
-        <property name="updatedDate" column="UPDATED_DATE" type="date" />
-        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" cascade="none" access="field"/>
-        <many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>        
+        <property name="status" column="status" type="short" access="field"/>
+        <property name="startDate" column="start_date" type="date" access="field"/>
+        <property name="endDate" column="end_date" type="date"  />
+        <property name="updatedBy" column="updated_by" />
+        <property name="updatedDate" column="updated_date" type="date" />
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" cascade="none" access="field"/>
+        <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  insert="true" update="false" cascade="none" access="field"/>        
     </class>
  </hibernate-mapping>

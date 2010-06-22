@@ -6,14 +6,14 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.PrdStatusEntity" table="PRD_STATUS">
-		<id name="offeringStatusId" column="OFFERING_STATUS_ID" access="field">
+	<class name="org.mifos.accounts.productdefinition.business.PrdStatusEntity" table="prd_status">
+		<id name="offeringStatusId" column="offering_status_id" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
-		<property name="status" column="CURRENTLY_IN_USE" type="short" not-null="true" />
-		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" not-null="true" access="field" />
-		<many-to-one name="prdState" column="PRD_STATE_ID" class="org.mifos.accounts.productdefinition.business.PrdStateEntity" not-null="true" access="field" />
+		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />
+		<property name="status" column="currently_in_use" type="short" not-null="true" />
+		<many-to-one name="prdType" column="prd_type_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" not-null="true" access="field" />
+		<many-to-one name="prdState" column="prd_state_id" class="org.mifos.accounts.productdefinition.business.PrdStateEntity" not-null="true" access="field" />
 	</class>
 	<query name="product.status">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.PrdStatusEntity prStatus

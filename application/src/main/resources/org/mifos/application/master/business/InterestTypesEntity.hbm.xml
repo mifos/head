@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.master.business.InterestTypesEntity" table="INTEREST_TYPES">
-        <id name="id" column="INTEREST_TYPE_ID" >
+    <class name="org.mifos.application.master.business.InterestTypesEntity" table="interest_types">
+        <id name="id" column="interest_type_id" >
             <generator class="native"/>
         </id>
-        <property name="descripton" column="DESCRIPTON" type="string" />
-        <many-to-one name="productType" column="CATEGORY_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity"  not-null="true" />
-        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
+        <property name="descripton" column="descripton" type="string" />
+        <many-to-one name="productType" column="category_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity"  not-null="true" />
+        <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="lookup_id" insert="true" update="false"/>
     </class>
 </hibernate-mapping>

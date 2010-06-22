@@ -34,18 +34,16 @@ import org.mifos.framework.business.AbstractEntity;
  */
 @Deprecated
 @Entity
-@Table(name = "CUSTOMER_ATTENDANCE_TYPES")
+@Table(name = "customer_attendance_types")
 public class CustomerAttendanceType extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ATTENDANCE_ID", nullable = false)
     private short attendanceId;
 
-    @Column(name = "ATTENDANCE_LOOKUP_ID")
+    @Column(name = "attendance_lookup_id")
     private Integer lookUpId;
 
-    @Column(name = "DESCRIPTION")
     private String desciption;
 
     public CustomerAttendanceType() {

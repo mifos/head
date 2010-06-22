@@ -24,28 +24,28 @@ explanation of the license and how it is applied.
 -->                            
 <hibernate-mapping>
 	<class name="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO"
-		table="BATCH_BRANCH_CASH_CONFIRMATION_REPORT">
+		table="batch_branch_cash_confirmation_report">
 		<id name="branchCashConfirmationReportId" access="field"
-			column="BRANCH_CASH_CONFIRMATION_REPORT_ID">
+			column="branch_cash_confirmation_report_id">
 			<generator class="native" />
 		</id>
-		<property name="branchId" column="BRANCH_ID" type="short"
+		<property name="branchId" column="branch_id" type="short"
 			access="field" />
-		<property name="runDate" column="RUN_DATE" type="date"
+		<property name="runDate" column="run_date" type="date"
 			access="field" />
 
 		<set name="centerRecoveries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_CASH_CONFIRMATION_REPORT_ID" not-null="true" />
+			<key column="branch_cash_confirmation_report_id" not-null="true" />
 			<one-to-many
 				class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO" />
 		</set>
 		<set name="centerIssues" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_CASH_CONFIRMATION_REPORT_ID" not-null="true" />
+			<key column="branch_cash_confirmation_report_id" not-null="true" />
 			<one-to-many
 				class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationIssueBO" />
 		</set>
 		<set name="disbursements" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_CASH_CONFIRMATION_REPORT_ID" not-null="true" />
+			<key column="branch_cash_confirmation_report_id" not-null="true" />
 			<one-to-many
 				class="org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO" />
 		</set>

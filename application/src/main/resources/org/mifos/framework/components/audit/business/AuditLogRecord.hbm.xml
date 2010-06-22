@@ -6,14 +6,14 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.framework.components.audit.business.AuditLogRecord" table="CHANGE_LOG_DETAIL">
-  		<id name="squenceNo" column="SEQUENCE_NUM" type="integer" unsaved-value="null" access="field">
+    <class name="org.mifos.framework.components.audit.business.AuditLogRecord" table="change_log_detail">
+  		<id name="squenceNo" column="sequence_num" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
-  		<property name="fieldName" column="FIELD_NAME" type="string" access="field"/>
-        <property name="oldValue" column="OLD_VALUE" type="string" access="field"/>
-        <property name="newValue" column="NEW_VALUE" type="string" access="field"/>
-        <many-to-one  name="auditLog" column="CHANGE_LOG_ID" 
+  		<property name="fieldName" column="field_name" type="string" access="field"/>
+        <property name="oldValue" column="old_value" type="string" access="field"/>
+        <property name="newValue" column="new_value" type="string" access="field"/>
+        <many-to-one  name="auditLog" column="change_log_id" 
             class="org.mifos.framework.components.audit.business.AuditLog"
             access="field"/>
       

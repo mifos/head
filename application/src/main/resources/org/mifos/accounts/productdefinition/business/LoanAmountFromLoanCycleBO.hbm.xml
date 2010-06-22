@@ -8,16 +8,16 @@
 
 	<class
 		name="org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO"
-		table="LOAN_AMOUNT_FROM_LOAN_CYCLE">
+		table="loan_amount_from_loan_cycle">
 		<id name="loanAmountFromLoanCycleID"
-			column="LOAN_AMOUNT_FROM_LOAN_CYCLE_ID" access="field">
+			column="loan_amount_from_loan_cycle_id" access="field">
 			<generator class="native" />
 		</id>
-		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" access="field"/>
-		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" access="field"/>
-		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" access="field"/>
-		<property name="rangeIndex" column="RANGE_INDEX" access="field"/>
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+		<property name="minLoanAmount" column="min_loan_amount" access="field"/>
+		<property name="maxLoanAmount" column="max_loan_amnt" access="field"/>
+		<property name="defaultLoanAmount" column="default_loan_amount" access="field"/>
+		<property name="rangeIndex" column="range_index" access="field"/>
+		<many-to-one name="loanOffering" column="prd_offering_id"
 			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			cascade="none" insert="true" update="true" unique="true"
 			access="field" />

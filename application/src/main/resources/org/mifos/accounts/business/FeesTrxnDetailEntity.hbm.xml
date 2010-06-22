@@ -6,15 +6,15 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.FeesTrxnDetailEntity" table="FEE_TRXN_DETAIL">
-		<id name="feesTrxnId" column="FEE_TRXN_DETAIL_ID" type="integer" access="field">
+	<class name="org.mifos.accounts.business.FeesTrxnDetailEntity" table="fee_trxn_detail">
+		<id name="feesTrxnId" column="fee_trxn_detail_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
 		<property name="feeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="FEE_AMOUNT_CURRENCY_ID" />
-			<column name="FEE_AMOUNT" />
+			<column name="fee_amount_currency_id" />
+			<column name="fee_amount" />
 		</property>
-		<many-to-one name="accountFees" column="ACCOUNT_FEE_ID" class="org.mifos.accounts.business.AccountFeesEntity" not-null="true" access="field" />
-		<many-to-one name="accountTrxn" column="ACCOUNT_TRXN_ID" class="org.mifos.accounts.business.AccountTrxnEntity" not-null="true" access="field" />
+		<many-to-one name="accountFees" column="account_fee_id" class="org.mifos.accounts.business.AccountFeesEntity" not-null="true" access="field" />
+		<many-to-one name="accountTrxn" column="account_trxn_id" class="org.mifos.accounts.business.AccountTrxnEntity" not-null="true" access="field" />
 	</class>
 </hibernate-mapping>

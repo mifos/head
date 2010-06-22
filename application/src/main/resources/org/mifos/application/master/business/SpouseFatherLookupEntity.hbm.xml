@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.master.business.SpouseFatherLookupEntity" table="SPOUSE_FATHER_LOOKUP">
-        <id name="id" column="SPOUSE_FATHER_ID">
+    <class name="org.mifos.application.master.business.SpouseFatherLookupEntity" table="spouse_father_lookup">
+        <id name="id" column="spouse_father_id">
             <generator class="native"/>
         </id>
         
-  	 <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" 
+  	 <many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="lookup_id" 
         cascade="none" update="false" unique="true"/>
    </class>
                  

@@ -6,31 +6,31 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.customers.office.business.OfficeBO" table="OFFICE">
-		<id name="officeId" column="OFFICE_ID" type="short" access="field">
+	<class name="org.mifos.customers.office.business.OfficeBO" table="office">
+		<id name="officeId" column="office_id" type="short" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
-		<property name="searchId" column="SEARCH_ID" type="string" />
-		<property name="officeName" column="DISPLAY_NAME" type="string" />
-		<property name="createdDate" column="CREATED_DATE" type="date" />
-		<property name="updatedDate" column="UPDATED_DATE" type="date" />
-		<property name="globalOfficeNum" column="GLOBAL_OFFICE_NUM"	type="string"  />
-		<property name="maxChildCount" column="MAX_CHILD_COUNT"	type="integer" access="field" />
-		<property name="operationMode" column="LOCAL_REMOTE_FLAG" access="field" />
-		<property name="createdBy" column="CREATED_BY" />
-		<property name="updatedBy" column="UPDATED_BY" />
-		<property name="shortName" column="OFFICE_SHORT_NAME" type="string" />
+		<version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
+		<property name="searchId" column="search_id" type="string" />
+		<property name="officeName" column="display_name" type="string" />
+		<property name="createdDate" column="created_date" type="date" />
+		<property name="updatedDate" column="updated_date" type="date" />
+		<property name="globalOfficeNum" column="global_office_num"	type="string"  />
+		<property name="maxChildCount" column="max_child_count"	type="integer" access="field" />
+		<property name="operationMode" column="local_remote_flag" access="field" />
+		<property name="createdBy" column="created_by" />
+		<property name="updatedBy" column="updated_by" />
+		<property name="shortName" column="office_short_name" type="string" />
 		
-		 <many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
-		<many-to-one name="parentOffice"  class="org.mifos.customers.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true" cascade="none" />
-		<many-to-one name="status"	class="org.mifos.customers.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" />
-		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD" order-by="FIELD_ID">
-			<key column="OFFICE_ID" />
+		 <many-to-one name="level" class="org.mifos.customers.office.business.OfficeLevelEntity" column="office_level_id" unique="true" insert="true" update="true" />
+		<many-to-one name="parentOffice"  class="org.mifos.customers.office.business.OfficeBO"	column="parent_office_id"  insert="true" update="true" cascade="none" />
+		<many-to-one name="status"	class="org.mifos.customers.office.business.OfficeStatusEntity" column="status_id" unique="true" insert="true" />
+		<set name="customFields" cascade="all" inverse="true"  table="office_custom_field" order-by="FIELD_ID">
+			<key column="office_id" />
 			<one-to-many class="org.mifos.customers.office.business.OfficeCustomFieldEntity" />
 		</set>
 		<set name="children"  inverse="true"  lazy="true" >
-			<key column="PARENT_OFFICE_ID"  />
+			<key column="parent_office_id"  />
 			<one-to-many class="org.mifos.customers.office.business.OfficeBO"/>
 		</set>
 

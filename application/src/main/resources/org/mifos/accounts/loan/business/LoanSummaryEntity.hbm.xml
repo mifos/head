@@ -6,56 +6,56 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.accounts.loan.business.LoanSummaryEntity" 
-	table="LOAN_SUMMARY">
-		<id name="accountId" column="ACCOUNT_ID" type="integer" access="field">
+	table="loan_summary">
+		<id name="accountId" column="account_id" type="integer" access="field">
 			<generator class="foreign">
 				<param name="property">loan</param>
 			</generator>
 		</id>
 		<property name="originalPrincipal" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="ORIG_PRINCIPAL_CURRENCY_ID" />
-			<column name="ORIG_PRINCIPAL" />
+			<column name="orig_principal_currency_id" />
+			<column name="orig_principal" />
 		</property>
 		<property name="originalInterest" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="ORIG_INTEREST_CURRENCY_ID" />
-			<column name="ORIG_INTEREST" />
+			<column name="orig_interest_currency_id" />
+			<column name="orig_interest" />
 		</property>
 		<property name="originalFees" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="ORIG_FEES_CURRENCY_ID" />
-			<column name="ORIG_FEES" />
+			<column name="orig_fees_currency_id" />
+			<column name="orig_fees" />
 		</property>
 		<property name="originalPenalty" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="ORIG_PENALTY_CURRENCY_ID" />
-			<column name="ORIG_PENALTY" />
+			<column name="orig_penalty_currency_id" />
+			<column name="orig_penalty" />
 		</property>
 		<property name="principalPaid" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="PRINCIPAL_PAID_CURRENCY_ID" />
-			<column name="PRINCIPAL_PAID" />
+			<column name="principal_paid_currency_id" />
+			<column name="principal_paid" />
 		</property>
 		<property name="interestPaid" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="INTEREST_PAID_CURRENCY_ID" />
-			<column name="INTEREST_PAID" />
+			<column name="interest_paid_currency_id" />
+			<column name="interest_paid" />
 		</property>
 		<property name="feesPaid" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="FEES_PAID_CURRENCY_ID" />
-			<column name="FEES_PAID" />
+			<column name="fees_paid_currency_id" />
+			<column name="fees_paid" />
 		</property>
 		<property name="penaltyPaid" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="PENALTY_PAID_CURRENCY_ID" />
-			<column name="PENALTY_PAID" />
+			<column name="penalty_paid_currency_id" />
+			<column name="penalty_paid" />
 		</property>
 		<property name="rawAmountTotal" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			<column name="RAW_AMOUNT_TOTAL_CURRENCY_ID" />
-			<column name="RAW_AMOUNT_TOTAL" />
+			<column name="raw_amount_total_currency_id" />
+			<column name="raw_amount_total" />
 		</property>
 		<one-to-one name="loan" 
 			class="org.mifos.accounts.loan.business.LoanBO" 

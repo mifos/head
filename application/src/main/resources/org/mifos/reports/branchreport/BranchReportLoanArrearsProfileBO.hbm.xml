@@ -25,36 +25,36 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportLoanArrearsProfileBO"
-		table="BATCH_LOAN_ARREARS_PROFILE">
-		<id name="loanArrearsProfileId" column="LOAN_ARREARS_PROFILE_ID" type="integer"
+		table="batch_loan_arrears_profile">
+		<id name="loanArrearsProfileId" column="loan_arrears_profile_id" type="integer"
 			access="field">
 			<generator class="native" />
 		</id>
 		<property name="loansInArrears"
-			column="LOANS_IN_ARREARS" type="integer" access="field" />
+			column="loans_in_arrears" type="integer" access="field" />
 		<property name="clientsInArrears"
-			column="CLIENTS_IN_ARREARS" type="integer" access="field" />
+			column="clients_in_arrears" type="integer" access="field" />
 		<property name="overDueBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="OVERDUE_BALANCE_CURRENCY_ID"/>
-			<column name="OVERDUE_BALANCE"/>
+			<column name="overdue_balance_currency_id"/>
+			<column name="overdue_balance"/>
 		</property>			
 		<property name="unpaidBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="UNPAID_BALANCE_CURRENCY_ID"/>
-			<column name="UNPAID_BALANCE"/>
+			<column name="unpaid_balance_currency_id"/>
+			<column name="unpaid_balance"/>
 		</property>
 		<property name="loansAtRisk"
-			column="LOANS_AT_RISK" type="integer" access="field" />
+			column="loans_at_risk" type="integer" access="field" />
 		<property name="outstandingAmountAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="OUTSTANDING_AMOUNT_AT_RISK_CURRENCY_ID"/>
-			<column name="OUTSTANDING_AMOUNT_AT_RISK"/>
+			<column name="outstanding_amount_at_risk_currency_id"/>
+			<column name="outstanding_amount_at_risk"/>
 		</property>
 		<property name="overdueAmountAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="OVERDUE_AMOUNT_AT_RISK_CURRENCY_ID"/>
-			<column name="OVERDUE_AMOUNT_AT_RISK"/>
+			<column name="overdue_amount_at_risk_currency_id"/>
+			<column name="overdue_amount_at_risk"/>
 		</property>
 		<property name="clientsAtRisk"
-			column="CLIENTS_AT_RISK" type="integer" access="field" />
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID"
+			column="clients_at_risk" type="integer" access="field" />
+		<many-to-one name="branchReport" column="branch_report_id"
 			access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>

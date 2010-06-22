@@ -8,24 +8,24 @@
 
 	<class
 		name="org.mifos.accounts.business.AccountFeesEntity"
-		table="ACCOUNT_FEES" >
-		<id name="accountFeeId" column="ACCOUNT_FEE_ID" type="integer" access="field">
+		table="account_fees" >
+		<id name="accountFeeId" column="account_fee_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer"
+		<version name="versionNo" column="version_no" type="integer"
 			unsaved-value="null" />
-		<property name="feeAmount" column="FEE_AMNT" />
+		<property name="feeAmount" column="fee_amnt" />
 		<property name="accountFeeAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-		 <column name="ACCOUNT_FEE_AMNT_CURRENCY_ID" /> 
-		 <column name="ACCOUNT_FEE_AMNT" />
+		 <column name="account_fee_amnt_currency_id" /> 
+		 <column name="account_fee_amnt" />
 		</property>
-		<property name="feeStatus" column="FEE_STATUS" type="short" />
-		<property name="statusChangeDate" column="STATUS_CHANGE_DATE" type="date" />
-		<property name="lastAppliedDate" column="LAST_APPLIED_DATE" />
-		<many-to-one name="account" column="ACCOUNT_ID"
+		<property name="feeStatus" column="fee_status" type="short" />
+		<property name="statusChangeDate" column="status_change_date" type="date" />
+		<property name="lastAppliedDate" column="last_applied_date" />
+		<many-to-one name="account" column="account_id"
 			class="org.mifos.accounts.business.AccountBO"
 			 lazy="false" access="field"/>
-		<many-to-one name="fees" column="FEE_ID" 
+		<many-to-one name="fees" column="fee_id" 
 			class="org.mifos.accounts.fees.business.FeeBO"
 			 unique="true" fetch="join" access="field"/>
 

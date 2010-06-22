@@ -6,37 +6,37 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.group.business.GroupPerformanceHistoryEntity" table="GROUP_PERF_HISTORY">
-        <id name="id" column="ID" type="integer">
+    <class name="org.mifos.customers.group.business.GroupPerformanceHistoryEntity" table="group_perf_history">
+        <id name="id" column="id" type="integer">
             <generator class="native"/>
         </id>
         
-        <property name="clientCount" column="NO_OF_CLIENTS" />
+        <property name="clientCount" column="no_of_clients" />
         <property name="lastGroupLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="LAST_GROUP_LOAN_AMNT_DISB_CURRENCY_ID" /> 
-			<column name="LAST_GROUP_LOAN_AMNT_DISB" />
+	        <column name="last_group_loan_amnt_disb_currency_id" /> 
+			<column name="last_group_loan_amnt_disb" />
 		</property>
 		<property name="avgLoanForMember" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="AVG_LOAN_SIZE_CURRENCY_ID" /> 
-			<column name="AVG_LOAN_SIZE" />
+	        <column name="avg_loan_size_currency_id" /> 
+			<column name="avg_loan_size" />
 		</property>
 		<property name="totalOutstandingPortfolio" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="TOTAL_OUTSTAND_LOAN_AMNT_CURRENCY_ID" /> 
-			<column name="TOTAL_OUTSTAND_LOAN_AMNT" />
+	        <column name="total_outstand_loan_amnt_currency_id" /> 
+			<column name="total_outstand_loan_amnt" />
 		</property>
 		<property name="totalSavings" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="TOTAL_SAVINGS_AMNT_CURRENCY_ID" /> 
-			<column name="TOTAL_SAVINGS_AMNT" />
+	        <column name="total_savings_amnt_currency_id" /> 
+			<column name="total_savings_amnt" />
 		</property>
 		<property name="portfolioAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
-			<column name="PORTFOLIO_AT_RISK" />
+	        <column name="portfolio_at_risk_currency_id" /> 
+			<column name="portfolio_at_risk" />
 		</property>        
-		<set name="loanCounters" cascade="all" table="GROUP_LOAN_COUNTER" lazy="false" access="field" inverse="true">
-			<key column="GROUP_PERF_ID" />
+		<set name="loanCounters" cascade="all" table="group_loan_counter" lazy="false" access="field" inverse="true">
+			<key column="group_perf_id" />
 			<one-to-many class="org.mifos.customers.group.business.GroupLoanCounter" />
 		</set>
-        <many-to-one name="group" column="CUSTOMER_ID"
+        <many-to-one name="group" column="customer_id"
 			class="org.mifos.customers.group.business.GroupBO" unique="true"/>
     </class>    
     

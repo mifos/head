@@ -7,13 +7,13 @@
 <hibernate-mapping>
 
     <class name="org.mifos.reports.business.ReportsBO" 
-    	table="REPORT">
+    	table="report">
         <id name="reportId" column="report_id" type="short">
             <generator class="native"/>
         </id>
         
-        <property name="isActive" column="REPORT_ACTIVE" type="short" />    
-        <property name="activityId" column="ACTIVITY_ID" type="short" />    
+        <property name="isActive" column="report_active" type="short" />    
+        <property name="activityId" column="activity_id" type="short" />    
         <property name="reportName" column="report_name" type="string" />    
         <property name="reportIdentifier" column="report_identifier" type="string" />        
     	<many-to-one name="reportsCategoryBO" 

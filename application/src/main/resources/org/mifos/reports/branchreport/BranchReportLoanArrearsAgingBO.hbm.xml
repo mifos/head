@@ -25,31 +25,31 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO"
-		table="BATCH_LOAN_ARREARS_AGING">
-		<id name="arrearsAgingId" column="LOAN_ARREARS_AGING_ID"
+		table="batch_loan_arrears_aging">
+		<id name="arrearsAgingId" column="loan_arrears_aging_id"
 			type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="agingPeriod" column="AGING_PERIOD_ID"
+		<property name="agingPeriod" column="aging_period_id"
 			type="org.mifos.reports.branchreport.LoanArrearsAgingPeriodType"
 			access="field" />
-		<property name="clientsAging" column="CLIENTS_AGING"
+		<property name="clientsAging" column="clients_aging"
 			type="integer" access="field" />
-		<property name="loansAging" column="LOANS_AGING" type="integer"
+		<property name="loansAging" column="loans_aging" type="integer"
 			access="field" />
 		<property name="amountAging" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="AMOUNT_AGING_CURRENCY_ID"/>
-			<column name="AMOUNT_AGING"/>
+			<column name="amount_aging_currency_id"/>
+			<column name="amount_aging"/>
 		</property>
 		<property name="amountOutstandingAging" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="AMOUNT_OUTSTANDING_AGING_CURRENCY_ID"/>
-			<column name="AMOUNT_OUTSTANDING_AGING"/>
+			<column name="amount_outstanding_aging_currency_id"/>
+			<column name="amount_outstanding_aging"/>
 		</property>
 		<property name="interestAging" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="INTEREST_AGING_CURRENCY_ID"/>
-			<column name="INTEREST_AGING"/>
+			<column name="interest_aging_currency_id"/>
+			<column name="interest_aging"/>
 		</property>
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+		<many-to-one name="branchReport" column="branch_report_id" access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>		
 	</class>

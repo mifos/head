@@ -5,20 +5,20 @@
 <hibernate-mapping>
 	<class
 		name="org.mifos.security.rolesandpermission.business.RoleBO"
-		table="ROLE">
-		<id name="id" type="short" column="ROLE_ID" access="field">
+		table="role">
+		<id name="id" type="short" column="role_id" access="field">
 			<generator class="increment" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" />
-		<property name="name" type="string" column="ROLE_NAME" />
+		<version name="versionNo" column="version_no" type="integer" />
+		<property name="name" type="string" column="role_name" />
 		
-		<property name="createdDate" column="CREATED_DATE" />
-		<property name="createdBy" column="CREATED_BY" />
-		<property name="updatedBy"  column="UPDATED_BY" />
-		<property name="updatedDate" column="UPDATED_DATE" />
+		<property name="createdDate" column="created_date" />
+		<property name="createdBy" column="created_by" />
+		<property name="updatedBy"  column="updated_by" />
+		<property name="updatedDate" column="updated_date" />
 
 		<set name="activities" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="ROLE_ID" />
+			<key column="role_id" />
 			<one-to-many
 				class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
 		</set>

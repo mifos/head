@@ -3,19 +3,19 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.surveys.business.Question" table="QUESTIONS">
-		<id name="questionId" column="QUESTION_ID" type="integer" unsaved-value="0" access="field">
+	<class name="org.mifos.customers.surveys.business.Question" table="questions">
+		<id name="questionId" column="question_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native"/>
 		</id>
-		<property name="shortName" column="SHORT_NAME"/>
-		<property name="questionText" column="QUESTION_TEXT"/>
-		<property name="answerType" column="ANSWER_TYPE" />
-		<property name="questionState" column="QUESTION_STATE"/>
-		<property name="numericMin" column="NUMERIC_MIN"/>
-		<property name="numericMax" column="NUMERIC_MAX"/>
+		<property name="shortName" column="short_name"/>
+		<property name="questionText" column="question_text"/>
+		<property name="answerType" column="answer_type" />
+		<property name="questionState" column="question_state"/>
+		<property name="numericMin" column="numeric_min"/>
+		<property name="numericMax" column="numeric_max"/>
 		<list name="choices" cascade="all" lazy="false">
-			<key column="QUESTION_ID" not-null="true"/>
-			<index column="CHOICE_ORDER"/>
+			<key column="question_id" not-null="true"/>
+			<index column="choice_order"/>
 			<one-to-many class="org.mifos.customers.surveys.business.QuestionChoice"/>
 		</list>
 	</class>

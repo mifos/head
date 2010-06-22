@@ -6,10 +6,10 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity" table="GRACE_PERIOD_TYPE">
-        <id name="id" column="GRACE_PERIOD_TYPE_ID">
+    <class name="org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity" table="grace_period_type">
+        <id name="id" column="grace_period_type_id">
             <generator class="native"/>
         </id>
- 		<many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="LOOKUP_ID" insert="true" update="false"/>
+ 		<many-to-one name="lookUpValue" class="org.mifos.application.master.business.LookUpValueEntity" column="lookup_id" insert="true" update="false"/>
     </class>
 </hibernate-mapping>

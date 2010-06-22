@@ -3,14 +3,14 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.fees.business.FeeTypeEntity" table="FEE_TYPE">
-		<id name="feeTypeId" column="FEE_TYPE_ID" type="short">
+	<class name="org.mifos.accounts.fees.business.FeeTypeEntity" table="fee_type">
+		<id name="feeTypeId" column="fee_type_id" type="short">
 			<generator class="native" />
 		</id>
 
-		<property name="flatOrRate" column="FLAT_OR_RATE" type="short" />
-		<property name="formula" column="FORMULA" type="string" />
+		<property name="flatOrRate" column="flat_or_rate" type="short" />
+		<property name="formula" column="formula" type="string" />
 
-		<many-to-one name="lookUpEntity" column="FEE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpEntity" />
+		<many-to-one name="lookUpEntity" column="fee_lookup_id" class="org.mifos.application.master.business.LookUpEntity" />
 	</class>
 </hibernate-mapping>

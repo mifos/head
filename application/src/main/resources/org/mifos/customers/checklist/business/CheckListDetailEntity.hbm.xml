@@ -6,17 +6,17 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.checklist.business.CheckListDetailEntity" table="CHECKLIST_DETAIL">
-        <id name="detailId" column="DETAIL_ID" type="integer" access="field">
+    <class name="org.mifos.customers.checklist.business.CheckListDetailEntity" table="checklist_detail">
+        <id name="detailId" column="detail_id" type="integer" access="field">
             <generator class="native"/>
         </id>
         
-        <property name="detailText" column="DETAIL_TEXT" type="string" />
-        <property name="answerType" column="ANSWER_TYPE" type="short"  not-null="true" /> 
-        <many-to-one name="supportedLocales" column="LOCALE_ID" 
+        <property name="detailText" column="detail_text" type="string" />
+        <property name="answerType" column="answer_type" type="short"  not-null="true" /> 
+        <many-to-one name="supportedLocales" column="locale_id" 
             class="org.mifos.application.master.business.SupportedLocalesEntity" 
             />         
-    	<many-to-one name="checkListBO" column="CHECKLIST_ID" 
+    	<many-to-one name="checkListBO" column="checklist_id" 
     	    class="org.mifos.customers.checklist.business.CheckListBO" 
     	    access="field" cascade="none" insert="true" update="true" />
    

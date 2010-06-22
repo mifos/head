@@ -3,27 +3,27 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.surveys.business.SurveyInstance" table="SURVEY_INSTANCE">
-		<id name="instanceId" column="INSTANCE_ID" type="integer" unsaved-value="0" access="field">
+	<class name="org.mifos.customers.surveys.business.SurveyInstance" table="survey_instance">
+		<id name="instanceId" column="instance_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
-		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="save-update"/>
-		<many-to-one name="officer" column="OFFICER_ID" access="field" cascade="save-update"/>
-		<many-to-one name="creator" column="CREATING_OFFICER_ID" access="field" cascade="save-update"/>
-		<many-to-one name="customer" column="CUSTOMER_ID" access="field" cascade="save-update"/>
-		<many-to-one name="account" column="ACCOUNT_ID" access="field" cascade="save-update"/>
-		<property name="dateConducted" column="DATE_CONDUCTED" type="date"/>
-		<property name="completedStatus" column="COMPLETED_STATUS" type="integer"/>
+		<many-to-one name="survey" column="survey_id" access="field" cascade="save-update"/>
+		<many-to-one name="officer" column="officer_id" access="field" cascade="save-update"/>
+		<many-to-one name="creator" column="creating_officer_id" access="field" cascade="save-update"/>
+		<many-to-one name="customer" column="customer_id" access="field" cascade="save-update"/>
+		<many-to-one name="account" column="account_id" access="field" cascade="save-update"/>
+		<property name="dateConducted" column="date_conducted" type="date"/>
+		<property name="completedStatus" column="completed_status" type="integer"/>
 		
-		<set name="surveyResponses" table="SURVEY_RESPONSE" cascade="all" order-by="RESPONSE_ID asc" inverse="true">
-			<key column="INSTANCE_ID" />
+		<set name="surveyResponses" table="survey_response" cascade="all" order-by="RESPONSE_ID asc" inverse="true">
+			<key column="instance_id" />
 			<one-to-many class="org.mifos.customers.surveys.business.SurveyResponse" />
 		</set>
 		
-		<joined-subclass table="PPI_SURVEY_INSTANCE" name="org.mifos.customers.ppi.business.PPISurveyInstance">
-			<key column="INSTANCE_ID"/>
-			<property name="bottomHalfBelowPovertyLinePercent" column="BOTTOM_HALF_BELOW"/>
-			<property name="topHalfBelowPovertyLinePercent" column="TOP_HALF_BELOW"/>
+		<joined-subclass table="ppi_survey_instance" name="org.mifos.customers.ppi.business.PPISurveyInstance">
+			<key column="instance_id"/>
+			<property name="bottomHalfBelowPovertyLinePercent" column="bottom_half_below"/>
+			<property name="topHalfBelowPovertyLinePercent" column="top_half_below"/>
 		</joined-subclass>
 	</class>
 	<query name="surveys.retrieveInstancesByCustomer">

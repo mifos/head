@@ -3,17 +3,17 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.ppi.business.PPILikelihood" table="PPI_LIKELIHOODS">
-		<id name="likelihoodId" column="LIKELIHOOD_ID" type="integer" unsaved-value="0" access="field">
+	<class name="org.mifos.customers.ppi.business.PPILikelihood" table="ppi_likelihoods">
+		<id name="likelihoodId" column="likelihood_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
-		<many-to-one name="survey" column="SURVEY_ID" class="org.mifos.customers.surveys.business.Survey"     
+		<many-to-one name="survey" column="survey_id" class="org.mifos.customers.surveys.business.Survey"     
 		    access="field" not-null="true"/>
-		<property name="scoreFrom" column="SCORE_FROM" />
-		<property name="scoreTo" column="SCORE_TO" />
-		<property name="bottomHalfBelowPovertyLinePercent" column="BOTTOM_HALF_BELOW" />
-		<property name="topHalfBelowPovertyLinePercent" column="TOP_HALF_BELOW" />
-		<property name="order" column="LIKELIHOOD_ORDER" access="field"/>
+		<property name="scoreFrom" column="score_from" />
+		<property name="scoreTo" column="score_to" />
+		<property name="bottomHalfBelowPovertyLinePercent" column="bottom_half_below" />
+		<property name="topHalfBelowPovertyLinePercent" column="top_half_below" />
+		<property name="order" column="likelihood_order" access="field"/>
 	</class>
 </hibernate-mapping>
 

@@ -24,48 +24,48 @@ explanation of the license and how it is applied.
 -->                            
 <hibernate-mapping>
 	<class name="org.mifos.reports.branchreport.BranchReportBO"
-		table="BATCH_BRANCH_REPORT">
+		table="batch_branch_report">
 		<id name="branchReportId" access="field"
-			column="BRANCH_REPORT_ID">
+			column="branch_report_id">
 			<generator class="native" />
 		</id>
-		<property name="branchId" column="BRANCH_ID" type="short"
+		<property name="branchId" column="branch_id" type="short"
 			access="field" />
-		<property name="runDate" column="RUN_DATE" type="date"
+		<property name="runDate" column="run_date" type="date"
 			access="field" />
 
 		<set name="clientSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true" />
+			<key column="branch_report_id" not-null="true" />
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportClientSummaryBO" />
 		</set>
 
 		<set name="loanArrearsAging" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<key column="branch_report_id" not-null="true"/>
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportLoanArrearsAgingBO" />
 		</set>
 
 		<set name="staffSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<key column="branch_report_id" not-null="true"/>
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportStaffSummaryBO" />
 		</set>
 		
 		<set name="staffingLevelSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<key column="branch_report_id" not-null="true"/>
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO" />
 		</set>
 		
 		<set name="loanDetails" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<key column="branch_report_id" not-null="true"/>
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportLoanDetailsBO" />
 		</set>
 		
 		<set name="loanArrearsProfile" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<key column="branch_report_id" not-null="true"/>
 			<one-to-many
 				class="org.mifos.reports.branchreport.BranchReportLoanArrearsProfileBO" />
 		</set>

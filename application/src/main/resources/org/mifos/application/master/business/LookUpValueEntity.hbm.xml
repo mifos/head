@@ -5,18 +5,18 @@
 
 <hibernate-mapping>
 	<class name="org.mifos.application.master.business.LookUpValueEntity" 
-		table="LOOKUP_VALUE">
-		<id column="LOOKUP_ID" name="lookUpId" type="java.lang.Integer">
+		table="lookup_value">
+		<id column="lookup_id" name="lookUpId" type="java.lang.Integer">
 			<generator class="native"></generator>
 		</id>
 
-		<property name="lookUpName" type="java.lang.String" column="LOOKUP_NAME" />
-		<many-to-one name="lookUpEntity" column="ENTITY_ID" 
+		<property name="lookUpName" type="java.lang.String" column="lookup_name" />
+		<many-to-one name="lookUpEntity" column="entity_id" 
 			class="org.mifos.application.master.business.LookUpEntity" 
 			unique="true" />
 
 		<set name="lookUpValueLocales" cascade="all" lazy="false">
-			<key column="LOOKUP_ID" update="false" />
+			<key column="lookup_id" update="false" />
 			<one-to-many class="org.mifos.application.master.business.LookUpValueLocaleEntity" />
 		</set>
 

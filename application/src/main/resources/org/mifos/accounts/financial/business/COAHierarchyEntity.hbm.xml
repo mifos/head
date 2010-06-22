@@ -3,8 +3,8 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.financial.business.COAHierarchyEntity" table="COAHIERARCHY">
-		<id name="accountId" column="COA_ID" access="field">
+	<class name="org.mifos.accounts.financial.business.COAHierarchyEntity" table="coahierarchy">
+		<id name="accountId" column="coa_id" access="field">
 			<generator class="foreign">
 				<param name="property">coa</param>
 			</generator>
@@ -12,7 +12,7 @@
 
 		<one-to-one name="coa" class="org.mifos.accounts.financial.business.COABO"
 			fetch="join" access="field" />
-		<many-to-one name="parentAccount" column="PARENT_COAID"
+		<many-to-one name="parentAccount" column="parent_coaid"
 			class="org.mifos.accounts.financial.business.COAHierarchyEntity"
 			fetch="join" cascade="none" unique="true" access="field" />
 

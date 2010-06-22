@@ -29,36 +29,53 @@ import javax.persistence.Table;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
-@Table(name = "FUND_CODE")
+@Table(name = "fund_code")
 public class FundCodeEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "FUNDCODE_ID", nullable = false)
-    private Short fundCodeId;
+    private Short fundcodeId;
 
-    @Column(name = "FUNDCODE_VALUE")
-    private String fundCodeValue;
+    private String fundcodeValue;
 
     public FundCodeEntity(String fundCode) {
-        this.fundCodeValue = fundCode;
+        this.fundcodeValue = fundCode;
     }
 
     protected FundCodeEntity() { }
 
     public Short getFundCodeId() {
-        return fundCodeId;
+        return fundcodeId;
     }
 
     public String getFundCodeValue() {
-        return fundCodeValue;
+        return fundcodeValue;
     }
 
     public void setFundCodeId(Short fundCodeId) {
-        this.fundCodeId = fundCodeId;
+        this.fundcodeId = fundCodeId;
     }
 
     public void setFundCodeValue(String fundCode) {
-        this.fundCodeValue = fundCode;
+        this.fundcodeValue = fundCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FundCodeEntity rhs = (FundCodeEntity) obj;
+        return new EqualsBuilder().append(this.fundcodeId, rhs.fundcodeId).append(this.fundcodeValue, rhs.fundcodeValue).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int initialNonZeroOddNumber = 7;
+        int multiplierNonZeroOddNumber = 7;
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.fundcodeId).append(this.fundcodeValue).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(this.fundcodeId).append(" : ").append(this.fundcodeValue).toString();
     }
 }
+
