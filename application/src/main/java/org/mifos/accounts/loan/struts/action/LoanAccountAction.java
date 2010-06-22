@@ -631,13 +631,12 @@ public class LoanAccountAction extends AccountAppAction {
     public ActionForward viewStatusHistory(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
+        UserContext userContext = getUserContext(request);
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
-        loanBusinessService.initialize(loanBO.getAccountStatusChangeHistory());
-        loanBO.setUserContext(getUserContext(request));
-        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(loanBO.getAccountStatusChangeHistory());
+        List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = this.loanServiceFacade.retrieveLoanAccountStatusChangeHistory(userContext, globalAccountNum);
+
         SessionUtils.setCollectionAttribute(STATUS_HISTORY, accStatusChangeHistory, request);
-        loanBO = null;
+
         return mapping.findForward(ActionForwards.viewStatusHistory.toString());
     }
 

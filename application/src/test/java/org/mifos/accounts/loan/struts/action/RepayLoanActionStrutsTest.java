@@ -31,6 +31,8 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
+import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -131,6 +133,10 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         addRequestParameter("paymentTypeId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
+        repayLoanActionForm.setAmount(amount.toString());
+        setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
 
@@ -153,6 +159,10 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         addRequestParameter("paymentTypeId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        RepayLoanActionForm repayLoanActionForm = new RepayLoanActionForm();
+        repayLoanActionForm.setAmount(amount.toString());
+        setActionForm(repayLoanActionForm);
         actionPerform();
         verifyForward(Constants.UPDATE_SUCCESS);
 

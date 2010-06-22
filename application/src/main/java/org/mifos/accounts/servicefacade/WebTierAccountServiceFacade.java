@@ -29,26 +29,30 @@ import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
- * Concrete implementation of service to manipulate accounts
- * from the presentation layer.
+ * Concrete implementation of service to manipulate accounts from the presentation layer.
  *
  */
 public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
     @Override
-    public AccountPaymentDto getAccountPaymentInformation(AccountReferenceDto accountReferenceDto,
-            String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception {
-        AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
+    public AccountPaymentDto getAccountPaymentInformation(AccountReferenceDto accountReferenceDto, String paymentType,
+            Short localeId, UserReferenceDto userReferenceDto) throws Exception {
+        AccountBO account = new AccountBusinessService()
+                .getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
 
         UserReferenceDto accountUser = null;
         if (account.getPersonnel() != null) {
@@ -56,10 +60,9 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         } else {
             accountUser = userReferenceDto;
         }
-        AccountPaymentDto accountPaymentDto = new AccountPaymentDto(
-                AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId()),
-                account.getVersionNo(), constructPaymentTypeList(paymentType, localeId),
-                account.getTotalPaymentDue(), accountUser);
+        AccountPaymentDto accountPaymentDto = new AccountPaymentDto(AccountTypeDto.getAccountType(account
+                .getAccountType().getAccountTypeId()), account.getVersionNo(), constructPaymentTypeList(paymentType,
+                localeId), account.getTotalPaymentDue(), accountUser);
 
         return accountPaymentDto;
     }
@@ -68,11 +71,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         List<PaymentTypeEntity> paymentTypeList = null;
         if (paymentType != null && paymentType.trim() != Constants.EMPTY_STRING) {
             if (paymentType.equals(Constants.LOAN)) {
-                paymentTypeList = new AcceptedPaymentTypePersistence().
-                    getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.loan_repayment.getValue());
+                paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(localeId,
+                        TrxnTypes.loan_repayment.getValue());
             } else {
-                paymentTypeList = new AcceptedPaymentTypePersistence().
-                    getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.fee.getValue());
+                paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(localeId,
+                        TrxnTypes.fee.getValue());
             }
         }
 
@@ -84,8 +87,10 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
-    public boolean isPaymentPermitted(final AccountReferenceDto accountReferenceDto, final UserContext userContext) throws ServiceException {
-        AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
+    public boolean isPaymentPermitted(final AccountReferenceDto accountReferenceDto, final UserContext userContext)
+            throws ServiceException {
+        AccountBO account = new AccountBusinessService()
+                .getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
         CustomerLevel customerLevel = null;
         if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             customerLevel = account.getCustomer().getLevel();
@@ -98,10 +103,58 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             personnelId = userContext.getId();
         }
 
-        return ActivityMapper.getInstance().isPaymentPermittedForAccounts(account.getType(), customerLevel, userContext,
-                account.getOffice().getOfficeId(), personnelId);
+        return ActivityMapper.getInstance().isPaymentPermittedForAccounts(account.getType(), customerLevel,
+                userContext, account.getOffice().getOfficeId(), personnelId);
     }
 
+    @Override
+    public List<ApplicableCharge> getApplicableFees(Integer accountId, UserContext userContext) throws ServiceException {
+        return new AccountBusinessService().getAppllicableFees(accountId, userContext);
+    }
 
+    @Override
+    public void applyCharge(Integer accountId, UserContext userContext, Short feeId, Double chargeAmount)
+            throws ApplicationException {
 
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+        account.setUserContext(userContext);
+
+        CustomerLevel customerLevel = null;
+        if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+            customerLevel = account.getCustomer().getLevel();
+        }
+        if (account.getPersonnel() != null) {
+            checkPermissionForApplyCharges(account.getType(), customerLevel, userContext, account.getOffice()
+                    .getOfficeId(), account.getPersonnel().getPersonnelId());
+        } else {
+            checkPermissionForApplyCharges(account.getType(), customerLevel, userContext, account.getOffice()
+                    .getOfficeId(), userContext.getId());
+        }
+
+        account.applyCharge(feeId, chargeAmount);
+        account.update();
+
+    }
+
+    private void checkPermissionForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(accountTypes, customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(AccountTypes accountTypes, CustomerLevel customerLevel,
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isApplyChargesPermittedForAccounts(accountTypes, customerLevel,
+                userContext, recordOfficeId, recordLoanOfficerId);
+    }
+
+    @Override
+    public AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId) throws ServiceException {
+
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
+        return new AccountTypeCustomerLevelDto(account.getType().getValue(), account.getCustomer().getCustomerLevel()
+                .getId());
+    }
 }

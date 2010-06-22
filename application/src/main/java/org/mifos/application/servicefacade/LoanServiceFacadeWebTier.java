@@ -616,7 +616,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate, LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
+    public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
+            LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
 
         CustomerBO customer = customerDao.findCustomerById(customerId);
         LoanBO loan = redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
@@ -638,7 +639,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             StaticHibernateUtil.closeSession();
         }
 
-        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled(), loan.getAccountId(), loan.getGlobalAccountNum(), loan, customer);
+        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled(), loan.getAccountId(), loan
+                .getGlobalAccountNum(), loan, customer);
     }
 
     private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
@@ -650,7 +652,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException, AccountException {
+    public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
+            AccountException {
         LoanBO loan = this.loanDao.findById(loanAccountId);
         new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
     }
@@ -658,33 +661,37 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException {
 
-       LoanBO loan = this.loanDao.findById(loanAccountId);
+        LoanBO loan = this.loanDao.findById(loanAccountId);
 
-       Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
-       if (AccountingRules.isBackDatedTxnAllowed()) {
-           proposedDate = loan.getDisbursementDate();
-       }
+        Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
+        if (AccountingRules.isBackDatedTxnAllowed()) {
+            proposedDate = loan.getDisbursementDate();
+        }
 
-       return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount(), loan.getAmountTobePaidAtdisburtail());
+        return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount(), loan
+                .getAmountTobePaidAtdisburtail());
     }
 
     @Override
-    public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) throws ApplicationException {
+    public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm,
+            DateTime disbursementDate, UserContext userContext) throws ApplicationException {
         CustomerBO customer = customerDao.findCustomerById(customerId);
         return redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
     }
 
-    private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate,
-            UserContext userContext) throws ApplicationException {
+    private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm,
+            DateTime disbursementDate, UserContext userContext) throws ApplicationException {
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
         MeetingBO newMeetingForRepaymentDay = null;
         if (isRepaymentIndepOfMeetingEnabled) {
-            newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(disbursementDate, loanAccountActionForm, customer);
+            newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(disbursementDate, loanAccountActionForm,
+                    customer);
         }
 
         Short productId = loanAccountActionForm.getPrdOfferingIdValue();
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
+                .getLoanOffering(productId, userContext.getLocaleId());
 
         Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountActionForm.getLoanAmount());
         Short numOfInstallments = loanAccountActionForm.getNoOfInstallmentsValue();
@@ -713,11 +720,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
 
         LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
-                numOfInstallments, disbursementDate.toDate(),
-                isInterestDeductedAtDisbursement,
-                interest, gracePeriod, fund, fees,
-                customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments, minNumOfShortInstallments,
-                isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+                numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
+                fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                minNumOfShortInstallments, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
         redoLoan.setExternalId(externalId);
         redoLoan.setBusinessActivityId(selectedLoanPurpose);
         redoLoan.setCollateralNote(collateralNote);
@@ -773,11 +778,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loanBO = this.loanDao.findById(accountId);
 
-        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
-        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
-        Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(viewOverDueInstallmentDetails.getSubTotal());
+        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
+                .getDetailsOfNextInstallment(), loanBO.getCurrency());
+        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
+                .getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
+        Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(
+                viewOverDueInstallmentDetails.getSubTotal());
 
-        return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails, totalAmountDue, loanBO.getNextMeetingDate());
+        return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails,
+                totalAmountDue, loanBO.getNextMeetingDate());
     }
 
     private InstallmentDetailsDto getUpcomingInstallmentDetails(
@@ -808,6 +817,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
     }
 
+    @Override
     public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException {
 
         LoanBO loan = this.loanDao.findById(loanAccountId);
@@ -820,5 +830,28 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findById(loanId);
         loan.updateDetails(userContext);
         return loan;
+    }
+
+    @Override
+    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        loan.updateDetails(userContext);
+        return new ArrayList<AccountStatusChangeHistoryEntity>(loan.getAccountStatusChangeHistory());
+    }
+
+    public Money getTotalEarlyRepayAmount(String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        return loan.getTotalEarlyRepayAmount();
+    }
+
+    @Override
+    public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr, String receiptNumber,
+            java.sql.Date receiptDate, String paymentTypeId, Short userId) throws AccountException {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
+        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
     }
 }

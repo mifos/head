@@ -46,10 +46,14 @@ import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.FeeDetailsForLoadDto;
+import org.mifos.application.servicefacade.FeeDetailsForManageDto;
+import org.mifos.application.servicefacade.FeeDetailsForPreviewDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -204,8 +208,6 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         return glCodes;
     }
 
-
-
     private MifosCurrency getCurrency(Short currencyId) {
         MifosCurrency currency;
         if (currencyId == null) {
@@ -230,16 +232,18 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     @Override
     public FeeDto createFee(FeeCreateRequest feeCreateRequest, UserContext userContext) throws ServiceException {
         try {
-            FeeFrequencyTypeEntity feeFrequencyType =
-                masterDataService.retrieveMasterEntity(
-                        FeeFrequencyTypeEntity.class, feeCreateRequest.getFeeFrequencyType().getValue(), userContext.getLocaleId());
-            CategoryTypeEntity feeCategoryType = masterDataService.retrieveMasterEntity(
-                    CategoryTypeEntity.class, feeCreateRequest.getCategoryType().getValue(), userContext.getLocaleId());
+            FeeFrequencyTypeEntity feeFrequencyType = masterDataService.retrieveMasterEntity(FeeFrequencyTypeEntity.class, feeCreateRequest.getFeeFrequencyType().getValue(), userContext.getLocaleId());
+            CategoryTypeEntity feeCategoryType = masterDataService.retrieveMasterEntity(CategoryTypeEntity.class, feeCreateRequest.getCategoryType().getValue(), userContext.getLocaleId());
             GLCodeEntity glCodeEntity = masterDataService.findGLCodeEntity(feeCreateRequest.getGlCode());
 
-            FeeBO feeBO = feeFrequencyType.isOneTime() ?
-                    createOneTimeFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext) :
-                        createPeriodicFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext);
+            FeeBO feeBO = null;
+
+            if (feeFrequencyType.isOneTime()) {
+                feeBO = createOneTimeFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext);
+            } else {
+                feeBO = createPeriodicFee(feeCreateRequest, feeFrequencyType, feeCategoryType, glCodeEntity, userContext);
+            }
+
             return mapFeeDto(feeBO);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -261,6 +265,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
                         .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE) : new MeetingBO(feeCreateRequest
                 .getFeeRecurrenceType(), feeCreateRequest.getWeekRecurAfter(), new DateTimeService()
                 .getCurrentJavaDateTime(), MeetingType.PERIODIC_FEE);
+
         FeeBO feeBO = null;
         if (feeCreateRequest.isRateFee()) {
             FeeFormulaEntity feeFormulaEntity = masterDataService.retrieveMasterEntity(FeeFormulaEntity.class,
@@ -281,12 +286,15 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     private FeeBO createOneTimeFee(FeeCreateRequest feeCreateRequest, FeeFrequencyTypeEntity feeFrequencyType,
             CategoryTypeEntity feeCategoryType, GLCodeEntity glCodeEntity, UserContext userContext)
             throws PersistenceException, FeeException {
+
         FeePaymentEntity feePaymentEntity = masterDataService.retrieveMasterEntity(FeePaymentEntity.class,
                 feeCreateRequest.getFeePaymentType().getValue(), userContext.getLocaleId());
+
         FeeBO feeBO = null;
         if (feeCreateRequest.isRateFee()) {
             FeeFormulaEntity feeFormulaEntity = masterDataService.retrieveMasterEntity(FeeFormulaEntity.class,
                     feeCreateRequest.getFeeFormula().getValue(), userContext.getLocaleId());
+
             feeBO = new RateFeeBO(userContext, feeCreateRequest.getFeeName(), feeCategoryType, feeFrequencyType,
                     glCodeEntity, feeCreateRequest.getRate(), feeFormulaEntity,
                     feeCreateRequest.isCustomerDefaultFee(), feePaymentEntity);
@@ -324,4 +332,32 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
         feeBo.update();
     }
 
+    @Override
+    public FeeDetailsForLoadDto retrieveDetailsForFeeLoad(Short localeId) throws ApplicationException {
+        FeeParameters feeParameters = parameters(localeId);
+        boolean isMultiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+        List<MifosCurrency> currencies = AccountingRules.getCurrencies();
+        return new FeeDetailsForLoadDto(feeParameters, isMultiCurrencyEnabled, currencies);
+    }
+
+    @Override
+    public FeeDetailsForPreviewDto retrieveDetailsforFeePreview(Short currencyId) {
+
+        boolean isMultiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
+        String currencyCode = "";
+
+        if (isMultiCurrencyEnabled) {
+            currencyCode = getCurrency(currencyId).getCurrencyCode();
+        }
+
+        return new FeeDetailsForPreviewDto(isMultiCurrencyEnabled, currencyCode);
+    }
+
+    @Override
+    public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId, Short localeId) throws ApplicationException {
+        FeeDto fee = getFeeDetails(feeId);
+        List<FeeStatusEntity> feeStatuses = new MasterPersistence().retrieveMasterEntities(FeeStatusEntity.class, localeId);
+
+        return new FeeDetailsForManageDto(fee, feeStatuses);
+    }
 }
