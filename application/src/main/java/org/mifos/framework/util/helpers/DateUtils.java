@@ -147,7 +147,6 @@ public class DateUtils {
     public static java.util.Date getDate(String value) {
         if (value != null && !value.equals("")) {
             try {
-
                 String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
                 SimpleDateFormat format = new SimpleDateFormat(formatStr, dateLocale);
                 format.setLenient(false);
@@ -155,9 +154,9 @@ public class DateUtils {
             } catch (Exception e) {
                 throw new FrameworkRuntimeException(e);
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**

@@ -878,12 +878,26 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerConstants.DISPLAY_NAME, displayName);
         queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
-        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GET_GROUP_COUNT_BY_NAME,
-                queryParameters);
+        List queryResult = this.genericDao.executeNamedQuery("Customer.getGroupCountByGroupNameAndOffice", queryParameters);
 
         if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
             throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateCenterNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerConstants.DISPLAY_NAME, displayName);
+        queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
+
+        List queryResult = this.genericDao.executeNamedQuery("Customer.getCenterCount", queryParameters);
+
+        if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
+            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+        }
+
     }
 
     @SuppressWarnings("unchecked")

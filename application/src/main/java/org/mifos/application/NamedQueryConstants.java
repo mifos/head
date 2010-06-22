@@ -233,8 +233,6 @@ public interface NamedQueryConstants {
 
     public String CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS = "customerScheduleEntity.getScheduleForIds";
     public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE = "accounts.countOfMissedDepositsPaidAfterDueDate";
-    public String GET_CENTER_COUNT_BY_NAME = "Customer.getCenterCount";
-    public String GET_GROUP_COUNT_BY_NAME = "Customer.getGroupCountByGroupNameAndOffice";
 
     // fee related m2
     public String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
