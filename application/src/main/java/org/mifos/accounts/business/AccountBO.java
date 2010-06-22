@@ -608,9 +608,8 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
         // keep looking at the next installment as long as the current date falls on or
         // after (!before) the start of the current installment
-        while (installment != null
-                && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate()
-                        .getTime())))) {
+        while (installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate().getTime())))) {
+
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
             if (installmentIndex == allInstallments.size()) {
