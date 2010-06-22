@@ -44,6 +44,10 @@
 </div>
 [/#macro]
 
+[#macro crumb url]
+<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}" /]</span></div>
+[/#macro]
+
 [#macro header pageTitle]
 <html>
   <head>

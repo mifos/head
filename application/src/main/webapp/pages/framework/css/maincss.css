@@ -26,6 +26,10 @@ a:hover {
 .marginAuto{
 	margin:auto;
 }
+
+.marginRight180{
+margin-right:180px;
+}
 .marginLeft30{
 	margin-left:30px;
 }
@@ -109,6 +113,10 @@ a:hover {
 .bluedivs {
 	background-color:#d7deee;
 	/*color:#666666;*/
+	width:95%;
+	padding-top:4px;
+	padding-bottom:3px;
+	padding-right:20%;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -182,6 +190,17 @@ a:hover {
 .marginTop75{
 	margin-top:75px;
 }
+.marginTop20{
+	margin-top:20px;
+}
+.marginTop10{
+	margin-top:10px;
+}
+
+.marginTop15{
+	margin-top:15px;
+}
+
 
 .buttn {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -196,9 +215,15 @@ a:hover {
 	background-repeat: repeat-x;
 	cursor: pointer;
 	height: 20px;
-	float:right;
 	margin-right:34px;
 }
+.floatLeft{
+	float:left;
+}
+.floatRight{
+	float:right;
+}
+
 .buttn2 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 9pt;
@@ -277,6 +302,9 @@ a:hover {
 	margin-left:188px;
 	width:600px;
 }
+.marginLeft10{
+	margin-left:20px;
+	}
 .sidebar {
 	margin-top:2px;
 	width:174px;

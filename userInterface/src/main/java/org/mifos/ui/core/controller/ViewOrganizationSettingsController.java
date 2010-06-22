@@ -38,7 +38,6 @@ public class ViewOrganizationSettingsController extends AbstractController{
             modelAndView.addObject("properties",p);
             } catch (Exception e) {
             // TODO Auto-generated catch block
-           System.out.println("in catch of try");
         }
         return modelAndView;
     }

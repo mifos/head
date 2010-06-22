@@ -63,8 +63,9 @@
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /systemInformation.ftl=systemInformationController
-                /viewOrganizationSettings.ftl=viewOrganizationSettingsController
+                /viewOrganizationSettings.ftl=viewOrganizationSettingsController                    
 </value>
+
         </property>
     </bean>
 

@@ -4,7 +4,9 @@
 
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  [#include "adminLeftPane.ftl" ] 
+  <div class="sidebar ht600">
+  [#include "adminLeftPane.ftl" ]
+  </div> 
     <!--  Left Sidebar Begins
   <div class="sidebar ht750">
     <p class="orangetab">Administrative Tasks</p>
@@ -20,23 +22,21 @@
   <div class=" content leftMargin180">
     <div class="orangeheading font14">[@spring.message "administrativeTasks" /]</div>
     <p>[@spring.message "administrativeTasksWelcome" /] </p>
+    <div class="marginTop20"></div>
     <div class="span-10 floatLT">
       <p class="orangeheading">[@spring.message "manageOrganization" /]</p>
       <p class="fontBold">[@spring.message "systemusers"/]</p>
       <ul>
-        <li type="circle"><a id="admin.link.viewSysUsers" href="PersonAction.do?method=loadSearch&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="PersonAction.do?method=chooseOffice&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewsystemuser" /]</a></li>
-        <li type="circle"><a id="admin.link.viewSysUsers" href="PersonAction.do?method=loadSearch&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="PersonAction.do?method=chooseOffice&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">[@spring.message "definenewsystemuser" /]</a></li>
+        <li type="circle"><a id="admin.link.viewSysUsers" href="PersonAction.do?method=loadSearch&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewsystemusers"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineNewUsers" href="PersonAction.do?method=chooseOffice&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewsystemuser" /]</a></li>       
         <li type="circle"><a id="admin.link.manageRoles" href="rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "managerolesandpermissions"/]</a></li>
       </ul>
       <p><span class="fontBold">[@spring.message "offices"/]</span>
       <ul>
         <li type="circle"><a id="admin.link.viewOffices" href="offAction.do?method=getAllOffices">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" href="offAction.do?method=load">[@spring.message "defineNewOffice"/]</a></li>
-        <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="offhierarchyaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewofficehierarchy" /]</a></li>
-        <li type="circle"><a id="admin.link.viewOffices" href="offAction.do?method=getAllOffices">[@spring.message "viewOffices" /]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewOffice" action="/offAction.do?method=load">[@spring.message "defineNewOffice"/]</a></li>
-        <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="offhierarchyaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewofficehierarchy" /]</a></li>
+        <li type="circle"><a id="admin.link.viewOfficeHierarchy" href="viewOfficeHierarchy.ftl">[@spring.message "viewofficehierarchy" /]</a></li>        
       </ul>
       </p>
-      <p><span class="fontBold">Organization Preferences</span>
+      <p><span class="fontBold">[@spring.message "organizationpreferences"/]</span>
       <ul>
         <li type="circle"><a id="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}" >[@spring.message "viewfees"/]</a>&nbsp;|&nbsp;<a eId="admin.link.defineNewFees" href="feeaction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewfees"/]</a></li>
         <li type="circle"><a id="admin.link.viewFunds" href="fundAction.do?method=viewAllFunds&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}" >[@spring.message "viewfunds"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewFund"	href="fundAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "definenewfund"/]</a></li>
@@ -75,7 +75,7 @@
       </p>
       <p><span class="fontBold">[@spring.message "manageproductmix"/]</span>
       <ul>
-        <li type="circle"><a id="admin.link.viewProductsMix" href="productMixAction.do?method=viewAllProductMix&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "viewproductsmix"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineProductsMix" href="productMixAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "defineproductsmix"/]</a></li>
+        <li type="circle"><a id="admin.link.viewProductsMix" href="viewProductMix.ftl">[@spring.message "viewproductsmix"/]</a>&nbsp;|&nbsp;<a id="admin.link.defineProductsMix" href="productMixAction.do?method=load&recordOfficeId=${model.request.getSession().getAttribute("UserContext").branchId}&recordLoanOfficerId=${model.request.getSession().getAttribute("UserContext").id}">[@spring.message "defineproductsmix"/]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "manageLoanProducts"/]</span>
