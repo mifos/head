@@ -15,7 +15,6 @@
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
-                <value>org.mifos.ui.localizedProperties.fees_messages</value>
                 <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
@@ -68,8 +67,6 @@
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
-    <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
-
     <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
@@ -79,8 +76,6 @@
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
-
-    <bean name="feeController" class="org.mifos.ui.core.controller.FeeController"/>
 
     <bean name="questionnaireController" class="org.mifos.ui.core.controller.QuestionnaireController"/>
 

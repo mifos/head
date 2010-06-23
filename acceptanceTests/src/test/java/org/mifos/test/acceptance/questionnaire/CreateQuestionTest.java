@@ -29,11 +29,13 @@ import org.mifos.test.acceptance.framework.admin.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class CreateQuestionTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
