@@ -43,6 +43,7 @@ import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -850,5 +851,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
+    }
+
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
+                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId());
     }
 }

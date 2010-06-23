@@ -51,6 +51,7 @@ import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
 import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.io.Serializable;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -110,11 +111,13 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationPreviewDto;
 import org.mifos.application.servicefacade.LoanCreationProductDetailsDto;
 import org.mifos.application.servicefacade.LoanCreationResultDto;
+import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -227,6 +230,7 @@ public class LoanAccountAction extends AccountAppAction {
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
+    private final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -577,6 +581,10 @@ public class LoanAccountAction extends AccountAppAction {
             }
             SessionUtils.setAttribute(CUSTOMER_ID, customerId, request);
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsViewList, request);
+
+            String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
+            LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
+            SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
         }
 
         loanBusinessService.initialize(loanBO.getLoanMeeting());
