@@ -25,7 +25,7 @@ import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 
-public interface OfficeServiceFacade {
+public interface LegacyOfficeServiceFacade {
 
     public String topLevelOfficeNames(String ids);
 

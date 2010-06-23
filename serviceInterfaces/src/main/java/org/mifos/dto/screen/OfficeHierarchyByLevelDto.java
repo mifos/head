@@ -18,35 +18,28 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.persistence;
+package org.mifos.dto.screen;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import java.util.List;
 
-public class OfficeDto implements DataTransferObject{
+import org.mifos.dto.domain.OfficeDto;
 
-    private final Short id;
-    private final String name;
-    private final String searchId;
+@SuppressWarnings("PMD")
+public class OfficeHierarchyByLevelDto {
 
-    public OfficeDto(final Short officeId, String officeName, String searchId) {
-        this.id = officeId;
-        this.name = officeName;
-        this.searchId = searchId;
+    private final List<OfficeDto> headOffices;
+    private final List<OfficeDto> regionalOffices;
+
+    public OfficeHierarchyByLevelDto(List<OfficeDto> headOffices, List<OfficeDto> regionalOffices) {
+        this.headOffices = headOffices;
+        this.regionalOffices = regionalOffices;
     }
 
-    public String getSearchId() {
-        return this.searchId;
+    public List<OfficeDto> getHeadOffices() {
+        return this.headOffices;
     }
 
-    public Short getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name.trim();
-    }
-
-    public String getText() {
-        return this.name.trim();
+    public List<OfficeDto> getRegionalOffices() {
+        return this.regionalOffices;
     }
 }

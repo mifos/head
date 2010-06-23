@@ -122,7 +122,8 @@ public class CenterStatusChangeIntegrationTest {
 
     @Before
     public void cleanDatabaseTables() throws Exception {
-        StaticHibernateUtil.getSessionTL().clear();
+        databaseCleaner.clean();
+
         Locale locale = Localization.getInstance().getMainLocale();
         AuditConfigurtion.init(locale);
 

@@ -45,6 +45,7 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.holiday.business.service.HolidayService;
@@ -62,7 +63,7 @@ import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
-import org.mifos.customers.office.business.service.OfficeServiceFacade;
+import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
@@ -98,6 +99,7 @@ public class DependencyInjectedServiceLocator {
 
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
     private static HolidayServiceFacade holidayServiceFacade;
+    private static LegacyOfficeServiceFacade legacyOfficeServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
     private static FeeServiceFacade feeServiceFacade;
 
@@ -257,6 +259,13 @@ public class DependencyInjectedServiceLocator {
             officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
         }
         return officeServiceFacade;
+    }
+
+    public static LegacyOfficeServiceFacade locateLegacyOfficeServiceFacade() {
+        if (legacyOfficeServiceFacade == null) {
+            legacyOfficeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
+        }
+        return legacyOfficeServiceFacade;
     }
 
     public static FeeServiceFacade locateFeeServiceFacade() {
