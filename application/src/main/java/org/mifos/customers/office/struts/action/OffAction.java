@@ -22,6 +22,8 @@ package org.mifos.customers.office.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -193,9 +195,10 @@ public class OffAction extends BaseAction {
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, office, request);
 
+        loadCustomFieldDefinitions(request);
         loadofficeLevels(request);
         loadParents(request, offActionForm);
-        loadEditCustomFields(request, offActionForm);
+        offActionForm.setCustomFields(createCustomFieldViews(office.getCustomFields(), request));
         loadOfficeStatus(request);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
@@ -254,17 +257,30 @@ public class OffAction extends BaseAction {
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
-    private void loadEditCustomFields(HttpServletRequest request, OffActionForm offActionForm) throws Exception {
-        // get the office
-        OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        List<CustomFieldDto> customfields = new ArrayList<CustomFieldDto>();
-        if (office.getCustomFields() != null && office.getCustomFields().size() > 0) {
-            for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
-                customfields.add(new CustomFieldDto(customField.getFieldId(), customField.getFieldValue(),
-                        CustomFieldType.NONE));
+    @SuppressWarnings({"unchecked"})
+    private List<CustomFieldDto> createCustomFieldViews(final Set<OfficeCustomFieldEntity> customFieldEntities,
+                                                        final HttpServletRequest request) throws PageExpiredException {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = getCustomFieldDefinitionsFromSession(request);
+        Locale locale = getUserContext(request).getPreferredLocale();
+        if (customFieldEntities != null) {
+            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+                for (OfficeCustomFieldEntity customFieldEntity : customFieldEntities) {
+                    if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
+                        if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
+                                    .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
+                                    .getFieldType()));
+                        } else {
+                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
+                                    .getFieldValue(), customFieldDef.getFieldType()));
+                        }
+                    }
+                }
             }
         }
-        offActionForm.setCustomFields(customfields);
+        return customFields;
     }
 
     private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws Exception {

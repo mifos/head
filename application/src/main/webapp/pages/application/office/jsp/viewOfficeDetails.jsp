@@ -26,6 +26,7 @@ explanation of the license and how it is applied.
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
@@ -162,13 +163,21 @@ explanation of the license and how it is applied.
 										items="${BusinessKey.customFields}">
 										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
-												<font class="fontnormal">
-												<mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}"
-											bundle="OfficeResources"></mifos:mifoslabel>:
-												</font>
-												<span class="fontnormal"><c:out value="${cfdef.fieldValue}" /><br>
+                                         <c:choose>
+											<c:when test="${cf.fieldType == 3}"> <%-- FIXME: use a constant here instead --%>
+												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
+													bundle="OfficeResources" isColonRequired="yes"/>
+									         		<span class="fontnormal"><c:out
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cfdef.fieldValue)}" />
 												</span>
+											</c:when>
+											<c:otherwise>
+												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
+													bundle="OfficeResources" isColonRequired="yes"/>
+									         		<span class="fontnormal"><c:out
+													value="${cfdef.fieldValue}" /> </span>
+											</c:otherwise>
+										</c:choose>
 											</c:if>
 										</c:forEach>
 									</c:forEach>
