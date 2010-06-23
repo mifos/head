@@ -3,6 +3,7 @@
 . lib.sh
 . params.sh
 
+
 if ! mifos_instance_root_exists
 then
 	echo -n setting up Mifos instance root...
@@ -37,9 +38,22 @@ fi
 ### comment: password exists in ~/.my.cnf
 ### test: mysql -h RDS_HOSTNAME -u mifosroot <<< 'use mifostest'
 ### create: mysqladmin -h RDS_HOSTNAME -u mifosroot create mifostest
+if ! database_created
+then
+	echo -n setting up Mifos database...
+	create_database
+	echo Done.
+fi
 
 # set up db connection parameters
 ## local.properties
+if ! local_dot_properties_configured
+then
+	echo -n configuring local.properties...
+	configure_local_dot_properties
+	echo Done.
+fi
+
 
 # set up apache frontend
 ## add ProxyPass* lines to /etc/apache2/conf.d/mifosapps.conf

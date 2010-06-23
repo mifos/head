@@ -20,12 +20,13 @@ explanation of the license and how it is applied.
 <!-- CreateNewOffice.jsp -->
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
-<%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".create">
@@ -47,6 +48,7 @@ explanation of the license and how it is applied.
 	}
   }
 </script>
+    <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form action="/offAction.do?method=preview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -244,7 +246,7 @@ explanation of the license and how it is applied.
 										<td width="21%" align="right"><span id="CreateNewOffice.label.customField"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
-											bundle="OfficeResources"></mifos:mifoslabel></span>:
+											bundle="OfficeResources"/></span>:
 										</td>
 										<td width="79%"><c:if test="${cf.fieldType == 1}">
 											<mifos:mifosnumbertext styleId="CreateNewOffice.input.customField" name="offActionForm"
@@ -253,8 +255,7 @@ explanation of the license and how it is applied.
 											<mifos:mifosalphanumtext styleId="CreateNewOffice.input.customField" name="offActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
-											<mifos:mifosalphanumtext styleId="CreateNewOffice.input.customField" name="offActionForm"
-												property='customField[${ctr}].fieldValue' maxlength="200" />
+                                            <date:datetag property="customField[${ctr}].fieldValue" />
 
 										</c:if></td>
 									</tr>

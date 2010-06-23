@@ -1,12 +1,15 @@
 #!/bin/bash
 set -o errexit
 
-SSH_PUB_KEYRING="~/.ssh/authorized_keys"
-REMOTE_MONITORING_SERVER_IP="75.149.167.17"
-DOWNLOAD_DIR=/opt/software
 UNPRIVILEGED_USER=ubuntu
 UNPRIVILEGED_GROUP=ubuntu
+SSH_PUB_KEYRING="/home/$UNPRIVILEGED_USER/.ssh/authorized_keys"
+REMOTE_MONITORING_SERVER_IP="75.149.167.17"
+DOWNLOAD_DIR=/opt/software
 APACHE_CONF=/etc/apache2/conf.d/mifosapps.conf
+javapackage=sun-java6-jre
+SOURCEFORGE_MIFOS_URL=http://downloads.sourceforge.net/project/mifos/mifos/1.5.0.1/
+MIFOS_RELEASE_FILE=mifos-v1.5.0.1.zip
 
 mifos_ssh_pubkeys_installed() {
     if grep -q 'automated provisioning software' ~/.ssh/authorized_keys
@@ -72,7 +75,7 @@ EndOfSnmpConf
 }
 
 prerequisite_packages_installed() {
-    local javapackage=sun-java6-jre
+#    local javapackage=sun-java6-jre
     if dpkg -p $javapackage > /dev/null
     then
         return 0
@@ -92,7 +95,7 @@ EndOfPartner
     fi
 
     sudo apt-get update 
-    sudo apt-get -y install $javapackage mysql-client-5.1 apache2
+    sudo apt-get -y install $javapackage mysql-client-5.1 apache2 unzip
 
     # download tomcat, place in a handy location for use by scripts which
     # set up Mifos instances
@@ -100,6 +103,7 @@ EndOfPartner
     sudo chown $UNPRIVILEGED_USER.$UNPRIVILEGED_GROUP $DOWNLOAD_DIR
     cd $DOWNLOAD_DIR
     wget http://ci.mifos.org/apache-tomcat-6.0.26.tar.gz
+    wget $SOURCEFORGE_MIFOS_URL$MIFOS_RELEASE_FILE
 
     sudo a2enmod proxy
     sudo a2enmod ssl
@@ -247,4 +251,37 @@ ProxyPass /$instance_nickname http://localhost:$tomcat_connector_port/$instance_
 ProxyPassReverse /$instance_nickname http://localhost:$tomcat_connector_port/$instance_nickname
 EndOfApacheConf
     sudo service apache2 restart
+}
+
+database_created() {
+    if mysql -h $RDS_HOSTNAME -u mifosroot <<< "use $database_name" 2>&1 | grep -q ERROR
+    then
+        return 1
+    else
+        return 0
+    fi
+}
+
+create_database() {
+    mysqladmin -h $RDS_HOSTNAME -u mifosroot create $database_name
+}
+
+local_dot_properties_configured() {
+    if [ -e $mifos_instance_root/mifos_conf/local.properties ]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+configure_local_dot_properties() {
+    local tmpfile=`mktemp`
+    cat templates/local.properties | \
+        sed -e "s/@DATABASE_NAME@/$database_name/" | \
+        sed -e "s/@DATABASE_HOST@/$RDS_HOSTNAME/" | \
+        sed -e "s/@DATABASE_PWD@/$database_pwd/" | \
+        sed -e "s/@DATABASE_USER@/$database_user/" > \
+        $tmpfile
+    sudo mv $tmpfile $mifos_instance_root/mifos_conf/local.properties
 }

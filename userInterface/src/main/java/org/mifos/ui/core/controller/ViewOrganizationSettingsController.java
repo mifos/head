@@ -1,16 +1,17 @@
 package org.mifos.ui.core.controller;
 
-
-
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Properties;
+
+@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField", "PMD.AvoidPrintStackTrace" })
+@Controller
 public class ViewOrganizationSettingsController extends AbstractController{
 
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
@@ -23,24 +24,18 @@ public class ViewOrganizationSettingsController extends AbstractController{
         this.viewOrganizationSettingsServiceFacade=viewOrganizationServiceFacade;
     }
 
-
-
-
     @Override
+    @RequestMapping("/viewOrganizationSettings.ftl")
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
      {
-        HttpSession httpsession=request.getSession();
-        Properties p=null;
-        // TODO Auto-generated method stub
-        ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings");
-        try {
-            p=viewOrganizationSettingsServiceFacade.getOrganizationSettings(httpsession);
-            modelAndView.addObject("properties",p);
-            } catch (Exception e) {
-            // TODO Auto-generated catch block
-           System.out.println("in catch of try");
-        }
-        return modelAndView;
+         ModelAndView modelAndView = new ModelAndView("viewOrganizationSettings");
+         try {
+             Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
+             modelAndView.addObject("properties", p);
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return modelAndView;
     }
 
 }

@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.admin;
 
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
@@ -27,18 +28,17 @@ import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.UndoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductConfirmationPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPreviewPage;
 import org.mifos.test.acceptance.framework.loanproduct.ViewLoanProductsPage;
-import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage.SubmitFormParameters;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.multicurrrency.DefineNewDifferentCurrencyLoanProductPage.SubmitMultiCurrencyFormParameters;
 import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
+import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.util.StringUtil;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * Encapsulates the GUI based actions that can
@@ -68,6 +68,12 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.viewFees");
         waitForPageToLoad();
         return new ViewFeesPage(selenium);
+    }
+
+	public CreateQuestionPage navigateToCreateQuestionPage() {
+        selenium.click("admin.link.defineNewQuestion");
+        waitForPageToLoad();
+        return new CreateQuestionPage(selenium);
     }
 
    public ViewReportsPage navigateToViewReportsPage() {
@@ -257,5 +263,11 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.manageImports");
         waitForPageToLoad();
         return new ImportTransactionsPage(selenium);
+    }
+
+    public ViewAllQuestionsPage navigateToViewAllQuestions() {
+        selenium.click("admin.link.questions");
+        waitForPageToLoad();
+        return new ViewAllQuestionsPage(selenium);
     }
 }

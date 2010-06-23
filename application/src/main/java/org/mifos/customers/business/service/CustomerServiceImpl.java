@@ -129,8 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.validate();
         customer.validateMeetingAndFees(accountFees);
 
-//        FIXME - keithw - should we ensure center names are unique per branch/office
-//        customerDao.validateCenterNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+        customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
@@ -931,8 +930,8 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
 
-            client.resetPositions(oldParent);
             if (oldParent != null) {
+                client.resetPositions(oldParent);
                 oldParent.updateDetails(client.getUserContext());
 
                 if (oldParent.getParentCustomer() != null) {
@@ -950,14 +949,14 @@ public class CustomerServiceImpl implements CustomerService {
             client.updateDetails(userContext);
             customerDao.save(client);
 
-            hibernateTransactionHelper.commitTransaction();
+            hibernateTransactionHelper.flushSession();
 
             if (regenerateSchedules) {
-                hibernateTransactionHelper.startTransaction();
+                client = customerDao.findClientBySystemId(clientGlobalCustNum);
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(client.getOfficeId());
                 handleChangeInMeetingSchedule(client, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-                hibernateTransactionHelper.commitTransaction();
             }
+            hibernateTransactionHelper.commitTransaction();
             return client;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
