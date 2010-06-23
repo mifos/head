@@ -148,13 +148,7 @@ public class OfficeLevelEntity extends MasterDataEntity {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
     }
 
-    public void update(String name) throws OfficeException {
+    public void update(String name) {
         setName(name);
-        // try {
-        // new OfficeHierarchyPersistence().createOrUpdate(this);
-        // }
-        // catch (PersistenceException e) {
-        // throw new OfficeException(e);
-        // }
     }
 }

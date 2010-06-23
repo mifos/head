@@ -73,9 +73,8 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.search_success.toString());
-        Assert.assertEquals(1, ((List<OfficeBO>) SessionUtils.getAttribute(OfficeConstants.GET_HEADOFFICE, request))
-                .size());
-        Assert.assertNull(SessionUtils.getAttribute(OfficeConstants.GET_REGIONALOFFICE, request));
+        Assert.assertEquals(1, ((List<OfficeBO>) SessionUtils.getAttribute(OfficeConstants.GET_HEADOFFICE, request)).size());
+        Assert.assertEquals(0, ((List) SessionUtils.getAttribute(OfficeConstants.GET_REGIONALOFFICE, request)).size());
         Assert.assertNull(SessionUtils.getAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, request));
         Assert.assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_BRANCHOFFICE, request)).size());
         Assert.assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request)).size());

@@ -24,10 +24,11 @@ import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.service.Service;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 
@@ -42,7 +43,6 @@ import org.mifos.security.util.UserContext;
  */
 public class LoanProductService implements Service {
     private LoanPrdBusinessService loanProductBusinessService;
-    private FeeBusinessService feeBusinessService;
 
     public LoanPrdBusinessService getLoanProductBusinessService() {
         return this.loanProductBusinessService;
@@ -52,21 +52,12 @@ public class LoanProductService implements Service {
         this.loanProductBusinessService = loanProductBusinessService;
     }
 
-    public FeeBusinessService getFeeBusinessService() {
-        return this.feeBusinessService;
-    }
-
-    public void setFeeBusinessService(FeeBusinessService feeBusinessService) {
-        this.feeBusinessService = feeBusinessService;
-    }
-
     public LoanProductService() {
         // null constructor to use with setter injection.
     }
 
-    public LoanProductService(LoanPrdBusinessService loanPrdBusinessService, FeeBusinessService feeBusinessService) {
+    public LoanProductService(LoanPrdBusinessService loanPrdBusinessService) {
         this.loanProductBusinessService = loanPrdBusinessService;
-        this.feeBusinessService = feeBusinessService;
     }
 
     /*
@@ -86,9 +77,9 @@ public class LoanProductService implements Service {
      * @throws ServiceException the service exception
      */
     public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeDto> defaultFees,
-            List<FeeDto> additionalFees) throws ServiceException {
+            List<FeeDto> additionalFees) throws ServiceException, PersistenceException {
         LoanOfferingBO loanOffering = loanProductBusinessService.getLoanOffering(loanProductId);
-        List<FeeBO> fees = feeBusinessService.getAllApplicableFeesForLoanCreation();
+        List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
         for (FeeBO fee : fees) {
             if (!fee.isPeriodic()
                     || (MeetingBO.isMeetingMatched(fee.getFeeFrequency().getFeeMeetingFrequency(), loanOffering

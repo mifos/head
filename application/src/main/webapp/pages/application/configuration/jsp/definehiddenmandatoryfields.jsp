@@ -342,6 +342,34 @@ explanation of the license and how it is applied.
 									<html-el:checkbox property="mandatoryClientPovertyStatus" value="1" onclick="disableFields(this)"/>
 								</td>
 							</tr>
+                            <c:choose>
+                            <c:when test="${!session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areFamilyDetailsRequired')}">
+                            <tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.spousefatherinformation" />
+								</td>
+								<td class="drawtablerow">
+                                    <html-el:checkbox property="hideClientSpouseFatherInformation" value="1" onclick="disableFields(this)"/>
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryClientSpouseFatherInformation" value="1" onclick="disableFields(this)"/>
+								</td>
+							</tr>
+                            </c:when>
+                            <c:otherwise>
+                            <tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.familydetails" />
+								</td>
+								<td class="drawtablerow">
+                                    &nbsp;
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryClientFamilyDetails" value="1" onclick="disableFields(this)"/>
+								</td>
+							</tr>
+                            </c:otherwise>
+                            </c:choose>
 							<tr>
 								<td class="drawtablerow">
 									<mifos:mifoslabel name="configuration.spousefathermiddlename" />

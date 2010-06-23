@@ -1094,27 +1094,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    /**
-     * @deprecated pull up to service level to remove persistence/update here and remove getPersonnelPersistence
-     */
-    @Deprecated
-    public void removeGroupMemberShip(final PersonnelBO personnel, final String comment) throws PersistenceException,
-            CustomerException {
-        PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
-        CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment, new DateTimeService()
-                .getCurrentJavaSqlDate(), user, this);
-        this.addCustomerNotes(accountNotesEntity);
-
-        resetPositions(getParentCustomer());
-        getParentCustomer().setUserContext(getUserContext());
-        getParentCustomer().update();
-
-        setPersonnel(personnel);
-        setParentCustomer(null);
-        generateSearchId();
-        update();
-    }
-
     protected void handleAddClientToGroup() {
         setPersonnel(getParentCustomer().getPersonnel());
         if (getCustomerMeeting() != null) {
@@ -1325,7 +1304,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
                 if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
                     try {
-                        DateUtils.getDate(centerCustomField.getFieldValue());
+                        // is set as database format coming in...
+                        String userFormattedDate = DateUtils.convertDbToUserFmt(centerCustomField.getFieldValue(), "dd/MM/yyyy");
+                        DateUtils.getDate(userFormattedDate);
                     } catch (Exception e) {
                         throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
                     }

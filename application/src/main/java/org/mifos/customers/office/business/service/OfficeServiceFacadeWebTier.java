@@ -19,10 +19,12 @@
  */
 package org.mifos.customers.office.business.service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -31,12 +33,15 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
-public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
+public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, OfficeServiceFacade {
 
     private final OfficeDao officeDao;
     private final HolidayDao holidayDao;
@@ -114,11 +119,44 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             office.update(userContext, officeUpdateRequest, parentOffice);
             StaticHibernateUtil.commitTransaction();
             return isParentOfficeChanged;
+        } catch (ApplicationException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new ApplicationException(e.getKey(), e);
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e.getMessage(), e);
         } finally {
             StaticHibernateUtil.closeSession();
         }
+    }
+
+    @Override
+    public OfficeHierarchyByLevelDto retrieveAllOffices() {
+        List<OfficeDto> allOffices = this.officeDao.findAllOffices();
+        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices));
+    }
+
+    private List<OfficeDto> regionalOfficeSpecification(List<OfficeDto> allOffices) {
+        List<OfficeDto> regionalOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.REGIONALOFFICE.getValue().equals(officeDto.getLevelId())) {
+                regionalOffices.add(officeDto);
+            }
+        }
+
+        return regionalOffices;
+    }
+
+    private List<OfficeDto> headOfficeSpecification(List<OfficeDto> allOffices) {
+        List<OfficeDto> headOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.HEADOFFICE.getValue().equals(officeDto.getLevelId())) {
+                headOffices.add(officeDto);
+            }
+        }
+
+        return headOffices;
     }
 }

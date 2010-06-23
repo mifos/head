@@ -70,9 +70,9 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) installment;
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
                     .getAccountFeesActionDetails()) {
+                Money preRepaymentFeeAmount = accountFeesActionDetailEntity.getFeeAmount();
                 accountFeesActionDetailEntity.makeRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
-               Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), accountFeesActionDetailEntity
-                        .getFeeAmountPaid());
+               Assert.assertEquals(accountFeesActionDetailEntity.getFeeAmount(), preRepaymentFeeAmount);
             }
         }
     }

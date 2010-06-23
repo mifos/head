@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(254);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(259);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -1642,6 +1642,8 @@ INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(626, 91, 'Repay
 -- INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 -- VALUES(957, 1, 626, NULL);
 
+
+
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES
 (620, 92, 'Together'),
 (621, 92, 'NotTogether'),
@@ -2650,6 +2652,11 @@ INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_F
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)VALUES
 (83,'ExternalId',22,0,0);
 
+/* Added for jira issue 2929 */
+INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)VALUES
+(84,'SpouseFatherInformation',1,1,0),
+(85,'FamilyDetails',1,1,0);
+
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 -- this row was CollectionSheetHelper.daysInAdvance
 -- (value now stored in applicationConfiguration.default.properties)
@@ -3115,3 +3122,24 @@ INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME) VALUES(51,'Hunga
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(624,74,'Language-Hungarian');
 INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES(11,'Hungarian','hu',624);
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(47,51,11,'Hungarian-Hungary',0);
+
+/* Upgrade 255,256 START*/
+INSERT INTO LOOKUP_VALUE (LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) VALUES 
+(628,87,'Permissions.CanViewDetailedAgingOfPortfolioAtRiskReport'),
+(629,87,'Permissions.CanViewGeneralLedgerReport');
+INSERT INTO LOOKUP_VALUE_LOCALE (LOOKUP_VALUE_ID, LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) VALUES
+(958,1,628,'Can View Detailed Aging Of Portfolio At Risk Report'),
+(959,1,629,'Can View General Ledger Report');
+INSERT INTO ACTIVITY (ACTIVITY_ID, PARENT_ID, ACTIVITY_NAME_LOOKUP_ID, DESCRIPTION_LOOKUP_ID) VALUES
+(236,150,628,628),
+(237,150,629,629);
+INSERT INTO ROLES_ACTIVITY (ACTIVITY_ID, ROLE_ID) VALUES
+(236,1),
+(237,1);
+INSERT INTO REPORT (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report',236,1),
+(5,6,'General Ledger Report','general_ledger_report',237,1);
+INSERT INTO REPORT_JASPER_MAP (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, REPORT_JASPER) VALUES 
+(4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report','DetailedAgingPortfolioAtRiskReport.rptdesign'),
+(5,6,'General Ledger Report','general_ledger_report','GeneralLedgerReport.rptdesign');
+/* Upgrade 255,256 END*/

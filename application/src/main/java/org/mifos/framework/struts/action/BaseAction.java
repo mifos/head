@@ -38,7 +38,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.holiday.persistence.HolidayServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -55,7 +57,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
-import org.mifos.customers.office.business.service.OfficeServiceFacade;
+import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -107,7 +109,9 @@ public abstract class BaseAction extends DispatchAction {
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
+    protected LegacyOfficeServiceFacade legacyOfficeServiceFacade = DependencyInjectedServiceLocator.locateLegacyOfficeServiceFacade();
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
+    protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -127,7 +131,9 @@ public abstract class BaseAction extends DispatchAction {
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
+            this.legacyOfficeServiceFacade = springAppContext.getBean(LegacyOfficeServiceFacade.class);
             this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
+            this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }
@@ -321,11 +327,10 @@ public abstract class BaseAction extends DispatchAction {
 
     /**
      * This should return true if we don't want to the automatic conversion of
-     * forms to business objects (for example, if the data from the form ends up
-     * in several business objects)
+     * forms to business objects (for example, if the data from the form ends up in several business objects)
      */
     protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return false;
+        return true;
     }
 
     protected UserContext getUserContext(HttpServletRequest request) {

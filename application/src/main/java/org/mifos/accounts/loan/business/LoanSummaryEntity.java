@@ -210,6 +210,15 @@ public class LoanSummaryEntity extends AbstractEntity {
         feesPaid = feesPaid.add(fees);
     }
 
+    // John W -  to contra the decreaseBy (used when making early repayment) when adjusting the fully paid loan
+    void increaseBy(Money principal, Money interest, Money penalty, Money fees) {
+        originalPrincipal = originalPrincipal.add(principal);
+        originalFees = originalFees.add(fees);
+        originalPenalty = originalPenalty.add(penalty);
+        originalInterest = originalInterest.add(interest);
+        rawAmountTotal = rawAmountTotal.add(interest.add(fees));
+    }
+
     void decreaseBy(Money principal, Money interest, Money penalty, Money fees) {
         originalPrincipal = originalPrincipal.subtract(principal);
         originalFees = originalFees.subtract(fees);

@@ -19,46 +19,56 @@
  */
 package org.mifos.customers.business;
 
+import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
 import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
-import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
  */
-public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
-
-    public CustomerDaoHibernateIntegrationTest() throws Exception {
-        super();
-    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml"})
+public class CustomerDaoHibernateIntegrationTest {
 
     // class under test
+    @Autowired
     private CustomerDao customerDao;
-
-    // collaborators
-    private final GenericDao genericDao = new GenericDaoHibernate();
 
     // test data
     private MeetingBO weeklyMeeting;
@@ -71,9 +81,34 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
     private ClientBO activeClient;
     private ClientBO pendingClient;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
+
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        databaseCleaner.clean();
 
         weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
         IntegrationTestObjectMother.saveMeeting(weeklyMeeting);
@@ -113,18 +148,10 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         pendingClient = new ClientBuilder().pendingApproval().withMeeting(weeklyMeeting).withName("Pending Client")
                 .withOffice(sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(pendingClient, weeklyMeeting);
-
-        customerDao = new CustomerDaoHibernate(genericDao);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        IntegrationTestObjectMother.cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(activeClient,
-                pendingClient, group, center, weeklyMeeting);
-    }
-
-    public void testShouldFindCustomerByIdGivenCustomerExists() {
+    @Test
+    public void shouldFindCustomerByIdGivenCustomerExists() {
 
         // exercise test
         CustomerBO returnedCustomer = customerDao.findCustomerById(center.getCustomerId());
@@ -134,7 +161,8 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertThat(returnedCustomer.getDisplayName(), is("Center"));
     }
 
-    public void testShouldReturnNullWhenNoCustomerExistsWithId() {
+    @Test
+    public void shouldReturnNullWhenNoCustomerExistsWithId() {
 
         // exercise test
         CustomerBO returnedCustomer = customerDao.findCustomerById(Integer.valueOf(-1));
@@ -143,7 +171,8 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertNull(returnedCustomer);
     }
 
-    public void testShouldReturnOnlyActiveClientsUnderGroup() {
+    @Test
+    public void shouldReturnOnlyActiveClientsUnderGroup() {
 
         // exercise test
         List<ClientBO> activeClients = customerDao.findActiveClientsUnderGroup(group);
@@ -153,7 +182,8 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertThat(activeClients.get(0).getCustomerId(), is(activeClient.getCustomerId()));
     }
 
-    public void testShouldFindGroupWithParentInitialisedBySystemId() {
+    @Test
+    public void shouldFindGroupWithParentInitialisedBySystemId() {
 
         // exercise test
         GroupBO activeGroup = customerDao.findGroupBySystemId(group.getGlobalCustNum());
@@ -164,7 +194,8 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertThat(activeGroup.getParentCustomer().getDisplayName(), is(notNullValue()));
     }
 
-    public void testShouldFindActiveCenters() {
+    @Test
+    public void shouldFindActiveCenters() {
 
         // exercise test
         List<CustomerDetailDto> activeCenters = customerDao.findActiveCentersUnderUser(center.getPersonnel());
@@ -173,12 +204,27 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
         assertThat(activeCenters.size(), is(1));
     }
 
-    public void testShouldFindActiveGroups() {
+    @Test
+    public void shouldFindActiveGroups() {
 
         // exercise test
         List<CustomerDetailDto> activeGroups = customerDao.findGroupsUnderUser(group.getPersonnel());
 
         // verification
         assertThat(activeGroups.size(), is(1));
+    }
+
+    @Test
+    public void shouldNotFailValidationWhenCenterNameDoesNotAlreadyExist() throws Exception {
+
+        // exercise test
+        customerDao.validateCenterNameIsNotTakenForOffice("nameDoesNotExist", center.getOfficeId());
+    }
+
+    @Test(expected=CustomerException.class)
+    public void shouldThrowCustomerExceptionWhenValidationFailsDueToCenterNameAlreadyExistingForOffice() throws Exception {
+
+        // exercise test
+        customerDao.validateCenterNameIsNotTakenForOffice(center.getDisplayName(), center.getOfficeId());
     }
 }

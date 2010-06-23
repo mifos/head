@@ -37,7 +37,6 @@ import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityDto;
@@ -212,11 +211,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         List<FeeDto> additionalFees = new ArrayList<FeeDto>();
         List<FeeDto> defaultFees = new ArrayList<FeeDto>();
 
-        new LoanProductService(new LoanPrdBusinessService(), new FeeBusinessService()).getDefaultAndAdditionalFees(
-                productId, userContext, defaultFees, additionalFees);
+        new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext, defaultFees, additionalFees);
 
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
-                .getLoanOffering(productId, userContext.getLocaleId());
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
 
         if (AccountingRules.isMultiCurrencyEnabled()) {
             defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());

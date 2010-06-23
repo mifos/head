@@ -219,6 +219,11 @@ public class StandardAccountService implements AccountService {
         if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
+        if (!accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) &&
+            !accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) &&
+            !accountBo.getState().equals(AccountState.CUSTOMER_ACCOUNT_ACTIVE)) {
+            errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
+        }
         if (AccountTypes.getAccountType(accountBo.getAccountType().getAccountTypeId()) == AccountTypes.LOAN_ACCOUNT) {
             if (!getLoanPaymentTypes().contains(payment.getPaymentType())) {
                 errors.add(InvalidPaymentReason.UNSUPPORTED_PAYMENT_TYPE);

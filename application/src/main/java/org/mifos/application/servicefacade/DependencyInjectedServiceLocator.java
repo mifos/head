@@ -17,10 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 
+import org.mifos.accounts.fees.business.service.FeeService;
+import org.mifos.accounts.fees.business.service.FeeServiceImpl;
+import org.mifos.accounts.fees.persistence.FeeDao;
+import org.mifos.accounts.fees.persistence.FeeDaoHibernate;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
+import org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade;
+import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
+import org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
@@ -36,6 +45,7 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDaoHibernate;
 import org.mifos.application.holiday.business.service.HolidayService;
@@ -53,7 +63,7 @@ import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
 import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
-import org.mifos.customers.office.business.service.OfficeServiceFacade;
+import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
@@ -89,12 +99,15 @@ public class DependencyInjectedServiceLocator {
 
     private static PersonnelDetailsServiceFacade personnelDetailsServiceFacade;
     private static HolidayServiceFacade holidayServiceFacade;
+    private static LegacyOfficeServiceFacade legacyOfficeServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
+    private static FeeServiceFacade feeServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
     private static CustomerService customerService;
     private static HolidayService holidayService;
+    private static FeeService feeService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -109,6 +122,7 @@ public class DependencyInjectedServiceLocator {
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static FundDao fundDao = new FundDaoHibernate(genericDao);
     private static LoanDao loanDao = new LoanDaoHibernate(genericDao);
+    private static FeeDao feeDao = new FeeDaoHibernate(genericDao);
     private static OfficeDao officeDao = new OfficeDaoHibernate(genericDao);
     private static PersonnelDao personnelDao = new PersonnelDaoHibernate(genericDao);
     private static HolidayDao holidayDao = new HolidayDaoHibernate(genericDao);
@@ -117,6 +131,7 @@ public class DependencyInjectedServiceLocator {
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
     private static AuthenticationDao authenticationDao = new AuthenticationDaoHibernate();
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
+    private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
@@ -148,6 +163,14 @@ public class DependencyInjectedServiceLocator {
             holidayService = new HolidayServiceImpl(officeDao, holidayDao, hibernateTransactionHelper);
         }
         return holidayService;
+    }
+
+    public static FeeService locateFeeService() {
+
+        if (feeService == null) {
+            feeService = new FeeServiceImpl(feeDao, generalLedgerDao, hibernateTransactionHelper);
+        }
+        return feeService;
     }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
@@ -236,6 +259,21 @@ public class DependencyInjectedServiceLocator {
             officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
         }
         return officeServiceFacade;
+    }
+
+    public static LegacyOfficeServiceFacade locateLegacyOfficeServiceFacade() {
+        if (legacyOfficeServiceFacade == null) {
+            legacyOfficeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
+        }
+        return legacyOfficeServiceFacade;
+    }
+
+    public static FeeServiceFacade locateFeeServiceFacade() {
+        if (feeServiceFacade == null) {
+            feeService = locateFeeService();
+            feeServiceFacade = new WebTierFeeServiceFacade(feeService, feeDao, generalLedgerDao);
+        }
+        return feeServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

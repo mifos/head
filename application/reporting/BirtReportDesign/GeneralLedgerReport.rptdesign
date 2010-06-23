@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.20" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.5.1.v20090903 Build &lt;2.5.1.v20090917-1447></property>
+    <property name="units">in</property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">317</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">317</property>
+        </structure>
+    </list-property>
+    <property name="layoutPreference">auto layout</property>
+    <parameters>
+        <scalar-parameter name="Select Branch" id="318">
+            <text-property name="promptText">Select a Branch</text-property>
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">branches</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["branch_id"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["branch_name"]</expression>
+            <expression name="sortByColumn">dataSetRow["branch_name"]</expression>
+            <property name="sortDirection">asc</property>
+            <property name="dataType">integer</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">false</property>
+            <structure name="format">
+                <property name="category">Fixed</property>
+                <property name="pattern">###0</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="FromDate" id="7">
+            <text-property name="helpText">YYYY-MM-DD</text-property>
+            <text-property name="promptText">From (YYYY-MM-DD)</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Custom</property>
+                <property name="pattern">yyyy-MM-dd</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="ToDate" id="6">
+            <text-property name="helpText">YYYY-MM-DD</text-property>
+            <text-property name="promptText">To (YYYY-MM-DD)</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Custom</property>
+                <property name="pattern">yyyy-MM-dd</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://localhost:3306/mifos</property>
+            <property name="odaUser">mifos</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">bWlmb3M=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="branches" id="317">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="alias">branch_name</property>
+                    <text-property name="displayName">Branch Name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">OFFICE_ID</property>
+                    <property name="alias">branch_id</property>
+                    <text-property name="displayName">Branch ID</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">branch_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">branch_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">DISPLAY_NAME</property>
+                    <property name="nativeName">DISPLAY_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">OFFICE_ID</property>
+                    <property name="nativeName">OFFICE_ID</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">5</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select display_name, office_id FROM office where office_level_id=5]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Get Branch Name" id="319">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="alias">branch_name</property>
+                    <text-property name="displayName">Branch Name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">BranchID</property>
+                    <property name="paramName">Select Branch</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">branch_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">DISPLAY_NAME</property>
+                    <property name="nativeName">DISPLAY_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT DISPLAY_NAME from office WHERE OFFICE_ID =?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>DISPLAY_NAME</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>200</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>DISPLAY_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>DISPLAY_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>200</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Get Head Office Name" id="334">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">DISPLAY_NAME</property>
+                    <property name="alias">mfi_name</property>
+                    <text-property name="displayName">MFI Name</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">mfi_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">DISPLAY_NAME</property>
+                    <property name="nativeName">DISPLAY_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT DISPLAY_NAME FROM office WHERE OFFICE_LEVEL_ID = 1]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>DISPLAY_NAME</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>200</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>DISPLAY_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>DISPLAY_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>200</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="General Ledger" id="365">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">POSTED_DATE</property>
+                    <text-property name="displayName">posted_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">GLCODE_VALUE</property>
+                    <text-property name="displayName">glcode_value</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">debit</property>
+                    <text-property name="displayName">debit</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">credit</property>
+                    <text-property name="displayName">credit</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">branch_id</property>
+                    <property name="paramName">Select Branch</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">from_date</property>
+                    <property name="paramName">FromDate</property>
+                    <property name="dataType">date</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">to_date</property>
+                    <property name="paramName">ToDate</property>
+                    <property name="dataType">date</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">POSTED_DATE</property>
+                        <property name="dataType">date</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">GLCODE_VALUE</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">debit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">credit</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">POSTED_DATE</property>
+                    <property name="nativeName">POSTED_DATE</property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">91</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">GLCODE_VALUE</property>
+                    <property name="nativeName">GLCODE_VALUE</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">debit</property>
+                    <property name="nativeName">debit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">credit</property>
+                    <property name="nativeName">credit</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT financial_trxn.posted_date, 
+	gl_code.glcode_value,
+	SUM(IF(debit_credit_flag = 0, ABS(posted_amount), 0.000)) AS debit, 
+	SUM(IF(debit_credit_flag = 1, ABS(posted_amount),0.000)) AS credit
+FROM financial_trxn
+INNER JOIN gl_code USING (glcode_id)
+INNER JOIN account_trxn ON account_trxn.account_trxn_id = financial_trxn.account_trxn_id
+INNER JOIN account ON account.account_id = account_trxn.account_id
+WHERE account.OFFICE_ID = ?
+ 	AND financial_trxn.posted_date >= ?
+	AND financial_trxn.posted_date <= ?
+GROUP BY posted_date, glcode_value
+ORDER BY posted_date, glcode_value]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>ACTION_DATE</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>91</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>action_date</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>action_date</design:label>
+            <design:formattingHints>
+              <design:displaySize>10</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>GLCODE_VALUE</design:name>
+            <design:position>2</design:position>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>glcode_value</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>glcode_value</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>debit</design:name>
+            <design:position>3</design:position>
+            <design:nativeDataTypeCode>3</design:nativeDataTypeCode>
+            <design:precision>32</design:precision>
+            <design:scale>3</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>debit</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>debit</design:label>
+            <design:formattingHints>
+              <design:displaySize>34</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>credit</design:name>
+            <design:position>4</design:position>
+            <design:nativeDataTypeCode>3</design:nativeDataTypeCode>
+            <design:precision>32</design:precision>
+            <design:scale>3</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>credit</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>credit</design:label>
+            <design:formattingHints>
+              <design:displaySize>34</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="topMargin">1in</property>
+            <property name="leftMargin">1.25in</property>
+            <property name="bottomMargin">1in</property>
+            <property name="rightMargin">1.25in</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <label id="32">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">18pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">General Ledger Summary</text-property>
+        </label>
+        <grid id="320">
+            <column id="321">
+                <property name="width">130px</property>
+            </column>
+            <column id="322"/>
+            <column id="323"/>
+            <row id="324">
+                <cell id="325">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <data id="333">
+                        <property name="fontSize">large</property>
+                        <property name="dataSet">Get Head Office Name</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">mfi_name</property>
+                                <expression name="expression">dataSetRow["mfi_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Column Binding</property>
+                                <text-property name="displayName">MFI</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["mfi_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Column Binding</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="328">
+                <cell id="329">
+                    <label id="335">
+                        <property name="fontSize">large</property>
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">Branch Name:</text-property>
+                    </label>
+                </cell>
+                <cell id="330">
+                    <data id="336">
+                        <property name="fontSize">large</property>
+                        <property name="textAlign">left</property>
+                        <property name="dataSet">Get Branch Name</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">branch_name</property>
+                                <expression name="expression">dataSetRow["branch_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Column Binding</property>
+                                <text-property name="displayName">Branch Name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["branch_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Column Binding</property>
+                    </data>
+                </cell>
+                <cell id="331"/>
+            </row>
+        </grid>
+        <grid id="424">
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <text-property name="displayName">from date</text-property>
+                    <expression name="expression" type="javascript">params["FromDate"].value</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_1</property>
+                    <text-property name="displayName">to date</text-property>
+                    <expression name="expression" type="javascript">params["ToDate"].value</expression>
+                    <property name="dataType">date</property>
+                </structure>
+            </list-property>
+            <column id="425">
+                <property name="width">130px</property>
+            </column>
+            <column id="426">
+                <property name="width">0.9in</property>
+                <property name="textAlign">left</property>
+            </column>
+            <column id="427">
+                <property name="width">0.2in</property>
+            </column>
+            <column id="428">
+                <property name="width">0.9in</property>
+            </column>
+            <column id="429"/>
+            <row id="430">
+                <cell id="431">
+                    <label id="439">
+                        <property name="fontSize">large</property>
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">From:</text-property>
+                    </label>
+                </cell>
+                <cell id="432">
+                    <data id="436">
+                        <property name="fontSize">large</property>
+                        <property name="textAlign">left</property>
+                        <property name="resultSetColumn">Column Binding</property>
+                    </data>
+                </cell>
+                <cell id="433">
+                    <label id="437">
+                        <property name="fontSize">large</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">to</text-property>
+                    </label>
+                </cell>
+                <cell id="434">
+                    <data id="438">
+                        <property name="fontSize">large</property>
+                        <property name="textAlign">left</property>
+                        <property name="resultSetColumn">Column Binding_1</property>
+                    </data>
+                </cell>
+                <cell id="435"/>
+            </row>
+        </grid>
+        <table id="337">
+            <property name="dataSet">General Ledger</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">GLCODE_VALUE</property>
+                    <expression name="expression">dataSetRow["GLCODE_VALUE"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">debit</property>
+                    <expression name="expression">dataSetRow["debit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">credit</property>
+                    <expression name="expression">dataSetRow["credit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <text-property name="displayName">gl_code</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["GLCODE_VALUE"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_1</property>
+                    <text-property name="displayName">Debit Amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["debit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_2</property>
+                    <text-property name="displayName">Credit Amount</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["credit"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_3</property>
+                    <text-property name="displayName">Debit Amount Total</text-property>
+                    <expression name="expression" type="javascript">Total.sum(row["Column Binding_1"])</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_4</property>
+                    <text-property name="displayName">Credit Amount Total</text-property>
+                    <expression name="expression" type="javascript">Total.sum(row["Column Binding_2"])</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Posted Date</property>
+                    <text-property name="displayName">Transaction Date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["POSTED_DATE"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_5</property>
+                    <text-property name="displayName">Posted Date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["POSTED_DATE"]</expression>
+                    <property name="dataType">date</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_6</property>
+                    <text-property name="displayName">Debit Control Total</text-property>
+                    <expression name="expression" type="javascript">Total.sum(dataSetRow["debit"])</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding_7</property>
+                    <text-property name="displayName">Credit Control Total</text-property>
+                    <expression name="expression" type="javascript">Total.sum(dataSetRow["credit"])</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Debit Sub Total</property>
+                    <text-property name="displayName">Debit Sub Total</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Transaction Date</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["debit"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">Credit Sub Total</property>
+                    <text-property name="displayName">Credit Sub Total</text-property>
+                    <property name="dataType">float</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>Transaction Date</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">SUM</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">dataSetRow["credit"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">Debit Sub Total Amount</property>
+                    <text-property name="displayName">Debit Amount Total</text-property>
+                    <expression name="expression" type="javascript">row["Debit Sub Total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">Credit Sub Total Amount</property>
+                    <text-property name="displayName">Credit Amount Total</text-property>
+                    <expression name="expression" type="javascript">row["Credit Sub Total"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+            </list-property>
+            <property name="pageBreakInterval">0</property>
+            <column id="350"/>
+            <column id="351"/>
+            <column id="352"/>
+            <header>
+                <row id="338">
+                    <cell id="339"/>
+                    <cell id="340"/>
+                    <cell id="341"/>
+                </row>
+            </header>
+            <group id="375">
+                <property name="groupName">Transaction Date</property>
+                <property name="interval">none</property>
+                <property name="sortDirection">asc</property>
+                <expression name="keyExpr" type="javascript">row["Posted Date"]</expression>
+                <structure name="toc"/>
+                <property name="repeatHeader">true</property>
+                <property name="hideDetail">false</property>
+                <property name="pageBreakAfter">auto</property>
+                <property name="pageBreakBefore">auto</property>
+                <property name="pageBreakInside">auto</property>
+                <header>
+                    <row id="376">
+                        <cell id="377">
+                            <label id="421">
+                                <property name="fontSize">large</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="display">block</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <text-property name="text">Date:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="378">
+                            <data id="384">
+                                <property name="fontSize">large</property>
+                                <structure name="numberFormat">
+                                    <property name="category">Unformatted</property>
+                                </structure>
+                                <property name="pageBreakBefore">auto</property>
+                                <property name="resultSetColumn">Column Binding_5</property>
+                            </data>
+                        </cell>
+                        <cell id="379"/>
+                    </row>
+                    <row id="402">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                        <cell id="403">
+                            <label id="353">
+                                <text-property name="text">GL-Code	</text-property>
+                            </label>
+                        </cell>
+                        <cell id="404">
+                            <label id="355">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Debit</text-property>
+                            </label>
+                        </cell>
+                        <cell id="405">
+                            <label id="354">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Credit</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="380">
+                        <property name="height">10px</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <cell id="381">
+                            <label id="389">
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">Sub Totals:</text-property>
+                            </label>
+                        </cell>
+                        <cell id="382">
+                            <data id="390">
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">Debit Sub Total Amount</property>
+                            </data>
+                        </cell>
+                        <cell id="383">
+                            <data id="391">
+                                <structure name="numberFormat">
+                                    <property name="category">Currency</property>
+                                    <property name="pattern">#,##0.00</property>
+                                </structure>
+                                <property name="textAlign">right</property>
+                                <property name="resultSetColumn">Credit Sub Total Amount</property>
+                            </data>
+                        </cell>
+                    </row>
+                    <row id="440">
+                        <property name="height">10px</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">medium</property>
+                        <cell id="441">
+                            <label id="422">
+                                <property name="paddingBottom">8pt</property>
+                            </label>
+                        </cell>
+                        <cell id="442"/>
+                        <cell id="443"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="342">
+                    <cell id="343">
+                        <data id="386">
+                            <property name="resultSetColumn">Column Binding</property>
+                        </data>
+                    </cell>
+                    <cell id="344">
+                        <data id="387">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Column Binding_1</property>
+                        </data>
+                    </cell>
+                    <cell id="345">
+                        <data id="388">
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Column Binding_2</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="346">
+                    <property name="height">0.4in</property>
+                    <cell id="347">
+                        <label id="444">
+                            <property name="fontSize">large</property>
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Control Totals:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="348">
+                        <data id="445">
+                            <property name="fontSize">large</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Column Binding_6</property>
+                        </data>
+                    </cell>
+                    <cell id="349">
+                        <data id="447">
+                            <property name="fontSize">large</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0.00</property>
+                            </structure>
+                            <property name="textAlign">right</property>
+                            <property name="resultSetColumn">Column Binding_7</property>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+        <label id="420">
+            <property name="paddingBottom">15pt</property>
+        </label>
+        <grid id="392">
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">medium</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">medium</property>
+            <property name="borderRightColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">medium</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">medium</property>
+            <column id="393">
+                <property name="width">2.5in</property>
+            </column>
+            <column id="394">
+                <property name="width">1.4in</property>
+            </column>
+            <column id="395">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="396">
+                <property name="width">1.4in</property>
+            </column>
+            <row id="397">
+                <cell id="398">
+                    <label id="411">
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">Report Generated by:</text-property>
+                    </label>
+                </cell>
+                <cell id="399">
+                    <label id="412">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                    </label>
+                </cell>
+                <cell id="400">
+                    <label id="413">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">on</text-property>
+                    </label>
+                </cell>
+                <cell id="401">
+                    <label id="414">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                    </label>
+                </cell>
+            </row>
+            <row id="406">
+                <cell id="407">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <label id="415">
+                        <property name="fontWeight">bold</property>
+                        <text-property name="text">Posted to Accounting Systems by:</text-property>
+                    </label>
+                </cell>
+                <cell id="416">
+                    <label id="417">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                    </label>
+                </cell>
+                <cell id="409">
+                    <label id="418">
+                        <property name="fontWeight">bold</property>
+                        <property name="textAlign">center</property>
+                        <text-property name="text">on</text-property>
+                    </label>
+                </cell>
+                <cell id="410">
+                    <label id="419">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">medium</property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
+    </body>
+</report>

@@ -64,13 +64,6 @@ public class CenterPersistence extends Persistence {
         super();
     }
 
-    public boolean isCenterExists(String name) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
-        return ((Number) queryResult.get(0)).longValue() > 0;
-    }
-
     public CenterBO getCenter(Integer customerId) throws PersistenceException {
         return (CenterBO) getPersistentObject(CenterBO.class, customerId);
     }

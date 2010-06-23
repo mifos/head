@@ -419,7 +419,9 @@ public interface SecurityConstants {
     // Remove Group MemberShip
     public final short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
 
-    public final short CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK = 207;
+    public final short CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK = 236;
+
+    public final short CAN_VIEW_GENERAL_LEDGER = 237;
 
     public final short CAN_VIEW_COLLECTION_SHEET_REPORT = 229;
 

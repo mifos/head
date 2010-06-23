@@ -520,4 +520,39 @@ public class HiddenMandatoryConfigurationActionStrutsTest extends MifosMockStrut
         Assert.assertFalse(fieldConfig.isFieldHidden("Client.Trained"));
         Assert.assertFalse(fieldConfig.isFieldHidden("Client.TrainedDate"));
     }
+
+    public void testSpouseFatherFirstAndLastNameFields() throws HibernateProcessException, PersistenceException {
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryClientSpouseFatherInformation", "0");
+        addRequestParameter("mandatoryClientFamilyDetails", "0");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        FieldConfig fieldConfig = FieldConfig.getInstance();
+        fieldConfig.init();
+
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.SpouseFatherInformation"));
+        Assert.assertFalse(fieldConfig.isFieldManadatory("Client.FamilyDetails"));
+
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "load");
+        actionPerform();
+        StaticHibernateUtil.closeSession();
+
+        setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+        addRequestParameter("method", "update");
+        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        addRequestParameter("mandatoryClientSpouseFatherInformation", "1");
+        addRequestParameter("mandatoryClientFamilyDetails", "1");
+        actionPerform();
+        EntityMasterData.getInstance().init();
+        fieldConfig.init();
+
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.SpouseFatherInformation"));
+        Assert.assertTrue(fieldConfig.isFieldManadatory("Client.FamilyDetails"));
+    }
 }
