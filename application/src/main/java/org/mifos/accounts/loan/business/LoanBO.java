@@ -1607,7 +1607,6 @@ public class LoanBO extends AccountBO {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          *
-                         * So, calculate that amount here (though not sure at this point whether it is reopened or not.
                          */
                         if (accntActionDate.isPaid()) {
                             increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
