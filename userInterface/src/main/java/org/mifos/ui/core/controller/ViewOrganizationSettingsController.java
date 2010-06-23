@@ -23,6 +23,7 @@ public class ViewOrganizationSettingsController extends AbstractController{
     List<String> messagesList=new LinkedList<String> ();
 
     ViewOrganizationSettingsController(){
+        super();
         this.linksList.add(this.linksList.size(),"admin.ftl");
         this.messagesList.add(this.messagesList.size(),"admin");
         this.messagesList.add(this.messagesList.size(),"viewOrganizationSettings");
