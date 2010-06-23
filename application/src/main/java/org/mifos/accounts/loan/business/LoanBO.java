@@ -1754,15 +1754,15 @@ public class LoanBO extends AccountBO {
         MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
                 getLoanMeeting().getMeetingStartDate());
 
-        DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
-                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = meeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = meeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
 
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                startFromMeetingDate, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }
