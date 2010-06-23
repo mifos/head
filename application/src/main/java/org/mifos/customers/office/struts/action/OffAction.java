@@ -135,12 +135,10 @@ public class OffAction extends BaseAction {
         // FIXME - keithw - finish spring mvc example for offices
         OfficeHierarchyByLevelDto officeHierarchyStructure = this.officeServiceFacade.retrieveAllOffices();
 
-        List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
-
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, officeHierarchyStructure.getHeadOffices(), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, officeHierarchyStructure.getRegionalOffices(), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, officeHierarchyStructure.getDivisionalOffices(), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, officeHierarchyStructure.getAreaOffices(), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,((OfficeBusinessService) getService()).getBranchOffices()), request);
 
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);

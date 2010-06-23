@@ -133,7 +133,31 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeHierarchyByLevelDto retrieveAllOffices() {
         List<OfficeDto> allOffices = this.officeDao.findAllOffices();
-        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices));
+        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices), divisionalOffices(allOffices), areaOffices(allOffices));
+    }
+
+    private List<OfficeDto> areaOffices(List<OfficeDto> allOffices) {
+        List<OfficeDto> areaOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.AREAOFFICE.getValue().equals(officeDto.getLevelId())) {
+                areaOffices.add(officeDto);
+            }
+        }
+
+        return areaOffices;
+    }
+
+    private List<OfficeDto> divisionalOffices(List<OfficeDto> allOffices) {
+        List<OfficeDto> divisionalOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.SUBREGIONALOFFICE.getValue().equals(officeDto.getLevelId())) {
+                divisionalOffices.add(officeDto);
+            }
+        }
+
+        return divisionalOffices;
     }
 
     private List<OfficeDto> regionalOfficeSpecification(List<OfficeDto> allOffices) {

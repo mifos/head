@@ -899,14 +899,13 @@ public class CustomerServiceImpl implements CustomerService {
                 client.setUpdateDetails();
                 customerDao.save(client);
             }
-            hibernateTransactionHelper.commitTransaction();
+            hibernateTransactionHelper.flushSession();
 
             if (regenerateSchedules) {
-                hibernateTransactionHelper.startTransaction();
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
                 handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-                hibernateTransactionHelper.commitTransaction();
             }
+            hibernateTransactionHelper.commitTransaction();
             return group;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
