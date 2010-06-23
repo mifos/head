@@ -64,7 +64,7 @@ public class AddActivity extends Upgrade {
     public AddActivity(int higherVersion, short newActivityId, Short parentActivity, Short locale, String activityName) {
         super(higherVersion);
         if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
+            throw new RuntimeException(WRONG_CONSTRUCTOR);
         }
         this.newActivityId = newActivityId;
         this.parentActivity = parentActivity;

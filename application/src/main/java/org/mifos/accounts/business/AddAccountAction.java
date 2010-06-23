@@ -45,7 +45,7 @@ public class AddAccountAction extends Upgrade {
     public AddAccountAction(int higherVersion, int action, Short locale, String message) {
         super(higherVersion);
         if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
+            throw new RuntimeException(WRONG_CONSTRUCTOR);
         }
         this.action = action;
         this.locale = locale;
