@@ -20,17 +20,6 @@
 
 package org.mifos.framework.persistence;
 
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.accounts.business.AddAccountStateFlag;
 import org.mifos.accounts.business.AddFinancialAction;
@@ -41,22 +30,7 @@ import org.mifos.accounts.productsmix.persistence.Upgrade127;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
-import org.mifos.application.master.persistence.Upgrade155;
-import org.mifos.application.master.persistence.Upgrade167;
-import org.mifos.application.master.persistence.Upgrade169;
-import org.mifos.application.master.persistence.Upgrade173;
-import org.mifos.application.master.persistence.Upgrade176;
-import org.mifos.application.master.persistence.Upgrade183;
-import org.mifos.application.master.persistence.Upgrade198;
-import org.mifos.application.master.persistence.Upgrade208;
-import org.mifos.application.master.persistence.Upgrade209;
-import org.mifos.application.master.persistence.Upgrade211;
-import org.mifos.application.master.persistence.Upgrade213;
-import org.mifos.application.master.persistence.Upgrade223;
-import org.mifos.application.master.persistence.Upgrade225;
-import org.mifos.application.master.persistence.Upgrade237;
-import org.mifos.application.master.persistence.Upgrade238;
-import org.mifos.application.master.persistence.Upgrade240;
+import org.mifos.application.master.persistence.*;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -65,9 +39,16 @@ import org.mifos.reports.persistence.AddReport;
 import org.mifos.security.AddActivity;
 import org.mifos.security.util.SecurityConstants;
 
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 257;
+    public static final int APPLICATION_VERSION = 259;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;

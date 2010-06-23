@@ -20,23 +20,25 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
 public class DateTimeUpdateController extends AbstractController {
 
     private DateTimeService dateTimeService;
@@ -63,6 +65,7 @@ public class DateTimeUpdateController extends AbstractController {
     }
 
     @Override
+    @RequestMapping("/dateTimeUpdate.ftl")
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView returnValue = new ModelAndView("pageNotFound");
         if (TestMode.MAIN == getTestingService().getTestMode()) {

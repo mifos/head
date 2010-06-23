@@ -65,7 +65,7 @@
                             <configuration>
                                 <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
                                 <properties>
-                                    <cargo.jvmargs>-Xms1024m -Xmx1024m</cargo.jvmargs>
+                                    <cargo.jvmargs>-Xms1024m -Xmx1024m -XX:MaxPermSize=128m</cargo.jvmargs>
                                 </properties>
                             </configuration>
                         </configuration>

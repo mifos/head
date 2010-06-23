@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.junit.Assert;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
@@ -60,12 +59,10 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -93,16 +90,12 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     private CustomerBO group;
     private CustomerBO client;
     private UserContext userContext;
-    private List<Days> workingDays;
-    private List<Holiday> holidays;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         TestDatabase.resetMySQLDatabase();
         userContext = TestObjectFactory.getContext();
-        workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        holidays = new ArrayList<Holiday>();
     }
 
     @Override
@@ -434,36 +427,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             Assert.assertEquals(1, customerActivityEntity.getPersonnel().getPersonnelId().intValue());
             Assert.assertEquals("Mainatnence Fee removed", customerActivityEntity.getDescription());
             Assert.assertEquals("222.0", customerActivityEntity.getAmount().toString());
-        }
-    }
-
-    public void testRegenerateFutureInstallments() throws Exception {
-        createCenter();
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        AccountActionDateEntity nextInstallment = center.getCustomerAccount().getDetailsOfNextInstallment();
-
-        MeetingBO meeting = center.getCustomerMeeting().getMeeting();
-        meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-        meeting.setMeetingStartDate(nextInstallment.getActionDate());
-        List<java.util.Date> meetingDates = null;
-
-        meetingDates = TestObjectFactory.getMeetingDates(center.getOfficeId(), meeting, 10);
-        meetingDates.remove(0);
-        center.getCustomerAccount().regenerateFutureInstallments(nextInstallment, workingDays, holidays);
-        TestObjectFactory.updateObject(center);
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        for (AccountActionDateEntity actionDateEntity : center.getCustomerAccount().getAccountActionDates()) {
-            if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),
-                        DateUtils.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
-            } else if (actionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate().getTime()),
-                        DateUtils.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
-            }
         }
     }
 

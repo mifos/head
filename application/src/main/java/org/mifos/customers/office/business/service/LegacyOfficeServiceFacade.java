@@ -18,35 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.persistence;
+package org.mifos.customers.office.business.service;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
-public class OfficeDto implements DataTransferObject{
+public interface LegacyOfficeServiceFacade {
 
-    private final Short id;
-    private final String name;
-    private final String searchId;
+    public String topLevelOfficeNames(String ids);
 
-    public OfficeDto(final Short officeId, String officeName, String searchId) {
-        this.id = officeId;
-        this.name = officeName;
-        this.searchId = searchId;
-    }
+    public OfficeHierarchyDto headOfficeHierarchy();
 
-    public String getSearchId() {
-        return this.searchId;
-    }
+    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException;
 
-    public Short getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name.trim();
-    }
-
-    public String getText() {
-        return this.name.trim();
-    }
 }
