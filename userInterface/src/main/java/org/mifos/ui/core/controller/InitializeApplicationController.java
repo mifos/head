@@ -20,22 +20,25 @@
 
 package org.mifos.ui.core.controller;
 
+import org.mifos.service.test.TestMode;
+import org.mifos.service.test.TestingService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.mifos.service.test.TestMode;
-import org.mifos.service.test.TestingService;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-
+@Controller
 public class InitializeApplicationController extends AbstractController {
     private TestingService testingService;
 
+    @RequestMapping("/initializeApplication.ftl")
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes") // Reason: here we want to surface a generic exception
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
