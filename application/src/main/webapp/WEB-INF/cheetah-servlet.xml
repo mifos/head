@@ -63,7 +63,10 @@
                 /cheetah.css.ftl=genericController
                 /gazelle.css.ftl=genericController
                 /systemInformation.ftl=systemInformationController
-                /viewOrganizationSettings.ftl=viewOrganizationSettingsController                    
+                /viewOrganizationSettings.ftl=viewOrganizationSettingsController
+                /viewOfficeHierarchy.ftl=genericController
+                /viewProductCategories.ftl=genericController
+                /viewProductMix.ftl=genericController
 </value>
 
         </property>

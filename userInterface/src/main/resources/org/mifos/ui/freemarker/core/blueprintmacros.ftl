@@ -44,12 +44,21 @@
 </div>
 [/#macro]
 
-[#macro crumbs breadcrumbs ]
-<div class="span-22 bluedivs paddingLeft">
-	[#assign seasons =breadcrumbs /]
-  		[#list seasons as seasons]
-  			[#if seasons_has_next]
-    			<a href="${seasons}.ftl">[@spring.message "${seasons}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${seasons}" /]</span>
+[#function returnMessage messagesIndex messagesList]
+		[#list messagesList as messagesList]
+			[#if messagesList_index==messagesIndex]
+						[#return messagesList]
+			[/#if]
+		[/#list]      
+[/#function]
+
+[#macro crumbs breadcrumbsLinks breadcrumbsMessages]
+<div class="span-20 bluedivs paddingLeft">
+	[#assign links =breadcrumbsLinks /]
+	[#assign messages =breadcrumbsMessages /]
+  		[#list messages as messages]
+  			[#if messages_has_next]
+    			<a href="${returnMessage(messages_index,links)}">[@spring.message "${messages}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages}" /]</span>
   			[/#if]
   		[/#list]
  </div>
