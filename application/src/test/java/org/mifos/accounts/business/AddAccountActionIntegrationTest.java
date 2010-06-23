@@ -88,7 +88,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, TEST_LOCALE,
                     "NewAccountAction");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountAction.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddAccountAction.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "NewAccountAction";
 

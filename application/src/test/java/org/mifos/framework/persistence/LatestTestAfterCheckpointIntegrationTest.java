@@ -74,7 +74,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
         dbUnitConnection = new DatabaseConnection(connection);
-        dbUnitConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
     }
 
     @Before

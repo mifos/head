@@ -54,7 +54,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
                     categoryId, "DecliningBalance", description, TEST_LOCALE, "DecliningBalance");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddInterestCalcRule.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "DecliningBalance";
 
