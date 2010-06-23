@@ -28,6 +28,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
 
 public interface OfficeDao {
@@ -35,6 +36,8 @@ public interface OfficeDao {
     OfficeBO findOfficeById(Short officeIdValue);
 
     OfficeDto findOfficeDtoById(Short valueOf);
+
+    List<OfficeDto> findAllOffices();
 
     List<OfficeBO> findBranchsOnlyWithParentsMatching(String searchId);
 

@@ -22,6 +22,8 @@ package org.mifos.customers.office.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +50,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -66,11 +69,6 @@ public class OffAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return new OfficeBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -134,21 +132,21 @@ public class OffAction extends BaseAction {
     public ActionForward getAllOffices(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
-        List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService())
-                .getOfficesTillBranchOffice());
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(officeList,
-                OfficeLevel.HEADOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, getOffice(officeList,
-                OfficeLevel.REGIONALOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,
-                OfficeLevel.SUBREGIONALOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,
-                OfficeLevel.AREAOFFICE), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,
-                ((OfficeBusinessService) getService()).getBranchOffices()), request);
-        loadofficeLevels(request);
+        UserContext userContext = getUserContext(request);
+
+        // FIXME - keithw - finish spring mvc example for offices
+        OfficeHierarchyByLevelDto officeHierarchyStructure = this.officeServiceFacade.retrieveAllOffices();
+
+        List<OfficeBO> officeList = getOffices(userContext, ((OfficeBusinessService) getService()).getOfficesTillBranchOffice());
+
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, officeHierarchyStructure.getHeadOffices(), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE, officeHierarchyStructure.getRegionalOffices(), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE, getOffice(officeList,OfficeLevel.SUBREGIONALOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(officeList,OfficeLevel.AREAOFFICE), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(userContext,((OfficeBusinessService) getService()).getBranchOffices()), request);
+
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
+
         return mapping.findForward(ActionForwards.search_success.toString());
     }
 
@@ -193,9 +191,10 @@ public class OffAction extends BaseAction {
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, office, request);
 
+        loadCustomFieldDefinitions(request);
         loadofficeLevels(request);
         loadParents(request, offActionForm);
-        loadEditCustomFields(request, offActionForm);
+        offActionForm.setCustomFields(createCustomFieldViews(office.getCustomFields(), request));
         loadOfficeStatus(request);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
@@ -226,7 +225,7 @@ public class OffAction extends BaseAction {
         Integer versionNum = sessionOffice.getVersionNo();
         OfficeUpdateRequest officeUpdateRequest = officeUpdateRequestFrom(offActionForm);
 
-        boolean isParentOfficeChanged = this.officeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
+        boolean isParentOfficeChanged = this.legacyOfficeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
 
         if (isParentOfficeChanged) {
             forward = mapping.findForward(ActionForwards.update_cache_success.toString());
@@ -254,17 +253,30 @@ public class OffAction extends BaseAction {
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
-    private void loadEditCustomFields(HttpServletRequest request, OffActionForm offActionForm) throws Exception {
-        // get the office
-        OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        List<CustomFieldDto> customfields = new ArrayList<CustomFieldDto>();
-        if (office.getCustomFields() != null && office.getCustomFields().size() > 0) {
-            for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
-                customfields.add(new CustomFieldDto(customField.getFieldId(), customField.getFieldValue(),
-                        CustomFieldType.NONE));
+    @SuppressWarnings({"unchecked"})
+    private List<CustomFieldDto> createCustomFieldViews(final Set<OfficeCustomFieldEntity> customFieldEntities,
+                                                        final HttpServletRequest request) throws PageExpiredException {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = getCustomFieldDefinitionsFromSession(request);
+        Locale locale = getUserContext(request).getPreferredLocale();
+        if (customFieldEntities != null) {
+            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+                for (OfficeCustomFieldEntity customFieldEntity : customFieldEntities) {
+                    if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
+                        if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
+                                    .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
+                                    .getFieldType()));
+                        } else {
+                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
+                                    .getFieldValue(), customFieldDef.getFieldType()));
+                        }
+                    }
+                }
             }
         }
-        offActionForm.setCustomFields(customfields);
+        return customFields;
     }
 
     private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws Exception {

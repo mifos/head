@@ -1,18 +1,19 @@
 package org.mifos.ui.core.controller;
 
-
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Properties;
+
+@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField", "PMD.AvoidPrintStackTrace" })
+@Controller
 public class ViewOrganizationSettingsController extends AbstractController{
 
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
@@ -36,27 +37,20 @@ public class ViewOrganizationSettingsController extends AbstractController{
         this.viewOrganizationSettingsServiceFacade=viewOrganizationServiceFacade;
     }
 
-
-
-
     @Override
+    @RequestMapping("/viewOrganizationSettings.ftl")
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
      {
-        HttpSession httpsession=request.getSession();
-       //creating links object
-        //linksList=new BreadCrumbsLinks();
-        //adding the present page's message into the list
-        //linksList.setWay(getPageToDisplay(request));
-        Properties p=null;
-        //adding the list to the modelAndView.
-        ModelAndView modelAndView=new ModelAndView("viewOrganizationSettings","bluecrumbsLinks",linksList);
-        try {
-            p=viewOrganizationSettingsServiceFacade.getOrganizationSettings(httpsession);
-            modelAndView.addObject("properties",p);
+
+         ModelAndView modelAndView = new ModelAndView("viewOrganizationSettings");
+         try {
+             Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
+             modelAndView.addObject("properties", p);
             modelAndView.addObject("bluecrumbmessages",messagesList);
-            } catch (Exception e) {
-        }
-        return modelAndView;
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return modelAndView;
     }
 
     public String getPageToDisplay(HttpServletRequest request) {

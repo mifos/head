@@ -18,19 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.business.service;
+package org.mifos.platform.persistence;
 
-import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
-import org.mifos.customers.office.struts.OfficeUpdateRequest;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.util.UserContext;
+import java.util.List;
 
-public interface OfficeServiceFacade {
-
-    public String topLevelOfficeNames(String ids);
-
-    public OfficeHierarchyDto headOfficeHierarchy();
-
-    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException;
-
+public interface QueryExecutor<T> {
+    List<T> execFindQuery(String qryMethodName, Object[] queryArgs);
 }

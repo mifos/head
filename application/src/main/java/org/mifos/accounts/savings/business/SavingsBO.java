@@ -1896,16 +1896,16 @@ public class SavingsBO extends AccountBO {
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
         MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
-        DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
-                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = customerMeeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = customerMeeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
+
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
         int numberOfInstallmentsToGenerate = getLastInstallmentId();
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                startFromMeetingDate, scheduledEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
         if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                 || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())

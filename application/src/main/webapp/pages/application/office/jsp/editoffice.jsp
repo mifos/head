@@ -25,9 +25,9 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="/sessionaccess" prefix="session"%>
-<%@ taglib prefix="date" uri="/tags/date" %>
+<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@taglib uri="/tags/date" prefix="date"%>
+<%@taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -44,6 +44,7 @@ explanation of the license and how it is applied.
 	offActionForm.submit();
   }
 </script>
+    <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form action="/offAction.do?method=editpreview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>

@@ -20,21 +20,19 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import org.mifos.application.admin.servicefacade.SystemInformationDto;
+import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
-import org.mifos.application.admin.servicefacade.SystemInformationDto;
-import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-
+@Controller
 public class SystemInformationController extends AbstractController {
 
     private SystemInformationServiceFacade systemInformationServiceFacade;
@@ -48,6 +46,7 @@ public class SystemInformationController extends AbstractController {
     }
 
     @Override
+    @RequestMapping("/systemInformation.ftl")
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
         ServletContext context = request.getSession().getServletContext();
 

@@ -1607,7 +1607,6 @@ public class LoanBO extends AccountBO {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          *
-                         * So, calculate that amount here (though not sure at this point whether it is reopened or not.
                          */
                         if (accntActionDate.isPaid()) {
                             increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
@@ -1755,15 +1754,15 @@ public class LoanBO extends AccountBO {
         MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
                 getLoanMeeting().getMeetingStartDate());
 
-        DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
-                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = meeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = meeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
 
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                startFromMeetingDate, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }

@@ -45,7 +45,8 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
         return validatePopulatedData(collectionSheetEntry, errors, locale);
     }
 
-    private ActionErrors validatePopulatedData(final CollectionSheetEntryDto parent, final ActionErrors errors, final Locale locale) {
+    private ActionErrors validatePopulatedData(final CollectionSheetEntryDto parent, final ActionErrors errors,
+            final Locale locale) {
         List<CollectionSheetEntryDto> children = parent.getCollectionSheetEntryChildren();
 
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
@@ -69,35 +70,25 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                 Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
                 if (totalDueAmount.doubleValue() <= 0.0 && totalDisburtialAmount > 0.0) {
                     if (!accountView.isValidDisbursementAmount()
-                            || !enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredDisbursalAmount
-                                    .equals(0.0)) {
+                            || !enteredDisbursalAmount.equals(totalDisburtialAmount)
+                            && !enteredDisbursalAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
                 if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
-                    if (!accountView.isValidAmountEntered()
-                            || !enteredAmount.equals(totalDueAmount) && !enteredAmount.equals(0.0)) {
+                    if (!accountView.isValidAmountEntered() || !enteredAmount.equals(totalDueAmount)
+                            && !enteredAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
                 if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
-                    if (!accountView.isValidAmountEntered()
-                            || !accountView.isValidDisbursementAmount()
+                    if ((!accountView.isValidAmountEntered()) || (!accountView.isValidDisbursementAmount())
                             || accountView.getEnteredAmount() == null
-                            || accountView.getDisBursementAmountEntered() == null
-                            || enteredAmount.equals(0.0) && !enteredDisbursalAmount.equals(0.0)
-                            || enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)
-                            || enteredDisbursalAmount.equals(totalDisburtialAmount) && !enteredAmount
-                                    .equals(totalDueAmount)
-                            || enteredAmount.equals(totalDueAmount) && !enteredDisbursalAmount
-                                    .equals(totalDisburtialAmount)
-                            || !enteredAmount.equals(totalDueAmount)
-                                    && !enteredDisbursalAmount.equals(totalDisburtialAmount)
-                                    && !enteredDisbursalAmount.equals(0.0) && !enteredAmount.equals(0.0)) {
+                            || accountView.getDisBursementAmountEntered() == null) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
@@ -114,8 +105,7 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
             }
         }
         for (SavingsAccountDto savingsAccountDto : parent.getSavingsAccountDetails()) {
-            if (!savingsAccountDto.isValidDepositAmountEntered()
-                    || !savingsAccountDto.isValidWithDrawalAmountEntered()) {
+            if (!savingsAccountDto.isValidDepositAmountEntered() || !savingsAccountDto.isValidWithDrawalAmountEntered()) {
                 errors.add(CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, new ActionMessage(
                         CollectionSheetEntryConstants.ERRORINVALIDAMOUNT, savingsAccountDto
                                 .getSavingsOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
@@ -128,18 +118,17 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
             customerAccountAmountEntered = getDoubleValue(customerAccountDto.getCustomerAccountAmountEntered());
         }
         if (!customerAccountDto.isValidCustomerAccountAmountEntered()
-                || !customerAccountAmountEntered.equals(customerAccountDto.getTotalAmountDue()
-                        .getAmountDoubleValue()) && !customerAccountAmountEntered.equals(0.0)) {
+                || !customerAccountAmountEntered.equals(customerAccountDto.getTotalAmountDue().getAmountDoubleValue())
+                && !customerAccountAmountEntered.equals(0.0)) {
             errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, new ActionMessage(
-                    CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, acCollections, parent.getCustomerDetail()
-                            .getDisplayName()));
+                    CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, acCollections, parent
+                            .getCustomerDetail().getDisplayName()));
         }
         return errors;
     }
 
     public static Double getDoubleValue(final String str) {
-        return StringUtils.isNotBlank(str) ? new LocalizationConverter()
-                .getDoubleValueForCurrentLocale(str) : null;
+        return StringUtils.isNotBlank(str) ? new LocalizationConverter().getDoubleValueForCurrentLocale(str) : null;
     }
 
 }

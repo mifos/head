@@ -129,8 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.validate();
         customer.validateMeetingAndFees(accountFees);
 
-//        FIXME - keithw - should we ensure center names are unique per branch/office
-//        customerDao.validateCenterNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+        customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
