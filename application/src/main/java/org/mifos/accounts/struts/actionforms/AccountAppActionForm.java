@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.dto.domain.CustomFieldDto;
 
 public class AccountAppActionForm extends ValidatorActionForm {
     private String accountId;

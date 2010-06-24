@@ -28,11 +28,11 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.dto.domain.CustomFieldDto;
 
 public class LoanCreationLoanDetailsDto {
 

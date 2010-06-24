@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -44,9 +44,9 @@ import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -413,7 +413,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
                             errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
                                     CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
                         }
-                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
                                 (StringUtils.isNotBlank(customField.getFieldValue()))) {
                             try {
                                 DateUtils.getDate(customField.getFieldValue());

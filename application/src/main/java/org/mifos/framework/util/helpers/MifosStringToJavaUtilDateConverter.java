@@ -23,8 +23,8 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 
 import org.apache.commons.beanutils.Converter;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.exceptions.InvalidDateException;
 
 public class MifosStringToJavaUtilDateConverter implements Converter {
 

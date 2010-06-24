@@ -25,9 +25,9 @@ import java.util.Locale;
 
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;

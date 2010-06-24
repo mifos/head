@@ -9,9 +9,9 @@ import java.util.Locale;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)

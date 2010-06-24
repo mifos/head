@@ -23,11 +23,11 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 

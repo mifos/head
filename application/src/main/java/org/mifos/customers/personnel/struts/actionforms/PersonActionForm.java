@@ -36,16 +36,16 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -652,7 +652,7 @@ public class PersonActionForm extends BaseActionForm {
                             errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
                                     PersonnelConstants.ERROR_CUSTOMfIELD, customFieldDef.getLabel()));
                         }
-                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
                                 (StringUtils.isNotBlank(customField.getFieldValue()))) {
                             try {
                                 DateUtils.getDate(customField.getFieldValue());

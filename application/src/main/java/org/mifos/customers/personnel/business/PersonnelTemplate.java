@@ -23,8 +23,8 @@ package org.mifos.customers.personnel.business;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 
