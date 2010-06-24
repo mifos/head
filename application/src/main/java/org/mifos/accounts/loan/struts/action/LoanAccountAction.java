@@ -521,6 +521,10 @@ public class LoanAccountAction extends AccountAppAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
+
+        String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
+        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
+        SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
         String customerId = request.getParameter(CUSTOMER_ID);
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
         LoanBO loanBO = loanBusinessService.findBySystemId(request.getParameter(GLOBAL_ACCOUNT_NUM));
@@ -581,10 +585,6 @@ public class LoanAccountAction extends AccountAppAction {
             }
             SessionUtils.setAttribute(CUSTOMER_ID, customerId, request);
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsViewList, request);
-
-            String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-            LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
-            SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
         }
 
         loanBusinessService.initialize(loanBO.getLoanMeeting());
