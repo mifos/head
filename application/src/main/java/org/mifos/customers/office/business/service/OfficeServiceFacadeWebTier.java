@@ -23,9 +23,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
@@ -35,10 +41,15 @@ import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.util.UserContext;
 
 public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, OfficeServiceFacade {
@@ -133,7 +144,19 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeHierarchyByLevelDto retrieveAllOffices() {
         List<OfficeDto> allOffices = this.officeDao.findAllOffices();
-        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices), divisionalOffices(allOffices), areaOffices(allOffices));
+        return new OfficeHierarchyByLevelDto(headOfficeSpecification(allOffices), regionalOfficeSpecification(allOffices), divisionalOffices(allOffices), areaOffices(allOffices), branchOffices(allOffices));
+    }
+
+    private List<OfficeDto> branchOffices(List<OfficeDto> allOffices) {
+        List<OfficeDto> branchOffices = new ArrayList<OfficeDto>();
+
+        for (OfficeDto officeDto : allOffices) {
+            if (OfficeLevel.BRANCHOFFICE.getValue().equals(officeDto.getLevelId())) {
+                branchOffices.add(officeDto);
+            }
+        }
+
+        return branchOffices;
     }
 
     private List<OfficeDto> areaOffices(List<OfficeDto> allOffices) {
@@ -182,5 +205,14 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
         }
 
         return headOffices;
+    }
+
+    @Override
+    public OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId) {
+
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = this.officeDao.retrieveCustomFieldsForOffice();
+        List<CustomFieldDto> customFields = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, Locale.getDefault());
+
+        return new OfficeFormDto(customFields);
     }
 }

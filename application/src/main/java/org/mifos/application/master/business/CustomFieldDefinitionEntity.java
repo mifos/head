@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SearchUtils;
@@ -87,7 +88,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
                              // database
         this.lookUpEntity = name;
         this.levelId = fieldIndex;
-        this.fieldType = fieldType.value;
+        this.fieldType = fieldType.getValue();
         this.entityType = entityType.getValue();
         this.defaultValue = defaultValue;
         this.mandatoryFlag = mandatory.getValue();
@@ -133,7 +134,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
         lookUpValues.add(lookupValue);
         lookupEntity.setLookUpValues(lookUpValues);
         this.lookUpEntity = lookupEntity;
-        this.fieldType = fieldType.value;
+        this.fieldType = fieldType.getValue();
         this.levelId = levelId;
         this.defaultValue = defaultValue;
         this.mandatoryFlag = mandatory.getValue();
@@ -259,6 +260,7 @@ public class CustomFieldDefinitionEntity extends AbstractEntity {
             fieldView.setMandatory(fieldDef.isMandatory());
             fieldView.setMandatoryString(fieldDef.getMandatoryStringValue());
             fieldView.setLookUpEntityType(fieldDef.getEntityName());
+            fieldView.setLabel(fieldDef.getLabel());
 
             customFieldDtos.add(fieldView);
         }

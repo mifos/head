@@ -35,6 +35,7 @@ public class OfficeDto implements Serializable {
     private final Short parentId;
     private final Short statusId;
     private final Short levelId;
+    private final String parentOfficeName;
 
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId) {
         this.id = officeId;
@@ -45,6 +46,19 @@ public class OfficeDto implements Serializable {
         this.parentId = parentId;
         this.statusId = statusId;
         this.levelId = levelId;
+        this.parentOfficeName = "";
+    }
+
+    public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId, String parentOfficeName) {
+        this.id = officeId;
+        this.name = officeName;
+        this.searchId = searchId;
+        this.officeShortName = officeShortName;
+        this.globalNum = globalNum;
+        this.parentId = parentId;
+        this.statusId = statusId;
+        this.levelId = levelId;
+        this.parentOfficeName = parentOfficeName;
     }
 
     public String getSearchId() {
@@ -81,5 +95,9 @@ public class OfficeDto implements Serializable {
 
     public Short getLevelId() {
         return this.levelId;
+    }
+
+    public String getParentOfficeName() {
+        return this.parentOfficeName;
     }
 }

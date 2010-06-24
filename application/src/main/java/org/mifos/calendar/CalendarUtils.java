@@ -29,9 +29,9 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 /**

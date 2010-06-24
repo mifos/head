@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 
 public class ClientPersonalInfoDto {
 

@@ -244,8 +244,8 @@ explanation of the license and how it is applied.
 									</bean:define>
 									<tr class="fontnormal">
 										<td width="21%" align="right"><span id="CreateNewOffice.label.customField"><mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}"
-											mandatory="${cf.mandatoryStringValue}"
+											name="${cf.lookUpEntityType}"
+											mandatory="${cf.mandatoryString}"
 											bundle="OfficeResources"/></span>:
 										</td>
 										<td width="79%"><c:if test="${cf.fieldType == 1}">
@@ -256,7 +256,6 @@ explanation of the license and how it is applied.
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
                                             <date:datetag property="customField[${ctr}].fieldValue" />
-
 										</c:if></td>
 									</tr>
 								</c:forEach>

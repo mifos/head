@@ -32,8 +32,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class LoanDisbursementActionForm extends AccountApplyPaymentActionForm {

@@ -22,7 +22,6 @@ package org.mifos.customers.group.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
@@ -35,6 +34,7 @@ import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.GroupPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.service.DataTransferObject;
 
 /**

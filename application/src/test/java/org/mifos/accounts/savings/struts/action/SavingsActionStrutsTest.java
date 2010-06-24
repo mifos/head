@@ -44,13 +44,13 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -155,7 +155,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private List<CustomFieldDto> getCustomFieldView() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(new Short("8"), "13", CustomFieldType.NONE));
+        customFields.add(new CustomFieldDto(new Short("8"), "13", null));
         return customFields;
 
     }
