@@ -288,16 +288,16 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext) {
 
         try {
-            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
-                    .retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
-                    userContext.getPreferredLocale());
-
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
 
             ClientRulesDto clientRules = retrieveClientRules();
 
             ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
+
+            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
+                    .retrieveCustomFieldEntitiesForClient();
+            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),  customFieldDefinitions,
+                    userContext);
 
             CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
             ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
