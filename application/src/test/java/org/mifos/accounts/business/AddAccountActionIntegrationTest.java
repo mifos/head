@@ -29,7 +29,6 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
@@ -87,7 +86,7 @@ public class AddAccountActionIntegrationTest extends MifosIntegrationTestCase {
 
         try {
             // use invalid lookup key format
-            upgrade = new AddAccountAction(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, invalidKey);
+            upgrade = new AddAccountAction(newId, invalidKey);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddAccountAction.wrongLookupValueKeyFormat);
         }

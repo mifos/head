@@ -39,12 +39,6 @@ import org.mifos.framework.util.StandardTestingService;
 
 public class TestDatabase {
 
-    public static void runUpgradeScripts(int fromVersion, Connection connection) throws Exception {
-        DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
-        Assert.assertEquals(fromVersion, persistence.read());
-        persistence.upgradeDatabase();
-    }
-
     /**
      * This method was added to work around integration test inter- and intra-dependencies. Once these dependencies in
      * main code are eliminated, we should be able to use Spring managed testing environment (transaction) this method

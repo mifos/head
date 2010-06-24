@@ -26,7 +26,6 @@ import org.hibernate.Session;
 import org.junit.Ignore;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
@@ -53,7 +52,7 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
 
     public void testStartFromStandardStore() throws Exception {
         short newId = 17032;
-        AddReport upgrade = new AddReport(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+        AddReport upgrade = new AddReport(newId,
                 ReportsCategoryBO.ANALYSIS, "Detailed Aging of Portfolio at Risk", "aging_portfolio_at_risk",
                 "DetailedAgingPortfolioAtRisk.rptdesign");
         upgrade.upgrade(session.connection());

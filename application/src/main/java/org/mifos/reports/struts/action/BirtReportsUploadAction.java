@@ -51,7 +51,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.ReportsBO;
@@ -335,7 +335,7 @@ public class BirtReportsUploadAction extends BaseAction {
         String activityNameHead = "Can view ";
         rp.updateLookUpValue(reportBO.getActivityId(), activityNameHead + uploadForm.getReportTitle());
         ActivityGenerator.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
-        ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseVersionPersistence.ENGLISH_LOCALE,
+        ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseMigrator.ENGLISH_LOCALE,
                 "Can view " + reportBO.getReportName());
 
         FormFile formFile = uploadForm.getFile();

@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +40,6 @@ import java.util.TreeMap;
 
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.security.AddActivity;
 import org.mifos.security.util.SecurityConstants;
 
@@ -53,8 +53,6 @@ import org.mifos.security.util.SecurityConstants;
  * <li>determine if the database needs upgrading</li>
  * <li>apply any upgrades not currently applied to the database</li>
  * </ul>
- *
- * This class will eventually replace {@link DatabaseVersionPersistence}.
  */
 public class DatabaseMigrator {
 
@@ -63,6 +61,7 @@ public class DatabaseMigrator {
     public SortedMap<Integer, String> availableUpgrades;
 
     public static final short ENGLISH_LOCALE = 1;
+
 
     public static final String CLASS_UPGRADE_TYPE = "class";
     public static final String METHOD_UPGRADE_TYPE = "method";
@@ -208,9 +207,11 @@ public class DatabaseMigrator {
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
         if (SCRIPT_UPGRADE_TYPE.equals(type)) {
-
-            DatabaseSetup.executeScript(upgradeNumber + ".sql", connection);
-
+            URL url = SqlResource.getInstance().getUrl(upgradeNumber + ".sql");
+            SqlUpgrade sqlUpgrade = new SqlUpgrade(url);
+            sqlUpgrade.upgrade(connection);
+            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
+            return;
         }
 
         if (CLASS_UPGRADE_TYPE.equals(type)) {
@@ -218,7 +219,8 @@ public class DatabaseMigrator {
 
             Upgrade upgradeClass = getInstanceOfUpgradeClass(className);
             upgradeClass.upgrade(connection);
-
+            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
+            return;
         }
 
         if (METHOD_UPGRADE_TYPE.equals(type)){
@@ -231,7 +233,8 @@ public class DatabaseMigrator {
                 e.getCause().printStackTrace();
                 e.printStackTrace();
             }
-
+            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
+            return;
 
         }
     }
@@ -275,16 +278,6 @@ public class DatabaseMigrator {
 
     private List<Integer> getAppliedUpgrades() {
 
-        // TODO convert query to HQL
-        StaticHibernateUtil.initialize();
-
-        Connection connection = null;
-        try {
-            connection = TestDatabase.getJDBCConnection();
-        } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
         List<Integer> appliedUpgrades = new ArrayList<Integer>();
 
         Statement stmt = null;
@@ -335,9 +328,10 @@ public class DatabaseMigrator {
 //                new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Edit product mix")));
     }
 
-    public void upgrade1277124044() throws IOException, SQLException{
-        Upgrade upgrade = new DummyUpgrade();
-        upgrade.upgrade(connection);
-    }
+    //TODO remove
+//    public void upgrade1277124044() throws IOException, SQLException{
+//        Upgrade upgrade = new DummyUpgrade();
+//        upgrade.upgrade(connection);
+//    }
 
 }

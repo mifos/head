@@ -50,7 +50,7 @@ public class AddInterestCalcRule extends Upgrade {
      * This constructor is used for version 174 and lower. And it must not be
      * used afterward
      */
-    public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description,
+    public AddInterestCalcRule(int newRuleId, int categoryId, String lookupName, String description,
             Short locale, String message) {
         super();
         this.newRuleId = newRuleId;
@@ -65,7 +65,7 @@ public class AddInterestCalcRule extends Upgrade {
      * This constructor must be used after version 174. The lookupValueKey must
      * in the format InterestTypes-...
      */
-    public AddInterestCalcRule(int higherVersion, int newRuleId, int categoryId, String lookupName, String description) {
+    public AddInterestCalcRule(int newRuleId, int categoryId, String lookupName, String description) {
         super();
         this.newRuleId = newRuleId;
         this.lookupName = lookupName;

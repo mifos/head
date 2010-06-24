@@ -57,7 +57,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.StandardTestingService;
@@ -237,7 +236,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.text("\n");
 
         if (databaseError.errorCode.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
-            addDatabaseVersionMessage(xml, dbVersion);
+            xml.text("Unable to apply database upgrades");
         }
         xml.endTag("p");
         if (databaseError.errorCode.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
@@ -289,15 +288,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         xml.endTag("a");
         xml.endTag("p");
         xml.text("\n");
-    }
-
-    private static void addDatabaseVersionMessage(XmlBuilder xml, int dbVersion) {
-        if (dbVersion == -1) {
-            xml.text("Database is too old to have a version.\n");
-        } else {
-            xml.text("Database Version = " + dbVersion + "\n");
-        }
-        xml.text("Application Version = " + DatabaseVersionPersistence.APPLICATION_VERSION + ".\n");
     }
 
     private static void addStackTraceHtml(XmlBuilder xml) {

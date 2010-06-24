@@ -45,11 +45,11 @@ public class AddReport extends Upgrade {
      * contructor.
      */
     @Deprecated
-    public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design) {
-        this(higherVersion, newId, category, name, identifier, design, null);
+    public AddReport(short newId, short category, String name, String identifier, String design) {
+        this(newId, category, name, identifier, design, null);
     }
 
-    public AddReport(int higherVersion, short newId, short category, String name, String identifier, String design,
+    public AddReport(short newId, short category, String name, String identifier, String design,
             Short activityId) {
         super();
         this.newId = newId;

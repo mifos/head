@@ -21,8 +21,6 @@
 package org.mifos.framework.persistence;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import junit.framework.Assert;
 
@@ -44,23 +42,6 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
         connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
-    @Override
-    public void tearDown() throws Exception {
-        databaseWithVersion();
-    }
-
-//  TODO Update for NSDU
-//    public void testIncrementVersion() throws Exception {
-//        databaseWithVersion();
-//        new DummyUpgrade().upgradeVersion(connection);
-//       Assert.assertEquals( new DatabaseVersionPersistence(connection).read());
-//    }
-
-    //  TODO Update for NSDU
-//    public void testNotReadyToIncrement() throws Exception {
-//        new DummyUpgrade(DatabaseVersionPersistence.APPLICATION_VERSION + 2).upgradeVersion(connection);
-//       Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection).read());
-//    }
 
     public void testValidateLookupValueKey() throws Exception {
         String validKey = "Permissions-Groups-CanBlacklistAGroup";
@@ -74,9 +55,4 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
     }
 
-    private void databaseWithVersion() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute("truncate table DATABASE_VERSION");
-        statement.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + DatabaseVersionPersistence.APPLICATION_VERSION + ")");
-    }
 }

@@ -23,7 +23,6 @@ package org.mifos.framework.persistence;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import junit.framework.Assert;
 
@@ -47,11 +46,9 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        databaseWithVersion();
     }
 
     public void testBasics() throws Exception {
-        databaseWithVersion();
         DummyUpgrade upgradeOne = new DummyUpgrade();
         DummyUpgrade upgradeTwo = new DummyUpgrade();
         Upgrade composite = new CompositeUpgrade(upgradeOne, upgradeTwo);
@@ -92,14 +89,6 @@ public class CompositeUpgradeIntegrationTest extends MifosIntegrationTestCase {
                 new MyUpgrade("third"));
         composite.upgrade(connection);
        Assert.assertEquals("upgrading first\n" + "upgrading second\n" + "upgrading third\n", log.toString());
-       Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection).read());
-    }
-
-
-    private void databaseWithVersion() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute("truncate table DATABASE_VERSION");
-        statement.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + DatabaseVersionPersistence.APPLICATION_VERSION + ")");
     }
 
     class MyUpgrade extends Upgrade {

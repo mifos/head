@@ -26,7 +26,6 @@ import org.hibernate.Session;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class AddFieldIntegrationTest extends MifosIntegrationTestCase {
 

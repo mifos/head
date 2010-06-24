@@ -37,10 +37,9 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private static final short ACTIVITY_ID = 1;
-    private static final int HIGHER_UPGRADE_VERSION = 185;
     private static final short REPORT_CATEGORY_ID = (short) 6;
     private static final short TEST_REPORT_ID = (short) 4;
-    private static final int LOWER_UPGRADE_VERSION = 184;
+
     private Session session;
     private Transaction transaction;
     private Connection connection;
@@ -54,7 +53,7 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
     }
 
     public void testShouldNotThrowErrorWhenUpgradingForVer184WithActivityIdNull() throws Exception {
-        AddReport addReport = createReport(LOWER_UPGRADE_VERSION);
+        AddReport addReport = createReport();
 
         try {
             addReport.doUpgrade(connection);
@@ -64,13 +63,13 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private AddReport createReport(int version) {
-        return new AddReport(version, TEST_REPORT_ID, REPORT_CATEGORY_ID, "TestReportForUpgrade",
+    private AddReport createReport() {
+        return new AddReport(TEST_REPORT_ID, REPORT_CATEGORY_ID, "TestReportForUpgrade",
                 "test_report_upgrade", "design string", ACTIVITY_ID);
     }
 
     public void testShouldUpgradeForDBVersion185OrMoreWithAcivityId() throws Exception {
-        AddReport addReport = createReport(HIGHER_UPGRADE_VERSION);
+        AddReport addReport = createReport();
         addReport.doUpgrade(connection);
         ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
         Assert.assertNotNull(report.getActivityId());

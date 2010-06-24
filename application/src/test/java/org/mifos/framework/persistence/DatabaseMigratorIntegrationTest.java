@@ -76,18 +76,20 @@ public class DatabaseMigratorIntegrationTest {
         migrator.upgrade();
 
         IDataSet dump = new DatabaseConnection(connection).createDataSet();
+        // check insertion of upgrade id
+        ResultSet rs = connection.createStatement().executeQuery(
+                "select upgrade_id from applied_upgrades where upgrade_id=" + upgrades.firstKey());
+        Assert.assertTrue(rs.next());
+
         Assertion.assertEquals(latestDump, dump);
-        // check if database is upgraded to 1274761395
 
     }
 
     private void createFooTable(Connection connection) throws SQLException {
         connection.createStatement().execute("drop table if exists foo");
-        connection.createStatement().execute("CREATE TABLE FOO ( "+
-                "FOO_ID INTEGER,"+
-                "Description VARCHAR(25),"+
-                "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
-
+        connection.createStatement().execute(
+                "CREATE TABLE FOO ( " + "FOO_ID INTEGER," + "Description VARCHAR(25),"
+                        + "PRIMARY KEY(FOO_ID) ) ENGINE=InnoDB CHARACTER SET utf8 ");
 
         connection.createStatement().execute("INSERT INTO FOO VALUES(1, 'BAR')");
 
@@ -97,65 +99,55 @@ public class DatabaseMigratorIntegrationTest {
 
     private void loadNonSeqDatabaseSchema() throws Exception {
 
-        //drop tables
+        // drop tables
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("drop table if exists bar");
-//        connection.createStatement().execute(
-//                "create table database_version(" +
-//                "database_version integer)" +
-//                "engine=innodb character set utf8;" );
+        // connection.createStatement().execute(
+        // "create table database_version(" +
+        // "database_version integer)" +
+        // "engine=innodb character set utf8;" );
 
         connection.createStatement().execute(
-                "create table applied_upgrades(" +
-                "upgrade_id integer)" +
-                "engine=innodb character set utf8;");
+                "create table applied_upgrades(" + "upgrade_id integer)" + "engine=innodb character set utf8;");
         connection.commit();
     }
 
+    public void testJavaBasedUpgrade() throws Exception {
+        loadNonSeqDatabaseSchema();
+        connection.createStatement().execute("drop table if exists baz");
+        connection.createStatement().execute(
+                "create table baz ( " + "baz_id integer" + ") ENGINE=InnoDB CHARACTER SET utf8 ");
+        connection.createStatement().execute("INSERT INTO baz VALUES(1202)");
+        connection.commit();
+        IDataSet dump1 = new DatabaseConnection(connection).createDataSet();
+        ITable expected = dump1.getTable("baz");
 
-    public void testJavaBasedUpgrade() throws Exception{
-       loadNonSeqDatabaseSchema();
-       connection.createStatement().execute("drop table if exists baz");
-       connection.createStatement().execute("create table baz ( "+
-               "baz_id integer"+
-               ") ENGINE=InnoDB CHARACTER SET utf8 ");
-       connection.createStatement().execute("INSERT INTO baz VALUES(1202)");
-       connection.commit();
-       IDataSet dump1 = new DatabaseConnection(connection).createDataSet();
-       ITable expected = dump1.getTable("baz");
+        loadNonSeqDatabaseSchema();
 
-       loadNonSeqDatabaseSchema();
+        connection.createStatement().execute("drop table  if exists foo");
+        SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
+        upgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);
 
-       connection.createStatement().execute("drop table  if exists foo");
-       SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
-       upgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);
+        new DatabaseMigrator(connection, upgrades).upgrade();
 
-       new DatabaseMigrator(connection, upgrades).upgrade();
-
-       IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
-       Assertion.assertEquals(expected, dump2.getTable("baz"));
+        IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
+        Assertion.assertEquals(expected, dump2.getTable("baz"));
     }
-
 
     public void testMergedUpgrade() throws Exception {
 
     }
-
 
     public void testFirstRun() throws Exception {
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
 
         // load dummy schema containing database_version & applied_upgrades tables
         connection.createStatement().execute(
-                "create table database_version(" +
-                "database_version integer)" +
-                "engine=innodb character set utf8;" );
+                "create table database_version(" + "database_version integer)" + "engine=innodb character set utf8;");
 
         connection.createStatement().execute(
-                "create table applied_upgrades(" +
-                "upgrade_id integer)" +
-                "engine=innodb character set utf8;");
+                "create table applied_upgrades(" + "upgrade_id integer)" + "engine=innodb character set utf8;");
 
         // insert database version
         connection.createStatement().execute("insert into database_version values(253)");
@@ -175,11 +167,12 @@ public class DatabaseMigratorIntegrationTest {
         // check appliedUPgrades table contains unix tStamps for upgrades
         ResultSet rs = connection.createStatement().executeQuery("select count(*) from applied_upgrades");
         rs.next();
-       Assert.assertEquals(rs.getInt(1), 5);
+        Assert.assertEquals(rs.getInt(1), 5);
 
     }
 
-    public void testMethodUpgrade() throws Exception{
+    @Test (enabled=false)
+    public void testMethodUpgrade() throws Exception {
 
         loadNonSeqDatabaseSchema();
 

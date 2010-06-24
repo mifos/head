@@ -26,7 +26,6 @@ import org.hibernate.Session;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase {
@@ -53,14 +52,14 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
 
         try {
             // use invalid lookup key format
-            upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId,
+            upgrade = new AddInterestCalcRule(newRuleId,
                     categoryId, invalidKey, description);
         } catch (Exception e) {
            Assert.assertEquals(e.getMessage(), AddInterestCalcRule.wrongLookupValueKeyFormat);
         }
         String goodKey = "InterestTypes-NewDecliningBalance";
         // use valid construtor and valid key
-        upgrade = new AddInterestCalcRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newRuleId, categoryId,
+        upgrade = new AddInterestCalcRule(newRuleId, categoryId,
                 goodKey, description);
         try {
             Session session = StaticHibernateUtil.getSessionTL();

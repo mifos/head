@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class Dispatcher extends HttpServlet {
@@ -178,7 +177,9 @@ public class Dispatcher extends HttpServlet {
         html.endTag("p");
 
         html.startTag("p");
-        html.text("Database version = " + DatabaseVersionPersistence.APPLICATION_VERSION);
+        //TODO Update for NSDU
+        //html.text("Database version = " + DatabaseVersionPersistence.APPLICATION_VERSION);
+
         html.endTag("p");
 
         html.startTag("p");
