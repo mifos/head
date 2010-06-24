@@ -44,7 +44,7 @@ import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
+@ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/org/mifos/config/resources/persistenceContext.xml", "/test-dataSourceContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 public class QuestionnaireServiceIntegrationTest {
 
@@ -131,7 +131,7 @@ public class QuestionnaireServiceIntegrationTest {
         result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
         assertThat(result, is(true));
     }
-    
+
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
         return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
     }
