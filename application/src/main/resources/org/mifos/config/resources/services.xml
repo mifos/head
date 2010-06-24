@@ -5,10 +5,18 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
     					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
+    <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
+    	<constructor-arg ref="feeService" />
+    	<constructor-arg ref="feeDao" />
+    	<constructor-arg ref="generalLedgerDao" />
+    </bean>
+    
     <bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" >
     	<constructor-arg ref="customerDao" />
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="fundDao" />
+    	<constructor-arg ref="loanDao" />
     </bean>
     
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" >
@@ -39,6 +47,11 @@
     	<constructor-arg ref="holidayDao" />
     </bean>
     
+    <bean id="officeServiceFacade" class="org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier" >
+    	<constructor-arg ref="officeDao" />
+    	<constructor-arg ref="holidayDao" />
+    </bean>
+    
     <bean id="hibernateTransactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil" />
     
     <bean id="customerService" class="org.mifos.customers.business.service.CustomerServiceImpl" >
@@ -54,5 +67,10 @@
     	<constructor-arg ref="holidayDao" />
     	<constructor-arg ref="hibernateTransactionHelper" />
     </bean>
-
+    
+    <bean id="feeService" class="org.mifos.accounts.fees.business.service.FeeServiceImpl" >
+    	<constructor-arg ref="feeDao" />
+    	<constructor-arg ref="generalLedgerDao" />
+    	<constructor-arg ref="hibernateTransactionHelper" />
+    </bean>
 </beans>

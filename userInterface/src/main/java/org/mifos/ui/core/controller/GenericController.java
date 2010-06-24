@@ -20,23 +20,29 @@
 
 package org.mifos.ui.core.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-
+@SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
+@Controller
 public class GenericController extends AbstractController {
 
 	@Override
+    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/admin.ftl"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
         	Map<String, Object> model = new HashMap<String, Object>();
         	model.put("request", request);
+
         	Map<String, Object> status = new HashMap<String, Object>();
         	List<String> errorMessages = new ArrayList<String>();
         	status.put("errorMessages", errorMessages);
@@ -46,6 +52,6 @@ public class GenericController extends AbstractController {
 	}
 
 	public String getPageToDisplay(HttpServletRequest request) {
-		return request.getRequestURI().replace("mifos/","").replace("/", "").replace(".ftl", "");
+		return request.getRequestURI().replaceFirst("/mifos.*/","").replace(".ftl", "");
 	}
 }

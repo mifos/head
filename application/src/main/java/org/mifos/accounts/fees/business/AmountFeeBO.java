@@ -22,6 +22,8 @@ package org.mifos.accounts.fees.business;
 
 import java.util.Date;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
@@ -128,4 +130,19 @@ public class AmountFeeBO extends FeeBO {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        AmountFeeBO rhs = (AmountFeeBO) obj;
+        return super.equals(obj) && new EqualsBuilder().append(this.feeAmount, rhs.feeAmount).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * new HashCodeBuilder().append(this.feeAmount).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder(super.toString()).append(" : ").append(this.feeAmount.toString()).toString();
+    }
 }

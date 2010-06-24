@@ -29,6 +29,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.ApplicableCharge;
@@ -116,12 +117,15 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
     public void testCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
-        accountBO = getLoanAccount(client, meeting);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, getAccountBusinessService().getAccount(
-                accountBO.getAccountId()), request);
         setRequestPathInfo("/applyChargeAction.do");
         addRequestParameter("method", "cancel");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+
+        accountBO = getLoanAccount(client, meeting);
+        ApplyChargeActionForm applyChargeActionForm = new ApplyChargeActionForm();
+        applyChargeActionForm.setAccountId(accountBO.getAccountId().toString());
+        setActionForm(applyChargeActionForm);
+
         actionPerform();
         verifyForward("loanDetails_success");
         verifyNoActionErrors();

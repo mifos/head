@@ -50,7 +50,6 @@ import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionExceptio
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -65,14 +64,15 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
@@ -193,7 +193,7 @@ public class SavingsBO extends AccountBO {
             final Short createdByUserId, List<Holiday> holidays) {
 
         super(accountType, accountState, customer, offsettingAllowable, scheduledPayments,
-                new HashSet<AccountFeesEntity>(), null, savingsOfficer, createdDate, createdByUserId);
+                new HashSet<AccountFeesEntity>(), customer.getOffice(), savingsOfficer, createdDate, createdByUserId);
         this.savingsOffering = savingsProduct;
         this.savingsPaymentStrategy = savingsPaymentStrategy;
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
@@ -236,11 +236,16 @@ public class SavingsBO extends AccountBO {
         // generated the deposit action dates only if savings account is being
         // saved in approved state
         if (isActive()) {
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            HolidayDao holidayDao = new HolidayDaoHibernate(new GenericDaoHibernate());
-            List<Holiday> thisAndNextYearsHolidays = holidayDao.findAllHolidaysThisYearAndNext(customer.getOfficeId());
-            setValuesForActiveState(workingDays, thisAndNextYearsHolidays);
+            goActiveForFristTimeAndGenerateSavingsSchedule(customer);
         }
+    }
+
+    private void goActiveForFristTimeAndGenerateSavingsSchedule(final CustomerBO customer) throws AccountException {
+
+        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+
+        CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
+        setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(), futureCalendarEventsApplicableToOffice.getHolidays());
     }
 
     public void populateInstanceForTest(final SavingsOfferingBO savingsOffering) {
@@ -1235,18 +1240,16 @@ public class SavingsBO extends AccountBO {
     @Override
     protected void activationDateHelper(final Short newStatusId) throws AccountException {
 
-        List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> holidays = new ArrayList<Holiday>();
-
         if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
             if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PENDINGAPPROVAL
                     && newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-                setValuesForActiveState(workingDays, holidays);
+
+                goActiveForFristTimeAndGenerateSavingsSchedule(customer);
             }
         } else {
             if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PARTIALAPPLICATION
                     && newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
-                setValuesForActiveState(workingDays, holidays);
+                goActiveForFristTimeAndGenerateSavingsSchedule(customer);
             }
         }
     }
@@ -1892,31 +1895,31 @@ public class SavingsBO extends AccountBO {
     protected void regenerateFutureInstallments(final AccountActionDateEntity nextInstallment,
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
-            MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
-            DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
-                    new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
+        MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = customerMeeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = customerMeeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
 
-            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                    workingDays, holidays);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
-            int numberOfInstallmentsToGenerate = getLastInstallmentId();
-            List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                    startFromMeetingDate, scheduledEvent);
+        int numberOfInstallmentsToGenerate = getLastInstallmentId();
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
-            if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
-                    || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
-                    && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
-            } else {
-                List<CustomerBO> children;
-                try {
-                    children = getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
-                } catch (CustomerException ce) {
-                    throw new AccountException(ce);
-                }
-                updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
+        if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
+                || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
+                && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
+            updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
+        } else {
+            List<CustomerBO> children;
+            try {
+                children = getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CLOSED);
+            } catch (CustomerException ce) {
+                throw new AccountException(ce);
             }
+            updateSavingsSchedule(nextInstallment.getInstallmentId(), meetingDates, children);
+        }
 
     }
 

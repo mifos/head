@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
@@ -209,6 +208,15 @@ public class LoanSummaryEntity extends AbstractEntity {
         interestPaid = interestPaid.add(interest);
         penaltyPaid = penaltyPaid.add(penalty);
         feesPaid = feesPaid.add(fees);
+    }
+
+    // John W -  to contra the decreaseBy (used when making early repayment) when adjusting the fully paid loan
+    void increaseBy(Money principal, Money interest, Money penalty, Money fees) {
+        originalPrincipal = originalPrincipal.add(principal);
+        originalFees = originalFees.add(fees);
+        originalPenalty = originalPenalty.add(penalty);
+        originalInterest = originalInterest.add(interest);
+        rawAmountTotal = rawAmountTotal.add(interest.add(fees));
     }
 
     void decreaseBy(Money principal, Money interest, Money penalty, Money fees) {

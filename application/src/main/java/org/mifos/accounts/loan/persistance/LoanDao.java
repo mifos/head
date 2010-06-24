@@ -20,97 +20,12 @@
 
 package org.mifos.accounts.loan.persistance;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.master.business.CustomFieldDto;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.persistence.DataAccessObject;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.util.UserContext;
 
-/**
- * The Loan Data Access Object (DAO) for create, read, update, delete (CRUD)
- * operations on loans.
- *
- * Further refactoring: loan creation seems like a good candidate to make use of
- * the Factory pattern.
- */
-public class LoanDao implements DataAccessObject {
+public interface LoanDao {
 
-    public LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering, CustomerBO customer,
-            AccountState accountState, Money loanAmount, Short noOfinstallments, Date disbursementDate,
-            boolean interestDeductedAtDisbursement, Double interestRate, Short gracePeriodDuration, FundBO fund,
-            List<FeeDto> feeDtos, List<CustomFieldDto> customFields, Double maxLoanAmount, Double minLoanAmount,
-            Short maxNoOfInstall, Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled) throws AccountException {
+    LoanBO findById(Integer accountId);
 
-        if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate)) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION);
-        }
-
-        if (!customer.isActive()) {
-
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-        }
-
-        if (!loanOffering.isActive()) {
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-        }
-
-        if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-        }
-
-        if (!isDisbursementDateValid(customer, disbursementDate)) {
-            throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-        }
-
-        if (interestDeductedAtDisbursement == true && noOfinstallments.shortValue() <= 1) {
-            throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
-        }
-
-        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
-                disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
-                customFields, false, maxLoanAmount, minLoanAmount,
-                loanOffering.getMaxInterestRate(), loanOffering.getMinInterestRate(),
-                maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
-    }
-
-    private boolean isAnyLoanParamsNull(Object... args) {
-        return Arrays.asList(args).contains(null);
-    }
-
-    private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
-        if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp())) {
-            return true;
-        }
-        return false;
-    }
-
-    private Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate)
-            throws AccountException {
-        MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("IsDisbursementDateValid invoked ");
-        Boolean isValid = false;
-        try {
-            isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,
-                    DateUtils.getLastDayOfNextYear());
-        } catch (MeetingException e) {
-            throw new AccountException(e);
-        }
-        return isValid;
-    }
+    LoanBO findByGlobalAccountNum(String globalAccountNum);
 
 }

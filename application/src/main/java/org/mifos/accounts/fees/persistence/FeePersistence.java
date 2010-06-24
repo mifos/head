@@ -26,21 +26,27 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.core.MifosRepositoryException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * @deprecated move to {@link FeeDao} and replace all usage of this methods with calls to {@link FeeDao}.
+ */
+@Deprecated
 public class FeePersistence extends Persistence {
 
+    /**
+     * use {@link FeeDao#findById(Short)}
+     */
+    @Deprecated
     public FeeBO getFee(Short feeId) {
         Session session = StaticHibernateUtil.getSessionTL();
         return (FeeBO) session.get(FeeBO.class, feeId);
@@ -55,37 +61,12 @@ public class FeePersistence extends Persistence {
         return (RateFeeBO) getPersistentObject(RateFeeBO.class, feeId);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Short> getUpdatedFeesForCustomer() throws PersistenceException {
         return executeNamedQuery("retrieveUpdatedFeesApplicableToCustomers", null);
     }
 
-    // Seems not to be used by anything
-    public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("ID", id);
-        return (ApplicableAccountsTypeEntity) executeNamedQuery(NamedQueryConstants.GET_FEE_UPDATETYPE, queryParameters)
-                .get(0);
-    }
-
-    public List<FeeBO> retrieveCustomerFees() throws PersistenceException {
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
-    }
-
-    public List<FeeBO> retrieveProductFees() throws PersistenceException {
-
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_PRODUCT_FEES, null);
-
-    }
-
-    public List<FeeBO> retrieveCustomerFeesByCategaroyType(FeeCategory feeCategory) throws PersistenceException {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(FeeCategory.ALLCUSTOMERS.toString(), FeeCategory.ALLCUSTOMERS.getValue());
-        queryParameters.put("CUSTOMER_CATEGAORY", feeCategory.getValue());
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE, queryParameters);
-
-    }
-
+    @SuppressWarnings("unchecked")
     public List<FeeBO> getAllAppllicableFeeForLoanCreation() throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("active", FeeStatus.ACTIVE.getValue());

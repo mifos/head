@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-    classpath:xsd/spring-beans-3.0.xsd">
+    classpath:xsd/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
+    <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
+    
+    <context:annotation-config/>
+    	 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames">
             <list>
                 <value>org.mifos.ui.localizedProperties.messages</value>
+                <value>org.mifos.ui.localizedProperties.questionnaire_messages</value>
             </list>
         </property>
     </bean>
+    
 
-    <!-- freemarker config -->
+    <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    	<property name="exceptionMappings">
+    		<props>
+    			<prop key="java.lang.Exception">unhandledError</prop>
+    		</props>
+    	</property>
+    	<property name="exceptionAttribute"><value>exception</value></property>
+    </bean> 
+    
+    <bean id="frontExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    	<property name="exceptionMappings">
+    		<props>
+    			<prop key="java.lang.Exception">unhandledError</prop>
+    		</props>
+    	</property>
+    	<property name="exceptionAttribute"><value>exception</value></property>
+    </bean>
+
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPaths">
             <list>
@@ -31,7 +57,7 @@
     </bean>
 
     <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-        <property name="cache" value="true"/>
+        <property name="cache" value="false"/>
         <property name="prefix" value=""/>
         <property name="suffix" value=".ftl"/>
         <property name="contentType" value="text/html; charset=UTF-8" />
@@ -41,39 +67,44 @@
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
-    <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+    <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
-    <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <value>
-                /customPropertiesUpdate.ftl=customPropertiesUpdateController
-                /dateTimeUpdate.ftl=dateTimeUpdateController
-                /initializeApplication.ftl=initializeApplicationController
-                /runBatchJobs.ftl=batchJobController
-                /accessDenied.ftl=genericController
-                /pageNotFound.ftl=genericController
-                /ping.ftl=genericController
-                /cheetah.css.ftl=genericController
-                /gazelle.css.ftl=genericController
-            </value>
-        </property>
-    </bean>
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-    <bean id="testingService" class="org.mifos.framework.util.StandardTestingService"/>
+    <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
-    <bean id="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
+    <context:component-scan base-package="org.mifos.ui.core.controller"/>
+
+    <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+
+    <bean name="questionnaireController" class="org.mifos.ui.core.controller.QuestionnaireController"/>
+
+    <bean name="initializeApplicationController" class="org.mifos.ui.core.controller.InitializeApplicationController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
+    <bean name="dateTimeUpdateController" class="org.mifos.ui.core.controller.DateTimeUpdateController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
+    <bean name="customPropertiesUpdateController" class="org.mifos.ui.core.controller.CustomPropertiesUpdateController">
         <property name="testingService" ref="testingService" />
     </bean>
 
-    <bean id="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
+    <bean name="batchJobController" class="org.mifos.ui.core.controller.BatchJobController">
         <property name="testingService" ref="testingService" />
     </bean>
+    
+    <bean id="systemInformationServiceFacade" class="org.mifos.application.admin.business.service.SystemInformationServiceFacadeWebTier"/>
+
+    <bean id="systemInformationController" class="org.mifos.ui.core.controller.SystemInformationController">
+        <property name="systemInformationServiceFacade" ref="systemInformationServiceFacade" />
+    </bean>
+    
+    <bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
+
+    <bean id="viewOrganizationSettingsController" class="org.mifos.ui.core.controller.ViewOrganizationSettingsController">
+        <property name="viewOrganizationSettingsServiceFacade" ref="viewOrganizationSettingsServiceFacade" />
+    </bean>  
+    
 </beans>

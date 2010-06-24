@@ -27,7 +27,6 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.ValueListElement;
@@ -150,8 +149,6 @@ public interface CustomerDao {
 
     CenterPerformanceHistoryDto getCenterPerformanceHistory(String searchId, Short branchId);
 
-    boolean validateGovernmentIdForClient(String governmentId);
-
     Integer getActiveAndOnHoldClientCountForGroup(String searchId, Short branchId);
 
     List<CustomerDetailDto> findActiveCentersUnderUser(PersonnelBO personnel);
@@ -172,11 +169,23 @@ public interface CustomerDao {
 
     void updateLoanOfficersForAllChildrenAndAccounts(Short loanOfficerId, String searchId, Short officeId);
 
+    boolean validateGovernmentIdForClient(String governmentId);
+
     void validateClientForDuplicateNameOrGovtId(ClientBO client) throws CustomerException;
 
-    // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     void validateGroupNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
 
+    void validateCenterNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException;
+
+    void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
+
+    void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
+
+    boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
+
+    boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
+
+    // FIXME - #000003 - keithw - inspect below methods to check are they non customer related methods to be moved out to other DAOs
     List<SavingsDetailDto> getSavingsDetailDto(Integer centerId, UserContext userContext);
 
     List<SavingsDetailDto> retrieveSavingOfferingsApplicableToClient();
@@ -202,12 +211,4 @@ public interface CustomerDao {
     CustomerPerformanceHistoryDto numberOfMeetings(boolean bool, Integer clientId);
 
     List<AccountBO> findGLIMLoanAccountsApplicableTo(Integer customerId, Integer customerWithActiveAccount);
-
-    void checkPermissionForStatusChange(Short value, UserContext userContext, Short statusFlagId, Short officeId, Short personnelId) throws CustomerException;
-
-    void checkPermissionForEditMeetingSchedule(UserContext userContext, CustomerBO customer) throws CustomerException;
-
-    boolean validateForClosedClientsOnNameAndDob(final String name, final DateTime dateOfBirth);
-
-    boolean validateForBlackListedClientsOnNameAndDob(String clientName, DateTime dateOfBirth);
 }

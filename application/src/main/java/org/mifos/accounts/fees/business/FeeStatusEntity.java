@@ -22,6 +22,7 @@ package org.mifos.accounts.fees.business;
 
 import java.util.Set;
 
+import org.mifos.accounts.fees.servicefacade.FeeStatusDto;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -80,7 +81,6 @@ public class FeeStatusEntity extends MasterDataEntity {
     public String getName() {
         String name = MessageLookup.getInstance().lookup(getLookUpValue());
         return name;
-
     }
 
     @Override
@@ -90,5 +90,12 @@ public class FeeStatusEntity extends MasterDataEntity {
 
     protected void setName(String name) {
         MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    }
+
+    public FeeStatusDto toDto() {
+        FeeStatusDto feeStatus = new FeeStatusDto();
+        feeStatus.setId(Short.toString(this.id));
+        feeStatus.setName(this.getName());
+        return feeStatus;
     }
 }

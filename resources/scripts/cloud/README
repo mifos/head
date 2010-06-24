@@ -1,0 +1,30 @@
+SYNOPSIS
+
+* Place all contents of this directory (and subdirectories) in /home/ubuntu on
+  a new EC2 Ubuntu Server instance.
+* run bootstrap_ec2.sh
+* edit params.sh
+* run setup_mifos.sh
+* make sure any/all changes make it back into source control
+
+CONTENTS
+
+* bootstrap_ec2.sh *
+first script to run to provision an Ubuntu server EC2 instance destined to host
+Mifos instances
+
+* setup_mifos.sh *
+spin up a new Mifos instance
+
+* lib.sh *
+functions and data for the above
+
+* params.sh *
+data for setup_mifos.sh
+
+* templates/ *
+parameterized config files
+
+* contrib *
+Other scripts. For instance, a Makefile for remote backups of these
+provisioning scripts

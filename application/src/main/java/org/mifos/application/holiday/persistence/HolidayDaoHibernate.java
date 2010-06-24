@@ -20,26 +20,21 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.hibernate.Query;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
+import org.mifos.framework.exceptions.ApplicationException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class HolidayDaoHibernate implements HolidayDao {
 
@@ -110,15 +105,13 @@ public class HolidayDaoHibernate implements HolidayDao {
     @SuppressWarnings("unchecked")
     public List<Holiday> getUnAppliedHolidays() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("FLAG", YesNoFlag.NO.getValue());
-        return (List<Holiday>) genericDao.executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS_BY_FLAG, queryParameters);
+        return (List<Holiday>) genericDao.executeNamedQuery("holiday.getUnappliedHolidaysEarliestFirst", queryParameters);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<String> applicableOffices(Integer id) {
-        Query sqlQuery = ((GenericDaoHibernate) genericDao).getHibernateUtil().getSessionTL().getNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS);
-        return sqlQuery.setInteger("HOLIDAY_ID", id).list();
+        return (List<String>) genericDao.executeNamedQuery(NamedQueryConstants.GET_APPLICABLE_OFFICES_FOR_HOLIDAYS, Collections.singletonMap("HOLIDAY_ID", id));
     }
 
     @Override
@@ -128,5 +121,23 @@ public class HolidayDaoHibernate implements HolidayDao {
         List<Holiday> upcomingHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
 
         return new CalendarEvent(workingDays, upcomingHolidays);
+    }
+
+    @Override
+    public void validateNoExtraFutureHolidaysApplicableOnParentOffice(Short oldParentOfficeId, Short newParentOfficeId) throws ApplicationException {
+
+        List<Holiday> previousApplicableHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(oldParentOfficeId);
+        List<Holiday> possibleApplicableHolidays = retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(newParentOfficeId);
+
+        if (previousApplicableHolidays.size() != possibleApplicableHolidays.size()) {
+            throw new ApplicationException(OfficeConstants.ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT);
+        }
+
+        for (Holiday holiday : previousApplicableHolidays) {
+            HolidayBO applicableHoliday = (HolidayBO) holiday;
+            if (!possibleApplicableHolidays.contains(applicableHoliday)) {
+                throw new ApplicationException(OfficeConstants.ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT);
+            }
+        }
     }
 }

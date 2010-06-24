@@ -40,8 +40,6 @@ import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.office.business.service.OfficeFacade;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -52,7 +50,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -112,20 +109,19 @@ public class HolidayAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
         String selectedOfficeIds = ((HolidayActionForm) form).getSelectedOfficeIds();
-        request.getSession().setAttribute(HolidayConstants.SELECTED_OFFICE_NAMES,
-                new OfficeFacade(new OfficeBusinessService()).topLevelOfficeNames(selectedOfficeIds));
+
+        final String topLevelOfficeNames = this.legacyOfficeServiceFacade.topLevelOfficeNames(selectedOfficeIds);
+
+        request.getSession().setAttribute(HolidayConstants.SELECTED_OFFICE_NAMES, topLevelOfficeNames);
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
-                .getSession());
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
 
@@ -164,8 +160,6 @@ public class HolidayAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward managePreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
-        // HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 
         return mapping.findForward(ActionForwards.managepreview_success.toString());
     }
@@ -210,25 +204,25 @@ public class HolidayAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelManage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelManage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancelEdit_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
 
-    public ActionForward officeHierarchy(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
-        httpservletresponse.setContentType("application/json");
-        PrintWriter out = httpservletresponse.getWriter();
-        out.println(new OfficeFacade(new OfficeBusinessService()).headOfficeHierarchy().toJSONString());
+    public ActionForward officeHierarchy(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        out.println(this.legacyOfficeServiceFacade.headOfficeHierarchy().toJSONString());
         out.flush();
         return null;
     }

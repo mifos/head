@@ -36,4 +36,6 @@ public interface HibernateTransactionHelper {
     void rollbackTransaction();
 
     void closeSession();
+
+    void flushSession();
 }

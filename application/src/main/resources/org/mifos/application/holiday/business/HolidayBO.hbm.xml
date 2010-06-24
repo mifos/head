@@ -44,9 +44,10 @@
                        order by holidayBO.holidayFromDate
    	       ]]>
 	</query>
-	<query name="holiday.getHoildaysByFlag">
+	<query name="holiday.getUnappliedHolidaysEarliestFirst">
 			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
-	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
+	                  where holidayBO.holidayChangesAppliedFlag = 0
+                       order by holidayBO.holidayFromDate
 			]]>
 	</query>
 	

@@ -67,7 +67,6 @@ import org.mifos.security.util.UserContext;
 public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
     private AccountService accountService = null;
-    private AccountBusinessService accountBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
     private List<PaymentTypeDto> feePaymentTypeDtos;
@@ -84,7 +83,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getAccountBusinessService();
+        return null;
     }
 
     @Override
@@ -225,13 +224,6 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
 
         return "applyPayment_success";
-    }
-
-    private AccountBusinessService getAccountBusinessService() {
-        if (accountBusinessService == null) {
-            accountBusinessService = new AccountBusinessService();
-        }
-        return accountBusinessService;
     }
 
     @TransactionDemarcate(joinToken = true)

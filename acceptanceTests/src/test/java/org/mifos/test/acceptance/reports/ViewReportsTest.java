@@ -65,6 +65,8 @@ public class ViewReportsTest extends UiTestCaseBase {
                 "Analysis",
                 "Branch Cash Confirmation Report",
                 "Branch Progress Report",
+                "Detailed Aging Of Portfolio At Risk",
+                "General Ledger Report",
                 "Miscellaneous"
         };
 

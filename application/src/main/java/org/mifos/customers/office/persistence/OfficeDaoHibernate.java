@@ -21,21 +21,31 @@
 package org.mifos.customers.office.persistence;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class OfficeDaoHibernate implements OfficeDao {
 
@@ -83,6 +93,12 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    public List<OfficeDto> findAllOffices() {
+        return (List<OfficeDto>) genericDao.executeNamedQuery("findAllOfficesApplicableToOfficeHierarchy", null);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public List<OfficeDetailsDto> findActiveOfficeLevels() {
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -93,6 +109,59 @@ public class OfficeDaoHibernate implements OfficeDao {
         }
 
         return queryResult;
+    }
+
+    @Override
+    public OfficeHierarchyDto headOfficeHierarchy() {
+        OfficeBO headOffice = getHeadOffice();
+        return officeHierarchy(headOffice);
+    }
+
+    @SuppressWarnings("unchecked")
+    private OfficeBO getHeadOffice() {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", OfficeConstants.HEADOFFICE);
+
+        List<OfficeBO> queryResult = (List<OfficeBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.OFFICE_GET_HEADOFFICE, queryParameters);
+
+        if (queryResult != null && queryResult.size() != 0) {
+            return queryResult.get(0);
+        }
+        throw new MifosRuntimeException("No head office found: ");
+    }
+
+    private OfficeHierarchyDto officeHierarchy(OfficeBO office) {
+        List<OfficeHierarchyDto> childOfficeList = new LinkedList<OfficeHierarchyDto>();
+        Set<OfficeBO> children = office.getChildren();
+        for (OfficeBO child : children) {
+            childOfficeList.add(officeHierarchy(child));
+        }
+        Collections.sort(childOfficeList);
+        OfficeHierarchyDto hierarchy = new OfficeHierarchyDto(office.getOfficeId(), office.getOfficeName().trim(), office.getSearchId(), office.isActive(), childOfficeList);
+        return hierarchy;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> topLevelOfficeNames(Collection<Short> officeIds) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_IDS", officeIds);
+
+        return (List<String>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES, queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateNoActiveChildrenExist(Short officeId) throws OfficeException {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_ID", officeId);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
+        int activeChildren = ((Number) queryResult.get(0)).intValue();
+
+        if (activeChildren > 0) {
+            throw new OfficeException(OfficeConstants.KEYHASACTIVECHILDREN);
+        }
     }
 
     @Override
@@ -118,9 +187,42 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("OFFICE_ID", officeId);
         queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
         List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
+
+        return ((Number) queryResult.get(0)).longValue() > 0;
+    }
+
+    @Override
+    public void validateNoActivePeronnelExist(Short officeId) throws OfficeException {
+
+        if (hasActivePeronnel(officeId)) {
+            throw new OfficeException(OfficeConstants.KEYHASACTIVEPERSONNEL);
         }
-        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateOfficeNameIsNotTaken(String officeName) throws OfficeException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("OFFICE_NAME", officeName);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICENAMEUNIQUENESS, queryParameters);
+
+        int officeCount = ((Number) queryResult.get(0)).intValue();
+
+        if (officeCount > 0) {
+            throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateOfficeShortNameIsNotTaken(String shortName) throws OfficeException {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SHORT_NAME", shortName);
+        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS, queryParameters);
+        int officeCount = ((Number) queryResult.get(0)).intValue();
+
+        if (officeCount > 0) {
+            throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
+        }
     }
 }

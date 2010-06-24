@@ -202,11 +202,9 @@ public class PersonAction extends SearchAction {
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
         if (StringUtils.isNotBlank(personActionForm.getPreferredLocale())) {
             return getShortValue(personActionForm.getPreferredLocale());
-        } else {
-            // return userContext.getMfiLocaleId();
-            return userContext.getLocaleId();
         }
 
+        return userContext.getLocaleId();
     }
 
     @TransactionDemarcate(joinToken = true)
