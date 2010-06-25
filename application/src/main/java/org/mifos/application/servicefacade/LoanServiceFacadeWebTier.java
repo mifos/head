@@ -856,6 +856,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        String fundName = null;
+        if (loan.getFund() != null) {
+            fundName = loan.getFund().getFundName();
+        }
+
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
@@ -867,7 +872,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
                                         loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(), loan.getMaxMinNoOfInstall(),
-                                        loan.getGracePeriodDuration(), loan.getFund().getFundName(), loan.getCollateralTypeId(), loan.getCollateralNote(),
+                                        loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
                                         loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
                                         loan.getPerformanceHistory(), loan.getCustomer().isGroup());
     }
