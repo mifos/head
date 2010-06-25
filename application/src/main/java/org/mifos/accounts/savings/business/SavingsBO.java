@@ -1265,10 +1265,8 @@ public class SavingsBO extends AccountBO {
         adjustExistingPayment(amountAdjustedTo, adjustmentComment);
         AccountPaymentEntity newPayment = createAdjustmentPayment(amountAdjustedTo, adjustmentComment);
 
-        // Fix for Hibernate 3.2, need to update for adjustment to existing
-        // payment to be committed
         this.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         adjustInterest(oldInterest, trxnDate, newPayment);
         if (this.getAccountState().getId().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
