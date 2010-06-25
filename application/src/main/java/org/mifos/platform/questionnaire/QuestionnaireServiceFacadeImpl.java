@@ -86,14 +86,25 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
     }
 
+    @Override
+    public QuestionGroupForm getQuestionGroup(int questionGroupId) throws ApplicationException {
+        return mapToQuestionGroup(questionnaireService.getQuestionGroup(questionGroupId));
+    }
+
     private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
         List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-            questionGroupForm.setTitle(questionGroupDetail.getTitle());
+            QuestionGroupForm questionGroupForm = mapToQuestionGroup(questionGroupDetail);
             questionGroupForms.add(questionGroupForm);
         }
         return questionGroupForms;
+    }
+
+    private QuestionGroupForm mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        questionGroupForm.setId(questionGroupDetail.getId().toString());
+        questionGroupForm.setTitle(questionGroupDetail.getTitle());
+        return questionGroupForm;
     }
 
     private void populateQuestionTypeMap() {
