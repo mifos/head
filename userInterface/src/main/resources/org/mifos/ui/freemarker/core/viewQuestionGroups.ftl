@@ -114,13 +114,13 @@
                             </span>
                             <br/>
                             <br/>
-                            <table width="90%" border="0" cellspacing="0" cellpadding="0" id="questionGroups.table">
+                            <table width="90%" border="0" cellspacing="0" cellpadding="0">
                                 [#list questionGroups as questionGroup]
                                 <tr class="fontnormal">
                                     <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9"
                                                         height="11"/></td>
                                     <td width="99%">
-                                        <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">
+                                        <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}">
                                             ${questionGroup.title}
                                             <br/>
                                         </a>

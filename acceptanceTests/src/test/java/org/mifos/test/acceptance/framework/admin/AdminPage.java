@@ -37,7 +37,6 @@ import org.mifos.test.acceptance.framework.office.ChooseOfficePage;
 import org.mifos.test.acceptance.framework.office.CreateOfficeEnterDataPage;
 import org.mifos.test.acceptance.framework.savingsproduct.DefineNewSavingsProductPage;
 import org.mifos.test.acceptance.framework.user.CreateUserParameters;
-import org.mifos.test.acceptance.questionnaire.CreateQuestionGroupPage;
 import org.mifos.test.acceptance.questionnaire.CreateQuestionPage;
 import org.mifos.test.acceptance.util.StringUtil;
 
@@ -270,17 +269,5 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.questions");
         waitForPageToLoad();
         return new ViewAllQuestionsPage(selenium);
-    }
-
-    public CreateQuestionGroupPage navigateToCreateQuestionGroupPage() {
-        selenium.click("admin.link.defineNewQuestionGroup");
-        waitForPageToLoad();
-        return new CreateQuestionGroupPage(selenium);
-    }
-
-    public ViewAllQuestionGroupsPage navigateToViewAllQuestionGroups() {
-        selenium.click("admin.link.questiongroups");
-        waitForPageToLoad();
-        return new ViewAllQuestionGroupsPage(selenium);
     }
 }
