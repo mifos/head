@@ -26,11 +26,11 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 

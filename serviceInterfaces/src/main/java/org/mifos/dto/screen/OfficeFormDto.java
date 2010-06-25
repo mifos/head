@@ -18,27 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business;
+package org.mifos.dto.screen;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
-import org.testng.annotations.Test;
+import org.mifos.dto.domain.CustomFieldDto;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class CustomFieldViewTest extends TestCase {
+public class OfficeFormDto {
 
-    public void testEmpty() throws Exception {
-        // The main point here is that we shouldn't get
-        // NullPointerException for these operations.
+    private final List<CustomFieldDto> customFields;
 
-        CustomFieldDto view = new CustomFieldDto();
-       Assert.assertEquals("org.mifos.application.master.business.CustomFieldDto@0", view.toString());
-        view.hashCode();
-
-        CustomFieldDto view2 = new CustomFieldDto();
-       Assert.assertTrue(view.equals(view2));
+    public OfficeFormDto(List<CustomFieldDto> customFields) {
+        this.customFields = customFields;
     }
 
+    public List<CustomFieldDto> getCustomFields() {
+        return this.customFields;
+    }
 }

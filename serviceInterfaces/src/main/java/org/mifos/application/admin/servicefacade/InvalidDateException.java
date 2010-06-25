@@ -17,28 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
 
-import org.mifos.framework.business.service.DataTransferObject;
+package org.mifos.application.admin.servicefacade;
 
-/**
- *
- */
-public class CustomFieldDto implements DataTransferObject {
-    private final Short fieldId;
-    private final String fieldValue;
+import org.mifos.core.MifosException;
 
-    public CustomFieldDto(final Short fieldId, final String fieldValue) {
-        this.fieldId = fieldId;
-        this.fieldValue = fieldValue;
+public class InvalidDateException extends MifosException {
+
+    private static final String EXCEPTION_VALIDATION_INVALID_DATE = "exception.validation.InvalidDate";
+    private final String dateString;
+
+    public InvalidDateException(String dateStr) {
+        super(EXCEPTION_VALIDATION_INVALID_DATE);
+        this.dateString = dateStr;
     }
 
-    public Short getFieldId() {
-        return this.fieldId;
+    public InvalidDateException(String dateStr, Throwable cause) {
+        super(EXCEPTION_VALIDATION_INVALID_DATE, cause);
+        this.dateString = dateStr;
     }
 
-    public String getFieldValue() {
-        return this.fieldValue;
+    public String getDateString() {
+        return dateString;
     }
 
 }

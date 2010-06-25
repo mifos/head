@@ -18,24 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business;
+package org.mifos.dto.domain;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.io.Serializable;
 
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.framework.business.service.DataTransferObject;
-import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.util.helpers.DateUtils;
-
-public class CustomFieldDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomFieldDto implements Serializable {
 
     private Short fieldId;
-
     private String fieldValue;
-
     private Short fieldType;
+    private boolean mandatory;
+    private String lookUpEntityType;
+    private String mandatoryString;
+    private String label;
 
     public CustomFieldDto() {
         super();
@@ -45,10 +42,6 @@ public class CustomFieldDto implements DataTransferObject {
         this.fieldId = fieldId;
         this.fieldValue = fieldValue;
         this.fieldType = fieldType;
-    }
-
-    public CustomFieldDto(Short fieldId, String value, CustomFieldType type) {
-        this(fieldId, value, type == null ? null : type.getValue());
     }
 
     public Short getFieldId() {
@@ -71,16 +64,8 @@ public class CustomFieldDto implements DataTransferObject {
         return fieldType;
     }
 
-    public CustomFieldType getFieldTypeAsEnum() {
-        return CustomFieldType.fromInt(fieldType);
-    }
-
     public void setFieldType(Short fieldType) {
         this.fieldType = fieldType;
-    }
-
-    public void setFieldType(CustomFieldType type) {
-        this.fieldType = type.getValue();
     }
 
     @Override
@@ -110,10 +95,35 @@ public class CustomFieldDto implements DataTransferObject {
         return true;
     }
 
-    public void convertDateToUniformPattern(Locale currentLocale) throws InvalidDateException {
-        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
-        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
-        setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 
+    public boolean isMandatory() {
+        return this.mandatory;
+    }
+
+    public String getLookUpEntityType() {
+        return this.lookUpEntityType;
+    }
+
+    public void setLookUpEntityType(String lookUpEntityType) {
+        this.lookUpEntityType = lookUpEntityType;
+    }
+
+    public String getMandatoryString() {
+        return this.mandatoryString;
+    }
+
+    public void setMandatoryString(String mandatoryString) {
+        this.mandatoryString = mandatoryString;
+    }
+
+    public String getLabel() {
+        return this.label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 }

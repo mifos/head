@@ -32,8 +32,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -41,11 +39,10 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -207,33 +204,19 @@ public class OffActionForm extends BaseActionForm {
         return (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
     }
 
-    protected void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-        try {
-            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                    .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldDto customField : customFields) {
-                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
-                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                            errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
-                                    OfficeConstants.ENTERADDTIONALINFO, customFieldDef.getLabel()));
-                        }
-                        if (CustomFieldType.DATE.getValue().equals(customField.getFieldType()) &&
-                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                            try {
-                                DateUtils.getDate(customField.getFieldValue());
-                            } catch (Exception e) {
-                                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
-                                        OfficeConstants.ERROR_CUSTOMDATEFIELD, customFieldDef.getLabel()));
-                            }
-                        }
-                        break;
-                    }
+    protected void validateCustomFields(ActionErrors errors) {
+        for (CustomFieldDto customField : customFields) {
+            if (customField.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
+                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(OfficeConstants.ENTERADDTIONALINFO, customField.getLabel()));
+            }
+            if (CustomFieldType.DATE.getValue().equals(customField.getFieldType())
+                    && (StringUtils.isNotBlank(customField.getFieldValue()))) {
+                try {
+                    DateUtils.getDate(customField.getFieldValue());
+                } catch (Exception e) {
+                    errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(OfficeConstants.ERROR_CUSTOMDATEFIELD, customField.getLabel()));
                 }
             }
-        } catch (PageExpiredException pee) {
-            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
         }
     }
 
@@ -249,7 +232,7 @@ public class OffActionForm extends BaseActionForm {
 
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editpreview.toString())) {
             verifyFields(errors, getUserContext(request));
-            validateCustomFields(request, errors);
+            validateCustomFields(errors);
             checkForMandatoryFields(EntityType.OFFICE.getValue(), errors, request);
             errors.add(super.validate(mapping, request));
         }

@@ -52,8 +52,8 @@ import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -67,9 +67,9 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
@@ -1075,7 +1075,7 @@ public class LoanAccountActionForm extends BaseActionForm {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
                                     LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
                         }
-                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
                                 (StringUtils.isNotBlank(customField.getFieldValue()))) {
                             try {
                                 DateUtils.getDate(customField.getFieldValue());
