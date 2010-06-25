@@ -135,6 +135,7 @@ EndOfMifosAppsConf
 
     sudo mkdir /etc/apache2/ssl
     sudo ufw allow proto tcp from any to any port https
+    sudo apt-get -y autoremove avahi-daemon
 }
 
 backup_pubkey_installed() {
