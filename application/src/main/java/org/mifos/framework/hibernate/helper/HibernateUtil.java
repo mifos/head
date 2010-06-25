@@ -139,6 +139,11 @@ public class HibernateUtil {
         sessionTL.set(null);
     }
 
+    public void flushSession() {
+        sessionTL.get().flush();
+    }
+
+
     public void flushAndCloseSession() {
         if (getSessionTL().isOpen()) {
             getSessionTL().flush();

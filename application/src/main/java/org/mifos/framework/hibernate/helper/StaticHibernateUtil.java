@@ -84,6 +84,10 @@ public class StaticHibernateUtil {
         hibernateUtil.closeSession();
     }
 
+    public static void flushSession() {
+        hibernateUtil.flushSession();
+    }
+
     public static void flushAndCloseSession() {
         hibernateUtil.flushAndCloseSession();
     }

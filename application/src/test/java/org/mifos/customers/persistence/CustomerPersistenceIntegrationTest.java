@@ -130,11 +130,12 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
             TestObjectFactory.cleanUp(group2);
             TestObjectFactory.cleanUp(group);
             TestObjectFactory.cleanUp(center);
-            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
             // Throwing from tearDown will tend to mask the real failure.
             e.printStackTrace();
         }
+        StaticHibernateUtil.rollbackTransaction();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
@@ -271,7 +272,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "none");
         TestObjectFactory.updateObject(clientAccount1);
         TestObjectFactory.updateObject(clientAccount2);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         Money amount2 = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING, group.getSearchId() + ".%");
         Assert.assertEquals(new Money(getCurrency(), "600"), amount2);
@@ -459,7 +460,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         user.setId(PersonnelConstants.SYSTEM_USER);
         account = TestObjectFactory.createSavingsAccount("000100000000020", group, AccountState.SAVINGS_ACTIVE,
                 currentDate, savingsOffering, user);
-        StaticHibernateUtil.closeSession();
         List<SavingsBO> savingsList = customerPersistence.retrieveSavingsAccountForCustomer(group.getCustomerId());
         Assert.assertEquals(1, savingsList.size());
         account = savingsList.get(0);
@@ -611,7 +611,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 .getId(), client.getCustomerStatus().getId(), CheckListConstants.STATUS_INACTIVE);
         CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(
                 group.getCustomerLevel().getId(), group.getCustomerStatus().getId(), CheckListConstants.STATUS_ACTIVE);
-        StaticHibernateUtil.closeSession();
         Assert.assertEquals(1, customerPersistence.getStatusChecklist(center.getCustomerStatus().getId(),
                 center.getCustomerLevel().getId()).size());
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
@@ -674,7 +673,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         TestObjectFactory.updateObject(groupAccount);
         TestObjectFactory.updateObject(clientAccount);
         TestObjectFactory.updateObject(clientSavingsAccount);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         Assert.assertEquals(1, customerPersistence.getAllClosedAccount(client.getCustomerId(),
                 AccountTypes.LOAN_ACCOUNT.getValue()).size());
         Assert.assertEquals(1, customerPersistence.getAllClosedAccount(group.getCustomerId(),
@@ -702,24 +701,20 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     public void testCustomerDeleteMeeting() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         client = TestObjectFactory.createClient("myClient", meeting, CustomerStatus.CLIENT_PENDING);
-        StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         customerPersistence.deleteCustomerMeeting(client);
         CustomerBOTestUtils.setCustomerMeeting(client, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertNull(client.getCustomerMeeting());
     }
 
     public void testDeleteMeeting() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        StaticHibernateUtil.closeSession();
         meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 
         customerPersistence.deleteMeeting(meeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+
 
         meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
         Assert.assertNull(meeting);
@@ -727,7 +722,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchWithOfficeId() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("3"), Short.valueOf("1"), Short
                 .valueOf("1"));
         Assert.assertNotNull(queryResult);
@@ -737,7 +732,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchWithoutOfficeId() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search("C", Short.valueOf("0"), Short.valueOf("1"), Short
                 .valueOf("1"));
         Assert.assertNotNull(queryResult);
@@ -747,7 +742,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchWithGlobalNo() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(), Short.valueOf("3"), Short
                 .valueOf("1"), Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
@@ -792,8 +787,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
                 "WITHDRAW LOAN ACCOUNT");
         TestObjectFactory.updateObject(groupAccount);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+
         groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount.getAccountId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
@@ -809,7 +804,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchWithAccountGlobalNo() throws Exception {
         getCustomer();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().search(groupAccount.getGlobalAccountNum(), Short
                 .valueOf("3"), Short.valueOf("1"), Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
@@ -820,7 +815,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchGropAndClient() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
@@ -833,7 +828,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting, Short.valueOf("3"), Short.valueOf("3"));
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, "1234", true,
                 new java.util.Date(), null, null, null, Short.valueOf("3"), center);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().searchGroupClient("C", Short.valueOf("3"));
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(0, queryResult.getSize());
@@ -846,7 +841,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting, Short.valueOf("3"), Short.valueOf("3"));
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, "1234", true,
                 new java.util.Date(), null, null, null, Short.valueOf("3"), center);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().searchGroupClient("G", Short.valueOf("3"));
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
@@ -856,7 +851,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testSearchCustForSavings() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         QueryResult queryResult = new CustomerPersistence().searchCustForSavings("C", Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(2, queryResult.getSize());
@@ -873,8 +868,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         CustomerAccountBO customerAccount = center.getCustomerAccount();
         AccountTestUtils.addAccountFees(accountFee, customerAccount);
         TestObjectFactory.updateObject(customerAccount);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+
 
         // check for the account fee
         List<AccountBO> accountList = new CustomerPersistence().getCustomerAccountsForFee(periodicFee.getFeeId());
@@ -920,7 +915,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         groupAccount = getLoanAccount();
         groupAccount.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "Changing to badStanding");
         TestObjectFactory.updateObject(groupAccount);
-        StaticHibernateUtil.closeSession();
+
         groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount.getAccountId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
@@ -936,7 +931,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
 
     public void testGetCustomersByLevelId() throws Exception {
         createCustomers(CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         List<CustomerBO> client = new CustomerPersistence().getCustomersByLevelId(Short.parseShort("1"));
         Assert.assertNotNull(client);
         Assert.assertEquals(1, client.size());
@@ -965,8 +960,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
         center = TestObjectFactory.createWeeklyFeeCenter("Inactive Center", meeting);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+
 
         CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
         CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
