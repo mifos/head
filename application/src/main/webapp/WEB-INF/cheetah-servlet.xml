@@ -74,10 +74,6 @@
     <bean name="testingService" class="org.mifos.framework.util.StandardTestingService"/>
 
     <context:component-scan base-package="org.mifos.ui.core.controller"/>
-                /viewOfficeHierarchy.ftl=genericController
-                /viewProductCategories.ftl=genericController
-                /viewProductMix.ftl=genericController
-
 
     <bean name="genericController" class="org.mifos.ui.core.controller.GenericController"/>
 
