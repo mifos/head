@@ -524,17 +524,9 @@ public class LoanAccountAction extends AccountAppAction {
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
-        SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
+
         String customerId = request.getParameter(CUSTOMER_ID);
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
-        LoanBO loanBO = loanBusinessService.findBySystemId(request.getParameter(GLOBAL_ACCOUNT_NUM));
-        if (customerId == null) {
-            customerId = loanBO.getCustomer().getCustomerId().toString();
-        }
-        CustomerBO customer = null;
-        if (null != customerId) {
-            customer = getCustomer(Integer.valueOf(customerId));
-        }
 
         Integer loanIndividualMonitoringIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
                 LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
@@ -542,7 +534,7 @@ public class LoanAccountAction extends AccountAppAction {
         if (null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue() != 0) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, loanIndividualMonitoringIsEnabled
                     .intValue(), request);
-            if (customer.isGroup()) {
+            if (loanInformationDto.isGroup()) {
                 SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES,
                         request);
             }
@@ -551,10 +543,10 @@ public class LoanAccountAction extends AccountAppAction {
         setBusinessActivitiesIntoSession(request);
 
         if (null != loanIndividualMonitoringIsEnabled && 0 != loanIndividualMonitoringIsEnabled.intValue()
-                && customer.isGroup()) {
+                && loanInformationDto.isGroup()) {
 
             List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
-                    loanBO.getAccountId()).toString());
+                    loanInformationDto.getAccountId()).toString());
 
             List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
 
@@ -587,21 +579,21 @@ public class LoanAccountAction extends AccountAppAction {
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsViewList, request);
         }
 
-        loanBusinessService.initialize(loanBO.getLoanMeeting());
-        for (AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
+        loanBusinessService.initialize(loanInformationDto.getLoanMeeting());
+        for (AccountActionDateEntity accountActionDateEntity : loanInformationDto.getAccountActionDates()) {
             loanBusinessService.initialize(accountActionDateEntity);
             for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
                     .getAccountFeesActionDetails()) {
                 loanBusinessService.initialize(accountFeesActionDetailEntity);
             }
         }
-        setLocaleForMasterEntities(loanBO, getUserContext(request).getLocaleId());
-        loadLoanDetailPageInfo(loanBO, request);
+        setLocaleForMasterEntities(loanInformationDto, getUserContext(request).getLocaleId());
+        loadLoanDetailPageInfo(loanInformationDto, request);
         loadMasterData(request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
+        SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
-        List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(loanBO);
+        List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(getAccountBusinessService().findBySystemId(globalAccountNum));
         boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
         request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
         request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
@@ -1198,24 +1190,24 @@ public class LoanAccountAction extends AccountAppAction {
         return newMeetingForRepaymentDay;
     }
 
-    private void setLocaleForMasterEntities(final LoanBO loanBO, final Short localeId) {
-        if (loanBO.getGracePeriodType() != null) {
+    private void setLocaleForMasterEntities(final LoanInformationDto loanInformationDto, final Short localeId) {
+        if (loanInformationDto.getGracePeriodType() != null) {
             // Is this locale ever consulted? I don't see a place...
-            loanBO.getGracePeriodType().setLocaleId(localeId);
+            loanInformationDto.getGracePeriodType().setLocaleId(localeId);
         }
-        loanBO.getInterestType().setLocaleId(localeId);
-        loanBO.getAccountState().setLocaleId(localeId);
-        for (AccountFlagMapping accountFlagMapping : loanBO.getAccountFlags()) {
+        loanInformationDto.getInterestType().setLocaleId(localeId);
+        loanInformationDto.getAccountState().setLocaleId(localeId);
+        for (AccountFlagMapping accountFlagMapping : loanInformationDto.getAccountFlags()) {
             accountFlagMapping.getFlag().setLocaleId(localeId);
         }
     }
 
-    private void loadLoanDetailPageInfo(final LoanBO loanBO, final HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, loanBusinessService.getRecentActivityView(loanBO
+    private void loadLoanDetailPageInfo(final LoanInformationDto loanInformationDto, final HttpServletRequest request) throws Exception {
+        SessionUtils.setCollectionAttribute(RECENTACCOUNTACTIVITIES, loanBusinessService.getRecentActivityView(loanInformationDto
                 .getGlobalAccountNum()), request);
-        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanBO
+        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto
                 .getAccountId()), request);
-        SessionUtils.setCollectionAttribute(NOTES, loanBO.getRecentAccountNotes(), request);
+        SessionUtils.setCollectionAttribute(NOTES, loanInformationDto.getRecentAccountNotes(), request);
         loadCustomFieldDefinitions(request);
     }
 

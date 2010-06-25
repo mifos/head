@@ -112,6 +112,7 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.
@@ -856,6 +857,18 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
-                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId());
+                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
+                                        loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
+                                        loan.getAccountNotes(), loan.getRecentAccountNotes(),
+                                        loan.getCustomer().getCustomerLevel(), loan.getCustomer().getCustomerId(), loan.getAccountType(),
+                                        loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
+                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loan.getLoanSummary(),
+                                        loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
+                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(), loan.getMaxMinNoOfInstall(),
+                                        loan.getGracePeriodDuration(), loan.getFund().getFundName(), loan.getCollateralTypeId(), loan.getCollateralNote(),
+                                        loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
+                                        loan.getPerformanceHistory(), loan.getCustomer().isGroup());
     }
 }
