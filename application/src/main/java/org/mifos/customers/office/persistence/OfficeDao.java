@@ -23,6 +23,7 @@ package org.mifos.customers.office.persistence;
 import java.util.Collection;
 import java.util.List;
 
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
@@ -46,6 +47,8 @@ public interface OfficeDao {
     OfficeHierarchyDto headOfficeHierarchy();
 
     List<String> topLevelOfficeNames(Collection<Short> idList);
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice();
 
     void validateOfficeNameIsNotTaken(String officeName) throws OfficeException;
 

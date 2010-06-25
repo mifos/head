@@ -42,7 +42,6 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -87,6 +86,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -907,6 +907,7 @@ public class CustomerServiceImpl implements CustomerService {
                 handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
                 hibernateTransactionHelper.commitTransaction();
             }
+
             return group;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();

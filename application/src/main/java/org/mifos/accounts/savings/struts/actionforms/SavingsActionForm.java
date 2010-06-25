@@ -38,10 +38,10 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
@@ -182,7 +182,7 @@ public class SavingsActionForm extends AccountAppActionForm {
                             errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
                                     LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
                         }
-                        if (customField.getFieldTypeAsEnum().equals(CustomFieldType.DATE) &&
+                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
                                 (StringUtils.isNotBlank(customField.getFieldValue()))) {
                             try {
                                 DateUtils.getDate(customField.getFieldValue());

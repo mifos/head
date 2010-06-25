@@ -30,7 +30,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
@@ -47,6 +46,7 @@ import org.mifos.customers.surveys.business.SurveyResponse;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -144,7 +144,7 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory factory = new TestObjectFactory();
         OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
         List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC));
+        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC.getValue()));
         Name name = new Name("XYZ", null, null, null);
         Address address = new Address("abcd" + "ppiSurvey", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();

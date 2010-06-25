@@ -24,15 +24,20 @@ import java.util.List;
 
 import org.mifos.dto.domain.OfficeDto;
 
-@SuppressWarnings("PMD")
 public class OfficeHierarchyByLevelDto {
 
     private final List<OfficeDto> headOffices;
     private final List<OfficeDto> regionalOffices;
+    private final List<OfficeDto> divisionalOffices;
+    private final List<OfficeDto> areaOffices;
+    private final List<OfficeDto> branchOffices;
 
-    public OfficeHierarchyByLevelDto(List<OfficeDto> headOffices, List<OfficeDto> regionalOffices) {
+    public OfficeHierarchyByLevelDto(List<OfficeDto> headOffices, List<OfficeDto> regionalOffices, List<OfficeDto> divisionalOffices, List<OfficeDto> areaOffices, List<OfficeDto> branchOffices) {
         this.headOffices = headOffices;
         this.regionalOffices = regionalOffices;
+        this.divisionalOffices = divisionalOffices;
+        this.areaOffices = areaOffices;
+        this.branchOffices = branchOffices;
     }
 
     public List<OfficeDto> getHeadOffices() {
@@ -41,5 +46,17 @@ public class OfficeHierarchyByLevelDto {
 
     public List<OfficeDto> getRegionalOffices() {
         return this.regionalOffices;
+    }
+
+    public List<OfficeDto> getDivisionalOffices() {
+        return this.divisionalOffices;
+    }
+
+    public List<OfficeDto> getAreaOffices() {
+        return this.areaOffices;
+    }
+
+    public List<OfficeDto> getBranchOffices() {
+        return this.branchOffices;
     }
 }

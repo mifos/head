@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -37,6 +36,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -482,7 +482,7 @@ public class LoginActionStrutsTest extends MifosMockStrutsTestCase {
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         Name name = new Name("XYZ", null, null, null);
         List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = new Date();
         personnel = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"), Short.valueOf("1"),

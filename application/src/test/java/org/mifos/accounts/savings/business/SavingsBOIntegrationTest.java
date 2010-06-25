@@ -81,7 +81,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -100,6 +99,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -1514,7 +1514,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private List<CustomFieldDto> getCustomFieldView() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(new Short("8"), "13", CustomFieldType.NONE));
+        customFields.add(new CustomFieldDto(new Short("8"), "13", null));
         return customFields;
 
     }

@@ -24,10 +24,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdateBuilder {
