@@ -18,20 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.persistence;
+package org.mifos.application.admin.servicefacade;
 
-import java.util.List;
+import org.mifos.core.MifosException;
 
-public class Upgrade209 extends LanguageUpgrade {
+public class InvalidDateException extends MifosException {
 
-    public Upgrade209() {
-        super(209);
+    private static final String EXCEPTION_VALIDATION_INVALID_DATE = "exception.validation.InvalidDate";
+    private final String dateString;
+
+    public InvalidDateException(String dateStr) {
+        super(EXCEPTION_VALIDATION_INVALID_DATE);
+        this.dateString = dateStr;
     }
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Portuguese", "pt" });
-        languageNameAndCodesToAdd.add(new String[] { "Khmer", "km" });
+    public InvalidDateException(String dateStr, Throwable cause) {
+        super(EXCEPTION_VALIDATION_INVALID_DATE, cause);
+        this.dateString = dateStr;
+    }
+
+    public String getDateString() {
+        return dateString;
     }
 
 }

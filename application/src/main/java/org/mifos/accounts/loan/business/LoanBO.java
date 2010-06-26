@@ -87,8 +87,8 @@ import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -108,10 +108,10 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.DateTimeService;
@@ -1607,7 +1607,6 @@ public class LoanBO extends AccountBO {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          *
-                         * So, calculate that amount here (though not sure at this point whether it is reopened or not.
                          */
                         if (accntActionDate.isPaid()) {
                             increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
@@ -1755,15 +1754,15 @@ public class LoanBO extends AccountBO {
         MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting().getMeeting(), getLoanMeeting(),
                 getLoanMeeting().getMeetingStartDate());
 
-        DateTime startFromMeetingDate = getLoanMeeting().startDateForMeetingInterval(
-                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = meeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = meeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
 
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                startFromMeetingDate, scheduledEvent);
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
+
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
         updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }

@@ -44,7 +44,7 @@ import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/test-persistenceContext.xml"})
+@ContextConfiguration(locations = {"/org/mifos/config/resources/QuestionnaireContext.xml", "/org/mifos/config/resources/persistenceContext.xml", "/test-dataSourceContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
 public class QuestionnaireServiceIntegrationTest {
 
@@ -109,7 +109,30 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldThrowExceptionForDupliacateQuestion() throws ApplicationException {
+    public void shouldGetQuestionGroupById() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
+        assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
+        assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionGroupByIdFailure() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
+        try {
+            questionnaireService.getQuestionGroup(maxQuestionGroupId+1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldThrowExceptionForDuplicateQuestion() throws ApplicationException {
         long offset = System.currentTimeMillis();
         String questionTitle = "Title" + offset;
         defineQuestion(questionTitle, DATE);
@@ -131,7 +154,7 @@ public class QuestionnaireServiceIntegrationTest {
         result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
         assertThat(result, is(true));
     }
-    
+
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
         return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
     }

@@ -25,11 +25,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
@@ -42,6 +46,7 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -88,6 +93,20 @@ public class OfficeDaoHibernate implements OfficeDao {
         queryParameters.put("OFFICE_ID", officeId);
 
         return (OfficeDto) genericDao.executeUniqueResultNamedQuery("findOfficeDtoById", queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<OfficeDto> findAllOffices() {
+
+        List<OfficeDto> headOffices = (List<OfficeDto>) genericDao.executeNamedQuery("findAllHeadOffices", null);
+
+        List<OfficeDto> allNonHeadOffices = (List<OfficeDto>) genericDao.executeNamedQuery("findAllNonHeadOfficesApplicableToOfficeHierarchy", null);
+
+        List<OfficeDto> allOffices = new ArrayList<OfficeDto>(allNonHeadOffices);
+        allOffices.addAll(headOffices);
+
+        return allOffices;
     }
 
     @SuppressWarnings("unchecked")
@@ -217,5 +236,19 @@ public class OfficeDaoHibernate implements OfficeDao {
         if (officeCount > 0) {
             throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
         }
+    }
+
+    @Override
+    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice() {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.OFFICE.getValue());
+
+        return retrieveCustomFieldDefinitions(queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CustomFieldDefinitionEntity> retrieveCustomFieldDefinitions(Map<String, Object> queryParameters) {
+        List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return customFieldsForCenter;
     }
 }

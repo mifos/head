@@ -179,28 +179,22 @@ function goToCancelPage(){
 								</tr>
 								<tr>
 									<td class="fontnormalbold"><br>
-									<mifos:mifoslabel name="Office.labelTelephone" /><span
-										class="fontnormal"> <c:out
-										value="${offActionForm.address.phoneNumber}"></c:out></span><br>
+									<mifos:mifoslabel name="Office.labelTelephone" />
+									<span class="fontnormal"><c:out value="${offActionForm.address.phoneNumber}" /></span><br>
 									<br>
-									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<c:if test="${!empty offActionForm.customFields}">
 										<mifos:mifoslabel name="Office.labelAdditionInformation" />
-									</c:if> <span class="fontnormal"><br>
-									 <c:forEach var="cfdef"
-										items="${offActionForm.customFields}">
-										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-											<c:if test="${cfdef.fieldId==cf.fieldId}">
+										<span class="fontnormal"><br>
+										 	<c:forEach var="cfdef" items="${offActionForm.customFields}">
 												<font class="fontnormalBold">
-												<mifos:mifoslabel
-											name="${cf.lookUpEntity.entityType}"
-											bundle="OfficeResources"></mifos:mifoslabel>:
+												<mifos:mifoslabel name="${cfdef.lookUpEntityType}" bundle="OfficeResources" />:
 												</font>
 												<span class="fontnormal"><c:out value="${cfdef.fieldValue}" /><br>
 												</span>
-											</c:if>
-										</c:forEach>
-									</c:forEach> </span></c:if> <br>
+											</c:forEach>
+										</span>
+									</c:if>
+									<br>
 									<br>
 									<span class="fontnormal"> <html-el:button styleId="preview_new_office.button.edit"
 										onclick="goToPreviousPage();" property="cancelButton"

@@ -20,6 +20,8 @@
 
 package org.mifos.customers.personnel.business;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -42,6 +44,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -51,7 +54,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -126,7 +128,9 @@ public class PersonnelBO extends AbstractBusinessObject {
                 if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
                         && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
                     try {
-                        view.convertDateToUniformPattern(Locale.getDefault());
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
                     } catch (InvalidDateException e) {
                         throw new ValidationException(e.toString());
                     }
@@ -347,7 +351,9 @@ public class PersonnelBO extends AbstractBusinessObject {
                     if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         if (CustomFieldType.DATE.getValue().equals(fieldView.getFieldType())
                                 && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
-                            fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                            SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                            String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                            fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), userfmt));
                         }
                         fieldEntity.setFieldValue(fieldView.getFieldValue());
                     }

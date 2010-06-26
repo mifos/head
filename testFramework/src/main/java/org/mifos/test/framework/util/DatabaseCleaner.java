@@ -65,6 +65,11 @@ public class DatabaseCleaner {
         template.execute("delete from savings_account");
         template.execute("delete from savings_performance");
 
+        template.execute("delete from financial_trxn");
+        template.execute("delete from fee_trxn_detail");
+        template.execute("delete from loan_trxn_detail");
+        template.execute("delete from account_trxn");
+        template.execute("delete from account_payment");
         template.execute("delete from account_notes");
         template.execute("delete from account");
 

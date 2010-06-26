@@ -1,12 +1,12 @@
-CREATE TABLE IMPORTED_TRANSACTIONS_FILES 
-( FILE_NAME VARCHAR(100) NOT NULL, 
-  SUBMITTED_ON TIMESTAMP NOT NULL, 
-  SUBMITTED_BY SMALLINT NOT NULL,
-  PRIMARY KEY (FILE_NAME),
-  FOREIGN KEY (SUBMITTED_BY) 
-  REFERENCES PERSONNEL(PERSONNEL_ID) 
-  ON DELETE NO ACTION 
-  ON UPDATE NO ACTION
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table imported_transactions_files 
+( file_name varchar(100) not null, 
+  submitted_on timestamp not null, 
+  submitted_by smallint not null,
+  primary key (file_name),
+  foreign key (submitted_by) 
+  references personnel(personnel_id) 
+  on delete no action 
+  on update no action
+)engine=innodb character set utf8;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 221 WHERE DATABASE_VERSION = 220;
+update database_version set database_version = 221 where database_version = 220;

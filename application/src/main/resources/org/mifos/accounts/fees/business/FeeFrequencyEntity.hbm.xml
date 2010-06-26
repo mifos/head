@@ -3,14 +3,14 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.fees.business.FeeFrequencyEntity" table="FEE_FREQUENCY">
-		<id name="feeFrequencyId" column="FEE_FREQUENCY_ID" unsaved-value="null" access="field">
+	<class name="org.mifos.accounts.fees.business.FeeFrequencyEntity" table="fee_frequency">
+		<id name="feeFrequencyId" column="fee_frequency_id" unsaved-value="null" access="field">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="feeFrequencyType" column="FEE_FREQUENCYTYPE_ID" class="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" insert="true" update="false" lazy="false" access="field" />
-		<many-to-one name="feePayment" column="FREQUENCY_PAYMENT_ID" class="org.mifos.accounts.fees.business.FeePaymentEntity" insert="true" update="false" lazy="false" access="field" />
-		<many-to-one name="feeMeetingFrequency" column="FREQUENCY_MEETING_ID" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" lazy="false" access="field" />
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.accounts.fees.business.FeeBO" access="field" />
+		<many-to-one name="feeFrequencyType" column="fee_frequencytype_id" class="org.mifos.accounts.fees.business.FeeFrequencyTypeEntity" insert="true" update="false" lazy="false" access="field" />
+		<many-to-one name="feePayment" column="frequency_payment_id" class="org.mifos.accounts.fees.business.FeePaymentEntity" insert="true" update="false" lazy="false" access="field" />
+		<many-to-one name="feeMeetingFrequency" column="frequency_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" lazy="false" access="field" />
+		<many-to-one name="fee" column="fee_id" class="org.mifos.accounts.fees.business.FeeBO" access="field" />
 	</class>
 </hibernate-mapping>

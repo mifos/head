@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.meeting.business.MeetingTypeEntity" table="MEETING_TYPE">
-        <id name="meetingTypeId" column="MEETING_TYPE_ID" type="short" access="field">
+    <class name="org.mifos.application.meeting.business.MeetingTypeEntity" table="meeting_type">
+        <id name="meetingTypeId" column="meeting_type_id" type="short" access="field">
             <generator class="native"/>
         </id>
-         <property name="meetingPurpose" column="MEETING_PURPOSE" type="string" access="field" />
-         <property name="description" column="DESCRIPTION" type="string" access="field"/> 
+         <property name="meetingPurpose" column="meeting_purpose" type="string" access="field" />
+         <property name="description" column="description" type="string" access="field"/> 
     </class>
 </hibernate-mapping>

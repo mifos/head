@@ -113,7 +113,7 @@ public class HolidayAction extends BaseAction {
         request.getSession().setAttribute(HolidayConstants.REPAYMENTRULETYPES, getRepaymentRuleTypes());
         String selectedOfficeIds = ((HolidayActionForm) form).getSelectedOfficeIds();
 
-        final String topLevelOfficeNames = this.officeServiceFacade.topLevelOfficeNames(selectedOfficeIds);
+        final String topLevelOfficeNames = this.legacyOfficeServiceFacade.topLevelOfficeNames(selectedOfficeIds);
 
         request.getSession().setAttribute(HolidayConstants.SELECTED_OFFICE_NAMES, topLevelOfficeNames);
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -222,7 +222,7 @@ public class HolidayAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.println(this.officeServiceFacade.headOfficeHierarchy().toJSONString());
+        out.println(this.legacyOfficeServiceFacade.headOfficeHierarchy().toJSONString());
         out.flush();
         return null;
     }

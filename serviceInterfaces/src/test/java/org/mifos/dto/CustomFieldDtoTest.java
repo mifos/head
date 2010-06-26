@@ -18,27 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.exceptions;
+package org.mifos.dto;
 
-import org.mifos.core.MifosException;
-import org.mifos.framework.util.helpers.ExceptionConstants;
+import junit.framework.Assert;
 
-public class InvalidDateException extends MifosException {
+import org.junit.Test;
+import org.mifos.dto.domain.CustomFieldDto;
 
-    private String dateString;
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
+public class CustomFieldDtoTest {
 
-    public InvalidDateException(String dateStr) {
-        super(ExceptionConstants.INVALIDDATEEXCEPTION);
-        this.dateString = dateStr;
-    }
+    @Test
+    public void shouldBeEqual() throws Exception {
+        // The main point here is that we shouldn't get
+        // NullPointerException for these operations.
 
-    public InvalidDateException(String dateStr, Throwable cause) {
-        super(ExceptionConstants.INVALIDDATEEXCEPTION, cause);
-        this.dateString = dateStr;
-    }
+        CustomFieldDto view = new CustomFieldDto();
+        Assert.assertEquals("org.mifos.dto.domain.CustomFieldDto@0", view.toString());
+        view.hashCode();
 
-    public String getDateString() {
-        return dateString;
+        CustomFieldDto view2 = new CustomFieldDto();
+        Assert.assertTrue(view.equals(view2));
     }
 
 }

@@ -59,286 +59,265 @@ explanation of the license and how it is applied.
 									bundle="OfficeResources"></mifos:mifoslabel>
 							</html-el:link><br>
 							<br>
-							<font class="fontnormalRedBold"><span id="viewOffices.error.message"><html-el:errors
-								bundle="OfficeResources" /></span></font>  <c:set
-								var="regional" /> <c:set var="divisional" /> <c:set var="area" />
-							<!-- start main loop from here --> <c:forEach var="office"
-								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
-								<!-- for head office -->
-								<c:if test="${office.level.id == OfficeLevel.HEADOFFICE.value }">
-									<span class="fontnormalbold"> <html-el:link styleId="viewOffices.link.viewHeadOffice"
-										href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
-										<c:out value="${office.officeName}" />
-									</html-el:link> <br>
+							<font class="fontnormalRedBold"><span id="viewOffices.error.message"><html-el:errors bundle="OfficeResources" /></span></font>
+						    <c:set var="regional" />
+							<c:set var="divisional" />
+							<c:set var="area" />
+							 
+							<c:forEach var="headOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
+									<span class="fontnormalbold">
+									<html-el:link styleId="viewOffices.link.viewHeadOffice" href="offAction.do?method=get&officeId=${headOffice.id}&randomNUm=${sessionScope.randomNUm}">
+									<c:out value="${headOffice.name}" /></html-el:link> <br>
 									</span>
-								</c:if>
 							</c:forEach>
 
 							<c:set var="regionalConfig" scope="request" value="false" ></c:set>
 							<c:set var="subRegionalConfig" scope="request" value="false" ></c:set>
 							<c:set var="areaConfig" scope="request" value="false" ></c:set>
-							<c:forEach var="level" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}">
-							   <c:if test="${OfficeLevel.REGIONALOFFICE.value == level.levelId}">
-							     <c:set var="regionalConfig" scope="request" value="true" ></c:set>
-							   </c:if>
-							   <c:if test="${OfficeLevel.SUBREGIONALOFFICE.value == level.levelId}">
-							     <c:set var="subRegionalConfig" scope="request" value="true" ></c:set>
-							   </c:if>
-							   <c:if test="${OfficeLevel.AREAOFFICE.value == level.levelId}">
-							     <c:set var="areaConfig" scope="request" value="true" ></c:set>
-							   </c:if>
-							</c:forEach>
+
+							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
+								<c:set var="regionalConfig" scope="request" value="true" ></c:set>
+							</c:if>
 
 							<c:choose>
-								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')
-									&& regionalConfig == 'true' }">
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList') && regionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 											</span></td>
-											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newRegionalOffice"
-												href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
-												<mifos:mifoslabel name="office.labelAddNew"
-													bundle="OfficeResources" />
-												<mifos:mifoslabel name="Office.labelRegionalOffice"
-													bundle="OfficeUIResources" />
-											</html-el:link></td>
+											<td width="39%" align="right">
+											<html-el:link styleId="viewOffices.link.newRegionalOffice" href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+												<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+												<mifos:mifoslabel name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
+											</html-el:link>
+											</td>
 										</tr>
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
-										<!-- for regional  office -->
-										<c:if
-											test="${office.level.id == OfficeLevel.REGIONALOFFICE.value && empty regional}">
-											<c:set var="regional" value="level" />
-											<br>
-											<table width="95%" border="0" cellspacing="0" cellpadding="0">
-												<tr>
-													<td width="61%"><span class="fontnormalbold"><span
-														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newRegionalOffice"
-														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="office.labelAddNew"
-															bundle="OfficeResources"></mifos:mifoslabel>
-														<c:out value="${office.level.name}" />
-													</html-el:link></td>
-												</tr>
-											</table>
-										</c:if>
+									<br>
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%"><span class="fontnormalbold">
+												<span class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newRegionalOffice" 
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+													<mifos:mifoslabel name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
+										</tr>
+									</table>
+									<c:forEach var="regionalOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'regionalOfficeList')}">
 										<span class="fontnormalbold"> </span>
-										<!--  now the childern loop for regional office -->
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
-												<td width="1%"><img
-													src="pages/framework/images/bullet_circle.gif" width="9"
-													height="11"></td>
+												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 												<td width="99%"><html-el:link styleId="viewOffices.link.viewRegionalOffice"
-													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
-													<c:out value="${office.officeName}" />
-												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
-													test="${office.status.id == OfficeStatus.INACTIVE.value}">
+													href="offAction.do?method=get&officeId=${regionalOffice.id}&randomNUm=${sessionScope.randomNUm}">
+													<c:out value="${regionalOffice.name}" />
+												</html-el:link>&nbsp;&nbsp;&nbsp;
+												<c:if test="${office.statusId == OfficeStatus.INACTIVE.value}">
 													<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
-													<c:out value="${office.status.name}" />
+													<mifos:mifoslabel name="OfficeStatus-Inactive" bundle="LookupValueMessages" />
 												</c:if></td>
 											</tr>
 										</table>
-										<!--  end childern loop for regional office -->
 									</c:forEach>
 								</c:otherwise>
 							</c:choose>
 
-
+							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
+							     <c:set var="subRegionalConfig" scope="request" value="true" ></c:set>
+							</c:if>
 
 							 <c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList') && subRegionalConfig == 'true' }">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
-												name="Office.labelDivisionalOffice"
-												bundle="OfficeUIResources" /> </span></td>
-											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
-												href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
-												<mifos:mifoslabel name="office.labelAddNew"
-													bundle="OfficeResources" />
-												<mifos:mifoslabel name="Office.labelDivisionalOffice"
-													bundle="OfficeUIResources" />
-											</html-el:link></td>
+											<td width="61%">
+												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" /></span>
+											</td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newDivisionalOffice" href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+													<mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
 										</tr>
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
-										<!-- for regional  office -->
-										<c:if
-											test="${office.level.id == OfficeLevel.SUBREGIONALOFFICE.value &&  empty divisional}">
-											<c:set var="divisional" value="level" />
-											<br>
-											<table width="95%" border="0" cellspacing="0" cellpadding="0">
-												<tr>
-													<td width="61%"><span class="fontnormalbold"><span
-														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
-														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="office.labelAddNew"
-															bundle="OfficeResources"></mifos:mifoslabel>
-														<c:out value="${office.level.name}" />
-													</html-el:link></td>
-												</tr>
-											</table>
-										</c:if>
+									<br>
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+												<span class="fontnormalbold">
+													<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" /></span>
+												</span>
+											</td>
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+												<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources"></mifos:mifoslabel>
+												<mifos:mifoslabel name="Office.labelDivisionalOffice" bundle="OfficeUIResources" />
+											</html-el:link></td>
+										</tr>
+									</table>
+										
+									<c:forEach var="divisionalOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'divisionalOfficeList')}">
 										<span class="fontnormalbold"> </span>
-										<!--  now the childern loop for regional office -->
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
-												<td width="1%"><img
-													src="pages/framework/images/bullet_circle.gif" width="9"
-													height="11"></td>
-												<td width="99%"><html-el:link styleId="viewOffices.link.viewDivisionalOffice"
-													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
-													<c:out value="${office.officeName}" />
-												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
-													test="${office.status.id == OfficeStatus.INACTIVE.value}">
+												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+												<td width="99%">
+													<html-el:link styleId="viewOffices.link.viewDivisionalOffice" 
+														href="offAction.do?method=get&officeId=${divisionalOffice.id}&randomNUm=${sessionScope.randomNUm}">
+														<c:out value="${divisionalOffice.name}" />
+													</html-el:link>&nbsp;&nbsp;&nbsp;
+												
+												<c:if test="${office.statusId == OfficeStatus.INACTIVE.value}">
 													<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
-													<c:out value="${office.status.name}" />
-												</c:if></td>
+													<mifos:mifoslabel name="OfficeStatus-Inactive" bundle="LookupValueMessages" />
+												</c:if>
+												</td>
 											</tr>
 										</table>
-										<!--  end childern loop for regional office -->
 									</c:forEach>
 								</c:otherwise>
-							</c:choose> <c:choose>
+							</c:choose> 
+		
+							<c:if test="${ !empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
+							     <c:set var="areaConfig" scope="request" value="true" />
+							</c:if>
+												
+							<c:choose>
 								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList') && areaConfig == 'true'}">
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
-												name="Office.labelAreaOffice" bundle="OfficeUIResources" />
-											</span></td>
-											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newAreaOffice"
-												href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
-												<mifos:mifoslabel name="office.labelAddNew"
-													bundle="OfficeResources" />
-												<mifos:mifoslabel name="Office.labelAreaOffice"
-													bundle="OfficeUIResources" />
-											</html-el:link></td>
+											<td width="61%">
+												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" /></span>
+											</td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newAreaOffice"
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+													<mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
 										</tr>
 									</table>
 								</c:when>
 								<c:otherwise>
-									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
-										<!-- for regional  office -->
-										<c:if
-											test="${office.level.id == OfficeLevel.AREAOFFICE.value && empty area }">
-											<c:set var="area" value="level" />
-											<br>
-											<table width="95%" border="0" cellspacing="0" cellpadding="0">
-												<tr>
-													<td width="61%"><span class="fontnormalbold"><span
-														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newAreaOffice"
-														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="office.labelAddNew"
-															bundle="OfficeResources"></mifos:mifoslabel>
-														<c:out value="${office.level.name}" />
-													</html-el:link></td>
-												</tr>
-											</table>
-										</c:if>
-										<span class="fontnormalbold"> </span>
-										<!--  now the childern loop for regional office -->
-										<table width="90%" border="0" cellspacing="0" cellpadding="0">
-											<tr class="fontnormal">
-												<td width="1%"><img
-													src="pages/framework/images/bullet_circle.gif" width="9"
-													height="11"></td>
-												<td width="99%"><html-el:link styleId="viewOffices.link.viewAreaOffice"
-													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
-													<c:out value="${office.officeName}" />
-												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
-													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
-													<c:out value="${office.status.name}" />
-												</c:if></td>
-											</tr>
-										</table>
-										<!--  end childern loop for regional office -->
-									</c:forEach>
-								</c:otherwise>
-							</c:choose> <c:set var="parentOffice" /> <c:set var="branch" />
-							<c:choose>
-								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}">
-									<c:set var="branch" value="level" />
 									<br>
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
-												name="Office.labelBranchOffice" bundle="OfficeUIResources" />
-											</span></td>
-											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newBranchOffice"
-												href="offAction.do?method=load&officeLevel=${OfficeLevel.BRANCHOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
-												<mifos:mifoslabel name="office.labelAddNew"
-													bundle="OfficeResources" />
-												<mifos:mifoslabel name="Office.labelBranchOffice"
-													bundle="OfficeUIResources" />
-											</html-el:link></td>
+											<td width="61%">
+												<span class="fontnormalbold">
+													<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" /></span>
+												</span>
+											</td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newAreaOffice"
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources"></mifos:mifoslabel>
+													<mifos:mifoslabel name="Office.labelAreaOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
 										</tr>
 									</table>
-								</c:when>
-								<c:otherwise>
-									<c:forEach var="office" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}"
-										varStatus="counter">
-										<c:if
-											test="${office.level.id == OfficeLevel.BRANCHOFFICE.value && empty branch}">
-											<c:set var="branch" value="level" />
-											<br>
-											<table width="95%" border="0" cellspacing="0" cellpadding="0">
-												<tr>
-													<td width="61%"><span class="fontnormalbold"> <c:out
-														value="${office.level.name}"></c:out> </span></td>
-													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newBranchOffice"
-														href="offAction.do?method=load&officeLevel=5&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="office.labelAddNew"
-															bundle="OfficeResources" />
-														<c:out value="${office.level.name}"></c:out>
-													</html-el:link></td>
-												</tr>
-											</table>
-										</c:if>
-										<c:if
-											test="${ !empty parentOffice  && parentOffice != office.parentOffice.officeName}">
-											<br>
-											<span class="fontnormal"><c:out
-												value="${office.parentOffice.officeName}" /></span>
-										</c:if>
-										<c:if test="${empty parentOffice}">
-											<span class="fontnormal"><c:out
-												value="${office.parentOffice.officeName}" /></span>
-											<c:set var="parentOffice"
-												value="${office.parentOffice.officeName}" />
-											<c:set var="branch" value="${office.parentOffice.officeName}" />
-										</c:if>
+									
+									<c:forEach var="areaOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'areaOfficeList')}">
+										<span class="fontnormalbold"> </span>
 										<table width="90%" border="0" cellspacing="0" cellpadding="0">
 											<tr class="fontnormal">
-												<td width="1%"><img
-													src="pages/framework/images/bullet_circle.gif" width="9"
-													height="11"></td>
-												<td width="99%"><html-el:link styleId="viewOffices.link.viewBranchOffice"
-													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
-													<c:out value="${office.officeName}" />
-												</html-el:link> &nbsp;&nbsp;&nbsp; <c:if
-													test="${office.status.id == OfficeStatus.INACTIVE.value}">
-													<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
-													<c:out value="${office.status.name}" />
-												</c:if></td>
+												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+												<td width="99%">
+													<html-el:link styleId="viewOffices.link.viewAreaOffice" 
+														href="offAction.do?method=get&officeId=${areaOffice.id}&randomNUm=${sessionScope.randomNUm}">
+														<c:out value="${areaOffice.name}" />
+													</html-el:link>&nbsp;&nbsp;&nbsp;
+													<c:if test="${areaOffice.statusId == OfficeStatus.INACTIVE.value}">
+														<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
+														<mifos:mifoslabel name="OfficeStatus-Inactive" bundle="LookupValueMessages" />
+													</c:if>
+												</td>
 											</tr>
 										</table>
 									</c:forEach>
 								</c:otherwise>
-							</c:choose></td>
+							</c:choose> 
+							
+							
+							<c:set var="parentOffice" /> 
+							<c:set var="branch" />
+							
+							<c:choose>
+								<c:when test="${empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}">
+									<br>
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+												<span class="fontnormalbold">
+													<mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" />
+												</span>
+											</td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newBranchOffice" 
+													href="offAction.do?method=load&officeLevel=${OfficeLevel.BRANCHOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+													<mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
+										</tr>
+									</table>
+								</c:when>
+								<c:otherwise>
+									<br>
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+												<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" /></span>
+											</td>
+											<td width="39%" align="right">
+												<html-el:link styleId="viewOffices.link.newBranchOffice" href="offAction.do?method=load&officeLevel=5&randomNUm=${sessionScope.randomNUm}">
+													<mifos:mifoslabel name="office.labelAddNew" bundle="OfficeResources" />
+													<mifos:mifoslabel name="Office.labelBranchOffice" bundle="OfficeUIResources" />
+												</html-el:link>
+											</td>
+										</tr>
+									</table>
+									<c:forEach var="branchOffice" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'branchOfficeList')}" varStatus="counter">
+										<c:if test="${ !empty parentOffice  && parentOffice != branchOffice.parentOfficeName}">
+											<br>
+											<span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
+										</c:if>
+										<c:if test="${empty parentOffice}">
+											<span class="fontnormal"><c:out value="${branchOffice.parentOfficeName}" /></span>
+											<c:set var="parentOffice" value="${branchOffice.parentOfficeName}" />
+											<c:set var="branch" value="${branchOffice.parentOfficeName}" />
+										</c:if>
+										<table width="90%" border="0" cellspacing="0" cellpadding="0">
+											<tr class="fontnormal">
+												<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+												<td width="99%">
+													<html-el:link styleId="viewOffices.link.viewBranchOffice" href="offAction.do?method=get&officeId=${branchOffice.id}&randomNUm=${sessionScope.randomNUm}">
+													<c:out value="${branchOffice.name}" /></html-el:link>&nbsp;&nbsp;&nbsp; 
+													<c:if test="${branchOffice.statusId == OfficeStatus.INACTIVE.value}">
+														<mifos:MifosImage id="inactive" moduleName="org.mifos.customers.office.util.resources.officeImages" />
+														<mifos:mifoslabel name="OfficeStatus-Inactive" bundle="LookupValueMessages" />
+													</c:if>
+												</td>
+											</tr>
+										</table>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+							</td>
 						</tr>
 					</table>
 					<br>
@@ -347,9 +326,7 @@ explanation of the license and how it is applied.
 			</table>
 			<br>
 			<br>
-			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="search" />
-			<!-- hidden varible for office type -->
 			<html-el:hidden property="officeLevel" value=""/>
 			<html-el:hidden property="officeId" value="" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

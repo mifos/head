@@ -38,8 +38,8 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -83,7 +83,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.customers.office.persistence.OfficeDto;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
@@ -93,9 +92,10 @@ import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -287,16 +287,16 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext) {
 
         try {
-            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
-                    .retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions,
-                    userContext.getPreferredLocale());
-
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
 
             ClientRulesDto clientRules = retrieveClientRules();
 
             ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
+
+            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
+                    .retrieveCustomFieldEntitiesForClient();
+            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),  customFieldDefinitions,
+                    userContext);
 
             CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
             ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());

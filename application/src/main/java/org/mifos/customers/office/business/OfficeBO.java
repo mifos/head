@@ -20,6 +20,8 @@
 
 package org.mifos.customers.office.business;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,8 +31,9 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.master.business.CustomFieldDto;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
@@ -40,10 +43,12 @@ import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.EventManger;
@@ -169,6 +174,16 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         this.customFields = new HashSet<OfficeCustomFieldEntity>();
         if (customFields != null) {
             for (CustomFieldDto view : customFields) {
+                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
+                    try {
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
+                    } catch (InvalidDateException e) {
+                        throw new OfficeValidationException(OfficeConstants.ERROR_CUSTOMDATEFIELD);
+                    }
+                }
                 this.customFields.add(new OfficeCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
             }
         }
@@ -545,9 +560,19 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
         }
     }
 
-    private void updateCustomFields(final List<CustomFieldDto> customfields) {
+    private void updateCustomFields(final List<CustomFieldDto> customfields) throws OfficeException {
         if (this.customFields != null && customfields != null) {
             for (CustomFieldDto fieldView : customfields) {
+                if (CustomFieldType.DATE.getValue().equals(fieldView.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
+                    try {
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), userfmt));
+                    } catch (InvalidDateException e) {
+                        throw new OfficeException(OfficeConstants.ERROR_CUSTOMDATEFIELD);
+                    }
+                }
                 for (OfficeCustomFieldEntity fieldEntity : this.customFields) {
                     if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
                         fieldEntity.setFieldValue(fieldView.getFieldValue());

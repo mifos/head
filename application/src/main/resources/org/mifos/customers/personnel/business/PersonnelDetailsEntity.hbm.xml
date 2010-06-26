@@ -6,35 +6,35 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.personnel.business.PersonnelDetailsEntity" table="PERSONNEL_DETAILS">
-   	    <id name="personnelId" column="PERSONNEL_ID" type="short" access="field">
+    <class name="org.mifos.customers.personnel.business.PersonnelDetailsEntity" table="personnel_details">
+   	    <id name="personnelId" column="personnel_id" type="short" access="field">
             <generator class="foreign">
             	<param name="property">personnel</param>
             </generator>
         </id> 
  
  		<component name="name" class="org.mifos.framework.business.util.Name">
-			<property name="firstName" column="FIRST_NAME" type="string" />
- 	       	<property name="middleName" column="MIDDLE_NAME" type="string"   />
-	        <property name="lastName" column="LAST_NAME" type="string" />
-	        <property name="secondLastName" column="SECOND_LAST_NAME" type="string"   />
+			<property name="firstName" column="first_name" type="string" />
+ 	       	<property name="middleName" column="middle_name" type="string"   />
+	        <property name="lastName" column="last_name" type="string" />
+	        <property name="secondLastName" column="second_last_name" type="string"   />
 		</component>
-        <property name="governmentIdNumber" column="GOVERNMENT_ID_NUMBER" type="string" />
-        <property name="dob" column="DOB" type="date" access="field"/>
-        <property name="maritalStatus" column="MARITAL_STATUS" type="integer" />
-        <property name="gender" column="GENDER" type="integer" />
-        <property name="dateOfJoiningMFI" column="DATE_OF_JOINING_MFI" type="date" />     
-        <property name="dateOfJoiningBranch" column="DATE_OF_JOINING_BRANCH" type="date" />                        
-        <property name="dateOfLeavingBranch" column="DATE_OF_LEAVING_BRANCH" type="date" />                                        
+        <property name="governmentIdNumber" column="government_id_number" type="string" />
+        <property name="dob" column="dob" type="date" access="field"/>
+        <property name="maritalStatus" column="marital_status" type="integer" />
+        <property name="gender" column="gender" type="integer" />
+        <property name="dateOfJoiningMFI" column="date_of_joining_mfi" type="date" />     
+        <property name="dateOfJoiningBranch" column="date_of_joining_branch" type="date" />                        
+        <property name="dateOfLeavingBranch" column="date_of_leaving_branch" type="date" />                                        
         <component name="address" class="org.mifos.framework.business.util.Address">
-	        <property name="line1" column="ADDRESS_1" type="string"  />
-	        <property name="line2" column="ADDRESS_2" type="string"   />
-   	        <property name="line3" column="ADDRESS_3" type="string"  />
-	        <property name="city" column="CITY" type="string"   />
-	        <property name="state" column="STATE" type="string"   />
-	        <property name="country" column="COUNTRY" type="string"  />
-	        <property name="zip" column="POSTAL_CODE" type="string"   />
-     		<property name="phoneNumber" column="TELEPHONE" type="string"  />
+	        <property name="line1" column="address_1" type="string"  />
+	        <property name="line2" column="address_2" type="string"   />
+   	        <property name="line3" column="address_3" type="string"  />
+	        <property name="city" column="city" type="string"   />
+	        <property name="state" column="state" type="string"   />
+	        <property name="country" column="country" type="string"  />
+	        <property name="zip" column="postal_code" type="string"   />
+     		<property name="phoneNumber" column="telephone" type="string"  />
         </component>
 		<one-to-one name="personnel" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="all" access="field"/>
     </class>

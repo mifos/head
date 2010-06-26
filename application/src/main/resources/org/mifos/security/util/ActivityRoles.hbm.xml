@@ -4,13 +4,13 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
 <hibernate-mapping>
- <class name="org.mifos.security.util.ActivityRoles" table="ACTIVITY">
-     <id name="id" type="short" column="ACTIVITY_ID">
+ <class name="org.mifos.security.util.ActivityRoles" table="activity">
+     <id name="id" type="short" column="activity_id">
       <generator class="native"/>
     </id>
-   <set name="activityRoles" lazy="false" table="ROLES_ACTIVITY" >
-    <key column="ACTIVITY_ID"/>
-    <element type="short" column="ROLE_ID" not-null="true"/>
+   <set name="activityRoles" lazy="false" table="roles_activity" >
+    <key column="activity_id"/>
+    <element type="short" column="role_id" not-null="true"/>
     </set>
  </class>
     <query name="getActivityRoles">

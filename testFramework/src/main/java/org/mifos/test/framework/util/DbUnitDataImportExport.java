@@ -37,6 +37,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -233,7 +234,7 @@ public class DbUnitDataImportExport {
             jdbcConnection = DriverManager.getConnection(
                     "jdbc:mysql://localhost/" + databaseName, user, password);
             IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
-
+            connection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             System.out.println("dumping data to: " + fileName + " ...");
 
             // sequenced data should not be necessary when foreign key constraints
@@ -260,6 +261,7 @@ public class DbUnitDataImportExport {
             jdbcConnection = DriverManager.getConnection(
                     "jdbc:mysql://localhost/" + databaseName + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
+            databaseConnection.getConfig().setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, Boolean.TRUE);
             DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
         }
         finally {

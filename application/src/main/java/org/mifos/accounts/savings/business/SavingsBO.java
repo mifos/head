@@ -21,6 +21,8 @@
 package org.mifos.accounts.savings.business;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -62,9 +64,9 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -85,10 +87,10 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -488,7 +490,9 @@ public class SavingsBO extends AccountBO {
                 if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
                         && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
                     try {
-                        view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
                     } catch (InvalidDateException e) {
                         throw new AccountException(e);
                     }
@@ -1894,16 +1898,16 @@ public class SavingsBO extends AccountBO {
             final List<Days> workingDays, final List<Holiday> holidays) throws AccountException {
 
         MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
-        DateTime startFromMeetingDate = customerMeeting.startDateForMeetingInterval(
-                new LocalDate(nextInstallment.getActionDate().getTime())).toDateTimeAtStartOfDay();
-
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customerMeeting);
-        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
-                workingDays, holidays);
+        LocalDate currentDate = new LocalDate();
+        LocalDate thisIntervalStartDate = customerMeeting.startDateForMeetingInterval(currentDate);
+        LocalDate nextMatchingDate = new LocalDate(scheduledEvent.nextEventDateAfter(thisIntervalStartDate.toDateTimeAtStartOfDay()));
+        DateTime futureIntervalStartDate = customerMeeting.startDateForMeetingInterval(nextMatchingDate).toDateTimeAtStartOfDay();
+
+        ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(workingDays, holidays);
 
         int numberOfInstallmentsToGenerate = getLastInstallmentId();
-        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate,
-                startFromMeetingDate, scheduledEvent);
+        List<DateTime> meetingDates = dateGeneration.generateScheduledDates(numberOfInstallmentsToGenerate, futureIntervalStartDate, scheduledEvent);
 
         if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
                 || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())

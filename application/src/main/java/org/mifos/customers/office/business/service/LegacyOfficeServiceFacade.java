@@ -18,19 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.persistence;
+package org.mifos.customers.office.business.service;
 
-import java.util.List;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
+import org.mifos.customers.office.struts.OfficeUpdateRequest;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.util.UserContext;
 
-public class Upgrade211 extends LanguageUpgrade {
+public interface LegacyOfficeServiceFacade {
 
-    public Upgrade211() {
-        super(211);
-    }
+    public String topLevelOfficeNames(String ids);
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Lao", "lo" });
-    }
+    public OfficeHierarchyDto headOfficeHierarchy();
+
+    public boolean updateOffice(UserContext userContext, Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest) throws ApplicationException;
 
 }

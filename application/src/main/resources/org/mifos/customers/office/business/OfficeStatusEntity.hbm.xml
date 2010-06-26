@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.office.business.OfficeStatusEntity" table="OFFICE_STATUS">
-        <id name="id" column="STATUS_ID" type="short">
+    <class name="org.mifos.customers.office.business.OfficeStatusEntity" table="office_status">
+        <id name="id" column="status_id" type="short">
             <generator class="native"/>
         </id>
-			<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+			<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>	
 		
     </class>

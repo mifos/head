@@ -18,21 +18,15 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.persistence;
+package org.mifos.application.admin.servicefacade;
 
-import java.util.List;
+import org.mifos.dto.screen.OfficeFormDto;
+import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 
-public class Upgrade208 extends LanguageUpgrade {
+public interface OfficeServiceFacade {
 
-    public Upgrade208() {
-        super(208);
-    }
+    OfficeHierarchyByLevelDto retrieveAllOffices();
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Chinese", "zh" });
-        languageNameAndCodesToAdd.add(new String[] { "Swahili", "sw" });
-        languageNameAndCodesToAdd.add(new String[] { "Arabic", "ar" });
-    }
+    OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId);
 
 }

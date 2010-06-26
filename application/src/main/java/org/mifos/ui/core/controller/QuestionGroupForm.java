@@ -28,6 +28,8 @@ public class QuestionGroupForm implements Serializable {
     private static final long serialVersionUID = 9142463851744584305L;
     private String title;
 
+    private String id;
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -38,5 +40,13 @@ public class QuestionGroupForm implements Serializable {
 
     public void trimTitle() {
         this.title = StringUtils.trim(this.title);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
