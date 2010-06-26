@@ -20,31 +20,28 @@
 
 package org.mifos.framework.persistence;
 
-import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.accounts.business.AddAccountStateFlag;
-import org.mifos.accounts.business.AddFinancialAction;
-import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.accounts.productdefinition.business.AddInterestCalcRule;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productsmix.persistence.Upgrade127;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.holiday.persistence.Upgrade104;
-import org.mifos.application.master.persistence.*;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.components.fieldConfiguration.business.AddField;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.reports.business.ReportsCategoryBO;
-import org.mifos.reports.persistence.AddReport;
-import org.mifos.security.AddActivity;
-import org.mifos.security.util.SecurityConstants;
-
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mifos.application.master.persistence.Upgrade213;
+import org.mifos.application.master.persistence.Upgrade223;
+import org.mifos.application.master.persistence.Upgrade225;
+import org.mifos.application.master.persistence.Upgrade237;
+import org.mifos.application.master.persistence.Upgrade238;
+import org.mifos.application.master.persistence.Upgrade240;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.reports.business.ReportsCategoryBO;
+import org.mifos.reports.persistence.AddReport;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
