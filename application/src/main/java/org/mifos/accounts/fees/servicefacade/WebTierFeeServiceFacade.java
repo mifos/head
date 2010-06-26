@@ -73,7 +73,7 @@ public class WebTierFeeServiceFacade implements FeeServiceFacade {
     public FeeParameters parameters(Short localeId) throws ApplicationException {
         List<GLCodeEntity> glCodes = generalLedgerDao.retreiveGlCodesBy(FinancialActionConstants.FEEPOSTING, FinancialConstants.CREDIT);
 
-        List<CategoryTypeEntity> categories = this.feeDao.retrieveFeeCategories();
+        List<CategoryTypeEntity> categories = this.feeDao.doRetrieveFeeCategories();
         List<FeeFormulaEntity> formulas = this.feeDao.retrieveFeeFormulae();
         List<FeeFrequencyTypeEntity> frequencies = this.feeDao.retrieveFeeFrequencies();
         List<FeePaymentEntity> timesOfCharging = this.feeDao.retrieveFeePayments();

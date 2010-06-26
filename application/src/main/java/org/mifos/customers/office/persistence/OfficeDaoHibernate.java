@@ -251,4 +251,14 @@ public class OfficeDaoHibernate implements OfficeDao {
         List<CustomFieldDefinitionEntity> customFieldsForCenter = (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
         return customFieldsForCenter;
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<OfficeDto> findActiveParents(OfficeLevel officeLevel) {
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("LEVEL_ID", officeLevel.getValue());
+        queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
+
+        return (List<OfficeDto>) this.genericDao.executeNamedQuery("office.findActiveParents", queryParameters);
+    }
 }

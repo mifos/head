@@ -35,6 +35,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
@@ -213,6 +214,13 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
         List<CustomFieldDefinitionEntity> customFieldDefinitions = this.officeDao.retrieveCustomFieldsForOffice();
         List<CustomFieldDto> customFields = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, Locale.getDefault());
 
-        return new OfficeFormDto(customFields);
+        OfficeLevel officeLevel = OfficeLevel.HEADOFFICE;
+        if (officeLevelId != null) {
+            officeLevel = OfficeLevel.getOfficeLevel(officeLevelId);
+        }
+
+        List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
+
+        return new OfficeFormDto(customFields, parents);
     }
 }
