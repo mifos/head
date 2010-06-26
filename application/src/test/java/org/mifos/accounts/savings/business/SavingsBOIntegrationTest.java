@@ -2200,6 +2200,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.setUserContext(TestObjectFactory.getContext());
         savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
 
+        StaticHibernateUtil.getSessionTL().clear();
+
         savings = savingsPersistence.findById(savings.getAccountId());
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(),
@@ -2210,7 +2212,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
         savings.applyPaymentWithPersist(paymentData);
 
-        StaticHibernateUtil.flushSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
 
