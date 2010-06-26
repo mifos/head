@@ -49,7 +49,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final LoanSummaryEntity loanSummary;
     private final List<LoanActivityEntity> loanActivityDetails;
     private final Double interestRate;
-    private final boolean intrestDeductedAtDisbursement;
+    private final boolean interestDeductedAtDisbursement;
     private final Short recurAfter;
     private final Short recurrenceId;
     private final boolean prinDueLastInst;
@@ -104,7 +104,7 @@ public class LoanInformationDto implements DataTransferObject {
         this.loanSummary = loanSummary;
         this.loanActivityDetails = loanActivityDetails;
         this.interestRate = interestRate;
-        this.intrestDeductedAtDisbursement = intrestDeductedAtDisbursement;
+        this.interestDeductedAtDisbursement = intrestDeductedAtDisbursement;
         this.recurAfter = recurAfter;
         this.recurrenceId = recurrenceId;
         this.prinDueLastInst = prinDueLastInst;
@@ -222,8 +222,8 @@ public class LoanInformationDto implements DataTransferObject {
         return this.interestRate;
     }
 
-    public boolean isIntrestDeductedAtDisbursement() {
-        return this.intrestDeductedAtDisbursement;
+    public boolean getInterestDeductedAtDisbursement() {
+        return this.interestDeductedAtDisbursement;
     }
 
     public Short getRecurAfter() {
@@ -234,7 +234,7 @@ public class LoanInformationDto implements DataTransferObject {
         return this.recurrenceId;
     }
 
-    public boolean isPrinDueLastInst() {
+    public boolean getPrinDueLastInst() {
         return this.prinDueLastInst;
     }
 
