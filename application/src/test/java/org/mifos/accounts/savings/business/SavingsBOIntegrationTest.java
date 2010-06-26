@@ -148,8 +148,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     protected void tearDown() throws Exception {
         StaticHibernateUtil.enableCommits();
         StaticHibernateUtil.rollbackTransaction();
-        StaticHibernateUtil.getSessionTL().clear();
-        //StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.closeSession();
         super.tearDown();
     }
 
