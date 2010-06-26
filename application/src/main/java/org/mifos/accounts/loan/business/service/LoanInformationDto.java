@@ -24,22 +24,22 @@ import org.mifos.framework.business.service.DataTransferObject;
 
 public class LoanInformationDto implements DataTransferObject {
 
-    private final String prdOfferingName;
+    private final Integer accountId;
     private final String globalAccountNum;
     private final AccountStateEntity accountState;
+    private final Integer customerId;
+    private final CustomerLevelEntity customerLevel;
+    private final String prdOfferingName;
     private final Set<AccountFlagMapping> accountFlags;
     private final Date disbursementDate;
     private final boolean redone;
     private final Integer businessActivityId;
-    private final Integer accountId;
     private final Set<AccountActionDateEntity> accountActionDates;
     private final GracePeriodTypeEntity gracePeriodType;
     private final InterestTypesEntity interestType;
     private MeetingBO loanMeeting;
     private final Set<AccountNotesEntity> accountNotes;
     private final List<AccountNotesEntity> recentAccountNotes;
-    private final CustomerLevelEntity customerLevel;
-    private final Integer customerId;
     private final AccountTypeEntity accountType;
     private final Short officeId;
     private final Short personnelId;

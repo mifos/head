@@ -144,7 +144,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td width="33%" class="headingorange"><mifos:mifoslabel
 								name="loan.acc_summary" /></td>
 							<td width="33%" align="right" class="fontnormal"><html-el:link styleId="loanaccountdetail.link.viewRepaymentSchedule"
-								href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountType.accountTypeId}&accountStateId=${loanInformationDto.accountState.id}&recordOfficeId=${loanInformationDto.office.officeId}&recordLoanOfficerId=${loanInformationDto.personnel.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountType.accountTypeId}&accountStateId=${loanInformationDto.accountState.id}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.view_schd" />
 							</html-el:link></td>
 						</tr>
@@ -163,7 +163,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										class="fontnormalbold"> </span></a>--%>
 								<%--<c:if test="${loanInformationDto.accountStateId == 5 || loanInformationDto.accountStateId == 9}">
 									<td width="42%" align="right" class="fontnormal">
-										<span class="fontnormal"><html-el:link styleId="loanaccountdetail.link.viewInstallmentDetails" href="loanAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&accountName=${loanInformationDto.loanOffering.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}
+										<span class="fontnormal"><html-el:link styleId="loanaccountdetail.link.viewInstallmentDetails" href="loanAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&accountName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}
 																&accountType=${loanInformationDto.accountTypeId}
 																&accountStateId=${loanInformationDto.accountStateId}
 																&recordOfficeId=${loanInformationDto.officeId}
@@ -185,7 +185,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<tr>
 								<td width="42%" align="right" class="fontnormal"><span
 									class="fontnormal"> <html-el:link styleId="loanaccountdetail.link.viewInstallmentDetails"
-									href="loanAccountAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountType.accountTypeId}&accountStateId=${loanInformationDto.accountState.id}&recordOfficeId=${loanInformationDto.office.officeId}&recordLoanOfficerId=${loanInformationDto.personnel.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="loanAccountAction.do?method=getInstallmentDetails&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountType=${loanInformationDto.accountType.accountTypeId}&accountStateId=${loanInformationDto.accountState.id}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_installment_details" />
 								</html-el:link> </span></td>
 							</tr>
@@ -269,7 +269,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td width="65%" align="right" class="fontnormal">&nbsp; <c:if
 								test="${!empty loanInformationDto.loanActivityDetails}">
 								<html-el:link styleId="loanaccountdetail.link.viewAccountActivity"
-									href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&accountStateId=${loanInformationDto.accountState.id}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${loanInformationDto.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountState.id}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${loanInformationDto.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
 								</html-el:link>
 							</c:if></td>
@@ -329,10 +329,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.repaymentRules" /> </span><br>
 							<mifos:mifoslabel name="loan.freq_of_inst" />:&nbsp;<c:out
-								value="${loanInformationDto.loanOffering.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" />
+								value="${loanInformationDto.recurAfter}" />
 							<c:choose>
 								<c:when
-									test="${loanInformationDto.loanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == '1'}">
+									test="${loanInformationDto.recurrenceId == '1'}">
 									<mifos:mifoslabel name="loan.week(s)" />
 								</c:when>
 								<c:otherwise>
@@ -341,7 +341,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.principle_due" />:<c:choose>
 								<c:when
-									test="${loanInformationDto.loanOffering.prinDueLastInst == true}">
+									test="${loanInformationDto.prinDueLastInst == true}">
 									<mifos:mifoslabel name="loan.yes" />
 								</c:when>
 								<c:otherwise>
@@ -361,7 +361,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								value="${loanInformationDto.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel
 								name="loan.inst" /><br>
 							<mifos:mifoslabel name="loan.source_fund" />:&nbsp; <c:out
-								value="${loanInformationDto.fund.fundName}" /><br>
+								value="${loanInformationDto.fundName}" /><br>
 							</td>
 						</tr>
 					</table>
@@ -494,7 +494,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />)
 									<html-el:link styleId="loanaccountdetail.link.removeFee"
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.office.officeId}&recordLoanOfficerId=${loanInformationDto.personnel.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 										<mifos:mifoslabel name="loan.remove" />
 									</html-el:link> <br>
 									</span>
@@ -523,7 +523,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<mifos:mifoslabel name="loan.view_change_log" />
 							</html-el:link><br>
 							<html-el:link styleId="loanaccountdetail.link.viewTransactionHistory"
-								href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Center.TransactionHistory" />
 							</html-el:link> </span></td>
 						</tr>
@@ -543,8 +543,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<span class="fontnormal8pt"> <c:if
 										test="${(loanInformationDto.accountState.id=='5' || loanInformationDto.accountState.id=='9')}">
 										<html-el:link styleId="loanaccountdetail.link.applyPayment"
-											href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountType.accountTypeId}
-																	&recordOfficeId=${loanInformationDto.office.officeId}&recordLoanOfficerId=${loanInformationDto.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${loanInformationDto.prdOfferingName}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&accountType=${loanInformationDto.accountType.accountTypeId}
+																	&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.apply_payment" />
 										</html-el:link>
 										<br>
@@ -564,13 +564,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 
 												<c:if test="${loanInformationDto.accountState.id=='6'}">
 													<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-														href="applyAdjustment.do?method=loadAdjustmentWhenObligationMet&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+														href="applyAdjustment.do?method=loadAdjustmentWhenObligationMet&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 														<mifos:mifoslabel name="loan.apply_adjustment" />
 													</html-el:link>
 												</c:if>
 												<c:if test="${loanInformationDto.accountState.id!='6'}">
 													<html-el:link styleId="loanaccountdetail.link.applyAdjustment"
-														href="applyAdjustment.do?method=loadAdjustment&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+														href="applyAdjustment.do?method=loadAdjustment&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 														<mifos:mifoslabel name="loan.apply_adjustment" />
 													</html-el:link>
 												</c:if>
@@ -598,7 +598,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<tr>
 										<td class="paddingL10"><span class="fontnormal8pt">
 										<html-el:link styleId="loanaccountdetail.link.disburseLoan"
-											href="loanDisbursementAction.do?method=load&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											href="loanDisbursementAction.do?method=load&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="loan.disburseloan" />
 										</html-el:link> <br>
 										</span></td>
@@ -608,7 +608,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<c:when
 									test="${ loanInformationDto.accountState.id=='9' || loanInformationDto.accountState.id=='5'}">
 									<span class="fontnormal8pt"> <html-el:link styleId="loanaccountdetail.link.repayLoan"
-										href="repayLoanAction.do?method=loadRepayment&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+										href="repayLoanAction.do?method=loadRepayment&accountId=${loanInformationDto.accountId}&globalAccountNum=${loanInformationDto.globalAccountNum}&prdOfferingName=${loanInformationDto.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.repay" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 									</html-el:link><br>
