@@ -20,10 +20,13 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 
 public interface OfficeServiceFacade {
 
     OfficeHierarchyByLevelDto retrieveAllOffices();
+
+    OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId);
 
 }

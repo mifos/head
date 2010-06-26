@@ -23,7 +23,7 @@ package org.mifos.framework.formulaic;
 import java.util.Date;
 import java.util.Map;
 
-import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateComponentValidator extends IsInstanceValidator {

@@ -109,7 +109,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -161,6 +160,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -339,7 +339,7 @@ public class TestObjectFactory {
 
     public static List<CustomFieldDto> getCustomFields() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        CustomFieldDto fee = new CustomFieldDto(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC);
+        CustomFieldDto fee = new CustomFieldDto(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC.getValue());
         customFields.add(fee);
         return customFields;
     }
@@ -881,7 +881,7 @@ public class TestObjectFactory {
 
     private static List<CustomFieldDto> getCustomFieldView() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(new Short("8"), "custom field value", CustomFieldType.NONE));
+        customFields.add(new CustomFieldDto(new Short("8"), "custom field value", null));
         return customFields;
     }
 

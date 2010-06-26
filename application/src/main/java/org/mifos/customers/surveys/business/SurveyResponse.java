@@ -22,11 +22,11 @@ package org.mifos.customers.surveys.business;
 
 import java.util.Date;
 
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class SurveyResponse implements Comparable<SurveyResponse> {
