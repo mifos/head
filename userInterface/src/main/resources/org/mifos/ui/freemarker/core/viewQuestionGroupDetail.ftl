@@ -87,16 +87,23 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="view_question_groups"/>
+            <span id="page.id" title="view_question_groups_details"/>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
                       <span class="fontnormal8pt">
                           <a href="AdminAction.do?method=load">Admin</a> /
                       </span>
-                      <span class="fontnormal8ptbold">
-                          View Question Groups
+                      <span class="fontnormal8pt">
+                          <a href="viewQuestionGroups.ftl">View Question Groups</a> /
                       </span>
+                        [#if error_message_code??]
+                            [@spring.message error_message_code/]
+                        [#else]
+                          <span class="fontnormal8ptbold">
+                            ${Request.questionGroupDetail.title}
+                          </span>
+                        [/#if]
                     </td>
                 </tr>
             </table>
@@ -104,30 +111,10 @@
                 <tr>
                     <td width="70%" align="left" valign="middle" class="paddingL15T15">
                         <div style="padding:3px" class="headingorange">
-                            View Question Groups
+                            [#if !error_message_code??]
+                                ${Request.questionGroupDetail.title}
+                            [/#if]
                             <br/>
-                            <span class="fontnormal">
-                                Click on a question group below to view details and make changes or
-                                <a href="createQuestionGroup.ftl">
-                                    define a new question group
-                                </a>
-                            </span>
-                            <br/>
-                            <br/>
-                            <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                                [#list questionGroups as questionGroup]
-                                <tr class="fontnormal">
-                                    <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9"
-                                                        height="11"/></td>
-                                    <td width="99%">
-                                        <a href="viewQuestionGroupDetail.ftl?questionGroupId=${questionGroup.id}">
-                                            ${questionGroup.title}
-                                            <br/>
-                                        </a>
-                                    </td>
-                                </tr>
-                                [/#list]
-                            </table>
                         </div>
                     </td>
                 </tr>

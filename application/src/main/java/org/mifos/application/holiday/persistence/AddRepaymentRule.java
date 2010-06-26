@@ -46,7 +46,7 @@ public class AddRepaymentRule extends Upgrade {
     public AddRepaymentRule(int higherVersion, RepaymentRuleTypes type, short locale, String message) {
         super(higherVersion);
         if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
+            throw new RuntimeException(WRONG_CONSTRUCTOR);
         }
         this.type = type;
         this.locale = locale;

@@ -1,4 +1,4 @@
 -- this update add a FOO table
-create table FOO ( COL INTEGER );
-insert into FOO(COL) VALUES(53);
-update DATABASE_VERSION set DATABASE_VERSION = 79 where DATABASE_VERSION = 78;
+create table foo ( col integer );
+insert into foo(col) values(53);
+update database_version set database_version = 79 where database_version = 78;

@@ -109,7 +109,30 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldThrowExceptionForDupliacateQuestion() throws ApplicationException {
+    public void shouldGetQuestionGroupById() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
+        assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
+        assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionGroupByIdFailure() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
+        try {
+            questionnaireService.getQuestionGroup(maxQuestionGroupId+1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldThrowExceptionForDuplicateQuestion() throws ApplicationException {
         long offset = System.currentTimeMillis();
         String questionTitle = "Title" + offset;
         defineQuestion(questionTitle, DATE);

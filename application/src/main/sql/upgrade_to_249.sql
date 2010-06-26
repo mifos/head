@@ -1,18 +1,18 @@
-CREATE TABLE  MAX_MIN_INTEREST_RATE(
-ACCOUNT_ID INTEGER   AUTO_INCREMENT NOT NULL,
-  MIN_INTEREST_RATE  DECIMAL(21,4) NOT NULL,
-  MAX_INTEREST_RATE  DECIMAL(21,4) NOT NULL,
-  PRIMARY KEY(ACCOUNT_ID),
-FOREIGN KEY(ACCOUNT_ID)
-    REFERENCES  LOAN_ACCOUNT(ACCOUNT_ID)
-      ON DELETE NO ACTION
-      ON UPDATE NO ACTION
+create table  max_min_interest_rate(
+account_id integer   auto_increment not null,
+  min_interest_rate  decimal(21,4) not null,
+  max_interest_rate  decimal(21,4) not null,
+  primary key(account_id),
+foreign key(account_id)
+    references  loan_account(account_id)
+      on delete no action
+      on update no action
 )
-ENGINE=InnoDB CHARACTER SET utf8;
+engine=innodb character set utf8;
 
-INSERT INTO MAX_MIN_INTEREST_RATE (ACCOUNT_ID, MIN_INTEREST_RATE, MAX_INTEREST_RATE)
-SELECT LOAN_ACCOUNT.ACCOUNT_ID, LOAN_OFFERING.MIN_INTEREST_RATE, LOAN_OFFERING.MAX_INTEREST_RATE
-FROM LOAN_ACCOUNT, LOAN_OFFERING
-WHERE LOAN_ACCOUNT.PRD_OFFERING_ID = LOAN_OFFERING.PRD_OFFERING_ID;
+insert into max_min_interest_rate (account_id, min_interest_rate, max_interest_rate)
+select loan_account.account_id, loan_offering.min_interest_rate, loan_offering.max_interest_rate
+from loan_account, loan_offering
+where loan_account.prd_offering_id = loan_offering.prd_offering_id;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 249 WHERE DATABASE_VERSION = 248;
+update database_version set database_version = 249 where database_version = 248;

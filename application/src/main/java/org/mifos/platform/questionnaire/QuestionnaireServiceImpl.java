@@ -93,6 +93,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return (Long) result.get(0) > 0;
     }
 
+    @Override
+    public QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException{
+        QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
+        if(questionGroup == null){
+            throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
+        }
+        return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
+    }
+
     private void persistQuestion(Question question) throws ApplicationException {
         try {
             questionDao.create(question);

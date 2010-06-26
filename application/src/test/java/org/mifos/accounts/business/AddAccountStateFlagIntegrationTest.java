@@ -92,7 +92,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
             upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
                     "NewAccountStateFlag", TEST_LOCALE, "NewAccountStateFlag");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddAccountStateFlag.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "NewAccountStateFlag";
 

@@ -8,16 +8,16 @@
 
 	<class
 		name="org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity"
-		table="PRD_OFFERING_FEES">
-		<id name="prdOfferingFeeId" column="PRD_OFFERING_FEE_ID"
+		table="prd_offering_fees">
+		<id name="prdOfferingFeeId" column="prd_offering_fee_id"
 			access="field">
 			<generator class="native" />
 		</id>
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+		<many-to-one name="loanOffering" column="prd_offering_id"
 			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			cascade="none" insert="true" update="true" unique="true"
 			access="field" />
-		<many-to-one name="fees" column="FEE_ID"
+		<many-to-one name="fees" column="fee_id"
 			class="org.mifos.accounts.fees.business.FeeBO" cascade="none"
 			insert="true" update="true" unique="true" access="field" />
 	</class>
