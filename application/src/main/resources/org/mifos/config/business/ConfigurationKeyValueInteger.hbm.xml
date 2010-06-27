@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 	<class name="org.mifos.config.business.ConfigurationKeyValueInteger"
-		table="CONFIG_KEY_VALUE_INTEGER">
-		<id name="configurationId" column="CONFIGURATION_ID" type="integer"	access="field">
+		table="config_key_value_integer">
+		<id name="configurationId" column="configuration_id" type="integer"	access="field">
 			<generator class="native" />
 		</id>
-        <property name="key" column="CONFIGURATION_KEY" type="string" />
-        <property name="value" column="CONFIGURATION_VALUE" type="integer" />	
+        <property name="key" column="configuration_key" type="string" />
+        <property name="value" column="configuration_value" type="integer" />	
 	</class>
 	<query name="getConfigurationKeyValueByKey">
 		<![CDATA[from org.mifos.config.business.ConfigurationKeyValueInteger as config where config.key = :KEY]]>

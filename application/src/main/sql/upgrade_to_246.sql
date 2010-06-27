@@ -1,33 +1,33 @@
-ALTER TABLE HOLIDAY
-    DROP FOREIGN KEY holiday_ibfk_1;
+alter table holiday
+    drop foreign key holiday_ibfk_1;
 
-ALTER TABLE HOLIDAY
-    DROP PRIMARY KEY;
+alter table holiday
+    drop primary key;
 
-ALTER TABLE HOLIDAY
-    ADD COLUMN HOLIDAY_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY;
+alter table holiday
+    add column holiday_id int not null auto_increment primary key;
     
-CREATE TABLE OFFICE_HOLIDAY (
-  OFFICE_ID SMALLINT,
-  HOLIDAY_ID INT,
-  PRIMARY KEY(OFFICE_ID, HOLIDAY_ID),
-  FOREIGN KEY(OFFICE_ID)
-    REFERENCES OFFICE(OFFICE_ID)
-      ON DELETE NO ACTION
-      ON UPDATE NO ACTION,
-  FOREIGN KEY(HOLIDAY_ID)
-    REFERENCES HOLIDAY(HOLIDAY_ID)
-      ON DELETE NO ACTION
-      ON UPDATE NO ACTION
+create table office_holiday (
+  office_id smallint,
+  holiday_id int,
+  primary key(office_id, holiday_id),
+  foreign key(office_id)
+    references office(office_id)
+      on delete no action
+      on update no action,
+  foreign key(holiday_id)
+    references holiday(holiday_id)
+      on delete no action
+      on update no action
 )
-ENGINE=InnoDB CHARACTER SET utf8;
+engine=innodb character set utf8;
 
-UPDATE OFFICE_HOLIDAY, OFFICE, HOLIDAY 
-    SET OFFICE_HOLIDAY.OFFICE_ID = OFFICE.OFFICE_ID, 
-        OFFICE_HOLIDAY.HOLIDAY_ID = HOLIDAY.OFFICE_ID 
-    WHERE OFFICE.OFFICE_ID = HOLIDAY.OFFICE_ID;
+update office_holiday, office, holiday 
+    set office_holiday.office_id = office.office_id, 
+        office_holiday.holiday_id = holiday.office_id 
+    where office.office_id = holiday.office_id;
 
-ALTER TABLE HOLIDAY
-    DROP COLUMN OFFICE_ID;
+alter table holiday
+    drop column office_id;
     
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 246 WHERE DATABASE_VERSION = 245;
+update database_version set database_version = 246 where database_version = 245;

@@ -6,22 +6,22 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.office.business.OfficeAddressEntity" table="OFFICE_ADDRESS">
-        <id name="officeAdressId" column="OFFICE_ADDRESS_ID" type="short" access="field">
+    <class name="org.mifos.customers.office.business.OfficeAddressEntity" table="office_address">
+        <id name="officeAdressId" column="office_address_id" type="short" access="field">
             <generator class="native"/>
         </id>
         <component name="address" class="org.mifos.framework.business.util.Address">
-	        <property name="line1" column="ADDRESS_1" type="string"  />
-	        <property name="line2" column="ADDRESS_2" type="string"   />
-   	       <property name="line3" column="ADDRESS_3" type="string"  />
-	        <property name="city" column="CITY" type="string"   />
-	        <property name="state" column="STATE" type="string"   />
-	        <property name="country" column="COUNTRY" type="string"  />
-	        <property name="zip" column="ZIP" type="string"   />
-     		<property name="phoneNumber" column="TELEPHONE" type="string"  />
+	        <property name="line1" column="address_1" type="string"  />
+	        <property name="line2" column="address_2" type="string"   />
+   	       <property name="line3" column="address_3" type="string"  />
+	        <property name="city" column="city" type="string"   />
+	        <property name="state" column="state" type="string"   />
+	        <property name="country" column="country" type="string"  />
+	        <property name="zip" column="zip" type="string"   />
+     		<property name="phoneNumber" column="telephone" type="string"  />
         </component>
     
-    <many-to-one name="office" column="OFFICE_ID" class="org.mifos.customers.office.business.OfficeBO"  access="field" />
+    <many-to-one name="office" column="office_id" class="org.mifos.customers.office.business.OfficeBO"  access="field" />
     
     </class>
 

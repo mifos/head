@@ -51,10 +51,10 @@ public class Upgrade237 extends Upgrade {
      * Skip this upgrade for GK as they are going to upgrade this manually in multiple steps
      */
     private static boolean alreadyUpgraded(Connection connection) throws SQLException {
-        ResultSet rs = connection.createStatement().executeQuery("DESCRIBE FEES");
+        ResultSet rs = connection.createStatement().executeQuery("describe fees");
         Boolean skipUpdate = Boolean.FALSE;
         while (rs.next()) {
-            if (rs.getString(1).equals("FEE_AMOUNT") && rs.getString(2).equals("decimal(21,4)")) {
+            if (rs.getString(1).equalsIgnoreCase("fee_amount") && rs.getString(2).equals("decimal(21,4)")) {
                 skipUpdate = Boolean.TRUE;
             }
         }

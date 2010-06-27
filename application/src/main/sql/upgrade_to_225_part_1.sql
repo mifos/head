@@ -1,1 +1,1 @@
-INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME) VALUES(51,'Hungary','HU');
+insert into country(country_id,country_name,country_short_name) values(51,'Hungary','HU');

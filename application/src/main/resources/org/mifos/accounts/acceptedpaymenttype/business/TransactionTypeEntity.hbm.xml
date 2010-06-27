@@ -5,11 +5,11 @@
                             
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity" table="TRANSACTION_TYPE">
-        <id name="transactionId" column="TRANSACTION_ID" type="short">
+    <class name="org.mifos.accounts.acceptedpaymenttype.business.TransactionTypeEntity" table="transaction_type">
+        <id name="transactionId" column="transaction_id" type="short">
             <generator class="native"/>
         </id>
- 		<property name="transactionName" column="TRANSACTION_NAME" type="string" not-null="true" />	  
+ 		<property name="transactionName" column="transaction_name" type="string" not-null="true" />	  
     </class>
      <query name="getPaymentTypes">
    	       <![CDATA[ from TransactionTypeEntity as trasaction where trasaction.transactionId=:TRANSACTION_ID ]]>

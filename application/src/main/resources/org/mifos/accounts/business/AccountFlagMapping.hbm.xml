@@ -7,12 +7,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.business.AccountFlagMapping" table="ACCOUNT_FLAG_DETAIL">
-        <id name="accountFlagId" column="ACCOUNT_FLAG_ID" type="integer">
+    <class name="org.mifos.accounts.business.AccountFlagMapping" table="account_flag_detail">
+        <id name="accountFlagId" column="account_flag_id" type="integer">
             <generator class="native"/>
         </id>
-		<property name="createdBy" column="CREATED_BY" not-null="true" update="false" />        
-   		<property name="createdDate" column="CREATED_DATE" not-null="true" update="false"/>
-   		<many-to-one name="flag" column="FLAG_ID" not-null="true"/>   		
+		<property name="createdBy" column="created_by" not-null="true" update="false" />        
+   		<property name="createdDate" column="created_date" not-null="true" update="false"/>
+   		<many-to-one name="flag" column="flag_id" not-null="true"/>   		
     </class>
 </hibernate-mapping>

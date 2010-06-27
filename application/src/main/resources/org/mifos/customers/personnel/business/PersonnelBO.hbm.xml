@@ -7,20 +7,20 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.customers.personnel.business.PersonnelBO"
-		table="PERSONNEL">
-		<id name="personnelId" column="PERSONNEL_ID" type="short"
+		table="personnel">
+		<id name="personnelId" column="personnel_id" type="short"
 			access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer"
+		<version name="versionNo" column="version_no" type="integer"
 			unsaved-value="negative" />
-		<many-to-one name="level" column="LEVEL_ID"
+		<many-to-one name="level" column="level_id"
 			class="org.mifos.customers.personnel.business.PersonnelLevelEntity"
 			unique="true" lazy="false" />
-		<many-to-one name="office" column="OFFICE_ID"
+		<many-to-one name="office" column="office_id"
 			class="org.mifos.customers.office.business.OfficeBO" unique="true"
 			lazy="false" />
-		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
+		<many-to-one name="preferredLocale" column="preferred_locale"
 			class="org.mifos.application.master.business.SupportedLocalesEntity"
 			insert="true" update="true" cascade="none" />
 		<one-to-one name="personnelDetails"
@@ -28,59 +28,59 @@
 			cascade="all" lazy="false" />
 
 		<property name="globalPersonnelNum"
-			column="GLOBAL_PERSONNEL_NUM" type="string" />
-		<property name="displayName" column="DISPLAY_NAME"
+			column="global_personnel_num" type="string" />
+		<property name="displayName" column="display_name"
 			type="string" />
-		<many-to-one name="status" column="PERSONNEL_STATUS"
+		<many-to-one name="status" column="personnel_status"
 			class="org.mifos.customers.personnel.business.PersonnelStatusEntity" />
-		<property name="title" column="TITLE" type="integer" />
-		<property name="searchId" column="SEARCH_ID" type="string" />
-		<property name="maxChildCount" column="MAX_CHILD_COUNT"
+		<property name="title" column="title" type="integer" />
+		<property name="searchId" column="search_id" type="string" />
+		<property name="maxChildCount" column="max_child_count"
 			type="integer" />
-		<property name="encryptedPassword" column="PASSWORD"
+		<property name="encryptedPassword" column="password"
 			type="binary" access="field" />
-		<property name="userName" column="LOGIN_NAME" unique="true"
+		<property name="userName" column="login_name" unique="true"
 			type="string" access="field" />
-		<property name="emailId" column="EMAIL_ID" type="string"
+		<property name="emailId" column="email_id" type="string"
 			access="field" />
-		<property name="passwordChanged" column="PASSWORD_CHANGED"
+		<property name="passwordChanged" column="password_changed"
 			type="short" access="field" />
-		<property name="createdBy" column="CREATED_BY" type="short" />
-		<property name="createdDate" column="CREATED_DATE" type="date"
+		<property name="createdBy" column="created_by" type="short" />
+		<property name="createdDate" column="created_date" type="date"
 			access="field" />
-		<property name="updatedBy" column="UPDATED_BY" type="short" />
-		<property name="updatedDate" column="UPDATED_DATE" type="date" />
-		<property name="lastLogin" column="LAST_LOGIN" type="date"
+		<property name="updatedBy" column="updated_by" type="short" />
+		<property name="updatedDate" column="updated_date" type="date" />
+		<property name="lastLogin" column="last_login" type="date"
 			access="field" />
-		<property name="locked" column="LOCKED" type="short"
+		<property name="locked" column="locked" type="short"
 			access="field" />
-		<property name="noOfTries" column="NO_OF_TRIES" type="short"
+		<property name="noOfTries" column="no_of_tries" type="short"
 			access="field" />
 		<set name="personnelRoles" cascade="all,delete-orphan"
 			inverse="true" lazy="false">
-			<key column="PERSONNEL_ID" />
+			<key column="personnel_id" />
 			<one-to-many
 				class="org.mifos.customers.personnel.business.PersonnelRoleEntity" />
 		</set>
 		<set name="customFields" cascade="all" inverse="true"
-			table="PERSONNEL_CUSTOM_FIELD">
-			<key column="PERSONNEL_ID" />
+			table="personnel_custom_field">
+			<key column="personnel_id" />
 			<one-to-many
 				class="org.mifos.customers.personnel.business.PersonnelCustomFieldEntity" />
 		</set>
 		<set name="personnelMovements" cascade="all" lazy="false"
 			access="field">
-			<key column="PERSONNEL_ID" update="false" />
+			<key column="personnel_id" update="false" />
 			<one-to-many
 				class="org.mifos.customers.personnel.business.PersonnelMovementEntity" />
 		</set>
 		<set name="personnelNotes" cascade="all" inverse="true"
-			table="PERSONNEL_NOTES" lazy="true" order-by="COMMENT_ID desc"
+			table="personnel_notes" lazy="true" order-by="COMMENT_ID desc"
 			access="field">
-			<key column="PERSONNEL_ID" />
+			<key column="personnel_id" />
 			<many-to-many
 				class="org.mifos.customers.personnel.business.PersonnelNotesEntity"
-				column="COMMENT_ID" />
+				column="comment_id" />
 		</set>
 	</class>
 	<!-- This query obtains all the active loan officers under a particular office -->

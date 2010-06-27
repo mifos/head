@@ -1,6 +1,6 @@
 /* Added for jira issue 2730 */
-INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)VALUES
+insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag)values
 (81,'MaritalStatus',1,0,0),
 (82,'NumberOfChildren',1,0,0);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 241 WHERE DATABASE_VERSION = 240;
+update database_version set database_version = 241 where database_version = 240;

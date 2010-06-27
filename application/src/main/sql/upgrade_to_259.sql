@@ -1,26 +1,26 @@
-CREATE TABLE EVENTS (
-    ID INTEGER AUTO_INCREMENT NOT NULL,
-    EVENT_NAME VARCHAR(50) NOT NULL,
-    PRIMARY KEY (ID)
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table events (
+    id integer auto_increment not null,
+    event_name varchar(50) not null,
+    primary key (id)
+)engine=innodb character set utf8;
 
-CREATE TABLE ENTITY_EVENTS (
-    ID INTEGER AUTO_INCREMENT NOT NULL,
-    ENTITY_TYPE_ID  SMALLINT NOT NULL,
-    EVENT_ID INTEGER NOT NULL,
-    DESCRIPTION VARCHAR(200) NOT NULL,
-    PRIMARY KEY (ID),
-    FOREIGN KEY (ENTITY_TYPE_ID) REFERENCES ENTITY_MASTER(ENTITY_TYPE_ID),
-    FOREIGN KEY (EVENT_ID) REFERENCES EVENTS(ID)
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table entity_events (
+    id integer auto_increment not null,
+    entity_type_id  smallint not null,
+    event_id integer not null,
+    description varchar(200) not null,
+    primary key (id),
+    foreign key (entity_type_id) references entity_master(entity_type_id),
+    foreign key (event_id) references events(id)
+)engine=innodb character set utf8;
 
-CREATE TABLE QUESTION_GROUP_ENTITY_EVENTS(
-    ID INTEGER AUTO_INCREMENT NOT NULL,
-    QUESTION_GROUP_ID INTEGER NOT NULL,
-    ENTITY_EVENT_ID INTEGER NOT NULL,
-    PRIMARY KEY (ID),
-    FOREIGN KEY (QUESTION_GROUP_ID) REFERENCES QUESTION_GROUP(ID),
-    FOREIGN KEY (ENTITY_EVENT_ID) REFERENCES ENTITY_EVENTS(ID)
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table question_group_entity_events(
+    id integer auto_increment not null,
+    question_group_id integer not null,
+    entity_event_id integer not null,
+    primary key (id),
+    foreign key (question_group_id) references question_group(id),
+    foreign key (entity_event_id) references entity_events(id)
+)engine=innodb character set utf8;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 259 WHERE DATABASE_VERSION = 258;
+update database_version set database_version = 259 where database_version = 258;

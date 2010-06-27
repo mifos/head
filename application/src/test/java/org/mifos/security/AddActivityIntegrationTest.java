@@ -135,7 +135,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, null, TEST_LOCALE,
                     "NewActivity");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddActivity.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddActivity.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "NewActivity";
 

@@ -34,4 +34,4 @@ where ifnull(asch.account_status_change_id, -1) =
         where c2.customer_id = c.customer_id);
 
     
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 247 WHERE DATABASE_VERSION = 246;
+update database_version set database_version = 247 where database_version = 246;

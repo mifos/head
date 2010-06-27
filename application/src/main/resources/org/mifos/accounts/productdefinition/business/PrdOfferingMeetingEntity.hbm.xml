@@ -6,14 +6,14 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" table="PRD_OFFERING_MEETING">
-        <id name="prdOfferingMeetingId" column="PRD_OFFERING_MEETING_ID" access="field">
+    <class name="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" table="prd_offering_meeting">
+        <id name="prdOfferingMeetingId" column="prd_offering_meeting_id" access="field">
             <generator class="native"/>
         </id>
- 		<property name="meetingType" column="PRD_OFFERING_MEETING_TYPE_ID" access="field"/>
+ 		<property name="meetingType" column="prd_offering_meeting_type_id" access="field"/>
 
- 		<many-to-one name="prdOffering" column="PRD_OFFERING_ID" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" access="field"/>
-        <many-to-one name="meeting"  column="PRD_MEETING_ID" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"/>
+ 		<many-to-one name="prdOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="none" insert="true" update="true" access="field"/>
+        <many-to-one name="meeting"  column="prd_meeting_id" class="org.mifos.application.meeting.business.MeetingBO" cascade="all" insert="true" update="true" unique="true"/>
     </class>
     
 </hibernate-mapping>
