@@ -894,17 +894,20 @@ public class CustomerServiceImpl implements CustomerService {
                 client.setUpdateDetails();
                 customerDao.save(client);
             }
-            hibernateTransactionHelper.flushSession();
+            hibernateTransactionHelper.commitTransaction();
 
             if (regenerateSchedules) {
+                hibernateTransactionHelper.startTransaction();
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
                 handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+                hibernateTransactionHelper.commitTransaction();
             }
-            hibernateTransactionHelper.commitTransaction();
             return group;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
+        } finally {
+            //hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -1091,7 +1094,6 @@ public class CustomerServiceImpl implements CustomerService {
         for (AccountBO account : accounts) {
             account.handleChangeInMeetingSchedule(workingDays, orderedUpcomingHolidays);
             customerDao.save(account);
-            this.hibernateTransactionHelper.flushSession();
         }
 
         for (CustomerBO child : customer.getChildren()) {

@@ -50,6 +50,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.util.StandardTestingService;
@@ -74,6 +75,9 @@ public class GroupTransferServiceIntegrationTest {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private CustomerDao customerDao;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -148,7 +152,7 @@ public class GroupTransferServiceIntegrationTest {
         customerService.transferGroupTo(groupForTransfer, centerWithNoChildren);
 
         // verification
-        groupForTransfer = IntegrationTestObjectMother.findGroupBy(groupForTransfer.getGlobalCustNum());
+        groupForTransfer = customerDao.findGroupBySystemId(groupForTransfer.getGlobalCustNum());
 
         assertThat(groupForTransfer.getStatus().isGroupActive(), is(false));
         TestUtils.assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(groupForTransfer, WeekDay.getJodaWeekDay(tomorrowTwoWeeksAgo.getDayOfWeek()));
@@ -191,16 +195,16 @@ public class GroupTransferServiceIntegrationTest {
         IntegrationTestObjectMother.createClient(child1, child1.getCustomerMeetingValue());
 
         // pre-verification
-        ClientBO client = IntegrationTestObjectMother.findClientBy(child1.getGlobalCustNum());
+        ClientBO client = customerDao.findClientBySystemId(child1.getGlobalCustNum());
         TestUtils.assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(client, WeekDay.getJodaWeekDay(tomorrowTwoWeeksAgo.getDayOfWeek()));
 
         // exercise test
-        groupForTransfer = IntegrationTestObjectMother.findGroupBy(groupForTransfer.getGlobalCustNum());
+        groupForTransfer = customerDao.findGroupBySystemId(groupForTransfer.getGlobalCustNum());
         groupForTransfer.setUserContext(TestUtils.makeUser());
         customerService.transferGroupTo(groupForTransfer, centerWithNoChildren);
 
         // verification
-        client = IntegrationTestObjectMother.findClientBy(child1.getGlobalCustNum());
+        client = customerDao.findClientBySystemId(child1.getGlobalCustNum());
 
         TestUtils.assertThatAllCustomerSchedulesOccuringBeforeOrOnCurrentInstallmentPeriodRemainUnchanged(client, WeekDay.getJodaWeekDay(tomorrowTwoWeeksAgo.getDayOfWeek()));
         TestUtils.assertThatAllCustomerSchedulesOccuringAfterCurrentInstallmentPeriodFallOnDayOfWeek(client, WeekDay.getJodaWeekDay(todaySixWeeksAgo.getDayOfWeek()));
