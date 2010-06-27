@@ -20,6 +20,7 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.framework.business.service.DataTransferObject;
 
 public class LoanInformationDto implements DataTransferObject {
@@ -37,7 +38,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final Set<AccountActionDateEntity> accountActionDates;
     private final GracePeriodTypeEntity gracePeriodType;
     private final InterestTypesEntity interestType;
-    private MeetingBO loanMeeting;
+    private final MeetingBO loanMeeting;
     private final Set<AccountNotesEntity> accountNotes;
     private final List<AccountNotesEntity> recentAccountNotes;
     private final AccountTypeEntity accountType;
@@ -66,6 +67,10 @@ public class LoanInformationDto implements DataTransferObject {
     private final LoanPerformanceHistoryEntity performanceHistory;
     private final boolean group;
 
+
+    private final Boolean activeSurveys;
+    private final List<SurveyDto> accountSurveys;
+
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, AccountStateEntity accountState,
             Set<AccountFlagMapping> accountFlags, Date disbursementDate, boolean redone, Integer businessActivityId,
             Integer accountId,Set<AccountActionDateEntity> accountActionDates,
@@ -77,7 +82,8 @@ public class LoanInformationDto implements DataTransferObject {
             Short recurAfter, Short recurrenceId, boolean prinDueLastInst, Short noOfInstallments,
             MaxMinNoOfInstall maxMinNoOfInstall, Short gracePeriodDuration, String fundName, Integer collateralTypeId,
             String collateralNote, String externalId, Set<AccountCustomFieldEntity> accountCustomFields,
-            Set<AccountFeesEntity> accountFees, Date createdDate, LoanPerformanceHistoryEntity performanceHistory, boolean group) {
+            Set<AccountFeesEntity> accountFees, Date createdDate, LoanPerformanceHistoryEntity performanceHistory, boolean group,
+            final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
         super();
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -120,6 +126,9 @@ public class LoanInformationDto implements DataTransferObject {
         this.createdDate = createdDate;
         this.performanceHistory = performanceHistory;
         this.group = group;
+
+        this.activeSurveys = activeSurveys;
+        this.accountSurveys = accountSurveys;
     }
 
     public String getPrdOfferingName() {
@@ -285,4 +294,14 @@ public class LoanInformationDto implements DataTransferObject {
     public boolean isGroup() {
         return this.group;
     }
+
+    public Boolean getActiveSurveys() {
+        return this.activeSurveys;
+    }
+
+    public List<SurveyDto> getAccountSurveys() {
+        return this.accountSurveys;
+    }
+
+
 }

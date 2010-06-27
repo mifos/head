@@ -97,7 +97,11 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -861,6 +865,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             fundName = loan.getFund().getFundName();
         }
 
+        SurveysPersistence surveysPersistence = new SurveysPersistence();
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
+
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
@@ -874,6 +882,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                         loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(), loan.getMaxMinNoOfInstall(),
                                         loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
                                         loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
-                                        loan.getPerformanceHistory(), loan.getCustomer().isGroup());
+                                        loan.getPerformanceHistory(), loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
     }
 }

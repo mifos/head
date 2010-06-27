@@ -26,12 +26,12 @@ import org.mifos.framework.business.service.DataTransferObject;
 /**
  *
  */
-public class CustomerSurveyDto implements DataTransferObject {
+public class SurveyDto implements DataTransferObject {
     private final Integer instanceId;
     private final String surveyName;
     private final Date dateConducted;
 
-    public CustomerSurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
+    public SurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
         this.instanceId = instanceId;
         this.surveyName = surveyName;
         this.dateConducted = dateConducted;

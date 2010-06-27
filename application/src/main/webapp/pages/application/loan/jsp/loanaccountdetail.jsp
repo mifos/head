@@ -675,7 +675,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									<td width="70%" class="paddingL10"><span
 										class="fontnormal8pt"> <a id="loanaccountdetail.link.survey"
 										href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=loan">
-									<c:out value="${surveyInstance.survey.name}" /> </a> </span></td>
+									<c:out value="${surveyInstance.surveyName}" /> </a> </span></td>
 									<td width="30%" align="left" class="paddingL10"><span
 										class="fontnormal8pt"> <c:out
 										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />

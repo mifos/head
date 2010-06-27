@@ -594,12 +594,9 @@ public class LoanAccountAction extends AccountAppAction {
         loadMasterData(request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
-        List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(getAccountBusinessService().findBySystemId(globalAccountNum));
-        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
-        request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
-        request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
-        request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
+        request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
+        request.setAttribute(CustomerConstants.SURVEY_COUNT, loanInformationDto.getActiveSurveys());
+        request.setAttribute(AccountConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
 
         Integer administrativeDocumentsIsEnabled = configurationPersistence.getConfigurationKeyValueInteger(
                 ADMINISTRATIVE_DOCUMENT_IS_ENABLED).getValue();

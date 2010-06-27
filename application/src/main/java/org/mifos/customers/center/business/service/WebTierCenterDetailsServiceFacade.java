@@ -37,7 +37,7 @@ import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ServiceException;
@@ -88,7 +88,7 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
 
         Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
 
-        List<CustomerSurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
+        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
 
         List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
 

@@ -878,4 +878,17 @@ select coll.*,
           ]]>
 	</sql-query>
 
+	<sql-query name="Account.getAccountSurveyDto">
+		<return-scalar column="instanceId" type="integer" />
+		<return-scalar column="surveyName" type="string" />
+		<return-scalar column="dateConducted" type="date" />
+		<![CDATA[SELECT si.instance_id as instanceId,
+				s.survey_name as surveyName,
+				si.date_conducted as dateConducted
+				from survey_instance si 
+				join survey s on s.survey_id = si.survey_id
+				where si.account_id = :ACCOUNT_ID
+				order by s.survey_name
+		]]>
+	</sql-query>
 </hibernate-mapping>
