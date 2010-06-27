@@ -613,6 +613,10 @@ public class LoanAccountAction extends AccountAppAction {
 
         }
 
+        //John W - temporarily put back because needed in applychargeaction - update
+        LoanBO loan = new LoanDaoHibernate(new GenericDaoHibernate()).findById(loanInformationDto.getAccountId());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
