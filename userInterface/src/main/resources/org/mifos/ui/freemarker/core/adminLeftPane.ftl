@@ -6,7 +6,7 @@
 	  <div class="left-pane-content">
    	  </div>
 </div>-->
- <div  class="sidebar ht750">
+ <div  class="sidebar ht600">
   <div>
     <p class="orangetab">[@spring.message "administrativeTasks" /]</p>
     <p class="paddingLeft marginTop10">[@spring.message "searchbynamesystemIDoraccountnumber"/]<br />

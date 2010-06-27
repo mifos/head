@@ -11,7 +11,7 @@
 [#-- usage   [@mifos.topNavigation currentTab="Home" /] --]
 [#macro topNavigation currentTab]
 <div>
-    <div class="topAlign append-1">
+    <div class="topAlign">
 		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>
 		&nbsp;|&nbsp;
 		<a href="loginAction.do?method=logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
@@ -44,21 +44,11 @@
 </div>
 [/#macro]
 
-[#function returnMessage messagesIndex messagesList]
-		[#list messagesList as messagesList]
-			[#if messagesList_index==messagesIndex]
-						[#return messagesList]
-			[/#if]
-		[/#list]      
-[/#function]
-
-[#macro crumbs breadcrumbsLinks breadcrumbsMessages]
+[#macro crumbs breadcrumbs]
 <div class="span-20 bluedivs paddingLeft">
-	[#assign links =breadcrumbsLinks /]
-	[#assign messages =breadcrumbsMessages /]
-  		[#list messages as messages]
+	    [#list breadcrumbs as messages]
   			[#if messages_has_next]
-    			<a href="${returnMessage(messages_index,links)}">[@spring.message "${messages}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages}" /]</span>
+    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages.message}" /]</span>
   			[/#if]
   		[/#list]
  </div>

@@ -19,14 +19,18 @@ public class ViewOrganizationSettingsController extends AbstractController{
     private ViewOrganizationSettingsServiceFacade viewOrganizationSettingsServiceFacade;
 
     //BreadCrumbsLinks linksList;
-    List<String> linksList=new LinkedList<String> ();
-    List<String> messagesList=new LinkedList<String> ();
+    BreadCrumbsLinks crumb1=new BreadCrumbsLinks();
+    BreadCrumbsLinks crumb2=new BreadCrumbsLinks();
+    List<BreadCrumbsLinks> linksList=new LinkedList<BreadCrumbsLinks> ();
 
     ViewOrganizationSettingsController(){
         super();
-        this.linksList.add(this.linksList.size(),"admin.ftl");
-        this.messagesList.add(this.messagesList.size(),"admin");
-        this.messagesList.add(this.messagesList.size(),"viewOrganizationSettings");
+        crumb1.setLink("admin.ftl");
+        crumb1.setMessage("admin");
+        crumb2.setLink("viewOrganizationSettings.ftl");
+        crumb2.setMessage("viewOrganizationSettings");
+        linksList.add(crumb1);
+        linksList.add(crumb2);
     }
 
 
@@ -47,7 +51,7 @@ public class ViewOrganizationSettingsController extends AbstractController{
          try {
              Properties p = viewOrganizationSettingsServiceFacade.getOrganizationSettings(request.getSession());
              modelAndView.addObject("properties", p);
-            modelAndView.addObject("bluecrumbmessages",messagesList);
+            modelAndView.addObject("breadcrumbs",linksList);
          } catch (Exception e) {
              e.printStackTrace();
          }

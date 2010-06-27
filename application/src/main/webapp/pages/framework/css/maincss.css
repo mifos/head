@@ -113,10 +113,9 @@ margin-right:180px;
 .bluedivs {
 	background-color:#d7deee;
 	/*color:#666666;*/
-	width:95%;
+	width:80%;
 	padding-top:4px;
 	padding-bottom:3px;
-	padding-right:20%;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -312,7 +311,7 @@ margin-right:180px;
 	float:left;
 }
 .ht600 {
-	height:650px;
+	height:620px;
 }
 .ht750 {
 	height:750px;
@@ -423,9 +422,8 @@ margin-right:180px;
 	text-decoration:none;
 }
 .paddingLeft {
-	padding-left:15px;
-	font-weight:bold;
-	font-size:8pt;
+	padding-left:15px;	
+	font-size:9pt;
 }
 .red { 
 	color:#FF0000;

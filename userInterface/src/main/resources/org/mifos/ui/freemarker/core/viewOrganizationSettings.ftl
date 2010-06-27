@@ -11,7 +11,7 @@
   <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
     <div class="span-24">
-  		[@mifos.crumbs bluecrumbsLinks bluecrumbmessages /]
+  		[@mifos.crumbs breadcrumbs/]
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "organizationalSettings"/] </span></p>
         <p class="span-24">
