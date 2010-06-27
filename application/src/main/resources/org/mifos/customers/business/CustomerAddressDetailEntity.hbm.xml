@@ -6,21 +6,21 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerAddressDetailEntity" table="CUSTOMER_ADDRESS_DETAIL">
-        <id name="customerAddressId" column="CUSTOMER_ADDRESS_ID" type="integer" unsaved-value="null" access="field">
+    <class name="org.mifos.customers.business.CustomerAddressDetailEntity" table="customer_address_detail">
+        <id name="customerAddressId" column="customer_address_id" type="integer" unsaved-value="null" access="field">
             <generator class="native"/>
         </id>
         <component name="address" class="org.mifos.framework.business.util.Address" access="field">
-	        <property name="line1" column="LINE_1" type="string"  />
-	        <property name="line2" column="LINE_2" type="string"   />
-   	       <property name="line3" column="LINE_3" type="string"  />
-	        <property name="city" column="CITY" type="string"   />
-	        <property name="state" column="STATE" type="string"   />
-	        <property name="country" column="COUNTRY" type="string"  />
-	        <property name="zip" column="ZIP" type="string"   />
-     		<property name="phoneNumber" column="PHONE_NUMBER" type="string"  />
+	        <property name="line1" column="line_1" type="string"  />
+	        <property name="line2" column="line_2" type="string"   />
+   	       <property name="line3" column="line_3" type="string"  />
+	        <property name="city" column="city" type="string"   />
+	        <property name="state" column="state" type="string"   />
+	        <property name="country" column="country" type="string"  />
+	        <property name="zip" column="zip" type="string"   />
+     		<property name="phoneNumber" column="phone_number" type="string"  />
         </component>
-        <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  unique="true" access="field"/>        
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO"  unique="true" access="field"/>        
     </class>
     
 </hibernate-mapping>

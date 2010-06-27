@@ -86,6 +86,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -93,6 +94,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -611,6 +613,10 @@ public class LoanAccountAction extends AccountAppAction {
 
         }
 
+        //John W - temporarily put back because needed in applychargeaction - update
+        LoanBO loan = new LoanDaoHibernate(new GenericDaoHibernate()).findById(loanInformationDto.getAccountId());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -824,8 +830,8 @@ public class LoanAccountAction extends AccountAppAction {
 
         String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
         handleRepaymentsIndependentOfMeetingIfConfigured(request, loanActionForm, recurMonth);
+        LoanBO loanBO = new LoanDaoHibernate(new GenericDaoHibernate()).findByGlobalAccountNum(globalAccountNum);
 
-        LoanBO loanBO = getLoanBO(request);
         loanBO.setUserContext(getUserContext(request));
         SessionUtils.setAttribute(PROPOSED_DISBURSAL_DATE, loanBO.getDisbursementDate(), request);
         SessionUtils.removeAttribute(LOANOFFERING, request);

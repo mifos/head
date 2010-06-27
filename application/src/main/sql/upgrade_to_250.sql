@@ -72,4 +72,4 @@ left join    (select a.account_id,
 set ls.penalty_paid = abs(ifnull(correct.amount_paid,0));
 
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 250 WHERE DATABASE_VERSION = 249;
+update database_version set database_version = 250 where database_version = 249;

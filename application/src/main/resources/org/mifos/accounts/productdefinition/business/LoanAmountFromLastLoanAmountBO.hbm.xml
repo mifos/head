@@ -8,18 +8,18 @@
 
 	<class
 		name="org.mifos.accounts.productdefinition.business.LoanAmountFromLastLoanAmountBO"
-		table="LOAN_AMOUNT_FROM_LAST_LOAN">
+		table="loan_amount_from_last_loan">
 		<id name="loanAmountFromLastLoanID"
-			column="LOAN_AMOUNT_FROM_LAST_LOAN_ID" access="field"
+			column="loan_amount_from_last_loan_id" access="field"
 			unsaved-value="-1">
 			<generator class="native" />
 		</id>
-		<property name="endRange" column="END_RANGE" />
-		<property name="startRange" column="START_RANGE" />
-		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
-		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" />
-		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" />
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+		<property name="endRange" column="end_range" />
+		<property name="startRange" column="start_range" />
+		<property name="minLoanAmount" column="min_loan_amount" />
+		<property name="maxLoanAmount" column="max_loan_amnt" />
+		<property name="defaultLoanAmount" column="default_loan_amount" />
+		<many-to-one name="loanOffering" column="prd_offering_id"
 			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			unique="true" lazy="false" cascade="none" insert="true" update="true"
 			access="field" />

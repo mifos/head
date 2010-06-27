@@ -1,4 +1,4 @@
-UPDATE PRD_CATEGORY_STATUS SET PRD_CATEGORY_STATUS_ID = 2 WHERE PRD_CATEGORY_STATUS_ID = 0;
-UPDATE PRD_CATEGORY SET STATE = 2 WHERE STATE = 0;
+update prd_category_status set prd_category_status_id = 2 where prd_category_status_id = 0;
+update prd_category set state = 2 where state = 0;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 215 WHERE DATABASE_VERSION = 214;
+update database_version set database_version = 215 where database_version = 214;

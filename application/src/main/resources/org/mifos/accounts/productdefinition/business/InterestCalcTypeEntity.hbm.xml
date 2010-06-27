@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" table="INTEREST_CALCULATION_TYPES">
-		<id name="id" column="INTEREST_CALCULATION_TYPE_ID">
+	<class name="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" table="interest_calculation_types">
+		<id name="id" column="interest_calculation_type_id">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="lookUpValue" column="INTEREST_CALCULATION_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+		<many-to-one name="lookUpValue" column="interest_calculation_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
 	</class>
 </hibernate-mapping>

@@ -6,13 +6,13 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerPositionEntity" table="CUSTOMER_POSITION">
-        <id name="customerPositionId" column="CUSTOMER_POSITION_ID" type="integer" unsaved-value="-1" access="field">
+    <class name="org.mifos.customers.business.CustomerPositionEntity" table="customer_position">
+        <id name="customerPositionId" column="customer_position_id" type="integer" unsaved-value="-1" access="field">
                 <generator class="native"/>
         </id>
-       <!-- <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>-->
-       <many-to-one name="position" column="POSITION_ID" class="org.mifos.customers.business.PositionEntity" insert="true" update="false" access="field"/>
-	   <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  insert="true" update="true" />	
-	   <many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>	
+       <!-- <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>-->
+       <many-to-one name="position" column="position_id" class="org.mifos.customers.business.PositionEntity" insert="true" update="false" access="field"/>
+	   <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="true" />	
+	   <many-to-one name="parentCustomer" column="parent_customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>	
     </class>    
 </hibernate-mapping>

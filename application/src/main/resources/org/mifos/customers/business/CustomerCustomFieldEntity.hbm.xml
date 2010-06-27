@@ -7,13 +7,13 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerCustomFieldEntity" table="CUSTOMER_CUSTOM_FIELD">
-        <id name="customFieldId" column="CUSTOMER_CUSTOMFIELD_ID"  access="field">
+    <class name="org.mifos.customers.business.CustomerCustomFieldEntity" table="customer_custom_field">
+        <id name="customFieldId" column="customer_customfield_id"  access="field">
             <generator class="native"/>
         </id>
-	    <property name="fieldId" column="FIELD_ID"  access="field"/>
-	  	<property name="fieldValue" column="FIELD_VALUE"  />
-	   	<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>
+	    <property name="fieldId" column="field_id"  access="field"/>
+	  	<property name="fieldValue" column="field_value"  />
+	   	<many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO"  insert="true" update="false" access="field"/>
     </class>
 
     <query name="CustomerCustomFieldEntity.insertEntries"><![CDATA[

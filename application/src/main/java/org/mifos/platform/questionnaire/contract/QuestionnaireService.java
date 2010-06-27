@@ -34,4 +34,6 @@ public interface QuestionnaireService {
     List<QuestionGroupDetail> getAllQuestionGroups();
 
     boolean isDuplicateQuestion(QuestionDefinition questionDefinition);
+
+    QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException;
 }
