@@ -83,7 +83,7 @@ public class DatabaseMigrator {
         BufferedReader bufferedReader = null;
         SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
         try {
-            reader = ClasspathResource.getInstance("/sql/").getAsReader("upgrades-checkpoint.txt");
+            reader = ClasspathResource.getInstance("/sql/").getAsReader("upgrades.txt");
             bufferedReader = new BufferedReader(reader);
 
             while (true) {
@@ -147,6 +147,12 @@ public class DatabaseMigrator {
 
     }
 
+    /**
+     *
+     * @param legacyUpgrades A mapping from the database version to the Unix time-stamp
+     * @throws Exception
+     */
+
     public void firstRun(Map<Integer, Integer> legacyUpgrades) throws Exception {
         createAppliedUpgradesTable();
 
@@ -167,11 +173,47 @@ public class DatabaseMigrator {
         if (!isNSDU()){
             throw new RuntimeException("Failed to migrate schema to NSDU");
         }
+
+        //run NSDU
+        upgrade();
     }
 
     public Map<Integer, Integer> getLegacyUpgradesMap(){
-        // TODO
-        return null;
+        Map<Integer, Integer> legacyUpgrades = new TreeMap<Integer, Integer>();
+        legacyUpgrades.put(225, 1277565389);
+        legacyUpgrades.put(226, 1277567194);
+        legacyUpgrades.put(228, 1277567768);
+        legacyUpgrades.put(229, 1277567885);
+        legacyUpgrades.put(230, 1277567949);
+        legacyUpgrades.put(231, 1277568944);
+        legacyUpgrades.put(233, 1277569001);
+        legacyUpgrades.put(234, 1277571296);
+        legacyUpgrades.put(235, 1277571560);
+        legacyUpgrades.put(236, 1277571792);
+        legacyUpgrades.put(237, 1277571837);
+        legacyUpgrades.put(238, 1277586926);
+        legacyUpgrades.put(239, 1277587117);
+        legacyUpgrades.put(240, 1277587199);
+        legacyUpgrades.put(241, 1277587465);
+        legacyUpgrades.put(242, 1277587818);
+        legacyUpgrades.put(243, 1277587878);
+        legacyUpgrades.put(244, 1277587947);
+        legacyUpgrades.put(245, 1277588038);
+        legacyUpgrades.put(246, 1277588072);
+        legacyUpgrades.put(247, 1277588240);
+        legacyUpgrades.put(248, 1277588373);
+        legacyUpgrades.put(249, 1277588885);
+        legacyUpgrades.put(250, 1277588973);
+        legacyUpgrades.put(251, 1277589055);
+        legacyUpgrades.put(252, 1277589143);
+        legacyUpgrades.put(252, 1277589236);
+        legacyUpgrades.put(253, 1277589321);
+        legacyUpgrades.put(254, 1277589383);
+
+
+
+
+        return legacyUpgrades;
     }
 
     public int readDatabaseVersion() throws SQLException {
@@ -207,7 +249,7 @@ public class DatabaseMigrator {
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
         if (SCRIPT_UPGRADE_TYPE.equals(type)) {
-            URL url = SqlResource.getInstance().getUrl(upgradeNumber + ".sql");
+            URL url = SqlResource.getInstance().getUrl("upgrade"+upgradeNumber + ".sql");
             SqlUpgrade sqlUpgrade = new SqlUpgrade(url);
             sqlUpgrade.upgrade(connection);
             connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
@@ -286,7 +328,7 @@ public class DatabaseMigrator {
             ResultSet rs = stmt.executeQuery("SELECT UPGRADE_ID FROM APPLIED_UPGRADES");
 
             if (rs.next()) {
-                appliedUpgrades.add(rs.getInt(0));
+                appliedUpgrades.add(rs.getInt(1));
             }
 
             rs.close();
@@ -313,13 +355,13 @@ public class DatabaseMigrator {
 
 
     @SuppressWarnings("unused")
-    private static void upgrade236() {
+    private static void upgrade1277571792() {
         new AddActivity("Permissions-CanShutdownMifos",
                 SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION);
     }
 
     @SuppressWarnings("unused")
-    private static void upgrade248() {
+    private static void upgrade1277588373() {
         new AddActivity("Permissions-CanDefineHoliday",
                 SecurityConstants.CAN_DEFINE_HOLIDAY, SecurityConstants.ORGANIZATION_MANAGEMENT);
 //        register(register, new CompositeUpgrade(

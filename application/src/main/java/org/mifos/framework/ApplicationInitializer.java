@@ -159,7 +159,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
                         if(!migrator.isNSDU()){
                             migrator.firstRun(migrator.getLegacyUpgradesMap());
                         }
-                        migrator.upgrade();
                     } catch (Throwable t) {
                         setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE, "Failed to upgrade database.", t);
                     }

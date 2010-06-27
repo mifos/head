@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.logging.impl.AvalonLogger;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -103,10 +104,7 @@ public class DatabaseMigratorIntegrationTest {
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("drop table if exists bar");
-        // connection.createStatement().execute(
-        // "create table database_version(" +
-        // "database_version integer)" +
-        // "engine=innodb character set utf8;" );
+        connection.createStatement().execute("drop table if exists baz");
 
         connection.createStatement().execute(
                 "create table applied_upgrades(" + "upgrade_id integer)" + "engine=innodb character set utf8;");
@@ -140,7 +138,12 @@ public class DatabaseMigratorIntegrationTest {
     }
 
     public void testFirstRun() throws Exception {
+
         DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+        connection.createStatement().execute("drop table if exists foo");
+        connection.createStatement().execute("drop table if exists bar");
+        connection.createStatement().execute("drop table if exists baz");
+        connection.commit();
 
         // load dummy schema containing database_version & applied_upgrades tables
         connection.createStatement().execute(
@@ -151,8 +154,12 @@ public class DatabaseMigratorIntegrationTest {
 
         // insert database version
         connection.createStatement().execute("insert into database_version values(253)");
+        connection.commit();
 
-        // call firstRun with dummy upgrades map
+        SortedMap<Integer, String> availableUpgrades = new TreeMap<Integer, String>();
+        availableUpgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);
+        availableUpgrades.put(1274760000, DatabaseMigrator.SCRIPT_UPGRADE_TYPE);
+
         Map<Integer, Integer> legacyUpgradesMap = new HashMap<Integer, Integer>(5);
         legacyUpgradesMap.put(142, 1276821345);
         legacyUpgradesMap.put(153, 1276821391);
@@ -160,14 +167,12 @@ public class DatabaseMigratorIntegrationTest {
         legacyUpgradesMap.put(201, 1276821432);
         legacyUpgradesMap.put(253, 1276821600);
 
-        connection.commit();
+        new DatabaseMigrator(connection, availableUpgrades).firstRun(legacyUpgradesMap);
 
-        new DatabaseMigrator(connection, null).firstRun(legacyUpgradesMap);
-
-        // check appliedUPgrades table contains unix tStamps for upgrades
+        // check appliedUPgrades table contains Unix time-stamps for upgrades
         ResultSet rs = connection.createStatement().executeQuery("select count(*) from applied_upgrades");
         rs.next();
-        Assert.assertEquals(rs.getInt(1), 5);
+        Assert.assertEquals(rs.getInt(1), 7);
 
     }
 

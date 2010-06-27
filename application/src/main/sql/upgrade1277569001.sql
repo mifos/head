@@ -1,0 +1,1 @@
+UPDATE office SET SEARCH_ID = concat(SEARCH_ID,'.') where SEARCH_ID not like '%.';

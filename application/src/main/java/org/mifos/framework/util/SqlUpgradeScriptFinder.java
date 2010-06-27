@@ -35,10 +35,10 @@ public class SqlUpgradeScriptFinder {
 
         if (foundInSql) {
             return new SqlUpgrade(url);
-        } else {
-          //TODO Update for NSDU
-            throw new IllegalStateException("Did not find upgrade to  in java or in an sql file");
         }
+
+        throw new IllegalStateException("Did not find upgrade to  in java or in an sql file");
+
     }
 
     static URL getSqlResourceLocation(String name) {
