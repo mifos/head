@@ -29,11 +29,13 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -69,9 +71,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void setUp() throws Exception {
-
         super.setUp();
-
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -91,15 +91,6 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         super.tearDown();
     }
 
-    private LoanBO getLoanAccount(AccountState state, Date startDate) {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
-        return TestObjectFactory.createLoanAccount("424231423415", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
-                startDate, loanOffering);
-    }
-
     private LoanBO getLoanAccount() {
         Date startDate = new Date(System.currentTimeMillis());
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -111,7 +102,6 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testRescheduleLoan() throws Exception {
-        Session session = StaticHibernateUtil.getSessionTL();
         loanBO = getLoanAccount();
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("accountId", loanBO.getAccountId().toString());
@@ -125,20 +115,14 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward(ActionForwards.loan_detail_page.toString());
-        AccountBO closedAccount = group.getCustomerAccount();
-        session.refresh(loanBO);
+        CustomerAccountBO closedAccount = group.getCustomerAccount();
+        Assert.assertEquals(AccountState.CUSTOMER_ACCOUNT_ACTIVE, closedAccount.getState());
+        Session session = StaticHibernateUtil.getSessionTL();
+        session.beginTransaction();
+        loanBO = (LoanBO) session.get(LoanBO.class, loanBO.getAccountId());
         List<TransactionHistoryDto> history = loanBO.getTransactionHistoryView();
-
         for (TransactionHistoryDto entry : history) {
            Assert.assertEquals(AccountConstants.LOAN_RESCHEDULED, entry.getType());
         }
-        StaticHibernateUtil.closeSession(session);
-    }
-
-    private LoanBO createInitialObjects(int disbursalType) {
-        loanBO = getLoanAccount(AccountState.LOAN_APPROVED, currentDate);
-        addRequestParameter("recordLoanOfficerId", "1");
-        addRequestParameter("accountId", loanBO.getAccountId().toString());
-        return loanBO;
     }
 }
