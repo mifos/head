@@ -7,4 +7,9 @@ public class ViewAllQuestionsPage extends MifosPage {
     public ViewAllQuestionsPage(Selenium selenium) {
         super(selenium);
     }
+
+    public ViewAllQuestionsPage verifyPage(){
+        verifyPage("view_questions");
+        return this;
+    }
 }

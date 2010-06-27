@@ -33,6 +33,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.mifos.framework.business.AbstractEntity;
 
@@ -41,8 +42,6 @@ import org.mifos.framework.business.AbstractEntity;
  * file key value) The no whitespace requirement is enforced by the unit test
  * ApplicationConfigurationPersistenceIntegrationTest.testGetLookupEntities()
  */
-@Entity
-@Table(name = "LOOKUP_ENTITY")
 @NamedQueries( {
   @NamedQuery(
     name="entities",
@@ -68,6 +67,8 @@ import org.mifos.framework.business.AbstractEntity;
   )
 
 })
+@Entity
+@Table(name = "lookup_entity")
 public class LookUpEntity extends AbstractEntity {
 
     public static final Short DEFAULT_LOCALE_ID = 1;
@@ -82,18 +83,17 @@ public class LookUpEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ENTITY_ID", nullable = false)
     private Short entityId;
 
-    @Column(name = "ENTITY_NAME")
+    @Column(name="entity_name")
     private String entityType;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ENTITY_ID", updatable = false)
+    @JoinColumn(name = "entity_id", updatable = false)
     private Set<LookUpLabelEntity> lookUpLabels;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ENTITY_ID", updatable = false)
+    @JoinColumn(name = "entity_id", updatable = false)
     private Set<LookUpValueEntity> lookUpValues;
 
     public LookUpEntity() {

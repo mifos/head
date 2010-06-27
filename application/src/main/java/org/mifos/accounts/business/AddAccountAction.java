@@ -45,7 +45,7 @@ public class AddAccountAction extends Upgrade {
     public AddAccountAction(int higherVersion, int action, Short locale, String message) {
         super(higherVersion);
         if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
+            throw new RuntimeException(WRONG_CONSTRUCTOR);
         }
         this.action = action;
         this.locale = locale;
@@ -81,7 +81,7 @@ public class AddAccountAction extends Upgrade {
 
     private void addAction(Connection connection, int actionId, int lookupId) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID) " + "VALUES(?,?)");
+                .prepareStatement("insert into account_action(account_action_id,lookup_id) values (?,?)");
         statement.setInt(1, actionId);
         statement.setInt(2, lookupId);
         statement.executeUpdate();

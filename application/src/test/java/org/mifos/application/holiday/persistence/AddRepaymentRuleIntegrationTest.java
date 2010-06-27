@@ -48,7 +48,7 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddRepaymentRule(DatabaseVersionPersistence.APPLICATION_VERSION + 1,
                     RepaymentRuleTypes.SAME_DAY, TEST_LOCALE, "SameDayValue");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddRepaymentRule.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddRepaymentRule.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "SameDay";
 

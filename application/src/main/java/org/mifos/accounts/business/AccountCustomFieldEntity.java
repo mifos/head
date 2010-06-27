@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,31 +27,29 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 
 @Entity
-@Table(name = "ACCOUNT_CUSTOM_FIELD")
+@Table(name = "account_custom_field")
 public class AccountCustomFieldEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "ACCOUNT_CUSTOM_FIELD_ID", nullable = false)
     private Integer accountCustomFieldId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ACCOUNT_ID", unique = true)
+    @JoinColumn(name = "account_id", unique = true)
     private AccountBO account;
 
     /*
      * Reference to a {@link CustomFieldDefinitionEntity}
      */
-    @Column(name = "FIELD_ID")
     private Short fieldId;
 
-    @Column(name = "FIELD_VALUE")
     private String fieldValue;
 
     public AccountCustomFieldEntity() {

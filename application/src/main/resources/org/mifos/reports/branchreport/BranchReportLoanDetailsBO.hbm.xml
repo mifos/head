@@ -25,35 +25,35 @@ explanation of the license and how it is applied.
 <hibernate-mapping>
 	<class
 		name="org.mifos.reports.branchreport.BranchReportLoanDetailsBO"
-		table="BATCH_LOAN_DETAILS">
-		<id name="loanDetailsId" column="LOAN_DETAILS_ID" type="integer"
+		table="batch_loan_details">
+		<id name="loanDetailsId" column="loan_details_id" type="integer"
 			access="field">
 			<generator class="native" />
 		</id>
-		<property name="productName" column="PRODUCT_NAME" type="string"
+		<property name="productName" column="product_name" type="string"
 			access="field" />
 		<property name="numberOfLoansIssued"
-			column="NUMBER_OF_LOANS_ISSUED" type="integer" access="field" />
+			column="number_of_loans_issued" type="integer" access="field" />
 		<property name="loanAmountIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_AMOUNT_ISSUED_CURRENCY_ID"/>
-			<column name="LOAN_AMOUNT_ISSUED"/>
+			<column name="loan_amount_issued_currency_id"/>
+			<column name="loan_amount_issued"/>
 		</property>
 		<property name="loanInterestIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_INTEREST_ISSUED_CURRENCY_ID"/>
-			<column name="LOAN_INTEREST_ISSUED"/>
+			<column name="loan_interest_issued_currency_id"/>
+			<column name="loan_interest_issued"/>
 		</property>
 		<property name="numberOfLoansOutstanding"
-			column="NUMBER_OF_LOANS_OUTSTANDING" type="integer" access="field" />
+			column="number_of_loans_outstanding" type="integer" access="field" />
 		<property name="loanAmountOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_OUTSTANDING_AMOUNT_CURRENCY_ID"/>
-			<column name="LOAN_OUTSTANDING_AMOUNT"/>
+			<column name="loan_outstanding_amount_currency_id"/>
+			<column name="loan_outstanding_amount"/>
 		</property>
 		<property name="loanInterestOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="LOAN_OUTSTANDING_INTEREST_CURRENCY_ID"/>
-			<column name="LOAN_OUTSTANDING_INTEREST"/>
+			<column name="loan_outstanding_interest_currency_id"/>
+			<column name="loan_outstanding_interest"/>
 		</property>
 
-		<many-to-one name="branchReport" column="BRANCH_REPORT_ID"
+		<many-to-one name="branchReport" column="branch_report_id"
 			access="field"
 			class="org.mifos.reports.branchreport.BranchReportBO">
 		</many-to-one>
@@ -63,10 +63,10 @@ explanation of the license and how it is applied.
 		name="branchReport.getBranchReportLoanDetailsForDateAndBranch">
 		<load-collection alias="loanDetails"
 			role="org.mifos.reports.branchreport.BranchReportBO.loanDetails" />
-		<![CDATA[SELECT {loanDetails.*} FROM BATCH_LOAN_DETAILS as loanDetails, BATCH_BRANCH_REPORT as branchReport WHERE 
-			branchReport.BRANCH_REPORT_ID=loanDetails.BRANCH_REPORT_ID 
-			AND branchReport.RUN_DATE=:RUN_DATE 
-			AND branchReport.BRANCH_ID=:BRANCH_ID
+		<![CDATA[SELECT {loanDetails.*} from batch_loan_details as loanDetails, batch_branch_report as branchReport where 
+			branchReport.branch_report_id=loanDetails.branch_report_id 
+			and branchReport.run_date=:RUN_DATE 
+			and branchReport.branch_id=:BRANCH_ID
 		]]>
 	</sql-query>
 
@@ -100,8 +100,8 @@ explanation of the license and how it is applied.
 			            select 
 			                        po.prd_offering_id as prd_offering_id,
 			                        count(ls.account_id) as numberOfLoansIssued,
-			                        round(sum(COALESCE(ls.orig_principal,0)),3) as loanAmountIssued,
-			                        round(sum(COALESCE(ls.orig_interest ,0)),3) as loanInterestIssued
+			                        round(sum(coalesce(ls.orig_principal,0)),3) as loanAmountIssued,
+			                        round(sum(coalesce(ls.orig_interest ,0)),3) as loanInterestIssued
 			                   from 
 			                        loan_account la
 			                   left join 
@@ -128,8 +128,8 @@ explanation of the license and how it is applied.
 			            select 
 			                        po.prd_offering_id as prd_offering_id,
 			                        sum(if((ls.orig_principal-ls.principal_paid=0),0,1)) as numberOfLoansOutstanding,
-			                        round(sum(COALESCE(ls.orig_principal,0)-COALESCE(ls.principal_paid,0)),3) as loanAmountOutstanding,
-			                        round(sum(COALESCE(ls.orig_interest,0) -COALESCE(ls.interest_paid, 0)),3) as loanInterestOutstanding
+			                        round(sum(coalesce(ls.orig_principal,0)-COALESCE(ls.principal_paid,0)),3) as loanAmountOutstanding,
+			                        round(sum(coalesce(ls.orig_interest,0) -coalesce(ls.interest_paid, 0)),3) as loanInterestOutstanding
 			                   from 
 			                        loan_account la
 			                   left join 

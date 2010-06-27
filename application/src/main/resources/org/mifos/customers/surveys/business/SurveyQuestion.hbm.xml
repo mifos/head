@@ -4,18 +4,18 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.customers.surveys.business.SurveyQuestion" 
-		table="SURVEY_QUESTIONS">
-		<id name="surveyQuestionId" column="SURVEYQUESTION_ID" type="integer" 
+		table="survey_questions">
+		<id name="surveyQuestionId" column="surveyquestion_id" type="integer" 
 			unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
 		<property name="mandatory" column="mandatory"/>
-		<property name="order" column="QUESTION_ORDER" access="field"/>
-		<many-to-one name="survey" column="SURVEY_ID" 
+		<property name="order" column="question_order" access="field"/>
+		<many-to-one name="survey" column="survey_id" 
 			class="org.mifos.customers.surveys.business.Survey"     
 		    access="field" not-null="true"/>
 		    
-		<many-to-one name="question" column="QUESTION_ID" cascade="save-update" lazy="false"
+		<many-to-one name="question" column="question_id" cascade="save-update" lazy="false"
 		    class="org.mifos.customers.surveys.business.Question"     
 		    access="field"/>
 	</class>

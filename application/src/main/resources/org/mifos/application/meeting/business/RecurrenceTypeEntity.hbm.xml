@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.meeting.business.RecurrenceTypeEntity" table="RECURRENCE_TYPE">
-        <id name="recurrenceId" column="RECURRENCE_ID" type="short" access="field">
+    <class name="org.mifos.application.meeting.business.RecurrenceTypeEntity" table="recurrence_type">
+        <id name="recurrenceId" column="recurrence_id" type="short" access="field">
             <generator class="native"/>
         </id>
-         <property name="recurrenceName" column="RECURRENCE_NAME" type="string" access="field"/>
-         <property name="description" column="DESCRIPTION" type="string" access="field"/>
+         <property name="recurrenceName" column="recurrence_name" type="string" access="field"/>
+         <property name="description" column="description" type="string" access="field"/>
  
     </class>
     <query name="meeting.fetchAllReccurenceTypes">

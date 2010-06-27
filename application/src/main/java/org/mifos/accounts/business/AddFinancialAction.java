@@ -67,7 +67,7 @@ public class AddFinancialAction extends Upgrade {
 
     private void addAction(Connection connection, int actionId, int lookupId) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("INSERT INTO FINANCIAL_ACTION(FIN_ACTION_ID,LOOKUP_ID) " + "VALUES(?,?)");
+                .prepareStatement("insert into financial_action(fin_action_id,lookup_id) " + "values(?,?)");
         statement.setInt(1, actionId);
         statement.setInt(2, lookupId);
         statement.executeUpdate();
@@ -76,11 +76,11 @@ public class AddFinancialAction extends Upgrade {
 
     private short findLookupId(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("select LOOKUP_ID "
-                + "from FINANCIAL_ACTION where FIN_ACTION_ID = ?");
+                + "from financial_action where fin_action_id = ?");
         statement.setInt(1, action);
         ResultSet results = statement.executeQuery();
         if (results.next()) {
-            short lookupId = results.getShort("LOOKUP_ID");
+            short lookupId = results.getShort("lookup_id");
             statement.close();
             return lookupId;
         } else {
@@ -91,7 +91,7 @@ public class AddFinancialAction extends Upgrade {
 
     private void deleteFromAccountAction(Connection connection) throws SQLException {
         PreparedStatement statement = connection
-                .prepareStatement("delete from FINANCIAL_ACTION where FIN_ACTION_ID = ?");
+                .prepareStatement("delete from financial_action where fin_action_id = ?");
         statement.setInt(1, action);
         statement.executeUpdate();
         statement.close();

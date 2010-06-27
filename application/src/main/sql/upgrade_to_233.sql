@@ -1,3 +1,3 @@
-UPDATE office SET SEARCH_ID = concat(SEARCH_ID,'.') where SEARCH_ID not like '%.';
+update office set search_id = concat(search_id,'.') where search_id not like '%.';
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 233 WHERE DATABASE_VERSION = 232;
+update database_version set database_version = 233 where database_version = 232;

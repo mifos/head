@@ -64,17 +64,17 @@ public class AddReport extends Upgrade {
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
-        this.lookupId = getNextId(connection, "LOOKUP_ID", "LOOKUP_VALUE");
-        this.lookupValueId = getNextId(connection, "LOOKUP_VALUE_ID", "LOOKUP_VALUE_LOCALE");
-        this.reportId = getNextId(connection, "REPORT_ID", "REPORT");
-        this.activityId = getNextId(connection, "ACTIVITY_ID", "ACTIVITY");
+        this.lookupId = getNextId(connection, "lookup_id", "lookup_value");
+        this.lookupValueId = getNextId(connection, "lookup_value_id", "lookup_value_locale");
+        this.reportId = getNextId(connection, "report_id", "report");
+        this.activityId = getNextId(connection, "activity_id", "activity");
         doUpgrade(connection);
         upgradeVersion(connection);
     }
 
     private short getNextId(Connection connection, String idName, String table) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "SELECT MAX(" + idName + ") FROM " + table;
+        String query = "select max(" + idName + ") from " + table;
         short id = 0;
         ResultSet results = statement.executeQuery(query);
         if (results.next()) {
@@ -89,21 +89,21 @@ public class AddReport extends Upgrade {
     }
 
     void doUpgrade(Connection connection) throws SQLException {
-        String sql = "INSERT INTO LOOKUP_VALUE (LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) VALUES (" + lookupId + ",87,'"
+        String sql = "insert into lookup_value (lookup_id, entity_id, lookup_name) values (" + lookupId + ",87,'"
                 + lookupName + "')";
         connection.createStatement().executeUpdate(sql);
-        sql = "INSERT INTO LOOKUP_VALUE_LOCALE (LOOKUP_VALUE_ID, LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) VALUES   ("
+        sql = "insert into lookup_value_locale (lookup_value_id, locale_id, lookup_id, lookup_value) values   ("
                 + lookupValueId + ",1," + lookupId + ",'" + lookupValue + "')";
         connection.createStatement().executeUpdate(sql);
-        sql = "INSERT INTO ACTIVITY (ACTIVITY_ID, PARENT_ID, ACTIVITY_NAME_LOOKUP_ID, DESCRIPTION_LOOKUP_ID) VALUES ("
+        sql = "insert into activity (activity_id, parent_id, activity_NAME_lookup_id, description_lookup_id) values ("
                 + activityId + "," + parentId + "," + lookupId + "," + lookupId + ")";
         connection.createStatement().executeUpdate(sql);
-        sql = "INSERT INTO ROLES_ACTIVITY (ACTIVITY_ID, ROLE_ID) VALUES (" + activityId + ",1)";
+        sql = "insert into roles_activity (activity_id, role_id) values (" + activityId + ",1)";
         connection.createStatement().executeUpdate(sql);
-        sql = "INSERT INTO REPORT (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) VALUES ("
+        sql = "insert into report (report_id, report_category_id, report_name, report_identifier, activity_id, report_active) values ("
                 + reportId + "," + category + ",'" + name + "','" + identifier + "'," + activityId + ",1)";
         connection.createStatement().executeUpdate(sql);
-        sql = "INSERT INTO REPORT_JASPER_MAP (REPORT_ID, REPORT_CATEGORY_ID, REPORT_NAME, REPORT_IDENTIFIER, REPORT_JASPER) VALUES  ("
+        sql = "insert into report_jasper_map (report_id, report_category_id, report_name, report_identifier, report_jasper) values  ("
                 + reportId + "," + category + ",'" + name + "','" + identifier + "','" + fileName + "')";
         connection.createStatement().executeUpdate(sql);
     }
