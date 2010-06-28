@@ -39,7 +39,7 @@ msgstr "Fecha de vencimiento"
 #: Fees
 msgctxt "Fees"
 msgid "Fees"
-msgstr "Honorarios"
+msgstr "Cuotas"
 
 # Could also be "mercado"
 #: Field
@@ -50,7 +50,7 @@ msgstr "Campo"
 #: Installment
 msgctxt "Installment"
 msgid "Installment"
-msgstr "Plazo"
+msgstr "pago"
 
 #: Interest
 msgctxt "Interest"
@@ -72,11 +72,11 @@ msgstr "Tipo de garantía"
 msgid "Purpose of "
 msgstr "Propósito del"
 
-# Nuevo estado
+# Nuevo Estatus
 #: NewStatus
 msgctxt "NewStatus"
 msgid "New Status"
-msgstr "Estado actual"
+msgstr "Estatus actual"
 
 #: NewValue
 msgctxt "NewValue"
@@ -87,12 +87,12 @@ msgstr "Valor nuevo"
 #: OldStatus
 msgctxt "OldStatus"
 msgid "Old Status"
-msgstr "Estado anterior"
+msgstr "Estatus anterior"
 
 #: OldValue
 msgctxt "OldValue"
 msgid "Old Value"
-msgstr "Valor viejo"
+msgstr "Antiguo valor"
 
 #: Principal
 msgctxt "Principal"
@@ -111,7 +111,7 @@ msgstr "Usuario"
 
 #: accounts.colon
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: accounts.date_of_trxn
 msgctxt "accounts.date_of_trxn"
@@ -127,11 +127,11 @@ msgstr "Edite la transacción"
 msgid "Receipt date"
 msgstr "Fecha del recibo"
 
-# ID is Identificación but ID is a common use of the word.
+
 #: accounts.receiptid
 msgctxt "accounts.receiptid"
 msgid "Receipt ID"
-msgstr "Identificación del recibo"
+msgstr "ID del recibo"
 
 #: error.activity.not.allowed
 msgid ""
@@ -145,7 +145,7 @@ msgstr ""
 #: error.incompletechecklist
 msgid "Please select all the checklists to change the status."
 msgstr ""
-"Por favor, seleccione todas las listas de control para cambiar el estado."
+"Por favor, seleccione todas las listas de control para cambiar el Estatus."
 
 #: error.statuschangenotallowed
 msgctxt "error.statuschangenotallowed"
@@ -162,11 +162,11 @@ msgstr ""
 
 #: errors.Account.specifyCustomFieldValue
 msgid "Please specify required additional information for '{0}' field."
-msgstr ""
+msgstr "Por favor especifique la informacion adicional requeridapara el campo '{0}'."
 
 #: errors.Account.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
 
 #: errors.alleastonerecord
 msgid "Please select at least one {0}."
@@ -183,11 +183,11 @@ msgstr ""
 
 #: errors.cannotDisburseLoan.because.unitemisedReason
 msgid "This loan cannot be disbursed because it is not in the right state. "
-msgstr ""
+msgstr "Este préstamo no puede ser desembolsado porque no se encuentra en el Estatus correcto."
 
 #: errors.cannotDisburseLoan.because.disburseFailed
 msgid "Disbursal failed.  This loan may have been disbursed elsewhere."
-msgstr ""
+msgstr "Desembolso fallo. Es posible que este préstamo ya haya sido desembolsado."
 
 #: errors.customernotselected
 msgid "Please select a {0} / {1}."
@@ -211,14 +211,14 @@ msgid ""
 "Please specify valid {0}. {0} should be a value between {1} and {2}, "
 "inclusive."
 msgstr ""
-"Por favor especifique válido {0}. Inclusive, {0} debe tener un valor entre "
+"Por favor especifique un {0} válido.{0} debe tener un valor entre "
 "{1} y {2}."
 
 # Need context for this sentence.
 #: errors.double
 msgctxt "errors.double"
 msgid "Please specify valid {0}. Use numbers only."
-msgstr "Por favor, especifique válido {0}. Solamente use números."
+msgstr "Por favor, especifique un {0} válido. Solamente use números."
 
 #: errors.emitype_not_supported
 msgid "EMI type is not supported."
@@ -231,7 +231,7 @@ msgstr "Por favor, especifique la información requerida."
 
 #: errors.feeschedule
 msgid "Fee schedule error."
-msgstr "Error en la lista de honorarios."
+msgstr "Error en la lista de Cuotas."
 
 #: errors.futuredate
 msgid "{0} can not be a future date."
@@ -239,16 +239,16 @@ msgstr "{0} no puede ser una fecha en el futuro."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a{1}"
 
 # Installment can also be cuotas.
 #: errors.gracePeriod
 msgid "The Grace period should be less than the total number of installments."
-msgstr "El período de gracia debe ser menor que el número total de plazos. "
+msgstr "El período de gracia debe ser menor que el número total de pagos. "
 
 #: errors.gracePeriodProductDef
 msgid "The Grace period cannot be greater than in loan product definition."
-msgstr ""
+msgstr "El periodo de gracia no puede ser mayor al pago del prestamo."
 
 #: errors.graceper
 msgid "Please specify valid {0}. {0} should be a value less than {1}."
@@ -260,7 +260,7 @@ msgstr ""
 #, fuzzy
 msgid "Please specify a non-zero loan amount for all selected clients."
 msgstr ""
-"Por favor específique el préstamo Non Zero para todos los clientes "
+"Por favor específique un préstamo superior a cero para todos los clientes "
 "seleccionados."
 
 # Can I use parenthesis? will this create problems for the developers?
@@ -307,11 +307,11 @@ msgid ""
 "than or equal to today's date"
 msgstr ""
 "Usted ha introducido una fecha de desembolso inválida. Introduzca una fecha "
-"de desembolso mayor que o igual a la fecha de hoy."
+"de desembolso en el futuro o igual a la fecha de hoy."
 
 #: errors.invalidDisbursementDateFormat
 msgid "You have entered an invalid {0}. Please check the date format"
-msgstr ""
+msgstr "Ha ingresado una {0} invalida. Por favor cheque el formato de la fecha."
 
 #: errors.invalidDisbursementDateForRedoLoan
 msgid ""
@@ -451,11 +451,11 @@ msgstr ""
 
 #: errors.mustNotBeNegative
 msgid "{0} must not be negative."
-msgstr ""
+msgstr "{0} debe ser negativo."
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0} debe ser mayor a 0"
 
 #: errors.nosearchresults
 msgid "No search results found."
@@ -490,7 +490,7 @@ msgstr ""
 msgid ""
 "This Frequency type is not supported. Please select another Frequency type."
 msgstr ""
-"Este tipo de frecuencia no es soportada. Por favor, seleccione otro tip de "
+"Este tipo de frecuencia no es soportada. Por favor, seleccione otro tipo de "
 "frecuencia."
 
 #: errors.not_supported_gracetype
@@ -622,7 +622,7 @@ msgid ""
 msgstr ""
 "Debido a cambios en la definición del préstamo, la información de la cuenta "
 "ya no es válida. Por favor, modifique lo mismo en la página de editar antes "
-"de cambiar el estado."
+"de cambiar el Estatus."
 
 #: exceptions.application.loan.duplicatePeriodicFee
 msgid "{0}(periodic) fee selected multiple times."
@@ -649,11 +649,11 @@ msgstr "Esta fecha de desembolso es inválida."
 
 #: exceptions.application.loan.disbursementDateMustBeAWorkingDay
 msgid "Disbursement date must be on a working day."
-msgstr ""
+msgstr "La fecha de desembolso debe ser en un dia habil."
 
 #: exceptions.application.loan.disbursementDateMustNotBeInAHoliday
 msgid "Disbursement date must not be during a defined holiday."
-msgstr ""
+msgstr "La fecha de desembolso no puede ser en un dia feriado definido."
 
 #: exceptions.application.loan.invalidFeeAmnt
 msgid "The Fee amount cannot be zero or blank."
@@ -664,7 +664,7 @@ msgid ""
 "The no of installments should be greater than 1 if interest deducted at "
 "disbursement is selected."
 msgstr ""
-"La cantidad de plazos para pagar debe ser mayor que 1 si el interés deducido "
+"La cantidad de pagos para pagar debe ser mayor que 1 si el interés deducido "
 "al momento del desembolso es seleccionado."
 
 #: exceptions.application.loan.invalidTransactionDate
@@ -701,7 +701,7 @@ msgid ""
 "The No. of installments should be greater than 1 if {1} is deducted at "
 "disbursement. Please specify {0} "
 msgstr ""
-"El número de plazos debe ser mayor que 1 si {1} es deducido al momento del "
+"El número de pagos debe ser mayor que 1 si {1} es deducido al momento del "
 "desembolso. Por favor, especifique {0}"
 
 #: loan.Account
@@ -729,7 +729,7 @@ msgstr "Entonces haga clic en Enviar."
 
 #: loan.ConfirmStatusChange
 msgid "Confirm status change"
-msgstr "Confirme el cambio de estado."
+msgstr "Confirme el cambio de Estatus."
 
 #: loan.Edit
 msgid "Edit"
@@ -738,7 +738,7 @@ msgstr "Editar"
 #: loan.EditStatus
 #, fuzzy
 msgid "Edit status "
-msgstr "Estado de editaje"
+msgstr "Estatus de editaje"
 
 #: loan.Enter
 msgid "Enter"
@@ -752,7 +752,7 @@ msgstr "Los campos marcados con asterisco son requeridos."
 #: loan.NewStatus
 #, fuzzy
 msgid "New status:"
-msgstr "Estado nuevo\\:"
+msgstr "Estatus nuevo\\:"
 
 #: loan.NoChecklist
 msgid "No CheckList Available"
@@ -761,7 +761,7 @@ msgstr "No hay Lista de Control disponible"
 #: loan.NoFlagsAvailable
 #, fuzzy
 msgid "No Flags Available"
-msgstr "No hay Indicadores disponibles"
+msgstr "No hay banderas disponibles"
 
 #: loan.NoNotesAvailable
 msgid "No notes entered"
@@ -781,7 +781,7 @@ msgstr ""
 
 #: loan.SelectStatus
 msgid "Select from the status options below."
-msgstr "Seleccione de las opciones de estado de abajo."
+msgstr "Seleccione de las opciones de Estatus de abajo."
 
 #: loan.Slash
 msgid "/"
@@ -793,7 +793,7 @@ msgstr "La cuota se dedujo al momento del desembolso"
 
 #: loan.a
 msgid "a "
-msgstr ""
+msgstr "a "
 
 #: loan.acc_details
 msgid "Account details"
@@ -866,7 +866,7 @@ msgstr "Añada una nota"
 
 #: loan.additionalFee
 msgid "addtional fee"
-msgstr ""
+msgstr "cuota adicional"
 
 #: loan.additionalInfo
 msgid "Additional information"
@@ -905,7 +905,7 @@ msgstr "Cantidad permitida"
 #: loan.allowed_interest1
 #, fuzzy
 msgid "(Allowed  "
-msgstr "(Permitida"
+msgstr "(Permitida)"
 
 #: loan.allowed_interest2
 msgid "Rate Amount"
@@ -914,7 +914,7 @@ msgstr "Tasa"
 #: loan.allowed_no_of_inst
 #, fuzzy
 msgid "(Allowed Number of Installments:"
-msgstr "(Número de plazos permitidos\\:"
+msgstr "(Número de pagos permitidos\\:"
 
 #: loan.allpayments
 #, fuzzy
@@ -932,11 +932,11 @@ msgstr "Cantidad"
 
 #: loan.amount_due
 msgid "Amount due"
-msgstr "Cantidad adeudada"
+msgstr "Cantidad debida"
 
 #: loan.amountdue
 msgid "Amount Due"
-msgstr "Cantidad Adeudada"
+msgstr "Cantidad debida"
 
 #: loan.amountpaid
 msgid "Amount Paid"
@@ -995,7 +995,7 @@ msgstr "Aprobado"
 
 #: loan.apr
 msgid "APR  "
-msgstr ""
+msgstr "CAT"
 
 #: loan.areyousure
 #, fuzzy
@@ -1039,7 +1039,7 @@ msgstr "Propósito del "
 # DNI: Documento Nacional de Identidad
 #: loan.byid
 msgid "by ID"
-msgstr "por identificación"
+msgstr "por ID"
 
 #: loan.cancel
 msgid "Cancel"
@@ -1051,7 +1051,7 @@ msgstr "Cambiar el Registro"
 
 #: loan.changestatus
 msgid "Change status"
-msgstr "Cambiar el estado"
+msgstr "Cambiar el Estatus"
 
 #: loan.charged_applied
 msgid "Charges Applied"
@@ -1082,7 +1082,7 @@ msgstr "Verifique para revertir el último pago"
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
 msgstr ""
-"Clic cancelar para regresar a la página del Administrador sin ninguna "
+"Pulse clic para cancelar y regresar a la página del Administrador sin ninguna "
 "modificación."
 
 #: loan.client/group_name
@@ -1093,7 +1093,7 @@ msgstr "Cliente/Nombre del Grupo\\:"
 #: loan.coll_sheet_type
 #, fuzzy
 msgid "Collection sheet type:"
-msgstr "Tipo de hoja de colección\\:"
+msgstr "Tipo de hoja de cobranza\\:"
 
 #: loan.collateralDetails
 msgid "Collateral details"
@@ -1111,7 +1111,7 @@ msgstr "Tipo de colateral"
 
 #: loan.colon
 msgid ": "
-msgstr ""
+msgstr ":"
 
 #: loan.complete_field
 #, fuzzy
@@ -1125,7 +1125,7 @@ msgstr ""
 
 #: loan.congo1_1
 msgid "A new  "
-msgstr ""
+msgstr "Una nueva"
 
 #: loan.congo1_2
 msgid "account for"
@@ -1170,15 +1170,15 @@ msgstr "Crédito"
 
 #: loan.currentStatus
 msgid "Current Status"
-msgstr "Estado Actual"
+msgstr "Estatus Actual"
 
 #: loan.current_installment
 msgid "Current installment"
-msgstr "Plazo actual"
+msgstr "pago actual"
 
 #: loan.currentstatus
 msgid "Current status"
-msgstr "Estado actual"
+msgstr "Estatus actual"
 
 #: loan.date
 msgctxt "loan.date"
@@ -1222,11 +1222,11 @@ msgstr "Cantidad no pagada"
 
 #: loan.definst
 msgid "Number of installments"
-msgstr "Número de plazos"
+msgstr "Número de pagos"
 
 #: loan.defaultFee
 msgid "administrative fee"
-msgstr ""
+msgstr "cuota administrativa"
 
 #: loan.delinquency
 #, fuzzy
@@ -1245,7 +1245,7 @@ msgstr "Descripción"
 
 #: loan.detailssearch
 msgid "details and click Search. Click Cancel to return to"
-msgstr "detalles y clic en Búsqueda. Clic Cancelar para regresar a "
+msgstr "detalles y haga clic en Búsqueda. Clic Cancelar para regresar a "
 
 #: loan.dis_date
 msgid "Proposed/Actual disbursement date"
@@ -1305,7 +1305,7 @@ msgstr "Editar información de la cuenta"
 
 #: loan.edit_acc_status
 msgid "Edit account status"
-msgstr "Editar estado de la cuenta"
+msgstr "Editar Estatus de la cuenta"
 
 #: loan.edit_info
 msgid ""
@@ -1318,7 +1318,7 @@ msgstr ""
 
 #: loan.edit_loan_acc
 msgid "Edit  account information"
-msgstr "Editar  información de la cuenta"
+msgstr "Editar información de la cuenta"
 
 #: loan.edittrans
 #, fuzzy
@@ -1398,15 +1398,15 @@ msgstr "Campo"
 #: loan.folldetails
 #, fuzzy
 msgid "Following are the account details for the "
-msgstr "Seguido están los detalles de la cuenta para el "
+msgstr "A continuacion están los detalles de la cuenta para el "
 
 #: loan.freq_of_inst
 msgid "Frequency of Installments"
-msgstr "Frecuencia de los Plazos"
+msgstr "Frecuencia de los pagos"
 
 #: loan.future_install
 msgid "Future Installments"
-msgstr "Plazos Futuros"
+msgstr "Pagos a futuro"
 
 #: loan.generate_report
 msgid "Generate report"
@@ -1415,7 +1415,7 @@ msgstr "Generar reporte"
 #: loan.gl_cod
 #, fuzzy
 msgid "GL Cod"
-msgstr "Código del Libro Mayor General "
+msgstr "Código del Libro Mayor"
 
 #: loan.gracePeriodForRepayments
 msgid "Grace period for repayments {0}"
@@ -1448,32 +1448,32 @@ msgstr ""
 
 #: loan.ins
 msgid "Ins # "
-msgstr ""
+msgstr "Inst #"
 
 #: loan.inst
 #, fuzzy
 msgid "Installments"
-msgstr "Plazos"
+msgstr "Pagos"
 
 #: loan.install_paid
 #, fuzzy
 msgid "Installments "
-msgstr "Plazos"
+msgstr "Pagos"
 
 #: loan.installment_details
 msgid "Installment details"
-msgstr "Detalles del plazo"
+msgstr "Detalles del pago"
 
 #: loan.installments
 msgctxt "loan.installments"
 msgid "Installment"
-msgstr "Plazo"
+msgstr "Pago"
 
 # I'm not sure the context for instance
 #: loan.instanceName
 msgctxt "loan.instanceName"
 msgid "instance name"
-msgstr "Nombre de la instancia "
+msgstr "nombre de la instancia "
 
 #: loan.instance_info
 msgid "Instance information"
@@ -1481,7 +1481,7 @@ msgstr "Información de la instancia"
 
 #: loan.instance_name
 msgid "Loan instance name"
-msgstr "Nombre del préstamo de la instancia"
+msgstr "Nombre de la instancia delpréstamo"
 
 #: loan.instancename
 msgctxt "loan.instancename"
@@ -1490,11 +1490,11 @@ msgstr "Nombre de la instancia"
 
 #: loan.instt_due
 msgid "Installments due"
-msgstr "Vencimiento de los plazos"
+msgstr "Vencimiento de los pagos"
 
 #: loan.instt_paid
 msgid "Installments paid"
-msgstr "Plazos pagados"
+msgstr "Pagos realizados"
 
 #: loan.int_rate
 msgid "Rate"
@@ -1524,7 +1524,7 @@ msgstr "{0} reglas"
 
 #: loan.interest_amount
 msgid "rate amount"
-msgstr "Cantidad de la tasa"
+msgstr "cantidad de la tasa"
 
 #: loan.interest_cal_payments
 msgid "Interest Calculation Rule For Early/Late Payments"
@@ -1598,11 +1598,11 @@ msgstr "{0} nombre de la instancia"
 
 #: loan.loanOfficer
 msgid "Loan Officer"
-msgstr "Oficial de Préstamo"
+msgstr "Oficial de Crédito"
 
 #: loan.loanProductSummary
 msgid "{0} Product Summary"
-msgstr "Sumario del producto {0}"
+msgstr "Resumen del producto {0}"
 
 #: loan.loan_acc_details
 msgid "Account Details"
@@ -1638,7 +1638,7 @@ msgstr "Fecha de vencimiento del préstamo\\:"
 
 #: loan.maxinst
 msgid "max number of installments"
-msgstr "Número máximo de plazos"
+msgstr "Número máximo de pagos"
 
 #: loan.maxintrate
 msgid "Max interest rate"
@@ -1663,7 +1663,7 @@ msgstr "Cuota de membresía"
 
 #: loan.mininst
 msgid "min number of installments"
-msgstr "Número mínimo de plazos"
+msgstr "Número mínimo de pagos"
 
 #: loan.minintrate
 msgid "Min interest rate"
@@ -1705,7 +1705,7 @@ msgstr "Nuevo"
 #: loan.new_status
 msgctxt "loan.new_status"
 msgid "New Status"
-msgstr "Estado nuevo"
+msgstr "Estatus nuevo"
 
 #: loan.new_val
 msgctxt "loan.new_val"
@@ -1714,15 +1714,15 @@ msgstr "Valor nuevo"
 
 #: loan.next_inst
 msgid "Next installment"
-msgstr "Próximo plazo"
+msgstr "Próximo pago"
 
 #: loan.next_inst_due
 msgid "Next installment due"
-msgstr "Vencimiento del próximo plazo"
+msgstr "Vencimiento del próximo pago"
 
 #: loan.next_install_details
 msgid "Next installment details"
-msgstr "Detalles del próximo plazo"
+msgstr "Detalles del próximo pago"
 
 #: loan.no
 msgid "No"
@@ -1731,12 +1731,12 @@ msgstr "Núm"
 #: loan.noOfInstallments
 msgctxt "loan.noOfInstallments"
 msgid "No. of installments"
-msgstr "Núm. de plazos"
+msgstr "Núm. de pagos"
 
 #: loan.no_of_inst
 msgctxt "loan.no_of_inst"
 msgid "No. of installments"
-msgstr "Núm. de plazos"
+msgstr "Núm. de pagos"
 
 #: loan.nopaymentsmade
 #, fuzzy
@@ -1759,7 +1759,7 @@ msgstr "\\# de pagos\\:"
 #: loan.old_status
 msgctxt "loan.old_status"
 msgid "Old Status"
-msgstr "Estado pasado"
+msgstr "Estatus pasado"
 
 #: loan.old_val
 msgctxt "loan.old_val"
@@ -1821,7 +1821,7 @@ msgstr "Balance pendiente"
 
 #: loan.overdueamount
 msgid "Overdue amount"
-msgstr "Cantidad morosa"
+msgstr "Cantidad atrasada"
 
 #: loan.paid
 msgid "paid"
@@ -1884,12 +1884,12 @@ msgstr "Multa"
 #: loan.penalty_01
 #, fuzzy
 msgid "Penalty for Installment #1"
-msgstr "Multa por el plazo \\#1"
+msgstr "Multa por el pago \\#1"
 
 #: loan.penalty_02
 #, fuzzy
 msgid "Penalty for Installment #2"
-msgstr "Multa por el plazo \\#2"
+msgstr "Multa por el pago \\#2"
 
 #: loan.penalty_type
 msgid "Penalty Type"
@@ -1897,7 +1897,7 @@ msgstr "Tipo de multa"
 
 #: loan.performance_history
 msgid "Performance history"
-msgstr "Historia del rendimiento"
+msgstr "Historia del desempeño"
 
 #: loan.periodicity
 msgid "Periodicity"
@@ -1955,7 +1955,7 @@ msgstr "Principal"
 
 #: loan.principle_due
 msgid "Principal due on last installment"
-msgstr "Cantidad de principal en el último plazo"
+msgstr "Cantidad de principal en el último pago"
 
 #: loan.product_summary
 msgid "Product Summary"
@@ -1980,7 +1980,7 @@ msgstr "Fecha de la creación del archivo"
 #: loan.receiptId
 msgctxt "loan.receiptId"
 msgid "Receipt ID"
-msgstr "Identificación del recibo"
+msgstr "ID del recibo"
 
 #: loan.receiptNumber
 msgid "Receipt Number"
@@ -2051,7 +2051,7 @@ msgstr "Revierta"
 #: loan.review&edit
 msgctxt "loan.review&edit"
 msgid "Review installments"
-msgstr "Revisión de los plazos"
+msgstr "Revisión de los pagos"
 
 #: loan.review&submit
 msgid "Review & submit"
@@ -2060,7 +2060,7 @@ msgstr "Revise y envie"
 #: loan.review/edit_ins
 msgctxt "loan.review/edit_ins"
 msgid "Review installments"
-msgstr "Revisión de los plazos"
+msgstr "Revisión de los pagos"
 
 #: loan.review_payment_schedule
 msgid ""
@@ -2107,7 +2107,7 @@ msgstr "Revise la Transacción"
 
 #: loan.running_bal
 msgid "Running balance"
-msgstr "Balance corriente"
+msgstr "Balance actual"
 
 #: loan.s
 msgid "s"
@@ -2123,7 +2123,7 @@ msgstr "Buscar"
 
 #: loan.seeallnotes
 msgid "See all notes"
-msgstr "Fijarse en todas las notas"
+msgstr "Ver todas las notas"
 
 #: loan.sel_charge_type
 #, fuzzy
@@ -2175,7 +2175,7 @@ msgstr ""
 
 #: loan.status
 msgid "Status"
-msgstr "Estado"
+msgstr "Estatus"
 
 #: loan.status_active
 msgid "Active"
@@ -2183,11 +2183,11 @@ msgstr "Activo"
 
 #: loan.status_history
 msgid "Status history"
-msgstr "Estado de la historia"
+msgstr "Estatus de la historia"
 
 #: loan.statuschanged
 msgid "status will be changed to cancelled."
-msgstr "el estado será cambiado para cancelar."
+msgstr "el Estatus será cambiado para cancelar."
 
 #: loan.subTotal
 msgid "subTotal"
@@ -2242,7 +2242,7 @@ msgstr "Cantidad total adeudada en"
 
 #: loan.total_due_install
 msgid "Total due this installment"
-msgstr "Cantidad todal adeudada en este plazo"
+msgstr "Cantidad todal adeudada en este pago"
 
 #: loan.totalamount
 msgid "Total amount"
@@ -2256,7 +2256,7 @@ msgstr "Cuota de entrenamiento\\:"
 #: loan.transaction_id
 #, fuzzy
 msgid "Transaction ID#"
-msgstr "Identificación de la transacción\\#"
+msgstr "ID de la transacción\\#"
 
 #: loan.transc_history
 msgid "Transaction history"
@@ -2298,12 +2298,12 @@ msgstr "Ver el cambio del registro"
 #: loan.view_inst_details
 msgctxt "loan.view_inst_details"
 msgid "View installment details"
-msgstr "Ver los detalles del plazo"
+msgstr "Ver los detalles del pago"
 
 #: loan.view_installment_details
 msgctxt "loan.view_installment_details"
 msgid "View installment details"
-msgstr "Ver los detalles del plazo"
+msgstr "Ver los detalles del pago"
 
 #: loan.view_loan_acc1
 #, fuzzy
@@ -2316,15 +2316,15 @@ msgstr "detalles de la cuenta ahora"
 
 #: loan.view_schd
 msgid "View repayment schedule"
-msgstr "Ver el plan de pago"
+msgstr "Ver el calendario de pagos"
 
 #: loan.view_status_history
 msgid "View status history"
-msgstr "Ver la historia del estado"
+msgstr "Ver la historia del Estatus"
 
 #: loan.view_transc_history
 msgid "View transaction history"
-msgstr "Ver la historia de la transacción"
+msgstr "Ver la historia de las transacciónes"
 
 #: loan.voucherNumber
 msgid "Voucher Number"
@@ -2332,7 +2332,7 @@ msgstr "Número de cupón"
 
 #: loan.waive
 msgid "Waive"
-msgstr "Eliminar"
+msgstr "No aplicar"
 
 #: loan.week(s)
 msgid "Week(s)"
@@ -2340,7 +2340,7 @@ msgstr "Semana(s)"
 
 #: loan.withfollid
 msgid "with the following IDs have been created"
-msgstr "con los siguientes DNI han sido creados"
+msgstr "con los siguientes IDs han sido creados"
 
 #: loan.yes
 msgid "Yes"

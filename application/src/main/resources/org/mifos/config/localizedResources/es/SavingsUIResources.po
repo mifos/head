@@ -62,7 +62,7 @@ msgstr "Descripción"
 
 #: GLCode
 msgid "GL Code"
-msgstr "Código GL"
+msgstr "Código contable"
 
 #: NewStatus
 msgid "New Status"
@@ -75,7 +75,7 @@ msgstr "Estado Anterior"
 #: PaymentID
 #, fuzzy
 msgid "Payment ID#"
-msgstr "Identificación de Pago\\#"
+msgstr "ID de Pago\\#"
 
 #: PostedBy
 msgid "Posted By"
@@ -87,7 +87,7 @@ msgstr "Publicado Por"
 
 #: RunningBalance
 msgid "Running Balance"
-msgstr "Balance Corriente"
+msgstr "Balance actual"
 
 #: Savings.ANew
 msgid "A new"
@@ -143,7 +143,7 @@ msgstr "Seleccionar un(a)"
 
 #: Savings.Transactionhistory
 msgid "Transaction history"
-msgstr "Historia de las transacciones"
+msgstr "Historial de las transacciones"
 
 #: Savings.View
 #, fuzzy
@@ -286,7 +286,7 @@ msgstr "Fecha de la transacción"
 
 #: Savings.depositduedetails
 msgid "Deposit due details"
-msgstr "Detalles del depósito adeudado"
+msgstr "Detalles de depósitos en adeudado"
 
 #: Savings.description
 msgctxt "Savings.description"
@@ -391,7 +391,7 @@ msgid ""
 "updated."
 msgstr ""
 "La última transacción se puede modificar si es necesario. Si el ajuste se "
-"hace, el sistema hará una operación de transacción inversa y el saldo de la "
+"hace, el sistema hará la transacción inversa y el saldo de la "
 "cuenta será actualizado."
 
 #: Savings.nextdeposit
@@ -408,7 +408,7 @@ msgstr "Notas"
 
 #: Savings.on
 msgid "on "
-msgstr ""
+msgstr "en"
 
 #: Savings.openANew
 msgid "Open a new"
@@ -570,7 +570,7 @@ msgstr "' para hacer cambios."
 
 #: Savings.totalAmountDue
 msgid "Total amount due"
-msgstr "Cantidad total adeudada"
+msgstr "Cantidad total en adeudo"
 
 #: Savings.totalDeposits
 msgid "Total deposits"
@@ -610,20 +610,20 @@ msgstr "Ver detalles de los depósitos adeudados"
 
 #: Savings.viewStatusHistory
 msgid "View status history"
-msgstr "Ver estado de la historia"
+msgstr "Ver estatus del historial"
 
 #: Savings.viewTransactionHistory
 msgid "View transaction history"
-msgstr "Ver historia de las transacciones"
+msgstr "Ver historial de las transacciones"
 
 #: Savings.waive
 msgid "Waive"
-msgstr "Eliminar"
+msgstr "No aplicar"
 
 #: TransactionID
 #, fuzzy
 msgid "Transaction ID#"
-msgstr "Identificación de la transacción\\#"
+msgstr "ID de la transacción\\#"
 
 #: Type
 msgid "Type"
@@ -674,11 +674,11 @@ msgstr ""
 
 #: errors.Account.specifyCustomFieldValue
 msgid "Please specify required additional information for '{0}' field."
-msgstr ""
+msgstr "Por favor especifique la informacion adicional para el campo '{0}'."
 
 #: errors.Account.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo {0}"
 
 #: errors.createfailed
 msgid ""
@@ -709,7 +709,7 @@ msgstr "{0} no puede ser una fecha futura."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a {1}"
 
 #: errors.insufficentbalance
 msgid ""
@@ -769,7 +769,7 @@ msgstr "El tamaño de las Notas no puede ser mayor que {0} caracter(es)."
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0} debe ser mayor a 0"
 
 #: errors.prefix
 msgid "<LI>"

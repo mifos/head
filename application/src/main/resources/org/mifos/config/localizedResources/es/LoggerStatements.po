@@ -30,7 +30,7 @@ msgstr "No existe tal desplazamiento aplicable para {0}."
 
 #: LoanOfficerNotActiveException
 msgid "The chosen loan officer is inactive."
-msgstr "El oficial de préstamos elegido no se encuentra activo."
+msgstr "El Oficial de Crédito elegido no se encuentra activo."
 
 #: entry
 msgid "This is the entry point"
@@ -106,4 +106,5 @@ msgstr "Este es el punto de salida."
 msgid ""
 "Fatal chart of accounts error: account with general ledger code {0} not "
 "found."
-msgstr ""
+msgstr "Error fatal en el libro mayor de cuentas: cuenta con el codigo de libro mayor {0}"
+"no ha sido encontrada."

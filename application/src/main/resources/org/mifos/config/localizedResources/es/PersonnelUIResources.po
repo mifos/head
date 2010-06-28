@@ -151,7 +151,7 @@ msgstr ""
 #: Personnel.ClickEditPersonnelSettings
 msgid "Click on Edit information link to modify your personal settings."
 msgstr ""
-"Haga clic en Editar Enlace de Información para modificar su configuración "
+"Haga clic en el vinculo Editar Información para modificar su configuración "
 "personal."
 
 #: Personnel.ClickPreview
@@ -197,11 +197,11 @@ msgstr "Fecha de Unión a la Sucursal\\:"
 #: Personnel.DOJMFI
 #, fuzzy
 msgid "MFI Joining Date:"
-msgstr "Fecha de Unión a MFI\\:"
+msgstr "Fecha de ingreso a la IMF\\:"
 
 #: Personnel.DOJMFILabel
 msgid "Date of Joining MFI"
-msgstr "Fecha de Unión a MFI"
+msgstr "Fecha de ingreso a la IMF"
 
 #: Personnel.Edit
 msgid "Click Edit to make changes."
@@ -280,7 +280,7 @@ msgstr "Identificación del Gobierno"
 #: Personnel.LanguagePreferred
 #, fuzzy
 msgid "Language Preferred:"
-msgstr "Idioma de preferencia\\:"
+msgstr "Idioma preferido\\:"
 
 #: Personnel.LastName
 #, fuzzy
@@ -640,11 +640,11 @@ msgstr ""
 
 #: error.customfield
 msgid "Please specify required additional information for '{0}' field."
-msgstr ""
+msgstr "Por favor especifique la informacion adicional requerida para el campo '{0}'."
 
 #: error.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "Por favor ingrese una fecha valida (format dd/mm/yyyy) en el campo '{0}'."
 
 #: error.dob
 msgid "Please specify date of birth."
@@ -731,7 +731,7 @@ msgstr "Por favor, especifique la jerarquía."
 #: error.lo_only_in_branches
 msgid "Loan officer hierarchy can exist only at branch offices."
 msgstr ""
-"La jerarquía del Oficial de Crédito  puede existir sólo en las sucursales."
+"La jerarquía del Oficial de Crédito puede existir sólo en las sucursales."
 
 #: error.masterdata
 msgid ""
@@ -868,11 +868,11 @@ msgid ""
 "are identical."
 msgstr ""
 "Por favor, asegúrese que la contraseña y la confirmación de la contraseña "
-"sea hagan y sean idénticas."
+"sean idénticas."
 
 #: errors.validvalue
 msgid "Please specify a valid {1}."
-msgstr "Por favor, especifique un válido {1}."
+msgstr "Por favor, especifique un {1} válido."
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."

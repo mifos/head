@@ -36,7 +36,7 @@ msgstr "Aprobado"
 
 #: accountStatus.branch
 msgid "Branch"
-msgstr "Agencia"
+msgstr "Sucursal"
 
 #: accountStatus.cancel
 msgid "Cancel"
@@ -74,7 +74,7 @@ msgstr "/"
 
 #: accountStatus.id
 msgid ": ID "
-msgstr ""
+msgstr ": ID"
 
 #: accountStatus.in
 msgid "in"
@@ -86,7 +86,7 @@ msgstr "Préstamo"
 
 #: accountStatus.loanOfficer
 msgid "Loan Officer"
-msgstr "Oficial de Préstamos"
+msgstr "Oficial de Préstamo"
 
 #: accountStatus.loanamount
 msgid "Loan Amount"
@@ -95,7 +95,7 @@ msgstr "Importe del Préstamo"
 #: accountStatus.loanofficer
 #, fuzzy
 msgid "Loan Officer:"
-msgstr "Oficial de Préstamos\\:"
+msgstr "Oficial de Préstamo\\:"
 
 #: accountStatus.newstatus
 #, fuzzy
@@ -104,7 +104,7 @@ msgstr "Nuevo Estado\\:"
 
 #: accountStatus.noresultfound
 msgid "No search result found."
-msgstr "La búsqueda no ha dado resultado"
+msgstr "No se encontraron resultados"
 
 #: accountStatus.note
 #, fuzzy
@@ -125,11 +125,11 @@ msgstr "--Seleccionar--"
 
 #: accountStatus.state
 msgid "Pending-Approval"
-msgstr "Pendiente de aprobación"
+msgstr "Aprobación Pendiente"
 
 #: accountStatus.statusmessage
 msgid "The following account status has been successfully modified"
-msgstr "Los estados de cuenta siguientes se han modificado con éxito"
+msgstr "El estado de la cuenta se han modificado exitosamente"
 
 #: accountStatus.submit
 msgid "Submit"
@@ -142,5 +142,5 @@ msgstr "Tipo"
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
 msgstr ""
-"Se encontraron 7 resultados en todas las agencias para préstamos pendientes "
+"Se encontraron 7 resultados en todas las sucursales con préstamos pendientes "
 "de aprobar"
