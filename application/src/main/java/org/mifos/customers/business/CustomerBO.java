@@ -1372,4 +1372,12 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         return !groupMeeting.getMeetingId().equals(customerMeeting.getMeetingId());
     }
+
+    public Short getLoanOfficerId() {
+        Short loanOfficerId = null;
+        if (this.personnel != null) {
+            loanOfficerId = this.personnel.getPersonnelId();
+        }
+        return loanOfficerId;
+    }
 }
