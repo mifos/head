@@ -87,58 +87,44 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="view_questions"/>
+            <span id="page.id" title="view_question_details"/>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
-      <span class="fontnormal8pt">
-          <a href="AdminAction.do?method=load">Admin</a> /
-      </span>
-      <span class="fontnormal8ptbold">
-          View Questions
-      </span>
+                      <span class="fontnormal8pt">
+                          <a href="AdminAction.do?method=load">Admin</a> /
+                      </span>
+                      <span class="fontnormal8pt">
+                          <a href="viewQuestions.ftl">View Questions</a> /
+                      </span>
+                        [#if error_message_code??]
+                        [@spring.message error_message_code/]
+                        [#else]
+                          <span class="fontnormal8ptbold">
+                            ${Request.questionDetail.title}
+                          </span>
+                        [/#if]
                     </td>
                 </tr>
             </table>
-
+            [#if !error_message_code??]
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td width="70%" align="left" valign="middle" class="paddingL15T15">
                         <div style="padding:3px" class="headingorange">
-                            View Questions
+                            ${Request.questionDetail.title}
                             <br/>
-                            <br/>
-                                <span class="fontnormal">
-                                    Click on a question below to view details and make changes or
-                                    <a href="createQuestion.ftl">
-                                        define a new question
-                                    </a>
-                                </span>
-                            <br/>
-                            <span class="fontnormal">
-                                Note: questions flagged as PPI may not be attached to general surveys.
-                            </span>
-                            <br/>
-                            <br/>
+                            <br>
                         </div>
-                        <table width="90%" border="0" cellspacing="0" cellpadding="0" id="questions.table">
-                            [#list questions as question]
-                            <tr class="fontnormal">
-                                <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9"
-                                                    height="11"/></td>
-                                <td width="99%">
-                                    <a href="viewQuestionDetail.ftl?questionId=${question.id}"
-                                       id="questionId_${question.id}">
-                                        ${question.title}
-                                        <br/>
-                                    </a>
-                                </td>
-                            </tr>
-                            [/#list]
-                        </table>
+                        <span class="fontnormal">
+                            Question: ${Request.questionDetail.title}
+                            <br/>
+                            Answer type: ${Request.questionDetail.type}
+                        </span>
                     </td>
                 </tr>
             </table>
+            [/#if]
         </td>
     </tr>
 </table>

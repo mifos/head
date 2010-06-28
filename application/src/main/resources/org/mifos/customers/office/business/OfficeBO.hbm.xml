@@ -79,9 +79,6 @@
         <query name="getCountOfActiveChildren">
             <![CDATA[select count(*) from org.mifos.customers.office.business.OfficeBO o where o.parentOffice.officeId=:OFFICE_ID and o.status.id=1]]>
     </query>
-	<query name="masterdata.activeParents">
-        <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(office.officeId, office.officeName,office.level.id,lv.lookUpName,office.versionNo) from org.mifos.customers.office.business.OfficeBO office ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=office.level.lookUpValue.lookUpId and  office.level.id < :LEVEL_ID and office.status.id=:STATUS_ID ]]>
-    </query>          
     <query name="masterdata.officestatus">
         <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(os.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeStatusEntity os ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=os.lookUpValue.lookUpId   ]]>
     </query>       
@@ -119,6 +116,9 @@
     <query name="office.getAllOfficesForCustomField">    		
             <![CDATA[from org.mifos.customers.office.business.OfficeBO]]>
     </query>
+	<query name="masterdata.activeParents">
+        <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(office.officeId, office.officeName,office.level.id,lv.lookUpName,office.versionNo) from org.mifos.customers.office.business.OfficeBO office ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=office.level.lookUpValue.lookUpId and  office.level.id < :LEVEL_ID and office.status.id=:STATUS_ID ]]>
+    </query>          
     
     <!-- querys used by officeDao below this -->
     <query name="findOfficeById">
@@ -133,6 +133,9 @@
     <query name="findAllNonHeadOfficesApplicableToOfficeHierarchy">
 		<![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.parentOffice.officeId, o.status.id, o.level.id, o.parentOffice.officeName) from OfficeBO o where o.level.configured=1 order by o.level.id]]>
     </query>
+    <query name="office.findActiveParents">
+        <![CDATA[select new org.mifos.dto.domain.OfficeDto(o.officeId, o.officeName, o.searchId, o.shortName, o.globalOfficeNum, o.versionNo, o.status.id, o.level.id, lv.lookUpName) from OfficeBO o ,LookUpValueEntity lv where lv.lookUpId=o.level.lookUpValue.lookUpId and o.level.id < :LEVEL_ID and o.status.id=:STATUS_ID ]]>
+    </query>          
     <query name="masterdata.activeLevels">
         <![CDATA[select new org.mifos.customers.office.business.OfficeDetailsDto(ol.id,lv.lookUpName) from org.mifos.customers.office.business.OfficeLevelEntity ol ,org.mifos.application.master.business.LookUpValueEntity lv where lv.lookUpId=ol.lookUpValue.lookUpId and ol.configured=1 and ol.id !=1 order by ol.id  ]]>
     </query>

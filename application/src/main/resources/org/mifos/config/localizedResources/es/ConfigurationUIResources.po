@@ -30,11 +30,11 @@ msgstr "Activo"
 
 #: configuration.activebadstand
 msgid "Active in bad standing"
-msgstr "Activo en mala condición"
+msgstr "Activo en mala posición"
 
 #: configuration.activegoodstand
 msgid "Active in good standing"
-msgstr "Activo en buena condición"
+msgstr "Activo en buena posición"
 
 #: configuration.add
 msgid "Add"
@@ -98,11 +98,11 @@ msgstr "Asignando"
 
 #: configuration.branchoffice
 msgid "Branch office"
-msgstr "Oficina de agencia"
+msgstr "Sucursal"
 
 #: configuration.bulkentry
 msgid "Bulk entry"
-msgstr "Entrada en bloque"
+msgstr "Registro de datos en volumen"
 
 #: configuration.businessactivity
 msgid "Business Activity"
@@ -154,11 +154,11 @@ msgstr "Cerrado"
 
 #: configuration.closeobligmet
 msgid "Closed-obligation met"
-msgstr "Cerrado-Obligación satisfecha"
+msgstr "Cerrado-Responsabilidad cumplida"
 
 #: configuration.closeresch
 msgid "Closed-rescheduled"
-msgstr "Cerrado-pospuesto"
+msgstr "Cerrado-Cambio de fecha"
 
 #: configuration.closewriteoff
 msgid "Closed-written off"
@@ -234,7 +234,7 @@ msgstr "ID externa"
 
 #: configuration.familydetails
 msgid "Family Details"
-msgstr ""
+msgstr "Datos Familiares"
 
 #: configuration.fields
 msgid "fields"
@@ -246,11 +246,11 @@ msgstr "ID Gubernamental"
 
 #: configuration.graceallrepay
 msgid "Grace on all repayments"
-msgstr "Carencia en todos los pagos"
+msgstr "Gracia en todos los pagos"
 
 #: configuration.gracetypes
 msgid "Grace types"
-msgstr "Tipos de carencia"
+msgstr "Tipos de gracia"
 
 #: configuration.group
 msgid "Group"
@@ -341,7 +341,7 @@ msgstr "Estado Civil"
 #: configuration.middlename
 #, fuzzy
 msgid "Middle name"
-msgstr "----"
+msgstr "Segundo Nombre"
 
 #: configuration.misc
 msgid "Miscellaneous"
@@ -373,7 +373,7 @@ msgstr "Aplicación parcial"
 
 #: configuration.paymentmodes
 msgid "Payment Modes"
-msgstr "Modos de Pago"
+msgstr "Tipos de Pago"
 
 #: configuration.pendingappr
 msgid "Pending Approval"
@@ -397,7 +397,7 @@ msgstr "Foto"
 
 #: configuration.please_note
 msgid "Please Note"
-msgstr ""
+msgstr "Favor de tomar en cuenta"
 
 #: configuration.postalcode
 msgid "Postal code"
@@ -405,7 +405,7 @@ msgstr "Código Postal"
 
 #: configuration.povertystatus
 msgid "Poverty Status"
-msgstr ""
+msgstr "Estado de pobreza"
 
 #: configuration.prdtypes
 msgid "Product Types"
@@ -431,7 +431,7 @@ msgstr ""
 
 #: configuration.pringrace
 msgid "Principal only grace"
-msgstr "Carencia de capital solamente."
+msgstr "Gracia de capital solamente."
 
 #: configuration.products
 msgid "products"
@@ -474,7 +474,7 @@ msgid ""
 "Click on a category below to view and edit the additional fields defined for "
 "that category or"
 msgstr ""
-"Pulse en una categoría abajo para ver y editar los campos adicionales "
+"Pulse en una categoría de abajo para ver y editar los campos adicionales "
 "definidos para esa categoría o"
 
 #: configuration.sequence_number
@@ -483,19 +483,19 @@ msgstr "Número de secuencia"
 
 #: configuration.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "Fuente de los fondos"
 
 #: configuration.spousefatherinformation
 msgid "Spouse/Father Information"
-msgstr ""
+msgstr "Informacion del Esposo/Padre"
 
 #: configuration.spousefathermiddlename
 msgid "Relative middle name"
-msgstr ""
+msgstr "Segundo Nombre"
 
 #: configuration.spousefathersecondlastname
 msgid "Relative second last name"
-msgstr ""
+msgstr "Segundo Apellido"
 
 #: configuration.state
 msgid "State"
@@ -543,19 +543,19 @@ msgstr "Ver campos adicionales"
 
 #: configuration.vouchers
 msgid "Vouchers"
-msgstr "Cupones"
+msgstr "Vouchers"
 
 #: configuration.numberofchildren
 msgid "Number of Children"
-msgstr ""
+msgstr "Numero de hijos"
 
 #: errors.default_value_not_date
 msgid "Default value does not match data type date (format (DD/MM/YYYY))"
-msgstr "El valor por defecto no coincide con el formato de fecha (DD/MM/AAAA)"
+msgstr "El valor por default no coincide con el formato de fecha (DD/MM/AAAA)"
 
 #: errors.default_value_not_number
 msgid "Default value does not match data type (number)"
-msgstr "El valor por defecto no coincide con el tipo de dato (número)"
+msgstr "El valor por default no coincide con el tipo de dato (número)"
 
 #: errors.duplicatevalue
 msgid "The entered value already exists in the list box."
@@ -599,7 +599,7 @@ msgstr "Por favor especifique un valor con {0} caracteres o menos."
 # There is no middle name in Spanish
 #, fuzzy
 #~ msgid "Spouse/father middle name"
-#~ msgstr "----"
+#~ msgstr "Segundo Nombre de esposo/padre"
 
 #~ msgid "Spouse/father second last name"
 #~ msgstr "Segundo apellido del padre/esposo"

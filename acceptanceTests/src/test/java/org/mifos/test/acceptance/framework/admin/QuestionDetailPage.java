@@ -17,29 +17,18 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.test.acceptance.framework.admin;
 
-package org.mifos.dto.screen;
+import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-import java.util.List;
-
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.OfficeDto;
-
-public class OfficeFormDto {
-
-    private final List<CustomFieldDto> customFields;
-    private final List<OfficeDto> parents;
-
-    public OfficeFormDto(List<CustomFieldDto> customFields, List<OfficeDto> parents) {
-        this.customFields = customFields;
-        this.parents = parents;
+public class QuestionDetailPage extends MifosPage{
+    public QuestionDetailPage(Selenium selenium) {
+        super(selenium);
     }
 
-    public List<CustomFieldDto> getCustomFields() {
-        return this.customFields;
-    }
-
-    public List<OfficeDto> getParents() {
-        return this.parents;
+    public QuestionDetailPage verifyPage() {
+        verifyPage("view_question_details");
+        return this;
     }
 }

@@ -184,7 +184,7 @@ public class FeeDaoHibernateIntegrationTest {
     public void shouldReturnAllFeeCategories() {
 
         // exercise test
-        List<CategoryTypeEntity> categories = this.feeDao.retrieveFeeCategories();
+        List<CategoryTypeEntity> categories = this.feeDao.doRetrieveFeeCategories();
 
         // verification
         assertThat(categories.size(), is(5));

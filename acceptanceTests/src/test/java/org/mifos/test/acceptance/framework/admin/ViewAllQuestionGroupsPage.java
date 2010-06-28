@@ -33,8 +33,8 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
         return this;
     }
 
-    public QuestionGroupDetailPage navigateToQuestionGroupDetailPage(String id) {
-        selenium.click(id);
+    public QuestionGroupDetailPage navigateToQuestionGroupDetailPage(String title) {
+        selenium.click("link="+title);
         waitForPageToLoad();
         return new QuestionGroupDetailPage(selenium);
     }

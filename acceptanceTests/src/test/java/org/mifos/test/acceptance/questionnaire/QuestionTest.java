@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.QuestionDetailPage;
 import org.mifos.test.acceptance.framework.admin.ViewAllQuestionsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String TITLE_MISSING = "Please specify the title.";
     private static final String DUPLICATE_TITLE = "The name specified already exists.";
     private CreateQuestionParameters createQuestionParameters;
+    private static final String DATE_TYPE = "Date";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -74,13 +76,22 @@ public class QuestionTest extends UiTestCaseBase {
         testDuplicateTitle(createQuestionPage);
         adminPage = testCreateQuestions(createQuestionPage);
         adminPage = testDuplicateTitleForExistingQuestionInDB(adminPage);
-        testViewQuestions(adminPage);
+        ViewAllQuestionsPage viewAllQuestionsPage = testViewQuestions(adminPage);
+        testViewQuestionDetail(viewAllQuestionsPage);
     }
 
-    private void testViewQuestions(AdminPage adminPage) {
+    private void testViewQuestionDetail(ViewAllQuestionsPage viewAllQuestionsPage) {
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(title);
+        questionDetailPage.verifyPage();
+        Assert.assertTrue(selenium.isTextPresent("Question: "+title), "Title is missing");
+        Assert.assertTrue(selenium.isTextPresent("Answer type: "+DATE_TYPE), "Answer type is missing");
+    }
+
+    private ViewAllQuestionsPage testViewQuestions(AdminPage adminPage) {
         ViewAllQuestionsPage viewAllQuestionsPage = adminPage.navigateToViewAllQuestions();
         viewAllQuestionsPage.verifyPage();
         assertTextFoundOnPage(title);
+        return viewAllQuestionsPage;
     }
 
     private AdminPage getAdminPage() {
@@ -112,9 +123,11 @@ public class QuestionTest extends UiTestCaseBase {
 
     private void testAddQuestion(CreateQuestionPage createQuestionPage) {
         createQuestionParameters.setTitle(title);
+        createQuestionParameters.setType(DATE_TYPE);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertFalse(selenium.isTextPresent(TITLE_MISSING), "Missing title error should not appear");
         Assert.assertEquals(title, selenium.getTable("questions.table.1.0"));
+        Assert.assertEquals(DATE_TYPE, selenium.getTable("questions.table.1.1"));
     }
 
     private CreateQuestionPage testMissingTitle(AdminPage adminPage) {
@@ -129,6 +142,8 @@ public class QuestionTest extends UiTestCaseBase {
 class CreateQuestionParameters {
     private String title;
 
+    private String type;
+
     public String getTitle() {
         return title;
     }
@@ -137,4 +152,11 @@ class CreateQuestionParameters {
         this.title = title;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

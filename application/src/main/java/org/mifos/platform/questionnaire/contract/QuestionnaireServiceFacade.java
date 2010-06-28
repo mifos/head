@@ -38,4 +38,6 @@ public interface QuestionnaireServiceFacade {
     List<QuestionGroupForm> getAllQuestionGroups();
 
     QuestionGroupForm getQuestionGroup(int questionGroupId) throws ApplicationException;
+
+    Question getQuestion(int questionId) throws ApplicationException;
 }

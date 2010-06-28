@@ -22,7 +22,7 @@ msgstr "Activo"
 
 #: checklist.addnewchecklist
 msgid "Add new checklist"
-msgstr "Añadir nueva lista"
+msgstr "Añadir nueva lista de control"
 
 #: checklist.admin
 msgid "Admin"
@@ -62,7 +62,7 @@ msgstr "Nombre"
 
 #: checklist.checklistStatus
 msgid "checklist status"
-msgstr "estatus de la lista"
+msgstr "estatus de la lista de control"
 
 #: checklist.checklistText
 msgid "Text"
@@ -74,15 +74,15 @@ msgstr "Tipo"
 
 #: checklist.checklist_Name
 msgid "checklist name"
-msgstr "nombre de la lista"
+msgstr "nombre de la lista de control"
 
 #: checklist.checklist_info
 msgid "Checklist information"
-msgstr "información de la lista"
+msgstr "información de la lista de control"
 
 #: checklist.checklistdetails
 msgid "Checklist details"
-msgstr "detalles de la lista"
+msgstr "detalles de la lista de control"
 
 #: checklist.client
 msgid "Client"
@@ -102,11 +102,11 @@ msgstr "Fecha de creación"
 
 #: checklist.definenewchecklist
 msgid "define a new checklist"
-msgstr "definir una nueva lista"
+msgstr "definir una nueva lista de control"
 
 #: checklist.description
 msgid "Click on a checklist below to view details and make changes or"
-msgstr "Seleccione una lista abajo para ver los detalles y realizar cambios o"
+msgstr "Seleccione una lista de control abajo para ver los detalles y realizar cambios o"
 
 #: checklist.details
 msgid "details"
@@ -114,22 +114,22 @@ msgstr "detalles"
 
 #: checklist.display_status
 msgid "Displayed when moving into Status"
-msgstr "Mostrado al cambiar de estatus"
+msgstr "Mostrado al cambiar a Estatus"
 
 #: checklist.displayed_status
 #, fuzzy
 msgid "Displayed when moving into Status:"
-msgstr "Mostrado al cambiar de estatus\\:"
+msgstr "Mostrado al cambiar a Estatus\\:"
 
 #: checklist.edit_button
 msgctxt "checklist.edit_button"
 msgid "Edit Checklist Information"
-msgstr "Editar información de la lista"
+msgstr "Editar información de la lista de control"
 
 #: checklist.edit_checklist
 msgctxt "checklist.edit_checklist"
 msgid "Edit Checklist Information"
-msgstr "Editar información de la lista"
+msgstr "Editar información de la lista de control"
 
 #: checklist.edit_checklist_info
 msgid ""
@@ -137,7 +137,7 @@ msgid ""
 "Checklist Details without editing information."
 msgstr ""
 "Complete los campos de abajo. Luego pulse Vista Previa. Pulse Cancelar para "
-"volver a los detalles de la lista sin editar la información."
+"volver a los detalles de la lista de control sin editar la información."
 
 #: checklist.enter_Info_one
 msgid ""
@@ -153,7 +153,7 @@ msgstr "Los campos marcados con un asterisco son obligatorios."
 
 #: checklist.enterchecklist_Info
 msgid "Enter checklist information"
-msgstr "Introduzca la información de la lista"
+msgstr "Introduzca la información de la lista de control"
 
 #: checklist.group
 msgid "Group"
@@ -185,7 +185,7 @@ msgstr "Nombre\\:"
 
 #: checklist.onhold
 msgid "On hold"
-msgstr "Interrumpido"
+msgstr "En Espera"
 
 #: checklist.review_Info
 msgid ""
@@ -203,11 +203,11 @@ msgstr "Revisar y enviar"
 
 #: checklist.reviewchecklist_Info
 msgid "Review checklist information"
-msgstr "Revisar la información de la lista"
+msgstr "Revisar la información de la lista de control"
 
 #: checklist.savelater
 msgid "Save for later"
-msgstr "Grabar y continuar más tarde"
+msgstr "Guardar y continuar más tarde"
 
 #: checklist.savings
 msgid "Savings"
@@ -220,7 +220,7 @@ msgstr "Estatus"
 #: checklist.status_checklist
 #, fuzzy
 msgid "Status of checklist:"
-msgstr "Estatus de la lista\\:"
+msgstr "Estatus de la lista de control\\:"
 
 #: checklist.submitapproval
 msgid "Submit for approval"
@@ -233,7 +233,7 @@ msgstr "Tipo\\:"
 
 #: checklist.view_checklists
 msgid "View checklists"
-msgstr "Ver listas"
+msgstr "Ver listas de control"
 
 #: error.activity.not.allowed
 msgid ""

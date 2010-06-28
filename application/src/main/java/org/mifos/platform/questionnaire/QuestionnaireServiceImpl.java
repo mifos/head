@@ -40,7 +40,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private QuestionDao questionDao;
-    
+
     @Autowired
     private QuestionGroupDao questionGroupDao;
 
@@ -94,12 +94,21 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException{
+    public QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException {
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
-        if(questionGroup == null){
+        if (questionGroup == null) {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
         }
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
+    }
+
+    @Override
+    public QuestionDetail getQuestion(int questionId) throws ApplicationException {
+        Question question = questionDao.getDetails(questionId);
+        if (question == null) {
+            throw new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND);
+        }
+        return questionnaireMapper.mapToQuestionDetail(question);
     }
 
     private void persistQuestion(Question question) throws ApplicationException {

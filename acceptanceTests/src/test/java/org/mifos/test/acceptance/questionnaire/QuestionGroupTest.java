@@ -88,7 +88,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     }
 
     private void testQuestionGroupDetail(ViewAllQuestionGroupsPage viewAllQuestionGroupsPage) {
-        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage("questionGroupId_1");
+        QuestionGroupDetailPage questionGroupDetailPage = viewAllQuestionGroupsPage.navigateToQuestionGroupDetailPage(title1);
         questionGroupDetailPage.verifyPage();
         assertTextFoundOnPage(title1);
     }
