@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
@@ -97,9 +98,30 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestions() {
+        when(questionDao.getDetailsAll()).thenReturn(asList(getQuestion(1, "q1", AnswerType.DATE), getQuestion(2, "q2", AnswerType.FREETEXT)));
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         assertNotNull("getAllQuestions should not return null", questionDetails);
         verify(questionDao, times(1)).getDetailsAll();
+
+        assertThat(questionDetails.get(0).getText(), is("q1"));
+        assertThat(questionDetails.get(0).getShortName(), is("q1"));
+        assertThat(questionDetails.get(0).getId(), is(1));
+        assertThat(questionDetails.get(0).getType(), is(QuestionType.DATE));
+
+        assertThat(questionDetails.get(1).getText(), is("q2"));
+        assertThat(questionDetails.get(1).getShortName(), is("q2"));
+        assertThat(questionDetails.get(1).getId(), is(2));
+        assertThat(questionDetails.get(1).getType(), is(QuestionType.FREETEXT));
+        
+    }
+
+    private Question getQuestion(int id, String text, AnswerType type) {
+        Question question = new Question();
+        question.setQuestionId(id);
+        question.setQuestionText(text);
+        question.setShortName(text);
+        question.setAnswerType(type);
+        return question;
     }
 
     @Test
@@ -127,7 +149,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionGroupDao.getDetailsAll()).thenReturn(asList(getQuestionGroup(1,"QG1"),getQuestionGroup(2,"QG2")));
+        when(questionGroupDao.getDetailsAll()).thenReturn(asList(getQuestionGroup(1, "QG1"), getQuestionGroup(2, "QG2")));
         List<QuestionGroupDetail> questionGroupDetails = questionnaireService.getAllQuestionGroups();
         assertNotNull("getAllQuestionGroups should not return null", questionGroupDetails);
         assertThat(questionGroupDetails.get(0).getId(), is(1));
@@ -158,6 +180,32 @@ public class QuestionnaireServiceTest {
         } catch (ApplicationException e) {
             verify(questionGroupDao, times(1)).getDetails(questionGroupId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    public void testGetQuestionByIdSuccess() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.DATE));
+        QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
+        assertNotNull(questionDetail);
+        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
+        assertThat(questionDetail.getType(), is(QuestionType.DATE));
+        verify(questionDao, times(1)).getDetails(questionId);
+    }
+
+    @Test
+    public void testGetQuestionByIdFailure() {
+        int questionId = 1;
+        when(questionDao.getDetails(questionId)).thenReturn(null);
+        try {
+            questionnaireService.getQuestion(questionId);
+            fail("Should raise application exception when question group is not present");
+        } catch (ApplicationException e) {
+            verify(questionDao, times(1)).getDetails(questionId);
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
     }
 

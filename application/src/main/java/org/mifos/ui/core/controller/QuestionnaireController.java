@@ -148,22 +148,39 @@ public class QuestionnaireController {
         return "viewQuestionGroupDetail";
     }
 
-    private boolean invalid(String questionGroupId) {
-        if (isEmpty(questionGroupId) || !isInteger(questionGroupId)) {
+    @RequestMapping("/viewQuestionDetail.ftl")
+    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionId = httpServletRequest.getParameter("questionId");
+        try {
+            if (invalid(questionId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+            } else {
+                Question question = questionnaireServiceFacade.
+                        getQuestion(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", question);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
+        }
+        return "viewQuestionDetail";
+    }
+
+    private boolean invalid(String id) {
+        if (isEmpty(id) || !isInteger(id)) {
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean isInteger(String input) {
+    public boolean isInteger(String id) {
         try {
-            Integer.parseInt(input);
+            Integer.parseInt(id);
             return true;
         }
         catch (NumberFormatException e) {
             return false;
         }
     }
-
 }

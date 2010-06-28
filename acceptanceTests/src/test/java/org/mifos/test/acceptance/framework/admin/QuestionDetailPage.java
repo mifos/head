@@ -22,20 +22,13 @@ package org.mifos.test.acceptance.framework.admin;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
 
-public class ViewAllQuestionGroupsPage extends MifosPage {
-    public ViewAllQuestionGroupsPage(Selenium selenium) {
+public class QuestionDetailPage extends MifosPage{
+    public QuestionDetailPage(Selenium selenium) {
         super(selenium);
     }
 
-
-    public ViewAllQuestionGroupsPage verifyPage() {
-        verifyPage("view_question_groups");
+    public QuestionDetailPage verifyPage() {
+        verifyPage("view_question_details");
         return this;
-    }
-
-    public QuestionGroupDetailPage navigateToQuestionGroupDetailPage(String title) {
-        selenium.click("link="+title);
-        waitForPageToLoad();
-        return new QuestionGroupDetailPage(selenium);
     }
 }

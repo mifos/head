@@ -132,7 +132,7 @@ public class QuestionnaireControllerTest {
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInForm() throws Exception {
         QuestionForm questionForm = new QuestionForm();
         questionForm.setTitle("  " + TITLE + "    ");
-        questionForm.setQuestions(asList(getQuestion(TITLE)));
+        questionForm.setQuestions(asList(getQuestion("0", TITLE, "Number")));
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionnaireController.addQuestion(questionForm, requestContext);
         assertThat(questionForm.getQuestions().size(), is(1));
@@ -196,11 +196,11 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQuestions() {
-        when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestion("title1"), getQuestion("title2")));
+        when(questionnaireServiceFacade.getAllQuestions()).thenReturn(asList(getQuestion("1", "title1", "Number"), getQuestion("2", "title2", "Number")));
         String view = questionnaireController.getAllQuestions(model, httpServletRequest);
         assertThat(view, is("viewQuestions"));
         verify(questionnaireServiceFacade).getAllQuestions();
-        verify(model).addAttribute(eq("questions"), argThat(new ListOfTitlesMatcher("title1", "title2")));
+        verify(model).addAttribute(eq("questions"), argThat(new ListOfQuestionsMatcher(getQuestion("1", "title1", "Number"), getQuestion("2", "title2", "Number"))));
     }
 
     @Test
@@ -220,23 +220,73 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void shouldGetQuestionById() throws ApplicationException {
+        int questionId = 1;
+        Question question = getQuestion(Integer.toString(questionId), TITLE, "Number");
+        when(questionnaireServiceFacade.getQuestion(questionId)).thenReturn(question);
+        when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
+        String view = questionnaireController.getQuestion(model, httpServletRequest);
+        assertThat(view, is("viewQuestionDetail"));
+        verify(questionnaireServiceFacade).getQuestion(questionId);
+        verify(httpServletRequest, times(1)).getParameter("questionId");
+        verify(model).addAttribute(eq("questionDetail"), argThat(new QuestionMatcher(getQuestion(Integer.toString(questionId), TITLE, "Number"))));
+    }
+
+    @Test
+    public void testGetQuestionWhenNotPresentInDb() throws ApplicationException {
+        int questionId = 1;
+        when(questionnaireServiceFacade.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        when(httpServletRequest.getParameter("questionId")).thenReturn(Integer.toString(questionId));
+        String view = questionnaireController.getQuestion(model, httpServletRequest);
+        assertThat(view, is("viewQuestionDetail"));
+        verify(questionnaireServiceFacade).getQuestion(questionId);
+        verify(httpServletRequest, times(1)).getParameter("questionId");
+        verify(model).addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
+    }
+
+    @Test
+    public void testGetQuestionWhenIdIsNull() throws ApplicationException {
+        when(httpServletRequest.getParameter("questionId")).thenReturn(null);
+        String view = questionnaireController.getQuestion(model, httpServletRequest);
+        assertThat(view, is("viewQuestionDetail"));
+        verify(httpServletRequest, times(1)).getParameter("questionId");
+        verify(questionnaireServiceFacade, times(0)).getQuestion(anyInt());
+        verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+    }
+
+    @Test
+    public void testGetQuestionWhenIdIsNotInteger() throws ApplicationException {
+        when(httpServletRequest.getParameter("questionId")).thenReturn("1A");
+        String view = questionnaireController.getQuestion(model, httpServletRequest);
+        assertThat(view, is("viewQuestionDetail"));
+        verify(httpServletRequest, times(1)).getParameter("questionId");
+        verify(questionnaireServiceFacade, times(0)).getQuestion(anyInt());
+        verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+    }
+
+
+    @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setTitle(TITLE);
         int questionGroupId = 1;
+        QuestionGroupForm questionGroupForm = getQuestionGroupForm(questionGroupId, TITLE);
         when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroupForm);
-        when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1");
+        when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroupDetail"));
         verify(questionnaireServiceFacade).getQuestionGroup(questionGroupId);
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
-        verify(model).addAttribute("questionGroupDetail", questionGroupForm);
+        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupFormMatcher(getQuestionGroupForm(questionGroupId, TITLE))));
+    }
+
+    private QuestionGroupForm getQuestionGroupForm(int questionGroupId, String title) {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        questionGroupForm.setId(Integer.toString(questionGroupId));
+        questionGroupForm.setTitle(title);
+        return questionGroupForm;
     }
 
     @Test
-    public void testGetQuestionGroupWhenNotPresent() throws ApplicationException {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setTitle(TITLE);
+    public void testGetQuestionGroupWhenNotPresentInDb() throws ApplicationException {
         int questionGroupId = 1;
         when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn("1");
@@ -280,9 +330,11 @@ public class QuestionnaireControllerTest {
         return questionGroupForm;
     }
 
-    private Question getQuestion(String title) {
+    private Question getQuestion(String id, String title, String type) {
         Question question = new Question();
         question.setTitle(title);
+        question.setId(id);
+        question.setType(type);
         return question;
     }
 
@@ -304,11 +356,11 @@ public class QuestionnaireControllerTest {
         }
     }
 
-    private class ListOfTitlesMatcher extends ArgumentMatcher<List> {
-        private String[] titles;
+    private class ListOfQuestionsMatcher extends ArgumentMatcher<List> {
+        private Question[] questions;
 
-        public ListOfTitlesMatcher(String... titles) {
-            this.titles = titles;
+        public ListOfQuestionsMatcher(Question... questions) {
+            this.questions = questions;
         }
 
         @Override
@@ -319,12 +371,54 @@ public class QuestionnaireControllerTest {
                     Object obj = questionList.get(i);
                     if (obj instanceof Question) {
                         Question question = (Question) obj;
-                        if (!equalsIgnoreCase(question.getTitle(), titles[i])) return false;
+                        if (!(
+                                equalsIgnoreCase(question.getId(), questions[i].getId())
+                                        && equalsIgnoreCase(question.getTitle(), questions[i].getTitle())
+                                        && equalsIgnoreCase(question.getType(), questions[i].getType())
+                        )) return false;
                     } else {
                         return false;
                     }
                 }
                 return true;
+            }
+            return false;
+        }
+    }
+
+    private class QuestionMatcher extends ArgumentMatcher<Question> {
+        private Question question;
+
+        public QuestionMatcher(Question question) {
+            this.question = question;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (argument instanceof Question) {
+                Question question = (Question) argument;
+                return (equalsIgnoreCase(this.question.getType(), question.getType())
+                        && equalsIgnoreCase(this.question.getId(), question.getId())
+                        && equalsIgnoreCase(this.question.getTitle(), question.getTitle()));
+            }
+            return false;
+        }
+    }
+
+    private class QuestionGroupFormMatcher extends ArgumentMatcher<QuestionGroupForm> {
+        private QuestionGroupForm questionGroupForm;
+
+        public QuestionGroupFormMatcher(QuestionGroupForm questionGroupForm) {
+            this.questionGroupForm = questionGroupForm;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (argument instanceof QuestionGroupForm) {
+                QuestionGroupForm questionGroupForm = (QuestionGroupForm) argument;
+                return (equalsIgnoreCase(this.questionGroupForm.getTitle(), questionGroupForm.getTitle())
+                        && equalsIgnoreCase(this.questionGroupForm.getId(), questionGroupForm.getId())
+                );
             }
             return false;
         }

@@ -132,6 +132,31 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionById() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.FREETEXT);
+        QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail .getId());
+        assertNotSame(createdQuestionDetail , retrievedQuestionDetail);
+        assertThat(retrievedQuestionDetail.getText(), is(title));
+        assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionByIdFailure() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.DATE);
+        Integer maxQuestionId = createdQuestionDetail.getId();
+        try {
+            questionnaireService.getQuestion(maxQuestionId+1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldThrowExceptionForDuplicateQuestion() throws ApplicationException {
         long offset = System.currentTimeMillis();
         String questionTitle = "Title" + offset;

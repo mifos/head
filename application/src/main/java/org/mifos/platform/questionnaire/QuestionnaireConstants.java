@@ -7,4 +7,6 @@ public class QuestionnaireConstants {
     public static final String QUESTION_GROUP_TITLE_NOT_PROVIDED = "QuestionGroupTitleNotProvided";
     public static final String QUESTION_GROUP_NOT_FOUND = "questionnaire.error.question.group.not.found";
     public static final String INVALID_QUESTION_GROUP_ID = "questionnaire.error.invalid.question.group.id";
+    public static final String QUESTION_NOT_FOUND = "questionnaire.error.question.not.found";
+    public static final String INVALID_QUESTION_ID = "questionnaire.error.invalid.question.id";
 }
