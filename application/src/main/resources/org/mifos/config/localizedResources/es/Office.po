@@ -77,7 +77,7 @@ msgstr "La oficina no se puede activar ya que la oficina padre está inactiva."
 
 #: errors.office.shortname.minlength
 msgid "Minimum length for office short name is {2} characters."
-msgstr "El largo mínimo para el nombre corto de la oficina es {2} caracteres."
+msgstr "La longitud mínima para la abreviacion de la oficina es de {2} caracteres."
 
 #: errors.office.updationhierarchyfailed
 #, fuzzy
@@ -243,13 +243,13 @@ msgid ""
 "This Office short name already exists in the application. Please specify a "
 "different name."
 msgstr ""
-"El nombre corto dado a la Oficina ya existe en la aplicación. Por favor, "
+"La abreviacion dada a la Oficina ya existe en la aplicación. Por favor, "
 "especifique un nombre diferente."
 
 #: office.formParentOffice.requiredmsg
 #, fuzzy
 msgid "Please specify a Parent office. "
-msgstr "Por favor, especifique una oficina Padre."
+msgstr "Por favor, especifique una oficina matriz."
 
 #: office.labelAddNew
 msgid "Define new"
@@ -302,7 +302,7 @@ msgstr "Cambiar el estado\\:"
 
 #: office.labelCheckLevelIncluded
 msgid "Check the levels to be included."
-msgstr "Marque los niveles que deben ser  incluídos."
+msgstr "Marque los niveles que deben ser incluídos."
 
 #: office.labelCity
 #, fuzzy
@@ -424,7 +424,7 @@ msgstr "Nombre de la Oficina\\:"
 #: office.labelOfficeShortName
 #, fuzzy
 msgid "Office short name:"
-msgstr "Nombre corto de la Oficina\\:"
+msgstr "Abreviacion de la Oficina\\:"
 
 #: office.labelOfficeType
 #, fuzzy
@@ -434,7 +434,7 @@ msgstr "Tipo de Oficina\\:"
 #: office.labelParentOffice
 #, fuzzy
 msgid "Parent office:"
-msgstr "Oficina Padre\\:"
+msgstr "Oficina Matriz\\:"
 
 #: office.labelPleaseNote
 #, fuzzy

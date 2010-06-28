@@ -39,7 +39,7 @@ msgstr "disponible."
 
 #: CustomerSearch.branch
 msgid "branch"
-msgstr "agencia"
+msgstr "sucursal"
 
 #: CustomerSearch.edit
 msgid "edit"
@@ -59,11 +59,11 @@ msgstr "Los enlaces a la izquierda"
 
 #: CustomerSearch.loanOfficer
 msgid "loan officer"
-msgstr "Oficial de Préstamo"
+msgstr "Oficial de Crédito"
 
 #: CustomerSearch.loanOfficers
 msgid "loan officers"
-msgstr "Oficiales de Préstamo"
+msgstr "Oficiales de Crédito"
 
 #: CustomerSearch.navigate
 msgid "You can navigate your way through Mifos using"
@@ -140,7 +140,7 @@ msgstr "Seleccione un"
 
 #: CustomerSearch.selectLoanOfficer
 msgid "Select a loan officer."
-msgstr "Seleccione un Oficial de Préstamos"
+msgstr "Seleccione un Oficial de Créditos"
 
 #: CustomerSearch.tabsattop
 msgid "the tabs at the top"
@@ -180,7 +180,7 @@ msgstr "<UL>"
 
 #: errors.idmandatory
 msgid "Please select a Branch to proceed."
-msgstr "Por favor seleccione una agencia para continuar."
+msgstr "Por favor seleccione una sucursal para continuar."
 
 #: errors.namemandatory
 msgid ""

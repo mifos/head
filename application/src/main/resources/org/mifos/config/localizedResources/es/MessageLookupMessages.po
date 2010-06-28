@@ -109,7 +109,7 @@ msgstr "Estado del cliente"
 
 #: CollateralTypes.Label
 msgid "CollateralTypes"
-msgstr "Tipo de colaterales"
+msgstr "Tipo de colateral"
 
 #: CustomFieldType.ALPHA_NUMERIC
 msgid "Alpha Numeric"
@@ -149,13 +149,13 @@ msgstr "Descripción"
 #: DistanceFromBoToCenter.Label
 #, fuzzy
 msgid "Distance from BO to Center"
-msgstr "Distancia desde el BO al Centro"
+msgstr "Distancia desde la sucursal al Centro"
 
 # What is a HO?
 #: DistanceFromHoToBO.Label
 #, fuzzy
 msgid "Distance from HO to BO for office"
-msgstr "Distancia del HO al BO para la oficina"
+msgstr "Distancia del corporativo al sucursal para la oficina"
 
 #: EducationLevel.Label
 msgid "EducationLevel"
@@ -171,17 +171,17 @@ msgstr "Identificación externa"
 
 #: ExternalLoanId.Label
 msgid "External Loan Id"
-msgstr "Identificación externa del préstamo "
+msgstr "ID externa del préstamo "
 
 #: ExternalSavingsId
 msgctxt "ExternalSavingsId"
 msgid "External Savings Id"
-msgstr "Identificación externa de los ahorros"
+msgstr "ID externa de los ahorros"
 
 #: ExternalSavingsId.Label
 msgctxt "ExternalSavingsId.Label"
 msgid "External Savings Id"
-msgstr "Identificación externa de los ahorros"
+msgstr "ID externa de los ahorros"
 
 #: FeeFormulaMaster.Label
 msgid "Fee Formula Master"
@@ -209,7 +209,7 @@ msgstr "Acción Financiera"
 
 #: GRTStaffId.Label
 msgid "GRT Staff Id"
-msgstr "Identificación del personal GRT"
+msgstr "Id del personal GRT"
 
 #: Gender.Label
 msgid "Gender"
@@ -374,29 +374,29 @@ msgstr "Estado del Producto"
 
 #: RankOfDay.FIRST
 msgid "First"
-msgstr ""
+msgstr "Primero"
 
 #: RankOfDay.SECOND
 msgid "Second"
-msgstr ""
+msgstr "Segundo"
 
 #: RankOfDay.THIRD
 msgid "Third"
-msgstr ""
+msgstr "Tercero"
 
 #: RankOfDay.FOURTH
 msgid "Fourth"
-msgstr ""
+msgstr "Cuarato"
 
 #: RankOfDay.LAST
 msgid "Last"
-msgstr ""
+msgstr "Ultimo"
 
 # Need better context
 #: RecommendedAmtUnit.Label
 #, fuzzy
 msgid "REC AMNT UNIT"
-msgstr "REC AMNT UNIT"
+msgstr "Unidades de Cantidad Recomendadas"
 
 #: ReplacementStatus.Label
 msgid "Replacement Status"

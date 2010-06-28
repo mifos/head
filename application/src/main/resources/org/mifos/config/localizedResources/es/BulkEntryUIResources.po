@@ -26,7 +26,7 @@ msgstr "Centro"
 
 #: bulkEntry.acCollection
 msgid "A/C Collections"
-msgstr "Cuenta de "
+msgstr "Cobranza de "
 
 #: bulkEntry.accountGroupCenter
 msgid "%s account"
@@ -34,17 +34,17 @@ msgstr "cuenta %s"
 
 #: bulkEntry.attendance
 msgid "Attendance"
-msgstr "Participación"
+msgstr "Asistencia"
 
 # Assuming it stands for attendance
 #: bulkEntry.attn
 #, fuzzy
 msgid "Attn"
-msgstr "Part"
+msgstr "Asis"
 
 #: bulkEntry.bulkentry
 msgid "Bulk entry"
-msgstr "Entrada en bloque"
+msgstr "Ingresar en bloque"
 
 #: bulkEntry.cancel
 msgid "Cancel"
@@ -95,7 +95,7 @@ msgstr "Introducir datos y pulsar Vista Previa"
 
 #: bulkEntry.entercollsheetdata
 msgid "Enter collection sheet data"
-msgstr "Introduzca datos de la hoja de pagos"
+msgstr "Introduzca datos de la hoja de cobranza"
 
 #: bulkEntry.enterdata
 msgid "Enter data"
@@ -103,7 +103,7 @@ msgstr "Introduzca datos"
 
 #: bulkEntry.entersucc
 msgid "You have successfully entered collection sheet data"
-msgstr "Ha introducido los datos de la hoja de pagos con éxito"
+msgstr "Ha introducido los datos de la hoja de cobranza con éxito"
 
 #: bulkEntry.hasenter
 msgid "has been entered."
@@ -112,25 +112,25 @@ msgstr "ha sido introducido."
 #: bulkEntry.issuesWithdrawals
 msgctxt "bulkEntry.issuesWithdrawals"
 msgid "Issues/Withdrawals"
-msgstr "Problemas/Desembolsos"
+msgstr "Problemas/Retiros"
 
 #: bulkEntry.isswith
 msgctxt "bulkEntry.isswith"
 msgid "Issues/Withdrawals"
-msgstr "Problemas/Desembolsos"
+msgstr "Problemas/Retiros"
 
 #: bulkEntry.loanDisbursements
 #, fuzzy
 msgid "Loan disbursements:"
-msgstr "Desembolsos del préstamo"
+msgstr "Desembolso del préstamo"
 
 #: bulkEntry.loanRepayments
 msgid "Loan repayments"
-msgstr ""
+msgstr "Pagos al credito"
 
 #: bulkEntry.loanofficer
 msgid "Loan officer"
-msgstr "Oficial de préstamos"
+msgstr "Oficial de Crédito"
 
 #: bulkEntry.mandatory
 msgid "Fields marked with an asterisk are required."
@@ -156,11 +156,11 @@ msgstr "Por favor tenga en cuenta"
 
 #: bulkEntry.pmnttype
 msgid "Mode of payment"
-msgstr "Modalidad de pago"
+msgstr "Tipo de pago"
 
 #: bulkEntry.prevdataclisub
 msgid "Preview the data and click Submit."
-msgstr "Vista Previa de los datos, luego pulse Enviar."
+msgstr "Revise los datos, luego pulse Enviar."
 
 #: bulkEntry.preview
 msgid "Preview"
@@ -185,7 +185,7 @@ msgstr "Depósito de Ahorros"
 
 #: bulkEntry.savingsWithdrawal
 msgid "Savings Withdrawal"
-msgstr "Retirada de Ahorros"
+msgstr "Retiro de Ahorros"
 
 #: bulkEntry.select
 msgid "Select"
@@ -197,7 +197,7 @@ msgid ""
 "and the"
 msgstr ""
 "Para seleccionar, elija un {0} de la lista de abajo. Luego seleccione el "
-"oficial de préstamos y el"
+"Oficial de Crédito y el"
 
 #: bulkEntry.submit
 msgid "Submit"
@@ -242,7 +242,7 @@ msgid ""
 "You do not have permissions to perform this activity. Contact your system "
 "administrator to grant you the required permissions and try again."
 msgstr ""
-"No tiene permiso para esta actividad. Contacte con el administrador del "
+"No tiene permiso para realizar esta actividad. Contacte al administrador del "
 "sistema para que le de el permiso necesario e inténtelo de nuevo."
 
 #: errors.InvalidReceiptDate
@@ -255,7 +255,7 @@ msgid ""
 "<li>The amount specified for {0} of customer {1} is invalid. Please specify "
 "a valid amount.</li>"
 msgstr ""
-"<li>El importe especificado para {0} para el cliente {1} no es válido. Por "
+"<li>El importe especificado para {0} del cliente {1} no es válido. Por "
 "favor especifique un importe válido.</li>"
 
 #: errors.invalidaccollections
@@ -264,7 +264,7 @@ msgid ""
 "<li>The amount specified for {0} of customer {1} must be exact amount due or "
 "0. Please specify a valid amount.</li>"
 msgstr ""
-"<li>El importe especificado para {0} para el cliente {1} no es válido. Por "
+"<li>El importe especificado para {0} del cliente {1} no es válido. Por "
 "favor especifique un importe válido.</li>"
 
 #: errors.invalidamountvalue
@@ -273,7 +273,7 @@ msgid ""
 "<li>The amount specified for {0} of customer {1} is invalid. Please specify "
 "a valid amount.</li>"
 msgstr ""
-"<li>El importe especificado para {0} para el cliente {1} no es válido. Por "
+"<li>El importe especificado para {0} del cliente {1} no es válido. Por "
 "favor especifique un importe válido.</li>"
 
 #: errors.invaliddate
@@ -305,12 +305,13 @@ msgid ""
 "updates/insufficient balance/invalid disbursement date/invalid repayment: "
 "{0}"
 msgstr ""
-"Las siguientes cuentas no se han puesto al día debido a puesta al día "
-"simultánea/saldo insuficiente/fecha de desembolso no válida\\: {0}"
+"Las siguientes cuentas no se han puesto al día debido a que tienen "
+"cambios simultaneos/saldo insuficiente/una fecha de desembolso no válida\\: {0}"
 
 #: errors.database
 msgid "Database error occurred while trying to save collection sheet data: {0}"
-msgstr ""
+msgstr "Ocurrio un error en la Base de Datos mientras se trataba de guardar la"
+"informacion de la hoja de cobranza"
 
 #: exception.framework.PageExpiredException
 msgid "The action is not permissible."

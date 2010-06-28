@@ -105,11 +105,11 @@ msgstr "Definir campos adicionales"
 
 #: admin.definehiddenmandfields
 msgid "Define mandatory/hidden fields"
-msgstr "Definir campos mandatorios/escondidos"
+msgstr "Definir campos obligatorios/escondidos"
 
 #: admin.definelabels
 msgid "Define Labels"
-msgstr "Definir etiqueta"
+msgstr "Definir etiquetas"
 
 #: admin.definelookupoption
 msgid "Define Lookup Options"
@@ -194,11 +194,11 @@ msgstr "Estatus de importación"
 
 #: admin.importexport.rowsWithErrors
 msgid "The following row(s) contain errors and will not be imported:"
-msgstr "La(s) siguiente(s) fila(s) contiene(n) errores y no serán importadas"
+msgstr "La(s) siguiente(s) hileras(s) contiene(n) errores y no serán importadas"
 
 #: admin.importexport.zeroImportableRows
 msgid "No valid rows were found."
-msgstr "No se encontraron filas válidas."
+msgstr "No se encontraron hileras válidas."
 
 #: admin.importexport.successfulImportRows
 msgid "{0} rows contained no errors and will be imported."
@@ -327,59 +327,60 @@ msgstr "encuestas"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
-msgstr ""
+msgstr "Informacion de cerrado del sistema"
 
 #: admin.shutdown.link
 msgid "Shutdown"
-msgstr ""
+msgstr "Apagado"
 
 #: admin.shutdown.button.submit
 msgid "Start shutdown"
-msgstr ""
+msgstr "Comienza a cerrar el sistema"
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
-msgstr ""
+msgstr "Cancelar el apagado del sistema"
 
 #: admin.shutdown.button.refresh
 msgid "Refresh"
-msgstr ""
+msgstr "Refresacar"
 
 #: admin.shutdown.welcome
 msgid "Welcome to the Mifos shutdown management area."
-msgstr ""
+msgstr "Bienvenido a sistema de apagado de Mifos"
 
 #: admin.shutdown.users
 msgid "Active sessions"
-msgstr ""
+msgstr "Sesiones activas"
 
 #: admin.shutdown.status
 msgid "Shutdown status"
-msgstr ""
+msgstr "Estatus de apagado"
 
 #: admin.shutdown.status.none
 msgid "Not planned"
-msgstr ""
+msgstr "No planeado"
 
 #: admin.shutdown.status.inprogress
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
-msgstr ""
+msgstr "En progreso (cerrando en {0} horas, {1} minutos, {2} segundos)"
 
 #: admin.shutdown.status.imminent
 msgid "System shutdown is imminent. Please complete current work and log out."
-msgstr ""
+msgstr "El apagado del sistema es inminente. Por favor complete su trabajo y cierre"
+"de sesion."
 
 #: admin.shutdown.timeout
 msgid "Schedule in"
-msgstr ""
+msgstr "Agendado en"
 
 #: admin.shutdown.timeout.unit
 msgid "seconds"
-msgstr ""
+msgstr "segundos"
 
 #: admin.sysadmin.title
 msgid "System Administration"
-msgstr ""
+msgstr "Sistema de Administracion"
 
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
@@ -391,11 +392,11 @@ msgstr "Servidor de aplicaciones"
 
 #: admin.sysinfo.customreportsdir
 msgid "Custom Reports Directory"
-msgstr "Directorio de reportes hechos por encargo"
+msgstr "Directorio de reportes"
 
 #: admin.sysinfo.database
 msgid "Database Vendor / Version"
-msgstr "Vendedor de base de datos / versión"
+msgstr "Vendedor/ versión  de base de datos"
 
 #: admin.sysinfo.datetime
 msgid "Date and Time"
@@ -408,7 +409,7 @@ msgstr "Fecha y Hora en formato ISO 8601"
 
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
-msgstr "Controlador de la base de datos / versión"
+msgstr "Driver de la base de datos / versión"
 
 #: admin.sysinfo.source
 msgid "Database Parameter Source"
@@ -440,23 +441,23 @@ msgstr "Sistema Operativo / Archivo / Versión"
 
 #: admin.sysinfo.osUser
 msgid "Operating System User"
-msgstr ""
+msgstr "Sistema operativo del usuario"
 
 #: admin.sysinfo.releaseName
 msgid "Release Name"
-msgstr ""
+msgstr "Nombre de la version"
 
 #: admin.sysinfo.commitIdentifier
 msgid "Commit Identifier"
-msgstr ""
+msgstr "Identificador de la version"
 
 #: admin.sysinfo.buildNumber
 msgid "Build Number"
-msgstr ""
+msgstr "Numero de version"
 
 #: admin.sysinfo.buildDate
 msgid "Build Date"
-msgstr ""
+msgstr "Fecha de version"
 
 #: admin.sysinfo.title
 msgid "System Information"
@@ -566,7 +567,7 @@ msgstr "Ver la categoría de los productos"
 # I'm not sure of the context. Bank as accumulation? bank as queue?
 #: admin.viewquestions
 msgid "View question bank"
-msgstr "Ver las preguntas acumuladas"
+msgstr "Ver el banco de preguntas"
 
 #: admin.viewreports
 msgid "View reports"
@@ -601,7 +602,7 @@ msgstr ""
 
 #: error.shutdown.timeout.invalid
 msgid "Please type valid shutdown timeout (in seconds)."
-msgstr ""
+msgstr "Especifique un tiempo valido para cerrar la sesion (en segundos)"
 
 #: errors.prefix
 msgid "<li>"
@@ -623,19 +624,19 @@ msgstr "La acción no está permitida."
 
 #: errors.importexport.toobig
 msgid "The file size is too big (Maximum size allowed id 4MB)."
-msgstr ""
+msgstr "El archivo es demasiado grando (Tamano maximo 4MB)"
 
 #: errors.importexport.mandatory_selectbox
 msgid "Please select the import type."
-msgstr ""
+msgstr "Por favor seleccione el tipo de importe"
 
 #: errors.importexport.mandatory_file
 msgid "Please select file to upload."
-msgstr ""
+msgstr "Seleccione un archivo para cargar"
 
 #: errors.importexport.already_submitted
 msgid "Same file has been already imported."
-msgstr ""
+msgstr "El archivo ya ha sido importado"
 
 # I'm using subversion as an application/software. Not known translation.
 #~ msgid "Subversion Revision Number"

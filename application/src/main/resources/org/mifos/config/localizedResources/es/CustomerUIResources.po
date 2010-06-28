@@ -109,7 +109,7 @@ msgstr "Sexo"
 
 #: Customer.History.InterestPaid
 msgid "interest paid"
-msgstr ""
+msgstr "interes pagado"
 
 #: Customer.IncompleteChecklist
 msgid "Please select all the items in the checklist, and click submit."
@@ -125,9 +125,9 @@ msgid ""
 "officer/has been transferred. Please try again with a different Loan "
 "Officer."
 msgstr ""
-"El Oficial de Préstamos seleccionado se ha cambiado a inactivo/ya no se "
-"ocupa de préstamos/ha sido trasferido. por favor inténtelo de nuevo con un "
-"Oficial de Préstamos diferente."
+"El Oficiales de Crédito seleccionado se ha cambiado a inactivo/ya no se "
+"ocupa de préstamos/ha sido trasferido. Por favor inténtelo de nuevo con un "
+"Oficiales de Crédito diferente."
 
 #: Customer.NewStatus
 msgid "New status"
@@ -135,7 +135,7 @@ msgstr "Nuevo estatus"
 
 #: Customer.NoChecklist
 msgid "No CheckList Available"
-msgstr "No hay listas disponibles"
+msgstr "No hay listas de control disponibles"
 
 #: Customer.NoFlagsAvailable
 msgid "No Flags Available"
@@ -195,11 +195,11 @@ msgstr "Apellidos del Padre/Esposo"
 
 #: Customer.SpouseType
 msgid "Spouse/Father Relationship"
-msgstr "Relación del Padre/Esposo"
+msgstr "Relación con el Padre/Esposo"
 
 #: Customer.StateChangeException
 msgid "The status cannot be changed as there are active {0}s."
-msgstr "No se puede cambiar el estatus ya que hay {0}s activos."
+msgstr "No se puede cambiar el estatus ya que hay {0} activos."
 
 #: Customer.StatusNotesRequired
 msgid "Please specify Note."
@@ -225,7 +225,7 @@ msgid ""
 "will make a reverse transaction entry and the account balance will be "
 "updated."
 msgstr ""
-"El último pago se puede restituir si fuera necesario. Si se hace este "
+"El último pago se puede revertir si fuera necesario. Si se hace este "
 "ajuste, el sistema efectuará una entrada para una operación inversa y se "
 "actualizará el balance de la cuenta."
 
@@ -235,7 +235,7 @@ msgstr "Importe de la cuota administrativa"
 
 #: Customer.allBranches
 msgid "All Branches"
-msgstr "Todas las Agencias"
+msgstr "Todas las Sucursales"
 
 #: Customer.amnt_tobe_adjusted
 msgid "Amount to be adjusted"
@@ -265,7 +265,7 @@ msgstr "Cambiar estatus"
 
 #: Customer.chk_revert_last_pmnt
 msgid "Check to revert the last payment"
-msgstr "Marcar para restituir el último pago"
+msgstr "Marcar para revertir el último pago"
 
 #: Customer.currentstatus
 msgid "Current status"
@@ -358,7 +358,7 @@ msgstr "El estatus de {0} debería ser mayor que el de {1}"
 msgid "This status cannot be changed as Loan Officer is not assigned."
 msgstr ""
 "No se puede cambiar el estatus ya que no se ha asignado un Oficial de "
-"Préstamos."
+"Crédito."
 
 #: Postedby
 msgid "Posted by"
@@ -407,6 +407,8 @@ msgstr "Por favor seleccione todos los objetos de la lista y pulse enviar."
 msgid "This action is not permissible"
 msgstr "Esta acción no está permitida"
 
+
+
 #: error.unknownexception
 msgid ""
 "Unknown exception occurred in the application. Please try again later or "
@@ -444,17 +446,17 @@ msgstr "La longitud de {0} es superior a la permitida."
 
 #: errors.fee
 msgid "fee"
-msgstr ""
+msgstr "cuota"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido devido a {1}"
 
 #: errors.grouploanofficernotassigned
 msgid "Status cannot be changed to Active since Loan officer is not assigned."
 msgstr ""
 "No se puede cambiar el estatus a Activo ya que no se ha asignado un Oficial "
-"de Préstamos."
+"de Crédito."
 
 #: errors.invalidNumber
 msgctxt "errors.invalidNumber"
@@ -481,7 +483,7 @@ msgstr "Por favor seleccione el {0}."
 
 #: errors.mandatorytextarea
 msgid "Please enter some notes before continuing."
-msgstr "Por favor introduzca algunas notas antes de continuar."
+msgstr "Por favor introduzca alguna nota antes de continuar."
 
 #: errors.maxlength
 msgid "The maximum length for {0} field is {1}"
@@ -510,7 +512,7 @@ msgid ""
 "The amount cannot be adjusted either because the status is not yet active or "
 "because a payment was received at the time of disbursement."
 msgstr ""
-"No se puede ajustar el importe bien porque el estatus no es todavía activo o "
+"No se puede ajustar el importe debido a que el estatus no es todavía activo o "
 "porque se recibió un pago en el momento del desembolso."
 
 #: exception.accounts.ApplicationException.FindByGlobalAccntException
@@ -574,7 +576,7 @@ msgstr "Volver a la página de cargos"
 
 #: label.colon
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: label.edithistoricaldata
 msgid "Edit historical data"

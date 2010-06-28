@@ -19,7 +19,7 @@ msgstr ""
 #: Account.AddNewNote
 msgctxt "Account.AddNewNote"
 msgid "Add new note"
-msgstr "Añadir nueva nota"
+msgstr "Añadir una nueva nota"
 
 #: Account.AddNote
 msgctxt "Account.AddNote"
@@ -34,7 +34,7 @@ msgstr "Administrador"
 msgid ""
 "Click Cancel to return to Loan Details Page without submitting information."
 msgstr ""
-"Presione Cancelar para volver a la Página de Detalles del Préstamo sin "
+"Presiona Cancelar para regresar a la Página de Detalles del Préstamo sin "
 "enviar la información"
 
 #: Account.ClickPreview
@@ -99,12 +99,12 @@ msgstr "Volver a los detalles de la cuenta"
 
 #: AdjustmentNotes
 msgid "Adjustment Notes"
-msgstr "Notas de ajuste"
+msgstr "Notas para ajustar"
 
 #: Amount
 msgctxt "Amount"
 msgid "Amount"
-msgstr "Importe"
+msgstr "Cantidad"
 
 #: Balance
 msgctxt "Balance"
@@ -160,7 +160,7 @@ msgstr "Estado Anterior"
 #, fuzzy
 msgctxt "PaymentID"
 msgid "Payment ID#"
-msgstr "Identificador del Pago"
+msgstr "Identificación del Pago"
 
 #: PostedBy
 msgctxt "PostedBy"
@@ -175,12 +175,12 @@ msgstr "Publicado por"
 #, fuzzy
 msgctxt "TransactionID"
 msgid "Transaction ID#"
-msgstr "Identificador de la operación"
+msgstr "Identificación de la operación"
 
 #: Type
 msgctxt "Type"
 msgid "Type"
-msgstr "Tipo"
+msgstr "Tasa"
 
 #: User
 msgctxt "User"
@@ -190,15 +190,15 @@ msgstr "Usuario"
 #: account.amount
 msgctxt "account.amount"
 msgid "amount"
-msgstr "importe"
+msgstr "Cantidad"
 
 #: account.amount_zero
 msgid "amount should be greater than 0.0"
-msgstr "El importe ha de ser superior a 0.0."
+msgstr "El Cantidad debe ser superior a 0.0."
 
 #: account.chargetype
 msgid "charge type"
-msgstr "tipo de cargo"
+msgstr "Tasa de cargo"
 
 #: accounts.Account
 msgid "Account"
@@ -323,7 +323,7 @@ msgstr "Añadir nota"
 #: accounts.addnewnote
 msgctxt "accounts.addnewnote"
 msgid "Add new note"
-msgstr "Añadir nueva nota"
+msgstr "Añadir una nueva nota"
 
 #: accounts.addnote
 msgid "Add a note"
@@ -340,7 +340,7 @@ msgstr ""
 
 #: accounts.admin_set_fees
 msgid "Administrative Set Fees"
-msgstr "Comisiones administrativas fijadas"
+msgstr "Fijar Comisiones administrativas"
 
 #: accounts.agro
 msgid "Agriculture"
@@ -354,51 +354,51 @@ msgstr "Préstamo Agrícola"
 #: accounts.allowed_amount
 #, fuzzy
 msgid "(Allowed Amount: INR "
-msgstr "(Importe permitido\\: INR"
+msgstr "(Cantidad permitido\\: INR"
 
 #: accounts.allowed_interest
 #, fuzzy
 msgid "(Allowed Interest Rate Amount "
-msgstr "(Tipo de interés permitido"
+msgstr "(Tasa de interés permitido"
 
 #: accounts.allowed_no_of_inst
 #, fuzzy
 msgid "(Allowed Number of Installments "
-msgstr "(Número de cuotas permitido"
+msgstr "(Número de pagos permitido"
 
 #: accounts.amnt_tobe_adjusted
 msgid "Amount to be adjusted"
-msgstr "Importe a ajustar"
+msgstr "Cantidad a ajustar"
 
 #: accounts.amount
 msgctxt "accounts.amount"
 msgid "Amount"
-msgstr "Importe"
+msgstr "Cantidad"
 
 #: accounts.amount(USD)
 #, fuzzy
 msgctxt "accounts.amount(USD)"
 msgid "Amount "
-msgstr "Importe"
+msgstr "Cantidad"
 
 #: accounts.amount_(Rs)
 #, fuzzy
 msgctxt "accounts.amount_(Rs)"
 msgid "Amount "
-msgstr "Importe"
+msgstr "Cantidad"
 
 #: accounts.amount_due
 msgid "Amount due"
-msgstr "Importe pendiente de pago"
+msgstr "Cantidad pendiente de pago"
 
 #: accounts.amt
 msgctxt "accounts.amt"
 msgid "Amount"
-msgstr "Importe"
+msgstr "Cantidad"
 
 #: accounts.amt_paid
 msgid "Amount paid"
-msgstr "Importe pagado"
+msgstr "Cantidad pagado"
 
 #: accounts.anti_disburse_dd
 #, fuzzy
@@ -407,16 +407,16 @@ msgstr "Fecha de desembolso prevista\\:"
 
 #: accounts.app_fee
 msgid "Application Fee"
-msgstr "Comisión de estudio"
+msgstr "Comisión por aplicación"
 
 #: accounts.app_fee_amt
 msgid "Application fee amount"
-msgstr "Importe de la comisión de estudio"
+msgstr "Cantidad de la comisión por aplicación"
 
 #: accounts.appl_fees
 #, fuzzy
 msgid "Application fee:"
-msgstr "Comisión de estudio\\:"
+msgstr "Comisión de aplicación\\:"
 
 #: accounts.apply_add_fees
 msgid "Apply Additional Fees"
@@ -429,7 +429,7 @@ msgstr "Aplicar ajuste"
 
 #: accounts.apply_charges
 msgid "Apply charges"
-msgstr "Aplicar cargos"
+msgstr "Aplicar cobros"
 
 #: accounts.apply_payment
 msgid "Apply payment"
@@ -450,7 +450,7 @@ msgstr "Aprobado"
 
 #: accounts.apr
 msgid "APR"
-msgstr "TAE"
+msgstr "CAT"
 
 #: accounts.asterisk
 msgid "Fields marked with an asterisk are required."
@@ -458,7 +458,7 @@ msgstr "Los campos marcados con un asterisco son obligatorios"
 
 #: accounts.backtocharges
 msgid "Back to Charges page"
-msgstr "Volver a la página de cambios"
+msgstr "Volver a la página de cobros"
 
 #: accounts.balance
 msgctxt "accounts.balance"
@@ -492,7 +492,7 @@ msgstr "Préstamos para ganado"
 
 #: accounts.centercharges
 msgid "Center charges"
-msgstr "Cargos de Centro"
+msgstr "Cobros del Centro"
 
 #: accounts.change_log
 msgid "Change Log"
@@ -505,15 +505,15 @@ msgstr "Cambiar estado"
 
 #: accounts.charged
 msgid "charged"
-msgstr "cargado"
+msgstr "cobrado"
 
 #: accounts.charged_applied
 msgid "Charges Applied"
-msgstr "Cargos aplicados"
+msgstr "Cobros aplicados"
 
 #: accounts.charges
 msgid "charges"
-msgstr "cargos"
+msgstr "cobros"
 
 #: accounts.check_remove
 msgid "Check to Remove"
@@ -529,11 +529,11 @@ msgstr "Nombre del Cliente / Grupo"
 
 #: accounts.clientcharges
 msgid "Client charges"
-msgstr "Cargos al cliente"
+msgstr "Cobros al cliente"
 
 #: accounts.coll_sheet_type
 msgid "Collection sheet type"
-msgstr "Tipo de hoja de reembolsos"
+msgstr "Tasa de Hoja de Reembolso"
 
 #: accounts.collateral_notes
 msgctxt "accounts.collateral_notes"
@@ -542,7 +542,7 @@ msgstr "Notas sobre el colateral"
 
 #: accounts.collateral_type
 msgid "Collateral type"
-msgstr "Tipo de colateral"
+msgstr "Tasa de colateral"
 
 #: accounts.collateralnote
 msgctxt "accounts.collateralnote"
@@ -558,7 +558,7 @@ msgid ""
 "Select a loan instance. Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
-"Seleccione un tipo de préstamo. Presione Cancelar para volver a Clientes y "
+"Seleccione un Tasa de préstamo. Presione Cancelar para volver a Clientes y "
 "Cuentas sin enviar la información"
 
 #: accounts.congo
@@ -574,7 +574,7 @@ msgstr ""
 
 #: accounts.consultancy_fee
 msgid "Consultancy fee"
-msgstr "Comisión de consultoría"
+msgstr "Comisión por consultoría"
 
 #: accounts.continue
 msgid "Continue"
@@ -632,20 +632,20 @@ msgstr "Débito"
 # Default means amount not paid, or amount selected by default?
 #: accounts.defamt
 msgid "Default amount"
-msgstr "Importe por defecto"
+msgstr "Cantidad en mora"
 
 #: accounts.definst
 #, fuzzy
 msgid "Default # of installments"
-msgstr "Número de cuotas por defecto"
+msgstr "Número de pagos en mora"
 
 #: accounts.defintrate
 msgid "Default interest rate"
-msgstr "Tipo de interés en caso de incumplimiento"
+msgstr "Tasa de interés en caso de incumplimiento"
 
 #: accounts.delinquency
 msgid "Delinquency"
-msgstr "Dudosos"
+msgstr "En mora"
 
 #: accounts.desc
 msgctxt "accounts.desc"
@@ -705,7 +705,7 @@ msgstr "Editar operación"
 
 #: accounts.edu_loan
 msgid "Educational Loan"
-msgstr "Préstamo para educación"
+msgstr "Préstamo para la educación"
 
 #: accounts.enter_client_details1
 #, fuzzy
@@ -735,12 +735,12 @@ msgstr ""
 
 #: accounts.enteramount
 msgid "Enter amount"
-msgstr "Introduzca importe"
+msgstr "Introduzca Cantidad"
 
 #: accounts.fee_amt
 msgctxt "accounts.fee_amt"
 msgid "amount"
-msgstr "importe"
+msgstr "Cantidad"
 
 # if pd stands for paid, then pagada as above
 #: accounts.fee_pd
@@ -754,7 +754,7 @@ msgstr "Comisión recibida"
 
 #: accounts.fee_type
 msgid "Fee Type"
-msgstr "Tipo de comisión"
+msgstr "Tasa de comisión"
 
 #: accounts.fees
 msgid "Fees"
@@ -771,11 +771,11 @@ msgstr "viveros de peces"
 #: accounts.freq_of_inst
 #, fuzzy
 msgid "Frequency of Installments:"
-msgstr "Frecuencia de las Cuotas\\:"
+msgstr "Frecuencia de los pagos\\:"
 
 #: accounts.future_install
 msgid "Future Installments"
-msgstr "Cuotas Futuras"
+msgstr "Pagos Futuros"
 
 #: accounts.generate_report
 msgid "Generate report"
@@ -788,23 +788,23 @@ msgstr "Código de Cuenta General"
 
 #: accounts.grace_period
 msgid "Grace period for repayments"
-msgstr "Periodo de carencia para el reembolso"
+msgstr "Periodo de gracia para el reembolso"
 
 #: accounts.grace_period_type
 msgid "Grace Period Type"
-msgstr "Tipo de periodo de carencia"
+msgstr "Tasa de periodo de gracia"
 
 #: accounts.graceperdur
 msgid "Grace period duration"
-msgstr "Duración del periodo de carencia"
+msgstr "Duración del periodo de gracia"
 
 #: accounts.groupcharges
 msgid "Group charges"
-msgstr "Cargos de grupo"
+msgstr "Cargos al grupo"
 
 #: accounts.hope&effort_group
 msgid "Hope & Effort Group"
-msgstr "Grupo de Esperanza y Esfuerzo"
+msgstr "Grupo Esperanza y Esfuerzo"
 
 #: accounts.horticulture
 msgid "Horticulture"
@@ -812,42 +812,43 @@ msgstr "Horticultura"
 
 #: accounts.ins
 msgid "Ins # "
-msgstr ""
+msgstr "# de pagos"
 
 #: accounts.inst
 msgid "Installments"
-msgstr "Cuotas"
+msgstr "Pagos"
 
 #: accounts.install_paid
 msgctxt "accounts.install_paid"
 msgid "Installments paid"
-msgstr "Cuotas pagadas"
+msgstr "Pagos realizados"
 
 #: accounts.installment_details
 msgid "Installment details"
-msgstr "Detalle de las cuotas"
+msgstr "Detalle de los pagos"
 
 #: accounts.installments
 msgid "Installment"
-msgstr "Cuota"
+msgstr "Pago"
 
+# NOT TRANSLATED What is instance???? 
 #: accounts.instance_info
 msgid "Instance information"
-msgstr "Información sobre la frecuencia de reembolso"
+msgstr "Información sobre la instancia"
 
 #: accounts.instance_name
 msgctxt "accounts.instance_name"
 msgid "Loan instance name"
-msgstr "Periodicidad de las cuotas"
+msgstr "Nombre del credito"
 
 #: accounts.instt_due
 msgid "Installments due"
-msgstr "Cuotas pendientes"
+msgstr "Pagos pendientes"
 
 #: accounts.instt_paid
 msgctxt "accounts.instt_paid"
 msgid "Installments paid"
-msgstr "Cuotas pagadas"
+msgstr "Pagos realizados"
 
 #: accounts.interest
 msgid "Interest"
@@ -855,11 +856,11 @@ msgstr "Interés"
 
 #: accounts.interest_amount
 msgid "Interest Rate Amount"
-msgstr "Importe del Tipo de Interés"
+msgstr "Tasa de Interés"
 
 #: accounts.interest_cal_payments
 msgid "Interest Calculation Rule For Early/Late Payments"
-msgstr "Regla de cálculo del interés para prepagos/pagos atrasados"
+msgstr "Como calcular la tasa de interés para pagos anticipados/atrasados"
 
 #: accounts.interest_disb
 msgid "Interest deducted at disbursement"
@@ -868,30 +869,30 @@ msgstr "Intereses deducidos al desembolsar"
 #: accounts.interest_rate
 msgctxt "accounts.interest_rate"
 msgid "Interest rate"
-msgstr "Tipo de Interés"
+msgstr "Tasa de Interés"
 
 #: accounts.interest_type
 msgid "Interest Rate Type"
-msgstr "Clase de Tipo de Interés"
+msgstr "Tipo de Tasa de Interés"
 
-# Not sure what this stands for
+# NOT TRANSLATED
 #: accounts.intr_rec
 #, fuzzy
 msgid "Intr Rec"
-msgstr "?"
+msgstr "Recibido"
 
 #: accounts.intrate
 msgctxt "accounts.intrate"
 msgid "Interest rate"
-msgstr "Tipo de Interés"
+msgstr "Tasa de Interés"
 
 #: accounts.intratetype
 msgid "Interest rate type"
-msgstr "Clase de Tipo de Interés"
+msgstr "Tipo de Tasa de Interés"
 
 #: accounts.kanakpura_center
 msgid "Kanakpura Center"
-msgstr "Centro de Kanakpura"
+msgstr "Centro Kanakpura"
 
 #: accounts.last_pmnt
 msgid "Last payment made"
@@ -899,7 +900,7 @@ msgstr "Fecha del último pago"
 
 #: accounts.loan_amount
 msgid "Loan amount"
-msgstr "Importe del préstamo"
+msgstr "Cantidad del préstamo"
 
 #: accounts.loan_balance
 msgid "Recent activity"
@@ -908,16 +909,17 @@ msgstr "Actividad reciente"
 #: accounts.loaninstname
 msgctxt "accounts.loaninstname"
 msgid "Loan instance name"
-msgstr "Periodicidad de las cuotas"
+msgstr "Nombre del credito"
 
 #: accounts.maintenance_fee
 msgid "Maintenance fee"
 msgstr "Comisión de mantenimiento"
 
+# NOT TRANSLATED
 #: accounts.mariev
 #, fuzzy
 msgid "mariev"
-msgstr "?"
+msgstr "mariev"
 
 #: accounts.maturity_date
 msgid "Loan maturity date"
@@ -926,51 +928,51 @@ msgstr "Fecha de vencimiento del préstamo"
 #: accounts.maxinst
 #, fuzzy
 msgid "Max # of installments"
-msgstr "Máximo número de cuotas"
+msgstr "Máximo número de pagos"
 
 #: accounts.maxintrate
 msgid "Max interest rate"
-msgstr "Tipo de interés máximo"
+msgstr "Tasa de interés máxima"
 
 #: accounts.maxloanamt
 msgid "Max loan amount"
-msgstr "Importe máximo del préstamo"
+msgstr "Cantidad máxima del préstamo"
 
 #: accounts.meeting_charges
 msgid "Meeting charges"
-msgstr "Cargos por reunión"
+msgstr "Cuota por junta"
 
 #: accounts.member_fee_amt
 msgid "Membership fee amount"
-msgstr "Importe de la cuota de socio"
+msgstr "Cantidad de la Cuota de inscripcion"
 
 #: accounts.membership_fee
 msgid "Membership fee"
-msgstr "Cuota de socio"
+msgstr "Cuota de inscripcion"
 
 #: accounts.mininst
 #, fuzzy
 msgid "Min # of installments"
-msgstr "Número mínimo de cuotas"
+msgstr "Número mínimo de pagos"
 
 #: accounts.minintrate
 msgid "Min interest rate"
-msgstr "Tipo de interés mínimo"
+msgstr "Tasa de interés mínima"
 
 #: accounts.minloanamt
 msgid "Min loan amount"
-msgstr "Importe mínimo del préstamo"
+msgstr "Cantidad mínima del préstamo"
 
 #: accounts.missed_payments
 #, fuzzy
 msgid "# of missed payments"
 msgstr ""
 "\n"
-"úmero de cuotas vencidas"
+"úmero de pagos no realizados"
 
 #: accounts.mode_of_payment
 msgid "Mode of payment"
-msgstr "Modalidad de pago"
+msgstr "Tipo de pago"
 
 #: accounts.modeofpayment
 msgctxt "accounts.modeofpayment"
@@ -1000,15 +1002,15 @@ msgstr "Nuevo valor"
 
 #: accounts.next_inst
 msgid "Next installment"
-msgstr "Próxima cuota"
+msgstr "Próximo pago"
 
 #: accounts.next_inst_due
 msgid "Next installment due"
-msgstr "Fecha de pago de la próxima cuota"
+msgstr "Proxima fecha de pago"
 
 #: accounts.next_install_details
 msgid "Next installment details"
-msgstr "Detalles de la próxima cuota"
+msgstr "Detalles del próxima pago"
 
 #: accounts.niew_acc_activity
 msgid "View all account activity"
@@ -1021,7 +1023,7 @@ msgstr "Número"
 #: accounts.no_of_inst
 #, fuzzy
 msgid "No. of installments:"
-msgstr "Número de cuotas\\:"
+msgstr "Número de pagos\\:"
 
 #: accounts.note
 #, fuzzy
@@ -1072,7 +1074,7 @@ msgstr "Abrir una nueva cuenta de ahorro"
 
 #: accounts.or
 msgid "or  "
-msgstr ""
+msgstr "o"
 
 #: accounts.original_loan
 msgid "Original loan"
@@ -1080,11 +1082,11 @@ msgstr "Préstamo original"
 
 #: accounts.past_due
 msgid "Total past due"
-msgstr "Importe atrasado total"
+msgstr "Cantidad atrasada total"
 
 #: accounts.past_due_details
 msgid "Past due details"
-msgstr "Detalles del importe atrasado"
+msgstr "Detalles del Cantidad atrasada"
 
 #: accounts.payment
 msgid "Payment"
@@ -1094,7 +1096,7 @@ msgstr "Pago"
 #, fuzzy
 msgctxt "accounts.payment_id"
 msgid "Payment ID#"
-msgstr "Identificador del Pago"
+msgstr "Identificacion del Pago"
 
 #: accounts.penalty
 msgid "Penalty"
@@ -1103,12 +1105,12 @@ msgstr "Recargo"
 #: accounts.penalty_01
 #, fuzzy
 msgid "Penalty for Installment #1"
-msgstr "Recargo para la cuota \\ 1"
+msgstr "Recargo por pago \\ 1"
 
 #: accounts.penalty_02
 #, fuzzy
 msgid "Penalty for Installment #2"
-msgstr "Recargo para la cuota \\ 2"
+msgstr "Recargo por el pago \\ 2"
 
 #: accounts.penalty_type
 msgid "Penalty Type"
@@ -1126,11 +1128,11 @@ msgstr "Periodicidad\\: comisión anual"
 #: accounts.periodicity_one_time_fee
 #, fuzzy
 msgid "Periodicity: one time fee"
-msgstr "Periodicidad\\: comisión una tantum"
+msgstr "Periodicidad\\: comisión unica"
 
 #: accounts.plz_note
 msgid "Please Note"
-msgstr "Por favor tenga presente"
+msgstr "Tenga en cuenta"
 
 #: accounts.posted_by
 msgctxt "accounts.posted_by"
@@ -1145,12 +1147,12 @@ msgstr "Granja avícola"
 #: accounts.pr_pd
 #, fuzzy
 msgid "Pr Pd"
-msgstr "?"
+msgstr "Pr Pd"
 
 #: accounts.prdOfferingVal
 msgctxt "accounts.prdOfferingVal"
 msgid "Loan instance name"
-msgstr "Frecuencia de reembolso del préstamo"
+msgstr "Nombre del prestamo"
 
 #: accounts.preview
 msgid "Preview"
@@ -1166,7 +1168,7 @@ msgstr "Capital"
 
 #: accounts.principle_due
 msgid "Principal due on last installment"
-msgstr "Capital pendiente de pago a la fecha de la última cuota"
+msgstr "Capital pendiente de pago a la fecha del último pago"
 
 #: accounts.product_summary
 msgid "Loan Product Summary"
@@ -1183,7 +1185,7 @@ msgstr "Fecha de creación del registro"
 
 #: accounts.receiptdate
 msgid "Receipt date"
-msgstr "Fecha de recibo"
+msgstr "Fecha del recibo"
 
 #: accounts.receiptid
 msgid "Receipt ID"
@@ -1207,7 +1209,7 @@ msgstr "eliminado"
 
 #: accounts.repayment_sched
 msgid "Repayment Schedule as of"
-msgstr "Calendario de pagos a fecha"
+msgstr "Calendario de pagos a la fecha"
 
 #: accounts.returnToAccountDetails
 msgctxt "accounts.returnToAccountDetails"
@@ -1224,13 +1226,13 @@ msgid ""
 "Edit to make changes. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
 msgstr ""
-"Revise la información de abajo. Presione Enviar si es correctao Editar para "
+"Revise la información de abajo. Presione Enviar si es correcta o Editar para "
 "hacer cambios. Presione cancelar para volver a Clientes y Cuentas sin enviar "
 "la información."
 
 #: accounts.review&edit
 msgid "Review and/or edit installments"
-msgstr "Revisar y/o editar cuotas"
+msgstr "Revisar y/o editar pagos"
 
 #: accounts.review&submit
 msgid "Review & submit"
@@ -1238,7 +1240,7 @@ msgstr "Revisar y enviar"
 
 #: accounts.review/edit_ins
 msgid "Review/edit installments"
-msgstr "Revisar/editar cuotas"
+msgstr "Revisar/editar pagos"
 
 #: accounts.review_payment_schedule
 msgid ""
@@ -1246,7 +1248,7 @@ msgid ""
 "Click Preview to continue. Click Cancel to return to Clients & Accounts "
 "without submitting information."
 msgstr ""
-"Revise el calendario de pagos de abajo. Puede editar cada cuota "
+"Revise el calendario de pagos de abajo. Puede editar cada pago "
 "individualmente. Presione Cancelar para volver a Clientes y Cuentas sin "
 "enviar la información."
 
@@ -1301,7 +1303,7 @@ msgstr "seleccionar"
 #: accounts.select_click1
 #, fuzzy
 msgid "To select, click on a resulting   "
-msgstr "Para seleccionar, seleccione un "
+msgstr "Para seleccionar, haga click en un "
 
 #: accounts.select_click2
 msgid ""
@@ -1324,7 +1326,7 @@ msgid ""
 "Select a loan instance.Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
-"Seleccione una frecuencia de reembolso. Presione Cancelar para volver a "
+"Seleccione una tipo de prestamo. Despues presione Continuar. Presione Cancelar para volver a "
 "Clientes y Cuentas sin enviar la información."
 
 #: accounts.source_fund
@@ -1358,7 +1360,7 @@ msgstr "Ha creado una nueva cuenta de préstamo satisfactoriamente"
 
 #: accounts.suggested_steps
 msgid "Suggested next steps"
-msgstr "Próximas etapas sugeridas"
+msgstr "Próximos pasos sugeridas"
 
 #: accounts.total
 msgid "Total"
@@ -1366,7 +1368,7 @@ msgstr "Total"
 
 #: accounts.total_due_install
 msgid "Total due this installment"
-msgstr "Importe pendiente a la fecha de esta cuota"
+msgstr "Cantidad pendiente a la fecha de pago"
 
 #: accounts.tractor_loan
 msgid "Tractor Loan"
@@ -1374,7 +1376,7 @@ msgstr "Préstamo para un tractor"
 
 #: accounts.training_fee
 msgid "Training fee"
-msgstr "Comisión de formación"
+msgstr "Comisión de entrenamiento"
 
 #: accounts.transaction_id
 #, fuzzy
@@ -1414,7 +1416,7 @@ msgstr "Ver registro de cambios"
 
 #: accounts.view_inst_details
 msgid "View installment details"
-msgstr "Ver detalles de la cuota"
+msgstr "Ver detalles del pago"
 
 #: accounts.view_loan_acc
 msgid "View loan account details now"
@@ -1422,7 +1424,7 @@ msgstr "Ver detalles de la cuenta de préstamo ahora"
 
 #: accounts.view_schd
 msgid "View repayment schedule"
-msgstr "Ver calendario de reembolsos"
+msgstr "Ver calendario de pago"
 
 #: accounts.view_status_history
 msgid "View status history"
@@ -1434,7 +1436,7 @@ msgstr "Ver histórico de operaciones"
 
 #: accounts.waive
 msgid "Waive"
-msgstr "Renunciar"
+msgstr "No aplicar"
 
 #: accounts.yes
 msgid "Yes"
@@ -1469,13 +1471,13 @@ msgid ""
 "There is no amount due on this account, so the payment cannot be made. A "
 "payment can be made on or after the due date."
 msgstr ""
-"No hay importes pendientes en esta cuenta, por lo que no se puede realizar "
+"No existe un adeudo en esta cuenta, por lo que no se puede realizar "
 "el pago. Se puede realizar un pago en la misma fecha de vencimiento o en una "
 "posterior."
 
 #: error.stateinitializationexception
 msgid "Unknown exception occurred during state initialization."
-msgstr "Excepción desconocida durante la iniciación."
+msgstr "Ocurrio un error desconocido durante la iniciación."
 
 #: error.status
 msgid "Please choose a status."
@@ -1498,8 +1500,8 @@ msgid ""
 "Unknown exception occurred in the application. Please try again later or "
 "contact the system administrator."
 msgstr ""
-"Se ha producido una excepción desconocida en el programa. Por favor "
-"inténtelo de nuevo más tarde o contacte con el administrador del sistema."
+"Se ha producido un error desconocido en el programa. Por favor "
+"inténtelo de nuevo más tarde o contacte al administrador del sistema."
 
 #: error.versionnodonotmatch
 #, fuzzy
@@ -1512,7 +1514,7 @@ msgstr ""
 
 #: errors.adjustmentNoteTooBig
 msgid "Adjustment note cannot be more than 300 chars."
-msgstr "La nota del ajuste no puede tener más de 300 caracteres."
+msgstr "La nota no puede tener más de 300 caracteres."
 
 #: errors.decimalFormat
 msgid "{0} is greater than the allowable size."
@@ -1524,7 +1526,7 @@ msgid ""
 "inclusive."
 msgstr ""
 "Por favor especifique un {0} válido. {0} debería ser un valor entre {1} y "
-"{2}, incluídos."
+"{2}."
 
 #: errors.double
 msgctxt "errors.double"
@@ -1557,8 +1559,8 @@ msgid ""
 "Please specify valid Amount. The amount specified should be less than the "
 "amount required for complete payment."
 msgstr ""
-"Por favor introduzca un importe válido. El importe especificado debería ser "
-"inferior al importe requerido para completar el pago."
+"Por favor introduzca un Cantidad válida. La Cantidad especificada debería ser "
+"inferior al Cantidad requerida para liquidar el pago."
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -1582,7 +1584,7 @@ msgstr "Por favor seleccione el {0}."
 #: errors.mandatorytextarea
 msgid "Please specify comments in the notes field before continuing."
 msgstr ""
-"Por favor especifique sus comentarios en el campo Notas antes de proseguir."
+"Por favor especifique sus comentarios en el campo de Notas antes de proseguir."
 
 #: errors.mask
 msgid "Please specify alpha numeric characters only for {0}."
@@ -1606,7 +1608,7 @@ msgstr "No hay una reunión asociada a esta cuenta."
 
 #: errors.nomoreinstallments
 msgid "There are no installments to apply a charge."
-msgstr "No hay cuotas para realizar un cargo."
+msgstr "No hay cargos para realizar un pago."
 
 #: errors.nosearchstring
 msgid "Please specify some value"
@@ -1618,7 +1620,7 @@ msgstr "<LI>"
 
 #: errors.rateException
 msgid "Please specify a rate amount not greater than 999."
-msgstr "Por favor especifique un importe de tasa inferior a 999."
+msgstr "Por favor especifique una Cantidad de tasa inferior a 999."
 
 #: errors.selectAnyValue
 msgctxt "errors.selectAnyValue"
@@ -1643,7 +1645,7 @@ msgid ""
 "The amount cannot be adjusted either because the status is not yet active or "
 "because a payment was received at the time of disbursement."
 msgstr ""
-"No se puede ajustar el importe, bien porque el estado no es todavía activo o "
+"No se puede ajustar la Cantidad, porque el estado no es todavía activo o "
 "porque se recibió un pago en la fecha de desembolso."
 
 #: exception.accounts.ApplicationException.FindByGlobalAccntException
@@ -1671,9 +1673,9 @@ msgid ""
 "The product instance you have selected is currently inactive. Please select "
 "active product instance."
 msgstr ""
-"La frecuencia de reembolso del producto que ha seleccionado no está "
-"activada. Por favor seleccione una frecuencia de reembolso del producto "
-"activa."
+"La insatancia del producto que ha seleccionado no está "
+"activada. Por favor seleccione un producto que se encuentre "
+"activo."
 
 #: loanedit_acc_status
 msgid "Edit account status"

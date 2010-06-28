@@ -47,7 +47,7 @@ msgstr "El cliente puede existir fuera del grupo"
 #: VOS.collectionSheetAdvanceDays
 msgid "Number of days in advance the collection sheet should be generated"
 msgstr ""
-"Número de días por adelantado en que la hoja de colección debe ser generada"
+"Número de días por adelantado en que la hoja de cobranza debe ser generada"
 
 #: VOS.country
 msgid "Country"
@@ -55,7 +55,7 @@ msgstr "País"
 
 #: VOS.currencies
 msgid "Currencies"
-msgstr ""
+msgstr "Monedas"
 
 #: VOS.currency
 msgid "Currency"
@@ -79,7 +79,7 @@ msgstr "Año fiscal"
 
 #: VOS.glim
 msgid "Group loan with individual monitoring (GLIM)"
-msgstr ""
+msgstr "Monitoreo Individual para prestamo Grupal (GLIM)"
 
 #: VOS.groupPendingState
 msgid "Group pending approval state enabled"
@@ -103,11 +103,11 @@ msgstr "Número de días de interés"
 
 #: VOS.isAgeCheckEnabled
 msgid "Age check enabled"
-msgstr ""
+msgstr "Chequeo de edad activado"
 
 #: VOS.isFamilyDetailsRequired
 msgid "Additional family details required"
-msgstr ""
+msgstr "Detalles familiares adicionales requeridos"
 
 #: VOS.currencyRoundingMode
 msgid "Currency Rounding Mode"
@@ -131,7 +131,7 @@ msgstr "Final Round Off Multiple"
 #: VOS.initialRoundOffMultiple
 #, fuzzy
 msgid "Initial Round Off Multiple"
-msgstr "Initial Round Off Multiple"
+msgstr "Multiplo de Redondeo Inicial"
 
 #: VOS.labelLinkAdmin
 msgid "Admin"
@@ -143,15 +143,15 @@ msgstr "Idioma"
 
 #: VOS.loanDisbursedState
 msgid "Loan disbursed to loan officer state enabled"
-msgstr "Préstamo desembolsado al oficial de préstamo - permitido"
+msgstr "Préstamo desembolsado al Oficial de Crédito - permitido"
 
 #: VOS.loanPendingState
 msgid "Loan pending approval state enabled"
-msgstr "Aprobación pendiente del préstamo - permitido"
+msgstr "Aprobación pendiente del Crédito - permitido"
 
 #: VOS.loansForGroups
 msgid "Groups allowed to apply for loans"
-msgstr "Grupos permitidos para aplicar por préstamos"
+msgstr "Grupos permitidos para aplicar para préstamos"
 
 #: VOS.locale
 msgid "Locale"
@@ -159,7 +159,7 @@ msgstr "Localización"
 
 #: VOS.lsim
 msgid "Loan schedule independent of meeting (LSIM)"
-msgstr ""
+msgstr "Horario del prestamo independiente de la junta grupal (LSIM)"
 
 #: VOS.maxInterest
 msgid "Maximum Interest"
@@ -167,15 +167,15 @@ msgstr "Interés máximo"
 
 #: VOS.maximumAge
 msgid "Maximum allowed age for new clients"
-msgstr ""
+msgstr "Edad maxima para nuevos clientes"
 
 #: VOS.maximumNumberOfFamilyMembers
 msgid "Maximum number of family members"
-msgstr ""
+msgstr "Numero maximo de familiares"
 
 #: VOS.minimumAge
 msgid "Minimum allowed age for new clients"
-msgstr ""
+msgstr "Edad minima para nuevos clientes"
 
 #: VOS.minInterest
 msgid "Minimum Interest"
@@ -207,7 +207,7 @@ msgstr "Estructura organizacional"
 
 #: VOS.processflow
 msgid "Process flow"
-msgstr "Flujo de proceso"
+msgstr "Flujo del proceso"
 
 #: VOS.savingsPendingState
 msgid "Savings pending approval state enabled"

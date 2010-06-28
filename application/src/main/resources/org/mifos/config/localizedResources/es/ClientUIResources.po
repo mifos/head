@@ -70,11 +70,11 @@ msgstr "<li>El cliente solo puede tener un padre </li>"
 
 #: Family.InvalidSpouseNumber
 msgid "<li> The number of Spouses per client cannot be greater than 1 </li>"
-msgstr "<li> El cliente solo puede tener 1 esposo/a</li>"
+msgstr "<li> El cliente solo puede tener un esposo/a</li>"
 
 #: Family.InvalidCharacter
 msgid "<li> Bad Character ',' or '/' in input String </li>"
-msgstr "Caracter erróneo ',' ó '/' en la cadena de entrada."
+msgstr "Caracter erróneo ',' ó '/' en el texto introducido."
 
 #: Family.InvalidRelationship
 msgid ""
@@ -98,7 +98,7 @@ msgstr ""
 msgid "<li>Please specify the first name of every family member</li>"
 msgstr ""
 "<li>Por favor especifica el primer nombre de cada miembro de la "
-"familiar</li>"
+"familia</li>"
 
 #: Family.InvalidFamilyLastName
 msgid "<li>Please specify the last name of every family member</li>"
@@ -144,16 +144,16 @@ msgid ""
 "<li>The selected branch is inactive. Please try again with a different "
 "branch.</li>"
 msgstr ""
-"<li>La agencia seleccionada se encuentra inactiva. Por favor inténtelo de "
-"nuevo con una agencia diferente.</li>"
+"<li>La sucusal seleccionada se encuentra inactiva. Por favor inténtelo de "
+"nuevo con una sucursal diferente.</li>"
 
 #: Customer.DuplicateCustomerName
 msgid ""
 "<li> The combination of the specified Date of Birth and name {0} already "
 "exists in the application. Please specify a different name.</li>"
 msgstr ""
-"<li> La combinación de la fecha de nacimiento especificada con del nombre "
-"{0} ya existe en esta solicitud. Por favor especifique un nombre "
+"<li> La combinación de la fecha de nacimiento especificada con el nombre "
+"{0} ya existen en esta solicitud. Por favor especifique un nombre "
 "diferente.</li>"
 
 #: Customer.FeesInactive
@@ -167,7 +167,7 @@ msgstr ""
 #: Customer.IncompleteChecklist
 msgid "<li>Please select all items in the checklist, and click submit.</li>"
 msgstr ""
-"<li>Por favor seleccione todos los objetos de la lista y pulse Enviar.</li>"
+"<li>Por favor seleccione todos los objetos de la lista de control y pulse Enviar.</li>"
 
 #: Customer.InvalidVersion
 msgid ""
@@ -184,13 +184,13 @@ msgid ""
 "different loan officer.</li>"
 msgstr ""
 "<li>El Oficial de Préstamos seleccionado se encuentra inactivo/ya no se "
-"ocupa de préstamos/se ha transferido a otra agencia. Por favor inténtelo de "
+"ocupa de préstamos/se ha transferido a otra sucursal. Por favor inténtelo de "
 "nuevo con un Oficial de Préstamos diferente.</li>"
 
 #: Customer.MeetingRequired
 msgid "<li>Please select meeting schedule to apply a fee.</li>"
 msgstr ""
-"<li>Por favor seleccione una agenda de reunión para poder aplicar una "
+"<li>Por favor seleccione un horario de reunión para poder aplicar una "
 "cuota.</li>"
 
 #: Date
@@ -222,8 +222,8 @@ msgid ""
 "<li>Unknown exception occurred in the application. Please try again later or "
 "contact the system administrator.</li>"
 msgstr ""
-"<li>Ha ocurrido una excepción desconocida en la solicitud. Por favor "
-"inténtelo de nuevo más tarde o contacte con el Administrador del "
+"<li>Ha ocurrido un error desconocido en la solicitud. Por favor "
+"inténtelo de nuevo más tarde o contacte al Administrador del "
 "Sistema.</li>"
 
 #: FeeType
@@ -237,7 +237,7 @@ msgstr "Campo"
 
 #: FormedByLoanOfficerBlankException
 msgid "<li>Please select value for Recruited By.</li>"
-msgstr "<li>Por favor seleccione un valor para Contratado Por.</li>"
+msgstr "<li>Por favor seleccione un valor para el campo Reclutado Por.</li>"
 
 #: GroupStatusException
 msgctxt "GroupStatusException"
@@ -310,7 +310,7 @@ msgid ""
 "<li>There was an exception in updating. Please try again later or contact "
 "the system administrator.</li>"
 msgstr ""
-"<li>Ha ocurrido una excepción al actualizar el fichero. Por favor inténtelo "
+"<li>Ha ocurrido un error al actualizar la informacion. Por favor inténtelo "
 "de nuevo más tarde o contacte con el Administrador del Sistema.</li>"
 
 #: User
@@ -324,7 +324,7 @@ msgstr "Aprobado"
 
 #: button.SaveForLater
 msgid "Save For Later"
-msgstr "Grabar y dejar para más tarde."
+msgstr "Guardar y dejar para más tarde."
 
 #: button.SubmitForApproval
 msgid "Submit For Approval"
@@ -353,7 +353,7 @@ msgstr "Editar"
 
 #: button.previousMFIInfo
 msgid "Edit MFI related information"
-msgstr "Editar información relativa a la IMF"
+msgstr "Editar información relacionada con la IMF"
 
 #: button.previousPersonalInfo
 msgctxt "button.previousPersonalInfo"
@@ -363,7 +363,7 @@ msgstr "Editar información personal"
 #: button.previousFamilyInfo
 #, fuzzy
 msgid "Edit Family information"
-msgstr "Vista Previa de información de la IMF."
+msgstr "Vista Previa de la información de la IMF."
 
 #: button.previousStatus
 msgid "Edit status"
@@ -383,7 +383,7 @@ msgstr "Eliminar"
 
 #: cf.lookUpEntity.entityId
 msgid "Custom Field"
-msgstr "Personalizar Campo"
+msgstr "Campo Personalizado"
 
 #: client.AccountHeading
 msgid "Account information"
@@ -396,7 +396,7 @@ msgstr "Crear una cuenta para este {0}"
 #: client.AccountsLink
 #, fuzzy
 msgid "Open new account:"
-msgstr "Abrir nueva cuenta\\:"
+msgstr "Abrir una nueva cuenta\\:"
 
 #: client.ActiveLoans
 #, fuzzy
@@ -453,7 +453,7 @@ msgstr "Dirección"
 
 #: client.AdministrativeFeesHeading
 msgid "Administrative set fees"
-msgstr "Comisiones administrativas fijadas"
+msgstr "Comisiones administrativas fijas"
 
 #: client.Age
 #, fuzzy
@@ -481,7 +481,7 @@ msgstr "Asignar clientes a títulos de centro\\:"
 
 #: client.BranchGroupHeading
 msgid "Select group/branch"
-msgstr "Seleccionar grupo/agencia"
+msgstr "Seleccionar grupo/sucursal"
 
 #: client.BranchSelected
 #, fuzzy
@@ -568,11 +568,11 @@ msgstr "Detalles."
 #: client.Citizenship
 #, fuzzy
 msgid "Religion:"
-msgstr "Religión\\:"
+msgstr "Nacionalidad\\:"
 
 #: client.CitizenshipValue
 msgid "Religion"
-msgstr "Religión"
+msgstr "Nacionalidad"
 
 #: client.City
 #, fuzzy
@@ -614,7 +614,7 @@ msgstr ", seleccione una explicación del menú desplegable de abajo"
 #: client.CollectionSheet
 #, fuzzy
 msgid "Collection sheet type:"
-msgstr "Tipo de hoja de pagos\\:"
+msgstr "Tipo de hoja de cobranza\\:"
 
 #: client.Confidential
 #, fuzzy
@@ -678,7 +678,7 @@ msgstr "Complete los campos de abajo. Luego pulse Vista Previa."
 
 #: client.CreateMfiInformationTitle
 msgid "-  Enter MFI information"
-msgstr "- Introduzca información de la IMF"
+msgstr "- Introduzca la información de la IMF"
 
 #: client.CreateNewClientLink
 msgid "Create a new {0} account"
@@ -704,11 +704,11 @@ msgstr "Complete los campos de abajo. Luego pulse Continuar."
 
 #: client.CreateFamilyInformationInstruction
 msgid "Add the family members. Then click Continue."
-msgstr ""
+msgstr "Añadir a los miembros de la familia. Despues presione Continuar"
 
 #: client.CreatePersonalInformationTitle
 msgid "-  Enter personal information"
-msgstr "- Introduzca información personal"
+msgstr "- Introduzca la información personal"
 
 #: client.CreatePreviewPageInstruction
 msgid ""
@@ -763,20 +763,20 @@ msgstr "Cartera vencida\\:"
 #: client.EditBranchHeading
 msgctxt "client.EditBranchHeading"
 msgid "Edit branch membership"
-msgstr "Editar pertenencia a la agencia"
+msgstr "Editar pertenencia a la sucursal"
 
 #: client.EditBranchInstructions
 msgid ""
 "Click confirm to change the branch or cancel to return to client details "
 "page without changing the branch"
 msgstr ""
-"Pulse confirmar para cambiar la agencia o cancelar para volver a la página "
-"de detalles del cliente sin cambiar de agencia"
+"Pulse confirmar para cambiar la sucursal o cancelar para volver a la página "
+"de detalles del cliente sin cambiar de sucursal"
 
 #: client.EditBranchMembershipLink
 msgctxt "client.EditBranchMembershipLink"
 msgid "Edit branch membership"
-msgstr "Editar pertenencia a la agencia"
+msgstr "Editar pertenencia a la sucursal"
 
 #: client.EditGroupInstructions
 msgid ""
@@ -799,7 +799,7 @@ msgstr "Editar"
 #: client.EditMeetingLink
 msgctxt "client.EditMeetingLink"
 msgid "Edit meeting schedule"
-msgstr "Editar agenda de reunión"
+msgstr "Editar horario de reunión"
 
 #: client.EditMfiInformationLink
 msgid "Edit MFI information"
@@ -896,7 +896,7 @@ msgstr "Nombre"
 #: client.FormedBy
 #, fuzzy
 msgid "Recruited By:"
-msgstr "Contratado Por\\:"
+msgstr "Reclutado Por\\:"
 
 #: client.Gender
 #, fuzzy
@@ -1027,7 +1027,7 @@ msgstr "Información de la IMF"
 
 #: client.ManageTitle
 msgid "Manage"
-msgstr "Gestionar"
+msgstr "Administrar"
 
 #: client.MaritalStatus
 #, fuzzy
@@ -1037,16 +1037,16 @@ msgstr "Estado Civil\\:"
 #: client.MeetingSchedule
 #, fuzzy
 msgid "Meeting schedule:"
-msgstr "Agenda de la reunión\\:"
+msgstr "Horarios de la reunión\\:"
 
 #: client.MeetingScheduleLink
 msgid "Schedule Meeting"
-msgstr "Agenda de la reunión"
+msgstr "Horarios de la reunión"
 
 #: client.MeetingsAttended
 #, fuzzy
 msgid "Meetings Attended:"
-msgstr "Reuniones en las que ha participado\\:"
+msgstr "Reuniones en las que ha atendido\\:"
 
 #: client.MeetingsHeading
 msgid "Meeting"
@@ -1055,7 +1055,7 @@ msgstr "Reunión"
 #: client.MeetingsLink
 msgctxt "client.MeetingsLink"
 msgid "Edit meeting schedule"
-msgstr "Editar agenda de la reunión"
+msgstr "Editar horarios de la reunión"
 
 #: client.MeetingsMissed
 #, fuzzy
@@ -1084,7 +1084,7 @@ msgstr "Vista Previa de información de la IMF."
 #: client.MiddleName
 #, fuzzy
 msgid "Middle Name:"
-msgstr "----"
+msgstr "Segundo Nombre"
 
 #: client.Name
 #, fuzzy
@@ -1288,7 +1288,7 @@ msgstr "Apellidos del Padre/Esposo"
 #, fuzzy
 msgctxt "client.SpouseMiddleName"
 msgid "Middle Name"
-msgstr "----"
+msgstr "Segundo Nombre"
 
 #: client.SpouseNameTypeValue
 msgid "Spouse/Father Type"
@@ -1300,11 +1300,11 @@ msgstr "Segundo Apellido"
 
 #: client.FamilyNumber
 msgid "Dependent Family Members"
-msgstr ""
+msgstr "Dependientes Familiares"
 
 #: client.FamilyDetails
 msgid "Family Details"
-msgstr ""
+msgstr "Detalles de la Familia"
 
 #: client.FamilyRelationship
 msgctxt "client.FamilyRelationship"
@@ -1321,7 +1321,7 @@ msgstr "Nombre"
 #, fuzzy
 msgctxt "client.FamilyMiddleName"
 msgid "Middle Name"
-msgstr "----"
+msgstr "Segundo Nombre"
 
 #: client.FamilyLastName
 msgctxt "client.FamilyLastName"
@@ -1340,27 +1340,27 @@ msgstr "Sexo"
 
 #: client.FamilyLivingStatus
 msgid "Living Status"
-msgstr ""
+msgstr "Estatus de Vida"
 
 #: client.FamilyChildLabel
 msgid "Child"
-msgstr ""
+msgstr "Hijo"
 
 #: client.FamilySpouseLabel
 msgid "Spouse"
-msgstr ""
+msgstr "Esposo/a"
 
 #: client.FamilyFatherLabel
 msgid "Father"
-msgstr ""
+msgstr "Padre"
 
 #: client.FamilyMotherLabel
 msgid "Mother"
-msgstr ""
+msgstr "Madre"
 
 #: client.FamilySiblingLabel
 msgid "Sibling"
-msgstr ""
+msgstr "Hermano/a"
 
 #: client.FamilyDisplayName
 #, fuzzy
@@ -1409,21 +1409,21 @@ msgstr "Total de Ahorros\\:"
 #: client.Trained
 #, fuzzy
 msgid "Trained:"
-msgstr "Formado\\:"
+msgstr "Capacitado\\:"
 
 #: client.TrainedOn
 #, fuzzy
 msgid "Trained On:"
-msgstr "Formado el\\:"
+msgstr "Capacitado el\\:"
 
 #: client.TrainedOnDate
 #, fuzzy
 msgid "Trained On Date:"
-msgstr "Fecha de formación\\:"
+msgstr "Fecha de capacitacion\\:"
 
 #: client.TrainingStatus
 msgid "Training Status"
-msgstr "Estatus de formación"
+msgstr "Estatus de capacitacion"
 
 #: client.TransactionHistory
 msgid "View transaction history"
@@ -1473,7 +1473,7 @@ msgstr "Importe"
 
 #: client.amtdue
 msgid "Amount Due"
-msgstr "Importe pagadero"
+msgstr "Importe por pagar"
 
 #: client.amtoverdue
 msgid "Amount Overdue"
@@ -1602,7 +1602,7 @@ msgstr "nombre de la frecuencia de pago de {0}"
 
 #: client.seephoto
 msgid "See\tPhoto"
-msgstr "Ver\tphoto"
+msgstr "Ver\tFoto"
 
 #: client.select
 msgid "Select"
@@ -1673,7 +1673,7 @@ msgstr "<li> el cliente con ID del Sistema {0} no existe.</li>"
 
 #: errors.generic
 msgid "<li>The {0} is invalid because {1}</li>"
-msgstr ""
+msgstr "<li>El {0} es invalido debido a {1}</li>"
 
 #: error.unknownexception
 msgid "<li>Unknown Exception occurred.</li>"
@@ -1684,7 +1684,7 @@ msgid ""
 "The record has already been modified by another user. Please navigate to the "
 "details page and start the activity again."
 msgstr ""
-"Estae registro ya ha sido modificado por otro usuario. Por favor vaya a la "
+"Este registro ya ha sido modificado por otro usuario. Por favor vaya a la "
 "página de detalles y comience la actividad de nuevo."
 
 #: errors.Client.duplicateOfferingSelected
@@ -1719,7 +1719,7 @@ msgstr ""
 
 #: errors.Customer.invalidFormedBy
 msgid "<li>Please select recruited by personnel.</li>"
-msgstr "<li>Por favor seleccione personal contratado por.</li>"
+msgstr "<li>Por favor seleccione personal reclutado por.</li>"
 
 #: errors.Customer.invalidLoanOfficer
 msgid "<li>Please select loan officer.</li>"
@@ -1727,7 +1727,7 @@ msgstr "<li>Por favor seleccione Oficial de Préstamos.</li>"
 
 #: errors.Customer.invalidMeeting
 msgid "<li>Please select meeting schedule.</li>"
-msgstr "<li>Por favor seleccione agenda de la reunión.</li>"
+msgstr "<li>Por favor seleccione el horario de la reunión.</li>"
 
 #: errors.Customer.invalidName
 msgid "<li>Please specify a name.</li>"
@@ -1786,7 +1786,8 @@ msgstr "<li>Por favor especifique la información adicional requerida.</li>"
 msgid ""
 "<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field.</li>"
-msgstr ""
+msgstr "<li>Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo de "
+"informacion adicional.</li>"
 
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
@@ -1798,7 +1799,7 @@ msgstr "No se puede añadir el cliente a un grupo inactivo"
 
 #: errors.Customer.TargetGroupStatusLowerThanClient
 msgid "Group status should be higher than Client status"
-msgstr ""
+msgstr "El estatus del Grupo debe de ser mas alto que el estatus del Cliente"
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"
@@ -1807,7 +1808,7 @@ msgstr "<li>Por favor introduzca una fecha de formación válida.</li>"
 #: errors.TrainedCheckbox
 msgctxt "errors.TrainedCheckbox"
 msgid "<li>Please select the Trained checkbox.</li>"
-msgstr "<li>Por favor seleccione la casilla Formado.</li>"
+msgstr "<li>Por favor seleccione la casilla Capacitado.</li>"
 
 #: errors.TrainedDateNeeded
 msgctxt "errors.TrainedDateNeeded"
@@ -1890,5 +1891,5 @@ msgid ""
 "A record matching this client was found in \"blacklisted\" status.  Please "
 "review that client record before continuing."
 msgstr ""
-"Se encontró un registro similar al de este cliente con un estatus de "
-"cerrado. Por favor revise el registro de ese cliente antes de continuar."
+"Se encontró un registro similar al de este cliente en la lista negra. "
+"Por favor revise el registro de ese cliente antes de continuar."
