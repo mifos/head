@@ -595,22 +595,26 @@ public class ClientBO extends CustomerBO {
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
 
-                        clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
+                        ClientNameDetailDto nameView = clientNameDetailDto.get(key);
+                        if (nameView != null) {
+                            clientNameDetailEntity.updateNameDetails(nameView);
 
-                        // if switched from familyDetailsRequired=false to true then migrate clientNameDetail to family
-                        // details table.
-                        if (ClientRules.isFamilyDetailsRequired()) {
-                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate
-                                    .getFamilyDetails();
+                            // if switched from familyDetailsRequired=false to true then migrate clientNameDetail to
+                            // family
+                            // details table.
+                            if (ClientRules.isFamilyDetailsRequired()) {
+                                List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate
+                                        .getFamilyDetails();
 
-                            // check each detail to see if it is part of familyDetails and if not, add it to
-                            // familyDetails
-                            for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
+                                // check each detail to see if it is part of familyDetails and if not, add it to
+                                // familyDetails
+                                for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
 
-                                if (familyDetailsDoesNotAlreadyContain(clientNameDetailEntity.getCustomerNameId())) {
-                                    ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this,
-                                            clientNameDetailEntity, clientFamilyDetail);
-                                    familyDetailSet.add(clientFamilyEntity);
+                                    if (familyDetailsDoesNotAlreadyContain(clientNameDetailEntity.getCustomerNameId())) {
+                                        ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(
+                                                this, clientNameDetailEntity, clientFamilyDetail);
+                                        familyDetailSet.add(clientFamilyEntity);
+                                    }
                                 }
                             }
                         }
