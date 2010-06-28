@@ -72,7 +72,7 @@ msgstr "Dirección2"
 #: Client.Address3
 msgctxt "Client.Address3"
 msgid "Village"
-msgstr "Pueblo"
+msgstr "Villa"
 
 #: Client.BusinessActivities
 msgid "Business Activites"
@@ -80,7 +80,7 @@ msgstr "Sector de Actividad"
 
 #: Client.NumberOfChildren
 msgid "Number of Children"
-msgstr ""
+msgstr "Numero de Hijos"
 
 #: Client.Citizenship
 msgid "Religion"
@@ -110,7 +110,7 @@ msgstr "ID Externa"
 
 #: Client.FamilyDetails
 msgid "Family Details"
-msgstr ""
+msgstr "Informacion Familiar"
 
 #: Client.GovernmentId
 msgctxt "Client.GovernmentId"
@@ -119,14 +119,14 @@ msgstr "ID Gubernamental"
 
 #: Client.Handicapped
 msgid "Handicaped"
-msgstr "Disminuido"
+msgstr "Minusvalido"
 
 # There is no Middle Name in Spanish
 #: Client.MiddleName
 #, fuzzy
 msgctxt "Client.MiddleName"
 msgid "Middle Name"
-msgstr "-"
+msgstr "Segundo Nombre"
 
 #: Client.PhoneNumber
 msgctxt "Client.PhoneNumber"
@@ -152,13 +152,13 @@ msgstr "Segundo Apellido"
 
 #: Client.SpouseFatherInformation
 msgid "Spouse/Father Information"
-msgstr ""
+msgstr "Informacion del Esposo/Padre"
 
 # There is no Middle Name in Spanish
 #: Client.SpouseFatherMiddleName
 #, fuzzy
 msgid "Spouse/Father Middle Name"
-msgstr "N/A"
+msgstr "Segundo nombre del Esposo/Padre"
 
 #: Client.SpouseFatherSecondLastName
 msgid "Spouse/Father Second Last Name"
@@ -172,11 +172,11 @@ msgstr "Estado"
 #: Client.Trained
 msgctxt "Client.Trained"
 msgid "Trained"
-msgstr "Formado"
+msgstr "Capacitado"
 
 #: Client.TrainedDate
 msgid "Trained On Date"
-msgstr "Formado en fecha"
+msgstr "Capacitado en fecha"
 
 #: Group.Address1
 msgctxt "Group.Address1"
@@ -234,7 +234,7 @@ msgstr "Formado en"
 
 #: Loan.CollateralNotes
 msgid "Collateral Notes"
-msgstr "Notas sobre el Colateral"
+msgstr "Notas del Colateral"
 
 #: Loan.CollateralType
 msgid "Collateral Type"
@@ -262,7 +262,7 @@ msgstr "Estado"
 #: Personnel.Address3
 msgctxt "Personnel.Address3"
 msgid "Village"
-msgstr "Pueblo"
+msgstr "Villa"
 
 #: Personnel.Country
 msgctxt "Personnel.Country"
@@ -280,7 +280,7 @@ msgstr "Identidad Gubernamental"
 #, fuzzy
 msgctxt "Personnel.MiddleName"
 msgid "Middle Name"
-msgstr "N/A"
+msgstr "Segundo Nombre"
 
 #: Personnel.PhoneNumber
 msgctxt "Personnel.PhoneNumber"

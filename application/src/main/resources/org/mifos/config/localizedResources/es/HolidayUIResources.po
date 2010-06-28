@@ -123,11 +123,11 @@ msgstr "Por favor especifique {0}."
 
 #: holiday.ApplicableOffices
 msgid "Applies To"
-msgstr ""
+msgstr "Aplica a"
 
 #: holiday.HolidayFromDate
 msgid "From Date"
-msgstr "Desde Fecha"
+msgstr "Desde la fecha"
 
 #: holiday.HolidayName
 msgid "Holiday Name"
@@ -139,7 +139,7 @@ msgstr "Regla de Reembolso"
 
 #: holiday.HolidayThruDate
 msgid "To Date"
-msgstr "A Fecha"
+msgstr "A la Fecha"
 
 #: holiday.address.address1.requiredmsg
 msgid "Please specify an Holiday address."
@@ -428,7 +428,7 @@ msgid ""
 msgstr ""
 "Puede introducir un número de ID del sistema en la casilla de búsqueda para "
 "acceder a los detalles del centro que <br> incluyen también las cuentas y "
-"datos de comportamiento del centro."
+"datos de desempeño del centro."
 
 #: holiday.labelHolidayDetails
 #, fuzzy
@@ -473,7 +473,7 @@ msgstr "Días festivos"
 #: holiday.labelLinkListOrganizationalHolidays
 msgid "Below is the list of organization wide holidays."
 msgstr ""
-"La lista de abajo recoge los días festivos que se aplican a toda la "
+"La lista de abajo incluye los días festivos que se aplican a toda la "
 "organización."
 
 #: holiday.labelLinkViewHolidays

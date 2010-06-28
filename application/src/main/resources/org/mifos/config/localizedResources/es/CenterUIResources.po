@@ -19,7 +19,7 @@ msgstr ""
 #: CEnter.AssignClients
 #, fuzzy
 msgid "Assign clients to center titles:"
-msgstr "Asignar clientes a títulos de centro\\:"
+msgstr "Asignar clientes a un centro\\:"
 
 #: Center.AccountActivity
 #, fuzzy
@@ -89,7 +89,7 @@ msgstr "Dirección"
 
 #: Center.AdministrativeFeesHeading
 msgid "Administrative set fees"
-msgstr "Cuotas administrativas fijas"
+msgstr "Especificar cuotas administrativas"
 
 #: Center.Amount
 #, fuzzy
@@ -110,8 +110,8 @@ msgid "Amount Overdue"
 msgstr "Importe por pagar"
 
 #: Center.ApplyAdjustment
-msgid "Apply adjustment      "
-msgstr ""
+msgid "Apply adjustment "
+msgstr "Aplicar ajuste"
 
 #: Center.ApplyCharges
 #, fuzzy
@@ -120,12 +120,12 @@ msgstr "Aplicar cargos"
 
 #: Center.ApplyPayment
 msgid "Apply payment     "
-msgstr ""
+msgstr "Aplicar pago     "
 
 #: Center.ApplyTransaction
 #, fuzzy
 msgid "Apply transactions:     "
-msgstr "Aplicar operaciones\\:"
+msgstr "Aplicar transacciones\\:"
 
 #: Center.Assigned
 msgid "assigned"
@@ -137,19 +137,19 @@ msgstr "disponible"
 
 #: Center.BranchPipeline
 msgid "Choose Branch"
-msgstr "Elegir agencia"
+msgstr "Elegir sucursal"
 
 #: Center.BranchSelected
 #, fuzzy
 msgid "Branch selected:"
-msgstr "Agencia seleccionada\\:"
+msgstr "Sucursal seleccionada\\:"
 
 #: Center.CenterChangeMembershipInstruction
 msgid ""
 "Enter a {0} name and click Search. Click Cancel to return to {1} Details "
 "without submitting information."
 msgstr ""
-"Introduzca un número {0} y pulse Buscar. Pulse Cancelar para volver a {1} "
+"Introduzca un nombre {0} y pulse Buscar. Pulse Cancelar para volver a {1} "
 "Detalles sin enviar la información."
 
 #: Center.CenterCharges
@@ -224,11 +224,11 @@ msgstr "Ver todas las cuentas cerradas"
 #: Center.CollectionSheet
 #, fuzzy
 msgid "Collection sheet type:"
-msgstr "Tipo de hoja de pagos\\:"
+msgstr "Tipo de hoja de cobranza\\:"
 
 #: Center.Colon
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: Center.ConfMessage
 msgid "You have successfully created a new {0}."
@@ -254,13 +254,13 @@ msgstr ""
 #: Center.Confirmation.Information2
 #, fuzzy
 msgid "details which also include a "
-msgstr "que incluyen también los datos de cuenta y de rendimiento de "
+msgstr "que incluyen también "
 
 # Please note that the sequence and location of {0} is different in Spanish. For this box and the 2 before, the Spanish wording does not exactly match the English wording because of this, instead this is based on the breakdown of the string three positions above this one, as appropriate.
 #: Center.Confirmation.Information3
 #, fuzzy
 msgid "'s account and performance data."
-msgstr " ."
+msgstr " sus datos de cuenta y de rendimiento."
 
 #: Center.Confirmation.NameSystemID
 #, fuzzy
@@ -289,7 +289,7 @@ msgstr "País\\:"
 
 #: Center.CreateEditPageTitle
 msgid "Manage Center - Enter center information"
-msgstr "Gestionar Centro - Introducir información de Centro"
+msgstr "Administrar Centro - Introducir información de Centro"
 
 #: Center.CreateGroupNew
 msgid "Create New {0}"
@@ -398,7 +398,7 @@ msgstr "Pulse Cancelar para volver a los detalles de"
 #: Center.EditPageCancelInstruction2
 msgctxt "Center.EditPageCancelInstruction2"
 msgid "Details without submitting information."
-msgstr "sin enviar la información."
+msgstr "detalles sin enviar la información."
 
 #: Center.Enter
 msgid "Enter"
@@ -471,12 +471,12 @@ msgstr ""
 #: Center.LoanOff
 #, fuzzy
 msgid "Loan officer:"
-msgstr "Oficial de préstamos\\:"
+msgstr "Oficial de Crédito\\:"
 
 #: Center.LoanOfficer
 #, fuzzy
 msgid "Loan officer assigned:"
-msgstr "Oficial de préstamos asignado\\:"
+msgstr "Oficial de Crédito asignado\\:"
 
 #: Center.LocationOfMeeting
 #, fuzzy
@@ -495,11 +495,11 @@ msgstr "Gestionar Centro"
 #: Center.MeetingSchedule
 #, fuzzy
 msgid "Meeting schedule:"
-msgstr "Agenda de la reunión"
+msgstr "Horario de la reunión:"
 
 #: Center.MeetingScheduleLink
 msgid "Schedule Meeting"
-msgstr "Fijar reunión"
+msgstr "Fijar horario de la reunión"
 
 #: Center.MeetingsHeading
 msgid "Meeting details"
@@ -507,7 +507,7 @@ msgstr "Detalles de la reunión"
 
 #: Center.MeetingsLink
 msgid "Edit Meeting Schedule"
-msgstr "Editar agenda de la reunión"
+msgstr "Editar horario de la reunión"
 
 #: Center.MeetingsSubHeading
 msgid "Meetings"
@@ -515,7 +515,7 @@ msgstr "Reuniones"
 
 #: Center.Membership
 msgid "membership."
-msgstr "Estatus de miembro"
+msgstr "miembro."
 
 #: Center.MfiJoiningDate
 msgid "MFI joining date"
@@ -572,7 +572,7 @@ msgstr "Títulos oficiales asignados"
 
 #: Center.PerformanceHistoryHeading
 msgid "Performance History"
-msgstr "Historial de comportamiento"
+msgstr "Historial de desempeño"
 
 #: Center.Periodicity
 #, fuzzy
@@ -630,7 +630,7 @@ msgstr "Seleccionar centro"
 #: Center.SearchGroupPipeline
 #, fuzzy
 msgid "Group information "
-msgstr "Información de grupo"
+msgstr "Información del grupo"
 
 #: Center.SearchHeading
 msgid "Create a New Group -"
@@ -642,7 +642,7 @@ msgstr "Introduzca un nombre de {0} y pulse Buscar."
 
 #: Center.Searchmsg1
 msgid "To select, click on a resulting {0}."
-msgstr ""
+msgstr "Para selecionar, haga click en un {0}"
 
 #: Center.SearchResultName
 #, fuzzy
@@ -761,7 +761,7 @@ msgstr "Balance"
 
 #: Center.branchoffices
 msgid "Branch offices"
-msgstr "Agencias"
+msgstr "Sucursals"
 
 #: Center.cancelInstruction
 #, fuzzy
@@ -877,7 +877,7 @@ msgid ""
 "for this customer.</li>"
 msgstr ""
 "<li>El estatus del cliente no se puede cambiar a Cerrado. Todavía existen "
-"cuentas para este cliente.</li>"
+"cuentas activaas para este cliente.</li>"
 
 #: Customer.BranchInactive
 msgid ""
@@ -928,14 +928,14 @@ msgid ""
 "loan officer/has been transferred to a new {0}. Please try again with a "
 "different Loan Officer.</li>"
 msgstr ""
-"<li>El Oficial de Préstamos seleccionado se encuentra inactivo/ha cambiado "
+"<li>El Oficial de Crédito seleccionado se encuentra inactivo/ha cambiado "
 "de cargo/se ha transferido a un nuevo {0}. Por favor inténtelo de nuevo con "
-"un  Oficial de Préstamos diferente. </li>"
+"un  Oficial de Crédito diferente. </li>"
 
 #: Customer.MeetingRequired
 msgid "<li>Please select Meeting schedule to apply a fee.</li>"
 msgstr ""
-"<li>Por favor seleccione una agenda de reunión para aplicar una cuota.</li>"
+"<li>Por favor seleccione un horario de reunión para aplicar una cuota.</li>"
 
 #: Customer.StateChangeException
 msgid "<li>The status cannot be changed as there are active {0}s.</li>"
@@ -960,7 +960,7 @@ msgid ""
 "<li>Unknown exception occurred in the application. Please try again later or "
 "contact the system administrator.</li>"
 msgstr ""
-"<li>Se ha producido una excepción desconocida en la aplicación. Por favor "
+"<li>Se ha producido una error desconocido en la aplicación. Por favor "
 "inténtelo de nuevo más tarde o contacte con el Administrador del sistema. "
 "</li>"
 
@@ -969,7 +969,7 @@ msgid ""
 "<li>Please select Loan Officer. Loan Officer cannot be blank as the customer "
 "is active.</li>"
 msgstr ""
-"<li>Por favor seleccione un Oficial de Préstamos. El Oficial de Préstamos no "
+"<li>Por favor seleccione un Oficial de Crédito. El Oficial de Crédito no "
 "puede estar en blanco ya que el cliente está activo.</li>"
 
 #: LoanOfficerNotAssignedException
@@ -981,7 +981,7 @@ msgstr ""
 #: LoanOfficerRequiredException
 msgctxt "LoanOfficerRequiredException"
 msgid "<li>Please select loan officer.</li>"
-msgstr "<li>Por favor seleccione un Oficial de Préstamos.</li>"
+msgstr "<li>Por favor seleccione un Oficial de Crédito.</li>"
 
 #: NameRequiredException
 msgctxt "NameRequiredException"
@@ -1035,7 +1035,7 @@ msgstr ""
 
 #: error.unknownexception
 msgid "<li>An unknown exception occurred.</li>"
-msgstr "<li>Ha ocurrido una excepción inesperada.</li>"
+msgstr "<li>Ha ocurrido un error inesperado.</li>"
 
 #: error.versionnodonotmatch
 msgid ""
@@ -1051,7 +1051,7 @@ msgid ""
 "<li> The specified name {0}, already exists in the system. Please specify a "
 "different name</li>"
 msgstr ""
-"<li> El nombre de {0} especificado ya existe en el sistema. Por favor "
+"<li> El nombre especificado {0} ya existe en el sistema. Por favor "
 "especifique un nombre diferente</li>"
 
 #: errors.Customer.duplicatePeriodicFee
@@ -1077,7 +1077,8 @@ msgstr "<li>Por favor especifique la información adicional requerida.</li>"
 msgid ""
 "<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field.</li>"
-msgstr ""
+msgstr "<li>Por favor ingrese un formato de fecha valido (formato dd/mm/yyyy) "
+"en la informacion adicional.</li>"
 
 #: errors.Customer.specifyFeeAmount
 msgctxt "errors.Customer.specifyFeeAmount"
@@ -1087,11 +1088,11 @@ msgstr "<li>Por favor especifique el importe de la cuota.</li>"
 #: errors.Customer.specifyLoanOfficer
 msgctxt "errors.Customer.specifyLoanOfficer"
 msgid "<li>Please select loan officer.</li>"
-msgstr "<li>Por favor seleccione el Oficial de Préstamos.</li>"
+msgstr "<li>Por favor seleccione el Oficial de Crédito.</li>"
 
 #: errors.Customer.specifyMeeting
 msgid "<li>Please select Meeting schedule.</li>"
-msgstr "<li>Por favor seleccione la agenda de la reunión.</li>"
+msgstr "<li>Por favor seleccione los horarios de la reunión.</li>"
 
 #: errors.Customer.specifyName
 msgctxt "errors.Customer.specifyName"
@@ -1100,11 +1101,11 @@ msgstr "<li>Por favor especifique Nombre.</li>"
 
 #: errors.fee
 msgid "fee"
-msgstr ""
+msgstr "cuota"
 
 #: errors.generic
 msgid "<li>The {0} is invalid because {1}</li>"
-msgstr ""
+msgstr "<li>La {0} es invalida por que {1}</li>"
 
 #: errors.invalidfeeamt
 msgctxt "errors.invalidfeeamt"
@@ -1113,11 +1114,11 @@ msgstr "<li>Por favor especifique el importe de la cuota.</li>"
 
 #: errors.MfiJoiningDateNeeded
 msgid "<li>Please specify MFI joining date.</li>"
-msgstr "<li>Por favor especifique la fecha de adhesión a la IMF.</li>"
+msgstr "<li>Por favor especifique la fecha de ingreso a la IMF.</li>"
 
 #: errors.InvalidMfiJoiningDate
 msgid "<li>Invalid MFI joining date.</li>"
-msgstr "<li>Fecha de adhesión a la IMF inválida.</li>"
+msgstr "<li>Fecha de ingreso a la IMF inválida.</li>"
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -1129,7 +1130,7 @@ msgid ""
 "<li>This is an invalid entry. Please specify only alphanumeric characters "
 "for this field.</li>"
 msgstr ""
-"<li>Esta entrada no es válida. Por favor use sólo caracteres alfanuméricos "
+"<li>Esta informacion no es válida. Por favor use sólo caracteres alfanuméricos "
 "para este campo.</li>"
 
 #: errors.maxlength

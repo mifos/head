@@ -27,11 +27,11 @@ msgstr ""
 
 #: error.categoryId
 msgid "Please specify report category."
-msgstr "Por favor, especifique la categoría del informe."
+msgstr "Por favor, especifique la categoría del reporte."
 
 #: error.file
 msgid "Please choose a Birt report to upload."
-msgstr "Por favor, elija un informe Birt para cargar."
+msgstr "Por favor, elija un reporte Birt para cargar."
 
 #: error.noMoreDynamicActivityId
 msgid "ActivityId exceed the range, can not add any more."
@@ -42,23 +42,23 @@ msgid ""
 "The report ActivityId is NULL, so you can not edit any information of this "
 "report."
 msgstr ""
-"El informe ActivityId es NULO, por lo que no se puede editar la información "
-"de este informe."
+"El reporte ActivityId es NULO, por lo que no se puede editar la información "
+"de este reporte."
 
 #: error.reportAlreadyExist
 msgid ""
 "The report already exists in this category. Please enter unique report info."
 msgstr ""
-"El informe ya existe en esta categoría. Por favor, introduzca información "
-"única para el informe."
+"El reporte ya existe en esta categoría. Por favor, introduzca información "
+"única para el reporte."
 
 #: error.reportInfoNotEdit
 msgid ""
 "You have not edited the report info. Please edit the report or click Cancel "
 "to return to the View reports page."
 msgstr ""
-"No ha editado la información del informe. Por favor, modifique el informe o "
-"haga clic en Cancelar para volver a la página de Ver informes."
+"No ha editado la información del reporte. Por favor, modifique el reporte o "
+"haga clic en Cancelar para volver a la página de Ver reportes."
 
 #: error.status
 msgid "Please choose a status."
@@ -71,7 +71,7 @@ msgstr "Este título ya existe, por favor, elija otro título."
 
 #: error.titleName
 msgid "Please specify report title."
-msgstr "Por favor, especifique el título para el informe."
+msgstr "Por favor, especifique el título para el reporte."
 
 #: errors.footer
 msgid "</UL>"
@@ -95,7 +95,7 @@ msgstr "Administrador"
 
 #: reports.ReportTemplate
 msgid "Report Template"
-msgstr "Plantilla del Informe"
+msgstr "Plantilla del reporte"
 
 #: reports.ShowWhenStatus
 msgid "Show when Status"
@@ -127,7 +127,7 @@ msgstr "Título del Documento de Administración"
 
 #: reports.administerreports
 msgid "Administer reports"
-msgstr "Administrar informes"
+msgstr "Administrar reportes"
 
 #: reports.administrativeDocumentDetails
 msgid "Administrative document details"
@@ -155,7 +155,7 @@ msgid ""
 "report design document"
 msgstr ""
 "Haga clic en el enlace Editar para realizar cambios en el estado del "
-"informe, la categoría, o documento de diseño"
+"reporte, la categoría, o documento de diseño"
 
 #: reports.classname
 msgid "Classname"
@@ -175,7 +175,7 @@ msgstr ""
 
 #: reports.createNewReportInfo
 msgid "To install a new BIRT report, click on {0}."
-msgstr "Para instalar un nuevo informe Birt, haga clic en {0}."
+msgstr "Para instalar un nuevo reporte Birt, haga clic en {0}."
 
 #: reports.data
 msgid "Data"
@@ -187,7 +187,7 @@ msgstr "Descripción"
 
 #: reports.details
 msgid "Report details"
-msgstr "Detalles del informe"
+msgstr "Detalles del reporte"
 
 #: reports.documentInformation
 msgid "Document information"
@@ -207,7 +207,7 @@ msgstr "Descargar el documento administrativo"
 
 #: reports.driver
 msgid "Driver"
-msgstr "Controlador"
+msgstr "Driver"
 
 #: reports.dsname
 msgid "Datasource Name"
@@ -224,12 +224,12 @@ msgstr "Editar la información del documento"
 #: reports.editReportInformation
 msgctxt "reports.editReportInformation"
 msgid "Edit report information"
-msgstr "Editar la información del informe"
+msgstr "Editar la información del reporte"
 
 #: reports.editinformation
 msgctxt "reports.editinformation"
 msgid "Edit report information"
-msgstr "Editar la información del informe"
+msgstr "Editar la información del reporte"
 
 #: reports.editreporttips
 msgid ""
@@ -237,7 +237,7 @@ msgid ""
 "report details without submitting information."
 msgstr ""
 "Completar los campos abajo. A continuación, haga clic en Vista previa. Haga "
-"clic en Cancelar para regresar al detalle de los informes sin enviar la "
+"clic en Cancelar para regresar al detalle de los reportes sin enviar la "
 "información."
 
 #: reports.editreporttipswithasterisk
@@ -251,7 +251,7 @@ msgstr "Introduzca la información del documento"
 
 #: reports.enterRInformation
 msgid "Enter report information"
-msgstr "Introduzca la información del informe"
+msgstr "Introduzca la información del reporte"
 
 #: reports.exportformat
 msgid "Select one of the following Export Format"
@@ -270,8 +270,8 @@ msgid ""
 "Welcome to mifos reports area. Click on a report name below to view the "
 "report"
 msgstr ""
-"Bienvenido al área de Informes de MIFOS . Haga clic en el nombre de abajo de "
-"un informe para ver el informe"
+"Bienvenido al área de reportes de MIFOS . Haga clic en el nombre de abajo de "
+"un reporte para ver el reporte"
 
 #: reports.labelAdministrativeDocument
 msgid "Select Administrative Document"
@@ -279,11 +279,11 @@ msgstr "Seleccionar Documento Administrativo"
 
 #: reports.labelCategory
 msgid "Report category"
-msgstr "Categoría de Informes"
+msgstr "Categoría de reportes"
 
 #: reports.labelReportStatus
 msgid "Report Status"
-msgstr "Estado de Informes"
+msgstr "Estado de reportes"
 
 #: reports.labelSelectTemplate
 msgid "Select report template"
@@ -291,11 +291,11 @@ msgstr "Seleccionar plantilla de reportes"
 
 #: reports.labelTitle
 msgid "Report title"
-msgstr "Título del informe"
+msgstr "Título del reporte"
 
 #: reports.linkviewreport
 msgid "View reports"
-msgstr "Ver Informes"
+msgstr "Ver reportes"
 
 #: reports.linkviewtemplate
 msgid "View Template"
@@ -311,11 +311,11 @@ msgstr "Mencione los Parámetros"
 
 #: reports.listparamsmap
 msgid "Map Parameter and Report"
-msgstr "Mapa de los Parámetros e Informes"
+msgstr "Mapa de los Parámetros e reportes"
 
 #: reports.listreports
 msgid "List Reports"
-msgstr "Lista de Informes"
+msgstr "Lista de reportes"
 
 #: reports.listuserparam
 msgid "Enter Parameters"
@@ -328,7 +328,7 @@ msgstr "Los campos marcados con un asterisco son obligatorios."
 
 #: reports.newReportLinkText
 msgid "upload a new report"
-msgstr "cargar un informe nuevo"
+msgstr "cargar un reporte nuevo"
 
 #: reports.or
 msgid "or"
@@ -356,12 +356,12 @@ msgid ""
 "details without submitting information."
 msgstr ""
 "Examine los campos de abajo. A continuación, haga clic en Enviar. Haga clic "
-"en Cancelar para volver al detalle de los informes sin enviar la "
+"en Cancelar para volver al detalle de los reportes sin enviar la "
 "información."
 
 #: reports.reports
 msgid "Reports"
-msgstr "Informes"
+msgstr "reportes"
 
 #: reports.review&submit
 msgid "Review & submit"
@@ -374,7 +374,7 @@ msgstr "Revise la información de abajo."
 
 #: reports.selectReport
 msgid "To select, click on a report from the list below."
-msgstr "Para seleccionar, haga clic en un informe de la lista de abajo."
+msgstr "Para seleccionar, haga clic en un reporte de la lista de abajo."
 
 #: reports.statement
 #, fuzzy
@@ -395,7 +395,7 @@ msgstr "Enviar"
 
 #: reports.summaryandreport
 msgid "Client Summary & History Report"
-msgstr "Resumen del Cliente e Informe Histórico"
+msgstr "Resumen del Cliente e reporte Histórico"
 
 #: reports.title
 msgid "Title"
@@ -423,11 +423,11 @@ msgstr "Cargar documento administrativo"
 
 #: reports.uploadReport
 msgid "Upload report"
-msgstr "Cargar informe"
+msgstr "Cargar reporte"
 
 #: reports.upload_report
 msgid "Upload Report"
-msgstr "Cargar Informe"
+msgstr "Cargar reporte"
 
 #: reports.uploadanewadmindoc
 #, fuzzy

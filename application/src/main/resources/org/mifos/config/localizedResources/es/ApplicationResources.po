@@ -43,7 +43,7 @@ msgstr "{0} no es una fecha"
 
 #: errors.double
 msgid "{0} must be a double."
-msgstr "{0} ha de ser un doble"
+msgstr "{0} debe de ser un numero de tipo doble."
 
 #: errors.email
 msgid "{0} is an invalid e-mail address."
@@ -51,7 +51,7 @@ msgstr "{0} es una dirección de correo electrónico no válida"
 
 #: errors.float
 msgid "{0} must be a float."
-msgstr "{0} ha de ser flotante"
+msgstr "{0} debe de ser un numero de tipo flotante."
 
 #: errors.footer
 msgid "</ul><hr>"
@@ -64,12 +64,12 @@ msgid ""
 "<h3><font color=\"red\">Validation Error</font></h3>You must correct the "
 "following error(s) before proceeding:<ul>"
 msgstr ""
-"<h3><color de fuente\\=\"rojo\">Error de Validación</fuente></h3>Debe corregir "
+"<h3><font color=\"red\">Error de Validación</font></h3>Debe corregir "
 "el(los) siguientes error(es) antes de proseguir\\:<ul>"
 
 #: errors.integer
 msgid "{0} must be an integer."
-msgstr "{0} ha de ser un entero."
+msgstr "{0} debe de ser un numero entero."
 
 #: errors.invalid
 msgid "{0} is invalid."
@@ -77,7 +77,7 @@ msgstr "{0} no es válido"
 
 #: errors.long
 msgid "{0} must be a long."
-msgstr "{0} ha de ser un largo."
+msgstr "{0} debe de ser un numero de tipo largo."
 
 #: errors.maxlength
 msgid "{0} can not be greater than {1} characters."
@@ -102,7 +102,7 @@ msgstr "<li>{0} es necesario.</li>"
 
 #: errors.short
 msgid "{0} must be a short."
-msgstr "{0} ha de ser un corto."
+msgstr "{0} debe de ser un numero de tipo corto."
 
 #: label.accounts
 msgid "Accounts"
@@ -136,11 +136,11 @@ msgstr "Clientes"
 
 #: label.collectionsheet
 msgid "Collection Sheet"
-msgstr "Hoja de reembolsos"
+msgstr "Hoja de cobranza"
 
 #: label.collectionsheets
 msgid "Collection Sheets"
-msgstr "Hojas de reembolsos"
+msgstr "Hojas de cobranza"
 
 #: label.create
 msgid "Create"
@@ -184,11 +184,11 @@ msgstr "Oficial de Préstamos"
 
 #: label.manage
 msgid "Manage"
-msgstr "Gestionar"
+msgstr "Administrar"
 
 #: label.manageexisting
 msgid "Manage Existing"
-msgstr "Gestionar Existente"
+msgstr "Administrar Existente"
 
 #: label.opennew
 msgid "Open new"
@@ -211,11 +211,11 @@ msgstr "Comienzo rápido"
 
 #: label.report
 msgid "report"
-msgstr "informe"
+msgstr "reporte"
 
 #: label.reports
 msgid "reports"
-msgstr "informes"
+msgstr "reportes"
 
 #: label.savingsaccount
 msgid "Savings Account"

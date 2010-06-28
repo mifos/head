@@ -80,11 +80,11 @@ msgstr ""
 
 #: PPI.definePovertyMeasurementTool
 msgid "Define Poverty Measurement Tool"
-msgstr "Defina Herramientas de Medida de la Pobreza"
+msgstr "Defina las Herramientas para medir la Pobreza"
 
 #: PPI.definePovertyStatus
 msgid "Define poverty status"
-msgstr "Defina estado de la pobreza"
+msgstr "Defina estado de pobreza"
 
 #: PPI.definePovertyStatusIntructions
 msgid ""
@@ -101,7 +101,7 @@ msgstr "Edite la herramienta de configuración PPI"
 # This is an unregistered trademark. Legal input is required.
 #: PPI.longName
 msgid "Progress out of Poverty Index"
-msgstr "Progreso de Índice de Pobreza"
+msgstr "Índice de Progreso para salir de la Pobreza"
 
 #: PPI.ppiConfiguration
 msgid "PPI Configuration"

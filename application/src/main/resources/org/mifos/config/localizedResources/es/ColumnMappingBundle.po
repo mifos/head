@@ -99,16 +99,16 @@ msgstr "Rango"
 #: Center.meetingRecurrence.weekDay
 msgctxt "Center.meetingRecurrence.weekDay"
 msgid "Week Day"
-msgstr "Día laborable"
+msgstr "Día habil"
 
 #: Center.mfiJoiningDate
 msgctxt "Center.mfiJoiningDate"
 msgid "MFI Joining Date"
-msgstr "Fecha de afiliación a la IMF"
+msgstr "Fecha de ingreso a la IMF"
 
 #: Center.personnel.displayName
 msgid "Loan Officer Assigned"
-msgstr "Oficial de Préstamos Asignado"
+msgstr "Oficial de Crédito Asignado"
 
 #: Center.personnelId
 msgctxt "Center.personnelId"
@@ -187,7 +187,7 @@ msgstr "Apellidos"
 #, fuzzy
 msgctxt "Client.customerNameDetailSet.middleName"
 msgid "Middle Name"
-msgstr "----"
+msgstr "Segundo Nombre
 
 #: Client.customerNameDetailSet.nameType
 msgid "Spouse/Father Name"
@@ -275,7 +275,7 @@ msgstr "Día Laborable"
 #: Client.mfiJoiningDate
 msgctxt "Client.mfiJoiningDate"
 msgid "MFI Joining Date"
-msgstr "Fecha de afiliación a la IMF"
+msgstr "Fecha de ingreso a la IMF"
 
 #: Client.parentCustomer.displayName
 msgctxt "Client.parentCustomer.displayName"
@@ -420,11 +420,11 @@ msgstr "Estatus"
 
 #: Group.trained
 msgid "Trained"
-msgstr "Formado"
+msgstr "Capacitado"
 
 #: Group.trainedDate
 msgid "Trained On"
-msgstr "Formado con fecha"
+msgstr "Capacitado con fecha"
 
 #: Group.zip
 msgctxt "Group.zip"
@@ -466,7 +466,7 @@ msgstr "Propósito de"
 
 #: Loan.Rate
 msgid "Rate"
-msgstr "Tipo"
+msgstr "Tasa"
 
 #: Loan.accountState
 msgctxt "Loan.accountState"
@@ -484,7 +484,7 @@ msgstr "Explicación"
 
 #: Loan.gracePeriodDuration
 msgid "Grace period for repayments"
-msgstr "Periodo de carencia "
+msgstr "Periodo de gracia "
 
 #: Loan.intDedDisbursement
 msgid "deducted At Disbursement"
@@ -508,7 +508,7 @@ msgstr "Mín"
 
 #: LoanProduct.def
 msgid "Default"
-msgstr "Por defecto"
+msgstr "Por omisión"
 
 #: LoanProduct.defNoInstallments
 #, fuzzy
@@ -539,11 +539,11 @@ msgstr "Fuentes de Fondos"
 
 #: LoanProduct.gracePeriodDuration
 msgid "Grace Period Duration"
-msgstr "Duración del periodo de carencia"
+msgstr "Duración del periodo de gracia"
 
 #: LoanProduct.gracePeriodType.gracePeriodTypeId
 msgid "Grace Period Type"
-msgstr "Tipo de periodo de carencia"
+msgstr "Tipo de periodo de gracia"
 
 #: LoanProduct.intDedDisbursementFlag
 msgid "Deducted At Disbursement"
@@ -563,7 +563,7 @@ msgstr "Contador de Ciclo"
 
 #: LoanProduct.maxInterestRate
 msgid "Max Interest Rate"
-msgstr "Tipo de interés máximo           "
+msgstr "Tasa de interés máxima "
 
 #: LoanProduct.maxLoanAmount
 msgid "Max Loan Amount"
@@ -572,7 +572,7 @@ msgstr "Importe máximo del préstamo "
 #: LoanProduct.maxNoInstallments
 #, fuzzy
 msgid "Max # Of Installments"
-msgstr "Número máximo de cuotas"
+msgstr "Número máximo de pagos"
 
 #: LoanProduct.meetingDetails.recurAfter
 msgid "Recur After"
@@ -580,7 +580,7 @@ msgstr "Recurrir tras"
 
 #: LoanProduct.minInterestRate
 msgid "Min Interest Rate"
-msgstr "Tipo de interés mínimo"
+msgstr "Tasa de interés mínima"
 
 #: LoanProduct.minLoanAmount
 msgid "Min Loan Amount"
@@ -589,7 +589,7 @@ msgstr "Importe mínimo del préstamo"
 #: LoanProduct.minNoInstallments
 #, fuzzy
 msgid "Min # Of Installments"
-msgstr "Número mínimo de cuotas"
+msgstr "Número mínimo de pagos"
 
 #: LoanProduct.penalty.penaltyID
 msgid "Penalty Type"
@@ -601,7 +601,7 @@ msgstr "Código GL de Penalidades"
 
 #: LoanProduct.penaltyGrace
 msgid "Grace Period For Penalty"
-msgstr "Periodo de carencia para la penalidad"
+msgstr "Periodo de gracia para la penalidad"
 
 #: LoanProduct.penaltyRate
 msgid "Penalty Rate"
@@ -620,7 +620,7 @@ msgstr "Categoría de Producto"
 #: LoanProduct.prdOfferingName
 msgctxt "LoanProduct.prdOfferingName"
 msgid "Product Instance Name"
-msgstr "Nombre de la Periodicidad del Producto"
+msgstr "Nombre del Producto"
 
 #: LoanProduct.prdOfferingShortName
 msgctxt "LoanProduct.prdOfferingShortName"
@@ -634,7 +634,7 @@ msgstr "Estatus"
 
 #: LoanProduct.prinDueLastInstFlag
 msgid "Principal Due On Last Installment"
-msgstr "Saldo de Capital Pendiente a la fecha de la última cuota"
+msgstr "Saldo de Capital Pendiente a la fecha del último pago"
 
 #: LoanProduct.principalGLCode
 msgid "Principal GL code"
@@ -642,7 +642,7 @@ msgstr "Código GL de Capital"
 
 #: LoanProduct.recurrenceType.recurrenceName
 msgid "Frequency Of Installments"
-msgstr "Frecuencia de las Cuotas"
+msgstr "Frecuencia de los pagos"
 
 #: LoanProduct.startDate
 msgctxt "LoanProduct.startDate"
@@ -767,7 +767,7 @@ msgstr "Idioma preferido"
 #, fuzzy
 msgctxt "Personnel.middleName"
 msgid "Middle Name"
-msgstr "----"
+msgstr "Segundo Nombre"
 
 #: Personnel.officeId
 msgctxt "Personnel.officeId"
@@ -852,7 +852,7 @@ msgstr "Tipo de Interés"
 
 #: SavingsProduct.maxAmntWithdrawl
 msgid "Max Amount Per Withdrawal"
-msgstr "Importe máximo de cada disposición"
+msgstr "Importe máximo de cada retiro"
 
 #: SavingsProduct.meetingDetails.recurAfter
 msgid "Time Period/Frequency"
@@ -875,7 +875,7 @@ msgstr "Categoría de Producto"
 #: SavingsProduct.prdOfferingName
 msgctxt "SavingsProduct.prdOfferingName"
 msgid "Product Instance Name"
-msgstr "Nombre de la Periodicidad del Producto"
+msgstr "Nombre del Producto"
 
 #: SavingsProduct.prdOfferingShortName
 msgctxt "SavingsProduct.prdOfferingShortName"
@@ -907,7 +907,7 @@ msgstr "Fecha de comienzo"
 
 #: customer.branch_membership
 msgid "Branch membership"
-msgstr "Pertenencia a la agencia"
+msgstr "Pertenencia a la sucursal"
 
 #: historicalData.interestPaid
 msgid "Paid"
@@ -923,7 +923,7 @@ msgstr "Ciclo por producto"
 
 #: historicalData.missedPaymentsCount
 msgid "Number of missed payments"
-msgstr "Número de cuotas impagadas"
+msgstr "Número de cuotas no pagadas"
 
 #: historicalData.notes
 msgid "Notes"
