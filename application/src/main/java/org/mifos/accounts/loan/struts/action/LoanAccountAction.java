@@ -525,7 +525,8 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletResponse response) throws Exception {
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
+        Short localeId = getUserContext(request).getLocaleId();
+        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, localeId);
 
         String customerId = request.getParameter(CUSTOMER_ID);
         SessionUtils.removeAttribute(BUSINESS_KEY, request);
@@ -1202,7 +1203,7 @@ public class LoanAccountAction extends AccountAppAction {
             loanInformationDto.getGracePeriodType().setLocaleId(localeId);
         }
         loanInformationDto.getInterestType().setLocaleId(localeId);
-        loanInformationDto.getAccountState().setLocaleId(localeId);
+//        loanInformationDto.getAccountState().setLocaleId(localeId);
         for (AccountFlagMapping accountFlagMapping : loanInformationDto.getAccountFlags()) {
             accountFlagMapping.getFlag().setLocaleId(localeId);
         }
