@@ -411,6 +411,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public MeetingBO getCustomerMeetingValue() {
+        if (customerMeeting == null) {
+            return null;
+        }
         return customerMeeting.getMeeting();
     }
 
