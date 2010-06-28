@@ -81,6 +81,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 /**
  * FIXME - keithw - move all usage of deprecated constructors in tests and TestObjectFactory towards newer builder + IntegrationTestObjectMother pattern
@@ -120,6 +121,11 @@ public class ClientBO extends CustomerBO {
         // inherit settings from parent (group)
         OfficeBO office = group.getOffice();
         MeetingBO meeting = group.getCustomerMeetingValue();
+
+        if (clientStatus.isClientActive()) {
+            Assert.notNull(meeting, "meeting inherited from parent group should not be null when client is active");
+        }
+
         PersonnelBO loanOfficer = group.getPersonnel();
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,

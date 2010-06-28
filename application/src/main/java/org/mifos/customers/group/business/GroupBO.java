@@ -121,7 +121,10 @@ public class GroupBO extends CustomerBO {
             DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
-        Assert.notNull(meeting, "meeting cannot be null");
+
+        if (customerStatus.isGroupActive()) {
+            Assert.notNull(meeting, "meeting cannot be null when group is active");
+        }
 
         DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
