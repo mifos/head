@@ -17,20 +17,25 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.test.acceptance.framework.admin;
 
-package org.mifos.accounts.loan.persistance;
+import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-import java.util.List;
+public class ViewAllQuestionGroupsPage extends MifosPage {
+    public ViewAllQuestionGroupsPage(Selenium selenium) {
+        super(selenium);
+    }
 
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.util.helpers.SurveyDto;
 
-public interface LoanDao {
+    public ViewAllQuestionGroupsPage verifyPage() {
+        verifyPage("view_question_groups");
+        return this;
+    }
 
-    LoanBO findById(Integer accountId);
-
-    LoanBO findByGlobalAccountNum(String globalAccountNum);
-
-    List<SurveyDto> getAccountSurveyDto(Integer accountId);
-
+    public QuestionGroupDetailPage navigateToQuestionGroupDetailPage(String id) {
+        selenium.click(id);
+        waitForPageToLoad();
+        return new QuestionGroupDetailPage(selenium);
+    }
 }

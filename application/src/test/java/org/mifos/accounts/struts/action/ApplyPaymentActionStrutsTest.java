@@ -254,8 +254,10 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "get");
         actionPerform();
-        LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        loan = (LoanBO) StaticHibernateUtil.getSessionTL().load(LoanBO.class, loan.getAccountId());
+
+        //LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        LoanBO loan = (LoanBO) StaticHibernateUtil.getSessionTL().load(LoanBO.class, accountBO.getAccountId());
+
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
 
         Short DEFAULT_LOCALE = (short) 1;

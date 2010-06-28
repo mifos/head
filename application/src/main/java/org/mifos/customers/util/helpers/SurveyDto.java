@@ -17,20 +17,36 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.customers.util.helpers;
 
-package org.mifos.accounts.loan.persistance;
+import java.util.Date;
 
-import java.util.List;
+import org.mifos.framework.business.service.DataTransferObject;
 
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.util.helpers.SurveyDto;
+/**
+ *
+ */
+public class SurveyDto implements DataTransferObject {
+    private final Integer instanceId;
+    private final String surveyName;
+    private final Date dateConducted;
 
-public interface LoanDao {
+    public SurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
+        this.instanceId = instanceId;
+        this.surveyName = surveyName;
+        this.dateConducted = dateConducted;
+    }
 
-    LoanBO findById(Integer accountId);
+    public int getInstanceId() {
+        return this.instanceId;
+    }
 
-    LoanBO findByGlobalAccountNum(String globalAccountNum);
+    public String getSurveyName() {
+        return this.surveyName;
+    }
 
-    List<SurveyDto> getAccountSurveyDto(Integer accountId);
+    public Date getDateConducted() {
+        return this.dateConducted;
+    }
 
 }

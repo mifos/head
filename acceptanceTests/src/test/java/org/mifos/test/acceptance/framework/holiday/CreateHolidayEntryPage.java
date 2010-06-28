@@ -20,6 +20,7 @@
 
 package org.mifos.test.acceptance.framework.holiday;
 
+import com.thoughtworks.selenium.Wait;
 import junit.framework.Assert;
 
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -154,7 +155,13 @@ public class CreateHolidayEntryPage extends MifosPage {
         selenium.fireEvent("holidayFromDateYY", "blur");
         selenium.fireEvent("holidayThruDateYY", "blur");
 
-
+        new Wait("Wait for ajax component, jsTree has timed out") {
+            public boolean until() {
+                //id 1 is the for the root/head office of the jsTree
+                return selenium.isElementPresent("id=1");
+            }
+        };
+        
         selenium.click("holiday.button.preview");
         waitForPageToLoad();
 

@@ -61,6 +61,7 @@
                                     <url>${container.url}</url>
                                     <installDir>${cargo.install.directory}/${container.name}</installDir>
                                 </zipUrlInstaller>
+                                <output>${java.io.tmpdir}/${user.name}-cargo/conf/logs/server-console.log</output>
                             </container>
                             <configuration>
                                 <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>

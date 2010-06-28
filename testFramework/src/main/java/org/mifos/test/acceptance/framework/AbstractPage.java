@@ -20,9 +20,9 @@
 
 package org.mifos.test.acceptance.framework;
 
-import org.testng.Assert;
-
 import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.Wait;
+import org.testng.Assert;
 
 /**
  * Base class for all Page objects -
@@ -33,36 +33,41 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class AbstractPage {
 
-	private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
-	protected Selenium selenium;
+    private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
+    protected Selenium selenium;
 
-	public AbstractPage() {
-		// do nothing
-	}
+    public AbstractPage() {
+        // do nothing
+    }
 
-	public AbstractPage(Selenium selenium) {
-		this.selenium = selenium;
-	}
+    public AbstractPage(Selenium selenium) {
+        this.selenium = selenium;
+    }
 
-	protected void waitForPageToLoad() {
-		selenium.waitForPageToLoad(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
-	}
+    protected void waitForPageToLoad() {
+        selenium.waitForPageToLoad(MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
+    }
 
-	final public void setSelenium(Selenium selenium) {
-		this.selenium = selenium;
-	}
+    final public void setSelenium(Selenium selenium) {
+        this.selenium = selenium;
+    }
 
-	public Selenium getSelenium() {
-		return this.selenium;
-	}
+    public Selenium getSelenium() {
+        return this.selenium;
+    }
 
-	public void openUri (String uri) {
-		selenium.open(uri);
-		waitForPageToLoad();
-	}
+    public void openUri(String uri) {
+        selenium.open(uri);
+        waitForPageToLoad();
+    }
 
-	public void verifyPage(String pageName) {
-		Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
-	}
+    public void verifyPage(String pageName) {
+        new Wait("Waiting for page.id element has failed. Current page is: \n" + selenium.getBodyText() + "\n Html content is: \n" + selenium.getHtmlSource()) {
+            public boolean until() {
+                return selenium.isElementPresent("id=page.id");
+            }
+        };
+        Assert.assertEquals(selenium.getAttribute("page.id@title"), pageName);
+    }
 
 }
