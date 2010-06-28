@@ -32,6 +32,7 @@ import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
@@ -87,8 +88,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeLevel", "5");
         actionPerform();
         verifyForward(ActionForwards.load_success.toString());
-        List<OfficeDetailsDto> parents = (List<OfficeDetailsDto>) SessionUtils.getAttribute(OfficeConstants.PARENTS,
-                request);
+        List<OfficeDto> parents = (List<OfficeDto>) SessionUtils.getAttribute(OfficeConstants.PARENTS, request);
         Assert.assertEquals(2, parents.size());
         List<OfficeDetailsDto> levels = (List<OfficeDetailsDto>) SessionUtils.getAttribute(
                 OfficeConstants.OFFICELEVELLIST, request);

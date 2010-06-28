@@ -42,6 +42,7 @@ import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
@@ -201,6 +202,15 @@ public class OfficeDaoHibernateIntegrationTest {
 
         // verification
         assertThat(allOffices.size(), is(9));
+    }
+
+    @Test
+    public void shouldRetrieveAllParentOfficesOfLevelAsOfficeDtos() throws Exception {
+
+        List<OfficeDto> allOffices = officeDao.findActiveParents(OfficeLevel.HEADOFFICE);
+
+        // verification
+        assertThat(allOffices.size(), is(0));
     }
 
     public void createOfficeHierarchy() {

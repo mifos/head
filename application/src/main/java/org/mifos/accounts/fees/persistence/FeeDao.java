@@ -46,7 +46,7 @@ public interface FeeDao {
 
     List<FeeDto> retrieveAllCustomerFees();
 
-    List<CategoryTypeEntity> retrieveFeeCategories();
+    List<CategoryTypeEntity> doRetrieveFeeCategories();
 
     List<FeeFormulaEntity> retrieveFeeFormulae();
 
