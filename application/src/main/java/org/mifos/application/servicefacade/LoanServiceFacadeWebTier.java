@@ -45,6 +45,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanService;
+import org.mifos.accounts.loan.business.service.LoanSummaryDto;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -858,7 +859,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
     }
 
-    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum, Short localeId) {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         String fundName = null;
         if (loan.getFund() != null) {
@@ -869,13 +870,24 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
         List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
 
-        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
+        LoanSummaryDto loanSummary = new LoanSummaryDto(loan.getLoanSummary().getOriginalPrincipal(), loan.getLoanSummary().getPrincipalPaid(),
+                                                        loan.getLoanSummary().getPrincipalDue(), loan.getLoanSummary().getOriginalInterest(),
+                                                        loan.getLoanSummary().getInterestPaid(), loan.getLoanSummary().getInterestDue(),
+                                                        loan.getLoanSummary().getOriginalFees(), loan.getLoanSummary().getFeesPaid(),
+                                                        loan.getLoanSummary().getFeesDue(), loan.getLoanSummary().getOriginalPenalty(),
+                                                        loan.getLoanSummary().getPenaltyPaid(), loan.getLoanSummary().getPenaltyDue(),
+                                                        loan.getLoanSummary().getTotalLoanAmnt(), loan.getLoanSummary().getTotalAmntPaid(),
+                                                        loan.getLoanSummary().getTotalAmntDue());
+
+        loan.getAccountState().setLocaleId(localeId);
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, /*loan.getAccountState(),*/ loan.getAccountState().getId(),
+                                        /*loan.getAccountState().getName()*/ "Shahid", loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
                                         loan.getAccountNotes(), loan.getRecentAccountNotes(),
-                                        loan.getCustomer().getCustomerLevel(), loan.getCustomer().getCustomerId(), loan.getAccountType(),
+                                        /*loan.getCustomer().getCustomerLevel(),*/ loan.getCustomer().getCustomerId(), loan.getAccountType(),
                                         loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
-                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loan.getLoanSummary(),
+                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
                                         loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
