@@ -880,7 +880,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                                         loan.getLoanSummary().getTotalAmntDue());
 
         loan.getAccountState().setLocaleId(localeId);
-        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, /*loan.getAccountState(),*/ loan.getAccountState().getId(),
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState().getId(),
                                         /*loan.getAccountState().getName()*/ "Shahid", loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
