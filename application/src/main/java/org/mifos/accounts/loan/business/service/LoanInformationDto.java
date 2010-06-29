@@ -33,8 +33,8 @@ public class LoanInformationDto implements DataTransferObject {
     private final boolean redone;
     private final Integer businessActivityId;
     private final Set<AccountActionDateEntity> accountActionDates;
-    private final GracePeriodTypeEntity gracePeriodType;
-    private final InterestTypesEntity interestType;
+    private final String gracePeriodTypeName;
+    private final String interestTypeName;
     private final MeetingBO loanMeeting;
     private final Set<AccountNotesEntity> accountNotes;
     private final List<AccountNotesEntity> recentAccountNotes;
@@ -52,7 +52,8 @@ public class LoanInformationDto implements DataTransferObject {
     private final Short recurrenceId;
     private final boolean prinDueLastInst;
     private final Short noOfInstallments;
-    private final MaxMinNoOfInstall maxMinNoOfInstall;
+    private final Short minNoOfInstall;
+    private final Short maxNoOfInstall;
     private final Short gracePeriodDuration;
     private final String fundName;
     private final Integer collateralTypeId;
@@ -69,12 +70,13 @@ public class LoanInformationDto implements DataTransferObject {
 
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName,
                               Set<AccountFlagMapping> accountFlags, Date disbursementDate, boolean redone, Integer businessActivityId,
-                              Integer accountId,Set<AccountActionDateEntity> accountActionDates,GracePeriodTypeEntity gracePeriodType,
-                              InterestTypesEntity interestType,MeetingBO loanMeeting, Set<AccountNotesEntity> accountNotes,
+                              Integer accountId,Set<AccountActionDateEntity> accountActionDates,String gracePeriodTypeName,
+                              String interestTypeName,MeetingBO loanMeeting, Set<AccountNotesEntity> accountNotes,
                               List<AccountNotesEntity> recentAccountNotes, Integer customerId, AccountTypeEntity accountType, Short officeId,
                               Short personnelId, Date nextMeetingDate, Money totalAmountDue,Money totalAmountInArrears, LoanSummaryDto loanSummary,
                               List<LoanActivityEntity> loanActivityDetails, Double interestRate, boolean interestDeductedAtDisbursement,
-                              Short recurAfter, Short recurrenceId, boolean prinDueLastInst, Short noOfInstallments,MaxMinNoOfInstall maxMinNoOfInstall,
+                              Short recurAfter, Short recurrenceId, boolean prinDueLastInst, Short noOfInstallments, Short minNoOfInstall,
+                              Short maxNoOfInstall,
                               Short gracePeriodDuration, String fundName, Integer collateralTypeId,String collateralNote, String externalId,
                               Set<AccountCustomFieldEntity> accountCustomFields, Set<AccountFeesEntity> accountFees, Date createdDate,
                               LoanPerformanceHistoryEntity performanceHistory, boolean group, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
@@ -89,8 +91,8 @@ public class LoanInformationDto implements DataTransferObject {
         this.businessActivityId = businessActivityId;
         this.accountId = accountId;
         this.accountActionDates = accountActionDates;
-        this.gracePeriodType = gracePeriodType;
-        this.interestType = interestType;
+        this.gracePeriodTypeName = gracePeriodTypeName;
+        this.interestTypeName = interestTypeName;
         this.loanMeeting = loanMeeting;
         this.accountNotes = accountNotes;
         this.recentAccountNotes = recentAccountNotes;
@@ -109,7 +111,8 @@ public class LoanInformationDto implements DataTransferObject {
         this.recurrenceId = recurrenceId;
         this.prinDueLastInst = prinDueLastInst;
         this.noOfInstallments = noOfInstallments;
-        this.maxMinNoOfInstall = maxMinNoOfInstall;
+        this.minNoOfInstall = minNoOfInstall;
+        this.maxNoOfInstall = maxNoOfInstall;
         this.gracePeriodDuration = gracePeriodDuration;
         this.fundName = fundName;
         this.collateralTypeId = collateralTypeId;
@@ -165,12 +168,12 @@ public class LoanInformationDto implements DataTransferObject {
         return this.accountActionDates;
     }
 
-    public GracePeriodTypeEntity getGracePeriodType() {
-        return this.gracePeriodType;
+    public String getGracePeriodTypeName() {
+        return this.gracePeriodTypeName;
     }
 
-    public InterestTypesEntity getInterestType() {
-        return this.interestType;
+    public String getInterestTypeName() {
+        return this.interestTypeName;
     }
 
     public MeetingBO getLoanMeeting() {
@@ -245,8 +248,12 @@ public class LoanInformationDto implements DataTransferObject {
         return this.noOfInstallments;
     }
 
-    public MaxMinNoOfInstall getMaxMinNoOfInstall() {
-        return this.maxMinNoOfInstall;
+    public Short getMinNoOfInstall() {
+        return this.minNoOfInstall;
+    }
+
+    public Short getMaxNoOfInstall() {
+        return this.maxNoOfInstall;
     }
 
     public Short getGracePeriodDuration() {

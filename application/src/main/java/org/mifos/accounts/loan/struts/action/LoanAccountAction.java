@@ -1195,12 +1195,6 @@ public class LoanAccountAction extends AccountAppAction {
     }
 
     private void setLocaleForMasterEntities(final LoanInformationDto loanInformationDto, final Short localeId) {
-        if (loanInformationDto.getGracePeriodType() != null) {
-            // Is this locale ever consulted? I don't see a place...
-            loanInformationDto.getGracePeriodType().setLocaleId(localeId);
-        }
-        loanInformationDto.getInterestType().setLocaleId(localeId);
-//        loanInformationDto.getAccountState().setLocaleId(localeId);
         for (AccountFlagMapping accountFlagMapping : loanInformationDto.getAccountFlags()) {
             accountFlagMapping.getFlag().setLocaleId(localeId);
         }

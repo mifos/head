@@ -309,7 +309,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<fmt:message key="loan.interestRateType">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 							</fmt:message>:&nbsp; <c:out
-								value="${loanInformationDto.interestType.name}" /> <br>
+								value="${loanInformationDto.interestTypeName}" /> <br>
 							<fmt:message key="loan.interestRate">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 							</fmt:message>:&nbsp;<span class="fontnormal"><c:out
@@ -349,13 +349,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								</c:otherwise>
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
-								value="${loanInformationDto.gracePeriodType.name}" /><br>
+								value="${loanInformationDto.gracePeriodTypeName}" /><br>
 							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
 								value="${loanInformationDto.noOfInstallments}" /> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
-								value="${loanInformationDto.maxMinNoOfInstall.minNoOfInstall}" />
+								value="${loanInformationDto.minNoOfInstall}" />
 							-&nbsp;<c:out
-								value="${loanInformationDto.maxMinNoOfInstall.maxNoOfInstall}" />)
+								value="${loanInformationDto.maxNoOfInstall}" />)
 							<br>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<c:out
 								value="${loanInformationDto.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel

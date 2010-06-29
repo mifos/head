@@ -879,19 +879,35 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                                         loan.getLoanSummary().getTotalLoanAmnt(), loan.getLoanSummary().getTotalAmntPaid(),
                                                         loan.getLoanSummary().getTotalAmntDue());
 
-        loan.getAccountState().setLocaleId(localeId);
+        String accountStateName = null;
+        if (loan.getAccountState() != null) {
+            loan.getAccountState().setLocaleId(localeId);
+            accountStateName = /*loan.getAccountState().getName()*/ "Shahid";
+        }
+        String gracePeriodTypeName = null;
+        if (loan.getGracePeriodType() != null) {
+            loan.getGracePeriodType().setLocaleId(localeId);
+            gracePeriodTypeName = /*loan.getGracePeriodType().getName()*/ "Shahid";
+        }
+        String interestTypeName = null;
+        if(loan.getInterestType() != null) {
+            loan.getInterestType().setLocaleId(localeId);
+            interestTypeName = /*loan.getInterestType().getName()*/ "Shahid";
+        }
+
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState().getId(),
-                                        /*loan.getAccountState().getName()*/ "Shahid", loan.getAccountFlags(),
+                                        accountStateName, loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
-                                        loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
+                                        loan.getAccountActionDates(), gracePeriodTypeName, interestTypeName, loan.getLoanMeeting(),
                                         loan.getAccountNotes(), loan.getRecentAccountNotes(),
-                                        /*loan.getCustomer().getCustomerLevel(),*/ loan.getCustomer().getCustomerId(), loan.getAccountType(),
+                                        loan.getCustomer().getCustomerId(), loan.getAccountType(),
                                         loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
                                         loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
                                         loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
                                         loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
-                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(), loan.getMaxMinNoOfInstall(),
+                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
+                                        loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                         loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
                                         loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
                                         loan.getPerformanceHistory(), loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
