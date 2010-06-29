@@ -32,6 +32,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -56,6 +57,7 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -74,6 +76,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -98,7 +101,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
@@ -117,7 +119,6 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.
@@ -218,9 +219,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         List<FeeDto> additionalFees = new ArrayList<FeeDto>();
         List<FeeDto> defaultFees = new ArrayList<FeeDto>();
 
-        new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext, defaultFees, additionalFees);
+        new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext,
+                defaultFees, additionalFees);
 
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
+                .getLoanOffering(productId, userContext.getLocaleId());
 
         if (AccountingRules.isMultiCurrencyEnabled()) {
             defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
@@ -837,7 +840,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum) {
+    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext,
+            String globalAccountNum) {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         loan.updateDetails(userContext);
@@ -859,7 +863,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
     }
 
-    public LoanInformationDto getLoanInformationDto(String globalAccountNum, Short localeId) {
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         String fundName = null;
         if (loan.getFund() != null) {
@@ -879,23 +883,12 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                                         loan.getLoanSummary().getTotalLoanAmnt(), loan.getLoanSummary().getTotalAmntPaid(),
                                                         loan.getLoanSummary().getTotalAmntDue());
 
-        String accountStateName = null;
-        if (loan.getAccountState() != null) {
-            loan.getAccountState().setLocaleId(localeId);
-            accountStateName = /*loan.getAccountState().getName()*/ "Shahid";
-        }
-        String gracePeriodTypeName = null;
-        if (loan.getGracePeriodType() != null) {
-            loan.getGracePeriodType().setLocaleId(localeId);
-            gracePeriodTypeName = /*loan.getGracePeriodType().getName()*/ "Shahid";
-        }
-        String interestTypeName = null;
-        if(loan.getInterestType() != null) {
-            loan.getInterestType().setLocaleId(localeId);
-            interestTypeName = /*loan.getInterestType().getName()*/ "Shahid";
-        }
+        Short accountStateId = loan.getAccountState().getId();
+        String accountStateName = getAccountStateName(accountStateId);
+        String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
+        String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
 
-        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState().getId(),
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
                                         accountStateName, loan.getAccountFlags(),
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), gracePeriodTypeName, interestTypeName, loan.getLoanMeeting(),
@@ -911,5 +904,44 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                         loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
                                         loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
                                         loan.getPerformanceHistory(), loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
+    }
+
+    private String getAccountStateName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        AccountStateEntity accountStateEntity;
+        try {
+            accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+                    id);
+            return accountStateEntity.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getGracePeriodTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        GracePeriodTypeEntity gracePeriodType;
+        try {
+            gracePeriodType = (GracePeriodTypeEntity) masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+                    id);
+            return gracePeriodType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getInterestTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        InterestTypesEntity interestType;
+        try {
+            interestType = (InterestTypesEntity) masterPersistence.getPersistentObject(InterestTypesEntity.class,
+                    id);
+            return interestType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
     }
 }

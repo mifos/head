@@ -63,6 +63,15 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 			<c:set
 				value="${loanInformationDto.customerId}"
 				var="customerId" />
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountStateNameLocalised')}"
+				var="accountStateNameLocalised" />
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'gracePeriodTypeNameLocalised')}"
+				var="gracePeriodTypeNameLocalised" />
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestTypeNameLocalised')}"
+				var="interestTypeNameLocalised" />
 
 
 			<html-el:hidden property="currentFlowKey"
@@ -104,7 +113,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${loanInformationDto.accountStateId}"
 								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <c:out
-								value="${loanInformationDto.accountStateName}" />&nbsp; 
+								value="${accountStateNameLocalised}" />&nbsp; 
 								<c:forEach
 								var="flagSet" items="${loanInformationDto.accountFlags}">
 								<span class="fontnormal"><c:out
@@ -309,7 +318,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<fmt:message key="loan.interestRateType">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 							</fmt:message>:&nbsp; <c:out
-								value="${loanInformationDto.interestTypeName}" /> <br>
+								value="${interestTypeNameLocalised}" /> <br>
 							<fmt:message key="loan.interestRate">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 							</fmt:message>:&nbsp;<span class="fontnormal"><c:out
@@ -349,7 +358,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								</c:otherwise>
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
-								value="${loanInformationDto.gracePeriodTypeName}" /><br>
+								value="${gracePeriodTypeNameLocalised}" /><br>
 							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
 								value="${loanInformationDto.noOfInstallments}" /> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out

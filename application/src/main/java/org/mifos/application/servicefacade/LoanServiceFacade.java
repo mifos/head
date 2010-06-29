@@ -95,5 +95,5 @@ public interface LoanServiceFacade {
     void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmount, String receiptNumber,
             java.sql.Date receiptDate, String paymentTypeId, Short id) throws AccountException;
 
-    LoanInformationDto getLoanInformationDto(String globalAccountNum, Short localeId);
+    LoanInformationDto getLoanInformationDto(String globalAccountNum);
 }
