@@ -8,11 +8,14 @@
 </div>-->
  <div  class="sidebar ht600">
   <div>
+  <form name="custSearchActionForm" method="post"
+                              action="/mifos/custSearchAction.do?method=loadAllBranches">
     <p class="orangetab">[@spring.message "administrativeTasks" /]</p>
-    <p class="paddingLeft marginTop10">[@spring.message "searchbynamesystemIDoraccountnumber"/]<br />
-      <input type="text" id="txt" size="15"/>
+    <p class="paddingLeft marginTop10 fontBold">[@spring.message "searchbynamesystemIDoraccountnumber"/]<br />
+    <input type="text" name="searchString" maxlength="200" size="15" value="">
       <br />
-      <input class="buttn floatRight" type="button" name="search" value="[@spring.message "search" /]" onclick="#" />
+      <input type="submit" name="searchButton" value="[@spring.message "search" /]" class="buttn floatRight">
     </p>
+    </form>
   </div>
 </div>

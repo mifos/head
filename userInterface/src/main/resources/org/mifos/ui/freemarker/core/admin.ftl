@@ -1,24 +1,15 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
-
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+  <!--  Left Sidebar Begins
   <div class="sidebar ht600">
   [#include "adminLeftPane.ftl" ]
   </div> 
-    <!--  Left Sidebar Begins
-  <div class="sidebar ht750">
-    <p class="orangetab">Administrative Tasks</p>
-    <p class="paddingLeft"><span class="fontBold">Search by client name, system ID or account number</span><br />
-      <input type="text" id="txt" />
-      <br />
-      <input class="buttn" typ
-      e="button" name="search" value="Search"    onclick="location.href='searched.html'" />
-    </p>
-  </div>-->
   <!--  Left Sidebar Ends-->
-   <!--  Main Content Begins-->  
+  
+  <!--  Main Content Begins-->  
    <div>
   <div class=" content leftMargin180">
     <div class="orangeheading font14">[@spring.message "administrativeTasks" /]</div>

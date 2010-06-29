@@ -31,7 +31,7 @@ a:hover {
 margin-right:180px;
 }
 .marginLeft30{
-	margin-left:30px;
+	margin-left:20px;
 }
 .content {
 	padding-top: 10px;
@@ -113,9 +113,9 @@ margin-right:180px;
 .bluedivs {
 	background-color:#d7deee;
 	/*color:#666666;*/
-	width:80%;
-	padding-top:4px;
-	padding-bottom:3px;
+	width:95%;
+	padding-top:2px;
+	padding-bottom:2px;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -325,8 +325,8 @@ margin-right:180px;
 .ht1350 {
 	height:1350px;
 }
-.ht1550 {
-	height:1550px;
+.ht1500 {
+	height:1500px;
 }
 .ht1750 {
 	height:1750px;
@@ -446,4 +446,7 @@ margin-right:180px;
 .listSize{
 	width:135px;
 	height:80px;
+}
+.marginBottom{
+margin-bottom:10px;
 }

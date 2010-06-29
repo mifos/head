@@ -8,7 +8,7 @@
   [#include "adminLeftPane.ftl" ]
   </div> 
     <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class="content leftMargin180">
 <div class="span-20 bluedivs paddingLeft">
 	    <a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewLoanProducts" /]</span>  		
  </div>
