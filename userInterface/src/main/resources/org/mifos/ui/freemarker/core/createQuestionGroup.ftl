@@ -130,12 +130,12 @@
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>
-                                                    <input type="submit" name="_eventId_defineQuestionGroup"
+                                                    <input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup"
                                                            value="Submit"
                                                            class="buttn">
                                                 </td>
                                                 <td align="center">
-                                                    <input type="submit" name="_eventId_cancel"
+                                                    <input type="submit" name="_eventId_cancel" id="_eventId_cancel"
                                                            value="Cancel"
                                                            class="cancelbuttn">
                                                 </td>

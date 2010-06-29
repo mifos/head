@@ -34,14 +34,14 @@ public class CreateQuestionGroupPage extends MifosPage {
     }
 
     public AdminPage cancel() {
-        selenium.click("_eventId_cancel");
+        selenium.click("id=_eventId_cancel");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
 
     public AdminPage submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
         selenium.type("title", createQuestionGroupParameters.getTitle());
-        selenium.click("_eventId_defineQuestionGroup");
+        selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
