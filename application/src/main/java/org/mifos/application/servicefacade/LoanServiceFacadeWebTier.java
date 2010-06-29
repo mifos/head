@@ -45,6 +45,7 @@ import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.LoanSummaryDto;
 import org.mifos.accounts.loan.persistance.LoanDao;
@@ -883,6 +884,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                                         loan.getLoanSummary().getTotalLoanAmnt(), loan.getLoanSummary().getTotalAmntPaid(),
                                                         loan.getLoanSummary().getTotalAmntDue());
 
+        LoanPerformanceHistoryDto loanPerformanceHistory = new LoanPerformanceHistoryDto(loan.getPerformanceHistory().getNoOfPayments(),
+                                                                                        loan.getPerformanceHistory().getTotalNoOfMissedPayments(),
+                                                                                        loan.getPerformanceHistory().getDaysInArrears(),
+                                                                                        loan.getPerformanceHistory().getLoanMaturityDate());
+
         Short accountStateId = loan.getAccountState().getId();
         String accountStateName = getAccountStateName(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
@@ -893,7 +899,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                         loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
                                         loan.getAccountActionDates(), gracePeriodTypeName, interestTypeName, loan.getLoanMeeting(),
                                         loan.getAccountNotes(), loan.getRecentAccountNotes(),
-                                        loan.getCustomer().getCustomerId(), loan.getAccountType(),
+                                        loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
                                         loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
                                         loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
                                         loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
@@ -903,7 +909,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                         loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                         loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
                                         loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
-                                        loan.getPerformanceHistory(), loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
+                                        loanPerformanceHistory, loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
     }
 
     private String getAccountStateName(Short id) {

@@ -38,7 +38,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final MeetingBO loanMeeting;
     private final Set<AccountNotesEntity> accountNotes;
     private final List<AccountNotesEntity> recentAccountNotes;
-    private final AccountTypeEntity accountType;
+    private final Short accountTypeId;
     private final Short officeId;
     private final Short personnelId;
     private final Date nextMeetingDate;
@@ -62,7 +62,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final Set<AccountCustomFieldEntity> accountCustomFields;
     private final Set<AccountFeesEntity> accountFees;
     private final Date createdDate;
-    private final LoanPerformanceHistoryEntity performanceHistory;
+    private final LoanPerformanceHistoryDto performanceHistory;
     private final boolean group;
 
     private final Boolean activeSurveys;
@@ -72,14 +72,14 @@ public class LoanInformationDto implements DataTransferObject {
                               Set<AccountFlagMapping> accountFlags, Date disbursementDate, boolean redone, Integer businessActivityId,
                               Integer accountId,Set<AccountActionDateEntity> accountActionDates,String gracePeriodTypeName,
                               String interestTypeName,MeetingBO loanMeeting, Set<AccountNotesEntity> accountNotes,
-                              List<AccountNotesEntity> recentAccountNotes, Integer customerId, AccountTypeEntity accountType, Short officeId,
+                              List<AccountNotesEntity> recentAccountNotes, Integer customerId, Short accountTypeId, Short officeId,
                               Short personnelId, Date nextMeetingDate, Money totalAmountDue,Money totalAmountInArrears, LoanSummaryDto loanSummary,
                               List<LoanActivityEntity> loanActivityDetails, Double interestRate, boolean interestDeductedAtDisbursement,
                               Short recurAfter, Short recurrenceId, boolean prinDueLastInst, Short noOfInstallments, Short minNoOfInstall,
                               Short maxNoOfInstall,
                               Short gracePeriodDuration, String fundName, Integer collateralTypeId,String collateralNote, String externalId,
                               Set<AccountCustomFieldEntity> accountCustomFields, Set<AccountFeesEntity> accountFees, Date createdDate,
-                              LoanPerformanceHistoryEntity performanceHistory, boolean group, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
+                              LoanPerformanceHistoryDto performanceHistory, boolean group, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -97,7 +97,7 @@ public class LoanInformationDto implements DataTransferObject {
         this.accountNotes = accountNotes;
         this.recentAccountNotes = recentAccountNotes;
         this.customerId = customerId;
-        this.accountType = accountType;
+        this.accountTypeId = accountTypeId;
         this.officeId = officeId;
         this.personnelId = personnelId;
         this.nextMeetingDate = nextMeetingDate;
@@ -192,8 +192,8 @@ public class LoanInformationDto implements DataTransferObject {
         return this.customerId;
     }
 
-    public AccountTypeEntity getAccountType() {
-        return this.accountType;
+    public Short getAccountTypeId() {
+        return this.accountTypeId;
     }
 
     public Short getOfficeId() {
@@ -288,7 +288,7 @@ public class LoanInformationDto implements DataTransferObject {
         return this.createdDate;
     }
 
-    public LoanPerformanceHistoryEntity getPerformanceHistory() {
+    public LoanPerformanceHistoryDto getPerformanceHistory() {
         return this.performanceHistory;
     }
 
