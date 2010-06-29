@@ -7,4 +7,15 @@ public class ViewAllQuestionsPage extends MifosPage {
     public ViewAllQuestionsPage(Selenium selenium) {
         super(selenium);
     }
+
+    public ViewAllQuestionsPage verifyPage(){
+        verifyPage("view_questions");
+        return this;
+    }
+
+    public QuestionDetailPage navigateToQuestionDetail(String title) {
+        selenium.click("link="+title);
+        waitForPageToLoad();
+        return new QuestionDetailPage(selenium);        
+    }
 }

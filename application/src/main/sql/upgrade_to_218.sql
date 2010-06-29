@@ -1,3 +1,3 @@
-ALTER TABLE ACCOUNT ADD COLUMN EXTERNAL_ID VARCHAR(100);
+alter table account add column external_id varchar(100);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 218 WHERE DATABASE_VERSION = 217;
+update database_version set database_version = 218 where database_version = 217;

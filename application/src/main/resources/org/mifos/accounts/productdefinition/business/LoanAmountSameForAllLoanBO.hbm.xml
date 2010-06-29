@@ -8,16 +8,16 @@
 
 	<class
 		name="org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO"
-		table="LOAN_AMOUNT_SAME_FOR_ALL_LOAN">
+		table="loan_amount_same_for_all_loan">
 		<id name="loanAmountSameForAllLoanID"
-			column="LOAN_AMOUNT_SAME_FOR_ALL_LOAN_ID" access="field"
+			column="loan_amount_same_for_all_loan_id" access="field"
 			unsaved-value="-1">
 			<generator class="native" />
 		</id>
-		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
-		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" />
-		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" />
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+		<property name="minLoanAmount" column="min_loan_amount" />
+		<property name="maxLoanAmount" column="max_loan_amnt" />
+		<property name="defaultLoanAmount" column="default_loan_amount" />
+		<many-to-one name="loanOffering" column="prd_offering_id"
 			class="org.mifos.accounts.productdefinition.business.LoanOfferingBO"
 			unique="true" lazy="false" cascade="none" insert="true" update="true"
 			access="field" />

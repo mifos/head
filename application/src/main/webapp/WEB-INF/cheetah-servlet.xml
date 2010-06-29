@@ -30,15 +30,6 @@
     	<property name="exceptionAttribute"><value>exception</value></property>
     </bean> 
     
-    <bean id="frontExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-    	<property name="exceptionMappings">
-    		<props>
-    			<prop key="java.lang.Exception">unhandledError</prop>
-    		</props>
-    	</property>
-    	<property name="exceptionAttribute"><value>exception</value></property>
-    </bean>
-
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPaths">
             <list>

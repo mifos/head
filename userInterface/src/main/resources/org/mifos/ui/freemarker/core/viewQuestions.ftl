@@ -108,28 +108,34 @@
                             View Questions
                             <br/>
                             <br/>
-            <span class="fontnormal">
-                Click on a question below to view details and make changes or
-                <a href="createQuestion.ftl">
-                    define a new question
-                </a>
-            </span>
+                                <span class="fontnormal">
+                                    Click on a question below to view details and make changes or
+                                    <a href="createQuestion.ftl">
+                                        define a new question
+                                    </a>
+                                </span>
                             <br/>
-            <span class="fontnormal">
-                Note: questions flagged as PPI may not be attached to general surveys.
-            </span>
+                            <span class="fontnormal">
+                                Note: questions flagged as PPI may not be attached to general surveys.
+                            </span>
+                            <br/>
+                            <br/>
                         </div>
-
-                        <table width="95%" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td align="center" class="blueline">&nbsp;</td>
+                        <table width="90%" border="0" cellspacing="0" cellpadding="0" id="questions.table">
+                            [#list questions as question]
+                            <tr class="fontnormal">
+                                <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9"
+                                                    height="11"/></td>
+                                <td width="99%">
+                                    <a href="viewQuestionDetail.ftl?questionId=${question.id}"
+                                       id="questionId_${question.id}">
+                                        ${question.title}
+                                        <br/>
+                                    </a>
+                                </td>
                             </tr>
+                            [/#list]
                         </table>
-                        <br>
-                        [#list questions as question]
-                          ${question.title}
-                          <br/>
-                        [/#list]
                     </td>
                 </tr>
             </table>

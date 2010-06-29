@@ -39,7 +39,7 @@ msgstr ""
 
 #: Account.ClickPreview
 msgid "Then click Preview."
-msgstr "Entonces haga clic en Vista Previa."
+msgstr "Haga clic en Vista Previa."
 
 #: Account.Edit
 msgid "Click Edit to make changes."
@@ -128,7 +128,7 @@ msgstr "Fecha"
 #: DatePosted
 msgctxt "DatePosted"
 msgid "Date Posted"
-msgstr "Fecha de envío"
+msgstr "Fecha de publicacion"
 
 #: Debit
 msgctxt "Debit"
@@ -142,7 +142,7 @@ msgstr "Descripción"
 
 #: GLCode
 msgid "GL Code"
-msgstr "Código GL"
+msgstr "Código contable"
 
 #: NewStatus
 msgctxt "NewStatus"
@@ -158,22 +158,22 @@ msgstr "Estado Anterior"
 #, fuzzy
 msgctxt "PaymentID"
 msgid "Payment ID#"
-msgstr "Identificación de Pago\\#"
+msgstr "ID de Pago\\#"
 
 #: PostedBy
 msgctxt "PostedBy"
 msgid "Posted By"
-msgstr "Enviado Por"
+msgstr "Publicado Por"
 
 #: Postedby
 msgid "Posted by"
-msgstr "Enviado Por"
+msgstr "Publicado Por"
 
 #: TransactionID
 #, fuzzy
 msgctxt "TransactionID"
 msgid "Transaction ID#"
-msgstr "Identificación de Transacción\\#"
+msgstr "ID de Transacción\\#"
 
 #: Type
 msgctxt "Type"
@@ -279,7 +279,7 @@ msgstr "La lista no está disponible"
 
 #: accounts.NoFlagsAvailable
 msgid "No Flags Available"
-msgstr "No hay indicadores disponibles"
+msgstr "No hay banderas disponibles"
 
 #: accounts.NoNotesAvailable
 msgid "No notes available."
@@ -444,7 +444,7 @@ msgstr "(Monto permitido\\: INR"
 #: accounts.allowed_interest
 #, fuzzy
 msgid "(Allowed Interest Rate Amount "
-msgstr "(Tasa de Interés Permitido"
+msgstr "(Tasa de Interés Permitida"
 
 #: accounts.allowed_no_of_inst
 #, fuzzy
@@ -474,7 +474,7 @@ msgstr "Cantidad"
 
 #: accounts.amount_due
 msgid "Amount due"
-msgstr "Cantidad adeudada"
+msgstr "Cantidad a deber"
 
 #: accounts.amt
 msgctxt "accounts.amt"
@@ -535,7 +535,7 @@ msgstr "Aprobado"
 
 #: accounts.apr
 msgid "APR"
-msgstr "TAE"
+msgstr "CAT"
 
 #: accounts.asterisk
 msgid "Fields marked with an asterisk are required."
@@ -618,25 +618,25 @@ msgstr "Cargos del cliente"
 
 #: accounts.coll_sheet_type
 msgid "Collection sheet type"
-msgstr "Tipo de Hoja de Colección "
+msgstr "Tipo de Hoja de Cobranza "
 
 #: accounts.collateral_notes
 msgctxt "accounts.collateral_notes"
 msgid "Collateral notes"
-msgstr "Notas de garantía"
+msgstr "Notas de colateral"
 
 #: accounts.collateral_type
 msgid "Collateral type"
-msgstr "Tipos de garantía"
+msgstr "Tipos de colateral"
 
 #: accounts.collateralnote
 msgctxt "accounts.collateralnote"
 msgid "Collateral notes"
-msgstr "Notas de garantía"
+msgstr "Notas de colateral"
 
 #: accounts.colon
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: accounts.complete_field
 msgid ""
@@ -717,20 +717,20 @@ msgstr "Débito"
 
 #: accounts.defamt
 msgid "Default amount"
-msgstr "Monto por defecto"
+msgstr "Monto por default"
 
 #: accounts.definst
 #, fuzzy
 msgid "Default # of installments"
-msgstr "Número de pagos por defecto\\#"
+msgstr "Número de pagos por default\\#"
 
 #: accounts.defintrate
 msgid "Default interest rate"
-msgstr "Tasa de interés por defecto"
+msgstr "Tasa de interés por default"
 
 #: accounts.delinquency
 msgid "Delinquency"
-msgstr "Delincuencia"
+msgstr "Mora"
 
 #: accounts.desc
 msgctxt "accounts.desc"
@@ -748,7 +748,7 @@ msgstr "Fecha de desembolso Propuesto/Actual"
 
 #: accounts.disb_pr
 msgid "Disb Pr"
-msgstr "Disb Pr"
+msgstr "Periodo Desembolso"
 
 #: accounts.due_date
 msgid "Due date"
@@ -868,11 +868,11 @@ msgstr "Pagos futuros"
 
 #: accounts.generate_report
 msgid "Generate report"
-msgstr "Generar informes"
+msgstr "Generar reportes"
 
 #: accounts.gl_cod
 msgid "GL Cod"
-msgstr "GL Cod"
+msgstr "Codigo Contable"
 
 #: accounts.grace_period
 msgid "Grace period for repayments"
@@ -900,7 +900,7 @@ msgstr "Horticultura"
 
 #: accounts.ins
 msgid "Ins # "
-msgstr ""
+msgstr "No. de pagos"
 
 #: accounts.inst
 msgid "Installments"
@@ -1058,7 +1058,7 @@ msgstr "Modo de pago"
 #: accounts.modeofpayment
 msgctxt "accounts.modeofpayment"
 msgid ""
-msgstr "Mensual"
+msgstr "Modo de pago"
 
 #: accounts.mon
 msgid "(Monthly)"
@@ -1075,7 +1075,7 @@ msgstr "Nombre"
 #: accounts.new_status
 msgctxt "accounts.new_status"
 msgid "New Status"
-msgstr "Estado nuevo"
+msgstr "Estatus nuevo"
 
 #: accounts.new_val
 msgid "New Value"
@@ -1087,7 +1087,7 @@ msgstr "Próximo pago"
 
 #: accounts.next_inst_due
 msgid "Next installment due"
-msgstr "Siguiente pago adeudado"
+msgstr "Fecha del siguiente pago"
 
 #: accounts.next_install_details
 msgid "Next installment details"
@@ -1153,7 +1153,7 @@ msgstr "Abrir una nueva cuenta de ahorro"
 
 #: accounts.or
 msgid "or  "
-msgstr ""
+msgstr "o "
 
 #: accounts.original_loan
 msgid "Original loan"
@@ -1161,7 +1161,7 @@ msgstr "Préstamo original"
 
 #: accounts.past_due
 msgid "Total past due"
-msgstr "Total adeudado"
+msgstr "Total de adeudo"
 
 #: accounts.past_due_details
 msgid "Past due details"
@@ -1197,7 +1197,7 @@ msgstr "Tipo de multa"
 
 #: accounts.performance_history
 msgid "Performance history"
-msgstr "Historial de rendimiento"
+msgstr "Historial de desempeño"
 
 #: accounts.periodicity_annual_fee
 #, fuzzy
@@ -1216,7 +1216,7 @@ msgstr "Por favor Note"
 #: accounts.posted_by
 msgctxt "accounts.posted_by"
 msgid "Posted By"
-msgstr "Enviado Por"
+msgstr "Publicado Por"
 
 #: accounts.poultry_farm
 msgid "Poultry farm"
@@ -1245,7 +1245,7 @@ msgstr "Principal"
 
 #: accounts.principle_due
 msgid "Principal due on last installment"
-msgstr "Principal adeudado en el último pago"
+msgstr "Principal en adeudo en el último pago"
 
 #: accounts.product_summary
 msgid "Loan Product Summary"
@@ -1274,7 +1274,7 @@ msgstr "Notas Recientes"
 
 #: accounts.recurring_acc_fees
 msgid "Recurring account fees"
-msgstr "Cuotas de cuenta recurrentes"
+msgstr "Cuotas recurrentes de la cuenta"
 
 #: accounts.remove
 msgid "Remove"
@@ -1286,7 +1286,7 @@ msgstr "Removido"
 
 #: accounts.repayment_sched
 msgid "Repayment Schedule as of"
-msgstr "Cuadro de Repago desde"
+msgstr "Calendario de Repago desde"
 
 #: accounts.returnToAccountDetails
 msgctxt "accounts.returnToAccountDetails"
@@ -1445,7 +1445,7 @@ msgstr "Total"
 
 #: accounts.total_due_install
 msgid "Total due this installment"
-msgstr "Cantidad adeudada en este pago"
+msgstr "Catidad total de pago"
 
 #: accounts.tractor_loan
 msgid "Tractor Loan"
@@ -1513,7 +1513,7 @@ msgstr "Ver la historia de las transacciones"
 
 #: accounts.waive
 msgid "Waive"
-msgstr "Eliminar"
+msgstr "No Aplicar"
 
 #: accounts.yes
 msgid "Yes"
@@ -1585,13 +1585,13 @@ msgid ""
 "Please specify valid {0}. {0} should be a value between {1} and {2}, "
 "inclusive."
 msgstr ""
-"Por favor, especifique válida {0}.  {0} debe ser un valor entre {1} y {2}, "
-"inclusive."
+"Por favor, especifique válida {0}.  {0} debe ser un valor entre {1} y {2}"
+"."
 
 #: errors.double
 msgctxt "errors.double"
 msgid "Please specify valid {0}. Use numbers only."
-msgstr "Por favor, especifique un válido {0}. Sólo use números."
+msgstr "Por favor, especifique un {0} válido. Sólo use números."
 
 #: errors.futuredate
 msgid "{0} can not be a future date."
@@ -1599,12 +1599,12 @@ msgstr "{0} no puede ser una fecha futura."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a {1}"
 
 #: errors.integer
 msgctxt "errors.integer"
 msgid "Please specify valid {0}. Use numbers only."
-msgstr "Por favor, especifique válida {0}. Utilice sólo números."
+msgstr "Por favor, especifique {0} válida. Utilice sólo números."
 
 #: errors.invalidTxndate
 msgid ""
@@ -1657,11 +1657,11 @@ msgstr "Por favor, especifique sólo caracteres alfanuméricos para {0}."
 
 #: errors.maxMin
 msgid "Please specify valid {0}. {0} should be greater than or equal to {1}."
-msgstr "Por favor, especifique válida {0}. {0} debe ser superior o igual a {1}."
+msgstr "Por favor, especifique la {0} válida. {0} debe ser superior o igual a {1}."
 
 #: errors.maximumlength
 msgid "The maximum length for {0} field is {1}."
-msgstr "La duración máxima de campo {0} es {1}."
+msgstr "La longitud máxima del campo {0} es de {1}."
 
 #: errors.minimumlength
 msgid "The length of {0} cannot be less than {1} character(s)."
@@ -1669,7 +1669,7 @@ msgstr "La longitud de {0} no puede ser inferior a {1} caracter(es)."
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0} debe ser mayor a 0"
 
 #: errors.nomeeting
 msgid "There is no meeting associated with this account."
@@ -1687,7 +1687,8 @@ msgstr "Por favor, especifique algún valor."
 msgid ""
 "Attempting to pay a customer account balance (of {0}) that does not equal "
 "the total outstanding amount (of {1})."
-msgstr ""
+msgstr "Se esta intentando pagar a un cliente el balance de {0} este no es igual"
+"a la cantidad total debida (de {1})."
 
 #: errors.prefix
 msgid "<LI>"

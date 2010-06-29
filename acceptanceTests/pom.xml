@@ -61,6 +61,7 @@
                                     <url>${container.url}</url>
                                     <installDir>${cargo.install.directory}/${container.name}</installDir>
                                 </zipUrlInstaller>
+                                <output>${java.io.tmpdir}/${user.name}-cargo/conf/logs/server-console.log</output>
                             </container>
                             <configuration>
                                 <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
@@ -239,7 +240,6 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>2.4.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

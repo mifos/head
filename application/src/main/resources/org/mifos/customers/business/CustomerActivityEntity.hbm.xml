@@ -6,17 +6,17 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.customers.business.CustomerActivityEntity" table="CUSTOMER_ACCOUNT_ACTIVITY">
-		<id name="customerActivityId" column="CUSTOMER_ACCOUNT_ACTIVITY_ID" type="integer" access="field">
+	<class name="org.mifos.customers.business.CustomerActivityEntity" table="customer_account_activity">
+		<id name="customerActivityId" column="customer_account_activity_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
 		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="FEE_AMOUNT_CURRENCY_ID" />
-			<column name="AMOUNT" />
+			<column name="fee_amount_currency_id" />
+			<column name="amount" />
 		</property>
-		<property name="description" column="DESCRIPTION" access="field" />
-		<property name="createdDate" column="CREATED_DATE" access="field" />
-		<many-to-one name="customerAccount" column="ACCOUNT_ID" class="org.mifos.customers.business.CustomerAccountBO" access="field" />
-		<many-to-one name="personnel" column="CREATED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+		<property name="description" column="description" access="field" />
+		<property name="createdDate" column="created_date" access="field" />
+		<many-to-one name="customerAccount" column="account_id" class="org.mifos.customers.business.CustomerAccountBO" access="field" />
+		<many-to-one name="personnel" column="created_by" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 	</class>
 </hibernate-mapping>

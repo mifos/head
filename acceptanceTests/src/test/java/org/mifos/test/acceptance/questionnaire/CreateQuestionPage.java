@@ -17,6 +17,7 @@ public class CreateQuestionPage extends MifosPage {
 
     public CreateQuestionPage addQuestion(CreateQuestionParameters createQuestionParameters) {
         selenium.type("title", createQuestionParameters.getTitle());
+        selenium.select("id=type","value=Date");
         selenium.click("_eventId_addQuestion");
         waitForPageToLoad();
         return new CreateQuestionPage(selenium);

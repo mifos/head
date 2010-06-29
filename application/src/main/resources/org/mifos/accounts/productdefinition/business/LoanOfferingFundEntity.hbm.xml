@@ -6,12 +6,12 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity" table="LOAN_OFFERING_FUND">
-		<id name="loanOfferingFundId" column="LOAN_OFFERING_FUND_ID" access="field">
+	<class name="org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity" table="loan_offering_fund">
+		<id name="loanOfferingFundId" column="loan_offering_fund_id" access="field">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true" access="field" />
-		<many-to-one name="fund" column="FUND_ID" class="org.mifos.accounts.fund.business.FundBO" cascade="none" insert="true" update="true" unique="true" access="field" />
+		<many-to-one name="loanOffering" column="prd_offering_id" class="org.mifos.accounts.productdefinition.business.LoanOfferingBO" cascade="none" insert="true" update="true" unique="true" access="field" />
+		<many-to-one name="fund" column="fund_id" class="org.mifos.accounts.fund.business.FundBO" cascade="none" insert="true" update="true" unique="true" access="field" />
 	</class>
 </hibernate-mapping>

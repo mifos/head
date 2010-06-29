@@ -109,7 +109,55 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
-    public void shouldThrowExceptionForDupliacateQuestion() throws ApplicationException {
+    public void shouldGetQuestionGroupById() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
+        assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
+        assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionGroupByIdFailure() throws ApplicationException {
+        String title = "QG1" + System.currentTimeMillis();
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
+        try {
+            questionnaireService.getQuestionGroup(maxQuestionGroupId+1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionById() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.FREETEXT);
+        QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail .getId());
+        assertNotSame(createdQuestionDetail , retrievedQuestionDetail);
+        assertThat(retrievedQuestionDetail.getText(), is(title));
+        assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionByIdFailure() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.DATE);
+        Integer maxQuestionId = createdQuestionDetail.getId();
+        try {
+            questionnaireService.getQuestion(maxQuestionId+1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldThrowExceptionForDuplicateQuestion() throws ApplicationException {
         long offset = System.currentTimeMillis();
         String questionTitle = "Title" + offset;
         defineQuestion(questionTitle, DATE);

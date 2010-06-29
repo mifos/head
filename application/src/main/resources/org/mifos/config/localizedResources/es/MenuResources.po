@@ -50,7 +50,7 @@ msgstr "Inicio rápido"
 
 #: label.atrisk
 msgid "at risk"
-msgstr "a riesgo"
+msgstr "en riesgo"
 
 #: label.branch
 msgid "Branch"
@@ -79,11 +79,11 @@ msgstr "Clientes"
 
 #: label.collectionsheet
 msgid "Collection Sheet"
-msgstr "Hoja de colección"
+msgstr "Hoja de cobranza"
 
 #: label.collectionsheets
 msgid "Collection Sheets"
-msgstr "Hojas de Colección"
+msgstr "Hojas de cobranza"
 
 #: label.create
 msgctxt "label.create"
@@ -145,7 +145,7 @@ msgstr "Ayuda"
 
 #: label.loanofficer
 msgid "Loan officer"
-msgstr "Oficial de préstamo"
+msgstr "Oficial de Crédito"
 
 #: label.manage
 msgid "Manage"
@@ -235,7 +235,7 @@ msgstr "Vista"
 #: label.w/ocenter
 #, fuzzy
 msgid "w/o center"
-msgstr "w/o centro"
+msgstr "con/sin centro"
 
 #: label.yoursettings
 msgid "Your settings"

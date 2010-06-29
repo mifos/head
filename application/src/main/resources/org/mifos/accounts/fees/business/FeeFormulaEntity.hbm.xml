@@ -5,12 +5,12 @@
 
 
 <hibernate-mapping>
-    <class name="org.mifos.accounts.fees.business.FeeFormulaEntity" table="FEE_FORMULA_MASTER">
-        <id name="id" column="FORMULAID" type="short">
+    <class name="org.mifos.accounts.fees.business.FeeFormulaEntity" table="fee_formula_master">
+        <id name="id" column="formulaid" type="short">
             <generator class="native"/>
         </id>
  
-		<many-to-one name="lookUpValue" column="FORUMLA_LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+		<many-to-one name="lookUpValue" column="forumla_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     		cascade="none" update="false" unique="true"/>
 	</class>
 </hibernate-mapping>

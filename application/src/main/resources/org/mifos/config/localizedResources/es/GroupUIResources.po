@@ -18,7 +18,7 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: Customer.MeetingRequired
 msgid "Please select meeting schedule to apply a fee."
-msgstr "Por favor seleccione una agenda de reunión para aplicar una comisión."
+msgstr "Por favor seleccione una agenda de reunión para aplicar una cuota."
 
 #: FormedByLoanOfficerBlankException
 msgid "Please select Recruited by."
@@ -35,12 +35,12 @@ msgstr "Importe del último {0} {1}"
 #: Group.AssignedloanOfficer
 #, fuzzy
 msgid "Assigned loan officer:"
-msgstr "Oficial de préstamos asignado\\:"
+msgstr "Oficial de Crédito asignado\\:"
 
 #: Group.Avgindividual
 #, fuzzy
 msgid "Avg individual {0} size:"
-msgstr "Tamaño medio individual de {0}\\:"
+msgstr "Tamaño promedio de {0} individual\\:"
 
 #: Group.Center
 msgid "Center"
@@ -58,7 +58,7 @@ msgstr ""
 #: Group.FormedBy
 #, fuzzy
 msgid "Recruited By:"
-msgstr "Contratado Por\\:"
+msgstr "Reclutado Por\\:"
 
 #: Group.NoLabel
 msgid "No"
@@ -97,7 +97,7 @@ msgstr "cuenta"
 
 #: Group.accountinformation
 msgid "Account information"
-msgstr "Información de la cuenta"
+msgstr "Incapacitación de la cuenta"
 
 #: Group.accsum
 msgid "Account summary"
@@ -105,7 +105,7 @@ msgstr "Resumen de la cuenta"
 
 #: Group.addMembership
 msgid "Add {0} membership"
-msgstr "Añadir pertenencia de {0}"
+msgstr "Añadir afiliación de {0}"
 
 #: Group.addanote
 msgid "Add a note"
@@ -117,7 +117,7 @@ msgstr "Comisiones adicionales"
 
 #: Group.additionalinformation
 msgid "Additional information"
-msgstr "Información adicional"
+msgstr "Incapacitación adicional"
 
 #: Group.address
 msgid "Address"
@@ -152,7 +152,7 @@ msgstr "Dirección 3"
 
 #: Group.adminsetfess
 msgid "Administrative set fees"
-msgstr "Comisiones administrativas fijadas"
+msgstr "Fijar comisiones administrativas"
 
 #: Group.amount
 #, fuzzy
@@ -227,7 +227,7 @@ msgstr "Saldo\\:"
 
 #: Group.branchoffices
 msgid "Branch offices"
-msgstr "Agencias"
+msgstr "Sucursales"
 
 #: Group.center
 msgid "center"
@@ -244,20 +244,20 @@ msgstr "Centro asignado\\:"
 
 #: Group.centermembership&meetingdetails
 msgid "Meeting details & {0} membership"
-msgstr "Detalles de la reunión y pertenencia de {0}"
+msgstr "Detalles de la reunión y afiliación de {0}"
 
 #: Group.changeMembership
 msgid "Change {0} membership"
-msgstr "Cambiar pertenencia de {0}"
+msgstr "Cambiar afiliación de {0}"
 
 #: Group.changecentermembership
 #, fuzzy
 msgid "Change center membership:"
-msgstr "Cambiar centro de pertenencia\\:"
+msgstr "Cambiar centro de afiliación\\:"
 
 #: Group.changecentermembershiphead
 msgid "Change center membership"
-msgstr "Cambiar centro de pertenencia"
+msgstr "Cambiar centro de afiliación"
 
 #: Group.changestatus
 msgid "Change status"
@@ -269,7 +269,7 @@ msgstr "cargos de {0}"
 
 #: Group.checktoremove
 msgid "Check to Remove"
-msgstr "Marque para Cancelar"
+msgstr "Marque para Remover"
 
 #: Group.choosebranch
 msgid "Choose {0}"
@@ -311,7 +311,7 @@ msgstr "Clientes asignados"
 #: Group.collectionsheettype
 #, fuzzy
 msgid "Collection sheet type:"
-msgstr "Tipo de hoja de pagos\\:"
+msgstr "Tipo de hoja de cobranza\\:"
 
 #: Group.comma
 msgid "'"
@@ -426,7 +426,7 @@ msgstr "Luego pulse en Vista Previa."
 msgid ""
 "Click Cancel to return to Clients & Accounts without submitting information."
 msgstr ""
-"Pulse Cancelar para volver a Clientes y Cuentas sin enviar la información."
+"Pulse Cancelar para volver a Clientes y Cuentas sin enviar la incapacitación."
 
 #: Group.createpagehead4
 msgid "Fields marked with an asterisk are required."
@@ -472,11 +472,11 @@ msgstr "Editar"
 
 #: Group.editGrpMemberShip
 msgid "Edit Group Membership"
-msgstr "Editar Pertenencia a Grupo"
+msgstr "Editar afiliación a Grupo"
 
 #: Group.editInformation
 msgid "Edit {0} information"
-msgstr "Editar información de {0}"
+msgstr "Editar incapacitación de {0}"
 
 #: Group.editMag2
 msgid "Click Cancel to return to"
@@ -485,19 +485,19 @@ msgstr "Pulse Cancelar para volver a"
 #: Group.editMag2ReturnToDetail
 msgid "Click Cancel to return to {0} Details without submitting information."
 msgstr ""
-"Pulse Cancelar para volver a los Detalles de {0} sin enviar la información."
+"Pulse Cancelar para volver a los Detalles de {0} sin enviar la incapacitación."
 
 #: Group.editMag2ReturnToEdit
 msgid "Click Cancel to return to Edit {0} Membership."
-msgstr "Pulse Cancelar para volver a Editar la pertenencia de {0}."
+msgstr "Pulse Cancelar para volver a Editar la afiliación de {0}."
 
 #: Group.editMag3
 msgid "Details without submitting information."
-msgstr "Detalles sin enviar la información."
+msgstr "Detalles sin enviar la incapacitación."
 
 #: Group.editMembership
 msgid "Edit {0} membership"
-msgstr "Editar la pertenencia de {0}."
+msgstr "Editar la afiliación de {0}."
 
 #: Group.editMsg1
 msgid "Edit the fields below."
@@ -505,7 +505,7 @@ msgstr "Editar los campos de abajo."
 
 #: Group.editOfficeMembership
 msgid "Edit office membership"
-msgstr "Editar pertenencia a oficina"
+msgstr "Editar afiliación a oficina"
 
 #: Group.editStatus
 msgid "Edit {0} status"
@@ -513,11 +513,11 @@ msgstr "Editar estatus de {0}"
 
 #: Group.editcentermembership
 msgid "Edit center membership"
-msgstr "Editar pertenencia a centro"
+msgstr "Editar afiliación a centro"
 
 #: Group.editgroupinformation
 msgid "Edit group information"
-msgstr "Editar información de grupo"
+msgstr "Editar incapacitación de grupo"
 
 #: Group.editgroupstatus
 msgid "Edit group status"
@@ -529,7 +529,7 @@ msgstr "Editar agenda de reunión"
 
 #: Group.editpreviewMsg
 msgid "Click Confirm if you are satisfied or click Edit {0} information."
-msgstr "Pulse Confirmar si está satisfecho o pulse Editar información de {0}."
+msgstr "Pulse Confirmar si está satisfecho o pulse Editar incapacitación de {0}."
 
 #: Group.enter
 msgid "Enter"
@@ -545,7 +545,7 @@ msgstr "Introduzca un nombre de {0} y pulse Buscar."
 
 #: Group.enterInformation
 msgid "Enter {0} information"
-msgstr "Introduzca información de {0}"
+msgstr "Introduzca incapacitación de {0}"
 
 #: Group.entera
 msgid "Enter a"
@@ -553,7 +553,7 @@ msgstr "Introduzca un"
 
 #: Group.entergroupinformation
 msgid "Enter group information"
-msgstr "Introducir información de grupo"
+msgstr "Introducir incapacitación de grupo"
 
 #: Group.externalIdMsg
 msgid ""
@@ -575,7 +575,7 @@ msgstr "ID externa"
 #: Group.feetype
 #, fuzzy
 msgid "Fee Type:"
-msgstr "Tipo de comisión"
+msgstr "Tipo de cuota"
 
 #: Group.group
 msgid "Group"
@@ -588,7 +588,7 @@ msgstr "detalles de {0}"
 #: Group.groupMembership
 #, fuzzy
 msgid "Group membership:"
-msgstr "Pertenencia a grupo\\:"
+msgstr "afiliación a grupo\\:"
 
 #: Group.groupapprovaldate
 #, fuzzy
@@ -601,7 +601,7 @@ msgstr "Cargos de grupo"
 
 #: Group.groupdetailMsg
 msgid "Click on a {0} name to change the {0} membership."
-msgstr "Pulse en un nombre de {0} para cambiar la pertenencia de {0}."
+msgstr "Pulse en un nombre de {0} para cambiar la afiliación de {0}."
 
 #: Group.groupdetailMsg1
 msgid "Click on a"
@@ -621,11 +621,11 @@ msgstr "Detalles del Grupo"
 
 #: Group.groupfundloans
 msgid "Group fund Loans"
-msgstr "Préstamos al fondo del Grupo"
+msgstr "Crédito del fondo del Grupo"
 
 #: Group.groupinformation
 msgid "{0} information"
-msgstr "Información de {0}"
+msgstr "Incapacitación de {0}"
 
 #: Group.groupname
 msgid "{0} Name"
@@ -637,18 +637,18 @@ msgstr "Nombre"
 
 #: Group.groupsearch_instructions
 msgid "& Accounts without submitting information."
-msgstr "y Cuentas sin enviar la información."
+msgstr "y Cuentas sin enviar la incapacitación."
 
 #: Group.grouptrained
 #, fuzzy
 msgid "Trained:"
-msgstr "Formado\\:"
+msgstr "Capacitado\\:"
 
 #: Group.grouptrainedon
 #, fuzzy
 msgctxt "Group.grouptrainedon"
 msgid "Trained on:"
-msgstr "Formado en\\:"
+msgstr "Capacitado en\\:"
 
 #: Group.hashof
 #, fuzzy
@@ -672,16 +672,16 @@ msgstr "Ciclo por Producto de {0}"
 #: Group.loanofficer
 #, fuzzy
 msgid "Loan officer:"
-msgstr "Oficial de préstamos\\:"
+msgstr "Oficial de Crédito\\:"
 
 #: Group.loanofficerMsg
 msgid "Loan officer"
-msgstr "Oficial de préstamos"
+msgstr "Oficial de Crédito"
 
 #: Group.loanofficerassigned
 #, fuzzy
 msgid "Loan officer assigned:"
-msgstr "Oficial de préstamos asignado\\:"
+msgstr "Oficial de Crédito asignado\\:"
 
 #: Group.locationofthemeeting
 #, fuzzy
@@ -690,7 +690,7 @@ msgstr "Lugar de la reunión\\:"
 
 #: Group.managegroup
 msgid "Manage Group"
-msgstr "Gestionar Grupo"
+msgstr "Administrar Grupo"
 
 #: Group.meeting
 msgid "Meeting"
@@ -708,17 +708,17 @@ msgstr "Reuniones\\:"
 #: Group.meetingschedule
 #, fuzzy
 msgid "Meeting schedule:"
-msgstr "Agenda de la reunión\\:"
+msgstr "Horario de la reunión\\:"
 
 #: Group.membershipNotRequired
 msgid "Click here to continue if {0} membership is not required for your {1}."
 msgstr ""
-"Pulse aquí para continuar si la pertenencia de {0} no es necesaria para su "
+"Pulse aquí para continuar si la afiliación de {0} no es necesaria para su "
 "{1}."
 
 #: Group.mfiinformation
 msgid "MFI information"
-msgstr "Información de la IMF"
+msgstr "Incapacitación de la IMF"
 
 #: Group.name
 #, fuzzy
@@ -778,7 +778,7 @@ msgstr "Abrir nueva cuenta\\:"
 
 #: Group.performancehistory
 msgid "Performance history"
-msgstr "Historial de comportamiento"
+msgstr "Historial de desempeño"
 
 #: Group.periodicity
 #, fuzzy
@@ -787,7 +787,7 @@ msgstr "Periodicidad\\:"
 
 #: Group.personnelinformation
 msgid "Personal  information"
-msgstr "Información personal"
+msgstr "Incapacitación personal"
 
 #: Group.pleasenote
 #, fuzzy
@@ -819,11 +819,11 @@ msgstr "Vista Previa"
 
 #: Group.previewInformation
 msgid "Preview {0} information"
-msgstr "Vista previa de la información de {0}"
+msgstr "Vista previa de la incapacitación de {0}"
 
 #: Group.previewcreatepagehead1
 msgid "Review the information  below."
-msgstr "Revise la información de abajo."
+msgstr "Revise la incapacitación de abajo."
 
 #: Group.previewcreatepagehead2
 msgid "Click Submit if you are satisfied or click Edit to make changes."
@@ -831,7 +831,7 @@ msgstr "Pulse Enviar si está satisfecho o Editar para hacer cambios."
 
 #: Group.previewgroupinformation
 msgid "Preview group information"
-msgstr "Vista Previa de la información del Grupo"
+msgstr "Vista Previa de la incapacitación del Grupo"
 
 #: Group.programMsg
 msgid "Click on a program in the left box to select. Then click Add."
@@ -866,11 +866,11 @@ msgstr "eliminar"
 
 #: Group.removeGroupMembership
 msgid "Click here to remove group membership."
-msgstr "Pulse aquí para eliminar la pertenencia al grupo."
+msgstr "Pulse aquí para eliminar la afiliación al grupo."
 
 #: Group.removeMembership
 msgid "Remove {0} membership"
-msgstr "Eliminar la pertenencia de {0}."
+msgstr "Eliminar la afiliación de {0}."
 
 #: Group.reviewandsubmit
 msgid "Review & submit"
@@ -878,7 +878,7 @@ msgstr "Revisar y enviar"
 
 #: Group.s
 msgid "s:"
-msgstr ""
+msgstr "s:"
 
 #: Group.savings
 msgid "Savings"
@@ -886,7 +886,7 @@ msgstr "Ahorros"
 
 #: Group.schedulemeeting
 msgid "Schedule meeting"
-msgstr "Organizar reunión"
+msgstr "Agendar reunión"
 
 #: Group.searchmsg1
 #, fuzzy
@@ -967,7 +967,7 @@ msgstr "Próximos pasos sugeridos"
 
 #: Group.sureToDelete
 msgid "Are you sure you want to delete the group membership for this client"
-msgstr "¿Está seguro de querer borrar la pertenencia al grupo de este cliente?"
+msgstr "¿Está seguro de querer remover la afiliación al grupo de este cliente?"
 
 #: Group.sureToTransferTo
 msgid "Are you sure you want to transfer the {0} to"
@@ -995,11 +995,11 @@ msgstr "Cartera total de {0}."
 #, fuzzy
 msgctxt "Group.trainedon"
 msgid "Trained on:"
-msgstr "Formado en\\:"
+msgstr "Capacitado en\\:"
 
 #: Group.trainingstatus
 msgid "Training status"
-msgstr "Estatus de formación"
+msgstr "Estatus de capacitación"
 
 #: Group.transfer
 msgid "Transfer"
@@ -1007,7 +1007,7 @@ msgstr "Trasferir"
 
 #: Group.transferbranch
 msgid "Transfer branch"
-msgstr "Trasferir agencia"
+msgstr "Trasferir sucursal"
 
 #: Group.transferbranchMsg1
 msgid "To transfer {0} choose a {1} from the list below."
@@ -1019,7 +1019,7 @@ msgid ""
 "information."
 msgstr ""
 "Pulse Cancelar para volver a la página de detalles de {0} sin enviar la "
-"información."
+"incapacitación."
 
 #: Group.transferbranchMsg3
 msgid "Click Submit to confirm."
@@ -1051,11 +1051,11 @@ msgstr "Ver los detalles de {0} ahora"
 
 #: Group.viewTrxnHistory
 msgid "View transaction history"
-msgstr "Ver historia de la operación"
+msgstr "Ver historial de operaciónes"
 
 #: Group.viewallactivities
 msgid "View all account activities"
-msgstr "Ver todas las actividades de la cuenta"
+msgstr "Ver toda la actividad de la cuenta"
 
 #: Group.viewallclosedaccounts
 msgid "View all closed accounts"
@@ -1079,7 +1079,7 @@ msgstr "Ver resumen de datos históricos"
 
 #: Group.waive
 msgid "Waive"
-msgstr "Eximir"
+msgstr "No Aplicar"
 
 #: button.approved
 msgid "Approved"
@@ -1148,7 +1148,7 @@ msgstr ""
 msgid ""
 "The membership cannot be changed since its children has Active accounts."
 msgstr ""
-"La pertenencia no se puede cambiar ya que los hijos tienen cuentas activas."
+"La afiliación no se puede cambiar ya que los hijos tienen cuentas activas."
 
 #: errors.Customer.duplicateCustomer
 msgctxt "errors.Customer.duplicateCustomer"
@@ -1162,30 +1162,30 @@ msgstr ""
 #: errors.Customer.duplicatePeriodicFee
 msgctxt "errors.Customer.duplicatePeriodicFee"
 msgid "Same periodic fee cannot be selected multiple times."
-msgstr "No se puede seleccionar la misma comisión periódica más de una vez."
+msgstr "No se puede seleccionar la misma cuota periódica más de una vez."
 
 #: errors.Customer.feeFrequencyMismatch
 msgid ""
 "Meeting frequency and fee recurrence do not match. Please select only valid "
 "fee types."
 msgstr ""
-"La frecuencia de las reuniones y la periodicidad de la comisión no "
+"La frecuencia de las reuniones y la periodicidad de la cuota no "
 "coinciden. por favor seleccione sólo tipos de comisiones válidas."
 
 #: errors.Customer.hasActiveAccount
 msgctxt "errors.Customer.hasActiveAccount"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
-msgstr "No se puede cambiar la pertenencia porque todavía hay cuentas activas."
+msgstr "No se puede cambiar la afiliación porque todavía hay cuentas activas."
 
 #: errors.Customer.invalidLoanOfficer
 msgid "Please select loan officer"
-msgstr "Por favor seleccione un oficial de préstamos."
+msgstr "Por favor seleccione un Oficial de Crédito."
 
 #: errors.Customer.invalidMeeting
 msgctxt "errors.Customer.invalidMeeting"
 msgid "Please select Meeting schedule."
-msgstr "Por favor seleccione una agenda de reunión."
+msgstr "Por favor seleccione un horario de reunión."
 
 #: errors.Customer.meetingFrequencyMismatch
 msgid ""
@@ -1228,26 +1228,27 @@ msgstr ""
 
 #: errors.Customer.specifyCustomFieldValue
 msgid "Please specify required additional information."
-msgstr "Por favor especifique la información adicional requerida."
+msgstr "Por favor especifique la incapacitación adicional requerida."
 
 #: errors.Customer.customdatefield
 msgid ""
 "Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field."
-msgstr ""
+msgstr "Ingrese una fecha valida (formato dd/mm/yyyy) en el campo de "
+"informacion adicional."
 
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."
-msgstr "Por favor especifique el importe de la comisión."
+msgstr "Por favor especifique el importe de la cuota."
 
 #: errors.Customer.specifyLoanOfficer
 msgid "Please select loan officer."
-msgstr "Por favor seleccione el Oficial de Préstamos."
+msgstr "Por favor seleccione el Oficial de Créditos."
 
 #: errors.Customer.specifyMeeting
 msgctxt "errors.Customer.specifyMeeting"
 msgid "Please select Meeting schedule."
-msgstr "Por favor seleccione la agenda de la reunión."
+msgstr "Por favor seleccione el horario de la reunión."
 
 #: errors.Customer.specifyName
 msgid "Please specify Name."
@@ -1258,7 +1259,7 @@ msgid ""
 "Group membership couldn't be removed, since the client has an active loan "
 "account"
 msgstr ""
-"No se pudo eliminar la pertenencia al grupo, ya que el cliente tiene una "
+"No se pudo eliminar la afiliación al grupo, ya que el cliente tiene una "
 "cuenta de préstamo activa."
 
 #: errors.Group.ClientIsATitleHolder
@@ -1274,26 +1275,26 @@ msgid ""
 "Group membership couldn't be removed, since the group has an active loan "
 "account."
 msgstr ""
-"No se pudo eliminar la pertenencia al grupo, ya que el cliente tiene una "
+"No se pudo eliminar la afiliación al grupo, ya que el cliente tiene una "
 "cuenta de préstamo activa."
 
 #: errors.InvalidTrainedDate
 msgid "Please enter a valid training date."
-msgstr "Por favor introduzca una fecha de formación válida."
+msgstr "Por favor introduzca una fecha de capacitación válida."
 
 #: errors.TrainedCheckbox
 msgid "Please select the Trained checkbox."
-msgstr "Por favor marque la casilla Formado."
+msgstr "Por favor marque la casilla Capacitado."
 
 #: errors.TrainedDateNeeded
 msgid "Please specify Trained Date."
-msgstr "Por favor especifique la Fecha de Formación."
+msgstr "Por favor especifique la Fecha de capacitación."
 
 #: errors.assignedloanofficerrequired
 msgid "The client status is active. Please select a loan officer."
 msgstr ""
-"El estatus del cliente es activo. Por favor seleccione un oficial de "
-"préstamos."
+"El estatus del cliente es activo. Por favor seleccione un Oficial de "
+"Crédito."
 
 #: errors.branchinactive
 msgid "{0} assigned is in Inactive state."
@@ -1306,7 +1307,7 @@ msgstr "El {0} asignado está en estado inactivo."
 #: errors.duplicatefee
 msgctxt "errors.duplicatefee"
 msgid "Same periodic fee cannot be selected multiple times."
-msgstr "No se puede seleccionar la misma comisión periódica más de una vez."
+msgstr "No se puede seleccionar la misma cuota periódica más de una vez."
 
 #: errors.duplicategroup
 msgctxt "errors.duplicategroup"
@@ -1319,17 +1320,17 @@ msgstr ""
 
 #: errors.feeinactive
 msgid "The Fee assigned is in Inactive state."
-msgstr "La Comisión asignada está en estado inactivo."
+msgstr "La cuota asignada está en estado inactivo."
 
 #: errors.feewithoutmeeting
 msgid "Customer must have a meeting schedule before a Fee can be charged."
 msgstr ""
-"El cliente debe tener una agenda de reunión antes de que se le pueda cargar "
-"una comisión."
+"El cliente debe tener un horario de reunión antes de que se le pueda cargar "
+"una cuota."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a {1}"
 
 #: errors.groupclientsareactive
 msgid "Status cannot be changed since it has active {0}s."
@@ -1345,7 +1346,7 @@ msgid ""
 "{0} create failed. Please try again later or contact the system "
 "administrator."
 msgstr ""
-"Se produjo un fallo en la creación de {0}. Por favor inténtelo de nuevo más "
+"Se produjo un error en la creación de {0}. Por favor inténtelo de nuevo más "
 "tarde o contacte con el administrador del sistema."
 
 #: errors.grouphasactiveaccounts
@@ -1363,7 +1364,7 @@ msgstr ""
 msgid "Status cannot be changed to Active since Loan officer is not assigned."
 msgstr ""
 "No se puede cambiar el estatus a Activo ya que no se ha asignado un Oficial "
-"de préstamos."
+"de Crédito."
 
 #: errors.groupnotfound
 msgid ""
@@ -1395,28 +1396,28 @@ msgstr "Por favor seleccione todos los objetos de la lista, y pulse enviar."
 
 #: errors.invalidfeeamt
 msgid "Fee amount cannot be zero or blank."
-msgstr "El importe de la comisión no puede ser 0 o dejarse en blanco."
+msgstr "El importe de la cuota no puede ser 0 o dejarse en blanco."
 
 #: errors.loanofficerinactive
 msgid ""
 "Either the Loan officer assigned is in Inactive State or changed to Non-Loan "
 "Officer or might have been transferred to a different {0}."
 msgstr ""
-"Bien el Oficial de préstamos asignado está en Estado Inactivo, o se ha "
-"cambiado a un Oficial no de préstamos, o podría haberse trasferido a un {0} "
+"El Oficial de Crédito asignado está en Estado Inactivo, o se ha "
+"cabiado el estatus del Oficial de Crédito, o podría haberse trasferido a un {0} "
 "diferente."
 
 #: errors.loanofficerrequired
 msgid "Please select a Loan Officer for saving in the Approved state."
 msgstr ""
-"Por favor seleccione un Oficial de Préstamos para grabar en el estado de "
+"Por favor seleccione un Oficial de Crédito para grabar en el estado de "
 "Aprobado."
 
 #: errors.loanofficerrequired_activegroup
 msgid ""
 "Specifying a Loan officer is mandatory, since group is in Active/Hold State."
 msgstr ""
-"Es obligatorio especificar un Oficial de Préstamos ya que el grupo está en "
+"Es obligatorio especificar un Oficial de Crédito ya que el grupo está en "
 "Estado Activo/En Pausa."
 
 #: errors.mandatory
@@ -1486,22 +1487,22 @@ msgid ""
 "Please make sure if training is selected, training date is specified; and "
 "vice-versa."
 msgstr ""
-"Por favor asegúrese de que si se ha seleccionado una formación, se haya "
-"especificado la fecha de formación, y viceversa. "
+"Por favor asegúrese  que si capacitación esta seleccionado, se haya "
+"especificado la fecha de capacitación, y viceversa. "
 
 #: errors.transferex_activeloans
 msgctxt "errors.transferex_activeloans"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
 msgstr ""
-"No se puede cambiar la pertenencia ya que hay cuentas Activas presentes."
+"No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
 
 #: errors.transferex_clienthasactiveloan
 msgctxt "errors.transferex_clienthasactiveloan"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
 msgstr ""
-"No se puede cambiar la pertenencia ya que hay cuentas Activas presentes."
+"No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
 
 #: errors.transferex_clienttransferfailed
 msgid ""
@@ -1525,7 +1526,7 @@ msgid ""
 "Please search again to get the updated data."
 msgstr ""
 "El registro que estaba tratando de actualizar ya se modificó en otra "
-"operación. Por favor busque de nuevo para obtener los datos actualizados."
+"operación. Por favor busquelo de nuevo para obtener los datos actualizados."
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."

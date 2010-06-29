@@ -24,7 +24,7 @@ msgstr "Ajuste"
 
 #: AccountAction-CustomerAccountRepayment
 msgid "Customer Account Repayment"
-msgstr "Pago de la cuenta del cliente"
+msgstr "Pago a la cuenta del cliente"
 
 #: AccountAction-CustomerAdjustment
 msgctxt "AccountAction-CustomerAdjustment"
@@ -41,7 +41,7 @@ msgstr "Desembolso"
 
 #: AccountAction-DisrbursalAmountReversal
 msgid "Disrbursal amount Reversal"
-msgstr "Cantidad de desembolso reversible"
+msgstr "Cantidad de desembolso revocado"
 
 #: AccountAction-Fee
 msgid "Fee"
@@ -63,13 +63,13 @@ msgstr "Préstamo reprogramado"
 
 #: AccountAction-LoanReversal
 msgid "Loan Reversal"
-msgstr "Préstamo revertido"
+msgstr "Préstamo revocado"
 
 # Due to none payment or delinquency
 #: AccountAction-LoanWrittenOff
 msgctxt "AccountAction-LoanWrittenOff"
 msgid "Loan Written Off"
-msgstr "Préstamo cancelado "
+msgstr "Préstamo Pérdidas "
 
 #: AccountAction-MiscellenousFee
 msgid "Miscellenous Fee"
@@ -107,7 +107,7 @@ msgstr "Retirar"
 
 #: AccountFlags-LoanReversal
 msgid "Loan reversal"
-msgstr "Préstamo revertido"
+msgstr "Préstamo revocado"
 
 #: AccountFlags-Other
 msgctxt "AccountFlags-Other"
@@ -155,7 +155,7 @@ msgstr "Cerrado - Reprogramado"
 
 #: AccountState-ClosedWrittenOff
 msgid "Closed- Written Off"
-msgstr "Cerrado - Pérdida"
+msgstr "Cerrado - Pérdidas"
 
 #: AccountState-DisbursedToLo
 msgid "Disbursed to LO"
@@ -281,7 +281,7 @@ msgstr "La aplicación tiene la aprobación pendiente."
 #: ClientStatus-Cancelled
 msgctxt "ClientStatus-Cancelled"
 msgid "Cancelled"
-msgstr "Cancelado"
+msgstr "Pérdidas"
 
 #: ClientStatus-Closed
 msgctxt "ClientStatus-Closed"
@@ -355,11 +355,11 @@ msgstr "Tercero"
 
 #: Mother
 msgid "Mother"
-msgstr ""
+msgstr "Madre"
 
 #: Child
 msgid "Child"
-msgstr ""
+msgstr "Hijo"
 
 #: FeeFormulaMaster-Interest
 msgctxt "FeeFormulaMaster-Interest"
@@ -418,7 +418,7 @@ msgstr "Cargos de las reuniones"
 
 #: FeeType-TrainingFee
 msgid "Training Fee"
-msgstr "Cuota de entrenamiento"
+msgstr "Cuota de capacitacion"
 
 #: FinancialAction-CustomerAccountFeesPosting
 msgid "Customer Account Fees Posting"
@@ -456,7 +456,7 @@ msgstr "Préstamo reprogramado"
 #: FinancialAction-LoanWrittenOff
 msgctxt "FinancialAction-LoanWrittenOff"
 msgid "Loan Written Off"
-msgstr "Préstamo cancelado"
+msgstr "Préstamo Pérdidas"
 
 #: FinancialAction-MandatoryDeposit
 msgid "Mandatory Deposit"
@@ -585,7 +585,7 @@ msgstr "La aplicación tiene la aprobación pendiente."
 #: GroupStatus-Cancelled
 msgctxt "GroupStatus-Cancelled"
 msgid "Cancelled"
-msgstr "Cancelado"
+msgstr "Pérdidas"
 
 #: GroupStatus-Closed
 msgctxt "GroupStatus-Closed"
@@ -648,7 +648,7 @@ msgstr "Español"
 
 #: Language-Arabic
 msgid "Arabic"
-msgstr "Arábigo"
+msgstr "Arábe"
 
 #: Language-Chinese
 msgid "Chinese"
@@ -673,15 +673,15 @@ msgstr "Laosiano"
 
 #: Language-Hungarian
 msgid "Hungarian"
-msgstr ""
+msgstr "Hungaro"
 
 #: Together
 msgid "Together"
-msgstr ""
+msgstr "Juntos"
 
 #: NotTogether
 msgid "Not Together"
-msgstr ""
+msgstr "Separados"
 
 #: Loan-Loan
 msgctxt "Loan-Loan"
@@ -794,7 +794,7 @@ msgstr "Puede aprobar multiple préstamos "
 #: Permissions-CanBlacklistSavingsAccount
 #, fuzzy
 msgid "Can blacklist Savings account"
-msgstr "Puede blacklist la cuenta de ahorros"
+msgstr "Puede poner en la lista negra la cuenta de ahorros"
 
 #: Permissions-CanChangeStateToPartialApplication
 msgctxt "Permissions-CanChangeStateToPartialApplication"
@@ -861,7 +861,7 @@ msgstr "Puede definir campos ocultos/mandatorios"
 
 #: Permissions-CanDefineHoliday
 msgid "Can define holiday"
-msgstr ""
+msgstr "Puede definir periodo de vacaciones"
 
 #: Permissions-CanDefineLabels
 msgid "Can define labels"
@@ -953,7 +953,7 @@ msgstr "Puede introducir la Información de la Hoja de Colección"
 
 #: Permissions-CanImportTransactions
 msgid "Can import transactions"
-msgstr ""
+msgstr "Puede importar transacciones"
 
 #: Permissions-CanMakeAdjustmentEntryToTheAccount
 msgid "Can make adjustment entry to the account"
@@ -1021,7 +1021,7 @@ msgstr "Puede revocar el desembolso del préstamo"
 
 #: Permissions-CanShutdownMifos
 msgid "Can shut down Mifos"
-msgstr ""
+msgstr "Puede apagar Mifos"
 
 #: Permissions-CanUnlockAUser
 msgid "Can unlock a user"
@@ -1037,11 +1037,11 @@ msgstr "Puede cargar los documentos del administrador"
 
 #: Permissions-CanUploadNewReports
 msgid "Can upload new reports"
-msgstr "Pueden cargar nuevos informes"
+msgstr "Pueden cargar nuevos reportes"
 
 #: Permissions-CanUploadReportTemplate
 msgid "Can upload report template"
-msgstr "Puede cargar la plantilla del informe"
+msgstr "Puede cargar la plantilla del reporte"
 
 #: Permissions-CanViewActiveLoansByLoanOfficer
 msgid "Can view Active Loans By Loan Officer"
@@ -1053,15 +1053,15 @@ msgstr "Puede ver los documentos del administrador"
 
 #: Permissions-CanViewAreaPerformanceStatusReport
 msgid "Can view Area Performance Status Report"
-msgstr "Puede ver el Informe del estado del Área de Rendimiento "
+msgstr "Puede ver el reporte del estado del Área de Rendimiento "
 
 #: Permissions-CanViewBranchDueDisbursementReport
 msgid "Can view Branch Due disbursement Report"
-msgstr "Puede ver el informe por Sucursal de Desembolso"
+msgstr "Puede ver el reporte por Sucursal de Desembolso"
 
 #: Permissions-CanViewBranchPerformanceStatusReport
 msgid "Can view Branch Performance Status Report"
-msgstr "Puede ver el informe del Rendimiento por Sucursal"
+msgstr "Puede ver el reporte del Rendimiento por Sucursal"
 
 #: Permissions-CanViewCenterMeetingSchedule
 msgid "Can view Center Meeting Schedule"
@@ -1069,12 +1069,12 @@ msgstr "Puede ver el Calendario de Reuniones del Centro"
 
 #: Permissions-CanViewCenterSummaryReport
 msgid "Can view Center Summary Report"
-msgstr "Puede ver el Informe Resumido del Centro"
+msgstr "Puede ver el reporte Resumido del Centro"
 
 #: Permissions-CanViewClientFeesChargesAndPenaltiesReport
 msgid "Can view Client Fees, Charges and Penalties report"
 msgstr ""
-"Puede ver el informe de las cuotas de los clientes, los cargos y las multas"
+"Puede ver el reporte de las cuotas de los clientes, los cargos y las multas"
 
 #: Permissions-CanViewClientLoanRepaymentSchedule
 msgid "Can view Client Loan repayment schedule"
@@ -1082,19 +1082,19 @@ msgstr "Puede ver el calendario de pago del préstamo del cliente"
 
 #: Permissions-CanViewClientPendingApprovalReport
 msgid "Can view Client pending approval report"
-msgstr "Puede ver el informe de la aprobación pendiente del cliente"
+msgstr "Puede ver el reporte de la aprobación pendiente del cliente"
 
 #: Permissions-CanViewClientProductWiseHistoryReport
 msgid "Can view Client Product Wise History Report"
-msgstr "Puede ver el informe histórico de los Productos del cliente"
+msgstr "Puede ver el reporte histórico de los Productos del cliente"
 
 #: Permissions-CanViewClientSettlementInfoReport
 msgid "Can view Client Settlement info Report"
-msgstr "Puede ver el informe con la información del Acuerdo del Cliente"
+msgstr "Puede ver el reporte con la información del Acuerdo del Cliente"
 
 #: Permissions-CanViewClientSummaryHistoryReport
 msgid "Can view Client Summary-& History Report"
-msgstr "Puede ver el informe con el Sumario y la Historia del Cliente"
+msgstr "Puede ver el reporte con el Sumario y la Historia del Cliente"
 
 #: Permissions-CanViewClientsWithoutSavingsAccount
 msgid "Can view Clients without Savings Account"
@@ -1106,27 +1106,27 @@ msgstr "Puede ver la Hoja de Recaudación"
 
 #: Permissions-CanViewCollectionSheetReport
 msgid "Can view Collection Sheet Report"
-msgstr "Puede ver el informe de la Hoja de Recaudación"
+msgstr "Puede ver el reporte de la Hoja de Recaudación"
 
 #: Permissions-CanViewDailyCashConfirmationReportStaffWise
 msgid "Can view Daily Cash Confirmation Report - Staff Wise"
 msgstr ""
-"Puede ver el Informe de Confirmación Diario de Caja por parte del Personal "
+"Puede ver el reporte de Confirmación Diario de Caja por parte del Personal "
 
 #: Permissions-CanViewDailyCashFlowReportBranch
 msgid "Can view Daily Cash Flow Report - Branch"
-msgstr "Puede ver el Informe de Flujo de Caja Diario - Sucursal "
+msgstr "Puede ver el reporte de Flujo de Caja Diario - Sucursal "
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
 #, fuzzy
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
 msgstr ""
-"Puede ver el informe Diario de Datos de Calidad de la Cartera - Análisis de "
+"Puede ver el reporte Diario de Datos de Calidad de la Cartera - Análisis de "
 "Madurez"
 
 #: Permissions-CanViewDailyTransactionSummaryReport
 msgid "Can view Daily Transaction Summary report"
-msgstr "Puede ver el informe del Resumen diario de transacciones"
+msgstr "Puede ver el reporte del Resumen diario de transacciones"
 
 #: Permissions-CanViewDetailedAgingOfPortfolioAtRisk
 #, fuzzy
@@ -1135,19 +1135,19 @@ msgstr "Puede ver el detalle de la Cartera de Madurez en riesgo"
 
 #: Permissions-CanViewDivisionPerformanceStatusReport
 msgid "Can view Division Performance Status Report"
-msgstr "Puede ver el informe del Rendimiento de la División"
+msgstr "Puede ver el reporte del Rendimiento de la División"
 
 #: Permissions-CanViewFundRequirementReport
 msgid "Can view Fund Requirement Report"
-msgstr "Puede ver el informe de los Fondos Requeridos"
+msgstr "Puede ver el reporte de los Fondos Requeridos"
 
 #: Permissions-CanViewGrameenKootaPerformanceStatusReport
 msgid "Can view Grameen Koota Performance Status Report"
-msgstr "Puede ver el informe de Rendimiento de Grameen Koota "
+msgstr "Puede ver el reporte de Rendimiento de Grameen Koota "
 
 #: Permissions-CanViewLoanAccountsReports
 msgid "Can view Loan Accounts reports"
-msgstr "Puede ver los informes de las Cuentas de Préstamos"
+msgstr "Puede ver los reportes de las Cuentas de Préstamos"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
 msgid ""
@@ -1159,7 +1159,7 @@ msgstr ""
 
 #: Permissions-CanViewLoansPendingApprovalReport
 msgid "Can view Loans pending approval report"
-msgstr "Puede ver el informe de los Préstamos pendientes de aprobación"
+msgstr "Puede ver el reporte de los Préstamos pendientes de aprobación"
 
 #: Permissions-CanViewOrganizationSettings
 msgid "Can view organization settings"
@@ -1167,23 +1167,23 @@ msgstr "Puede ver la estructura de la organización"
 
 #: Permissions-CanViewOutreachReport
 msgid "Can view Outreach Report"
-msgstr "Puede ver el informe de Difusión"
+msgstr "Puede ver el reporte de Difusión"
 
 #: Permissions-CanViewRegionPerformanceStatusReport
 msgid "Can view Region Performance Status Report"
-msgstr "Puede ver el informe de Rendimiento de la Región"
+msgstr "Puede ver el reporte de Rendimiento de la Región"
 
 #: Permissions-CanViewReportCategory
 msgid "Can view report category"
-msgstr "Puede ver el informe de categorías"
+msgstr "Puede ver el reporte de categorías"
 
 #: Permissions-CanViewReports
 msgid "Can view reports"
-msgstr "Puede ver los informes"
+msgstr "Puede ver los reportes"
 
 #: Permissions-CanViewStaffPerformanceReport
 msgid "Can view Staff Performance Report"
-msgstr "Puede ver el Informe de Rendimiento del Personal"
+msgstr "Puede ver el reporte de Rendimiento del Personal"
 
 #: Permissions-CanViewSystemInformation
 msgid "Can view system information"
@@ -1271,7 +1271,7 @@ msgstr "Puede eliminar una cantidad adeudada"
 
 #: Permissions-Checklists
 msgid "Checklists"
-msgstr "Listas"
+msgstr "Listas de control"
 
 #: Permissions-ClientDetail
 msgid "Client Detail"
@@ -1279,7 +1279,7 @@ msgstr "Detalle del cliente"
 
 #: Permissions-ClientManagement
 msgid "Client management"
-msgstr "Gestión de clientes"
+msgstr "Administración de clientes"
 
 #: Permissions-Clients
 msgctxt "Permissions-Clients"
@@ -1320,7 +1320,7 @@ msgstr "Puede cambiar el estado a la aplicación en espera de ser aprobada"
 #: Permissions-Clients-CanChangeStateToCancelled
 msgctxt "Permissions-Clients-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr "Puede cambiar el estado a Cancelado"
+msgstr "Puede cambiar el estado a Pérdidas"
 
 #: Permissions-Clients-CanChangeStateToClosed
 msgctxt "Permissions-Clients-CanChangeStateToClosed"
@@ -1352,7 +1352,7 @@ msgstr "Puede editar la cuota adjunta  a la cuenta"
 
 #: Permissions-Clients-CanEditGroupMembership
 msgid "Can edit group membership"
-msgstr "Puede editar la membresía del grupo"
+msgstr "Puede editar la afiliación del grupo"
 
 #: Permissions-Clients-CanEditMeetingSchedule
 msgctxt "Permissions-Clients-CanEditMeetingSchedule"
@@ -1361,12 +1361,12 @@ msgstr "Puede editar el horario de las reuniones "
 
 #: Permissions-Clients-CanEditMfiInformation
 msgid "Can edit MFI information"
-msgstr "Puede editar la información MFI"
+msgstr "Puede editar la información de la IMF"
 
 #: Permissions-Clients-CanEditOfficeMembership
 msgctxt "Permissions-Clients-CanEditOfficeMembership"
 msgid "Can edit office membership"
-msgstr "Puede editar la membresía de la oficina"
+msgstr "Puede editar la afiliación de la oficina"
 
 #: Permissions-Clients-CanEditPersonalInformation
 msgid "Can edit personal information"
@@ -1400,7 +1400,7 @@ msgstr "Puede eliminar una cantidad aduedada"
 
 #: Permissions-ConfigurationManagement
 msgid "Configuration Management"
-msgstr "Gestión de configuración"
+msgstr "Administración de la configuración"
 
 #: Permissions-Fees
 msgctxt "Permissions-Fees"
@@ -1446,7 +1446,7 @@ msgstr "Puede cambiar el estado a aplicación en espera de ser aprobada"
 #: Permissions-Groups-CanChangeStateToCancelled
 msgctxt "Permissions-Groups-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr "Puede cambiar el estado a Cancelado"
+msgstr "Puede cambiar el estado a Pérdidas"
 
 #: Permissions-Groups-CanChangeStateToClosed
 msgctxt "Permissions-Groups-CanChangeStateToClosed"
@@ -1492,11 +1492,11 @@ msgstr "Puede editar el horario de reuniones"
 #: Permissions-Groups-CanEditOfficeMembership
 msgctxt "Permissions-Groups-CanEditOfficeMembership"
 msgid "Can edit office membership"
-msgstr "Puede editar la membresía de la Oficina"
+msgstr "Puede editar la afiliación de la Oficina"
 
 #: Permissions-Groups-CanMakeAdjustmentEntriesToGroupAccount
 msgid "Can make adjustment entries to group account"
-msgstr "Puede hacer ajustes a las entradas de la cuenta de grupo"
+msgstr "Puede hacer ajustes a la cuenta de grupo"
 
 #: Permissions-Groups-CanMakePaymentsToGroupAccounts
 msgid "Can make payments to group accounts"
@@ -1518,7 +1518,7 @@ msgstr "Puede eliminar una cantidad adeudada"
 
 #: Permissions-LoanManagement
 msgid "Loan management"
-msgstr "Gestión de préstamo"
+msgstr "Administración de préstamo"
 
 #: Permissions-LoanProcessing
 msgid "Loan Processing"
@@ -1531,7 +1531,7 @@ msgstr "Puede cambiar el estado a Aprobado"
 #: Permissions-LoanProcessing-CanChangeStateToCancelled
 msgctxt "Permissions-LoanProcessing-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
-msgstr "Puede cambiar el estado a Cancelado"
+msgstr "Puede cambiar el estado a Pérdidas"
 
 #: Permissions-LoanProcessing-CanChangeStateToClosedRescheduled
 msgid "Can change state to Closed-rescheduled"
@@ -1579,7 +1579,7 @@ msgstr "No implementado"
 
 #: Permissions-OfficeManagement
 msgid "Office management"
-msgstr "Gestión de Oficina"
+msgstr "Administración de Oficina"
 
 #: Permissions-Offices
 msgid "Offices"
@@ -1587,11 +1587,11 @@ msgstr "Oficinas"
 
 #: Permissions-OrganizationManagement
 msgid "Organization Management"
-msgstr "Gestión de Organización  "
+msgstr "Administración de Organización  "
 
 #: Permissions-Performance
 msgid "Performance"
-msgstr "Rendimiento"
+msgstr "Desempeño"
 
 #: Permissions-Personnel
 msgctxt "Permissions-Personnel"
@@ -1612,7 +1612,7 @@ msgstr "Combinación de productos"
 
 #: Permissions-ReportsManagement
 msgid "Reports Management"
-msgstr "Administración de Informes"
+msgstr "Administración de reportes"
 
 #: Permissions-Roles
 msgid "Roles"
@@ -1620,7 +1620,7 @@ msgstr "Funciones"
 
 #: Permissions-SavingsManagement
 msgid "Savings Management"
-msgstr "Gestión de Ahorros"
+msgstr "Administración de Ahorros"
 
 #: Permissions-SavingsManagement-CanChangeStateToActive
 msgctxt "Permissions-SavingsManagement-CanChangeStateToActive"
@@ -1659,7 +1659,7 @@ msgstr "Sistema de información"
 
 #: Permissions-UserManagement
 msgid "User management"
-msgstr "Gestión de usuarios"
+msgstr "Administración de usuarios"
 
 #: Personnel-Personnel
 msgctxt "Personnel-Personnel"
@@ -1668,7 +1668,7 @@ msgstr "Personal"
 
 #: PersonnelLevels-LoanOfficer
 msgid "Loan Officer"
-msgstr "Oficial de Préstamo"
+msgstr "Oficial de Crédito"
 
 #: PersonnelLevels-NonLoanOfficer
 msgid "Non Loan Officer"
@@ -1794,7 +1794,7 @@ msgstr "Siguiente día laborable"
 
 #: RepaymentRule-RepaymentMoratorium
 msgid "Moratorium"
-msgstr ""
+msgstr "Moratoria"
 
 #: RepaymentRule-SameDay
 msgid "Same Day"

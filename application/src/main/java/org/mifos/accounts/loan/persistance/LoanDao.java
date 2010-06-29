@@ -20,12 +20,17 @@
 
 package org.mifos.accounts.loan.persistance;
 
+import java.util.List;
+
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.customers.util.helpers.SurveyDto;
 
 public interface LoanDao {
 
     LoanBO findById(Integer accountId);
 
     LoanBO findByGlobalAccountNum(String globalAccountNum);
+
+    List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
 }

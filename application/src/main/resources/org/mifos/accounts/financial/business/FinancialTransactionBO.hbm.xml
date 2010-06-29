@@ -6,28 +6,28 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.financial.business.FinancialTransactionBO" table="FINANCIAL_TRXN">
-		<id name="trxnId" column="TRXN_ID" access="field">
+	<class name="org.mifos.accounts.financial.business.FinancialTransactionBO" table="financial_trxn">
+		<id name="trxnId" column="trxn_id" access="field">
 			<generator class="native" />
 		</id>
-		<property name="actionDate" column="ACTION_DATE" access="field" />
-		<property name="postedDate" column="POSTED_DATE" access="field" />
-		<property name="accountingUpdated" column="ACCOUNTING_UPDATED" access="field" />
-		<property name="notes" column="NOTES" access="field" />
+		<property name="actionDate" column="action_date" access="field" />
+		<property name="postedDate" column="posted_date" access="field" />
+		<property name="accountingUpdated" column="accounting_updated" access="field" />
+		<property name="notes" column="notes" access="field" />
 		<!-- Debit=0 , Credit=1 -->
-		<property name="debitCreditFlag" column="DEBIT_CREDIT_FLAG" access="field" />
+		<property name="debitCreditFlag" column="debit_credit_flag" access="field" />
 		<property name="postedAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="POSTED_AMOUNT_CURRENCY_ID" />
-			<column name="POSTED_AMOUNT" />
+			<column name="posted_amount_currency_id" />
+			<column name="posted_amount" />
 		</property>
 		<property name="balanceAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_AMOUNT" />
+			<column name="balance_amount_currency_id" />
+			<column name="balance_amount" />
 		</property>
-		<many-to-one name="accountTrxn" column="ACCOUNT_TRXN_ID" class="org.mifos.accounts.business.AccountTrxnEntity" insert="true" update="false" access="field" />
-		<many-to-one name="relatedFinancialTrxn" column="RELATED_FIN_TRXN" class="org.mifos.accounts.financial.business.FinancialTransactionBO" insert="true" update="false" access="field" />
-		<many-to-one name="financialAction" column="FIN_ACTION_ID" class="org.mifos.accounts.financial.business.FinancialActionTypeEntity" insert="true" update="false" access="field" />
-		<many-to-one name="glcode" column="GLCODE_ID" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
-		<many-to-one name="postedBy" column="POSTED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" access="field" />
+		<many-to-one name="accountTrxn" column="account_trxn_id" class="org.mifos.accounts.business.AccountTrxnEntity" insert="true" update="false" access="field" />
+		<many-to-one name="relatedFinancialTrxn" column="related_fin_trxn" class="org.mifos.accounts.financial.business.FinancialTransactionBO" insert="true" update="false" access="field" />
+		<many-to-one name="financialAction" column="fin_action_id" class="org.mifos.accounts.financial.business.FinancialActionTypeEntity" insert="true" update="false" access="field" />
+		<many-to-one name="glcode" column="glcode_id" class="org.mifos.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
+		<many-to-one name="postedBy" column="posted_by" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" access="field" />
 	</class>
 </hibernate-mapping>

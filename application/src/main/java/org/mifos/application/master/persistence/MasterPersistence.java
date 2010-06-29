@@ -145,7 +145,7 @@ public class MasterPersistence extends Persistence {
     }
 
     /**
-     * use Dao specific calls - see {@link FeeDao#retrieveFeeCategories()}, {@link FeeDao#retrieveFeeFrequencies()} etc
+     * use Dao specific calls - see {@link FeeDao#doRetrieveFeeCategories()}, {@link FeeDao#retrieveFeeFrequencies()} etc
      */
     @Deprecated
     public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) throws PersistenceException {

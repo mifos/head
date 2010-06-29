@@ -43,6 +43,7 @@ import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -96,7 +97,11 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -111,6 +116,7 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link LoanServiceFacade} for web application usage.
@@ -850,5 +856,32 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
+    }
+
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        String fundName = null;
+        if (loan.getFund() != null) {
+            fundName = loan.getFund().getFundName();
+        }
+
+        SurveysPersistence surveysPersistence = new SurveysPersistence();
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
+
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, loan.getAccountState(), loan.getAccountFlags(),
+                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
+                                        loan.getAccountActionDates(), loan.getGracePeriodType(), loan.getInterestType(), loan.getLoanMeeting(),
+                                        loan.getAccountNotes(), loan.getRecentAccountNotes(),
+                                        loan.getCustomer().getCustomerLevel(), loan.getCustomer().getCustomerId(), loan.getAccountType(),
+                                        loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
+                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loan.getLoanSummary(),
+                                        loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
+                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(), loan.getMaxMinNoOfInstall(),
+                                        loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
+                                        loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
+                                        loan.getPerformanceHistory(), loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
     }
 }

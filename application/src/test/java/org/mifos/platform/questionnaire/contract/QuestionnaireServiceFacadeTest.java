@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  *  All rights reserved.
@@ -24,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroupForm;
@@ -81,21 +84,69 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestion(){
-        when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(0, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<Question> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
         assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        assertThat(questionDetailList.get(0).getId(), is("1"));
         verify(questionnaireService).getAllQuestions();
     }
 
     @Test
     public void testGetAllQuestionGroups() {
-        when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail("title1"), new QuestionGroupDetail("title2")));
-        List<QuestionGroupForm> questionGroups = questionnaireServiceFacade.getAllQuestionGroups();
-        assertNotNull(questionGroups);
-        assertThat(questionGroups.get(0).getTitle(), is("title1"));
-        assertThat(questionGroups.get(1).getTitle(), is("title2"));
+        when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail(1,"title1"), new QuestionGroupDetail(2,"title2")));
+        List<QuestionGroupForm> questionGroupForm = questionnaireServiceFacade.getAllQuestionGroups();
+        assertNotNull(questionGroupForm);
+        assertThat(questionGroupForm.get(0).getTitle(), is("title1"));
+        assertThat(questionGroupForm.get(0).getId(), is("1"));
+        assertThat(questionGroupForm.get(1).getTitle(), is("title2"));
+        assertThat(questionGroupForm.get(1).getId(), is("2"));
         verify(questionnaireService).getAllQuestionGroups();
+    }
+
+    @Test
+    public void testGetQuestionGroupById() throws ApplicationException {
+        int questionGroupId = 1;
+        String title = "Title";
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(title));
+        QuestionGroupForm questionGroupForm = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+        assertNotNull("Question group should not be null",questionGroupForm);
+        assertThat(questionGroupForm.getTitle(), is(title));
+    }
+    
+    @Test
+    public void testGetQuestionGroupByIdFailure() throws ApplicationException {
+        int questionGroupId = 1;
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        try {
+             questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+        } catch (ApplicationException e) {
+            verify(questionnaireService,times(1)).getQuestionGroup(questionGroupId);
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    public void testGetQuestionById() throws ApplicationException {
+        int questionId = 1;
+        String title = "Title";
+        when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
+        Question question = questionnaireServiceFacade.getQuestion(questionId);
+        assertNotNull("Question group should not be null",question);
+        assertThat(question.getTitle(), is(title));
+        assertThat(question.getType(), is("Number"));
+    }
+
+    @Test
+    public void testGetQuestionByIdFailure() throws ApplicationException {
+        int questionId = 1;
+        when(questionnaireService.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        try {
+             questionnaireServiceFacade.getQuestion(questionId);
+        } catch (ApplicationException e) {
+            verify(questionnaireService,times(1)).getQuestion(questionId);
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
+        }
     }
 
     private Question getQuestion(String title, String type) {

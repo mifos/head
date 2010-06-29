@@ -110,32 +110,32 @@ public class FeeDaoHibernate implements FeeDao {
     }
 
     @Override
-    public List<CategoryTypeEntity> retrieveFeeCategories() {
-        return retrieveListOfMasterDataFor(CategoryTypeEntity.class);
+    public List<CategoryTypeEntity> doRetrieveFeeCategories() {
+        return doFetchListOfMasterDataFor(CategoryTypeEntity.class);
     }
 
     @Override
     public List<FeeFormulaEntity> retrieveFeeFormulae() {
-        return retrieveListOfMasterDataFor(FeeFormulaEntity.class);
+        return doFetchListOfMasterDataFor(FeeFormulaEntity.class);
     }
 
     @Override
     public List<FeeFrequencyTypeEntity> retrieveFeeFrequencies() {
-        return retrieveListOfMasterDataFor(FeeFrequencyTypeEntity.class);
+        return doFetchListOfMasterDataFor(FeeFrequencyTypeEntity.class);
     }
 
     @Override
     public List<FeePaymentEntity> retrieveFeePayments() {
-        return retrieveListOfMasterDataFor(FeePaymentEntity.class);
+        return doFetchListOfMasterDataFor(FeePaymentEntity.class);
     }
 
     @Override
     public List<FeeStatusEntity> retrieveFeeStatuses() {
-        return retrieveListOfMasterDataFor(FeeStatusEntity.class);
+        return doFetchListOfMasterDataFor(FeeStatusEntity.class);
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends MasterDataEntity> List<T> retrieveListOfMasterDataFor(Class<T> type) {
+    private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
         Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {

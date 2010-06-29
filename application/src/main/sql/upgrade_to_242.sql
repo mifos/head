@@ -1,3 +1,3 @@
-CREATE UNIQUE INDEX PRD_OFFERING_SHORT_NAME_IDX ON PRD_OFFERING (PRD_OFFERING_SHORT_NAME);
+create unique index prd_offering_short_name_idx on prd_offering (prd_offering_short_name);
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 242 WHERE DATABASE_VERSION = 241;
+update database_version set database_version = 242 where database_version = 241;

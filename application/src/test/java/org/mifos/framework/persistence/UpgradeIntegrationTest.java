@@ -75,7 +75,7 @@ public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     private void databaseWithVersion() throws SQLException {
         Statement statement = connection.createStatement();
-        statement.execute("truncate table DATABASE_VERSION");
-        statement.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(" + DatabaseVersionPersistence.APPLICATION_VERSION + ")");
+        statement.execute("truncate table database_version");
+        statement.execute("insert into database_version(database_version) values(" + DatabaseVersionPersistence.APPLICATION_VERSION + ")");
     }
 }

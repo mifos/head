@@ -5,29 +5,29 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.client.business.ClientPerformanceHistoryEntity" table="CLIENT_PERF_HISTORY">
-        <id name="id" column="ID" type="integer" access="field">
+    <class name="org.mifos.customers.client.business.ClientPerformanceHistoryEntity" table="client_perf_history">
+        <id name="id" column="id" type="integer" access="field">
             <generator class="native"/>
 	   </id>
         
-        <property name="noOfActiveLoans" column="TOTAL_ACTIVE_LOANS" />
+        <property name="noOfActiveLoans" column="total_active_loans" />
         <property name="lastLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="LAST_LOAN_AMNT_CURRENCY_ID" /> 
-			<column name="LAST_LOAN_AMNT" />
+	        <column name="last_loan_amnt_currency_id" /> 
+			<column name="last_loan_amnt" />
 		</property>
 		<property name="delinquentPortfolio" 
 			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="DELINQUINT_PORTFOLIO_CURRENCY_ID" /> 
-			<column name="DELINQUINT_PORTFOLIO" />
+	        <column name="delinquint_portfolio_currency_id" /> 
+			<column name="delinquint_portfolio" />
 		</property>
 		<property name="totalSavings" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-	        <column name="TOTAL_SAVINGS_AMNT_CURRENCY_ID" /> 
-			<column name="TOTAL_SAVINGS_AMNT" />
+	        <column name="total_savings_amnt_currency_id" /> 
+			<column name="total_savings_amnt" />
 		</property>     
-        <many-to-one name="client" column="CUSTOMER_ID"
+        <many-to-one name="client" column="customer_id"
 			class="org.mifos.customers.client.business.ClientBO" unique="true" access="field"/>
-		<set name="loanCounters" cascade="all" table="LOAN_COUNTER" lazy="false" access="field" inverse="true">
-			<key column="CLIENT_PERF_ID" />
+		<set name="loanCounters" cascade="all" table="loan_counter" lazy="false" access="field" inverse="true">
+			<key column="client_perf_id" />
 			<one-to-many class="org.mifos.customers.client.business.LoanCounter" />
 		</set>
     </class>    

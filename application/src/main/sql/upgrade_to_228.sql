@@ -1,5 +1,5 @@
-ALTER TABLE currency DROP COLUMN DISPLAY_SYMBOL;
-ALTER TABLE currency DROP COLUMN DEFAULT_CURRENCY;
-ALTER TABLE currency DROP COLUMN DEFAULT_DIGITS_AFTER_DECIMAL;
+alter table currency drop column display_symbol;
+alter table currency drop column default_currency;
+alter table currency drop column default_digits_after_decimal;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 228 WHERE DATABASE_VERSION = 227;
+update database_version set database_version = 228 where database_version = 227;

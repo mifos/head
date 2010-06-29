@@ -3,34 +3,34 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.customers.surveys.business.Survey" table="SURVEY">
-		<id name="surveyId" column="SURVEY_ID" type="integer" unsaved-value="0" access="field">
+	<class name="org.mifos.customers.surveys.business.Survey" table="survey">
+		<id name="surveyId" column="survey_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native"/>
 		</id>
-		<property name="name" column="SURVEY_NAME"/>
-		<property name="appliesTo" column="SURVEY_APPLIES_TO"/>
-		<property name="dateOfCreation" column="DATE_OF_CREATION"/>
-		<property name="state" column="STATE" not-null="true"/>
+		<property name="name" column="survey_name"/>
+		<property name="appliesTo" column="survey_applies_to"/>
+		<property name="dateOfCreation" column="date_of_creation"/>
+		<property name="state" column="state" not-null="true"/>
 		<list name="questions" lazy="false" inverse="true" cascade="save-update">
-			<key column="SURVEY_ID" not-null="true"/>
-			<index column="QUESTION_ORDER"/>
+			<key column="survey_id" not-null="true"/>
+			<index column="question_order"/>
 			<one-to-many class="org.mifos.customers.surveys.business.SurveyQuestion"/>
 		</list>
 		
-		<joined-subclass table="PPI_SURVEY" name="org.mifos.customers.ppi.business.PPISurvey">
-			<key column="SURVEY_ID"/>
-			<property name="veryPoorMin" column="VERY_POOR_MIN"/>
-			<property name="veryPoorMax" column="VERY_POOR_MAX"/>
-			<property name="poorMin" column="POOR_MIN"/>
-			<property name="poorMax" column="POOR_MAX"/>
-			<property name="atRiskMin" column="AT_RISK_MIN"/>
-			<property name="atRiskMax" column="AT_RISK_MAX"/>
-			<property name="nonPoorMin" column="NON_POOR_MIN"/>
-			<property name="nonPoorMax" column="NON_POOR_MAX"/>
-			<property name="country" column="COUNTRY_ID"/>
+		<joined-subclass table="ppi_survey" name="org.mifos.customers.ppi.business.PPISurvey">
+			<key column="survey_id"/>
+			<property name="veryPoorMin" column="very_poor_min"/>
+			<property name="veryPoorMax" column="very_poor_max"/>
+			<property name="poorMin" column="poor_min"/>
+			<property name="poorMax" column="poor_max"/>
+			<property name="atRiskMin" column="at_risk_min"/>
+			<property name="atRiskMax" column="at_risk_max"/>
+			<property name="nonPoorMin" column="non_poor_min"/>
+			<property name="nonPoorMax" column="non_poor_max"/>
+			<property name="country" column="country_id"/>
 			<list name="likelihoods" lazy="true" inverse="true" cascade="save-update">
-				<key column="SURVEY_ID" not-null="true"/>
-				<index column="LIKELIHOOD_ORDER"/>
+				<key column="survey_id" not-null="true"/>
+				<index column="likelihood_order"/>
 				<one-to-many class="org.mifos.customers.ppi.business.PPILikelihood"/>
 			</list>
 		</joined-subclass>

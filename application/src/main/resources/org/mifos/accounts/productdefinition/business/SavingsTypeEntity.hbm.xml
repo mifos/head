@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.productdefinition.business.SavingsTypeEntity" table="SAVINGS_TYPE">
-		<id name="id" column="SAVINGS_TYPE_ID">
+	<class name="org.mifos.accounts.productdefinition.business.SavingsTypeEntity" table="savings_type">
+		<id name="id" column="savings_type_id">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
 	</class>
 </hibernate-mapping>

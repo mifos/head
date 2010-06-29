@@ -17,20 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.test.acceptance.framework.admin;
 
-package org.mifos.application.master.persistence;
+import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-import java.util.List;
+public class QuestionGroupDetailPage extends MifosPage {
 
-public class Upgrade211 extends LanguageUpgrade {
-
-    public Upgrade211() {
-        super(211);
+    public QuestionGroupDetailPage(Selenium selenium) {
+        super(selenium);
     }
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Lao", "lo" });
+    public QuestionGroupDetailPage verifyPage() {
+        verifyPage("view_question_groups_details");
+        return this;
     }
-
 }

@@ -5,15 +5,15 @@
 
 
 <hibernate-mapping>
-    <class name="org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity" table="CLIENT_INITIAL_SAVINGS_OFFERING">
-        <id name="clientOfferingId" column="CLIENT_OFFERING_ID" type="integer" 
+    <class name="org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity" table="client_initial_savings_offering">
+        <id name="clientOfferingId" column="client_offering_id" type="integer" 
             access="field">
             <generator class="native"/>
         </id>
-        <many-to-one name="client" column="CUSTOMER_ID" 
+        <many-to-one name="client" column="customer_id" 
             class="org.mifos.customers.client.business.ClientBO" 
             insert="true" update="true" access="field"/>
-        <many-to-one name="savingsOffering" column="PRD_OFFERING_ID" 
+        <many-to-one name="savingsOffering" column="prd_offering_id" 
             class="org.mifos.accounts.productdefinition.business.SavingsOfferingBO" 
             insert="true" update="true" access="field"/>
     </class>    

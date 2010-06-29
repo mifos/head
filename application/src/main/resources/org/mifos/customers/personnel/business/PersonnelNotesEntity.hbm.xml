@@ -6,15 +6,15 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.personnel.business.PersonnelNotesEntity" table="PERSONNEL_NOTES">
-        <id name="commentId" column="COMMENT_ID" type="integer" access="field">
+    <class name="org.mifos.customers.personnel.business.PersonnelNotesEntity" table="personnel_notes">
+        <id name="commentId" column="comment_id" type="integer" access="field">
             <generator class="native"/>
         </id>
  
-        <property name="commentDate" column="COMMENT_DATE" type="date" access="field" />
-        <property name="comment" column="COMMENTS" type="string" access="field"/>
-        <many-to-one  name="officer" column="OFFICER_ID" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
-        <many-to-one  name="personnel" column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
+        <property name="commentDate" column="comment_date" type="date" access="field" />
+        <property name="comment" column="comments" type="string" access="field"/>
+        <many-to-one  name="officer" column="officer_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
+        <many-to-one  name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
     </class>
     <query name="personnel.getAllPersonnelNotes">
     	   <![CDATA[from org.mifos.customers.personnel.business.PersonnelNotesEntity note where note.personnel.personnelId=:PERSONNEL_ID order by note.commentId desc]]>

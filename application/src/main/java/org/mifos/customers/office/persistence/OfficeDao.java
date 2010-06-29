@@ -29,6 +29,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
 import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
 
@@ -59,4 +60,6 @@ public interface OfficeDao {
     void validateNoActivePeronnelExist(Short officeId) throws OfficeException;
 
     void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
+
+    List<OfficeDto> findActiveParents(OfficeLevel officeLevel);
 }

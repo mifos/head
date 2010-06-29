@@ -6,23 +6,23 @@
 <hibernate-mapping>
 	<class
 		name="org.mifos.security.rolesandpermission.business.ActivityEntity"
-		table="ACTIVITY">
-		<id name="id" type="short" column="ACTIVITY_ID" access="field">
+		table="activity">
+		<id name="id" type="short" column="activity_id" access="field">
 		</id>
 		<set name="roles" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
-			<key column="ACTIVITY_ID" />
+			<key column="activity_id" />
 			<one-to-many
 				class="org.mifos.security.rolesandpermission.business.RoleActivityEntity" />
 		</set>
-		<many-to-one name="parent" column="PARENT_ID"
+		<many-to-one name="parent" column="parent_id"
 			class="org.mifos.security.rolesandpermission.business.ActivityEntity"
 			cascade="none" update="true" insert="true" access="field" />
 		<many-to-one name="activityNameLookupValues"
-			column="ACTIVITY_NAME_LOOKUP_ID"
+			column="activity_name_lookup_id"
 			class="org.mifos.application.master.business.LookUpValueEntity"
 			cascade="none" update="true" insert="true" access="field" />
 		<many-to-one name="descriptionLookupValues"
-			column="DESCRIPTION_LOOKUP_ID"
+			column="description_lookup_id"
 			class="org.mifos.application.master.business.LookUpValueEntity"
 			cascade="none" update="true" insert="true" access="field" />
 	</class>

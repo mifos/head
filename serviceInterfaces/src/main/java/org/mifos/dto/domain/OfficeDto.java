@@ -36,6 +36,8 @@ public class OfficeDto implements Serializable {
     private final Short statusId;
     private final Short levelId;
     private final String parentOfficeName;
+    private Integer versionNum = Integer.valueOf(0);
+    private final String lookupNameKey;
 
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId) {
         this.id = officeId;
@@ -47,6 +49,7 @@ public class OfficeDto implements Serializable {
         this.statusId = statusId;
         this.levelId = levelId;
         this.parentOfficeName = "";
+        this.lookupNameKey = "";
     }
 
     public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Short parentId, Short statusId, Short levelId, String parentOfficeName) {
@@ -59,6 +62,21 @@ public class OfficeDto implements Serializable {
         this.statusId = statusId;
         this.levelId = levelId;
         this.parentOfficeName = parentOfficeName;
+        this.lookupNameKey = "";
+    }
+
+    public OfficeDto(final Short officeId, String officeName, String searchId, String officeShortName, String globalNum, Integer versionNum, Short statusId, Short levelId, String lookupNameKey) {
+        this.id = officeId;
+        this.name = officeName;
+        this.searchId = searchId;
+        this.officeShortName = officeShortName;
+        this.globalNum = globalNum;
+        this.parentId = null;
+        this.statusId = statusId;
+        this.levelId = levelId;
+        this.parentOfficeName = "";
+        this.versionNum = versionNum;
+        this.lookupNameKey = lookupNameKey;
     }
 
     public String getSearchId() {
@@ -99,5 +117,13 @@ public class OfficeDto implements Serializable {
 
     public String getParentOfficeName() {
         return this.parentOfficeName;
+    }
+
+    public Integer getVersionNum() {
+        return this.versionNum;
+    }
+
+    public String getLookupNameKey() {
+        return this.lookupNameKey;
     }
 }

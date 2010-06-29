@@ -1,9 +1,9 @@
-CREATE TABLE QUESTION_GROUP(
-  ID INTEGER AUTO_INCREMENT NOT NULL,
-  TITLE VARCHAR(200) NOT NULL,
-  DATE_OF_CREATION DATE NOT NULL,
-  STATE INTEGER NOT NULL,
-  PRIMARY KEY (ID)
-)ENGINE=InnoDB CHARACTER SET utf8;
+create table question_group(
+  id integer auto_increment not null,
+  title varchar(200) not null,
+  date_of_creation date not null,
+  state integer not null,
+  primary key (id)
+)engine=innodb character set utf8;
 
-UPDATE DATABASE_VERSION SET DATABASE_VERSION = 258 WHERE DATABASE_VERSION = 257;
+update database_version set database_version = 258 where database_version = 257;

@@ -26,7 +26,7 @@ msgstr "Los campos marcados con un asterisco son obligatorios."
 
 #: Fees.CreateFeesInstruction
 msgid "Complete the fields below. Then click Preview."
-msgstr "Complte los campos de abajo. Luego pulse Vista Previa."
+msgstr "Complete los campos de abajo. Luego pulse Vista Previa."
 
 #: Fees.DefaultFeeNo
 msgid "No"
@@ -39,7 +39,7 @@ msgstr "Sí "
 #: Fees.GLCode
 #, fuzzy
 msgid "GL Code:"
-msgstr "Código de Cuenta General\\:"
+msgstr "Código del Libro Mayor\\:"
 
 #: Fees.PreviewFeesInstruction
 msgid ""
@@ -72,7 +72,7 @@ msgstr "Seleccionar"
 #: Fees.accountDisplay
 #, fuzzy
 msgid "GL Code: 1001"
-msgstr "Código de Cuenta General\\: 1001"
+msgstr "Código del Libro Mayor\\: 1001"
 
 #: Fees.accounting
 msgid "Accounting"
@@ -135,7 +135,7 @@ msgstr "Cuotas del Cliente"
 
 #: Fees.currency
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #: Fees.daily
 msgid "Daily"
@@ -159,13 +159,13 @@ msgstr "Día"
 #, fuzzy
 msgctxt "Fees.defaultFees"
 msgid "Default fees:"
-msgstr "Cuotas por defecto\\:"
+msgstr "Cuotas por default\\:"
 
 #: Fees.defaultfees
 #, fuzzy
 msgctxt "Fees.defaultfees"
 msgid "Default fees:"
-msgstr "Cuotas por defecto\\:"
+msgstr "Cuotas por default\\:"
 
 #: Fees.definenewfee
 msgid "Define a new fee"
@@ -213,7 +213,7 @@ msgstr "nombre de la cuota"
 
 #: Fees.error.glcode
 msgid "glcode"
-msgstr "Código de Cuenta General"
+msgstr "Código del Libro Mayor"
 
 #: Fees.error.rate
 msgid "Rate"
@@ -351,7 +351,7 @@ msgstr "Frecuencia"
 
 #: Fees.mandatory_glCode
 msgid "GL Code"
-msgstr "Código de Cuenta General"
+msgstr "Código del Libro Mayor"
 
 #: Fees.mandatory_status
 msgctxt "Fees.mandatory_status"
@@ -463,7 +463,7 @@ msgstr ""
 #: Fees.setglcode
 #, fuzzy
 msgid "Set GL Code:"
-msgstr "Definir Código de Cuenta General\\:"
+msgstr "Definir Código del Libro Mayor\\:"
 
 #: Fees.smalldefinenewfee
 #, fuzzy
@@ -540,7 +540,7 @@ msgstr ""
 
 #: error.amountCannotBeNull
 msgid "Please enter a valid fee amount/rate."
-msgstr "Por favor introduzca un importe o una tasa de la cuota válidos."
+msgstr "Por favor introduzca un importe/tasa de la cuota válidos."
 
 #: error.enterRate
 msgid "Please specify rate to select formula for calculating fees."
@@ -554,7 +554,7 @@ msgstr "Por favor seleccione la frecuencia junto con el Tipo de Pago."
 
 #: error.periodicandfrequency
 msgid "Please select periodic along with frequency."
-msgstr "Por favor seleccione el periodo junto con la frecuencia."
+msgstr "Por favor seleccione periodo junto con la frecuencia."
 
 #: error.periodicorontime
 msgid "Please select a frequency."
@@ -563,13 +563,13 @@ msgstr "Por favor seleccione una frecuencia."
 #: error.reurmonth
 msgid "Please specify a recurrence pattern value for monthly fee."
 msgstr ""
-"Por favor seleccione un valor del calendario de repetición para la cuota "
+"Por favor seleccione el patrón de recurencia para la cuota "
 "mensual."
 
 #: error.reurweek
 msgid "Please specify a recurrence pattern value for weekly fee."
 msgstr ""
-"Por favor seleccione un valor del calendario de repetición para la cuota "
+"Por favor seleccione el valor del patrón de recurencia para la cuota "
 "semanal."
 
 #: error.versionnodonotmatch
@@ -578,11 +578,11 @@ msgstr "Este registro ya ha sido modificado."
 
 #: errors.Fee.invalidGLCode
 msgid "Please specify GL Code."
-msgstr "Por favor especifique el Código de Cuenta General."
+msgstr "Por favor especifique el Código del Libro Mayor."
 
 #: errors.Meeting.invalidRecurAfter
 msgid "Please specify a valid recurrence pattern value"
-msgstr "Por favor seleccione un valor del calendario de repetición válido."
+msgstr "Por favor seleccione un valor del calendario de recurencia válido."
 
 #: errors.amountGreaterThan
 msgid "{0} should lie between 0-999999999.99"
@@ -606,7 +606,7 @@ msgstr "</UL>"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a {1}"
 
 #: errors.header
 msgid "<UL>"
@@ -645,7 +645,7 @@ msgstr "La longitud de {0} no puede ser menor de {1} caracter(es)."
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0} debe de ser mayor de 0"
 
 #: errors.prefix
 msgid "<LI>"

@@ -25,7 +25,7 @@ msgstr ""
 
 #: errors.Meeting.invalidDayNumber
 msgid "Please specify the valid day number in the range of 1 to 31."
-msgstr "Por favor, específique un día válido en el rango del 1 al 31."
+msgstr "Por favor, específique un numero de día válido en el rango del 1 al 31."
 
 #: errors.Meeting.invalidMeetingPlace
 msgid "Please specify a Meeting location."
@@ -191,7 +191,7 @@ msgstr "semana(s) en "
 #: meeting.labelmeetingschedule&groupMembership
 #, fuzzy
 msgid "Meeting schedule & Group Membership:"
-msgstr "Horario de reuniones y membresía de grupo\\:"
+msgstr "Horario de reuniones y afiliacion al grupo\\:"
 
 #: meeting.monthDay.number
 msgid "Please specify a number for Month {0}."

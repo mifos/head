@@ -17,22 +17,36 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.customers.util.helpers;
 
-package org.mifos.application.master.persistence;
+import java.util.Date;
 
-import java.util.List;
+import org.mifos.framework.business.service.DataTransferObject;
 
-public class Upgrade208 extends LanguageUpgrade {
+/**
+ *
+ */
+public class SurveyDto implements DataTransferObject {
+    private final Integer instanceId;
+    private final String surveyName;
+    private final Date dateConducted;
 
-    public Upgrade208() {
-        super(208);
+    public SurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
+        this.instanceId = instanceId;
+        this.surveyName = surveyName;
+        this.dateConducted = dateConducted;
     }
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Chinese", "zh" });
-        languageNameAndCodesToAdd.add(new String[] { "Swahili", "sw" });
-        languageNameAndCodesToAdd.add(new String[] { "Arabic", "ar" });
+    public int getInstanceId() {
+        return this.instanceId;
+    }
+
+    public String getSurveyName() {
+        return this.surveyName;
+    }
+
+    public Date getDateConducted() {
+        return this.dateConducted;
     }
 
 }

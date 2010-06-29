@@ -5,12 +5,12 @@
 <hibernate-mapping>
 	<class
 		name="org.mifos.security.rolesandpermission.business.RoleActivityEntity"
-		table="ROLES_ACTIVITY">
+		table="roles_activity">
 		<composite-id>			   
-			<key-many-to-one name="activity" column="ACTIVITY_ID"
+			<key-many-to-one name="activity" column="activity_id"
 				class="org.mifos.security.rolesandpermission.business.ActivityEntity"
 				access="field"/>
-			<key-many-to-one name="role" column="ROLE_ID"
+			<key-many-to-one name="role" column="role_id"
 				class="org.mifos.security.rolesandpermission.business.RoleBO"
 				access="field"/>
 		</composite-id>

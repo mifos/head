@@ -57,44 +57,44 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     @AfterClass
     public static void destroy() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(53)");
         StaticHibernateUtil.flushAndCloseSession();
     }
 
     @Before
     public void setUp() throws Exception {
-        connection.createStatement().execute("drop table if exists DATABASE_VERSION");
+        connection.createStatement().execute("drop table if exists database_version");
     }
 
     @Test
     public void testReadSuccess() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(53)");
         new DatabaseVersionPersistence(connection).read();
     }
 
     @Test
     public void testReadTwoRows() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(54)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(53)");
+        connection.createStatement().execute("insert into database_version(database_version) values(54)");
         try {
             new DatabaseVersionPersistence(connection).read();
             Assert.fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals("too many rows in DATABASE_VERSION", e.getMessage());
+            Assert.assertEquals("too many rows in database_version", e.getMessage());
         }
     }
 
     @Test
     public void testReadNoRows() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
         try {
             new DatabaseVersionPersistence(connection).read();
             Assert.fail();
         } catch (RuntimeException e) {
-            Assert.assertEquals("No row in DATABASE_VERSION", e.getMessage());
+            Assert.assertEquals("No row in database_version", e.getMessage());
         }
     }
 
@@ -113,8 +113,8 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     @Test
     public void testWrite() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(53)");
         new DatabaseVersionPersistence(connection).write(77);
         Assert.assertEquals(77, new DatabaseVersionPersistence(connection).read());
     }
@@ -124,8 +124,8 @@ public class DatabaseVersionPersistenceIntegrationTest {
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         Assert.assertFalse(persistence.isVersioned());
 
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(43)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(43)");
         Assert.assertTrue(persistence.isVersioned());
     }
 
@@ -247,9 +247,9 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     @Test
     public void testExecuteStream() throws Exception {
-        connection.createStatement().execute("drop table if exists FOO");
-        byte[] sql = ("create table FOO(DATABASE_VERSION INTEGER);\n" + "--some comment\n"
-                + "insert into FOO(DATABASE_VERSION) VALUES(53);\n").getBytes("UTF-8");
+        connection.createStatement().execute("drop table if exists foo");
+        byte[] sql = ("create table foo(database_version integer);\n" + "--some comment\n"
+                + "insert into foo(database_version) values(53);\n").getBytes("UTF-8");
         ByteArrayInputStream in = new ByteArrayInputStream(sql);
         SqlExecutor.execute(in, connection);
         connection.commit();
@@ -259,11 +259,11 @@ public class DatabaseVersionPersistenceIntegrationTest {
     @Test
     public void testUpgradeDatabase() throws Exception {
         // Created in upgrade 79
-        connection.createStatement().execute("drop table if exists FOO");
+        connection.createStatement().execute("drop table if exists foo");
         // Created in upgrade 80
-        connection.createStatement().execute("drop table if exists BAR");
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
+        connection.createStatement().execute("drop table if exists bar");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(78)");
         connection.setAutoCommit(false);
         DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
         persistence.upgradeDatabase(connection, 80);
@@ -274,7 +274,7 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     private void readOneValueFromFoo(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select * from FOO");
+        ResultSet results = statement.executeQuery("select * from foo");
         Assert.assertTrue(results.next());
         int valueFromFoo = results.getInt(1);
         Assert.assertEquals(53, valueFromFoo);
@@ -285,8 +285,8 @@ public class DatabaseVersionPersistenceIntegrationTest {
 
     @Test
     public void testErrorWrapping() throws Exception {
-        connection.createStatement().execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-        connection.createStatement().execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
+        connection.createStatement().execute("create table database_version(database_version integer)");
+        connection.createStatement().execute("insert into database_version(database_version) values(78)");
         Upgrade upgrade = new Upgrade(79) {
 
             @Override
