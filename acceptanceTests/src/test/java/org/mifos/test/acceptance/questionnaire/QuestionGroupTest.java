@@ -37,7 +37,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"}, enabled = false)
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class QuestionGroupTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
