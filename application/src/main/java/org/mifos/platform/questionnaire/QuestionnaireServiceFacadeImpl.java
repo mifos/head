@@ -37,11 +37,13 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Autowired
     private QuestionnaireService questionnaireService;
-    private Map<String,QuestionType> questionTypeMap;
+    private Map<String, QuestionType> stringToQuestionTypeMap;
+    private Map<QuestionType, String> questionTypeToStringMap;
 
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
-        populateQuestionTypeMap();
+        populateStringToQuestionTypeMap();
+        populateQuestionTypeToStringMap();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -51,7 +53,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public void createQuestions(List<Question> questions) throws ApplicationException {
-        for (Question question: questions){
+        for (Question question : questions) {
             questionnaireService.defineQuestion(mapToQuestionDefinition(question));
         }
     }
@@ -74,11 +76,18 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     private List<Question> mapToQuestions(List<QuestionDetail> questionDetails) {
         List<Question> questions = new ArrayList<Question>();
         for (QuestionDetail questionDetail : questionDetails) {
-            Question question = new Question();
-            question.setTitle(questionDetail.getText());
+            Question question = mapToQuestion(questionDetail);
             questions.add(question);
         }
         return questions;
+    }
+
+    private Question mapToQuestion(QuestionDetail questionDetail) {
+        Question question = new Question();
+        question.setTitle(questionDetail.getText());
+        question.setId(questionDetail.getId().toString());
+        question.setType(questionTypeToStringMap.get(questionDetail.getType()));
+        return question;
     }
 
     @Override
@@ -86,23 +95,45 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
     }
 
+    @Override
+    public QuestionGroupForm getQuestionGroup(int questionGroupId) throws ApplicationException {
+        return mapToQuestionGroup(questionnaireService.getQuestionGroup(questionGroupId));
+    }
+
+    @Override
+    public Question getQuestion(int questionId) throws ApplicationException {
+        return mapToQuestion(questionnaireService.getQuestion(questionId));
+    }
+
     private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
         List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-            questionGroupForm.setTitle(questionGroupDetail.getTitle());
+            QuestionGroupForm questionGroupForm = mapToQuestionGroup(questionGroupDetail);
             questionGroupForms.add(questionGroupForm);
         }
         return questionGroupForms;
     }
 
-    private void populateQuestionTypeMap() {
-        questionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
+    private QuestionGroupForm mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
+        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        questionGroupForm.setId(questionGroupDetail.getId().toString());
+        questionGroupForm.setTitle(questionGroupDetail.getTitle());
+        return questionGroupForm;
+    }
+
+    private void populateStringToQuestionTypeMap() {
+        stringToQuestionTypeMap = CollectionUtils.asMap(makeEntry("Free text", QuestionType.FREETEXT),
                 makeEntry("Date", QuestionType.DATE),
                 makeEntry("Number", QuestionType.NUMERIC));
     }
 
+    private void populateQuestionTypeToStringMap() {
+        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, "Free text"),
+                makeEntry(QuestionType.DATE, "Date"),
+                makeEntry(QuestionType.NUMERIC, "Number"));
+    }
+
     private QuestionDefinition mapToQuestionDefinition(Question question) {
-        return new QuestionDefinition(question.getTitle(), questionTypeMap.get(question.getType()));
+        return new QuestionDefinition(question.getTitle(), stringToQuestionTypeMap.get(question.getType()));
     }
 }

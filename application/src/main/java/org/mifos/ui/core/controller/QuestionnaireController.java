@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 @Controller
 public class QuestionnaireController {
@@ -87,7 +90,7 @@ public class QuestionnaireController {
     }
 
     private boolean isInvalidTitle(String title) {
-        return StringUtils.isEmpty(StringUtils.trimToNull(title));
+        return isEmpty(StringUtils.trimToNull(title));
     }
 
     private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {
@@ -116,7 +119,7 @@ public class QuestionnaireController {
     }
 
     @RequestMapping("/viewQuestions.ftl")
-    public String getAllQuestions(ModelMap model, HttpServletRequest request){
+    public String getAllQuestions(ModelMap model, HttpServletRequest request) {
         model.addAttribute("questions", questionnaireServiceFacade.getAllQuestions());
         return "viewQuestions";
     }
@@ -125,5 +128,59 @@ public class QuestionnaireController {
     public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
         model.addAttribute("questionGroups", questionnaireServiceFacade.getAllQuestionGroups());
         return "viewQuestionGroups";
+    }
+
+    @RequestMapping("/viewQuestionGroupDetail.ftl")
+    public String getQuestionGroup(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionGroupId = httpServletRequest.getParameter("questionGroupId");
+        try {
+            if (invalid(questionGroupId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
+            } else {
+                QuestionGroupForm questionGroupForm = questionnaireServiceFacade.
+                        getQuestionGroup(Integer.valueOf(questionGroupId));
+                model.addAttribute("questionGroupDetail", questionGroupForm);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
+        }
+        return "viewQuestionGroupDetail";
+    }
+
+    @RequestMapping("/viewQuestionDetail.ftl")
+    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionId = httpServletRequest.getParameter("questionId");
+        try {
+            if (invalid(questionId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+            } else {
+                Question question = questionnaireServiceFacade.
+                        getQuestion(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", question);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
+        }
+        return "viewQuestionDetail";
+    }
+
+    private boolean invalid(String id) {
+        if (isEmpty(id) || !isInteger(id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isInteger(String id) {
+        try {
+            Integer.parseInt(id);
+            return true;
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

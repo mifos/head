@@ -32,6 +32,8 @@ import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
+import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
+import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
@@ -102,6 +104,7 @@ public class DependencyInjectedServiceLocator {
     private static LegacyOfficeServiceFacade legacyOfficeServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
     private static FeeServiceFacade feeServiceFacade;
+    private static FundServiceFacade fundServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -274,6 +277,13 @@ public class DependencyInjectedServiceLocator {
             feeServiceFacade = new WebTierFeeServiceFacade(feeService, feeDao, generalLedgerDao);
         }
         return feeServiceFacade;
+    }
+
+    public static FundServiceFacade locateFundServiceFacade() {
+        if (fundServiceFacade == null) {
+            fundServiceFacade = new WebTierFundServiceFacade(fundDao);
+        }
+        return fundServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

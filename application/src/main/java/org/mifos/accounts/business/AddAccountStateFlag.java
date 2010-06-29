@@ -53,7 +53,7 @@ public class AddAccountStateFlag extends Upgrade {
     public AddAccountStateFlag(int higherVersion, int newFlagId, String description, Short locale, String message) {
         super(higherVersion);
         if (higherVersion > LOOKUP_VALUE_CHANGE_VERSION) {
-            throw new RuntimeException(wrongConstructor);
+            throw new RuntimeException(WRONG_CONSTRUCTOR);
         }
         this.newFlagId = newFlagId;
         this.description = description;
@@ -92,8 +92,8 @@ public class AddAccountStateFlag extends Upgrade {
     }
 
     private void addFlag(Connection connection, int newFlagId, String description, int lookupId) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO ACCOUNT_STATE_FLAG("
-                + "  FLAG_ID,LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,RETAIN_FLAG)" + "VALUES(?,?,?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("insert into account_state_flag("
+                + "  flag_id,lookup_id,status_id,flag_description,retain_flag)" + "values(?,?,?,?,?)");
         statement.setInt(1, newFlagId);
         statement.setInt(2, lookupId);
         statement.setInt(3, STATUS_10);

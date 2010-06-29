@@ -119,7 +119,7 @@ explanation of the license and how it is applied.
 										<c:forEach
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'allFunds')}"
 											var="fund">
-											<html-el:option value="${fund.fundCodeId}">${fund.fundCodeValue}</html-el:option>
+											<html-el:option value="${fund.id}">${fund.value}</html-el:option>
 										</c:forEach>
 									</mifos:select></td>
 								</tr>

@@ -71,7 +71,7 @@ msgstr "Préstamos"
 
 #: acceptedPaymentType.repayment
 msgid "Repayments"
-msgstr "Reembolsos"
+msgstr "Pagos"
 
 #: acceptedPaymentType.saving
 msgid "Savings"

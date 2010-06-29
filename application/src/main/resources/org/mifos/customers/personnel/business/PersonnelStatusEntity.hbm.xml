@@ -6,11 +6,11 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.personnel.business.PersonnelStatusEntity" table="PERSONNEL_STATUS">
-        <id name="id" column="PERSONNEL_STATUS_ID"  unsaved-value="-1" access="field">
+    <class name="org.mifos.customers.personnel.business.PersonnelStatusEntity" table="personnel_status">
+        <id name="id" column="personnel_status_id"  unsaved-value="-1" access="field">
             <generator class="native"/>
         </id>
- 			<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+ 			<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>	
         
         

@@ -39,7 +39,7 @@ import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
@@ -89,7 +89,7 @@ public class WebTierClientDetailsServiceFacade implements ClientDetailsServiceFa
 
         Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
 
-        List<CustomerSurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
+        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
 
         List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(clientId,
                 EntityType.CLIENT.getValue(), userContext);

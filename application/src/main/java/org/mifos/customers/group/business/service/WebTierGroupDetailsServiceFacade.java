@@ -39,7 +39,7 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.GroupPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
@@ -94,7 +94,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
 
         boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
 
-        List<CustomerSurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
+        List<SurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
 
         List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
                 .getValue(), userContext);

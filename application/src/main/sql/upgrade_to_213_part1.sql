@@ -1,1 +1,1 @@
-CREATE INDEX CUSTOMER_BRANCH_SEARCH_IDX ON CUSTOMER (BRANCH_ID,SEARCH_ID);
+create index customer_branch_search_idx on customer (branch_id,search_id);

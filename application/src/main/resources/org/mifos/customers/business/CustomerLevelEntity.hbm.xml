@@ -5,12 +5,12 @@
 
 
 <hibernate-mapping>
-    <class name="org.mifos.customers.business.CustomerLevelEntity" table="CUSTOMER_LEVEL">
-        <id name="id" column="LEVEL_ID" type="short">
+    <class name="org.mifos.customers.business.CustomerLevelEntity" table="customer_level">
+        <id name="id" column="level_id" type="short">
             <generator class="native"/>
         </id>
-        <many-to-one name="lookUpValue" column="LEVEL_NAME_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+        <many-to-one name="lookUpValue" column="level_name_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>
-        <many-to-one name="parentCustomerLevel" column="PARENT_LEVEL_ID" class="org.mifos.customers.business.CustomerLevelEntity" access="field"/>
+        <many-to-one name="parentCustomerLevel" column="parent_level_id" class="org.mifos.customers.business.CustomerLevelEntity" access="field"/>
      </class>
 </hibernate-mapping>

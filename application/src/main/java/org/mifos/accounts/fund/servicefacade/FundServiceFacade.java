@@ -18,21 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.persistence;
+package org.mifos.accounts.fund.servicefacade;
+
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.accounts.fund.exception.FundException;
 
 import java.util.List;
 
-public class Upgrade208 extends LanguageUpgrade {
+public interface FundServiceFacade {
 
-    public Upgrade208() {
-        super(208);
-    }
+    FundDto getFund(Short fundId);
 
-    @Override
-    public void addData(List<String[]> languageNameAndCodesToAdd) {
-        languageNameAndCodesToAdd.add(new String[] { "Chinese", "zh" });
-        languageNameAndCodesToAdd.add(new String[] { "Swahili", "sw" });
-        languageNameAndCodesToAdd.add(new String[] { "Arabic", "ar" });
-    }
+    List<FundDto> getFunds();
 
+    List<FundCodeDto> getFundCodes();
+
+    void updateFund(FundDto fundDto) throws ApplicationException;
+
+    void createFund(FundDto fundDto) throws FundException;
 }

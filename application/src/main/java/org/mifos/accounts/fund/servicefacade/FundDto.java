@@ -17,36 +17,40 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
 
-import java.util.Date;
+package org.mifos.accounts.fund.servicefacade;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import java.io.Serializable;
 
-/**
- *
- */
-public class CustomerSurveyDto implements DataTransferObject {
-    private final Integer instanceId;
-    private final String surveyName;
-    private final Date dateConducted;
+public class FundDto implements Serializable {
 
-    public CustomerSurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
-        this.instanceId = instanceId;
-        this.surveyName = surveyName;
-        this.dateConducted = dateConducted;
+    private String id;
+
+    private FundCodeDto code;
+
+    private String name;
+
+    public String getId() {
+        return id;
     }
 
-    public int getInstanceId() {
-        return this.instanceId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getSurveyName() {
-        return this.surveyName;
+    public FundCodeDto getCode() {
+        return code;
     }
 
-    public Date getDateConducted() {
-        return this.dateConducted;
+    public void setCode(FundCodeDto code) {
+        this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

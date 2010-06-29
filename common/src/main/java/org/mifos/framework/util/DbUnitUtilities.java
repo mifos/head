@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -48,9 +49,11 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.NoSuchTableException;
 import org.dbunit.dataset.SortedTable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
 import org.joda.time.DateTime;
@@ -113,8 +116,9 @@ public class DbUnitUtilities {
             DatabaseUnitException {
 
         Assert.assertNotNull("Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.", columnsToIgnoreWhenVerifyingTables.get(tableName));
-        ITable expectedTable = expectedDataSet.getTable(tableName);
-        ITable actualTable = databaseDataSet.getTable(tableName);
+        ITable expectedTable = getCaseInsensitiveTable(tableName, expectedDataSet);
+        ITable actualTable = getCaseInsensitiveTable(tableName, databaseDataSet);
+
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable,
                 expectedTable.getTableMetaData().getColumns());
 
@@ -164,8 +168,8 @@ public class DbUnitUtilities {
             IDataSet expectedDataSet, String[] sortingColumns, Boolean actualDBComparableFlag, Boolean expectedDBComparableFlag) throws DataSetException, DatabaseUnitException {
 
         Assert.assertNotNull("Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.", columnsToIgnoreWhenVerifyingTables.get(tableName));
-        ITable expectedTable = expectedDataSet.getTable(tableName);
-        ITable actualTable = databaseDataSet.getTable(tableName);
+        ITable expectedTable = getCaseInsensitiveTable(tableName, expectedDataSet);
+        ITable actualTable = getCaseInsensitiveTable(tableName, databaseDataSet);
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable,
                 expectedTable.getTableMetaData().getColumns());
         SortedTable sortedExpectedTable = new SortedTable(expectedTable, sortingColumns);
@@ -185,6 +189,24 @@ public class DbUnitUtilities {
         } catch (AssertionError e) {
             throw new DatabaseUnitException(getTableDiff(expectedTable, actualTable), e);
         }
+    }
+
+    /**
+     * @param tableName
+     * @param dataSet
+     * @param itable
+     * @return
+     * @throws DataSetException
+     */
+    private ITable getCaseInsensitiveTable(String tableName, IDataSet dataSet)
+            throws DataSetException {
+        ITable itable;
+        try {
+        itable = dataSet.getTable(tableName);
+        } catch (NoSuchTableException ns) {
+            itable = dataSet.getTable(tableName.toLowerCase(Locale.ENGLISH));
+        }
+        return itable;
     }
 
     public void printTable(ITable table) throws DataSetException {
@@ -216,22 +238,24 @@ public class DbUnitUtilities {
 
     public IDataSet getDataSetFromClasspathFile(String filename, String directory)
     throws IOException, DataSetException {
-        boolean enableColumnSensing = true;
         ClassPathResource resource = new ClassPathResource(directory + filename);
         File file = resource.getFile();
         if (file == null) {
             throw new MifosRuntimeException("Couldn't find file:" + filename);
         }
-        return new FlatXmlDataSet(
-                getUncompressed(file), false, enableColumnSensing);
+        FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
+        fb.setColumnSensing(true);
+        fb.setDtdMetadata(false);
+        return fb.build(getUncompressed(file));
     }
 
     public IDataSet getDataSetFromFile(String filename)
     throws IOException, DataSetException {
-        boolean enableColumnSensing = true;
         File file = new File(filename);
-        return new FlatXmlDataSet(
-                getUncompressed(file), false, enableColumnSensing);
+        FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
+        fb.setColumnSensing(true);
+        fb.setDtdMetadata(false);
+        return fb.build(getUncompressed(file));
     }
 
     /**

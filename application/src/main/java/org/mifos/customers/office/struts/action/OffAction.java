@@ -50,6 +50,7 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.framework.business.service.BusinessService;
@@ -88,20 +89,20 @@ public class OffAction extends BaseAction {
         // loadParents
         if (StringUtils.isNotBlank(officeLevel)) {
             actionForm.setOfficeLevel(officeLevel);
-            OfficeLevel Level = OfficeLevel.getOfficeLevel(Short.valueOf(officeLevel));
 
-            List<OfficeDetailsDto> parents = ((OfficeBusinessService) getService()).getActiveParents(Level, getUserContext(request).getLocaleId());
             OfficeBO office = (OfficeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
+            List<OfficeDto> validParentOffices = new ArrayList<OfficeDto>();
             if (actionForm.getInput() != null && actionForm.getInput().equals("edit") && office != null) {
-                for (int i = 0; i < parents.size(); i++) {
-                    OfficeDetailsDto view = parents.get(i);
-                    if (view.getOfficeId().equals(office.getOfficeId())) {
-                        parents.remove(view);
+                for (OfficeDto view : officeFormDto.getParents()) {
+                    if (!view.getId().equals(office.getOfficeId())) {
+                        validParentOffices.add(view);
                     }
                 }
+            } else {
+                validParentOffices.addAll(officeFormDto.getParents());
             }
-            SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
+            SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, validParentOffices, request);
         }
 
         actionForm.setCustomFields(officeFormDto.getCustomFields());
