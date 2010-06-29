@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2009-08-08 20:55-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -518,6 +518,13 @@ msgstr "El nombre de esta oficina ya existe"
 msgid "This office short name already exist"
 msgstr "La Abrevación de esta oficina ya existe"
 
+#: error.office.futureholidaysnotthesame
+msgid ""
+"Office cannot be moved to a new parent office because there are future "
+"holidays applied to either the current parent office or the future parent "
+"office. Office can be moved after holidays have passed."
+msgstr ""
+
 #: error.office.invalidparentoffice
 msgid ""
 "Can not update parent office as this office level is greater than that of "
@@ -547,11 +554,13 @@ msgstr "el número máximo de oficinas permitidas son 9999"
 
 #: error.office.provideadditionalInformation
 msgid "Please specify required additional information for '{0}' field."
-msgstr "Por favor especifique la informacion adicional requerida para el campo '{0}'"
+msgstr ""
+"Por favor especifique la informacion adicional requerida para el campo '{0}'"
 
 #: error.office.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr "Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
+msgstr ""
+"Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
 
 #: error.versionnodonotmatch
 msgid ""
@@ -583,8 +592,7 @@ msgstr "La oficina no se puede activar porque la oficina padre está inactiva."
 
 #: errors.office.shortname.minlength
 msgid "Minimum length for office short name is {2} characters."
-msgstr ""
-"El tamaño mínimo para el Abrevación de las oficinas es {2} caracteres."
+msgstr "El tamaño mínimo para el Abrevación de las oficinas es {2} caracteres."
 
 #: errors.office.updationhierarchyfailed
 msgctxt "errors.office.updationhierarchyfailed"

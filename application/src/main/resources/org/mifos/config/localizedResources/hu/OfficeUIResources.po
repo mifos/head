@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:20+0530\n"
+"POT-Creation-Date: 2010-06-29 14:59-0700\n"
 "PO-Revision-Date: 2009-11-12 09:52+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,6 +508,13 @@ msgstr "Ez az iroda elnevezés már létezik"
 #: error.office.duplicateShortName
 msgid "This office short name already exist"
 msgstr "Ez az iroda rövid elnevezés már létezik"
+
+#: error.office.futureholidaysnotthesame
+msgid ""
+"Office cannot be moved to a new parent office because there are future "
+"holidays applied to either the current parent office or the future parent "
+"office. Office can be moved after holidays have passed."
+msgstr ""
 
 #: error.office.invalidparentoffice
 msgid ""

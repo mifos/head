@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2009-06-07 14:03-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -831,7 +831,7 @@ msgstr "Detalle de los pagos"
 msgid "Installment"
 msgstr "Pago"
 
-# NOT TRANSLATED What is instance???? 
+# NOT TRANSLATED What is instance????
 #: accounts.instance_info
 msgid "Instance information"
 msgstr "Información sobre la instancia"
@@ -1227,8 +1227,8 @@ msgid ""
 "without submitting information."
 msgstr ""
 "Revise la información de abajo. Presione Enviar si es correcta o Editar para "
-"hacer cambios. Presione cancelar para volver a Clientes y Cuentas sin enviar "
-"la información."
+"hacer cambios. Presione cancelar para volver a Clientes y Cuentas sin "
+"enviar la información."
 
 #: accounts.review&edit
 msgid "Review and/or edit installments"
@@ -1326,8 +1326,8 @@ msgid ""
 "Select a loan instance.Then click Continue. Click Cancel to return to "
 "Clients & Accounts without submitting information."
 msgstr ""
-"Seleccione una tipo de prestamo. Despues presione Continuar. Presione Cancelar para volver a "
-"Clientes y Cuentas sin enviar la información."
+"Seleccione una tipo de prestamo. Despues presione Continuar. Presione "
+"Cancelar para volver a Clientes y Cuentas sin enviar la información."
 
 #: accounts.source_fund
 msgid "Source of fund"
@@ -1471,8 +1471,8 @@ msgid ""
 "There is no amount due on this account, so the payment cannot be made. A "
 "payment can be made on or after the due date."
 msgstr ""
-"No existe un adeudo en esta cuenta, por lo que no se puede realizar "
-"el pago. Se puede realizar un pago en la misma fecha de vencimiento o en una "
+"No existe un adeudo en esta cuenta, por lo que no se puede realizar el pago. "
+"Se puede realizar un pago en la misma fecha de vencimiento o en una "
 "posterior."
 
 #: error.stateinitializationexception
@@ -1500,8 +1500,8 @@ msgid ""
 "Unknown exception occurred in the application. Please try again later or "
 "contact the system administrator."
 msgstr ""
-"Se ha producido un error desconocido en el programa. Por favor "
-"inténtelo de nuevo más tarde o contacte al administrador del sistema."
+"Se ha producido un error desconocido en el programa. Por favor inténtelo de "
+"nuevo más tarde o contacte al administrador del sistema."
 
 #: error.versionnodonotmatch
 #, fuzzy
@@ -1559,8 +1559,8 @@ msgid ""
 "Please specify valid Amount. The amount specified should be less than the "
 "amount required for complete payment."
 msgstr ""
-"Por favor introduzca un Cantidad válida. La Cantidad especificada debería ser "
-"inferior al Cantidad requerida para liquidar el pago."
+"Por favor introduzca un Cantidad válida. La Cantidad especificada debería "
+"ser inferior al Cantidad requerida para liquidar el pago."
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -1584,7 +1584,8 @@ msgstr "Por favor seleccione el {0}."
 #: errors.mandatorytextarea
 msgid "Please specify comments in the notes field before continuing."
 msgstr ""
-"Por favor especifique sus comentarios en el campo de Notas antes de proseguir."
+"Por favor especifique sus comentarios en el campo de Notas antes de "
+"proseguir."
 
 #: errors.mask
 msgid "Please specify alpha numeric characters only for {0}."
@@ -1673,9 +1674,8 @@ msgid ""
 "The product instance you have selected is currently inactive. Please select "
 "active product instance."
 msgstr ""
-"La insatancia del producto que ha seleccionado no está "
-"activada. Por favor seleccione un producto que se encuentre "
-"activo."
+"La insatancia del producto que ha seleccionado no está activada. Por favor "
+"seleccione un producto que se encuentre activo."
 
 #: loanedit_acc_status
 msgid "Edit account status"

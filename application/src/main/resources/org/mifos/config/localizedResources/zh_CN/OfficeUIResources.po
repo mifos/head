@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:57-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -451,6 +451,13 @@ msgstr "机构名称已存在"
 #: error.office.duplicateShortName
 msgid "This office short name already exist"
 msgstr "机构简称已存在"
+
+#: error.office.futureholidaysnotthesame
+msgid ""
+"Office cannot be moved to a new parent office because there are future "
+"holidays applied to either the current parent office or the future parent "
+"office. Office can be moved after holidays have passed."
+msgstr ""
 
 #: error.office.invalidparentoffice
 msgid ""

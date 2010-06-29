@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2010-02-24 11:10-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1585,8 +1585,7 @@ msgid ""
 "Please specify valid {0}. {0} should be a value between {1} and {2}, "
 "inclusive."
 msgstr ""
-"Por favor, especifique válida {0}.  {0} debe ser un valor entre {1} y {2}"
-"."
+"Por favor, especifique válida {0}.  {0} debe ser un valor entre {1} y {2}."
 
 #: errors.double
 msgctxt "errors.double"
@@ -1657,7 +1656,8 @@ msgstr "Por favor, especifique sólo caracteres alfanuméricos para {0}."
 
 #: errors.maxMin
 msgid "Please specify valid {0}. {0} should be greater than or equal to {1}."
-msgstr "Por favor, especifique la {0} válida. {0} debe ser superior o igual a {1}."
+msgstr ""
+"Por favor, especifique la {0} válida. {0} debe ser superior o igual a {1}."
 
 #: errors.maximumlength
 msgid "The maximum length for {0} field is {1}."
@@ -1687,8 +1687,9 @@ msgstr "Por favor, especifique algún valor."
 msgid ""
 "Attempting to pay a customer account balance (of {0}) that does not equal "
 "the total outstanding amount (of {1})."
-msgstr "Se esta intentando pagar a un cliente el balance de {0} este no es igual"
-"a la cantidad total debida (de {1})."
+msgstr ""
+"Se esta intentando pagar a un cliente el balance de {0} este no es iguala la "
+"cantidad total debida (de {1})."
 
 #: errors.prefix
 msgid "<LI>"

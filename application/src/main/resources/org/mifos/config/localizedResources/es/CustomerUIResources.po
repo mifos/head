@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2010-02-24 11:15-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,8 +225,8 @@ msgid ""
 "will make a reverse transaction entry and the account balance will be "
 "updated."
 msgstr ""
-"El último pago se puede revertir si fuera necesario. Si se hace este "
-"ajuste, el sistema efectuará una entrada para una operación inversa y se "
+"El último pago se puede revertir si fuera necesario. Si se hace este ajuste, "
+"el sistema efectuará una entrada para una operación inversa y se "
 "actualizará el balance de la cuenta."
 
 #: Customer.adminFeeAmount
@@ -407,8 +407,6 @@ msgstr "Por favor seleccione todos los objetos de la lista y pulse enviar."
 msgid "This action is not permissible"
 msgstr "Esta acción no está permitida"
 
-
-
 #: error.unknownexception
 msgid ""
 "Unknown exception occurred in the application. Please try again later or "
@@ -512,8 +510,8 @@ msgid ""
 "The amount cannot be adjusted either because the status is not yet active or "
 "because a payment was received at the time of disbursement."
 msgstr ""
-"No se puede ajustar el importe debido a que el estatus no es todavía activo o "
-"porque se recibió un pago en el momento del desembolso."
+"No se puede ajustar el importe debido a que el estatus no es todavía activo "
+"o porque se recibió un pago en el momento del desembolso."
 
 #: exception.accounts.ApplicationException.FindByGlobalAccntException
 msgid "This account number {0} does not exist."

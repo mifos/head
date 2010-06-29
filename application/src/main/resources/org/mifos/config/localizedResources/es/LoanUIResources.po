@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2009-07-22 07:09-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,6 @@ msgstr "Edite la transacción"
 msgid "Receipt date"
 msgstr "Fecha del recibo"
 
-
 #: accounts.receiptid
 msgctxt "accounts.receiptid"
 msgid "Receipt ID"
@@ -162,11 +161,13 @@ msgstr ""
 
 #: errors.Account.specifyCustomFieldValue
 msgid "Please specify required additional information for '{0}' field."
-msgstr "Por favor especifique la informacion adicional requeridapara el campo '{0}'."
+msgstr ""
+"Por favor especifique la informacion adicional requeridapara el campo '{0}'."
 
 #: errors.Account.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr "Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
+msgstr ""
+"Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
 
 #: errors.alleastonerecord
 msgid "Please select at least one {0}."
@@ -183,11 +184,14 @@ msgstr ""
 
 #: errors.cannotDisburseLoan.because.unitemisedReason
 msgid "This loan cannot be disbursed because it is not in the right state. "
-msgstr "Este préstamo no puede ser desembolsado porque no se encuentra en el Estatus correcto."
+msgstr ""
+"Este préstamo no puede ser desembolsado porque no se encuentra en el Estatus "
+"correcto."
 
 #: errors.cannotDisburseLoan.because.disburseFailed
 msgid "Disbursal failed.  This loan may have been disbursed elsewhere."
-msgstr "Desembolso fallo. Es posible que este préstamo ya haya sido desembolsado."
+msgstr ""
+"Desembolso fallo. Es posible que este préstamo ya haya sido desembolsado."
 
 #: errors.customernotselected
 msgid "Please select a {0} / {1}."
@@ -211,8 +215,7 @@ msgid ""
 "Please specify valid {0}. {0} should be a value between {1} and {2}, "
 "inclusive."
 msgstr ""
-"Por favor especifique un {0} válido.{0} debe tener un valor entre "
-"{1} y {2}."
+"Por favor especifique un {0} válido.{0} debe tener un valor entre {1} y {2}."
 
 # Need context for this sentence.
 #: errors.double
@@ -1082,8 +1085,8 @@ msgstr "Verifique para revertir el último pago"
 #: loan.clickcanceladmin
 msgid "Click cancel to return to Admin page without any modification."
 msgstr ""
-"Pulse clic para cancelar y regresar a la página del Administrador sin ninguna "
-"modificación."
+"Pulse clic para cancelar y regresar a la página del Administrador sin "
+"ninguna modificación."
 
 #: loan.client/group_name
 #, fuzzy

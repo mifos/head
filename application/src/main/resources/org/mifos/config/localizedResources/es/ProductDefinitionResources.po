@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2009-09-07 20:49-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,8 +27,7 @@ msgstr ""
 #: errors.calcinstallmenttype
 #, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
-msgstr ""
-"Por favor especifique el tipo de Calcular # de Pagos."
+msgstr "Por favor especifique el tipo de Calcular # de Pagos."
 
 #: errors.calcloanamounttype
 msgid "Please choose a Calculation Loan Amount Type."
@@ -50,8 +49,8 @@ msgid ""
 "valid interest rate."
 msgstr ""
 "Por favor especifique una tasa de interés por default válida, que debe estar "
-"entre la tasa de interés mínima y máxima. Por favor "
-"especifique una tasa de interés válido."
+"entre la tasa de interés mínima y máxima. Por favor especifique una tasa de "
+"interés válido."
 
 #: errors.defIntRateconfig
 msgid ""
@@ -147,8 +146,8 @@ msgid ""
 "Please specify end date greater than the start date and not less than the "
 "current date."
 msgstr ""
-"Por favor especifique una fecha de fin posterior a la fecha de inicio y a "
-"la fecha de hoy."
+"Por favor especifique una fecha de fin posterior a la fecha de inicio y a la "
+"fecha de hoy."
 
 #: errors.endinstallment
 msgid "Please Specify the valid End Installment Range Number {0} {1}."
@@ -156,9 +155,7 @@ msgstr "Por favor especifique un rango para el ultimo pago {0} {1} valido."
 
 #: errors.endloanamount
 msgid "Please Specify the valid End Range Loan Amount {0} {1}."
-msgstr ""
-"Por favor especifique el final del rango de préstamo {0} "
-"{1} válido."
+msgstr "Por favor especifique el final del rango de préstamo {0} {1} válido."
 
 #: errors.feefrequency
 msgid "The frequency of the product and the fee \"{0}\" does not match."
@@ -344,8 +341,8 @@ msgid ""
 "The Principal only grace is not applicable for Principal due on last "
 "installment."
 msgstr ""
-"La gracia del principal no es aplicable para el principal "
-"que esta pendiente de pago a la fecha del último pago."
+"La gracia del principal no es aplicable para el principal que esta pendiente "
+"de pago a la fecha del último pago."
 
 #: errors.select
 msgctxt "errors.select"
@@ -365,16 +362,16 @@ msgid ""
 "The Start date can be anything between current date and 1 year from the "
 "current date."
 msgstr ""
-"La fecha de inicio debe de estar entre el día de hoy y un año a "
-"partir de hoy."
+"La fecha de inicio debe de estar entre el día de hoy y un año a partir de "
+"hoy."
 
 #: errors.startdateupdateexception
 msgid ""
 "The Start date cannot be changed because either the product is active or the "
 "date specified is invalid."
 msgstr ""
-"No se puede cambiar la fecha de inicio, bien porque el producto está "
-"activo, bien porque la fecha especificada no es válida."
+"No se puede cambiar la fecha de inicio, bien porque el producto está activo, "
+"bien porque la fecha especificada no es válida."
 
 # for \# of last loan Installments - not sure about what this means in English, translated literally.
 #: errors.startendinstallment
@@ -384,26 +381,23 @@ msgid ""
 "be greater than the Start Range Loan Amount for # of last loan Installments "
 "{0} {1}.   "
 msgstr ""
-"Por favor especifique un rango del Final del Importe del Préstamo válido. Debe ser mayor que el inicio del "
-"rango del importe del préstamo para los \n"
+"Por favor especifique un rango del Final del Importe del Préstamo válido. "
+"Debe ser mayor que el inicio del rango del importe del préstamo para los \n"
 "úmeros de pagos del último préstamo {0} {1}."
-
-
 
 #: errors.startendrangeloanamount
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount {0} {1}."
 msgstr ""
-"Por favor especifique un rango del importe del préstamo válido. El "
-"fin del rango del importe del préstamo debe ser mayor que el inicio del "
-"rango del importe del préstamo {0} {1}."
+"Por favor especifique un rango del importe del préstamo válido. El fin del "
+"rango del importe del préstamo debe ser mayor que el inicio del rango del "
+"importe del préstamo {0} {1}."
 
 #: errors.startinstallment
 msgid "Please Specify the valid Start Installment Range Number {0} {1}."
 msgstr ""
-"Por favor especifique el número de inicio del rango de pagos válido {0} "
-"{1}."
+"Por favor especifique el número de inicio del rango de pagos válido {0} {1}."
 
 #: errors.startloanamount
 msgid "Please Specify the valid Start Range Loan Amount {0} {1}."
@@ -432,9 +426,9 @@ msgid ""
 "Please unselect this option or change the interest calculation method to "
 "flat interest.."
 msgstr ""
-"No se puede deducir el interés al desembolso para préstamos con una tasa de interes fija. "
-"Por favor no seleccione esta opción o cambie el método de cálculo del "
-"interés a un importe fijo."
+"No se puede deducir el interés al desembolso para préstamos con una tasa de "
+"interes fija. Por favor no seleccione esta opción o cambie el método de "
+"cálculo del interés a un importe fijo."
 
 #: product.DefineMixForNewProduct
 msgid "Define mix for a new product"
@@ -458,396 +452,365 @@ msgstr "Código del Libro Mayor para el capital"
 msgid "GL code for"
 msgstr "Código del Libro Mayor para "
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
 #: product.accounting
 msgid "Accounting"
-msgstr "Contabilidad"
+msgstr ""
 
 #: product.active
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #: product.addNewLoanProduct
 msgid "Add a new {0} product."
-msgstr "Añadir un nuevo producto {0}."
+msgstr ""
 
 #: product.addloanprod
 msgid "Add a new loan product"
-msgstr "Añadir un nuevo producto de préstamo"
+msgstr ""
 
 #: product.addnew
 msgid "Add a new"
-msgstr "Añadir un nuevo"
+msgstr ""
 
 #: product.addnewloanprd
 msgid "define a new loan product"
-msgstr "Definir un nuevo producto de préstamo"
+msgstr ""
 
 #: product.addnewprdcat
 msgid "define a new product category"
-msgstr "Definir una nueva categoría de producto"
+msgstr ""
 
 #: product.addnewsavingsprd
 msgid "define a new savings product"
-msgstr "Definir un nuevo producto de ahorro"
+msgstr ""
 
 #: product.addsuccessful
 msgid "You have successfully added a new product category"
-msgstr "Ha añadido con éxito una nueva categoría de producto"
+msgstr ""
 
 #: product.admin
 msgid "Admin"
-msgstr "Admin"
+msgstr ""
 
 #: product.allowedProducts
 msgid "Allowed products"
-msgstr "Productos permitidos"
+msgstr ""
 
 #: product.amount
 msgid "amount"
-msgstr "importe"
+msgstr ""
 
 #: product.appchgnewacc
 msgid "Apply change to new accounts"
-msgstr "Aplicar el cambio a las nuevas cuentas"
+msgstr ""
 
 #: product.appchgnewopenacc
 msgid "Apply change to open and new accounts"
-msgstr "Aplicar el cambio a las nuevas cuentas y a las ya abiertas"
+msgstr ""
 
 #: product.applfor
 msgid "Applicable for"
-msgstr "Aplicable a"
+msgstr ""
 
 #: product.attachfeestypes
 msgid "Attach fee types"
-msgstr "Adjuntar tipos de cuotas"
+msgstr ""
 
 #: product.automatic
 msgid "Automatic"
-msgstr "Automático"
+msgstr ""
 
 #: product.back
 msgid "Back to details page"
-msgstr "Volver a la página de detalles"
+msgstr ""
 
 #: product.balUsedForCalc
 msgid "Balance used for {0} calculation."
-msgstr "Saldo utilizado para el cálculo de {0}."
+msgstr ""
 
 #: product.balanceInterest
-#, fuzzy
 msgid "Balance used for "
-msgstr "Saldo utilizado para"
+msgstr ""
 
 #: product.balusedfor
-#, fuzzy
 msgid "Balance used for"
-msgstr "Saldo utilizado para"
+msgstr ""
 
 #: product.balusedforinstcalcrule
 msgid "Balance used for Interest calculation"
-msgstr "Saldo utilizado para el cálculo del interés"
+msgstr ""
 
 #: product.buteditcat
 msgid "Edit category information"
-msgstr "Editar información de categoría"
+msgstr ""
 
 #: product.buteditloaninfo
 msgid "Edit loan product information"
-msgstr "Editar información del préstamo"
+msgstr ""
 
 #: product.buteditsavingsinfo
 msgid "Edit Savings product information"
-msgstr "Editar información de producto de ahorro"
+msgstr ""
 
 #: product.butsubmit
 msgid "Submit"
-msgstr "Enviar"
+msgstr ""
 
 #: product.bylastloanamount
 msgid "By last loan Amount"
-msgstr "Por último importe del préstamo"
+msgstr ""
 
 #: product.byloancycle
 msgctxt "product.byloancycle"
 msgid "By loan Cycle"
-msgstr "Por ciclo del préstamo"
+msgstr ""
 
 #: product.calc
 msgid "calculation"
-msgstr "cálculo"
+msgstr ""
 
 #: product.calcInstallment
-#, fuzzy
 msgid "Calculate # of Installments as"
-msgstr "Calcular número de pagos como"
+msgstr ""
 
 #: product.calcloanamount
 msgid "Calculate Loan Amount as"
-msgstr "Calcular importe del préstamo como"
+msgstr ""
 
 #: product.cancel
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #: product.categorydesc
 msgid "Category Description"
-msgstr "Descripción de Categoría"
+msgstr ""
 
 #: product.categorydet
 msgid "Category Details"
-msgstr "Detalles de Categoría"
+msgstr ""
 
 #: product.categorydetails
 msgid "Category details"
-msgstr "Detalles de Categoría"
+msgstr ""
 
 #: product.categoryinfo
 msgid "Enter Product category information"
-msgstr "Introduzca información sobre la categoría de producto"
+msgstr ""
 
 #: product.categoryname
 msgid "Category Name"
-msgstr "Nombre de categoría "
+msgstr ""
 
 #: product.changelog
 msgid "Change Log"
-msgstr "Cambiar registro"
+msgstr ""
 
 #: product.chgStatus
 msgctxt "product.chgStatus"
 msgid "Status"
-msgstr "Estatus"
+msgstr ""
 
 #: product.clickToMakeChangesSavings
 msgid "Click on a {0} product below to view details and make changes or"
 msgstr ""
-"Pulse en un producto de {0} abajo para ver los detalles y realizar cambios o"
 
 #: product.clickToViewMixDetails
 msgid ""
 "Click on a product instance below to view mix details and make changes or"
 msgstr ""
-"Pulse en una periodicidad de producto abajo para ver los detalles de la "
-"mezcla y realizar cambios o"
 
 #: product.clickcanc
 msgid "Click Cancel to return to Admin."
-msgstr "Pulse Cancelar para volver a Admin"
+msgstr ""
 
 #: product.clickcanccat
 msgid ""
 "Click Cancel to return to category details without submitting information."
 msgstr ""
-"Pulse Cancelar para volver a la categoría de producto sin enviar la "
-"información."
 
 #: product.clickcancel
 msgid "Click Cancel to return to"
-msgstr "Pulse Cancelar para volver a"
+msgstr ""
 
 #: product.clickcancelprdmixinfo
 msgid ""
 "Click Cancel to return to product mix deatils without submitting "
 "information."
 msgstr ""
-"Pulse Cancelar para volver a los detalles de la mezcla de producto sin "
-"enviar la información."
 
 #: product.clickcancinfo
 msgid "Click Cancel to return to Admin without submitting information."
-msgstr "Pulse Cancelar para volver a Admin sin enviar la información."
+msgstr ""
 
 #: product.clickcancloan
 msgid ""
 "Click Cancel to return to Loan Product details without submitting "
 "information."
 msgstr ""
-"Pulse Cancelar para volver a los detalles del producto de préstamo sin "
-"enviar la información."
 
 #: product.clickcancsavings
 msgid ""
 "Click Cancel to return to Savings Product details without submitting "
 "information."
 msgstr ""
-"Pulse Cancelar para volver a los detalles del producto de ahorro sin enviar "
-"la información."
 
 #: product.clickcatdet
 msgid "Click on a category below to view details and make changes or"
-msgstr "Pulse en una categoría abajo para ver detalles y efectuar cambios o"
+msgstr ""
 
 #: product.clickfeetypes
 msgid "Click on a fee type in the left box to select. Then click Add."
 msgstr ""
-"Pulse en un tipo de cuota en el recuadro de la izquierda para "
-"seleccionar. Después pulse Añadir."
 
 #: product.clickfunds
 msgid "Click on a fund in the left box to select. Then click Add."
 msgstr ""
-"Pulse en un fondo en el recuadro de la izquierda para seleccionar. Después "
-"pulse Añadir."
 
 #: product.clickloandet
 msgid "Click on a loan product below to view details and make changes or"
 msgstr ""
-"Pulse en un producto de préstamo abajo para ver detalles y efectuar cambios "
-"o"
 
 #: product.clickon
 msgid "Click on a"
-msgstr "Pulse en un"
+msgstr ""
 
 #: product.clickpreview
 msgid "Then click Preview."
-msgstr "Después pulse Vista Previa."
+msgstr ""
 
 #: product.clickpymtselect
 msgid "Click on a payment type in the left box to select. Then click Add."
 msgstr ""
-"Pulse en un tipo de pago en el recuadro de la izquierda para seleccionar. "
-"Después pulse Añadir."
 
 #: product.clickrighttoselect
 msgid "Click on a product in the right box to select. Then click Remove."
 msgstr ""
-"Pulse en un producto en el recuadro de la derecha para seleccionar. Después "
-"pulse Añadir."
 
 #: product.clicksavingsdet
 msgid "Click on a savings product below to view details and make changes or"
 msgstr ""
-"Pulse en un producto de ahorro abajo para ver detalles y efectuar cambios o"
 
 #: product.clicksubmit
 msgid "Then click Submit."
-msgstr "Después pulse Enviar."
+msgstr ""
 
 #: product.clientgroupcenters
 msgid "Clients/ Groups/ Centers"
-msgstr "Clientes/ Grupos/ Centros"
+msgstr ""
 
 #: product.clients
 msgid "Clients"
-msgstr "Clientes"
+msgstr ""
 
 #: product.compfields
 msgid "Complete the fields below."
-msgstr "Complete los campos de abajo."
+msgstr ""
 
 #: product.completeFieldsInstructional
 msgid ""
 "Complete the fields below. Then click Preview. Click Cancel to return to "
 "Admin without submitting information."
 msgstr ""
-"Complete los campos de abajo. Después pulse Enviar. Pulse Cancelar para "
-"volver a Admin sin enviar la información."
 
 #: product.currency
 msgid "Currency"
-msgstr "Moneda"
+msgstr ""
 
 #: product.cyclecounter
 msgid "cycle counter"
-msgstr "contador de ciclo"
+msgstr ""
 
 #: product.day
 msgid "day(s)"
-msgstr "día(s)"
+msgstr ""
 
 #: product.days
 msgid "days"
-msgstr "días"
+msgstr ""
 
 #: product.deductedatdis
 msgid "{0} deducted at disbursement"
-msgstr "{0} deducido al desembolso"
+msgstr ""
 
 #: product.defaccountprocessflow
 msgid "Define Account Process Flow"
-msgstr "Definir Proceso de Flujo de Cuenta"
+msgstr ""
 
 #: product.defamt
 msgid "Default amount"
-msgstr "Importe por default"
+msgstr ""
 
 #: product.default
 msgid "Default"
-msgstr "Default"
+msgstr ""
 
 #: product.defaultAmount
 msgid "Default {0} amount"
-msgstr "Importe de {0} por default"
+msgstr ""
 
 #: product.defaultRate
 msgid "Default {0} rate"
-msgstr "Tasa de {0} por default"
+msgstr ""
 
 #: product.defclientprocessflow
 msgid "Define client process flow"
-msgstr "Definir flujo de proceso de cliente"
+msgstr ""
 
 #: product.define
 msgid "Define new category"
-msgstr "Definir nueva categoría"
+msgstr ""
 
 #: product.defineMixForNewProduct
+#, fuzzy
 msgid "define mix for a new product"
-msgstr "definir mezcla para un nuevo producto"
+msgstr "Definir mezcla para un nuevo producto"
 
 #: product.defineNew
 msgid "Define a new {0} product."
-msgstr "Definir un nuevo producto {0}."
+msgstr ""
 
 #: product.definst
-#, fuzzy
 msgid "Default # of installments"
-msgstr "No. de pagos por default"
+msgstr ""
 
 #: product.defintrate
 msgid "Default interest rate"
-msgstr "Tipo de interés por default"
+msgstr ""
 
 #: product.defprdcat
 msgid "Define a new product category"
-msgstr "Definir una nueva categoría de producto"
+msgstr ""
 
 #: product.defprocessflow
 msgid "Define Process Flow"
-msgstr "Definir flujo de proceso"
+msgstr ""
 
 #: product.desc
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #: product.details
 msgid "Details"
-msgstr "Detalles"
+msgstr ""
 
 #: product.disburstolo
 msgid "Disbursed to Loan Officer"
-msgstr "Desembolsado al Oficial de Crédito"
+msgstr ""
 
 #: product.dormancyDays
 msgid "dormancy days"
-msgstr "Días en inactividad"
+msgstr ""
 
 #: product.editCancelCat
 msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to "
 "category details without submitting information."
 msgstr ""
-"Edite los campos de abajo. Después pulse Vista Previa. Pulse Cancelar para "
-"volver a los detalles de categoría sin enviar la información."
 
 #: product.editLoanInfo
 msgctxt "product.editLoanInfo"
 msgid "Edit {0} product information."
-msgstr "Editar información del producto {0}."
+msgstr ""
 
 #: product.editPreviewSubmitLoan
 msgctxt "product.editPreviewSubmitLoan"
@@ -855,8 +818,6 @@ msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to {0} "
 "Product details without submitting information."
 msgstr ""
-"Edite los campos de abajo. Después pulse Vista Previa. Pulse Cancelar para "
-"volver a los detalles del producto {0} sin enviar la información."
 
 #: product.editPreviewSubmitSavings
 msgctxt "product.editPreviewSubmitSavings"
@@ -864,923 +825,888 @@ msgid ""
 "Edit the fields below. Then click Preview. Click Cancel to return to {0} "
 "Product details without submitting information."
 msgstr ""
-"Edite los campos de abajo. Después pulse Vista Previa. Pulse Cancelar para "
-"volver a los detalles del producto {0} sin enviar la información."
 
 #: product.editSavingsInfo
 msgctxt "product.editSavingsInfo"
 msgid "Edit {0} product information."
-msgstr "Editar información del producto {0}."
+msgstr ""
 
 #: product.editfields
 msgid "Edit the fields below."
-msgstr "Edite los campos de abajo."
+msgstr ""
 
 #: product.editprdmixinf
 msgid "Edit product mix information"
-msgstr "Editar información de la mezcla de producto"
+msgstr ""
 
 #: product.enddate
 msgid "End date"
-msgstr "Fecha final"
+msgstr ""
 
 #: product.enter
 msgid "Enter"
-msgstr "Introducir"
+msgstr ""
 
 #: product.enterLoanProductInfo
 msgctxt "product.enterLoanProductInfo"
 msgid "Enter {0} product information."
-msgstr "Introducir información del producto {0}."
+msgstr ""
 
 #: product.enterSavingsProductInfo
 msgctxt "product.enterSavingsProductInfo"
 msgid "Enter {0} product information."
-msgstr "Introducir información del producto {0}."
+msgstr ""
 
 #: product.enterfoll
 msgid "Specify the following"
-msgstr "Especifique lo siguiente"
+msgstr ""
 
 #: product.enterloanprodinfo
 msgid "Enter loan product information"
-msgstr "Introducir información del producto de préstamo"
+msgstr ""
 
 #: product.fees&pen
 msgid "Fees"
-msgstr "Cuotas"
+msgstr ""
 
 #: product.feestypes
 msgid "Fees Types"
-msgstr "Tipos de Cuotas"
+msgstr ""
 
 #: product.fieldsrequired
 msgid "Fields marked with an asterisk are required."
-msgstr "Los campos marcados con un asterisco son obligatorios."
+msgstr ""
 
 #: product.forbylastloanatrow
 msgid "for by last loan at row"
-msgstr "por el último préstamo en la fila"
+msgstr ""
 
 #: product.forbyloancycleatrow
 msgid "for by loan cycle at row"
-msgstr "por ciclo de préstamo en la fila"
+msgstr ""
 
 #: product.fornumberoflastloaninstallmentatrow
-#, fuzzy
 msgid "for # of last loan Installments at row"
-msgstr "por número de la último pago del préstamo en la fila"
+msgstr ""
 
 #: product.freq
-#, fuzzy
 msgid "Frequency of"
-msgstr "Frecuencia de"
+msgstr ""
 
 #: product.freqPostAcc
 msgid "Frequency of {0} posting to accounts."
-msgstr "Frecuencia de {0} publicado en las cuentas."
+msgstr ""
 
 #: product.freqinstpostacc
 msgid "Frequency of interest posting to accounts"
-msgstr "Frecuencia de publicación del interés en las cuentas."
+msgstr ""
 
 #: product.freqofinst
 msgid "Frequency of installments"
-msgstr "Frecuencia de las pagos"
+msgstr ""
 
 #: product.frequency
-#, fuzzy
 msgid "Frequency of "
-msgstr "Frecuencia de"
+msgstr ""
 
 #: product.glCodeFor
 #, fuzzy
 msgid "GL code for "
-msgstr "Código contable del Libro Mayor para "
+msgstr "Código del Libro Mayor para "
 
 #: product.glcodedep
 msgid "GL code for deposits"
-msgstr "Código contable del Libro Mayor para depósitos"
+msgstr ""
 
 #: product.glcodeint
+#, fuzzy
 msgctxt "product.glcodeint"
 msgid "GL code for interest"
-msgstr "Código contable del Libro Mayor para intereses"
+msgstr "Código del Libro Mayor para el interés"
 
 #: product.gracepenalty
 msgid "Grace period for penalty"
-msgstr "Periodo de gracias para la penalidad"
+msgstr ""
 
 #: product.graceperdur
 msgid "Grace period duration"
-msgstr "Duración del periodo de gracia"
+msgstr ""
 
 #: product.gracepertype
 msgid "Grace period type"
-msgstr "Tipo de periodo de gracia"
+msgstr ""
 
 #: product.groups
 msgid "Groups"
-msgstr "Grupos"
+msgstr ""
 
 #: product.inactive
 msgid "Inactive"
-msgstr "Inactivo"
+msgstr ""
 
 #: product.inclInLoanCycleCounter
 msgid "Include in {0} cycle counter."
-msgstr "Incluir en el contador de ciclo de {0}."
+msgstr ""
 
 #: product.inclin
 msgid "Include in"
-msgstr "Incluir en"
+msgstr ""
 
 #: product.inclloancyccounter
 msgid "Include in loan cycle counter"
-msgstr "Incluir en el contador de ciclo del préstamo."
+msgstr ""
 
 #: product.inf
 msgid "information"
-msgstr "información"
+msgstr ""
 
 #: product.info
 msgid "product information"
-msgstr "información del producto"
+msgstr ""
 
 #: product.installbylastloanamount
 msgid "By last loan amount"
-msgstr "por último importe del préstamo"
+msgstr ""
 
 #: product.installbyloancycle
 msgctxt "product.installbyloancycle"
 msgid "By loan Cycle"
-msgstr "Por ciclo del préstamo"
+msgstr ""
 
 #: product.installments
 msgid "installments"
-msgstr "pagos"
+msgstr ""
 
 #: product.insurance
 msgid "Insurance"
-msgstr "Seguro"
+msgstr ""
 
 #: product.intdeddis
 msgid "Interest deducted at disbursement"
-msgstr "Interés deducido al desembolso"
+msgstr ""
 
 #: product.interest
 msgid "Interest"
-msgstr "Interés"
+msgstr ""
 
 #: product.intrate
 msgid "Interest rate"
-msgstr "Tasa de interés"
+msgstr ""
 
 #: product.intratecalcpymt
 msgid "Interest calculation rule for late payments"
-msgstr "Regla de cálculo del interés para los pagos retrasados"
+msgstr ""
 
 #: product.intratetype
 msgid "Interest rate type"
-msgstr "Tipo de tasa de interés"
+msgstr ""
 
 #: product.lastloanamount
 msgid "Last Loan Amount"
-msgstr "Último importe del préstamo"
+msgstr ""
 
 #: product.latenessDays
 msgid "lateness days"
-msgstr "días de retraso"
+msgstr ""
 
 #: product.loan
 msgid "Loan"
-msgstr "Préstamo"
+msgstr ""
 
 #: product.loanProductDetails
 msgctxt "product.loanProductDetails"
 msgid "{0} product details."
-msgstr "Detalles de producto {0}."
+msgstr ""
 
 #: product.loanProductInfo
 msgctxt "product.loanProductInfo"
 msgid "{0} product information."
-msgstr "Información de producto {0}."
+msgstr ""
 
 #: product.loanaccountchanged
 msgid "account is changed to &quot;In Arrears&quot; by the system"
-msgstr "la cuenta se ha cambiado a &quot;morosa&quot; por el sistema"
+msgstr ""
 
 #: product.loanaddsuccessful
 msgid "You have successfully added a new Loan product"
-msgstr "Ha añadido con éxito un nuevo producto de préstamo"
+msgstr ""
 
 #: product.loanamount
 msgid "Loan Amount"
-msgstr "Importe del préstamo"
+msgstr ""
 
 #: product.loanamountas
-#, fuzzy
 msgid "Calculate loan amount as "
-msgstr "Calcular el importe del préstamo como"
+msgstr ""
 
 #: product.loancycleno
 msgid "Loan Cycle No."
-msgstr "Ciclo del préstamo no."
+msgstr ""
 
 #: product.loandefprd
 msgid "Define a new Loan product"
-msgstr "Definir un nuevo producto de préstamo"
+msgstr ""
 
 #: product.loanproddet
 msgid "Loan product details"
-msgstr "Detalles del producto de préstamo"
+msgstr ""
 
 #: product.loanprodinfo
 msgid "Loan product information"
-msgstr "Información del producto de préstamo"
+msgstr ""
 
 #: product.loanprodnum
 msgid "Loan Product has been assigned the system ID number"
-msgstr "Al producto de préstamo se le asignó el número de ID del sistema"
+msgstr ""
 
 #: product.loans
 msgid "Loans"
-msgstr "Préstamos"
+msgstr ""
 
 #: product.loanviewdet
 msgid "View Loan Product details now"
-msgstr "Ver detalles del producto de préstamo ahora"
+msgstr ""
 
 #: product.makechanges
 msgid "below to view details and make changes or"
-msgstr "abajo para ver los detalles y efectuar cambios o"
+msgstr ""
 
 #: product.mandamntdep
 msgid "Mandatory amount for deposit"
-msgstr "Importe obligatorio del depósito"
+msgstr ""
 
 #: product.manual
 msgid "Manual"
-msgstr "Manual"
+msgstr ""
 
 #: product.marginMoneySuccessLoan
 msgctxt "product.marginMoneySuccessLoan"
 msgid "You have successfully added a new {0} product."
-msgstr "Ha añadido un nuevo producto de {0} con éxito."
+msgstr ""
 
 #: product.marginMoneySuccessSavings
 msgctxt "product.marginMoneySuccessSavings"
 msgid "You have successfully added a new {0} product."
-msgstr "Ha añadido un nuevo producto de {0} con éxito."
+msgstr ""
 
 #: product.marginmoneysuccess
 msgid "You have successfully added a new"
-msgstr "Ha añadido con éxito un nuevo"
+msgstr ""
 
 #: product.max
 msgid "Max"
-msgstr "Máx"
+msgstr ""
 
 #: product.maxAmount
 msgid "Max {0} amount"
-msgstr "Importe máx de {0}"
+msgstr ""
 
 #: product.maxDays
 msgid "32767"
-msgstr "32767"
+msgstr ""
 
 #: product.maxRate
 msgid "Max {0} rate"
-msgstr "Máx tasa de {0}"
+msgstr ""
 
 #: product.maxamtwid
 msgid "Max amount per withdrawal"
-msgstr "Importe máx por desembolso"
+msgstr ""
 
 #: product.maxinst
-#, fuzzy
 msgid "Max # of installments"
-msgstr "Máx número de pagos"
+msgstr ""
 
 #: product.maxintrate
 msgid "Max interest rate"
-msgstr "Tipo de interés máx"
+msgstr ""
 
 #: product.maxloanamt
 msgid "Max loan amount"
-msgstr "Máx importe del préstamo"
+msgstr ""
 
 #: product.min
 msgid "Min"
-msgstr "Mín"
+msgstr ""
 
 #: product.minAmount
 msgid "Min {0} amount"
-msgstr "Mín importe de {0}"
+msgstr ""
 
 #: product.minBalForCalc
-#, fuzzy
 msgid "Minimum balance required for {0} calculation"
-msgstr "Saldo mínimo requerido para el cálculo de {0}."
+msgstr ""
 
 #: product.minRate
 msgid "Min {0} rate"
-msgstr "Mín tasa de {0}"
+msgstr ""
 
 #: product.minbalinstcalc
 msgid "Min balance required for interest rate calculation"
-msgstr "Saldo mínimo requerido para el cálculo del interés"
+msgstr ""
 
 #: product.minbalreq
 msgid "Min balance required for"
-msgstr "Saldo mínimo requerido para "
+msgstr ""
 
 #: product.mininst
-#, fuzzy
 msgid "Min # of installments"
-msgstr "Mín número de pagos"
+msgstr ""
 
 #: product.minintrate
 msgid "Min interest rate"
-msgstr "Tipo de interés mín"
+msgstr ""
 
 #: product.minloanamt
 msgid "Min loan amount"
-msgstr "Importe del préstamo mín"
+msgstr ""
 
 #: product.mix
 msgid "mix"
-msgstr "mezcla"
+msgstr ""
 
 #: product.mixdetails
 msgid "mix details"
-msgstr "detalles de la mezcla"
+msgstr ""
 
 #: product.month
 msgid "month(s)"
-msgstr "mes(es)"
+msgstr ""
 
 #: product.months
 msgid "months"
-msgstr "meses"
+msgstr ""
 
 #: product.no
 msgid "No"
-msgstr "No"
+msgstr ""
 
 #: product.notAllowedProducts
 msgid "Not allowed products"
-msgstr "Productos no permitidos"
+msgstr ""
 
 #: product.numberofinstallment
 msgid "Number of Installments"
-msgstr "Número de pagos"
+msgstr ""
 
 #: product.ofevery
 msgid "of every"
-msgstr "de cada"
-
+msgstr ""
 
 #: product.optionalclientstatus
 msgid "Select the optional status to be included in the clients status flow"
 msgstr ""
-"Seleccione el estatus opcional para incluir en el flujo de estado de los "
-"clientes"
 
 #: product.optionalgroupstatus
 msgid "Select the optional status to be included in the group status flow"
 msgstr ""
-"Seleccione el estatus opcional para incluir en el flujo de estado del grupo"
 
 #: product.optionalinsuranceaccountstatus
 msgid ""
 "Select the optional status to be included in the insurance account status "
 "flow."
 msgstr ""
-"Seleccione el estatus opcional para incluir en el flujo de estado de la "
-"cuenta de seguros"
 
 #: product.optionalloanaccountstatus
 msgid ""
 "Select the optional status to be included in the loan account status flow."
 msgstr ""
-"Seleccione el estatus opcional para incluir en el flujo de estado de la "
-"cuenta de préstamo"
 
 #: product.optionalsavingsaccountstatus
 msgid ""
 "Select the optional status to be included in the savings account status "
 "flow."
 msgstr ""
-"Seleccione el estatus opcional para incluir en el flujo de estado de la "
-"cuenta de ahorros"
 
 #: product.othersprdwillbeupdatedauto
 msgid "The others products mixes will be updated automatically."
-msgstr "Las otras mezclas de productos se actualizarán automáticamente"
+msgstr ""
 
 #: product.penalties
 msgid "Penalties"
-msgstr "Penalizaciones"
+msgstr ""
 
 #: product.penaltyrate
 msgid "Penalty rate"
-msgstr "Tasa de penalización"
+msgstr ""
 
 #: product.penaltytype
 msgid "Penalty type"
-msgstr "Tipo de penalización"
+msgstr ""
 
 #: product.perc
 msgid "%"
-msgstr "%"
+msgstr ""
 
 #: product.plsnote
 msgid "Please Note"
-msgstr "Por favor tenga en cuenta"
+msgstr ""
 
 #: product.postacc
 msgctxt "product.postacc"
 msgid "posting to accounts"
-msgstr "publicar en las cuentas"
+msgstr ""
 
 #: product.postingAccounts
 msgctxt "product.postingAccounts"
 msgid "posting to accounts"
-msgstr "publicar en las cuentas"
+msgstr ""
 
 #: product.prddetails
 msgid "product details"
-msgstr "detalles del producto"
+msgstr ""
 
 #: product.prdedit
 msgctxt "product.prdedit"
 msgid "Edit"
-msgstr "Editar"
+msgstr ""
 
 #: product.prdmixdefinedanew
 msgctxt "product.prdmixdefinedanew"
 msgid "Define a new"
-msgstr "Definir un nuevo"
+msgstr ""
 
 #: product.prdmixdetailsnow
 msgid "details now"
-msgstr "detalles ahora"
+msgstr ""
 
 #: product.prdrate
 msgid "rate"
-msgstr "tasa"
+msgstr ""
 
 #: product.preview
 msgid "Preview"
-msgstr "Vista Previa"
+msgstr ""
 
 #: product.previewLoanProductInfo
 msgctxt "product.previewLoanProductInfo"
 msgid "Preview {0} product information."
-msgstr "Vista Previa de la información de producto {0}."
+msgstr ""
 
 #: product.previewSavingsProductInfo
 msgctxt "product.previewSavingsProductInfo"
 msgid "Preview {0} product information."
-msgstr "Vista Previa de la información de producto {0}."
+msgstr ""
 
 #: product.previewSubmitSavings
 msgid ""
 "Preview the fields below. Then click Submit. Click Cancel to return to {0} "
 "Product details without submitting information."
 msgstr ""
-"Haga vista previa de los campos de abajo. Pulse Cancelar para volver a los "
-"detalles de producto de {0} sin enviar la información"
 
 #: product.previewfields
 msgid "Preview the fields below."
-msgstr "Haga vista previa de los campos de abajo."
+msgstr ""
 
 #: product.principal
 msgid "Principal"
-msgstr "Capital"
+msgstr ""
 
 #: product.prinlastinst
 msgid "Principal due on last installment"
-msgstr "Capital pendiente en la última cuota"
+msgstr ""
 
 #: product.pro
 msgid "product"
-msgstr "producto"
+msgstr ""
 
 #: product.prodcat
 msgid "Product category"
-msgstr "categoría de producto"
+msgstr ""
 
 #: product.prodinstname
 msgid "Product instance name"
-msgstr "Periodicidad del producto"
+msgstr ""
 
 #: product.prodnum
 msgid "Product category has been assigned the system ID number"
-msgstr "A la categoría de producto se le asignó el número de ID del sistema"
+msgstr ""
 
 #: product.product
 msgid "Product"
-msgstr "Producto"
+msgstr ""
 
 #: product.productAssignedId
 msgid "{0} product has been assigned the system ID number."
-msgstr "Al producto {0} se le ha asignado un número de ID del sistema"
+msgstr ""
 
 #: product.productRate
 msgid "{0} rate"
-msgstr "tasa de {0}"
+msgstr ""
 
 #: product.productType
 msgid "Product type"
-msgstr "Tipo de producto"
+msgstr ""
 
 #: product.productcatinfo
 msgid "Product category information"
-msgstr "Información de categoría de producto"
+msgstr ""
 
 #: product.productglcode
 msgid "Product GL code"
-msgstr "Código contable del producto"
+msgstr ""
 
 #: product.productinfo
 msgid "Product information"
-msgstr "Información de producto"
+msgstr ""
 
 #: product.productnotallowedto
 msgid "This/those product(s) is/are not allowed to"
-msgstr "Este/estos producto(s) no está(n) permitidos para"
+msgstr ""
 
 #: product.products
 msgid "Products"
-msgstr "Productos"
+msgstr ""
 
 #: product.producttype
 msgid "Product Type"
-msgstr "Tipo de Producto"
+msgstr ""
 
 #: product.prvloanprd
 msgid "Preview loan product information"
-msgstr "Vista previa de información de producto de préstamo"
+msgstr ""
 
 #: product.prvsavingsprd
 msgid "Preview savings product information"
-msgstr "Vista previa de información de producto de ahorro"
+msgstr ""
 
 #: product.pymttypesdeposits
 msgid "Payment type for deposits"
-msgstr "Tipo de pago para depósitos"
+msgstr ""
 
 #: product.pymttypesdisbur
 msgid "Payment types for disbursements"
-msgstr "Tipo de pago para desembolsos"
+msgstr ""
 
 #: product.pymttypesfees
 msgid "Payment types for fees"
-msgstr "Tipo de pago para comisiones"
+msgstr ""
 
 #: product.pymttypesrepay
 msgid "Payment types for repayments"
-msgstr "Tipo de pago para reembolsos"
+msgstr ""
 
 #: product.pymttypeswithdrwals
 msgid "Payment types for withdrawals"
-msgstr "Tipo de pago para disposiciones"
+msgstr ""
 
 #: product.rate
 msgid "(0 - 999 )%"
-msgstr "(0 - 999 )%"
+msgstr ""
 
 #: product.rateType
 msgid "{0} rate type"
-msgstr "Tipo de tasa de {0}"
+msgstr ""
 
 #: product.ratetype
 msgid "rate type"
-msgstr "tipo de tasa"
+msgstr ""
 
 #: product.recamtappl
 msgid "Amount Applies to"
-msgstr "El importe se aplica a"
+msgstr ""
 
 #: product.recamtdep
 msgid "Recommended Amount for Deposit"
-msgstr "Importe recomendado del depósito"
+msgstr ""
 
 #: product.recordCreationDate
 msgid "Record Creation Date"
-msgstr "Fecha de creación del registro"
+msgstr ""
 
 #: product.recur
 msgid "Recur every"
-msgstr "Repetir cada"
+msgstr ""
 
 #: product.recurdays
 msgid "If days, specify the recurrence"
-msgstr "Si días, especifique la recurrencia"
+msgstr ""
 
 #: product.recurmonths
 msgid "If months, select between the following"
-msgstr "Si meses, seleccione de entre los siguientes"
+msgstr ""
 
 #: product.recurweeks
 msgid "If weeks, select between the following"
-msgstr "Si semanas, seleccione de entre los siguientes"
+msgstr ""
 
 #: product.removenotallowed
 msgid "Remove not allowed products"
-msgstr "Eliminar los productos no permitidos"
+msgstr ""
 
 #: product.repaysch
 msgid "Repayment schedule"
-msgstr "Calendario de amortizaciones"
+msgstr ""
 
-# Not sure what &amp stands for
 #: product.review
-#, fuzzy
 msgid "Review &amp; submit"
-msgstr "Revisar &amp; enviar"
+msgstr ""
 
 #: product.sameforallinstallment
 msgid "Same for all Loans"
-msgstr "Igual para todos los préstamos"
+msgstr ""
 
 #: product.sameforallloans
 msgid "Same for all loans"
-msgstr "Igual para todos los préstamos"
+msgstr ""
 
 #: product.savingprod
 msgid "Product details now"
-msgstr "Detalles del producto ahora"
+msgstr ""
 
 #: product.savings
 msgid "Savings"
-msgstr "Ahorros"
+msgstr ""
 
 #: product.savingsAssignedTo
 msgid "{0} product has been assigned the system ID number"
-msgstr "Al producto {0} se le ha asignado un número de ID del sistema"
+msgstr ""
 
 #: product.savingsProductDetails
 msgctxt "product.savingsProductDetails"
 msgid "{0} product details."
-msgstr "Productos de detalle de {0}."
+msgstr ""
 
 #: product.savingsProductInfo
 msgctxt "product.savingsProductInfo"
 msgid "{0} product information."
-msgstr "Información de producto de {0}."
+msgstr ""
 
 #: product.savingsaccountchanged
 msgid ""
 "Accounts. The account status will be changed to &quot;On Hold&quot; by the "
 "system"
 msgstr ""
-"Cuentas. El estatus de la cuenta se cambiará a &quot;En Espera&quot; por el "
-"sistema"
 
 #: product.savingsaddsuccessful
 msgid "You have successfully added a new Savings product"
-msgstr "Ha añadido con éxito un nuevo producto de Ahorro"
+msgstr ""
 
 #: product.savingsassignedto
 msgid "has been assigned the system ID number"
-msgstr "se le ha asignado un número de ID del sistema"
+msgstr ""
 
 #: product.savingsdefinenew
 msgctxt "product.savingsdefinenew"
 msgid "Define a new"
-msgstr "Definir un nuevo"
+msgstr ""
 
 #: product.savingsdefnew
 msgid "define a new"
-msgstr "definir un nuevo"
+msgstr ""
 
 #: product.savingsdefprd
 msgid "Define a new Savings product"
-msgstr "Definir un nuevo producto de ahorro"
+msgstr ""
 
 #: product.savingsintrateperc
 msgid "(0 - 100 )%"
-msgstr "(0 - 100 )%"
+msgstr ""
 
 #: product.savingsprodnum
 msgid "Savings Product has been assigned the system ID number"
-msgstr "Al producto de ahorro se le ha asignado el número de ID del sistema"
+msgstr ""
 
 #: product.savingsview
 msgctxt "product.savingsview"
 msgid "View"
-msgstr "Ver"
+msgstr ""
 
 #: product.savingsviewdet
 msgid "View Savings Product details now"
-msgstr "Ver detalles del producto de ahorro ahora"
+msgstr ""
 
 #: product.setdormdef
 msgid "Set Dormancy Definition"
-msgstr "Establecer definición de inactividad"
+msgstr ""
 
 #: product.setlatedef
 msgid "Set Lateness Definition"
-msgstr "Establecer definición de retraso"
+msgstr ""
 
 #: product.setpencal
 msgid "Set Penalty Calculation Method"
-msgstr "Establecer método de cálculo de la penalidad"
+msgstr ""
 
 #: product.shortname
 msgid "Short name"
-msgstr "Abreviatura"
+msgstr ""
 
-# I have not translated &quot assuming it is some kind of mark for the system
 #: product.specLoanNoDaysAccountChanged
-#, fuzzy
 msgid ""
 "Specify the number of days of non-payment after which status of {0} account "
 "is changed to &quot;In Arrears&quot; by the system"
 msgstr ""
-"Especifique el número de días de no-pago después de los cuales el estatus de "
-"la cuenta {0} se cambia a &quot;moroso&quot; por el sistema"
 
 #: product.specSavingsDormDaysAccountChanged
 msgid ""
 "Specify the number of days to define &quot;Dormancy&quot; in {0} Accounts. "
 "The account status will be changed to &quot;On Hold&quot; by the system"
 msgstr ""
-"Especifique el número de días para definir &quot;Inactividad&quot; en las "
-"cuentas {0}. El estatus de la cuenta se cambiará a &quot;En pausa&quot; por "
-"el sistema."
 
 #: product.specacceptpymtinsurance
 msgid "Specify the accepted payment types for insurance products"
-msgstr "Especifique los tipos de pago aceptados para productos de seguros"
+msgstr ""
 
 #: product.specacceptpymtloans
 msgid "Specify the accepted payment types for loan products"
-msgstr "Especifique los tipos de pago aceptados para productos de préstamo"
+msgstr ""
 
 #: product.specacceptpymttypescgc
 msgid "Specify the accepted payment types for clients/group/center fees"
 msgstr ""
-"Especifique los tipos de pago aceptados para comisiones de "
-"clientes/grupo/centro"
 
 #: product.specloannodays
 msgid "Specify the number of days of non-payment after which status of"
-msgstr "Especifique el número de días de no-pago tras los cuales el estatus de"
+msgstr ""
 
 #: product.specpencal
 msgid "Specify the penalty calculation method"
-msgstr "Especifique el método de cálculo de la penalización"
+msgstr ""
 
 #: product.specpymttypessavings
 msgid "Specify the accepted payment types for savings products"
-msgstr "Especifique el tipo de pago aceptado para los productos de ahorro"
+msgstr ""
 
 #: product.specsavdormdays
 msgid "Specify the number of days to define &quot;Dormancy&quot; in"
-msgstr "Especifique el número de días para definir &quot;Inactividad&quot; en"
+msgstr ""
 
 #: product.srcfunds
 msgid "Sources of funds"
-msgstr "Fuentes de Fondos"
+msgstr ""
 
 #: product.startdate
 msgid "Start date"
-msgstr "Fecha de inicio"
+msgstr ""
 
 #: product.status
 msgctxt "product.status"
 msgid "Status"
-msgstr "Estatus"
+msgstr ""
 
 #: product.submitforapproval
 msgid "Submit for approval"
-msgstr "Enviar para aprobación"
+msgstr ""
 
 #: product.successfullydefinedanew
 msgid "You have successfully defined a new"
-msgstr "Ha definido con éxito un nuevo"
+msgstr ""
 
 #: product.tardepwidrest
 msgid "Targeted Deposits and Withdrawal Restrictions"
-msgstr "Depósitos Objetivo y Restricciones de Retiros"
+msgstr ""
 
 #: product.the
 msgid "The"
-msgstr "El"
+msgstr ""
 
 #: product.theday
 msgid "Day"
-msgstr "Día"
+msgstr ""
 
 #: product.timePerCalc
 msgid "Time period for {0} calculation."
-msgstr "Periodo de tiempo para el cálculo de {0}."
+msgstr ""
 
 #: product.timePeriod
-#, fuzzy
 msgid "Time period for "
-msgstr "Periodo de tiempo para"
+msgstr ""
 
 #: product.timeper
-#, fuzzy
 msgid "Time period for"
-msgstr "Periodo de tiempo para"
+msgstr ""
 
 #: product.timeperinstcalc
 msgid "Time period for interest calculation"
-msgstr "Periodo de tiempo para el cálculo del interés"
+msgstr ""
 
 #: product.tocontinueclickonsubmit
 msgid "If you want to continue click on submit to save this mix."
-msgstr "Si desea continuar, pulse enviar para grabar esta mezcla."
+msgstr ""
 
 #: product.type
 msgid "type"
-msgstr "tipo"
+msgstr ""
 
 #: product.typeofdep
 msgid "Type of deposits"
-msgstr "Tipo de depósitos"
+msgstr ""
 
 #: product.view
 msgctxt "product.view"
 msgid "View"
-msgstr "Ver"
+msgstr ""
 
 #: product.viewLoanDetails
 msgctxt "product.viewLoanDetails"
 msgid "View {0} product details now."
-msgstr "Ver detalle de productos {0} ahora."
+msgstr ""
 
 #: product.viewLoanProducts
 msgctxt "product.viewLoanProducts"
 msgid "View {0} products"
-msgstr "Ver productos {0}"
+msgstr ""
 
 #: product.viewSavingsDetails
 msgctxt "product.viewSavingsDetails"
 msgid "View {0} product details now."
-msgstr "Ver detalle de productos {0} ahora."
+msgstr ""
 
 #: product.viewSavingsProducts
 msgctxt "product.viewSavingsProducts"
 msgid "View {0} products"
-msgstr "Ver productos {0}"
+msgstr ""
 
 #: product.viewacceptpymttypes
 msgid "View Accepted Payment Types"
-msgstr "Ver tipos de pago aceptados"
+msgstr ""
 
 #: product.viewchangelog
 msgid "View Change Log"
-msgstr "Ver registro de cambios"
+msgstr ""
 
 #: product.viewdet
 msgid "View category details now"
-msgstr "Ver detalles de categoría ahora"
+msgstr ""
 
 #: product.viewlatedef
 msgid "View Lateness/Dormancy Definition"
-msgstr "Ver definición de retraso/inactividad"
+msgstr ""
 
 #: product.viewloanprd
 msgid "View Loan Products"
-msgstr "Ver Productos de Préstamo"
+msgstr ""
 
 #: product.viewprdcat
 msgid "View Product Categories"
-msgstr "Ver Categorías de Producto"
+msgstr ""
 
 #: product.viewprdmix
 msgid "View Product Mix"
-msgstr "Ver Mix de Productos"
+msgstr ""
 
 #: product.viewsavingsprd
 msgid "View Savings Products"
-msgstr "Ver Productos de Ahorro"
+msgstr ""
 
 #: product.week
 msgid "week(s)"
-msgstr "semana(s)"
+msgstr ""
 
 #: product.weeks
 msgid "weeks"
-msgstr "semanas"
+msgstr ""
 
 #: product.withoutsubmit
 msgid "Product details without submitting information."
-msgstr "detalles del producto sin enviar la información."
+msgstr ""
 
 #: product.yes
 msgid "Yes"
-msgstr "Sí "
+msgstr ""
 
 #: produt.edit
 msgctxt "produt.edit"
 msgid "Edit"
-msgstr "Editar"
+msgstr ""

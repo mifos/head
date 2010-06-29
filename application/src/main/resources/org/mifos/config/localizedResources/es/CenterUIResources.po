@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2010-02-24 11:15-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,7 +110,8 @@ msgid "Amount Overdue"
 msgstr "Importe por pagar"
 
 #: Center.ApplyAdjustment
-msgid "Apply adjustment "
+#, fuzzy
+msgid "Apply adjustment      "
 msgstr "Aplicar ajuste"
 
 #: Center.ApplyCharges
@@ -928,9 +929,9 @@ msgid ""
 "loan officer/has been transferred to a new {0}. Please try again with a "
 "different Loan Officer.</li>"
 msgstr ""
-"<li>El Oficial de Crédito seleccionado se encuentra inactivo/ha cambiado "
-"de cargo/se ha transferido a un nuevo {0}. Por favor inténtelo de nuevo con "
-"un  Oficial de Crédito diferente. </li>"
+"<li>El Oficial de Crédito seleccionado se encuentra inactivo/ha cambiado de "
+"cargo/se ha transferido a un nuevo {0}. Por favor inténtelo de nuevo con un "
+" Oficial de Crédito diferente. </li>"
 
 #: Customer.MeetingRequired
 msgid "<li>Please select Meeting schedule to apply a fee.</li>"
@@ -1077,8 +1078,9 @@ msgstr "<li>Por favor especifique la información adicional requerida.</li>"
 msgid ""
 "<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field.</li>"
-msgstr "<li>Por favor ingrese un formato de fecha valido (formato dd/mm/yyyy) "
-"en la informacion adicional.</li>"
+msgstr ""
+"<li>Por favor ingrese un formato de fecha valido (formato dd/mm/yyyy) en la "
+"informacion adicional.</li>"
 
 #: errors.Customer.specifyFeeAmount
 msgctxt "errors.Customer.specifyFeeAmount"
@@ -1130,8 +1132,8 @@ msgid ""
 "<li>This is an invalid entry. Please specify only alphanumeric characters "
 "for this field.</li>"
 msgstr ""
-"<li>Esta informacion no es válida. Por favor use sólo caracteres alfanuméricos "
-"para este campo.</li>"
+"<li>Esta informacion no es válida. Por favor use sólo caracteres "
+"alfanuméricos para este campo.</li>"
 
 #: errors.maxlength
 msgid "<li> The maximum length for this field is {0} characters.</li>"

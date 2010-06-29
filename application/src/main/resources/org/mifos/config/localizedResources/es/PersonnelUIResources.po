@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2009-08-08 17:25-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -640,11 +640,14 @@ msgstr ""
 
 #: error.customfield
 msgid "Please specify required additional information for '{0}' field."
-msgstr "Por favor especifique la informacion adicional requerida para el campo '{0}'."
+msgstr ""
+"Por favor especifique la informacion adicional requerida para el campo "
+"'{0}'."
 
 #: error.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr "Por favor ingrese una fecha valida (format dd/mm/yyyy) en el campo '{0}'."
+msgstr ""
+"Por favor ingrese una fecha valida (format dd/mm/yyyy) en el campo '{0}'."
 
 #: error.dob
 msgid "Please specify date of birth."

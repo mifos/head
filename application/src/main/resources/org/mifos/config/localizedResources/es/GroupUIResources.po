@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-06-29 14:58-0700\n"
 "PO-Revision-Date: 2010-01-25 17:08-0800\n"
 "Last-Translator: Kay Chau <kchau@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,7 +426,8 @@ msgstr "Luego pulse en Vista Previa."
 msgid ""
 "Click Cancel to return to Clients & Accounts without submitting information."
 msgstr ""
-"Pulse Cancelar para volver a Clientes y Cuentas sin enviar la incapacitación."
+"Pulse Cancelar para volver a Clientes y Cuentas sin enviar la "
+"incapacitación."
 
 #: Group.createpagehead4
 msgid "Fields marked with an asterisk are required."
@@ -485,7 +486,8 @@ msgstr "Pulse Cancelar para volver a"
 #: Group.editMag2ReturnToDetail
 msgid "Click Cancel to return to {0} Details without submitting information."
 msgstr ""
-"Pulse Cancelar para volver a los Detalles de {0} sin enviar la incapacitación."
+"Pulse Cancelar para volver a los Detalles de {0} sin enviar la "
+"incapacitación."
 
 #: Group.editMag2ReturnToEdit
 msgid "Click Cancel to return to Edit {0} Membership."
@@ -529,7 +531,8 @@ msgstr "Editar agenda de reunión"
 
 #: Group.editpreviewMsg
 msgid "Click Confirm if you are satisfied or click Edit {0} information."
-msgstr "Pulse Confirmar si está satisfecho o pulse Editar incapacitación de {0}."
+msgstr ""
+"Pulse Confirmar si está satisfecho o pulse Editar incapacitación de {0}."
 
 #: Group.enter
 msgid "Enter"
@@ -1169,8 +1172,8 @@ msgid ""
 "Meeting frequency and fee recurrence do not match. Please select only valid "
 "fee types."
 msgstr ""
-"La frecuencia de las reuniones y la periodicidad de la cuota no "
-"coinciden. por favor seleccione sólo tipos de comisiones válidas."
+"La frecuencia de las reuniones y la periodicidad de la cuota no coinciden. "
+"por favor seleccione sólo tipos de comisiones válidas."
 
 #: errors.Customer.hasActiveAccount
 msgctxt "errors.Customer.hasActiveAccount"
@@ -1234,8 +1237,9 @@ msgstr "Por favor especifique la incapacitación adicional requerida."
 msgid ""
 "Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field."
-msgstr "Ingrese una fecha valida (formato dd/mm/yyyy) en el campo de "
-"informacion adicional."
+msgstr ""
+"Ingrese una fecha valida (formato dd/mm/yyyy) en el campo de informacion "
+"adicional."
 
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."
@@ -1403,8 +1407,8 @@ msgid ""
 "Either the Loan officer assigned is in Inactive State or changed to Non-Loan "
 "Officer or might have been transferred to a different {0}."
 msgstr ""
-"El Oficial de Crédito asignado está en Estado Inactivo, o se ha "
-"cabiado el estatus del Oficial de Crédito, o podría haberse trasferido a un {0} "
+"El Oficial de Crédito asignado está en Estado Inactivo, o se ha cabiado el "
+"estatus del Oficial de Crédito, o podría haberse trasferido a un {0} "
 "diferente."
 
 #: errors.loanofficerrequired
@@ -1494,15 +1498,13 @@ msgstr ""
 msgctxt "errors.transferex_activeloans"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
-msgstr ""
-"No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
+msgstr "No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
 
 #: errors.transferex_clienthasactiveloan
 msgctxt "errors.transferex_clienthasactiveloan"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
-msgstr ""
-"No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
+msgstr "No se puede cambiar la afiliación ya que hay cuentas Activas presentes."
 
 #: errors.transferex_clienttransferfailed
 msgid ""
