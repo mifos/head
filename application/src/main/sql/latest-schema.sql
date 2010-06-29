@@ -4327,13 +4327,13 @@ create table question_group(
 )engine=innodb character set utf8;
 
 create table events (
-    id integer auto_increment not null,
-    event_name varchar(50) not null,
+    id integer not null,
+    name varchar(50) not null,
     primary key (id)
 )engine=innodb character set utf8;
 
-create table entity_events (
-    id integer auto_increment not null,
+create table event_sources (
+    id integer not null,
     entity_type_id  smallint not null,
     event_id integer not null,
     description varchar(200) not null,
@@ -4342,11 +4342,30 @@ create table entity_events (
     foreign key (event_id) references events(id)
 )engine=innodb character set utf8;
 
-create table question_group_entity_events(
+create table question_group_event_sources(
     id integer auto_increment not null,
     question_group_id integer not null,
-    entity_event_id integer not null,
+    event_source_id integer not null,
     primary key (id),
     foreign key (question_group_id) references question_group(id),
-    foreign key (entity_event_id) references entity_events(id)
+    foreign key (event_source_id) references event_sources(id)
+)engine=innodb character set utf8;
+
+create table sections(
+    id integer auto_increment not null,
+    question_group_id integer not null,
+    name varchar(50) not null,
+    sequence_number integer not null,
+    primary key (id),
+    foreign key (question_group_id) references question_group(id)
+)engine=innodb character set utf8;
+
+create table sections_questions(
+    id integer auto_increment not null,
+    section_id integer not null,
+    question_id integer not null,
+    is_required tinyint default 0,
+    primary key (id),
+    foreign key (section_id) references sections(id),
+    foreign key (question_id) references questions(question_id)
 )engine=innodb character set utf8;

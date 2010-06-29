@@ -20,32 +20,23 @@
 
 package org.mifos.framework.persistence;
 
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.mifos.application.master.persistence.Upgrade213;
-import org.mifos.application.master.persistence.Upgrade223;
-import org.mifos.application.master.persistence.Upgrade225;
-import org.mifos.application.master.persistence.Upgrade237;
-import org.mifos.application.master.persistence.Upgrade238;
-import org.mifos.application.master.persistence.Upgrade240;
+import org.mifos.application.master.persistence.*;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.persistence.AddReport;
 import org.mifos.security.AddActivity;
 import org.mifos.security.util.SecurityConstants;
 
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+
 public class DatabaseVersionPersistence {
 
-    public static final int APPLICATION_VERSION = 259;
+    public static final int APPLICATION_VERSION = 260;
     public static final int LATEST_CHECKPOINT_VERSION = 212;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
