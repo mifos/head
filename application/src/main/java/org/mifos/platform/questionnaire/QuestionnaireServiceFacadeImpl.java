@@ -24,7 +24,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+import org.mifos.ui.core.controller.QuestionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -64,8 +64,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException {
-        questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(questionGroupForm.getTitle()));
+    public void createQuestionGroup(QuestionGroup questionGroup) throws ApplicationException {
+        questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(questionGroup.getTitle()));
     }
 
     @Override
@@ -91,12 +91,12 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public List<QuestionGroupForm> getAllQuestionGroups() {
+    public List<QuestionGroup> getAllQuestionGroups() {
         return mapToQuestionGroups(questionnaireService.getAllQuestionGroups());
     }
 
     @Override
-    public QuestionGroupForm getQuestionGroup(int questionGroupId) throws ApplicationException {
+    public QuestionGroup getQuestionGroup(int questionGroupId) throws ApplicationException {
         return mapToQuestionGroup(questionnaireService.getQuestionGroup(questionGroupId));
     }
 
@@ -110,20 +110,20 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return questionnaireService.getAllEventSources();
     }
 
-    private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
-        List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
+    private List<QuestionGroup> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
+        List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            QuestionGroupForm questionGroupForm = mapToQuestionGroup(questionGroupDetail);
-            questionGroupForms.add(questionGroupForm);
+            QuestionGroup questionGroup = mapToQuestionGroup(questionGroupDetail);
+            questionGroups.add(questionGroup);
         }
-        return questionGroupForms;
+        return questionGroups;
     }
 
-    private QuestionGroupForm mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setId(questionGroupDetail.getId().toString());
-        questionGroupForm.setTitle(questionGroupDetail.getTitle());
-        return questionGroupForm;
+    private QuestionGroup mapToQuestionGroup(QuestionGroupDetail questionGroupDetail) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(questionGroupDetail.getId().toString());
+        questionGroup.setTitle(questionGroupDetail.getTitle());
+        return questionGroup;
     }
 
     private void populateStringToQuestionTypeMap() {

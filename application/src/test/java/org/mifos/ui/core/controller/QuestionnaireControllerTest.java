@@ -164,17 +164,17 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testCreateQuestionGroupSuccess() throws Exception {
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm("   " + TITLE + " ");
-        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        QuestionGroup questionGroup = getQuestionGroupForm("   " + TITLE + " ");
+        String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("success"));
         verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupFormTitleMatcher(TITLE)));
     }
 
     @Test
     public void testCreateQuestionGroupForFailureWhenQuestionGroupTitleNotProvided() throws Exception {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
+        QuestionGroup questionGroup = new QuestionGroup();
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is(notNullValue()));
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
@@ -184,12 +184,12 @@ public class QuestionnaireControllerTest {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionGroupFailure() throws Exception {
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
+        QuestionGroup questionGroup = getQuestionGroupForm(TITLE);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupForm>anyObject());
-        String result = questionnaireController.defineQuestionGroup(questionGroupForm, requestContext);
+        doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
+        String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("failure"));
-        verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupForm>anyObject());
+        verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.serivce.failure")));
     }
@@ -212,11 +212,11 @@ public class QuestionnaireControllerTest {
         verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupFormMatcher(getQuestionGroupForm("1", "title1"), getQuestionGroupForm("2", "title2"))));
     }
 
-    private QuestionGroupForm getQuestionGroupForm(String id, String title) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setId(id);
-        questionGroupForm.setTitle(title);
-        return questionGroupForm;
+    private QuestionGroup getQuestionGroupForm(String id, String title) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(id);
+        questionGroup.setTitle(title);
+        return questionGroup;
     }
 
     @Test
@@ -268,8 +268,8 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm(questionGroupId, TITLE);
-        when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroupForm);
+        QuestionGroup questionGroup = getQuestionGroupForm(questionGroupId, TITLE);
+        when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroup);
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroupDetail"));
@@ -278,11 +278,11 @@ public class QuestionnaireControllerTest {
         verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupFormMatcher(getQuestionGroupForm(questionGroupId, TITLE))));
     }
 
-    private QuestionGroupForm getQuestionGroupForm(int questionGroupId, String title) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setId(Integer.toString(questionGroupId));
-        questionGroupForm.setTitle(title);
-        return questionGroupForm;
+    private QuestionGroup getQuestionGroupForm(int questionGroupId, String title) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(Integer.toString(questionGroupId));
+        questionGroup.setTitle(title);
+        return questionGroup;
     }
 
     @Test
@@ -324,10 +324,10 @@ public class QuestionnaireControllerTest {
         return questionForm;
     }
 
-    private QuestionGroupForm getQuestionGroupForm(String title) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setTitle(title);
-        return questionGroupForm;
+    private QuestionGroup getQuestionGroupForm(String title) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(title);
+        return questionGroup;
     }
 
     private Question getQuestion(String id, String title, String type) {
@@ -405,26 +405,26 @@ public class QuestionnaireControllerTest {
         }
     }
 
-    private class QuestionGroupFormMatcher extends ArgumentMatcher<QuestionGroupForm> {
-        private QuestionGroupForm questionGroupForm;
+    private class QuestionGroupFormMatcher extends ArgumentMatcher<QuestionGroup> {
+        private QuestionGroup questionGroup;
 
-        public QuestionGroupFormMatcher(QuestionGroupForm questionGroupForm) {
-            this.questionGroupForm = questionGroupForm;
+        public QuestionGroupFormMatcher(QuestionGroup questionGroup) {
+            this.questionGroup = questionGroup;
         }
 
         @Override
         public boolean matches(Object argument) {
-            if (argument instanceof QuestionGroupForm) {
-                QuestionGroupForm questionGroupForm = (QuestionGroupForm) argument;
-                return (equalsIgnoreCase(this.questionGroupForm.getTitle(), questionGroupForm.getTitle())
-                        && equalsIgnoreCase(this.questionGroupForm.getId(), questionGroupForm.getId())
+            if (argument instanceof QuestionGroup) {
+                QuestionGroup questionGroup = (QuestionGroup) argument;
+                return (equalsIgnoreCase(this.questionGroup.getTitle(), questionGroup.getTitle())
+                        && equalsIgnoreCase(this.questionGroup.getId(), questionGroup.getId())
                 );
             }
             return false;
         }
     }
 
-    private class QuestionGroupFormTitleMatcher extends ArgumentMatcher<QuestionGroupForm> {
+    private class QuestionGroupFormTitleMatcher extends ArgumentMatcher<QuestionGroup> {
         private String title;
 
         public QuestionGroupFormTitleMatcher(String title) {
@@ -433,19 +433,19 @@ public class QuestionnaireControllerTest {
 
         @Override
         public boolean matches(Object argument) {
-            if (argument instanceof QuestionGroupForm) {
-                QuestionGroupForm questionGroupForm = (QuestionGroupForm) argument;
-                return equalsIgnoreCase(this.title, questionGroupForm.getTitle());
+            if (argument instanceof QuestionGroup) {
+                QuestionGroup questionGroup = (QuestionGroup) argument;
+                return equalsIgnoreCase(this.title, questionGroup.getTitle());
             }
             return false;
         }
     }
 
     private class ListOfQuestionGroupFormMatcher extends ArgumentMatcher<List> {
-        private QuestionGroupForm[] questionGroupForms;
+        private QuestionGroup[] questionGroups;
 
-        public ListOfQuestionGroupFormMatcher(QuestionGroupForm... questionGroupForms) {
-            this.questionGroupForms = questionGroupForms;
+        public ListOfQuestionGroupFormMatcher(QuestionGroup... questionGroups) {
+            this.questionGroups = questionGroups;
         }
 
         @Override
@@ -454,10 +454,10 @@ public class QuestionnaireControllerTest {
                 List questionGroupForms = (List) argument;
                 for (int i = 0, questionGroupFormsSize = questionGroupForms.size(); i < questionGroupFormsSize; i++) {
                     Object obj = questionGroupForms.get(i);
-                    if (obj instanceof QuestionGroupForm) {
-                        QuestionGroupForm questionGroupForm = (QuestionGroupForm) obj;
-                        if (!(equalsIgnoreCase(questionGroupForm.getTitle(), this.questionGroupForms[i].getTitle())
-                                && equalsIgnoreCase(questionGroupForm.getId(), this.questionGroupForms[i].getId())
+                    if (obj instanceof QuestionGroup) {
+                        QuestionGroup questionGroup = (QuestionGroup) obj;
+                        if (!(equalsIgnoreCase(questionGroup.getTitle(), this.questionGroups[i].getTitle())
+                                && equalsIgnoreCase(questionGroup.getId(), this.questionGroups[i].getId())
                         )) return false;
                     } else {
                         return false;

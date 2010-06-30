@@ -67,11 +67,11 @@ public class QuestionnaireController {
         return "success";
     }
 
-    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if (questionGroupFormHasErrors(questionGroupForm, requestContext)) return "failure";
+    public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
+        if (questionGroupHasErrors(questionGroup, requestContext)) return "failure";
         try {
-            questionGroupForm.trimTitle();
-            questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
+            questionGroup.trimTitle();
+            questionnaireServiceFacade.createQuestionGroup(questionGroup);
         } catch (ApplicationException e) {
             constructAndLogSystemError(requestContext, e);
             return "failure";
@@ -98,8 +98,8 @@ public class QuestionnaireController {
         requestContext.getMessageContext().addMessage(messageResolver);
     }
 
-    private boolean questionGroupFormHasErrors(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if (isInvalidTitle(questionGroupForm.getTitle())) {
+    private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
+        if (isInvalidTitle(questionGroup.getTitle())) {
             constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
             return true;
         }
@@ -137,9 +137,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroupForm questionGroupForm = questionnaireServiceFacade.
+                QuestionGroup questionGroup = questionnaireServiceFacade.
                         getQuestionGroup(Integer.valueOf(questionGroupId));
-                model.addAttribute("questionGroupDetail", questionGroupForm);
+                model.addAttribute("questionGroupDetail", questionGroup);
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);

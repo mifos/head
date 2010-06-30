@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 
-public class QuestionGroupForm implements Serializable {
+public class QuestionGroup implements Serializable {
     private static final long serialVersionUID = 9142463851744584305L;
     private String title;
 

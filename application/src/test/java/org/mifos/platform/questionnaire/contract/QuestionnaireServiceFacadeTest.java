@@ -30,7 +30,7 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+import org.mifos.ui.core.controller.QuestionGroup;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -62,8 +62,8 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
-        questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
+        QuestionGroup questionGroup = getQuestionGroup(TITLE);
+        questionnaireServiceFacade.createQuestionGroup(questionGroup);
         verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE)));
     }
 
@@ -95,12 +95,12 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetAllQuestionGroups() {
         when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail(1,"title1"), new QuestionGroupDetail(2,"title2")));
-        List<QuestionGroupForm> questionGroupForm = questionnaireServiceFacade.getAllQuestionGroups();
-        assertNotNull(questionGroupForm);
-        assertThat(questionGroupForm.get(0).getTitle(), is("title1"));
-        assertThat(questionGroupForm.get(0).getId(), is("1"));
-        assertThat(questionGroupForm.get(1).getTitle(), is("title2"));
-        assertThat(questionGroupForm.get(1).getId(), is("2"));
+        List<QuestionGroup> questionGroup = questionnaireServiceFacade.getAllQuestionGroups();
+        assertNotNull(questionGroup);
+        assertThat(questionGroup.get(0).getTitle(), is("title1"));
+        assertThat(questionGroup.get(0).getId(), is("1"));
+        assertThat(questionGroup.get(1).getTitle(), is("title2"));
+        assertThat(questionGroup.get(1).getId(), is("2"));
         verify(questionnaireService).getAllQuestionGroups();
     }
 
@@ -109,9 +109,9 @@ public class QuestionnaireServiceFacadeTest {
         int questionGroupId = 1;
         String title = "Title";
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(title));
-        QuestionGroupForm questionGroupForm = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
-        assertNotNull("Question group should not be null",questionGroupForm);
-        assertThat(questionGroupForm.getTitle(), is(title));
+        QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+        assertNotNull("Question group should not be null", questionGroup);
+        assertThat(questionGroup.getTitle(), is(title));
     }
     
     @Test
@@ -177,10 +177,10 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
-    private QuestionGroupForm getQuestionGroupForm(String title) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setTitle(title);
-        return questionGroupForm;
+    private QuestionGroup getQuestionGroup(String title) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(title);
+        return questionGroup;
     }
 
     private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
