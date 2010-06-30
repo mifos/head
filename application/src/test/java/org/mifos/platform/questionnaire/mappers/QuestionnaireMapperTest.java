@@ -25,8 +25,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
+import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.EventEntity;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
+import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -116,6 +120,28 @@ public class QuestionnaireMapperTest {
         for (int i = 0; i < countOfQuestions; i++) {
             assertThat(questionGroupDetails.get(i).getTitle(), is(TITLE + i));
         }
+    }
+
+    @Test
+    public void shouldMapToEventSources() {
+        List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
+        List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
+        assertThat(eventSources, is(not(nullValue())));
+        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
+    }
+
+    private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {
+        List<EventSourceEntity> events = new ArrayList<EventSourceEntity>();
+        EventSourceEntity eventSourceEntity = new EventSourceEntity();
+        eventSourceEntity.setDescription(description);
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setName(event);
+        eventSourceEntity.setEvent(eventEntity);
+        EntityMaster entityMaster = new EntityMaster();
+        entityMaster.setEntityType(source);
+        eventSourceEntity.setSource(entityMaster);
+        events.add(eventSourceEntity);
+        return events;
     }
 
     private QuestionGroup getQuestionGroup(String title) {

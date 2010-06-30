@@ -59,6 +59,9 @@
                 <value>org.mifos.accounts.financial.business.GLCodeEntity</value>
                 <value>org.mifos.application.master.business.LookUpEntity</value>
                 <value>org.mifos.application.master.business.CountryEntity</value>
+                <value>org.mifos.framework.components.fieldConfiguration.business.EntityMaster</value>
+                <value>org.mifos.platform.questionnaire.domain.EventEntity</value>
+                <value>org.mifos.platform.questionnaire.domain.EventSourceEntity</value>
             </list>
         </property>
 

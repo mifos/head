@@ -30,6 +30,7 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,6 +39,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -178,6 +180,15 @@ public class QuestionnaireServiceIntegrationTest {
         defineQuestion(questionTitle, DATE);
         result = questionnaireService.isDuplicateQuestion(new QuestionDefinition(questionTitle, FREETEXT));
         assertThat(result, is(true));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldRetrieveAllEventSources() {
+        List<EventSource> eventSources = questionnaireService.getAllEventSources();
+        assertNotNull(eventSources);
+        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
+        assertThat(eventSources, new HasThisKindOfEvent("View", "Client", "View Client"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {

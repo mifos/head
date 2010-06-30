@@ -24,6 +24,7 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 
@@ -89,6 +90,20 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
             questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle()));
         }
         return questionGroupDetails;
+    }
+
+    @Override
+    public List<EventSource> mapToEventSources(List<EventSourceEntity> eventSourceEntities) {
+        List<EventSource> eventSources = new ArrayList<EventSource>();
+        for (EventSourceEntity eventSourceEntity : eventSourceEntities) {
+            eventSources.add(mapEventSource(eventSourceEntity));
+        }
+        return eventSources;
+    }
+
+    private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {
+        return new EventSource(eventSourceEntity.getSource().getEntityType(),
+                eventSourceEntity.getEvent().getName(), eventSourceEntity.getDescription());
     }
 
     private QuestionType mapToQuestionType(AnswerType answerType) {

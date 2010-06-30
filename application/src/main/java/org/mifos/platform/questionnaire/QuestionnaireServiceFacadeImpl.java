@@ -105,6 +105,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         return mapToQuestion(questionnaireService.getQuestion(questionId));
     }
 
+    @Override
+    public List<EventSource> getAllEventSources() {
+        return questionnaireService.getAllEventSources();
+    }
+
     private List<QuestionGroupForm> mapToQuestionGroups(List<QuestionGroupDetail> questionGroupDetails) {
         List<QuestionGroupForm> questionGroupForms = new ArrayList<QuestionGroupForm>();
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {

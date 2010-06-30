@@ -18,26 +18,38 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.contract;
+package org.mifos.platform.questionnaire.domain;
 
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.business.AbstractEntity;
 
-import java.util.List;
+import javax.persistence.*;
 
-public interface QuestionnaireService {
-    QuestionDetail defineQuestion(QuestionDefinition questionDefinition) throws ApplicationException;
+@Entity
+@Table(name = "events")
+public class EventEntity extends AbstractEntity {
+    private static final long serialVersionUID = -3109216856965450935L;
 
-    List<QuestionDetail> getAllQuestions();
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Short id;
 
-    QuestionGroupDetail defineQuestionGroup(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException;
+    @Column(name = "name")
+    private String name;
 
-    List<QuestionGroupDetail> getAllQuestionGroups();
+    public Short getId() {
+        return id;
+    }
 
-    boolean isDuplicateQuestion(QuestionDefinition questionDefinition);
+    public void setId(Short id) {
+        this.id = id;
+    }
 
-    QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException;
+    public String getName() {
+        return name;
+    }
 
-    QuestionDetail getQuestion(int questionId) throws ApplicationException;
-
-    List<EventSource> getAllEventSources();
+    public void setName(String name) {
+        this.name = name;
+    }
 }

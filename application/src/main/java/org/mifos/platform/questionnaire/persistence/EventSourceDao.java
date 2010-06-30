@@ -18,27 +18,10 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.mappers;
+package org.mifos.platform.questionnaire.persistence;
 
-import org.mifos.customers.surveys.business.Question;
-import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
 
-import java.util.List;
-
-public interface QuestionnaireMapper {
-    List<QuestionDetail> mapToQuestionDetails(List<Question> questions);
-
-    QuestionDetail mapToQuestionDetail(Question question);
-
-    Question mapToQuestion(QuestionDefinition questionDefinition);
-
-    QuestionGroup mapToQuestionGroup(QuestionGroupDefinition questionGroupDefinition);
-
-    QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup);
-
-    List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups);
-
-    List<EventSource> mapToEventSources(List<EventSourceEntity> eventSourceEntities);
+public interface EventSourceDao extends GenericDao<EventSourceEntity, Integer> {
 }

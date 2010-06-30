@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
+import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroupForm;
 import org.mockito.ArgumentMatcher;
@@ -40,8 +41,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -135,6 +135,7 @@ public class QuestionnaireServiceFacadeTest {
         assertNotNull("Question group should not be null",question);
         assertThat(question.getTitle(), is(title));
         assertThat(question.getType(), is("Number"));
+        verify(questionnaireService).getQuestion(questionId);
     }
 
     @Test
@@ -147,6 +148,26 @@ public class QuestionnaireServiceFacadeTest {
             verify(questionnaireService,times(1)).getQuestion(questionId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
+    }
+
+    @Test
+    public void testRetrieveEventSources() {
+        List<EventSource> events = getEvents(makeEvent("Create", "Client", "Create Client"), makeEvent("View", "Client", "View Client"));
+        when(questionnaireService.getAllEventSources()).thenReturn(events);
+        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
+        assertNotNull(eventSources);
+        assertTrue(eventSources.size() == 2);
+        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
+        assertThat(eventSources, new HasThisKindOfEvent("View", "Client", "View Client"));
+        verify(questionnaireService).getAllEventSources();
+    }
+
+    private List<EventSource> getEvents(EventSource... event) {
+        return Arrays.asList(event);
+    }
+
+    private EventSource makeEvent(String event, String source, String description) {
+        return new EventSource(source, event, description);
     }
 
     private Question getQuestion(String title, String type) {
@@ -200,4 +221,5 @@ public class QuestionnaireServiceFacadeTest {
             return false;
         }
     }
+
 }

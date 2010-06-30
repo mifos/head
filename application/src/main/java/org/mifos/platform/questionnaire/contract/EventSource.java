@@ -20,26 +20,26 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+public class EventSource {
+    private String source;
+    private String event;
+    private String desciption;
 
-import java.util.List;
+    public EventSource(String source, String event, String desciption) {
+        this.source = source;
+        this.event = event;
+        this.desciption = desciption;
+    }
 
-public interface QuestionnaireServiceFacade {
-    void createQuestions(List<Question> questions) throws ApplicationException;
+    public String getSource() {
+        return source;
+    }
 
-    boolean isDuplicateQuestion(String title);
+    public String getEvent() {
+        return event;
+    }
 
-    void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException;
-
-    List<Question> getAllQuestions();
-
-    List<QuestionGroupForm> getAllQuestionGroups();
-
-    QuestionGroupForm getQuestionGroup(int questionGroupId) throws ApplicationException;
-
-    Question getQuestion(int questionId) throws ApplicationException;
-
-    List<EventSource> getAllEventSources();
+    public String getDesciption() {
+        return desciption;
+    }
 }
