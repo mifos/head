@@ -25,6 +25,19 @@ import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 
 import javax.persistence.*;
 
+@NamedQueries( {
+        @NamedQuery(
+                name = "EventSourceEntity.retrieveCountByEventAndSource",
+                query = "select count(*) from EventSourceEntity eventSource where " +
+                        "eventSource.event.name = ? and eventSource.source.entityType = ?"
+        ),
+        @NamedQuery(
+                name = "EventSourceEntity.retrieveByEventAndSource",
+                query = "select eventSource from EventSourceEntity eventSource where " +
+                        "eventSource.event.name = ? and eventSource.source.entityType = ?"
+        )
+})
+
 @Entity
 @Table(name = "event_sources")
 public class EventSourceEntity extends AbstractEntity {
@@ -78,4 +91,20 @@ public class EventSourceEntity extends AbstractEntity {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventSourceEntity that = (EventSourceEntity) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

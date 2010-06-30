@@ -23,5 +23,9 @@ package org.mifos.platform.questionnaire.persistence;
 import org.mifos.platform.persistence.GenericDao;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 
+import java.util.List;
+
 public interface EventSourceDao extends GenericDao<EventSourceEntity, Integer> {
+    List retrieveCountByEventAndSource(String event, String source);
+    List retrieveByEventAndSource(String event, String source);
 }

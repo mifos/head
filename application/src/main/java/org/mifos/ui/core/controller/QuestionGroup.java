@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.contract.EventSource;
 
 import java.io.Serializable;
 import java.util.List;
@@ -32,6 +33,8 @@ public class QuestionGroup implements Serializable {
     private String id;
 
     private List<SectionForm> sections;
+
+    private EventSource eventSource;
 
     public void setTitle(String title) {
         this.title = title;
@@ -59,6 +62,14 @@ public class QuestionGroup implements Serializable {
 
     public void setSections(List<SectionForm> sections) {
         this.sections = sections;
+    }
+
+    public void setEventSource(EventSource eventSource) {
+        this.eventSource = eventSource;
+    }
+
+    public EventSource getEventSource() {
+        return eventSource;
     }
 }
 

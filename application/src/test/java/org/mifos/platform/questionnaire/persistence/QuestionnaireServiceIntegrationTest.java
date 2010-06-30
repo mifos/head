@@ -197,7 +197,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title) throws ApplicationException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, asList(getSection("S1"))));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, new EventSource("Client", "Create", null), asList(getSection("S1"))));
     }
 
     private SectionDefinition getSection(String name) {

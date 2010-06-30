@@ -30,8 +30,10 @@ import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.EventEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -45,17 +47,24 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
-    private static final String SECTION_NAME1 = "S1";
+    private static final String SECTION_NAME = "S1";
     private String SECTION = "section";
+
+    @Mock
+    private EventSourceDao eventSourceDao;
 
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl();
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao);
     }
 
     @Test
@@ -96,7 +105,10 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE, asList(getSection(SECTION_NAME1)));
+        when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        EventSource eventSource = getEventSource("Create", "Client");
+        List<SectionDefinition> sectionDefinitions = asList(getSection(SECTION_NAME));
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE, eventSource, sectionDefinitions);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
         assertThat(questionGroup, is(not(nullValue())));
         assertThat(questionGroup.getTitle(), is(TITLE));
@@ -104,8 +116,13 @@ public class QuestionnaireMapperTest {
         List<Section> sections = questionGroup.getSections();
         assertNotNull(sections);
         assertThat(sections.size(), is(1));
-        assertThat(sections.get(0).getName(), is(SECTION_NAME1));
+        assertThat(sections.get(0).getName(), is(SECTION_NAME));
         verifyCreationDate(questionGroup);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
+    }
+
+    private EventSource getEventSource(String event, String source) {
+        return new EventSource(source, event, null);
     }
 
     private SectionDefinition getSection(String name) {
