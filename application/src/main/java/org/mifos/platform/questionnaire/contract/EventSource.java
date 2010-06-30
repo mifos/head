@@ -20,10 +20,13 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class EventSource {
+import java.io.Serializable;
+
+public class EventSource implements Serializable{
     private String source;
     private String event;
     private String desciption;
+    private static final long serialVersionUID = 285579716279021785L;
 
     public EventSource(String source, String event, String desciption) {
         this.source = source;
