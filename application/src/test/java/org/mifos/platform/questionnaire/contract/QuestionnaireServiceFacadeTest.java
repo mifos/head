@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  *  All rights reserved.
@@ -31,6 +29,7 @@ import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
 import org.mifos.test.matchers.HasThisKindOfEvent;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroup;
+import org.mifos.ui.core.controller.SectionForm;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -62,9 +61,15 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroup questionGroup = getQuestionGroup(TITLE);
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, asList(getSectionForm("S1"), getSectionForm("S2")));
         questionnaireServiceFacade.createQuestionGroup(questionGroup);
-        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE)));
+        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE, asList(getSectionForm("S1"), getSectionForm("S2")))));
+    }
+
+    private SectionForm getSectionForm(String name) {
+        SectionForm sectionForm = new SectionForm();
+        sectionForm.setName(name);
+        return sectionForm;
     }
 
     @Test
@@ -177,9 +182,10 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
-    private QuestionGroup getQuestionGroup(String title) {
+    private QuestionGroup getQuestionGroup(String title, List<SectionForm> sections) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
+        questionGroup.setSections(sections);
         return questionGroup;
     }
 
@@ -207,15 +213,21 @@ public class QuestionnaireServiceFacadeTest {
 
     private class QuestionGroupDefinitionMatcher extends ArgumentMatcher<QuestionGroupDefinition> {
         private String title;
+        private List<SectionForm> sectionForms;
 
-        public QuestionGroupDefinitionMatcher(String title) {
+        public QuestionGroupDefinitionMatcher(String title, List<SectionForm> sectionForms) {
             this.title = title;
+            this.sectionForms = sectionForms;
         }
 
         @Override
         public boolean matches(Object argument) {
             if (argument instanceof QuestionGroupDefinition) {
                 QuestionGroupDefinition questionGroupDefinition = (QuestionGroupDefinition) argument;
+                List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
+                for (int i=0; i<sectionDefinitions.size();i++){
+                    sectionForms.get(i).getName().equals(sectionDefinitions.get(i).getName());
+                }
                 return StringUtils.equals(questionGroupDefinition.getTitle(), title);
             }
             return false;

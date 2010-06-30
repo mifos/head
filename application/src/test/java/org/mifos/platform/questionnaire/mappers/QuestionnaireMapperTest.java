@@ -31,14 +31,17 @@ import org.mifos.platform.questionnaire.domain.EventEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mifos.platform.questionnaire.domain.Section;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
@@ -47,6 +50,8 @@ import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
 public class QuestionnaireMapperTest {
     private static final String TITLE = "Title";
     private QuestionnaireMapper questionnaireMapper;
+    private static final String SECTION_NAME1 = "S1";
+    private String SECTION = "section";
 
     @Before
     public void setUp() {
@@ -91,21 +96,36 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE);
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE, asList(getSection(SECTION_NAME1)));
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
-        assertThat(questionGroup, is (not(nullValue())));
+        assertThat(questionGroup, is(not(nullValue())));
         assertThat(questionGroup.getTitle(), is(TITLE));
         assertThat(questionGroup.getState(), is(ACTIVE));
+        List<Section> sections = questionGroup.getSections();
+        assertNotNull(sections);
+        assertThat(sections.size(), is(1));
+        assertThat(sections.get(0).getName(), is(SECTION_NAME1));
         verifyCreationDate(questionGroup);
+    }
+
+    private SectionDefinition getSection(String name) {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(name);
+        return section;
     }
 
     @Test
     public void shouldMapQuestionGroupToQuestionGroupDetail() {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(TITLE);
+        questionGroup.setSections(asList(new Section("S1"), new Section("S2")));
         QuestionGroupDetail questionGroupDetail = questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
-        assertThat(questionGroupDetail, is (not(nullValue())));
+        assertThat(questionGroupDetail, is(not(nullValue())));
         assertThat(questionGroupDetail.getTitle(), is(TITLE));
+        assertNotNull(questionGroupDetail.getSectionDefinitions());
+        assertThat(questionGroupDetail.getSectionDefinitions().size(), is(2));
+        assertThat(questionGroupDetail.getSectionDefinitions().get(0).getName(), is("S1"));
+        assertThat(questionGroupDetail.getSectionDefinitions().get(1).getName(), is("S2"));
     }
 
     @Test
@@ -113,12 +133,14 @@ public class QuestionnaireMapperTest {
         int countOfQuestions = 10;
         List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
         for (int i = 0; i < countOfQuestions; i++) {
-            questionGroups.add(getQuestionGroup(TITLE + i));
+            questionGroups.add(getQuestionGroup(TITLE + i, new Section(SECTION + i), new Section(SECTION + (i + 1))));
         }
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         assertThat(questionGroupDetails, is(notNullValue()));
         for (int i = 0; i < countOfQuestions; i++) {
             assertThat(questionGroupDetails.get(i).getTitle(), is(TITLE + i));
+            assertThat(questionGroupDetails.get(i).getSectionDefinitions().get(0).getName(), is(SECTION + i));
+            assertThat(questionGroupDetails.get(i).getSectionDefinitions().get(1).getName(), is(SECTION + (i + 1)));
         }
     }
 
@@ -144,9 +166,10 @@ public class QuestionnaireMapperTest {
         return events;
     }
 
-    private QuestionGroup getQuestionGroup(String title) {
+    private QuestionGroup getQuestionGroup(String title, Section... sections) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
+        questionGroup.setSections(asList(sections));
         return questionGroup;
     }
 

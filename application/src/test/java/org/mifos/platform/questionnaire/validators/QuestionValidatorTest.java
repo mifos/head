@@ -24,17 +24,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
+import org.mifos.platform.questionnaire.contract.SectionDefinition;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.contract.QuestionType.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
+import static org.mifos.platform.questionnaire.contract.QuestionType.FREETEXT;
+import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionValidatorTest {
@@ -42,12 +44,12 @@ public class QuestionValidatorTest {
     private QuestionnaireValidator questionnaireValidator;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         questionnaireValidator = new QuestionnaireValidatorImpl();
     }
 
     @Test
-    public void shouldNotThrowExceptionWhenQuestionTitleIsProvided(){
+    public void shouldNotThrowExceptionWhenQuestionTitleIsProvided() {
         try {
             questionnaireValidator.validate(new QuestionDefinition("Title", FREETEXT));
         } catch (ApplicationException e) {
@@ -56,7 +58,7 @@ public class QuestionValidatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenQuestionTitleIsProvided(){
+    public void shouldThrowExceptionWhenQuestionTitleIsProvided() {
         try {
             questionnaireValidator.validate(new QuestionDefinition(null, FREETEXT));
             fail("Should have thrown the application exception");
@@ -66,7 +68,7 @@ public class QuestionValidatorTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenQuestionTypeNotProvided(){
+    public void shouldThrowExceptionWhenQuestionTypeNotProvided() {
         try {
             questionnaireValidator.validate(new QuestionDefinition("Title 123", INVALID));
             fail("Should have thrown the application exception");
@@ -76,22 +78,47 @@ public class QuestionValidatorTest {
     }
 
     @Test
-    public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided(){
+    public void shouldNotThrowExceptionWhenQuestionGroupTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition("Title"));
+            questionnaireValidator.validate(new QuestionGroupDefinition("Title", asList(getSection("S1"))));
         } catch (ApplicationException e) {
             fail("Should not have thrown the exception");
         }
     }
 
     @Test
-    public void shouldThrowExceptionWhenQuestionGroupTitleIsProvided(){
+    public void shouldThrowExceptionWhenQuestionGroupTitleIsProvided() {
         try {
-            questionnaireValidator.validate(new QuestionGroupDefinition(null));
+            questionnaireValidator.validate(new QuestionGroupDefinition(null, asList(getSection("S1"))));
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(QUESTION_GROUP_TITLE_NOT_PROVIDED, e.getKey());
         }
+    }
+
+    @Test
+    public void shouldNotThrowExceptionWhenQuestionGroupHasAtLeastOneSection() {
+        try {
+            questionnaireValidator.validate(new QuestionGroupDefinition("Title", asList(getSection("S1"))));
+        } catch (ApplicationException e) {
+            fail("Should not have thrown the exception");
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenQuestionGroupHasNoSections() {
+        try {
+            questionnaireValidator.validate(new QuestionGroupDefinition("Title", new ArrayList<SectionDefinition>()));
+            fail("Should have thrown the application exception");
+        } catch (ApplicationException e) {
+            assertEquals(QUESTION_GROUP_SECTION_NOT_PROVIDED, e.getKey());
+        }
+    }
+
+    private SectionDefinition getSection(String name) {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(name);
+        return section;
     }
 
 }

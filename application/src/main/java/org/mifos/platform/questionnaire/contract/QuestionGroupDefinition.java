@@ -20,14 +20,27 @@
 
 package org.mifos.platform.questionnaire.contract;
 
+import java.util.List;
+
 public class QuestionGroupDefinition {
     private String title;
 
-    public QuestionGroupDefinition(String title) {
+    private List<SectionDefinition> sectionDefinitions;
+
+    public QuestionGroupDefinition(String title, List<SectionDefinition> sectionDefinitions) {
         this.title = title;
+        this.sectionDefinitions = sectionDefinitions;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public List<SectionDefinition> getSectionDefinitions() {
+        return sectionDefinitions;
+    }
+
+    public void setSectionDefinitions(List<SectionDefinition> sectionDefinitions) {
+        this.sectionDefinitions = sectionDefinitions;
     }
 }
