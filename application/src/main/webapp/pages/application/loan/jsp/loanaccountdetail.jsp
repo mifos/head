@@ -276,7 +276,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<mifos:mifoslabel name="loan.recentActivity" />
 							</c:if></td>
 							<td width="65%" align="right" class="fontnormal">&nbsp; <c:if
-								test="${!empty loanInformationDto.loanActivityDetails}">
+								test="${loanInformationDto.loanActivityDetails == true}">
 								<html-el:link styleId="loanaccountdetail.link.viewAccountActivity"
 									href="loanAccountAction.do?method=getAllActivity&accountId=${loanInformationDto.accountId}&prdOfferingName=${loanInformationDto.prdOfferingName}&accountStateId=${loanInformationDto.accountStateId}&globalAccountNum=${loanInformationDto.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${loanInformationDto.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
@@ -496,14 +496,14 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								name="loan.recurring_acc_fees" /><br>
 							</span> <c:forEach items="${loanInformationDto.accountFees}" var="feesSet">
 								<c:if
-									test="${feesSet.fees.feeFrequency.feeFrequencyType.id == '1' && feesSet.feeStatus != '2'}">
-									<c:out value="${feesSet.fees.feeName}" />:
+									test="${feesSet.feeFrequencyTypeId == '1' && feesSet.feeStatus != '2'}">
+									<c:out value="${feesSet.feeName}" />:
 										<span class="fontnormal"> <c:out
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
-										value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />)
+										value="${loanfn:getMeetingRecurrence(feesSet.feeMeetingFrequency,sessionScope.UserContext)}" />)
 									<html-el:link styleId="loanaccountdetail.link.removeFee"
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
+										href="accountAppAction.do?method=removeFees&feeId=${feesSet.feeId}&globalAccountNum=${loanInformationDto.globalAccountNum}&accountId=${loanInformationDto.accountId}&recordOfficeId=${loanInformationDto.officeId}&recordLoanOfficerId=${loanInformationDto.personnelId}&createdDate=${loanInformationDto.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan">
 										<mifos:mifoslabel name="loan.remove" />
 									</html-el:link> <br>
 									</span>

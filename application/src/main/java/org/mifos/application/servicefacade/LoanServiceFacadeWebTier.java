@@ -27,11 +27,14 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NO
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.InstallmentDetailsDto;
@@ -44,6 +47,7 @@ import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.service.AccountFeesDto;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
@@ -889,27 +893,38 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                                                                         loan.getPerformanceHistory().getDaysInArrears(),
                                                                                         loan.getPerformanceHistory().getLoanMaturityDate());
 
+        Set<AccountFeesDto> accountFeesDtos = new HashSet<AccountFeesDto>();
+        if(!loan.getAccountFees().isEmpty()) {
+            for (AccountFeesEntity accountFeesEntity: loan.getAccountFees()) {
+                AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
+                                                                  accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
+                                                                  accountFeesEntity.getAccountFeeAmount(),
+                                                                  accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency(),
+                                                                  accountFeesEntity.getFees().getFeeId());
+                accountFeesDtos.add(accountFeesDto);
+            }
+        }
+
         Short accountStateId = loan.getAccountState().getId();
         String accountStateName = getAccountStateName(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
         String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
 
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
-                                        accountStateName, loan.getAccountFlags(),
-                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
-                                        loan.getAccountActionDates(), gracePeriodTypeName, interestTypeName, loan.getLoanMeeting(),
-                                        loan.getAccountNotes(), loan.getRecentAccountNotes(),
-                                        loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
-                                        loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
-                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
-                                        loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
-                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
-                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
-                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
-                                        loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
-                                        loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
-                                        loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
-                                        loanPerformanceHistory, loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
+                                     accountStateName, loan.getAccountFlags(), loan.getDisbursementDate(), loan.isRedone(),
+                                     loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestTypeName,
+                                     loan.getRecentAccountNotes(),loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
+                                     loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
+                                     loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
+                                     loan.getLoanActivityDetails().isEmpty()? false: true, loan.getInterestRate(),
+                                     loan.isInterestDeductedAtDisbursement(),
+                                     loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
+                                     loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
+                                     loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
+                                     loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
+                                     loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
+                                     loan.getAccountCustomFields(), accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
+                                     loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
     }
 
     private String getAccountStateName(Short id) {

@@ -629,14 +629,6 @@ public class LoanAccountAction extends AccountAppAction {
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanAccountDetailsViewList, request);
         }
 
-        loanBusinessService.initialize(loanInformationDto.getLoanMeeting());
-        for (AccountActionDateEntity accountActionDateEntity : loanInformationDto.getAccountActionDates()) {
-            loanBusinessService.initialize(accountActionDateEntity);
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
-                    .getAccountFeesActionDetails()) {
-                loanBusinessService.initialize(accountFeesActionDetailEntity);
-            }
-        }
         setLocaleForMasterEntities(loanInformationDto, getUserContext(request).getLocaleId());
         loadLoanDetailPageInfo(loanInformationDto, request);
         loadMasterData(request);
