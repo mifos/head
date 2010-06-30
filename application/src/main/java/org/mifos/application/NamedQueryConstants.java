@@ -264,7 +264,7 @@ public interface NamedQueryConstants {
     public final String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB = "Customer.getClosedClientBasedOnNameAndDateOfBirth";
     public final String GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB = "Customer.getBlackListedClientBasedOnNameAndDateOfBirth";
     public final String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER = "product.getActiveOfferingsForCustomer";
-    public final String GET_CLOSED_CLIENT_BASEDON_GOVTID = "Customer.getClosedClientBasedOnGovtId";
+    public final String GET_CLOSED_CLIENT_BASED_ON_GOVT_ID = "Customer.getClosedClientBasedOnGovtId";
     public final String GETOFFICEACTIVEPERSONNEL = "getCountActivePersonnel";
     public final String GETCOUNTOFACTIVECHILDERN = "getCountOfActiveChildren";
     public final String GETACTIVEPARENTS = "masterdata.activeParents";

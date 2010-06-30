@@ -960,11 +960,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         if (StringUtils.isNotBlank(governmentId)) {
             governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
-            if (!governmentIdValidationFailing) {
-                duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName, dateOfBirth);
-                if (!duplicateNameOnClosedClient) {
-                    duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName, dateOfBirth);
-                }
+        }
+        if (!governmentIdValidationFailing) {
+            duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
+                    dateOfBirth);
+            if (!duplicateNameOnBlackListedClient) {
+                duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
+                        dateOfBirth);
             }
         }
 
