@@ -923,7 +923,8 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public boolean validateGovernmentIdForClient(String governmentId) {
-        return doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
+        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_GOVT_ID, governmentId,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
@@ -936,11 +937,6 @@ public class CustomerDaoHibernate implements CustomerDao {
     public boolean validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
-    }
-
-    private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
-        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
-                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @SuppressWarnings("unchecked")
