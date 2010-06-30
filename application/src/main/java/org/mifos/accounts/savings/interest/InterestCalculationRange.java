@@ -40,4 +40,9 @@ public class InterestCalculationRange {
         return this.upperDate;
     }
 
+    public boolean dateFallsWithin(LocalDate date) {
+        return ((date.isAfter(this.lowerDate) || date.isEqual(this.lowerDate)) &&
+                (date.isBefore(this.upperDate) || date.isEqual(this.upperDate)));
+    }
+
 }

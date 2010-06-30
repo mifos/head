@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -189,17 +190,40 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsId);
 
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
-            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
-            ScheduledEvent interestCalculationEvent = ScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
-
-            LocalDate upperDate = new LocalDate(interestCalculationEvent.nextEventDateAfter(firstDepositDate.toDateMidnight().toDateTime()));
-            InterestCalculationRange range = new InterestCalculationRange(firstDepositDate, upperDate);
-            InterestCalculationPeriodDetail interestCalculationPeriodDetail = new InterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);
-
             InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
             InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestCalcType);
 
-            interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+            // NOTE: for first interest calculation period, calculation starts from the first deposit date and not activation date
+            // NOTE: interest calculation and posting date are always the last day of the month (no matter what!)
+            ScheduledEvent interestCalculationEvent = ScheduledEventFactory.createScheduledEventFrom(savingsAccount.getTimePerForInstcalc());
+
+            LocalDate firstDepositDate = allEndOfDayDetailsForAccount.get(0).getDate();
+            LocalDate firstCalculationDate = firstDepositDate.withDayOfMonth(1).plusMonths(interestCalculationEvent.getEvery()+1).minusDays(1);
+
+            if (firstCalculationDate.isBefore(new LocalDate())) {
+                InterestCalculationRange range = new InterestCalculationRange(firstDepositDate, firstCalculationDate);
+                InterestCalculationPeriodDetail interestCalculationPeriodDetail = createInterestCalculationPeriodDetail(range, allEndOfDayDetailsForAccount);
+
+                Money calculatedInterest = interestCalculator.calculateInterestForPeriod(interestCalculationPeriodDetail);
+
+                LocalDate nextCalculationDate = firstCalculationDate.withDayOfMonth(1).plusMonths(interestCalculationEvent.getEvery()+1).minusDays(1);
+                if (nextCalculationDate.isBefore(new LocalDate())) {
+                    // then do it all again.
+                }
+            }
         }
+    }
+
+    private InterestCalculationPeriodDetail createInterestCalculationPeriodDetail(InterestCalculationRange range, List<EndOfDayDetail> allEndOfDayDetailsForAccount) {
+
+        List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
+
+        for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
+            if (range.dateFallsWithin(endOfDayDetail.getDate())) {
+                applicableDailyDetailsForPeriod.add(endOfDayDetail);
+            }
+        }
+
+        return new InterestCalculationPeriodDetail(range, applicableDailyDetailsForPeriod);
     }
 }
