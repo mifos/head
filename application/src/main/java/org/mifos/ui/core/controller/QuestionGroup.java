@@ -29,6 +29,7 @@ import java.util.List;
 public class QuestionGroup implements Serializable {
     private static final long serialVersionUID = 9142463851744584305L;
     private String title;
+    private String eventSourceId;
 
     private String id;
 
@@ -64,12 +65,20 @@ public class QuestionGroup implements Serializable {
         this.sections = sections;
     }
 
-    public void setEventSource(EventSource eventSource) {
-        this.eventSource = eventSource;
+    public void setEventSourceId(String eventSourceId) {
+        this.eventSourceId = eventSourceId;
+    }
+
+    public String getEventSourceId() {
+        return eventSourceId;
     }
 
     public EventSource getEventSource() {
-        return eventSource;
+        if (!StringUtils.isBlank(eventSourceId)) {
+            String[] parts = eventSourceId.split(".");
+            return new EventSource(parts[1], parts[0], eventSourceId);
+        }
+        return null;
     }
 }
 

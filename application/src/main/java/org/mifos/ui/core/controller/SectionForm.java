@@ -19,7 +19,10 @@
  */
 package org.mifos.ui.core.controller;
 
-public class SectionForm {
+import java.io.Serializable;
+
+public class SectionForm implements Serializable {
+    private static final long serialVersionUID = 4707282409987816335L;
     private String name;
 
     public String getName() {

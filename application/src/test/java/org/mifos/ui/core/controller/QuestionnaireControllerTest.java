@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
@@ -39,6 +40,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
@@ -317,6 +319,15 @@ public class QuestionnaireControllerTest {
         verify(model).addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
     }
 
+    @Test
+    public void shouldGetAllQgEventSources() {
+        when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSource("Client", "Create", "Create Client"), new EventSource("Client", "View", "View Client")));
+        Map<String, String> eventSources = questionnaireController.getAllQgEventSources();
+        verify(questionnaireServiceFacade).getAllEventSources();
+        assertThat(eventSources.get("Create.Client"), is("Create Client"));
+        assertThat(eventSources.get("View.Client"), is("View Client"));
+    }
+
     private QuestionForm getQuestionForm(String title, String type) {
         QuestionForm questionForm = new QuestionForm();
         questionForm.setTitle(title);
@@ -375,7 +386,9 @@ public class QuestionnaireControllerTest {
                                 equalsIgnoreCase(question.getId(), questions[i].getId())
                                         && equalsIgnoreCase(question.getTitle(), questions[i].getTitle())
                                         && equalsIgnoreCase(question.getType(), questions[i].getType())
-                        )) return false;
+                        )) {
+                            return false;
+                        }
                     } else {
                         return false;
                     }
@@ -458,7 +471,9 @@ public class QuestionnaireControllerTest {
                         QuestionGroup questionGroup = (QuestionGroup) obj;
                         if (!(equalsIgnoreCase(questionGroup.getTitle(), this.questionGroups[i].getTitle())
                                 && equalsIgnoreCase(questionGroup.getId(), this.questionGroups[i].getId())
-                        )) return false;
+                        )) {
+                            return false;
+                        }
                     } else {
                         return false;
                     }

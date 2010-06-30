@@ -24,6 +24,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -34,6 +35,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -51,8 +56,59 @@ public class QuestionnaireController {
         this.questionnaireServiceFacade = questionnaireServiceFacade;
     }
 
+    @RequestMapping("/viewQuestions.ftl")
+    public String getAllQuestions(ModelMap model, HttpServletRequest request) {
+        model.addAttribute("questions", questionnaireServiceFacade.getAllQuestions());
+        return "viewQuestions";
+    }
+
+    @RequestMapping("/viewQuestionGroups.ftl")
+    public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
+        model.addAttribute("questionGroups", questionnaireServiceFacade.getAllQuestionGroups());
+        return "viewQuestionGroups";
+    }
+
+    @RequestMapping("/viewQuestionGroupDetail.ftl")
+    public String getQuestionGroup(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionGroupId = httpServletRequest.getParameter("questionGroupId");
+        try {
+            if (invalid(questionGroupId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
+            } else {
+                QuestionGroup questionGroup = questionnaireServiceFacade.
+                        getQuestionGroup(Integer.valueOf(questionGroupId));
+                model.addAttribute("questionGroupDetail", questionGroup);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
+        }
+        return "viewQuestionGroupDetail";
+    }
+
+
+    @RequestMapping("/viewQuestionDetail.ftl")
+    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionId = httpServletRequest.getParameter("questionId");
+        try {
+            if (invalid(questionId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+            } else {
+                Question question = questionnaireServiceFacade.
+                        getQuestion(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", question);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
+        }
+        return "viewQuestionDetail";
+    }
+
     public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
-        if (questionFormHasErrors(questionForm, requestContext)) return "failure";
+        if (questionFormHasErrors(questionForm, requestContext)) {
+            return "failure";
+        }
         questionForm.addCurrentQuestion();
         return "success";
     }
@@ -68,7 +124,18 @@ public class QuestionnaireController {
     }
 
     public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
-        if (questionGroupHasErrors(questionGroup, requestContext)) return "failure";
+        //TODO: remove default Misc section
+        if (questionGroup.getSections() == null) {
+            ArrayList<SectionForm> sectionForms = new ArrayList<SectionForm>();
+            SectionForm sectionForm = new SectionForm();
+            sectionForm.setName("Misc");
+            sectionForms.add(sectionForm);
+            questionGroup.setSections(sectionForms);
+        }
+        // end of todo comment
+        if (questionGroupHasErrors(questionGroup, requestContext)) {
+            return "failure";
+        }
         try {
             questionGroup.trimTitle();
             questionnaireServiceFacade.createQuestionGroup(questionGroup);
@@ -77,6 +144,19 @@ public class QuestionnaireController {
             return "failure";
         }
         return "success";
+    }
+
+    public Map<String, String> getAllQgEventSources() {
+        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
+        Map<String, String> evtSourcesMap = new HashMap<String, String>();
+        for (EventSource evtSrc : eventSources) {
+            evtSourcesMap.put(getEventSourceId(evtSrc), evtSrc.getDesciption());
+        }
+        return evtSourcesMap;
+    }
+
+    private String getEventSourceId(EventSource evtSrc) {
+        return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
 
     private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
@@ -118,60 +198,9 @@ public class QuestionnaireController {
         return false;
     }
 
-    @RequestMapping("/viewQuestions.ftl")
-    public String getAllQuestions(ModelMap model, HttpServletRequest request) {
-        model.addAttribute("questions", questionnaireServiceFacade.getAllQuestions());
-        return "viewQuestions";
-    }
-
-    @RequestMapping("/viewQuestionGroups.ftl")
-    public String getAllQuestionGroups(ModelMap model, HttpServletRequest request) {
-        model.addAttribute("questionGroups", questionnaireServiceFacade.getAllQuestionGroups());
-        return "viewQuestionGroups";
-    }
-
-    @RequestMapping("/viewQuestionGroupDetail.ftl")
-    public String getQuestionGroup(ModelMap model, HttpServletRequest httpServletRequest) {
-        String questionGroupId = httpServletRequest.getParameter("questionGroupId");
-        try {
-            if (invalid(questionGroupId)) {
-                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
-            } else {
-                QuestionGroup questionGroup = questionnaireServiceFacade.
-                        getQuestionGroup(Integer.valueOf(questionGroupId));
-                model.addAttribute("questionGroupDetail", questionGroup);
-            }
-        } catch (ApplicationException e) {
-            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
-            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
-        }
-        return "viewQuestionGroupDetail";
-    }
-
-    @RequestMapping("/viewQuestionDetail.ftl")
-    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
-        String questionId = httpServletRequest.getParameter("questionId");
-        try {
-            if (invalid(questionId)) {
-                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
-            } else {
-                Question question = questionnaireServiceFacade.
-                        getQuestion(Integer.valueOf(questionId));
-                model.addAttribute("questionDetail", question);
-            }
-        } catch (ApplicationException e) {
-            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
-            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
-        }
-        return "viewQuestionDetail";
-    }
 
     private boolean invalid(String id) {
-        if (isEmpty(id) || !isInteger(id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (isEmpty(id) || !isInteger(id)) ? true : false;
     }
 
     public boolean isInteger(String id) {

@@ -3,10 +3,10 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<var name="questionGroupDefinition" class="org.mifos.ui.core.controller.QuestionGroup" />
+    <var name="questionGroupDefinition" class="org.mifos.ui.core.controller.QuestionGroup" />
 
     <on-start>
-       <evaluate expression="questionnaireServiceFacade.getAllEventSources()" result ="flowScope.EventSources" />
+       <evaluate expression="questionnaireController.getAllQgEventSources()" result ="flowScope.EventSources" />
     </on-start>
 
 	<view-state id="createQuestionGroup" model="questionGroupDefinition">

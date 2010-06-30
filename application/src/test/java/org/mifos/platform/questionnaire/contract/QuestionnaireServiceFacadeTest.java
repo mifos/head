@@ -83,13 +83,13 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    public void testShouldCheckDuplicates(){
+    public void testShouldCheckDuplicates() {
         questionnaireServiceFacade.isDuplicateQuestion(TITLE);
         verify(questionnaireService).isDuplicateQuestion(any(QuestionDefinition.class));
     }
 
     @Test
-    public void testGetAllQuestion(){
+    public void testGetAllQuestion() {
         when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<Question> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
@@ -100,13 +100,27 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestionGroups() {
-        when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail(1,"title1"), new QuestionGroupDetail(2,"title2")));
+        when(questionnaireService.getAllQuestionGroups()).thenReturn(
+                asList(new QuestionGroupDetail(1, "title1", asList(getSectionDefinition("S1"), getSectionDefinition("S2"))),
+                        new QuestionGroupDetail(2, "title2", asList(getSectionDefinition("S3")))));
         List<QuestionGroup> questionGroup = questionnaireServiceFacade.getAllQuestionGroups();
         assertNotNull(questionGroup);
-        assertThat(questionGroup.get(0).getTitle(), is("title1"));
-        assertThat(questionGroup.get(0).getId(), is("1"));
-        assertThat(questionGroup.get(1).getTitle(), is("title2"));
-        assertThat(questionGroup.get(1).getId(), is("2"));
+
+        QuestionGroup questionGroup1 = questionGroup.get(0);
+        assertThat(questionGroup1.getId(), is("1"));
+        assertThat(questionGroup1.getTitle(), is("title1"));
+        List<SectionForm> sectionsOfQuestionGroup1 = questionGroup1.getSections();
+        assertThat(sectionsOfQuestionGroup1.size(), is(2));
+        assertThat(sectionsOfQuestionGroup1.get(0).getName(), is("S1"));
+        assertThat(sectionsOfQuestionGroup1.get(1).getName(), is("S2"));
+
+        QuestionGroup groupGroup2 = questionGroup.get(1);
+        assertThat(groupGroup2.getId(), is("2"));
+        assertThat(groupGroup2.getTitle(), is("title2"));
+        List<SectionForm> sectionsOfQuestionGroup2 = groupGroup2.getSections();
+        assertThat(sectionsOfQuestionGroup2.size(), is(1));
+        assertThat(sectionsOfQuestionGroup2.get(0).getName(), is("S3"));
+
         verify(questionnaireService).getAllQuestionGroups();
     }
 
@@ -114,20 +128,30 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
         String title = "Title";
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(title));
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(1, title, asList(getSectionDefinition("S1"), getSectionDefinition("S2"))));
         QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
         assertNotNull("Question group should not be null", questionGroup);
         assertThat(questionGroup.getTitle(), is(title));
+        List<SectionForm> sectionForms = questionGroup.getSections();
+        assertThat(sectionForms.size(), is(2));
+        assertThat(sectionForms.get(0).getName(), is("S1"));
+        assertThat(sectionForms.get(1).getName(), is("S2"));
     }
-    
+
+    private SectionDefinition getSectionDefinition(String name) {
+        SectionDefinition sectionDefinition = new SectionDefinition();
+        sectionDefinition.setName(name);
+        return sectionDefinition;
+    }
+
     @Test
     public void testGetQuestionGroupByIdFailure() throws ApplicationException {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         try {
-             questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+            questionnaireServiceFacade.getQuestionGroup(questionGroupId);
         } catch (ApplicationException e) {
-            verify(questionnaireService,times(1)).getQuestionGroup(questionGroupId);
+            verify(questionnaireService, times(1)).getQuestionGroup(questionGroupId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         }
     }
@@ -138,7 +162,7 @@ public class QuestionnaireServiceFacadeTest {
         String title = "Title";
         when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
         Question question = questionnaireServiceFacade.getQuestion(questionId);
-        assertNotNull("Question group should not be null",question);
+        assertNotNull("Question group should not be null", question);
         assertThat(question.getTitle(), is(title));
         assertThat(question.getType(), is("Number"));
         verify(questionnaireService).getQuestion(questionId);
@@ -149,9 +173,9 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         when(questionnaireService.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
         try {
-             questionnaireServiceFacade.getQuestion(questionId);
+            questionnaireServiceFacade.getQuestion(questionId);
         } catch (ApplicationException e) {
-            verify(questionnaireService,times(1)).getQuestion(questionId);
+            verify(questionnaireService, times(1)).getQuestion(questionId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
     }
@@ -187,7 +211,7 @@ public class QuestionnaireServiceFacadeTest {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
         questionGroup.setSections(sections);
-        questionGroup.setEventSource(new EventSource(source, event, null));
+        questionGroup.setEventSourceId(String.format("%s.%s", event, source));
         return questionGroup;
     }
 
@@ -231,8 +255,10 @@ public class QuestionnaireServiceFacadeTest {
             if (argument instanceof QuestionGroupDefinition) {
                 QuestionGroupDefinition questionGroupDefinition = (QuestionGroupDefinition) argument;
                 List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
-                for (int i=0; i<sectionDefinitions.size();i++){
-                    sectionForms.get(i).getName().equals(sectionDefinitions.get(i).getName());
+                for (int i = 0; i < sectionDefinitions.size(); i++) {
+                    if (!sectionForms.get(i).getName().equals(sectionDefinitions.get(i).getName())) {
+                        return false;
+                    }
                 }
                 return StringUtils.equals(questionGroupDefinition.getTitle(), title) &&
                         StringUtils.equals(questionGroupDefinition.getEventSource().getEvent(), event) &&

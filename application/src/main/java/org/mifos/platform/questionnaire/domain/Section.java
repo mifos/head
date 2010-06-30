@@ -19,7 +19,9 @@
  */
 package org.mifos.platform.questionnaire.domain;
 
-public class Section {
+import org.mifos.framework.business.AbstractEntity;
+
+public class Section extends AbstractEntity {
     private int id;
 
     private String name;

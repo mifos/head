@@ -20,11 +20,13 @@
 
 package org.mifos.platform.questionnaire.domain;
 
+import org.mifos.framework.business.AbstractEntity;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class QuestionGroup {
+public class QuestionGroup extends AbstractEntity {
     private int id;
 
     private String title;
