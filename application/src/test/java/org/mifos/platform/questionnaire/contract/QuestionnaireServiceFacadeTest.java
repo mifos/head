@@ -197,7 +197,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private EventSource makeEvent(String event, String source, String description) {
-        return new EventSource(source, event, description);
+        return new EventSource(event, source, description);
     }
 
     private Question getQuestion(String title, String type) {

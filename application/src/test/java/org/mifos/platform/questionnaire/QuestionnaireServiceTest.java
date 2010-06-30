@@ -150,7 +150,7 @@ public class QuestionnaireServiceTest {
     }
 
     private EventSource getEventSource() {
-        return new EventSource("Client", "Create", "Create Client");
+        return new EventSource("Create", "Client", "Create Client");
     }
 
     private SectionDefinition getSectionDefinition(String name) {

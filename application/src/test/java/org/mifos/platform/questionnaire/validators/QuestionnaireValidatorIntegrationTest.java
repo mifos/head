@@ -50,7 +50,7 @@ public class QuestionnaireValidatorIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForInValidEventSource() {
-        EventSource eventSource = new EventSource("Client", "Disburse", "Disburse Client");
+        EventSource eventSource = new EventSource("Disburse", "Client", "Disburse Client");
         QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition("QuestionGroup123", eventSource, asList(new SectionDefinition()));
         try {
             questionnaireValidator.validate(questionGroupDefinition);
@@ -63,7 +63,7 @@ public class QuestionnaireValidatorIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldCheckForValidEventSource() {
-        EventSource eventSource = new EventSource("Client", "Create", "Create Client");
+        EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition("QuestionGroup123", eventSource, asList(new SectionDefinition()));
         try {
             questionnaireValidator.validate(questionGroupDefinition);

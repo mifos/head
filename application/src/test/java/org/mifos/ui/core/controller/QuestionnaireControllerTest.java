@@ -321,7 +321,7 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQgEventSources() {
-        when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSource("Client", "Create", "Create Client"), new EventSource("Client", "View", "View Client")));
+        when(questionnaireServiceFacade.getAllEventSources()).thenReturn(asList(new EventSource("Create", "Client", "Create Client"), new EventSource("View", "Client", "View Client")));
         Map<String, String> eventSources = questionnaireController.getAllQgEventSources();
         verify(questionnaireServiceFacade).getAllEventSources();
         assertThat(eventSources.get("Create.Client"), is("Create Client"));

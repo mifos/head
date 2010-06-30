@@ -54,7 +54,7 @@ public class QuestionnaireMapperIntegrationTest {
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldMapEventSources() {
-        EventSource eventSource = new EventSource("Client", "Create", "Create Client");
+        EventSource eventSource = new EventSource("Create", "Client", "Create Client");
         List<SectionDefinition> sectionDefinitions = getSectionDefinitions();
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(new QuestionGroupDefinition("Title", eventSource, sectionDefinitions));
         Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
