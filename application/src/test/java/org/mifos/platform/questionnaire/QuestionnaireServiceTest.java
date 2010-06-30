@@ -21,6 +21,7 @@
 package org.mifos.platform.questionnaire;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
@@ -126,6 +127,7 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
+    @Ignore
     public void shouldDefineQuestionGroup() throws ApplicationException {
         QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, null, asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
         try {

@@ -21,6 +21,7 @@ package org.mifos.platform.questionnaire.contract;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -60,6 +61,7 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateQuestionGroup() throws ApplicationException {
         QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")));
         questionnaireServiceFacade.createQuestionGroup(questionGroup);
