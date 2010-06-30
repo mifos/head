@@ -127,7 +127,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, null, asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
         try {
             QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
             verify(questionnaireValidator).validate(questionGroupDefinition);
@@ -152,7 +152,7 @@ public class QuestionnaireServiceTest {
 
     @Test(expected = ApplicationException.class)
     public void shouldThrowValidationExceptionWhenQuestionGroupTitleIsNull() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(null, asList(getSectionDefinition("S1")));
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(null, null, asList(getSectionDefinition("S1")));
         doThrow(new ApplicationException(QUESTION_GROUP_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validate(questionGroupDefinition);
         questionnaireService.defineQuestionGroup(questionGroupDefinition);
         verify(questionnaireValidator).validate(questionGroupDefinition);

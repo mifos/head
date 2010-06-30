@@ -35,6 +35,8 @@ public class QuestionGroup implements Serializable {
 
     private List<SectionForm> sections;
 
+    private EventSource eventSource;
+
     public void setTitle(String title) {
         this.title = title;
     }

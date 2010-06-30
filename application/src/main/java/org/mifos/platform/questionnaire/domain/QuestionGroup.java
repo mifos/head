@@ -24,6 +24,7 @@ import org.mifos.framework.business.AbstractEntity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class QuestionGroup extends AbstractEntity {
     private int id;
@@ -35,6 +36,8 @@ public class QuestionGroup extends AbstractEntity {
     private QuestionGroupState state;
 
     private List<Section> sections;
+
+    private Set<EventSourceEntity> eventSources;
 
     @SuppressWarnings({"UnusedDeclaration"})
     public QuestionGroup() {
@@ -78,5 +81,13 @@ public class QuestionGroup extends AbstractEntity {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    public Set<EventSourceEntity> getEventSources() {
+        return eventSources;
+    }
+
+    public void setEventSources(Set<EventSourceEntity> eventSources) {
+        this.eventSources = eventSources;
     }
 }

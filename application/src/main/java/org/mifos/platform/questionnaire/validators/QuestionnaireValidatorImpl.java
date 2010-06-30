@@ -23,13 +23,30 @@ package org.mifos.platform.questionnaire.validators;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 
 public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
+
+    @Autowired
+    private EventSourceDao eventSourceDao;
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    private QuestionnaireValidatorImpl() {
+    }
+
+    public QuestionnaireValidatorImpl(EventSourceDao eventSourceDao) {
+        this.eventSourceDao = eventSourceDao;
+    }
+
     @Override
     public void validate(QuestionDefinition questionDefinition) throws ApplicationException {
         validateQuestionTitle(questionDefinition);
@@ -40,6 +57,17 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validate(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
         validateQuestionGroupTitle(questionGroupDefinition);
         validateQuestionGroupSections(questionGroupDefinition);
+        validateQuestionGroupEventSource(questionGroupDefinition);
+    }
+
+    private void validateQuestionGroupEventSource(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
+        EventSource eventSource = questionGroupDefinition.getEventSource();
+        if (eventSource == null || StringUtils.isEmpty(eventSource.getSource()) || StringUtils.isEmpty(eventSource.getEvent()))
+            throw new ApplicationException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+        List result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
+        if (result.isEmpty() || (Long) result.get(0) == 0) {
+            throw new ApplicationException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
+        }
     }
 
     private void validateQuestionGroupSections(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {

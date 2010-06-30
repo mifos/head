@@ -220,7 +220,7 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title, List<SectionDefinition> sectionDefinitions) throws ApplicationException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, sectionDefinitions));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, new EventSource("Client", "Create", null), sectionDefinitions));
     }
 
     private SectionDefinition getSection(String name) {

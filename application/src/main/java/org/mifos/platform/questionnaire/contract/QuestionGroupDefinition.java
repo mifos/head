@@ -27,8 +27,11 @@ public class QuestionGroupDefinition {
 
     private List<SectionDefinition> sectionDefinitions;
 
-    public QuestionGroupDefinition(String title, List<SectionDefinition> sectionDefinitions) {
+    private EventSource eventSource;
+
+    public QuestionGroupDefinition(String title, EventSource eventSource, List<SectionDefinition> sectionDefinitions) {
         this.title = title;
+        this.eventSource = eventSource;
         this.sectionDefinitions = sectionDefinitions;
     }
 
@@ -42,5 +45,9 @@ public class QuestionGroupDefinition {
 
     public void setSectionDefinitions(List<SectionDefinition> sectionDefinitions) {
         this.sectionDefinitions = sectionDefinitions;
+    }
+
+    public EventSource getEventSource() {
+        return eventSource;
     }
 }

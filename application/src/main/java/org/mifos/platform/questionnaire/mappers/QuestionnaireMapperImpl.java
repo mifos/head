@@ -28,11 +28,10 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mifos.framework.util.CollectionUtils.asMap;
 import static org.mifos.framework.util.MapEntry.makeEntry;
@@ -41,9 +40,17 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Map<AnswerType, QuestionType> answerToQuestionType;
     private Map<QuestionType, AnswerType> questionToAnswerType;
 
+    @Autowired
+    private EventSourceDao eventSourceDao;
+
     public QuestionnaireMapperImpl() {
         populateAnswerToQuestionTypeMap();
         populateQuestionToAnswerTypeMap();
+    }
+
+    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao) {
+        this();
+        this.eventSourceDao = eventSourceDao;
     }
 
     @Override
@@ -80,7 +87,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
         questionGroup.setSections(mapToSections(questionGroupDefinition.getSectionDefinitions()));
+        questionGroup.setEventSources(mapToEventSources(questionGroupDefinition));
         return questionGroup;
+    }
+
+    private Set<EventSourceEntity> mapToEventSources(QuestionGroupDefinition questionGroupDefinition) {
+        Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
+        EventSource eventSource = questionGroupDefinition.getEventSource();
+        List list = eventSourceDao.retrieveByEventAndSource(eventSource.getEvent(), eventSource.getSource());
+        for (Object obj : list) eventSources.add((EventSourceEntity) obj);
+        return eventSources;
     }
 
     private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {

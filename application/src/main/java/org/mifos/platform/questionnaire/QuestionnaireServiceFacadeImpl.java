@@ -70,7 +70,10 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     private QuestionGroupDefinition mapToQuestionDefinition(QuestionGroup questionGroupForm) {
-        return new QuestionGroupDefinition(questionGroupForm.getTitle(), mapToSectionDefinitions(questionGroupForm.getSections()));
+        String title = questionGroupForm.getTitle();
+        List<SectionDefinition> sectionDefinitions = mapToSectionDefinitions(questionGroupForm.getSections());
+        EventSource eventSource = questionGroupForm.getEventSource();
+        return new QuestionGroupDefinition(title, eventSource, sectionDefinitions);
     }
 
     private static List<SectionDefinition> mapToSectionDefinitions(List<SectionForm> sectionForms) {

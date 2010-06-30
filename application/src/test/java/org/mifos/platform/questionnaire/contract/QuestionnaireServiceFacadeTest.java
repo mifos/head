@@ -61,9 +61,10 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroup questionGroup = getQuestionGroup(TITLE, asList(getSectionForm("S1"), getSectionForm("S2")));
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")));
         questionnaireServiceFacade.createQuestionGroup(questionGroup);
-        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE, asList(getSectionForm("S1"), getSectionForm("S2")))));
+        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
+                new QuestionGroupDefinitionMatcher(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")))));
     }
 
     private SectionForm getSectionForm(String name) {
@@ -206,10 +207,11 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
-    private QuestionGroup getQuestionGroup(String title, List<SectionForm> sections) {
+    private QuestionGroup getQuestionGroup(String title, String event, String source, List<SectionForm> sections) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
         questionGroup.setSections(sections);
+        questionGroup.setEventSourceId(String.format("%s.%s", event, source));
         return questionGroup;
     }
 
@@ -238,9 +240,13 @@ public class QuestionnaireServiceFacadeTest {
     private class QuestionGroupDefinitionMatcher extends ArgumentMatcher<QuestionGroupDefinition> {
         private String title;
         private List<SectionForm> sectionForms;
+        private String event;
+        private String source;
 
-        public QuestionGroupDefinitionMatcher(String title, List<SectionForm> sectionForms) {
+        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionForm> sectionForms) {
             this.title = title;
+            this.event = event;
+            this.source = source;
             this.sectionForms = sectionForms;
         }
 
@@ -254,7 +260,9 @@ public class QuestionnaireServiceFacadeTest {
                         return false;
                     }
                 }
-                return StringUtils.equals(questionGroupDefinition.getTitle(), title);
+                return StringUtils.equals(questionGroupDefinition.getTitle(), title) &&
+                        StringUtils.equals(questionGroupDefinition.getEventSource().getEvent(), event) &&
+                        StringUtils.equals(questionGroupDefinition.getEventSource().getSource(), source);
             }
             return false;
         }

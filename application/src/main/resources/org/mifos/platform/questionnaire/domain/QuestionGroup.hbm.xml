@@ -19,5 +19,10 @@
             <list-index column="sequence_number"/>
             <one-to-many class="org.mifos.platform.questionnaire.domain.Section"/>
         </list>
+        <set name="eventSources" table="question_group_event_sources" access="field" cascade="all">
+            <key column="question_group_id"/>
+            <many-to-many column="event_source_id"
+                class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
+        </set>
     </class>
 </hibernate-mapping>

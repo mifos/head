@@ -10,4 +10,5 @@ public class QuestionnaireConstants {
     public static final String INVALID_QUESTION_GROUP_ID = "questionnaire.error.invalid.question.group.id";
     public static final String QUESTION_NOT_FOUND = "questionnaire.error.question.not.found";
     public static final String INVALID_QUESTION_ID = "questionnaire.error.invalid.question.id";
+    public static final String INVALID_EVENT_SOURCE = "InvalidEventSourceProvided";
 }
