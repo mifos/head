@@ -75,7 +75,7 @@ public class QuestionGroup implements Serializable {
 
     public EventSource getEventSource() {
         if (!StringUtils.isBlank(eventSourceId)) {
-            String[] parts = eventSourceId.split(".");
+            String[] parts = eventSourceId.split("\\.");
             return new EventSource(parts[1], parts[0], eventSourceId);
         }
         return null;

@@ -21,7 +21,6 @@
 package org.mifos.platform.questionnaire;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
@@ -31,12 +30,14 @@ import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -63,14 +64,15 @@ public class QuestionnaireServiceTest {
     @Mock
     private QuestionGroupDao questionGroupDao;
 
-    private QuestionnaireMapperImpl questionnaireMapper = new QuestionnaireMapperImpl();
+    @Mock
+    private EventSourceDao eventSourceDao;
 
     private static final String QUESTION_TITLE = "Test QuestionDetail Title";
     private static final String QUESTION_GROUP_TITLE = "Question Group Title";
 
     @Before
     public void setUp() {
-        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, questionnaireMapper, questionGroupDao);
+        questionnaireService = new QuestionnaireServiceImpl(questionnaireValidator, questionDao, new QuestionnaireMapperImpl(eventSourceDao), questionGroupDao);
     }
 
     @Test
@@ -127,13 +129,14 @@ public class QuestionnaireServiceTest {
     }
 
     @Test
-    @Ignore
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, null, asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, getEventSource(), asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
         try {
+            when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
             QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
             verify(questionnaireValidator).validate(questionGroupDefinition);
             verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
+            verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
             assertNotNull(questionGroupDetail);
             assertEquals(QUESTION_GROUP_TITLE, questionGroupDetail.getTitle());
             List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
@@ -144,6 +147,10 @@ public class QuestionnaireServiceTest {
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
+    }
+
+    private EventSource getEventSource() {
+        return new EventSource("Client", "Create", "Create Client");
     }
 
     private SectionDefinition getSectionDefinition(String name) {
