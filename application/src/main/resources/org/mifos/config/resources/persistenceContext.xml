@@ -51,6 +51,7 @@
                 <value>/org/mifos/customers/surveys/business/QuestionChoice.hbm.xml</value>
 
                 <value>/org/mifos/platform/questionnaire/domain/QuestionGroup.hbm.xml</value>
+                <value>/org/mifos/platform/questionnaire/domain/Section.hbm.xml</value>
             </list>
         </property>
 

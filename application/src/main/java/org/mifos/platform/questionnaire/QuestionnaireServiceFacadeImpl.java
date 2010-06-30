@@ -23,8 +23,8 @@ package org.mifos.platform.questionnaire;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+import org.mifos.ui.core.controller.*;
+import org.mifos.ui.core.controller.SectionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -65,7 +65,25 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public void createQuestionGroup(QuestionGroupForm questionGroupForm) throws ApplicationException {
-        questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(questionGroupForm.getTitle()));
+        questionnaireService.defineQuestionGroup(mapToQuestionDefinition(questionGroupForm));
+    }
+
+    private QuestionGroupDefinition mapToQuestionDefinition(QuestionGroupForm questionGroupForm) {
+        return new QuestionGroupDefinition(questionGroupForm.getTitle(), mapToSectionDefinitions(questionGroupForm.getSections()));
+    }
+
+    private static List<SectionDefinition> mapToSectionDefinitions(List<SectionForm> sectionForms) {
+        List<SectionDefinition> sections = new ArrayList<SectionDefinition>();
+        for (SectionForm sectionForm: sectionForms){
+            sections.add(mapToSectionDefinition(sectionForm));
+        }
+        return sections;
+    }
+
+    private static SectionDefinition mapToSectionDefinition(SectionForm sectionForm) {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(sectionForm.getName());
+        return section;
     }
 
     @Override

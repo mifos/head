@@ -26,9 +26,7 @@ import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 
 public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
@@ -41,6 +39,13 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @Override
     public void validate(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
         validateQuestionGroupTitle(questionGroupDefinition);
+        validateQuestionGroupSections(questionGroupDefinition);
+    }
+
+    private void validateQuestionGroupSections(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {
+        if(questionGroupDefinition.getSectionDefinitions()==null || questionGroupDefinition.getSectionDefinitions().size()==0){
+            throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
+        }
     }
 
     private void validateQuestionGroupTitle(QuestionGroupDefinition questionGroupDefinition) throws ApplicationException {

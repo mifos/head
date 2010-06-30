@@ -27,11 +27,15 @@ import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.Section;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import static org.mifos.framework.util.CollectionUtils.asMap;
-import static org.mifos.framework.util.MapEntry.*;
+import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private Map<AnswerType, QuestionType> answerToQuestionType;
@@ -75,19 +79,46 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setTitle(questionGroupDefinition.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setDateOfCreation(Calendar.getInstance().getTime());
+        questionGroup.setSections(mapToSections(questionGroupDefinition.getSectionDefinitions()));
         return questionGroup;
+    }
+
+    private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {
+        ArrayList<Section> sections = new ArrayList<Section>();
+        for (SectionDefinition sectionDefinition : sectionDefinitions) {
+            sections.add(mapToSection(sectionDefinition));
+        }
+        return sections;
+    }
+
+    private Section mapToSection(SectionDefinition sectionDefinition) {
+        return new Section(sectionDefinition.getName());
     }
 
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle());
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDefinitions(questionGroup.getSections()));
+    }
+
+    private List<SectionDefinition> mapToSectionDefinitions(List<Section> sections) {
+        ArrayList<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+        for(Section section: sections){
+            sectionDefinitions.add(mapToSectionDefinition(section));
+        }
+        return sectionDefinitions;
+    }
+
+    private SectionDefinition mapToSectionDefinition(Section section) {
+        SectionDefinition sectionDefinition = new SectionDefinition();
+        sectionDefinition.setName(section.getName());
+        return sectionDefinition;
     }
 
     @Override
     public List<QuestionGroupDetail> mapToQuestionGroupDetails(List<QuestionGroup> questionGroups) {
         List<QuestionGroupDetail> questionGroupDetails = new ArrayList<QuestionGroupDetail>();
         for (QuestionGroup questionGroup : questionGroups) {
-            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle()));
+            questionGroupDetails.add(new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDefinitions(questionGroup.getSections())));
         }
         return questionGroupDetails;
     }
@@ -116,16 +147,16 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private void populateAnswerToQuestionTypeMap() {
         answerToQuestionType = asMap(makeEntry(AnswerType.INVALID, QuestionType.INVALID),
-                                     makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
-                                     makeEntry(AnswerType.DATE, QuestionType.DATE),
-                                     makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
+                makeEntry(AnswerType.FREETEXT, QuestionType.FREETEXT),
+                makeEntry(AnswerType.DATE, QuestionType.DATE),
+                makeEntry(AnswerType.NUMBER, QuestionType.NUMERIC));
     }
 
     private void populateQuestionToAnswerTypeMap() {
         questionToAnswerType = asMap(makeEntry(QuestionType.INVALID, AnswerType.INVALID),
-                                     makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
-                                     makeEntry(QuestionType.DATE, AnswerType.DATE),
-                                     makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
+                makeEntry(QuestionType.FREETEXT, AnswerType.FREETEXT),
+                makeEntry(QuestionType.DATE, AnswerType.DATE),
+                makeEntry(QuestionType.NUMERIC, AnswerType.NUMBER));
     }
 
 }

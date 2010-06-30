@@ -41,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
@@ -196,7 +197,13 @@ public class QuestionnaireServiceIntegrationTest {
     }
 
     private QuestionGroupDetail defineQuestionGroup(String title) throws ApplicationException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title));
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, asList(getSection("S1"))));
+    }
+
+    private SectionDefinition getSection(String name) {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(name);
+        return section;
     }
 
     private void verifyCreationDate(QuestionGroup questionGroup) {
