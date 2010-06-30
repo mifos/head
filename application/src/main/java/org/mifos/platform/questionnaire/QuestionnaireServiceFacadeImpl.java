@@ -142,7 +142,22 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setId(questionGroupDetail.getId().toString());
         questionGroup.setTitle(questionGroupDetail.getTitle());
+        questionGroup.setSections(mapToSectionForms(questionGroupDetail.getSectionDefinitions()));
         return questionGroup;
+    }
+
+    private List<SectionForm> mapToSectionForms(List<SectionDefinition> sectionDefinitions) {
+        List<SectionForm> sectionForms = new ArrayList<SectionForm>();
+        for(SectionDefinition sectionDefinition: sectionDefinitions){
+            sectionForms.add(mapToSectionForm(sectionDefinition));
+        }
+        return sectionForms;
+    }
+
+    private SectionForm mapToSectionForm(SectionDefinition sectionDefinition) {
+        SectionForm sectionForm = new SectionForm();
+        sectionForm.setName(sectionDefinition.getName());
+        return sectionForm;
     }
 
     private void populateStringToQuestionTypeMap() {
