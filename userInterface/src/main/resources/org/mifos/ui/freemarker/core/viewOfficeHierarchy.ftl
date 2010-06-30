@@ -6,9 +6,8 @@
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   [#include "adminLeftPane.ftl" /]
    <div class="content leftMargin180">
-	<div class="span-20 bluedivs paddingLeft">
-		<a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">View office hierarchy</span>
-	</div> 
+	<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewOfficeHierarchy"/]</span></div>
+	<br/>
     <div class="marginTop10">&nbsp;</div> 
     <form action="" >
     <div class="span-19">

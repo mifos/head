@@ -4,7 +4,7 @@
 
 [@mifos.header "title" /]
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<div class="sidebar ht600">
+<div class="sidebar ht950">
 [#include "adminLeftPane.ftl" ]
 </div>
   <!--  Main Content Begins-->  
@@ -17,53 +17,53 @@
     	<div class="bluedivs span-22 fontBold">
         	<span class="span-8 paddingLeft">[@spring.message "systemwidefields"/]</span><span class="span-7 paddingLeft">[@spring.message "hide"/]</span><span class="span-5 paddingLeft">[@spring.message "mandatory"/]</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "externalId"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "externalId"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "ethnicity"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "ethnicity"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "citizenship"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "citizenship"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "handicapped"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "handicapped"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "educationlevel"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "educationlevel"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "photo"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "photo"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "assigningClienttopositions"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "assigningClienttopositions"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "address1"/]</span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "address1"/]</span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "address2"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "address2"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "address3"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "address3"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "city/District"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "city/District"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "state"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "state"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "country"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "country"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "postalCode"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "postalCode"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "receiptIDandDate"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "receiptIDandDate"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft ">[@spring.message "collateralTypeandNotes"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "collateralTypeandNotes"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
     
     </div>
@@ -71,32 +71,32 @@
     	<div class="bluedivs span-22 fontBold">
         	<span class="span-8 paddingLeft">[@spring.message "client/systemusersfields"/]</span><span class="span-7 paddingLeft">[@spring.message "hide"/]</span><span class="span-5 paddingLeft">[@spring.message "mandatory"/]</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "middlename"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "middlename"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "secondlastname"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "secondlastname"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "governmentID"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "governmentID"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "spouse/fathermiddlename"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "spouse/fathermiddlename"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "spouse/fathersecondlastname"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "spouse/fathersecondlastname"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "phonenumber"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "phonenumber"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "trained"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "trained"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
-        <div class="span-22 borderbtm ">
-        	<span class="span-8 paddingLeft ">[@spring.message "trainedon"/]</span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
+        <div class="span-22 borderbtm">
+        	<span class="span-8 paddingLeft">[@spring.message "trainedon"/]</span><span class="span-7 paddingLeft ">&nbsp;</span><span class="span-5 paddingLeft"><input type="checkbox" /></span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft ">[@spring.message "business/workactivities"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "business/workactivities"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
     
     </div>
@@ -105,7 +105,7 @@
         	<span class="span-8 paddingLeft">[@spring.message "groupfields"/]</span><span class="span-7 paddingLeft">[@spring.message "hide"/]</span><span class="span-5 paddingLeft">[@spring.message "mandatory"/]</span>
         </div>
         <div class="span-22 last">
-        	<span class="span-8 paddingLeft ">[@spring.message "trained"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
+        	<span class="span-8 paddingLeft">[@spring.message "trained"/]</span><span class="span-7 paddingLeft "><input type="checkbox" /></span><span class="span-5 paddingLeft">&nbsp;</span>
         </div>
     
     </div>

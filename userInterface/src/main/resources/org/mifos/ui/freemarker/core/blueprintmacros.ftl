@@ -45,7 +45,7 @@
 [/#macro]
 
 [#macro crumbs breadcrumbs]
-<div class="span-20 bluedivs paddingLeft">
+<div class="bluedivs paddingLeft">
 	    [#list breadcrumbs as messages]
   			[#if messages_has_next]
     			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages.message}" /]</span>
@@ -55,7 +55,7 @@
 [/#macro]
 
 [#macro crumb url]
-<div class="span-20 bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
+<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
 [/#macro]
 
 [#macro header pageTitle]

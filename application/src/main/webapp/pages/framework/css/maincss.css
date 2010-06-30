@@ -37,7 +37,7 @@ margin-right:180px;
 	padding-top: 10px;
 	/*margin-left:180px;*/
 	padding-left:15px;
-	width:900px;
+	width:85%;
 	text-decoration:none;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -162,8 +162,8 @@ margin-right:180px;
 */}
 .borderbtm {
 	border-bottom:#d7deee 1px solid;
-	margin-bottom:5px;
-	margin-top:5px;
+	margin-bottom:2px;
+	margin-top:2px;
 }
 .rightTble {
 	width:55%;
@@ -311,7 +311,7 @@ margin-right:180px;
 	float:left;
 }
 .ht600 {
-	height:620px;
+	height:650px;
 }
 .ht750 {
 	height:750px;
@@ -424,6 +424,7 @@ margin-right:180px;
 .paddingLeft {
 	padding-left:15px;	
 	font-size:9pt;
+	margin-bottom:2px;
 }
 .red { 
 	color:#FF0000;

@@ -8,7 +8,7 @@
    <!--  Main Content Begins--> 
 <div class=" content leftMargin180">
   	<form method="" action="" name="formname">
- <p class="span-20 bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">View Product Categories</span></p><br/>
+ <p class="bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">View Product Categories</span></p><br/>
     <br/><p class="font15 orangeheading">[@spring.message "viewproductcategories" /]</p>
     <p>[@spring.message "clickonacategorybelowtoviewdetailsandmakechangesor"/] <a href="productCategoryAction.do?method=load">[@spring.message "definenewreportcategory"/]</a></p>
     <div class="fontBold">[@spring.message "loans"/]</div>

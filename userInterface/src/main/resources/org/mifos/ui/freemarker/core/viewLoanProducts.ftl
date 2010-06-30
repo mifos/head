@@ -9,9 +9,9 @@
   </div> 
     <!--  Main Content Begins-->  
   <div class="content leftMargin180">
-<div class="span-20 bluedivs paddingLeft">
+<div class="bluedivs paddingLeft">
 	    <a href="admin.ftl">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "viewLoanProducts" /]</span>  		
- </div>
+ </div><br/>
   <p>&nbsp;&nbsp;</p>
   	<form method="" action="" name="formname">
   <p class="font15 orangeheading">[@spring.message "viewLoanProducts"/]</p>

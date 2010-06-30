@@ -4,13 +4,13 @@
 
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
-  <div class="sidebar ht1400">
+  <div class="sidebar ht1350">
   [#include "adminLeftPane.ftl" ]
   </div>
   <div class="content leftMargin180">
+  <div class="bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Lookup Options</span></div>
   	<form method="" action="" name="formname">
-    <div class="span-21">
-  		<div class="span-20 bluedivs paddingLeft"><a href="admin.ftl">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Lookup Options</span></div>
+    <div class="span-21">  		
         <div class="clear">&nbsp;</div>
         <div ><span class="orangeheading">[@spring.message "defineLookupOptions" /]</span></div>
         <p class="error"></p>

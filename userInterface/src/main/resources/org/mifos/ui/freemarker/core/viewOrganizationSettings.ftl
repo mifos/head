@@ -8,10 +8,10 @@
   [#include "adminLeftPane.ftl" /]
   </div> 
  <!--  Main Content Begins-->  
-  <div class=" content leftMargin180">
+  <div class="content leftMargin180">
+  [@mifos.crumbs breadcrumbs/]
   	<form method="" action="" name="formname">
-    <div class="span-24">
-  		[@mifos.crumbs breadcrumbs/]
+    <div class="span-24">  		
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "organizationalSettings"/] </span></p>
         <p class="span-24">

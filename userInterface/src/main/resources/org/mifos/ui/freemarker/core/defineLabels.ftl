@@ -4,16 +4,16 @@
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Left Sidebar Begins
-  <div class="sidebar ht600">
+  <div class="sidebar ht1050">
   [#include "adminLeftPane.ftl" ]
   </div> 
    <!--  Left Sidebar Ends-->
  
    <!--  Main Content Begins-->  
   <div class=" content leftMargin180">
-  	<form method="" action="" name="formname">
-    <div class="span-16">
-  		<div class="span-20 bluedivs paddingLeft"><a href="admin.html">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Labels</span></div>
+  <div class="bluedivs paddingLeft"><a href="admin.html">Admin</a>&nbsp;/&nbsp;<span class="fontBold">Define Labels</span></div>
+  	<form method="" action="" name="formname">  	
+    <div class="span-16">  		
         <div class="clear">&nbsp;</div>
         <div class="fontBold"><span class="orangeheading"> Define Labels</span></div>
         <p class="error"></p>
