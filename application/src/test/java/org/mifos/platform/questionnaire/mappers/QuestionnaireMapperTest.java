@@ -122,7 +122,7 @@ public class QuestionnaireMapperTest {
     }
 
     private EventSource getEventSource(String event, String source) {
-        return new EventSource(source, event, null);
+        return new EventSource(event, source, null);
     }
 
     private SectionDefinition getSection(String name) {

@@ -149,8 +149,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private EventSource mapEventSource(EventSourceEntity eventSourceEntity) {
-        return new EventSource(eventSourceEntity.getSource().getEntityType(),
-                eventSourceEntity.getEvent().getName(), eventSourceEntity.getDescription());
+        return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(),
+                eventSourceEntity.getDescription());
     }
 
     private QuestionType mapToQuestionType(AnswerType answerType) {
