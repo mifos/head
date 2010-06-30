@@ -21,7 +21,8 @@
 package org.mifos.application;
 
 /**
- * This class holds the names of named queries which are used for master data retrieval.
+ * This class holds the names of named queries which are used for master data
+ * retrieval.
  */
 public interface NamedQueryConstants {
 
@@ -233,7 +234,12 @@ public interface NamedQueryConstants {
     // fee related m2
     public String GET_CUSTOMER_ACCOUNTS_FOR_FEE = "getCustomerAccountsForFee";
 
+    // Seems not to be used by anything
+    public String GET_FEE_UPDATETYPE = "getFeeUpdateType";
+
     public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE = "retrieveCustomerFeesByCategoryType";
+    public String RETRIEVE_CUSTOMER_FEES = "retrieveCustomerFees";
+    public String RETRIEVE_PRODUCT_FEES = "retrieveProductFees";
 
     public String APPLICABLE_LOAN_PRODUCTS = "loanOffering.getApplicableProducts";
 
@@ -255,7 +261,7 @@ public interface NamedQueryConstants {
     public String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB = "Customer.getClosedClientBasedOnNameAndDateOfBirth";
     public String GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB = "Customer.getBlackListedClientBasedOnNameAndDateOfBirth";
     public String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER = "product.getActiveOfferingsForCustomer";
-    public String GET_CLOSED_CLIENT_BASEDON_GOVTID = "Customer.getClosedClientBasedOnGovtId";
+    public String GET_CLOSED_CLIENT_BASED_ON_GOVT_ID = "Customer.getClosedClientBasedOnGovtId";
     public String GETOFFICEACTIVEPERSONNEL = "getCountActivePersonnel";
     public String GETCOUNTOFACTIVECHILDERN = "getCountOfActiveChildren";
     public String GETACTIVEPARENTS = "masterdata.activeParents";
