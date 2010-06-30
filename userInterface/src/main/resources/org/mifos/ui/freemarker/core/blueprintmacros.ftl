@@ -11,10 +11,10 @@
 [#-- usage   [@mifos.topNavigation currentTab="Home" /] --]
 [#macro topNavigation currentTab]
 <div>
-    <div class="topAlign append-1">
-		<a href="#" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>
+    <div class="topAlign">
+		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>
 		&nbsp;|&nbsp;
-		<a href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
+		<a href="loginAction.do?method=logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 	</div>
     <div>
 		<span class="logo"></span>
@@ -34,7 +34,7 @@
 <div>
 	<div class="topAlign append-1">
 		<span class="logo"></span>
-		<a href="#" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;<a href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
+		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;<a href="loginAction.do?method=logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 	</div>
     <div>
 		<span class="menu"><a href="custSearchAction.do?method=getHomePage" class="[#if currentTab == "Home"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Home" /]">[@spring.message "tab.Home" /]</a><a href="custSearchAction.do?method=loadMainSearch" class="[#if currentTab == "ClientsAndAccounts"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.ClientsAndAccounts" /]">[@spring.message "tab.ClientsAndAccounts" /]</a><a href="reportsAction.do?method=load" class="[#if currentTab == "Reports"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Reports" /]">[@spring.message "tab.Reports" /]</a><a href="admin.ftl" class="[#if currentTab == "Admin"]taborange[#else]tablightorange[/#if]" title="[@spring.message "tab.Admin" /]">[@spring.message "tab.Admin" /]</a></span>
@@ -42,6 +42,20 @@
     <div class="clear"></div>
     <div class="orangeline">&nbsp;</div>
 </div>
+[/#macro]
+
+[#macro crumbs breadcrumbs]
+<div class="bluedivs paddingLeft">
+	    [#list breadcrumbs as messages]
+  			[#if messages_has_next]
+    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.message "${messages.message}" /]</span>
+  			[/#if]
+  		[/#list]
+ </div>
+[/#macro]
+
+[#macro crumb url]
+<div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
 [/#macro]
 
 [#macro header pageTitle]
