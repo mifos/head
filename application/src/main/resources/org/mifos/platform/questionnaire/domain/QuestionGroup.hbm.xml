@@ -14,7 +14,7 @@
                 <param name="enumClass">org.mifos.platform.questionnaire.domain.QuestionGroupState</param>
             </type>
         </property>
-        <list name="sections">
+        <list name="sections" cascade="all">
             <key column="question_group_id" not-null="true"/>
             <list-index column="sequence_number"/>
             <one-to-many class="org.mifos.platform.questionnaire.domain.Section"/>

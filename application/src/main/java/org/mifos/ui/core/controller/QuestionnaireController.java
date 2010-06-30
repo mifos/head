@@ -19,10 +19,6 @@
  */
 package org.mifos.ui.core.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -39,6 +35,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -124,6 +124,15 @@ public class QuestionnaireController {
     }
 
     public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
+        //TODO: remove default Misc section
+        if (questionGroup.getSections() == null) {
+            ArrayList<SectionForm> sectionForms = new ArrayList<SectionForm>();
+            SectionForm sectionForm = new SectionForm();
+            sectionForm.setName("Misc");
+            sectionForms.add(sectionForm);
+            questionGroup.setSections(sectionForms);
+        }
+        // end of todo comment
         if (questionGroupHasErrors(questionGroup, requestContext)) {
             return "failure";
         }
@@ -141,7 +150,7 @@ public class QuestionnaireController {
         List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
         Map<String, String> evtSourcesMap = new HashMap<String, String>();
         for (EventSource evtSrc : eventSources) {
-            evtSourcesMap.put( getEventSourceId(evtSrc) , evtSrc.getDesciption());
+            evtSourcesMap.put(getEventSourceId(evtSrc), evtSrc.getDesciption());
         }
         return evtSourcesMap;
     }
