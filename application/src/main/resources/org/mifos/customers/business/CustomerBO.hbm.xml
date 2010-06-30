@@ -695,7 +695,8 @@
  	    <![CDATA[select count(*) 
  	    	from org.mifos.customers.client.business.ClientBO as client 
  	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
- 	    	and client.blackListed = 1 and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+ 	    	and client.customerStatus.id=:clientStatus and client.blackListed = 1
+			and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
 		]]>
 	</query>
 	<query name="Customer.getClosedClientBasedOnNameAndDateOfBirth">
