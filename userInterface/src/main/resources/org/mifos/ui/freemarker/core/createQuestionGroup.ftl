@@ -5,6 +5,52 @@
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
+    
+    <style type="text/css">
+      .normalFontFixedDiv {
+        color:#000000;
+        font-family:Arial,Verdana,Helvetica,sans-serif;
+        font-size:9pt;
+        font-weight:normal;
+        text-decoration:none;
+        width:400px;
+      }
+      
+      fieldset {  
+        float: left;    
+	clear: left;    
+	width: 100%;    
+	margin: 0 0 1.5em 0;    
+	padding: 0;  
+      }  
+      legend {  
+        margin-left: 1em;  
+        color: #000000;  
+        font-weight: bold;  
+      }  
+      fieldset ol {  
+        padding: 1em 1em 0 1em;  
+        list-style: none;  
+      }  
+      fieldset li {  
+        float: left;    
+	clear: left;    
+	width: 100%;    
+        padding-bottom: 1em;
+      }  
+      fieldset.submit {  
+        float: none;    
+	width: auto;    
+	border: 0 none #FFF;    
+	padding-left: 12em;   
+      }
+      label {    
+        float: left;    
+        width: 10em;    
+        margin-right: 1em;    
+        text-align: right;  
+      }
+    </style>
 </head>
 
 <body>
@@ -97,59 +143,44 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td align="left" valign="top" class="paddingL15T15">
-                        <table width="95%" border="0" cellpadding="3" cellspacing="0">
-                            <tr>
-                                <td class="headingorange"><span class="headingorange"> Add Question Group </span></td>
-                            </tr>
-                            <tr class="fontnormal">
-                                <td align="left" valign="top" class="paddingL15T15">
-                                    <form name="createquestiongroupform"
-                                          action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
-                                        <table width="98%" border="0" cellpadding="3" cellspacing="0">
-                                            <tr class="fontnormal">
-                                                <td width="24%" align="right"><span class="mandatorytext"><font
-                                                        color="#FF0000">*</font></span>Question Group Title:
-                                                </td>
-                                                <td width="76%">
-                                                    <script src="pages/framework/js/func.js"></script>
-                                                    <script src="pages/framework/js/func_en_GB.js"></script>
-                                                    [@spring.formInput "questionGroupDefinition.title",
-                                                    'maxlength="50"
-                                                    onkeypress="return FnCheckNumCharsOnPress(event,this);"
-                                                    onblur="return FnCheckNumChars(event,this);return
-                                                    FnEscape(event,this)"'/]
-                                                    <br/>
-                                                    [@spring.showErrors "<br>","fontnormalRedBold" /]
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>&nbsp;</td>
-                                                <td>
-                                                    <input type="submit" name="_eventId_defineQuestionGroup"
-                                                           value="Submit"
-                                                           class="buttn">
-                                                </td>
-                                                <td align="center">
-                                                    <input type="submit" name="_eventId_cancel"
-                                                           value="Cancel"
-                                                           class="cancelbuttn">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" class="blueline" align="left">&nbsp;</td>
-                                            </tr>
-                                        </table>
-                                        <br>
-                                    </form>
-                                    <br>
-                                </td>
-                        </table>
-                        <br>
+                    	<div>
+                    	   <span class="headingorange"> Add Question Group </span>
+                    	</div>
+                    	
+                    	<div class="normalFontFixedDiv">
+			  <form name="createquestiongroupform" action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
+			  
+			      <fieldset>  
+				<ol>  
+				  <li>
+				    <span class="mandatorytext"><font color="#FF0000">* </font></span>	
+				    <label for="title">Question Group Title:</label>  
+				    [@spring.formInput "questionGroupDefinition.title",
+					'maxlength="50" 
+					onkeypress="return FnCheckNumCharsOnPress(event,this);"
+					onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/] 
+				    [@spring.showErrors "<br/>","fontnormalRedBold" /] 
+				  </li>  
+				  <li>  
+				   <span class="mandatorytext"><font color="#FF0000">* </font></span>
+				   <label for="eventSourceId">Applies To:</label>  
+				   [@spring.formSingleSelect "questionGroupDefinition.eventSourceId", EventSources /]
+                   	           [@spring.showErrors "<br>","fontnormalRedBold" /]
+				  </li>  
+				 </ol>  
+			      </fieldset>  
+			        
+			      <fieldset class="submit">  
+				<input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value="Submit" class="buttn">
+				&nbsp; 
+				<input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="Cancel" class="cancelbuttn">
+			      </fieldset>
+			  
+			      
+			   </form>
+                    	</div>
+                    	
+                        
                     </td>
                 </tr>
             </table>
