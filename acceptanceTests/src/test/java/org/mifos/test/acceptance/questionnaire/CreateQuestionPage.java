@@ -34,4 +34,12 @@ public class CreateQuestionPage extends MifosPage {
         waitForPageToLoad();
         return new AdminPage(selenium);
     }
+
+    public String submitButtonClass() {
+        return selenium.getEval("window.document.getElementById('_eventId_createQuestions').className");
+    }
+
+    public String submitButtonStatus() {
+        return selenium.getEval("window.document.getElementById('_eventId_createQuestions').disabled");
+    }
 }
