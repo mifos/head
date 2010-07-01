@@ -40,6 +40,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -127,15 +129,27 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        String title = "Title";
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(1, title, asList(getSectionDefinition("S1"), getSectionDefinition("S2"))));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(questionGroupDetail);
         QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
         assertNotNull("Question group should not be null", questionGroup);
-        assertThat(questionGroup.getTitle(), is(title));
+        assertThat(questionGroup.getTitle(), is(TITLE));
         List<SectionForm> sectionForms = questionGroup.getSections();
         assertThat(sectionForms.size(), is(2));
         assertThat(sectionForms.get(0).getName(), is("S1"));
         assertThat(sectionForms.get(1).getName(), is("S2"));
+        EventSource eventSource = questionGroup.getEventSource();
+        assertThat(eventSource, is(not(nullValue())));
+        assertThat(eventSource.getEvent(), is("Create"));
+        assertThat(eventSource.getSource(), is("Client"));
+    }
+
+    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
+        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+        for (String sectionName : sectionNames) {
+            sectionDefinitions.add(getSectionDefinition(sectionName));
+        }
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sectionDefinitions);
     }
 
     private SectionDefinition getSectionDefinition(String name) {

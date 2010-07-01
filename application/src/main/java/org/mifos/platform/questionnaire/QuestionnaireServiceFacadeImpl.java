@@ -146,6 +146,7 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
         questionGroup.setId(questionGroupDetail.getId().toString());
         questionGroup.setTitle(questionGroupDetail.getTitle());
         questionGroup.setSections(mapToSectionForms(questionGroupDetail.getSectionDefinitions()));
+        questionGroup.setEventSource(questionGroupDetail.getEventSource());
         return questionGroup;
     }
 

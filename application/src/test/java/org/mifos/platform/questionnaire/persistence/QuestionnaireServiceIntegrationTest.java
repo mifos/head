@@ -49,6 +49,8 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.*;
@@ -128,10 +130,6 @@ public class QuestionnaireServiceIntegrationTest {
                 getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"), getSection("S1")))));
     }
 
-    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle1, List<SectionDefinition> sectionDefinitions) {
-        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle1, sectionDefinitions));
-    }
-
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionGroupById() throws ApplicationException {
@@ -140,9 +138,16 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
-        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().size(), is(2));
-        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().get(0).getName(), is("S1"));
-        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().get(1).getName(), is("S2"));
+        List<SectionDefinition> sectionDefinitions = retrievedQuestionGroupDetail.getSectionDefinitions();
+        assertThat(sectionDefinitions, is(not(nullValue())));
+        assertThat(sectionDefinitions.size(), is(2));
+        List<SectionDefinition> sectionDefinitionList = retrievedQuestionGroupDetail.getSectionDefinitions();
+        assertThat(sectionDefinitionList.get(0).getName(), is("S1"));
+        assertThat(sectionDefinitionList.get(1).getName(), is("S2"));
+        EventSource eventSource = retrievedQuestionGroupDetail.getEventSource();
+        assertThat(eventSource, is(not(nullValue())));
+        assertThat(eventSource.getEvent(), is("Create"));
+        assertThat(eventSource.getSource(), is("Client"));
     }
 
     @Test
@@ -248,6 +253,10 @@ public class QuestionnaireServiceIntegrationTest {
         assertEquals("Create", eventSourceEntity.getEvent().getName());
         assertEquals("Client", eventSourceEntity.getSource().getEntityType());
         assertEquals("Create Client", eventSourceEntity.getDescription());
+    }
+
+    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDefinition> sectionDefinitions) {
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDefinitions));
     }
 }
 
