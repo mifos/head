@@ -1138,10 +1138,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         FundCodeEntity fundCodeEntity = (FundCodeEntity) StaticHibernateUtil.getSessionTL().get(FundCodeEntity.class,
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
+
+        TestObjectFactory.cleanUpChangeLog();
         StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
-        TestObjectFactory.cleanUpChangeLog();
-
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestUtils.makeUser());

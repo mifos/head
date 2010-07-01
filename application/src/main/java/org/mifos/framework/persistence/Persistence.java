@@ -56,6 +56,7 @@ public abstract class Persistence {
     public Object createOrUpdate(final Object object) throws PersistenceException {
         try {
             Session session = getHibernateUtil().getSessionTL();
+            // FIXME remove this and fix the code
             getHibernateUtil().startTransaction();
             session.saveOrUpdate(object);
             if (getHibernateUtil().getInterceptor().isAuditLogRequired()) {

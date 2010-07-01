@@ -36,12 +36,6 @@ import org.mifos.framework.exceptions.HibernateSearchException;
  * hibernate session object getting closed.
  */
 public interface QueryResult {
-    /**
-     * Return the Session used for query
-     *
-     * @return Session
-     */
-    public Session getSession() throws HibernateProcessException;
 
     /**
      * Set the query which will be used for query execution
@@ -64,12 +58,6 @@ public interface QueryResult {
      * @param queryInputs
      */
     public void setQueryInputs(QueryInputs queryInputs) throws HibernateSearchException;
-
-    /**
-     * This is invoked on the query result to indicate the end of search result
-     * view at the front end , the associated hibernate session would be closed
-     */
-    public void close() throws HibernateProcessException;
 
     /**
      * Returns the size
