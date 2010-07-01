@@ -20,33 +20,36 @@
 
 package org.mifos.test.matchers;
 
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mockito.ArgumentMatcher;
 
 import java.util.List;
 
-public class HasThisKindOfEvent extends ArgumentMatcher<List<EventSource>> {
+public class EventSourceMatcher extends TypeSafeMatcher<List<EventSource>> {
     private String source;
     private String event;
     private String description;
 
-    public HasThisKindOfEvent(String event, String source, String description) {
+    public EventSourceMatcher(String event, String source, String description) {
         this.event = event;
         this.source = source;
         this.description = description;
     }
 
     @Override
-    public boolean matches(Object o) {
-        if (o instanceof List) {
-            List<EventSource> eventSources = (List<EventSource>) o;
-            for (EventSource eventSource : eventSources) {
-                if (eventSource.getSource().equals(source) &&
-                        eventSource.getEvent().equals(event) &&
-                            eventSource.getDesciption().equals(description))
-                    return true;
-            }
+    public boolean matchesSafely(List<EventSource> eventSources) {
+        for (EventSource eventSource : eventSources) {
+            if (eventSource.getSource().equals(source) &&
+                    eventSource.getEvent().equals(event) &&
+                        eventSource.getDesciption().equals(description))
+                return true;
         }
         return false;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("One of the eventSource objects did not match");
     }
 }

@@ -62,11 +62,17 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        StaticHibernateUtil.startTransaction();
         standardAccountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
                 new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
         paymentTypeDtos = standardAccountService.getLoanPaymentTypes();
         defaultPaymentType = paymentTypeDtos.get(0);
-        StaticHibernateUtil.commitTransaction();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        StaticHibernateUtil.rollbackTransaction();
     }
 
     public void testMakePayment() throws Exception {

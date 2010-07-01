@@ -19,6 +19,8 @@
  */
 package org.mifos.ui.core.controller;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 
 public class SectionForm implements Serializable {
@@ -31,5 +33,9 @@ public class SectionForm implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void trimName() {
+        name = StringUtils.trim(name);
     }
 }

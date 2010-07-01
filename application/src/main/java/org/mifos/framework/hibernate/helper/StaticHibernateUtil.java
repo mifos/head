@@ -31,6 +31,8 @@ public class StaticHibernateUtil {
 
     private static HibernateUtil hibernateUtil;
 
+    private static boolean commitFalg = true;
+
     public static void setHibernateUtil(HibernateUtil hibernateUtil) {
         StaticHibernateUtil.hibernateUtil = hibernateUtil;
     }
@@ -42,10 +44,13 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    public static Session openSession() throws HibernateProcessException {
-        return hibernateUtil.openSession();
-    }
-
+    /**
+     * Close a session. Do nothing if the session is null or already closed.
+     *
+     * @deprecated use only {@link StaticHibernateUtil#closeSession()} for session retrieved by
+     *             {@link StaticHibernateUtil#getSessionTL()}
+     */
+    @Deprecated
     public static void closeSession(Session session) throws HibernateProcessException {
         hibernateUtil.closeSession(session);
     }
@@ -66,12 +71,22 @@ public class StaticHibernateUtil {
         return hibernateUtil.startTransaction();
     }
 
+    /**
+     * @deprecated use only<br> {@link StaticHibernateUtil#startTransaction()}<br>
+     *             {@link StaticHibernateUtil#commitTransaction()}<br> {@link StaticHibernateUtil#rollbackTransaction()}<br>
+     * @return
+     */
+    @Deprecated
     public static Transaction getTransaction() {
         return hibernateUtil.getTransaction();
     }
 
     public static void closeSession() {
         hibernateUtil.closeSession();
+    }
+
+    public static void flushSession() {
+        hibernateUtil.flushSession();
     }
 
     public static void flushAndCloseSession() {
@@ -83,7 +98,19 @@ public class StaticHibernateUtil {
     }
 
     public static void commitTransaction() {
-        hibernateUtil.commitTransaction();
+        if (commitFalg) {
+            hibernateUtil.commitTransaction();
+        }
+    }
+
+    public static void enableCommits() {
+        commitFalg = true;
+
+    }
+
+    public static void disableCommits() {
+        commitFalg = false;
+
     }
 
     public static void rollbackTransaction() {

@@ -32,13 +32,11 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
@@ -48,9 +46,7 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMapperTest {
@@ -133,16 +129,40 @@ public class QuestionnaireMapperTest {
 
     @Test
     public void shouldMapQuestionGroupToQuestionGroupDetail() {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setTitle(TITLE);
-        questionGroup.setSections(asList(new Section("S1"), new Section("S2")));
+        QuestionGroup questionGroup = getQuestionGroup("Create", "Client", "S1", "S2");
         QuestionGroupDetail questionGroupDetail = questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
         assertThat(questionGroupDetail, is(not(nullValue())));
         assertThat(questionGroupDetail.getTitle(), is(TITLE));
-        assertNotNull(questionGroupDetail.getSectionDefinitions());
+        List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
+        assertThat(sectionDefinitions, is(not(nullValue())));
         assertThat(questionGroupDetail.getSectionDefinitions().size(), is(2));
         assertThat(questionGroupDetail.getSectionDefinitions().get(0).getName(), is("S1"));
         assertThat(questionGroupDetail.getSectionDefinitions().get(1).getName(), is("S2"));
+        EventSource eventSource = questionGroupDetail.getEventSource();
+        assertThat(eventSource, is(not(nullValue())));
+        assertThat(eventSource.getEvent(), is("Create"));
+        assertThat(eventSource.getSource(), is("Client"));
+    }
+
+    private QuestionGroup getQuestionGroup(String event, String source, String... sectionNames) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(TITLE);
+        List<Section> sections = new ArrayList<Section>();
+        for (String sectionName : sectionNames) sections.add(new Section(sectionName));
+        questionGroup.setSections(sections);
+        questionGroup.setEventSources(getEventSources(event, source));
+        return questionGroup;
+    }
+
+    private Set<EventSourceEntity> getEventSources(String event, String source) {
+        EventSourceEntity eventSourceEntity = new EventSourceEntity();
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setName(event);
+        eventSourceEntity.setEvent(eventEntity);
+        EntityMaster entityMaster = new EntityMaster();
+        entityMaster.setEntityType(source);
+        eventSourceEntity.setSource(entityMaster);
+        return Collections.singleton(eventSourceEntity);
     }
 
     @Test
@@ -166,7 +186,7 @@ public class QuestionnaireMapperTest {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
         List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
         assertThat(eventSources, is(not(nullValue())));
-        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
     }
 
     private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {

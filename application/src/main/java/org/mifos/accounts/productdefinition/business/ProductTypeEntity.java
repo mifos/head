@@ -73,7 +73,7 @@ public class ProductTypeEntity extends AbstractEntity {
         return dormancyDays;
     }
 
-    void setDormancyDays(Short dormancyDays) {
+    public void setDormancyDays(Short dormancyDays) {
         this.dormancyDays = dormancyDays;
     }
 
@@ -81,7 +81,7 @@ public class ProductTypeEntity extends AbstractEntity {
         return latenessDays;
     }
 
-    void setLatenessDays(Short latenessDays) {
+    public void setLatenessDays(Short latenessDays) {
         this.latenessDays = latenessDays;
     }
 
@@ -90,6 +90,10 @@ public class ProductTypeEntity extends AbstractEntity {
         return MessageLookup.getInstance().lookup(lookupKey);
     }
 
+    /**
+     * @deprecated remove after getting spring mvc form submission example working.
+     */
+    @Deprecated
     public void update(Short latenessDormancy) throws ProductDefinitionException {
 
         if (productTypeID.equals(ProductType.LOAN.getValue())) {

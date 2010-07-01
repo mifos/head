@@ -52,6 +52,7 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -103,6 +104,7 @@ public class GroupStatusChangeIntegrationTest {
     public void cleanDatabaseTablesAfterTest() {
         // NOTE: - only added to stop older integration tests failing due to brittleness
         databaseCleaner.clean();
+        StaticHibernateUtil.closeSession();
     }
 
     @Before
@@ -181,6 +183,7 @@ public class GroupStatusChangeIntegrationTest {
 
         existingPendingGroup = this.customerDao.findGroupBySystemId(existingPendingGroup.getGlobalCustNum());
         existingPendingGroup.setUserContext(TestUtils.makeUser());
+        StaticHibernateUtil.startTransaction();
         existingPartialClient = this.customerDao.findClientBySystemId(existingPartialClient.getGlobalCustNum());
         existingPendingClient = this.customerDao.findClientBySystemId(existingPendingClient.getGlobalCustNum());
 
@@ -192,7 +195,7 @@ public class GroupStatusChangeIntegrationTest {
 
         // verification
         assertThat(existingPendingGroup.getStatus(), is(CustomerStatus.GROUP_CANCELLED));
-        assertThat(existingPendingClient.getStatus(), is(CustomerStatus.CLIENT_PARTIAL));
+        assertThat(existingPendingClient.getStatus(), is(CustomerStatus.CLIENT_PENDING));
         assertThat(existingPartialClient.getStatus(), is(CustomerStatus.CLIENT_PARTIAL));
     }
 }

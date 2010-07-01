@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +74,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroup questionGroup = questionnaireServiceFacade.
-                        getQuestionGroup(Integer.valueOf(questionGroupId));
+                QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(Integer.valueOf(questionGroupId));
                 model.addAttribute("questionGroupDetail", questionGroup);
+                model.addAttribute("eventSources", getAllQgEventSources());
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
@@ -124,15 +123,6 @@ public class QuestionnaireController {
     }
 
     public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
-        //TODO: remove default Misc section
-        if (questionGroup.getSections() == null) {
-            ArrayList<SectionForm> sectionForms = new ArrayList<SectionForm>();
-            SectionForm sectionForm = new SectionForm();
-            sectionForm.setName("Misc");
-            sectionForms.add(sectionForm);
-            questionGroup.setSections(sectionForms);
-        }
-        // end of todo comment
         if (questionGroupHasErrors(questionGroup, requestContext)) {
             return "failure";
         }
@@ -183,7 +173,15 @@ public class QuestionnaireController {
             constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
             return true;
         }
+        if (sectionsNotPresent(questionGroup)) {
+            constructErrorMessage(requestContext, "questionnaire.error.no.sections.in.group", "sectionName", "Please specify at least one section or question");
+            return true;
+        }
         return false;
+    }
+
+    private boolean sectionsNotPresent(QuestionGroup questionGroup) {
+        return questionGroup.getSections().size() == 0;
     }
 
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
@@ -200,7 +198,7 @@ public class QuestionnaireController {
 
 
     private boolean invalid(String id) {
-        return (isEmpty(id) || !isInteger(id)) ? true : false;
+        return (isEmpty(id) || !isInteger(id));
     }
 
     public boolean isInteger(String id) {
@@ -211,5 +209,10 @@ public class QuestionnaireController {
         catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public String addSection(QuestionGroup questionGroup) {
+        questionGroup.addCurrentSection();
+        return "success";
     }
 }

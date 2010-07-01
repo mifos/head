@@ -11,8 +11,14 @@
 
 	<view-state id="createQuestionGroup" model="questionGroupDefinition">
 		<transition on="defineQuestionGroup" to="defineQuestionGroup" />
-		<transition on="cancel" to="cancel" bind="false" history="discard"/>
+        <transition on="addSection" to="addSection"/>
+        <transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
+
+    <action-state id="addSection">
+        <evaluate expression="questionnaireController.addSection(questionGroupDefinition)"/>
+        <transition on="success" to="createQuestionGroup" />
+    </action-state>
 
     <action-state id="defineQuestionGroup">
         <evaluate expression="questionnaireController.defineQuestionGroup(questionGroupDefinition, flowRequestContext)" />

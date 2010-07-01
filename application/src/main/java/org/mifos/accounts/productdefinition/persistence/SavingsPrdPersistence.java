@@ -47,6 +47,10 @@ public class SavingsPrdPersistence extends Persistence {
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT, queryParameters);
     }
 
+    /**
+     * @deprecated use {@link SavingsProductDao#findSavingsProductConfiguration()}
+     */
+    @Deprecated
     public Short retrieveDormancyDays() throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("productTypeId", ProductType.SAVINGS.getValue());

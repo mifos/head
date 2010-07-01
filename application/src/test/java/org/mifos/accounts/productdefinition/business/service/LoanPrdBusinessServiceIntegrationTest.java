@@ -197,29 +197,6 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         StaticHibernateUtil.closeSession();
     }
 
-    public void testRetrieveLatenessForPrd() throws Exception {
-        try {
-            Short latenessDays = new LoanPrdBusinessService().retrieveLatenessForPrd();
-           Assert.assertEquals(latenessDays, Short.valueOf("10"));
-        } catch (ServiceException e) {
-           Assert.assertTrue(false);
-        }
-        StaticHibernateUtil.closeSession();
-
-    }
-
-    public void testRetrieveLatenessForPrdForInvalidConnection() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            new LoanPrdBusinessService().retrieveLatenessForPrd();
-           Assert.assertTrue(false);
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-
-    }
-
     private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {
         Date startDate = new Date(System.currentTimeMillis());
 
