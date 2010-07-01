@@ -211,7 +211,7 @@ public class QuestionnaireController {
         }
     }
 
-    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
+    public String addSection(QuestionGroup questionGroup) {
         questionGroup.addCurrentSection();
         return "success";
     }

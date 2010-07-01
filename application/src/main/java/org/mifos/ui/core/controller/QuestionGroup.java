@@ -98,12 +98,12 @@ public class QuestionGroup implements Serializable {
         currentSection = new SectionForm();
     }
 
-    public void setSectionName(String sectionName) {
-        currentSection.setName(sectionName);
-    }
-
     public String getSectionName(){
         return currentSection.getName();
+    }
+
+    public void setSectionName(String sectionName) {
+        currentSection.setName(sectionName);
     }
 }
 

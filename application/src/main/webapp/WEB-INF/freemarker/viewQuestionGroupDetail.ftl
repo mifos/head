@@ -1,55 +1,36 @@
 [#ftl]
 [#import "spring.ftl" as spring]
-<html lang="EN">
+
+<html lang="EN" xmlns:html-el="http://www.w3.org/1999/xhtml" xmlns:html-el="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://www.springframework.org/schema/webflow" xmlns:c="http://www.w3.org/1999/XSL/Transform"
+      xmlns:fmt="http://jboss.org/xml/ns/javax/validation/mapping" xmlns:fmt="http://java.sun.com/JSP/Page">
 <head>
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
-    
     <style type="text/css">
-      .normalFontFixedDiv {
-        color:#000000;
-        font-family:Arial,Verdana,Helvetica,sans-serif;
-        font-size:9pt;
-        font-weight:normal;
-        text-decoration:none;
-        width:400px;
-      }
-      
-      fieldset {  
-        float: left;    
-	clear: left;    
-	width: 100%;    
-	margin: 0 0 1.5em 0;    
-	padding: 0;  
-      }  
-      legend {  
-        margin-left: 1em;  
-        color: #000000;  
-        font-weight: bold;  
-      }  
-      fieldset ol {  
-        padding: 1em 1em 0 1em;  
-        list-style: none;  
-      }  
-      fieldset li {  
-        float: left;    
-	clear: left;    
-	width: 100%;    
-        padding-bottom: 1em;
-      }  
-      fieldset.submit {  
-        float: none;    
-	width: auto;    
-	border: 0 none #FFF;    
-	padding-left: 12em;   
-      }
-      label {    
-        float: left;    
-        width: 10em;    
-        margin-right: 1em;    
-        text-align: right;  
-      }
+        .clsHeaderBg {
+            background-color:#D7DEEE;
+            width:100%;
+        }
+        fieldset {
+            float: left;
+            clear: left;
+            width: 100%;
+            margin: 0 0 1.5em 0;
+            padding: 0;
+            border: none;
+        }
+        fieldset ol {
+            padding: 1em 1em 0 1em;
+            list-style: none;
+        }
+        fieldset li {
+            float: left;
+            clear: left;
+            width: 100%;
+            padding-bottom: 1em;
+        }
     </style>
 </head>
 
@@ -89,6 +70,9 @@
         <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
     </tr>
 </table>
+
+
+
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
@@ -130,62 +114,59 @@
             </table>
         </td>
         <td align="left" valign="top" bgcolor="#FFFFFF" class="paddingleftmain" height="500">
-            <span id="page.id" title="createQuestionGroup"></span>
-            <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
-            <table width="95%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td class="bluetablehead05">
-                        <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> Add Question Group </span>
-                    </td>
-                </tr>
-            </table>
-            <table width="95%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td align="left" valign="top" class="paddingL15T15">
-                    	<div>
-                    	   <span class="headingorange"> Add Question Group </span>
-                    	</div>
-                    	
-                    	<div class="normalFontFixedDiv">
-			  <form name="createquestiongroupform" action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
-			  
-			      <fieldset>  
-				<ol>  
-				  <li>
-				    <span class="mandatorytext"><font color="#FF0000">* </font></span>	
-				    <label for="title">Question Group Title:</label>  
-				    [@spring.formInput "questionGroupDefinition.title",
-					'maxlength="50" 
-					onkeypress="return FnCheckNumCharsOnPress(event,this);"
-					onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/] 
-				    [@spring.showErrors "<br/>","fontnormalRedBold" /] 
-				  </li>  
-				  <li>  
-				   <span class="mandatorytext"><font color="#FF0000">* </font></span>
-				   <label for="eventSourceId">Applies To:</label>  
-				   [@spring.formSingleSelect "questionGroupDefinition.eventSourceId", EventSources /]
-                   	           [@spring.showErrors "<br>","fontnormalRedBold" /]
-				  </li>  
-				 </ol>  
-			      </fieldset>  
-			        
-			      <fieldset class="submit">  
-				<input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value="Submit" class="buttn">
-				&nbsp; 
-				<input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="Cancel" class="cancelbuttn">
-			      </fieldset>
-			  
-			      
-			   </form>
-                    	</div>
-                    	
-                        
-                    </td>
-                </tr>
-            </table>
-            <br>
-            <input type="hidden" name="h_user_locale" value="en_GB">
+            <span id="page.id" title="view_question_groups_details"></span>
+
+            <div id="divBreadCrumb" class="clsHeaderBg">
+              <span class="fontnormal8pt">
+                  <a href="AdminAction.do?method=load">Admin</a> /
+              </span>
+              <span class="fontnormal8pt">
+                  <a href="viewQuestionGroups.ftl">View Question Groups</a> /
+              </span>
+              [#if error_message_code??]
+                [@spring.message error_message_code/]
+              [#else]
+                 <span class="fontnormal8ptbold">
+                   ${Request.questionGroupDetail.title}
+                 </span>
+              [/#if]
+            </div>
+            <div id="divQuestionGroup">
+                <div id="divQGHeader" style="padding:3px" class="headingorange">
+                    [#if !error_message_code??]
+                    ${Request.questionGroupDetail.title}
+                    [/#if]
+                    <br/>
+                </div>
+                <div id="divQGContents"  class="fontnormal">
+                     <fieldset>
+                        <ol>
+                            <li id="question.group.applies.to">
+                               Question group applies to: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                            </li>
+                        </ol>
+                    </fieldset>
+                     <div id="divSections">
+                         [#list Request.questionGroupDetail.sections as section]
+                         ${section.name}:&nbsp;&nbsp;<a href="#">remove</a>
+                         <br/>
+                         <table width="100%" id="sections.table" name="sections.table" border="0"
+                                cellpadding="3" cellspacing="0">
+                             <tr>
+                                 <td class="drawtablehd">Question Name</td>
+                                 <td class="drawtablehd">Mandatory</td>
+                                 <td class="drawtablehd">Delete</td>
+                             </tr>
+                             <tr>
+                                 <td class="drawtablerow">&nbsp;</td>
+                                 <td class="drawtablerow">&nbsp;</td>
+                             </tr>
+                         </table>
+                         [/#list]
+                     </div>
+                </div>
+            </div>
+
         </td>
     </tr>
 </table>
