@@ -40,6 +40,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
 import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
@@ -112,6 +113,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LegacyOfficeServiceFacade legacyOfficeServiceFacade = DependencyInjectedServiceLocator.locateLegacyOfficeServiceFacade();
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
     protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
+    protected FundServiceFacade fundServiceFacade = DependencyInjectedServiceLocator.locateFundServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -134,6 +136,7 @@ public abstract class BaseAction extends DispatchAction {
             this.legacyOfficeServiceFacade = springAppContext.getBean(LegacyOfficeServiceFacade.class);
             this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
             this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
+            this.fundServiceFacade = springAppContext.getBean(FundServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

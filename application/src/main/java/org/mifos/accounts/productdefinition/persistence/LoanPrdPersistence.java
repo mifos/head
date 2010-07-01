@@ -39,6 +39,10 @@ public class LoanPrdPersistence extends Persistence {
 
     private static ThreadLocal<Map> reportsCacheTL = new ThreadLocal<Map>();
 
+    /**
+     * @deprecated use {@link LoanProductDao#findLoanProductConfiguration()}
+     */
+    @Deprecated
     public Short retrieveLatenessForPrd() throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT.getValue());

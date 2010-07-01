@@ -29,6 +29,7 @@ import java.util.List;
 public class QuestionForm implements Serializable{
     private List<Question> questions = new ArrayList<Question>();
     private Question currentQuestion = new Question();
+    private static final long serialVersionUID = 2010225942240327677L;
 
     public String getTitle() {
         return currentQuestion.getTitle();

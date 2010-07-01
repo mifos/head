@@ -26,14 +26,18 @@ a:hover {
 .marginAuto{
 	margin:auto;
 }
+
+.marginRight180{
+margin-right:180px;
+}
 .marginLeft30{
-	margin-left:30px;
+	margin-left:20px;
 }
 .content {
 	padding-top: 10px;
 	/*margin-left:180px;*/
 	padding-left:15px;
-	width:900px;
+	width:85%;
 	text-decoration:none;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -109,6 +113,9 @@ a:hover {
 .bluedivs {
 	background-color:#d7deee;
 	/*color:#666666;*/
+	width:95%;
+	padding-top:2px;
+	padding-bottom:2px;
 	color:#000000;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -155,8 +162,8 @@ a:hover {
 */}
 .borderbtm {
 	border-bottom:#d7deee 1px solid;
-	margin-bottom:5px;
-	margin-top:5px;
+	margin-bottom:2px;
+	margin-top:2px;
 }
 .rightTble {
 	width:55%;
@@ -182,6 +189,17 @@ a:hover {
 .marginTop75{
 	margin-top:75px;
 }
+.marginTop20{
+	margin-top:20px;
+}
+.marginTop10{
+	margin-top:10px;
+}
+
+.marginTop15{
+	margin-top:15px;
+}
+
 
 .buttn {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -196,9 +214,15 @@ a:hover {
 	background-repeat: repeat-x;
 	cursor: pointer;
 	height: 20px;
-	float:right;
 	margin-right:34px;
 }
+.floatLeft{
+	float:left;
+}
+.floatRight{
+	float:right;
+}
+
 .buttn2 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 9pt;
@@ -277,6 +301,9 @@ a:hover {
 	margin-left:188px;
 	width:600px;
 }
+.marginLeft10{
+	margin-left:20px;
+	}
 .sidebar {
 	margin-top:2px;
 	width:174px;
@@ -298,8 +325,8 @@ a:hover {
 .ht1350 {
 	height:1350px;
 }
-.ht1550 {
-	height:1550px;
+.ht1500 {
+	height:1500px;
 }
 .ht1750 {
 	height:1750px;
@@ -395,9 +422,9 @@ a:hover {
 	text-decoration:none;
 }
 .paddingLeft {
-	padding-left:15px;
-	font-weight:bold;
-	font-size:8pt;
+	padding-left:15px;	
+	font-size:9pt;
+	margin-bottom:2px;
 }
 .red { 
 	color:#FF0000;
@@ -420,4 +447,7 @@ a:hover {
 .listSize{
 	width:135px;
 	height:80px;
+}
+.marginBottom{
+margin-bottom:10px;
 }

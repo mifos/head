@@ -26,6 +26,7 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 import java.util.List;
 
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.master.business.ValueListElement;

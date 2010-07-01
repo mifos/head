@@ -6,23 +6,31 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.accounts.productdefinition.business.ProductTypeEntity" table="prd_type">
-        <id name="productTypeID" column="prd_type_id" type="short">
-            <generator class="native"/>
-        </id>
-         <version name="versionNo" column="version_no" type="integer" unsaved-value="null"/>
-        <property name="latenessDays" column="lateness_days" type="short"  not-null="false" />
-        <property name="dormancyDays" column="dormancy_days" type="short"  not-null="false" />
-        <many-to-one name="lookUpValue" column="prd_type_lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
-        
-     </class>
-     <!--Get the lateness days value for a Loan product -->
-      <query name="productdefenition.GetLatenessDaysForLoans">
+	<class name="org.mifos.accounts.productdefinition.business.ProductTypeEntity" table="prd_type">
+		<id name="productTypeID" column="prd_type_id" type="short">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="version_no" type="integer"
+			unsaved-value="null" />
+		<property name="latenessDays" column="lateness_days" type="short"
+			not-null="false" />
+		<property name="dormancyDays" column="dormancy_days" type="short"
+			not-null="false" />
+		<many-to-one name="lookUpValue" column="prd_type_lookup_id"
+			class="org.mifos.application.master.business.LookUpValueEntity"
+			cascade="none" update="false" />
+	</class>
+
+	<query name="findProductTypeConfigurationById">
+		<![CDATA[from ProductTypeEntity p where p.productTypeID = :productTypeId]]>
+	</query>
+	
+	<!--Get the lateness days value for a Loan product -->
+	<query name="productdefenition.GetLatenessDaysForLoans">
 		<![CDATA[select productType.latenessDays
 			from org.mifos.accounts.productdefinition.business.ProductTypeEntity productType 
-			where productType.productTypeID = :productTypeId  
-			]]>
-    </query>
+			where productType.productTypeID = :productTypeId]]>
+	</query>
 
     <query name="productdefenition.getDormancyDays">
 		<![CDATA[select productType.dormancyDays from org.mifos.accounts.productdefinition.business.ProductTypeEntity productType 
@@ -32,6 +40,4 @@
     <query name="productdefenition.getProductTypes">
 		<![CDATA[from org.mifos.accounts.productdefinition.business.ProductTypeEntity pt order by pt.productTypeID]]>
     </query>
-    
-    
 </hibernate-mapping>

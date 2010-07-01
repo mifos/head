@@ -22,6 +22,7 @@ package org.mifos.accounts.productdefinition.persistence;
 import java.util.List;
 
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
 
@@ -34,4 +35,5 @@ public interface LoanProductDao {
 
     List<ValueListElement> findAllLoanPurposes();
 
+    ProductTypeEntity findLoanProductConfiguration();
 }

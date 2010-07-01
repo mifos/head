@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  *  All rights reserved.
@@ -28,8 +26,10 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.mifos.ui.core.controller.Question;
-import org.mifos.ui.core.controller.QuestionGroupForm;
+import org.mifos.ui.core.controller.QuestionGroup;
+import org.mifos.ui.core.controller.SectionForm;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -40,8 +40,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -62,9 +63,16 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldCreateQuestionGroup() throws ApplicationException {
-        QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE);
-        questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
-        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(new QuestionGroupDefinitionMatcher(TITLE)));
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")));
+        questionnaireServiceFacade.createQuestionGroup(questionGroup);
+        verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
+                new QuestionGroupDefinitionMatcher(TITLE, "Create", "Client", asList(getSectionForm("S1"), getSectionForm("S2")))));
+    }
+
+    private SectionForm getSectionForm(String name) {
+        SectionForm sectionForm = new SectionForm();
+        sectionForm.setName(name);
+        return sectionForm;
     }
 
     @Test
@@ -77,13 +85,13 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     @Test
-    public void testShouldCheckDuplicates(){
+    public void testShouldCheckDuplicates() {
         questionnaireServiceFacade.isDuplicateQuestion(TITLE);
         verify(questionnaireService).isDuplicateQuestion(any(QuestionDefinition.class));
     }
 
     @Test
-    public void testGetAllQuestion(){
+    public void testGetAllQuestion() {
         when(questionnaireService.getAllQuestions()).thenReturn(asList(new QuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
         List<Question> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         assertNotNull(questionDetailList);
@@ -94,34 +102,70 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetAllQuestionGroups() {
-        when(questionnaireService.getAllQuestionGroups()).thenReturn(asList(new QuestionGroupDetail(1,"title1"), new QuestionGroupDetail(2,"title2")));
-        List<QuestionGroupForm> questionGroupForm = questionnaireServiceFacade.getAllQuestionGroups();
-        assertNotNull(questionGroupForm);
-        assertThat(questionGroupForm.get(0).getTitle(), is("title1"));
-        assertThat(questionGroupForm.get(0).getId(), is("1"));
-        assertThat(questionGroupForm.get(1).getTitle(), is("title2"));
-        assertThat(questionGroupForm.get(1).getId(), is("2"));
+        when(questionnaireService.getAllQuestionGroups()).thenReturn(
+                asList(new QuestionGroupDetail(1, "title1", asList(getSectionDefinition("S1"), getSectionDefinition("S2"))),
+                        new QuestionGroupDetail(2, "title2", asList(getSectionDefinition("S3")))));
+        List<QuestionGroup> questionGroup = questionnaireServiceFacade.getAllQuestionGroups();
+        assertNotNull(questionGroup);
+
+        QuestionGroup questionGroup1 = questionGroup.get(0);
+        assertThat(questionGroup1.getId(), is("1"));
+        assertThat(questionGroup1.getTitle(), is("title1"));
+        List<SectionForm> sectionsOfQuestionGroup1 = questionGroup1.getSections();
+        assertThat(sectionsOfQuestionGroup1.size(), is(2));
+        assertThat(sectionsOfQuestionGroup1.get(0).getName(), is("S1"));
+        assertThat(sectionsOfQuestionGroup1.get(1).getName(), is("S2"));
+
+        QuestionGroup groupGroup2 = questionGroup.get(1);
+        assertThat(groupGroup2.getId(), is("2"));
+        assertThat(groupGroup2.getTitle(), is("title2"));
+        List<SectionForm> sectionsOfQuestionGroup2 = groupGroup2.getSections();
+        assertThat(sectionsOfQuestionGroup2.size(), is(1));
+        assertThat(sectionsOfQuestionGroup2.get(0).getName(), is("S3"));
+
         verify(questionnaireService).getAllQuestionGroups();
     }
 
     @Test
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        String title = "Title";
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(new QuestionGroupDetail(title));
-        QuestionGroupForm questionGroupForm = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
-        assertNotNull("Question group should not be null",questionGroupForm);
-        assertThat(questionGroupForm.getTitle(), is(title));
+        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(questionGroupDetail);
+        QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+        assertNotNull("Question group should not be null", questionGroup);
+        assertThat(questionGroup.getTitle(), is(TITLE));
+        List<SectionForm> sectionForms = questionGroup.getSections();
+        assertThat(sectionForms.size(), is(2));
+        assertThat(sectionForms.get(0).getName(), is("S1"));
+        assertThat(sectionForms.get(1).getName(), is("S2"));
+        EventSource eventSource = questionGroup.getEventSource();
+        assertThat(eventSource, is(not(nullValue())));
+        assertThat(eventSource.getEvent(), is("Create"));
+        assertThat(eventSource.getSource(), is("Client"));
     }
-    
+
+    private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, String... sectionNames) {
+        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+        for (String sectionName : sectionNames) {
+            sectionDefinitions.add(getSectionDefinition(sectionName));
+        }
+        return new QuestionGroupDetail(1, title, new EventSource(event, source, null), sectionDefinitions);
+    }
+
+    private SectionDefinition getSectionDefinition(String name) {
+        SectionDefinition sectionDefinition = new SectionDefinition();
+        sectionDefinition.setName(name);
+        return sectionDefinition;
+    }
+
     @Test
     public void testGetQuestionGroupByIdFailure() throws ApplicationException {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         try {
-             questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+            questionnaireServiceFacade.getQuestionGroup(questionGroupId);
         } catch (ApplicationException e) {
-            verify(questionnaireService,times(1)).getQuestionGroup(questionGroupId);
+            verify(questionnaireService, times(1)).getQuestionGroup(questionGroupId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         }
     }
@@ -132,9 +176,10 @@ public class QuestionnaireServiceFacadeTest {
         String title = "Title";
         when(questionnaireService.getQuestion(questionId)).thenReturn(new QuestionDetail(questionId, title, title, QuestionType.NUMERIC));
         Question question = questionnaireServiceFacade.getQuestion(questionId);
-        assertNotNull("Question group should not be null",question);
+        assertNotNull("Question group should not be null", question);
         assertThat(question.getTitle(), is(title));
         assertThat(question.getType(), is("Number"));
+        verify(questionnaireService).getQuestion(questionId);
     }
 
     @Test
@@ -142,11 +187,31 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         when(questionnaireService.getQuestion(questionId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND));
         try {
-             questionnaireServiceFacade.getQuestion(questionId);
+            questionnaireServiceFacade.getQuestion(questionId);
         } catch (ApplicationException e) {
-            verify(questionnaireService,times(1)).getQuestion(questionId);
+            verify(questionnaireService, times(1)).getQuestion(questionId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
+    }
+
+    @Test
+    public void testRetrieveEventSources() {
+        List<EventSource> events = getEvents(makeEvent("Create", "Client", "Create Client"), makeEvent("View", "Client", "View Client"));
+        when(questionnaireService.getAllEventSources()).thenReturn(events);
+        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
+        assertNotNull(eventSources);
+        assertTrue(eventSources.size() == 2);
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
+        verify(questionnaireService).getAllEventSources();
+    }
+
+    private List<EventSource> getEvents(EventSource... event) {
+        return Arrays.asList(event);
+    }
+
+    private EventSource makeEvent(String event, String source, String description) {
+        return new EventSource(event, source, description);
     }
 
     private Question getQuestion(String title, String type) {
@@ -156,10 +221,12 @@ public class QuestionnaireServiceFacadeTest {
         return question;
     }
 
-    private QuestionGroupForm getQuestionGroupForm(String title) {
-        QuestionGroupForm questionGroupForm = new QuestionGroupForm();
-        questionGroupForm.setTitle(title);
-        return questionGroupForm;
+    private QuestionGroup getQuestionGroup(String title, String event, String source, List<SectionForm> sections) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle(title);
+        questionGroup.setSections(sections);
+        questionGroup.setEventSourceId(String.format("%s.%s", event, source));
+        return questionGroup;
     }
 
     private class QuestionDefinitionMatcher extends ArgumentMatcher<QuestionDefinition> {
@@ -186,18 +253,33 @@ public class QuestionnaireServiceFacadeTest {
 
     private class QuestionGroupDefinitionMatcher extends ArgumentMatcher<QuestionGroupDefinition> {
         private String title;
+        private List<SectionForm> sectionForms;
+        private String event;
+        private String source;
 
-        public QuestionGroupDefinitionMatcher(String title) {
+        public QuestionGroupDefinitionMatcher(String title, String event, String source, List<SectionForm> sectionForms) {
             this.title = title;
+            this.event = event;
+            this.source = source;
+            this.sectionForms = sectionForms;
         }
 
         @Override
         public boolean matches(Object argument) {
             if (argument instanceof QuestionGroupDefinition) {
                 QuestionGroupDefinition questionGroupDefinition = (QuestionGroupDefinition) argument;
-                return StringUtils.equals(questionGroupDefinition.getTitle(), title);
+                List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
+                for (int i = 0; i < sectionDefinitions.size(); i++) {
+                    if (!sectionForms.get(i).getName().equals(sectionDefinitions.get(i).getName())) {
+                        return false;
+                    }
+                }
+                return StringUtils.equals(questionGroupDefinition.getTitle(), title) &&
+                        StringUtils.equals(questionGroupDefinition.getEventSource().getEvent(), event) &&
+                        StringUtils.equals(questionGroupDefinition.getEventSource().getSource(), source);
             }
             return false;
         }
     }
+
 }

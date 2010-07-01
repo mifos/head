@@ -8,7 +8,7 @@
     http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <import resource="classpath:org/mifos/config/resources/webflow-config.xml" />
-    
+
     <context:annotation-config/>
     	 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -19,7 +19,6 @@
             </list>
         </property>
     </bean>
-    
 
     <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     	<property name="exceptionMappings">
@@ -58,7 +57,7 @@
 
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 
-    <bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+	<bean class= "org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
@@ -96,6 +95,5 @@
 
     <bean id="viewOrganizationSettingsController" class="org.mifos.ui.core.controller.ViewOrganizationSettingsController">
         <property name="viewOrganizationSettingsServiceFacade" ref="viewOrganizationSettingsServiceFacade" />
-    </bean>  
-    
+    </bean>
 </beans>

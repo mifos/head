@@ -27,6 +27,7 @@ import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.productdefinition.struts.action.PrdConfAction;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
@@ -85,6 +86,10 @@ public class SavingsPrdBusinessService implements BusinessService {
 
     }
 
+    /**
+     * @deprecated remove after spring mvc example is finished and {@link PrdConfAction} is removed..
+     */
+    @Deprecated
     public Short retrieveDormancyDays() throws ServiceException {
         try {
             return new SavingsPrdPersistence().retrieveDormancyDays();

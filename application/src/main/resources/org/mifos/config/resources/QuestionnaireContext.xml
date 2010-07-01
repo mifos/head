@@ -37,6 +37,17 @@
         </property>
     </bean>
 
+    <bean id="eventSourceDao" parent="abstractDao">
+        <property name="proxyInterfaces" value="org.mifos.platform.questionnaire.persistence.EventSourceDao"/>
+        <property name="target">
+            <bean parent="abstractDaoTarget">
+                <constructor-arg>
+                    <value>org.mifos.platform.questionnaire.domain.EventSourceEntity</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
     <bean name="questionnaireService" class="org.mifos.platform.questionnaire.QuestionnaireServiceImpl"/>
     <bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl"/>
     <bean name="questionnaireValidator" class="org.mifos.platform.questionnaire.validators.QuestionnaireValidatorImpl"/>

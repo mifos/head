@@ -20,17 +20,23 @@
 
 package org.mifos.platform.questionnaire.contract;
 
-public class QuestionGroupDetail {
-    private String title;
-    private Integer id;
+import java.util.List;
 
-    public QuestionGroupDetail(Integer id, String title) {
-        this.id = id;
-        this.title = title;
+public class QuestionGroupDetail {
+    private Integer id;
+    private String title;
+    private List<SectionDefinition> sectionDefinitions;
+    private EventSource eventSource;
+
+    public QuestionGroupDetail(int id, String title, List<SectionDefinition> sectionDefinitions) {
+        this(id, title, null, sectionDefinitions);
     }
 
-    public QuestionGroupDetail(String title) {
-        this(0, title);
+    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDefinition> sectionDefinitions) {
+        this.id = id;
+        this.title = title;
+        this.sectionDefinitions = sectionDefinitions;
+        this.eventSource = eventSource;
     }
 
     public String getTitle() {
@@ -39,5 +45,13 @@ public class QuestionGroupDetail {
 
     public Integer getId() {
         return id;
+    }
+
+    public List<SectionDefinition> getSectionDefinitions() {
+        return sectionDefinitions;
+    }
+
+    public EventSource getEventSource() {
+        return eventSource;
     }
 }

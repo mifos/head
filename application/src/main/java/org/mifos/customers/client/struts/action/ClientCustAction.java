@@ -292,12 +292,12 @@ public class ClientCustAction extends CustAction {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
         }
 
-        if (processRules.isDuplicateNameOnClosedClient()) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+        if (processRules.isDuplicateNameOnBlackListedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_BLACKLISTED);
         }
 
-        if (processRules.isDuplicateNameOnBlackListedClient()) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_BLACKLISTED);
+        if (processRules.isDuplicateNameOnClosedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_CLOSED);
         }
     }
 
