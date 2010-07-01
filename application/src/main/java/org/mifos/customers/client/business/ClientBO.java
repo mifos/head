@@ -547,8 +547,11 @@ public class ClientBO extends CustomerBO {
         this.lastName = clientName.getLastName();
         this.secondLastName = clientName.getSecondLastName();
 
+        if (personalInfo.getSpouseFather() != null) {
+            // can be null when family details configuration is turned on
+            this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
+        }
         this.updateClientDetails(personalInfo.getClientDetail());
-        this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
 
         setDisplayName(personalInfo.getClientDisplayName());
         updateAddress(personalInfo.getAddress());
