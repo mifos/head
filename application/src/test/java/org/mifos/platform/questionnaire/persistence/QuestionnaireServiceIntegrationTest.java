@@ -35,7 +35,7 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
 import org.mifos.platform.questionnaire.domain.Section;
-import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -213,8 +213,8 @@ public class QuestionnaireServiceIntegrationTest {
     public void shouldRetrieveAllEventSources() {
         List<EventSource> eventSources = questionnaireService.getAllEventSources();
         assertNotNull(eventSources);
-        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
-        assertThat(eventSources, new HasThisKindOfEvent("View", "Client", "View Client"));
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
