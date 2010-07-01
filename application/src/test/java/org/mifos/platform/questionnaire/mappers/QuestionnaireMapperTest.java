@@ -32,7 +32,7 @@ import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
-import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -166,7 +166,7 @@ public class QuestionnaireMapperTest {
         List<EventSourceEntity> events = getEventSourceEntities("Create", "Client", "Create Client");
         List<EventSource> eventSources = questionnaireMapper.mapToEventSources(events);
         assertThat(eventSources, is(not(nullValue())));
-        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
     }
 
     private List<EventSourceEntity> getEventSourceEntities(String event, String source, String description) {

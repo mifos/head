@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.QuestionnaireServiceFacadeImpl;
-import org.mifos.test.matchers.HasThisKindOfEvent;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.mifos.ui.core.controller.Question;
 import org.mifos.ui.core.controller.QuestionGroup;
 import org.mifos.ui.core.controller.SectionForm;
@@ -187,8 +187,8 @@ public class QuestionnaireServiceFacadeTest {
         List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
         assertNotNull(eventSources);
         assertTrue(eventSources.size() == 2);
-        assertThat(eventSources, new HasThisKindOfEvent("Create", "Client", "Create Client"));
-        assertThat(eventSources, new HasThisKindOfEvent("View", "Client", "View Client"));
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
         verify(questionnaireService).getAllEventSources();
     }
 
