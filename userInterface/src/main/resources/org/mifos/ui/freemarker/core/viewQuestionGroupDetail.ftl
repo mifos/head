@@ -119,6 +119,7 @@
                     </td>
                 </tr>
             </table>
+            <span id="question.group.applies.to" class="fontnormal">Question group applies to ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}</span>
         </td>
     </tr>
 </table>
