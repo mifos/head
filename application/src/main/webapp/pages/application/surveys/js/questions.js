@@ -44,6 +44,9 @@ function disableSubmitButtonOnEmptyQuestionList() {
     var qtable = document.getElementById('questions.table');
     if (qtable != null && qtable.rows.length <= 2) {
         var submitBtn = document.getElementById('_eventId_createQuestions');
-        if (submitBtn != null) submitBtn.disabled = true;
+        if (submitBtn != null) {
+            submitBtn.disabled = true;
+            submitBtn.className = 'disabledbuttn';
+        }
     }
 }
