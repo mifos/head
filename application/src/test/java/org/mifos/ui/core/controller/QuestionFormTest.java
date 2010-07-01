@@ -1,8 +1,6 @@
 package org.mifos.ui.core.controller;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -11,7 +9,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
 public class QuestionFormTest {
     private static final String TITLE = "title";
 

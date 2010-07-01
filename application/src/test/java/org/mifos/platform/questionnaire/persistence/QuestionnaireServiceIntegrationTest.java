@@ -120,19 +120,19 @@ public class QuestionnaireServiceIntegrationTest {
         String questionGroupTitle1 = "QG1" + System.currentTimeMillis();
         String questionGroupTitle2 = "QG2" + System.currentTimeMillis();
         defineQuestionGroup(questionGroupTitle1, "Create", "Client", asList(getSection("S1")));
-        defineQuestionGroup(questionGroupTitle2, "Create", "Client", asList(getSection("S2"),getSection("S1")));
+        defineQuestionGroup(questionGroupTitle2, "Create", "Client", asList(getSection("S2"), getSection("S1")));
         List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
         int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
         assertThat(questionGroups, hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, asList(getSection("S1"))),
-                getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"),getSection("S1")))));
+                getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"), getSection("S1")))));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionGroupById() throws ApplicationException {
         String title = "QG1" + System.currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1"),getSection("S2")));
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1"), getSection("S2")));
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));

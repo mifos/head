@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.contract.EventSource;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -35,7 +36,9 @@ public class QuestionGroup implements Serializable {
 
     private String id;
 
-    private List<SectionForm> sections;
+    private List<SectionForm> sections = new ArrayList<SectionForm>();
+
+    private SectionForm currentSection = new SectionForm();
 
     public void setTitle(String title) {
         this.title = title;
@@ -84,6 +87,23 @@ public class QuestionGroup implements Serializable {
     public void setEventSource(EventSource eventSource) {
         if (eventSource == null || StringUtils.isEmpty(eventSource.getEvent()) || StringUtils.isEmpty(eventSource.getSource())) return;
         eventSourceId = format("%s.%s", eventSource.getEvent(), eventSource.getSource());
+    }
+
+    public void addCurrentSection() {
+        currentSection.trimName();
+        if(StringUtils.isEmpty(getSectionName())){
+            setSectionName("Misc");
+        }
+        sections.add(currentSection);
+        currentSection = new SectionForm();
+    }
+
+    public void setSectionName(String sectionName) {
+        currentSection.setName(sectionName);
+    }
+
+    public String getSectionName(){
+        return currentSection.getName();
     }
 }
 

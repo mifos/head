@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
+<<<<<<< HEAD
  *  All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +26,8 @@ import org.junit.runner.RunWith;
 import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,6 +65,32 @@ public class QuestionGroupTest {
         questionGroup = new QuestionGroup();
         questionGroup.setEventSource(new EventSource("", null, null));
         assertThat(questionGroup.getEventSourceId(), is(nullValue()));
+    }
+
+    @Test
+    public void testAddCurrentSection() {
+        QuestionGroup questionGroup = new QuestionGroup();
+        String title = "title";
+        questionGroup.setTitle(title);
+        String sectionName = "sectionName";
+        questionGroup.setSectionName(sectionName);
+        questionGroup.addCurrentSection();
+        assertThat(questionGroup.getSections().size(), is(1));
+        String nameOfAddedSection = questionGroup.getSections().get(0).getName();
+        assertThat(nameOfAddedSection, is(sectionName));
+        assertNotSame(nameOfAddedSection, questionGroup.getSectionName());
+    }
+
+    @Test
+    public void testAddCurrentSectionWhenSectionNameIsNotProvided() {
+        QuestionGroup questionGroup = new QuestionGroup();
+        String title = "title";
+        questionGroup.setTitle(title);
+        questionGroup.addCurrentSection();
+        assertThat(questionGroup.getSections().size(), is(1));
+        String nameOfAddedSection = questionGroup.getSections().get(0).getName();
+        assertThat(nameOfAddedSection, is("Misc"));
+        assertNotSame(nameOfAddedSection, questionGroup.getSectionName());
     }
 
     private void assertEventSource(EventSource eventSource, String event, String source) {
