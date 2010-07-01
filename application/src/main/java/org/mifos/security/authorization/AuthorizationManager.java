@@ -61,24 +61,15 @@ public class AuthorizationManager {
     }
 
     public void init() throws SystemException, ApplicationException {
-        Session session = null;
         try {
-            session = StaticHibernateUtil.openSession();
-            init(session);
-
-        } catch (SystemException e) {
-            throw e;
-        } catch (ApplicationException e) {
-            throw e;
+            initialize();
         } catch (Exception e) {
             throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED, e);
-        } finally {
-            StaticHibernateUtil.closeSession(session);
         }
     }
 
-    public void init(Session session) throws ApplicationException {
-        SecurityHelper security = new SecurityHelper(session);
+    private void initialize() throws ApplicationException {
+        SecurityHelper security = new SecurityHelper();
 
         List<ActivityRoles> al = security.getActivities();
         activityToRolesCacheMap.clear();

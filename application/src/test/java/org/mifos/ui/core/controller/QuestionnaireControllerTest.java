@@ -311,6 +311,7 @@ public class QuestionnaireControllerTest {
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroupDetail"));
         verify(questionnaireServiceFacade).getQuestionGroup(questionGroupId);
+        verify(questionnaireServiceFacade, times(1)).getAllEventSources();
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
         verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroupForm(questionGroupId, TITLE,"S1","S2","S2"))));
     }

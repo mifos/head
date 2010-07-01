@@ -74,9 +74,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroup questionGroup = questionnaireServiceFacade.
-                        getQuestionGroup(Integer.valueOf(questionGroupId));
+                QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(Integer.valueOf(questionGroupId));
                 model.addAttribute("questionGroupDetail", questionGroup);
+                model.addAttribute("eventSources", getAllQgEventSources());
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
@@ -198,7 +198,7 @@ public class QuestionnaireController {
 
 
     private boolean invalid(String id) {
-        return (isEmpty(id) || !isInteger(id)) ? true : false;
+        return (isEmpty(id) || !isInteger(id));
     }
 
     public boolean isInteger(String id) {
