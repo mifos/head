@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-insert into database_version(database_version) values(259);
+insert into database_version(database_version) values(260);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3143,3 +3143,11 @@ insert into report_jasper_map (report_id, report_category_id, report_name, repor
 (4,6,'Detailed Aging Of Portfolio At Risk Report','detailed_aging_of_portfolio_at_risk_report','DetailedAgingPortfolioAtRiskReport.rptdesign'),
 (5,6,'General Ledger Report','general_ledger_report','GeneralLedgerReport.rptdesign');
 /* Upgrade 255,256 END*/
+
+/* Upgrade 260 START */
+insert into events (id, name) values (1, 'Create'), (2, 'View');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (1, (select entity_type_id from entity_master where entity_type = 'Client'), 1, 'Create Client');
+insert into event_sources (id, entity_type_id, event_id, description) values
+    (2, (select entity_type_id from entity_master where entity_type = 'Client'), 2, 'View Client');
+/* Upgrade 260 END */

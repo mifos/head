@@ -20,28 +20,23 @@
 
 package org.mifos.accounts.fund.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.struts.actionforms.FundActionForm;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
+import org.mifos.accounts.fund.servicefacade.FundDto;
+import org.mifos.accounts.fund.servicefacade.FundCodeDto;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -84,7 +79,7 @@ public class FundAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start Load method of Fund Action");
         doCleanUp(request);
-        SessionUtils.setCollectionAttribute(FundConstants.ALL_FUNDLIST, getFundCodes(), request);
+        SessionUtils.setCollectionAttribute(FundConstants.ALL_FUNDLIST, this.fundServiceFacade.getFundCodes(), request);
         logger.debug("Load method of Fund Action called");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -115,19 +110,11 @@ public class FundAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start create method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
-        FundCodeEntity fundCodeEntity = getFundCode(fundActionForm.getFundCode(), request);
-        FundBO fundBO = new FundBO(fundCodeEntity, fundActionForm.getFundName());
+        FundDto fundDto = new FundDto();
+        fundDto.setCode(getFundCode(fundActionForm.getFundCode(), request));
+        fundDto.setName(fundActionForm.getFundName());
 
-        try {
-            StaticHibernateUtil.startTransaction();
-            this.fundDao.save(fundBO);
-            StaticHibernateUtil.commitTransaction();
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e.getMessage(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
+        this.fundServiceFacade.createFund(fundDto);
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }
@@ -135,7 +122,7 @@ public class FundAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward viewAllFunds(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        SessionUtils.setCollectionAttribute(FundConstants.FUNDLIST, getFunds(), request);
+        SessionUtils.setCollectionAttribute(FundConstants.FUNDLIST, this.fundServiceFacade.getFunds(), request);
         return mapping.findForward(ActionForwards.viewAllFunds_success.toString());
     }
 
@@ -145,9 +132,9 @@ public class FundAction extends BaseAction {
         logger.debug("start manage method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
         Short fundId = getShortValue(fundActionForm.getFundCodeId());
-        FundBO fundBO = getFund(fundId);
-        SessionUtils.setAttribute(FundConstants.OLDFUNDNAME, fundBO.getFundName(), request);
-        setFormAttributes(fundActionForm, fundBO.getFundName(), fundBO.getFundCode().getFundCodeValue());
+        FundDto fundDto = this.fundServiceFacade.getFund(fundId);
+        SessionUtils.setAttribute(FundConstants.OLDFUNDNAME, fundDto.getName(), request);
+        setFormAttributes(fundActionForm, fundDto.getName(), fundDto.getCode().getValue());
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
@@ -178,22 +165,11 @@ public class FundAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start update method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
-        Short fundId = getShortValue(fundActionForm.getFundCodeId());
-        FundBO fundBO = getFund(fundId);
+        FundDto fundDto = new FundDto();
+        fundDto.setId(fundActionForm.getFundCodeId());
+        fundDto.setName(fundActionForm.getFundName());
 
-        try {
-            StaticHibernateUtil.startTransaction();
-            this.fundDao.update(fundBO, fundActionForm.getFundName());
-            StaticHibernateUtil.commitTransaction();
-        } catch (ApplicationException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new ApplicationException(e.getKey(), e);
-        } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e.getMessage(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
+        this.fundServiceFacade.updateFund(fundDto);
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -213,31 +189,14 @@ public class FundAction extends BaseAction {
         SessionUtils.setAttribute(FundConstants.FUND_ACTIONFORM, null, request.getSession());
     }
 
-    private List<FundCodeEntity> getFundCodes() throws Exception {
-        return this.fundDao.findAllFundCodes();
-    }
-
-    private List<FundBO> getFunds() throws Exception {
-        return this.fundDao.findAllFunds();
-    }
-
-    private FundBO getFund(Short fundId) throws Exception {
-        return this.fundDao.findById(fundId);
-    }
-
     private void setFormAttributes(FundActionForm actionForm, String fundName, String fundCodeValue) {
         actionForm.setFundName(fundName);
         actionForm.setFundCode(fundCodeValue);
     }
 
-    private FundCodeEntity getFundCode(String fundCode, HttpServletRequest request) throws Exception {
-        List<FundCodeEntity> fundList = (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST,
-                request);
-        for (FundCodeEntity fundCodeEntity : fundList) {
-            if (fundCodeEntity.getFundCodeId().equals(getShortValue(fundCode))) {
-                return fundCodeEntity;
-            }
-        }
-        return null;
+    private FundCodeDto getFundCode(String fundCode, HttpServletRequest request) throws Exception {
+        FundCodeDto fundCodeDto = new FundCodeDto();
+        fundCodeDto.setId(fundCode);
+        return fundCodeDto;
     }
 }

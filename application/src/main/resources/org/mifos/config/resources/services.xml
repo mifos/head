@@ -16,6 +16,10 @@
     	<constructor-arg ref="feeDao" />
     	<constructor-arg ref="generalLedgerDao" />
     </bean>
+
+    <bean id="fundServiceFacade" class="org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade" >
+    	<constructor-arg ref="fundDao" />
+    </bean>
     
     <bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" >
     	<constructor-arg ref="customerDao" />

@@ -38,4 +38,6 @@ public interface QuestionnaireService {
     QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException;
 
     QuestionDetail getQuestion(int questionId) throws ApplicationException;
+
+    List<EventSource> getAllEventSources();
 }

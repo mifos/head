@@ -20,15 +20,9 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
 import org.mifos.framework.business.AbstractEntity;
+
+import javax.persistence.*;
 
 @NamedQueries(
  {
@@ -47,6 +41,7 @@ public class EntityMaster extends AbstractEntity {
     @Column(name = "entity_type_id")
     private Short id;
 
+    @Column(name = "entity_type")
     private String entityType;
 
     public Short getId() {

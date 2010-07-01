@@ -67,10 +67,10 @@ explanation of the license and how it is applied.
               
               <c:forEach var="fundItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'fundList')}" >
 	              <tr>
-	                <td width="33%" class="drawtablerow">${fundItem.fundName}</td>
-	                <td width="44%" class="drawtablerow">${fundItem.fundCode.fundCodeValue}</td>
+	                <td width="33%" class="drawtablerow">${fundItem.name}</td>
+	                <td width="44%" class="drawtablerow">${fundItem.code.value}</td>
 	                <td width="23%" align="right" class="drawtablerow">
-		               	<html-el:link action="/fundAction.do?method=manage&fundCodeId=${fundItem.fundId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+		               	<html-el:link action="/fundAction.do?method=manage&fundCodeId=${fundItem.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 		               		<mifos:mifoslabel name="funds.edit" bundle="fundUIResources"/>                		
 		               	</html-el:link>
 	                </td>

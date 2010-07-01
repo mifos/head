@@ -10,7 +10,7 @@
   	<form method="" action="" name="formname">
     <div class="span-24">
         <div><span class=" orangeheading">[@spring.message "systemInformation" /]</span></div>
-        <div>[@spring.message "welcometotheMifossysteminformationarea" /]</div>
+        <div class="fontBold">[@spring.message "welcometotheMifossysteminformationarea" /]</div>
         <div class="clear">&nbsp;</div>
         <div class="clear">&nbsp;</div>
         <div class="span-22">

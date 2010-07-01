@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <!DOCTYPE hibernate-mapping PUBLIC
-                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.platform.questionnaire.domain.QuestionGroup" table="question_group">
-		<id name="id" column="ID" type="integer" unsaved-value="0" access="field">
-			<generator class="native"/>
-		</id>
-		<property name="title" column="title"/>
+    <class name="org.mifos.platform.questionnaire.domain.QuestionGroup" table="question_group">
+        <id name="id" column="ID" type="integer" unsaved-value="0" access="field">
+            <generator class="native"/>
+        </id>
+        <property name="title" column="title"/>
         <property name="dateOfCreation" column="date_of_creation"/>
         <property name="state" column="state">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">org.mifos.platform.questionnaire.domain.QuestionGroupState</param>
             </type>
         </property>
+        <list name="sections" cascade="all">
+            <key column="question_group_id" not-null="true"/>
+            <list-index column="sequence_number"/>
+            <one-to-many class="org.mifos.platform.questionnaire.domain.Section"/>
+        </list>
+        <set name="eventSources" table="question_group_event_sources" access="field" cascade="all">
+            <key column="question_group_id"/>
+            <many-to-many column="event_source_id"
+                class="org.mifos.platform.questionnaire.domain.EventSourceEntity"/>
+        </set>
     </class>
 </hibernate-mapping>
