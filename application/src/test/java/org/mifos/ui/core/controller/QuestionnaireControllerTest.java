@@ -152,7 +152,7 @@ public class QuestionnaireControllerTest {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle("title");
         questionGroup.setSectionName("sectionName");
-        String result = questionnaireController.addSection(questionGroup, requestContext);
+        String result = questionnaireController.addSection(questionGroup);
         assertThat(questionGroup.getSections().size(), is(1));
         assertThat(result, is("success"));
     }
@@ -160,7 +160,7 @@ public class QuestionnaireControllerTest {
     @Test
     public void testAddSectionsSuccessWhenSectionNameIsNotProvided() {
         QuestionGroup questionGroup = new QuestionGroup();
-        String result = questionnaireController.addSection(questionGroup, requestContext);
+        String result = questionnaireController.addSection(questionGroup);
         assertThat(questionGroup.getSections().size(), is(1));
         assertThat(questionGroup.getSections().get(0).getName(), is("Misc"));
         assertThat(result, is("success"));
@@ -170,7 +170,7 @@ public class QuestionnaireControllerTest {
     public void testAddSectionForSuccessWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setSectionName("        ");
-        String result = questionnaireController.addSection(questionGroup, requestContext);
+        String result = questionnaireController.addSection(questionGroup);
         assertThat(questionGroup.getSections().size(), is(1));
         assertThat(questionGroup.getSections().get(0).getName(), is("Misc"));
         assertThat(result, is("success"));
