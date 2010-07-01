@@ -17,49 +17,81 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.productdefinition.business;
+package org.mifos.accounts.productdefinition.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.spring.SpringUtil;
+import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.test.TestMode;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
  */
-public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
-
-    public LoanProductDaoHibernateIntegrationTest() throws Exception {
-        super();
-    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/integration-test-context.xml",
+                                    "/org/mifos/config/resources/hibernate-daos.xml"})
+public class LoanProductDaoHibernateIntegrationTest {
 
     // class under test
+    @Autowired
     private LoanProductDao loanProductDao;
-
-    // collaborators
-    private final GenericDao genericDao = new GenericDaoHibernate();
 
     // test data
     private LoanOfferingBO activeLoanProduct;
     private LoanOfferingBO inActiveLoanProduct;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
-        TestDatabase.resetMySQLDatabase();
+    private static MifosCurrency oldDefaultCurrency;
+
+    @BeforeClass
+    public static void initialiseHibernateUtil() {
+
+        oldDefaultCurrency = Money.getDefaultCurrency();
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        new StandardTestingService().setTestMode(TestMode.INTEGRATION);
+        DatabaseSetup.initializeHibernate();
+        SpringUtil.initializeSpring();
+    }
+
+    @AfterClass
+    public static void resetCurrency() {
+        Money.setDefaultCurrency(oldDefaultCurrency);
+    }
+
+    @Before
+    public void setUp() throws Exception {
+
+        databaseCleaner.clean();
 
         activeLoanProduct = new LoanProductBuilder().active().withName("Active Loan Product").withShortName("ALP")
                 .appliesToGroupsOnly().withGlobalProductNumber("AAA-111").buildForIntegrationTests();
@@ -67,15 +99,15 @@ public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTest
                 .withShortName("ILP").appliesToGroupsOnly().withGlobalProductNumber("AAA-112")
                 .buildForIntegrationTests();
         IntegrationTestObjectMother.saveLoanProducts(activeLoanProduct, inActiveLoanProduct);
-
-        loanProductDao = new LoanProductDaoHibernate(genericDao);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
     }
 
+    @Test
     public void testShouldFindOnlyActiveLoanProductsApplicableToCustomerLevel() {
 
         CustomerLevelEntity groupLevel = new CustomerLevelEntity(CustomerLevel.GROUP);
@@ -89,6 +121,7 @@ public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTest
         assertThat(activeLoanProductsApplicableToGroup, hasItem(activeLoanProduct));
     }
 
+    @Test
     public void testShouldFindAllLoanPurposeSeedData() {
 
         // exercise test
@@ -97,5 +130,15 @@ public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTest
         assertThat(
                 "number of loan purposes has changed: this could be due to change in seed data in lookup_value table",
                 allLoanPruposes.size(), is(131));
+    }
+
+    @Test
+    public void testShouldFindLoanProductConfiguration() {
+
+        // exercise test
+       ProductTypeEntity productType = loanProductDao.findLoanProductConfiguration();
+
+       assertThat(productType, is(notNullValue()));
+       assertThat(productType.getType(), is(ProductType.LOAN));
     }
 }

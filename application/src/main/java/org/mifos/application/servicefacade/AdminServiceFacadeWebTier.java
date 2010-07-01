@@ -41,18 +41,18 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
     @Override
     public ProductConfigurationDto retrieveProductConfiguration() {
-        return new ProductConfigurationDto(Integer.valueOf(12), Integer.valueOf(14));
+        ProductTypeEntity loanProductConfiguration = this.loanProductDao.findLoanProductConfiguration();
+        ProductTypeEntity savingsProductConfiguration = this.savingsProductDao.findSavingsProductConfiguration();
+
+        return new ProductConfigurationDto(loanProductConfiguration.getLatenessDays().intValue(), savingsProductConfiguration.getDormancyDays().intValue());
     }
 
     @Override
     public void updateProductConfiguration(ProductConfigurationDto productConfiguration) {
 
         ProductTypeEntity loanProductConfiguration = this.loanProductDao.findLoanProductConfiguration();
-        loanProductConfiguration.setLatenessDays(productConfiguration.getLatenessDays().shortValue());
-
         ProductTypeEntity savingsProductConfiguration = this.savingsProductDao.findSavingsProductConfiguration();
-        savingsProductConfiguration.setDormancyDays(productConfiguration.getDormancyDays().shortValue());
 
-        this.productService.updateLatenessAndDormancy(loanProductConfiguration, savingsProductConfiguration);
+        this.productService.updateLatenessAndDormancy(loanProductConfiguration, savingsProductConfiguration, productConfiguration);
     }
 }

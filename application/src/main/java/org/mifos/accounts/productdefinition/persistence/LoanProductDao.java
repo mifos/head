@@ -36,4 +36,6 @@ public interface LoanProductDao {
     List<ValueListElement> findAllLoanPurposes();
 
     ProductTypeEntity findLoanProductConfiguration();
+
+    void save(ProductTypeEntity loanProductConfiguration);
 }

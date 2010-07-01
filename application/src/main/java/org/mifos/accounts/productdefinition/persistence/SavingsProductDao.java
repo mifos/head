@@ -26,4 +26,6 @@ public interface SavingsProductDao {
 
     ProductTypeEntity findSavingsProductConfiguration();
 
+    void save(ProductTypeEntity savingsProductConfiguration);
+
 }
