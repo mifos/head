@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-29 14:57-0700\n"
+"POT-Creation-Date: 2010-07-01 13:16+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1685,12 +1685,18 @@ msgstr ""
 
 #: warning.clientWithSameGovtIdExistInClosed
 msgid ""
-"A record matching this client was found in \"closed\" status.  Please review "
-"that client record before continuing."
+"A record matching this client was found in \"closed\" status with same Govt. "
+"ID.  Please review that client record before continuing."
 msgstr ""
 
-#: warning.clientWithSameGovtIdExistInBlackListed
+#: warning.clientWithSameNameDOBExistInClosed
 msgid ""
-"A record matching this client was found in \"blacklisted\" status.  Please "
-"review that client record before continuing."
+"A record matching this client was found in \"closed\" status with same name "
+"and date of birth.  Please review that client record before continuing."
+msgstr ""
+
+#: warning.clientWithSameNameDOBExistInBlackListed
+msgid ""
+"A record matching this client was found in \"blacklisted\" status with same "
+"name and date of birth.  Please review that client record before continuing."
 msgstr ""

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-29 14:57-0700\n"
+"POT-Creation-Date: 2010-07-01 13:15+0530\n"
 "PO-Revision-Date: 2009-08-16 21:53-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1811,18 +1811,28 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "សូមបញ្ជាក់ពីតំលៃសំរាប់{0}"
 
 #: warning.clientWithSameGovtIdExistInClosed
+#, fuzzy
 msgid ""
-"A record matching this client was found in \"closed\" status.  Please review "
-"that client record before continuing."
+"A record matching this client was found in \"closed\" status with same Govt. "
+"ID.  Please review that client record before continuing."
 msgstr ""
 "ការកត់ត្រាដែលត្រូវជាមួយអតិថិជននេះត្រូវបានរកឃើញនៅក្នុងលក្ខ័ណ\"បិទ\"សូមពិនិត្យមើ"
 "លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"
 
-#: warning.clientWithSameGovtIdExistInBlackListed
+#: warning.clientWithSameNameDOBExistInClosed
 #, fuzzy
 msgid ""
-"A record matching this client was found in \"blacklisted\" status.  Please "
-"review that client record before continuing."
+"A record matching this client was found in \"closed\" status with same name "
+"and date of birth.  Please review that client record before continuing."
+msgstr ""
+"ការកត់ត្រាដែលត្រូវជាមួយអតិថិជននេះត្រូវបានរកឃើញនៅក្នុងលក្ខ័ណ\"បិទ\"សូមពិនិត្យមើ"
+"លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"
+
+#: warning.clientWithSameNameDOBExistInBlackListed
+#, fuzzy
+msgid ""
+"A record matching this client was found in \"blacklisted\" status with same "
+"name and date of birth.  Please review that client record before continuing."
 msgstr ""
 "ការកត់ត្រាដែលត្រូវជាមួយអតិថិជននេះត្រូវបានរកឃើញនៅក្នុងលក្ខ័ណ\"បិទ\"សូមពិនិត្យមើ"
 "លកំណត់ត្រារបស់អតិថិជនម្តងទៀតមុននឹងបន្ត"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-29 14:57-0700\n"
+"POT-Creation-Date: 2010-07-01 13:15+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1681,14 +1681,22 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>请为{0}指定值。</li>"
 
 #: warning.clientWithSameGovtIdExistInClosed
-msgid ""
-"A record matching this client was found in \"closed\" status.  Please review "
-"that client record before continuing."
-msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
-
-#: warning.clientWithSameGovtIdExistInBlackListed
 #, fuzzy
 msgid ""
-"A record matching this client was found in \"blacklisted\" status.  Please "
-"review that client record before continuing."
+"A record matching this client was found in \"closed\" status with same Govt. "
+"ID.  Please review that client record before continuing."
+msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
+
+#: warning.clientWithSameNameDOBExistInClosed
+#, fuzzy
+msgid ""
+"A record matching this client was found in \"closed\" status with same name "
+"and date of birth.  Please review that client record before continuing."
+msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
+
+#: warning.clientWithSameNameDOBExistInBlackListed
+#, fuzzy
+msgid ""
+"A record matching this client was found in \"blacklisted\" status with same "
+"name and date of birth.  Please review that client record before continuing."
 msgstr "搜索到一条处于“已关闭”状态的客户记录。请在继续之前先查看该客户记录。"
