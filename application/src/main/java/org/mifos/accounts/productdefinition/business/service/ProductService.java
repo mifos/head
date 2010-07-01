@@ -17,28 +17,13 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.productdefinition.business;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
+package org.mifos.accounts.productdefinition.business.service;
 
-/**
- *
- */
-public class LoanProductDaoHibernateTest {
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 
-    // class under test
-    private LoanProductDao loanProductDao;
+public interface ProductService {
 
-    @Before
-    public void setupAndInjectDependencies() {
-        loanProductDao = new LoanProductDaoHibernate(null);
-    }
+    void updateLatenessAndDormancy(ProductTypeEntity loanProductConfiguration, ProductTypeEntity savingsProductConfiguration);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenNullCustomerLevelIsUsed() {
-        loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(null);
-    }
 }

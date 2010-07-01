@@ -13,25 +13,4 @@
     <import resource="messageSourceBean.xml" />
     <import resource="financialRulesBean.xml" />
 
-    <!--<context:component-scan base-package="org.mifos.application.importexport" />
-
-    <bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
-
-    <tx:annotation-driven transaction-manager="txManager" />
-
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="configLocation" value="/org/mifos/framework/util/resources/hibernate.cfg.xml" />
-    </bean>
-
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${main.database.driver}" />
-        <property name="url"
-            value="jdbc:mysql://${main.database.host}:${main.database.port}/${main.database}" />
-        <property name="username" value="${main.database.user}" />
-        <property name="password" value="${main.database.password}" />
-    </bean>
-
---></beans>
+</beans>
