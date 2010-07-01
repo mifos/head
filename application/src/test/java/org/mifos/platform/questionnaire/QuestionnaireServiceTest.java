@@ -25,8 +25,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
+import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.EventEntity;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.Section;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
@@ -37,11 +40,11 @@ import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
@@ -130,9 +133,12 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldDefineQuestionGroup() throws ApplicationException {
-        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, getEventSource(), asList(getSectionDefinition("S1"), getSectionDefinition("S2")));
+        List<SectionDefinition> sectionDefinitionList = asList(getSectionDefinition("S1"), getSectionDefinition("S2"));
+        EventSource event = getEventSource("Create", "Client");
+        QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(QUESTION_GROUP_TITLE, event, sectionDefinitionList);
         try {
-            when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+            EventSourceEntity eventSourceEntity = getEventSourceEntity("Create", "Client");
+            when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(Collections.singletonList(eventSourceEntity));
             QuestionGroupDetail questionGroupDetail = questionnaireService.defineQuestionGroup(questionGroupDefinition);
             verify(questionnaireValidator).validate(questionGroupDefinition);
             verify(questionGroupDao, times(1)).create(any(QuestionGroup.class));
@@ -144,13 +150,28 @@ public class QuestionnaireServiceTest {
             assertThat(sectionDefinitions.size(), is(2));
             assertThat(sectionDefinitions.get(0).getName(), is("S1"));
             assertThat(sectionDefinitions.get(1).getName(), is("S2"));
+            EventSource eventSource = questionGroupDetail.getEventSource();
+            assertThat(eventSource, is(not(nullValue())));
+            assertThat(eventSource.getEvent(), is("Create"));
+            assertThat(eventSource.getSource(), is("Client"));
         } catch (ApplicationException e) {
             fail("Should not have thrown the validation exception");
         }
     }
 
-    private EventSource getEventSource() {
-        return new EventSource("Create", "Client", "Create Client");
+    private EventSourceEntity getEventSourceEntity(String event, String source) {
+        EventSourceEntity eventSourceEntity = new EventSourceEntity();
+        EventEntity eventEntity = new EventEntity();
+        eventEntity.setName(event);
+        eventSourceEntity.setEvent(eventEntity);
+        EntityMaster entityMaster = new EntityMaster();
+        entityMaster.setEntityType(source);
+        eventSourceEntity.setSource(entityMaster);
+        return eventSourceEntity;
+    }
+
+    private EventSource getEventSource(String event, String source) {
+        return new EventSource(event, source, null);
     }
 
     private SectionDefinition getSectionDefinition(String name) {
