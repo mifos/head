@@ -26,6 +26,8 @@ import org.mifos.platform.questionnaire.contract.EventSource;
 import java.io.Serializable;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class QuestionGroup implements Serializable {
     private static final long serialVersionUID = 9142463851744584305L;
     private String title;
@@ -34,8 +36,6 @@ public class QuestionGroup implements Serializable {
     private String id;
 
     private List<SectionForm> sections;
-
-    private EventSource eventSource;
 
     public void setTitle(String title) {
         this.title = title;
@@ -74,11 +74,16 @@ public class QuestionGroup implements Serializable {
     }
 
     public EventSource getEventSource() {
-        if (!StringUtils.isBlank(eventSourceId)) {
+        if (StringUtils.isNotEmpty(eventSourceId)) {
             String[] parts = eventSourceId.split("\\.");
             return new EventSource(parts[0], parts[1], eventSourceId);
         }
         return null;
+    }
+
+    public void setEventSource(EventSource eventSource) {
+        if (eventSource == null || StringUtils.isEmpty(eventSource.getEvent()) || StringUtils.isEmpty(eventSource.getSource())) return;
+        eventSourceId = format("%s.%s", eventSource.getEvent(), eventSource.getSource());
     }
 }
 

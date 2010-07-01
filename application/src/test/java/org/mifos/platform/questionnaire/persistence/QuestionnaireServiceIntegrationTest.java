@@ -128,10 +128,6 @@ public class QuestionnaireServiceIntegrationTest {
                 getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"),getSection("S1")))));
     }
 
-    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle1, List<SectionDefinition> sectionDefinitions) {
-        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle1, sectionDefinitions));
-    }
-
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionGroupById() throws ApplicationException {
@@ -248,6 +244,10 @@ public class QuestionnaireServiceIntegrationTest {
         assertEquals("Create", eventSourceEntity.getEvent().getName());
         assertEquals("Client", eventSourceEntity.getSource().getEntityType());
         assertEquals("Create Client", eventSourceEntity.getDescription());
+    }
+
+    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle, List<SectionDefinition> sectionDefinitions) {
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle, sectionDefinitions));
     }
 }
 
