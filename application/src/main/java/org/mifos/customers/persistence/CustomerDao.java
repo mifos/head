@@ -52,7 +52,7 @@ import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
@@ -143,7 +143,7 @@ public interface CustomerDao {
 
     CustomerMeetingDto getCustomerMeetingDto(CustomerMeetingEntity customerMeeting, UserContext userContext);
 
-    List<CustomerSurveyDto> getCustomerSurveyDto(Integer centerId);
+    List<SurveyDto> getCustomerSurveyDto(Integer centerId);
 
     List<CustomFieldDto> getCustomFieldViewForCustomers(Integer centerId, Short value, UserContext userContext);
 

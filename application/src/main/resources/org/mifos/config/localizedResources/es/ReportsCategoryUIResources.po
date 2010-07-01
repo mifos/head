@@ -21,7 +21,7 @@ msgid ""
 "There are reports assigned to this category.  You must reassign these "
 "reports to another category before deleting this category."
 msgstr ""
-"Hay informes asignados a esta categoría. Usted debe reasignar estos informes "
+"Hay reportes asignados a esta categoría. Usted debe reasignar estos reportes "
 "a otra categoría antes de eliminar esta categoría."
 
 #: error.categoryName
@@ -82,7 +82,7 @@ msgstr "Entonces haga clic en Enviar."
 
 #: reportsCategory.defineNewReportCategory
 msgid "Define new report category"
-msgstr "Defina la nueva categoría del informe "
+msgstr "Defina la nueva categoría del reporte "
 
 #: reportsCategory.delete
 msgid "Delete"
@@ -90,7 +90,7 @@ msgstr "Borrar"
 
 #: reportsCategory.deleteCategory
 msgid "Delete Report Category"
-msgstr "Borre la Categoría del Informe"
+msgstr "Borre la Categoría del reporte"
 
 #: reportsCategory.deleteCategoryConfirm
 #, fuzzy
@@ -103,7 +103,7 @@ msgid ""
 "without deleting the role."
 msgstr ""
 "Haga clic en Enviar para confirmar. Haga clic en Cancelar para regresar a "
-"Ver la Categoría del Informe sin borrar la función."
+"ver la Categoría del reporte sin borrar la función."
 
 #: reportsCategory.detail
 msgctxt "reportsCategory.detail"
@@ -153,15 +153,15 @@ msgstr "Información de la Categoría"
 
 #: reportsCategory.labelinfo
 msgid "Edit / Delete to make changes to a report category or"
-msgstr "Editar / Borrar para realizar cambios a una categoría de informe o"
+msgstr "Editar / Borrar para realizar cambios a una categoría de reporte o"
 
 #: reportsCategory.linkViewReportCategory
 msgid "View report categories"
-msgstr "Ver categorías de informe  "
+msgstr "Ver categorías de reporte  "
 
 #: reportsCategory.linkinfo
 msgid "add a new report category"
-msgstr "añadir una nueva categoría de informe"
+msgstr "añadir una nueva categoría de reporte"
 
 #: reportsCategory.markedFieldStatement
 msgctxt "reportsCategory.markedFieldStatement"

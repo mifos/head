@@ -32,6 +32,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -43,7 +44,10 @@ import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
+import org.mifos.accounts.loan.business.service.LoanSummaryDto;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -54,6 +58,7 @@ import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -72,6 +77,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -96,7 +102,10 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -211,9 +220,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         List<FeeDto> additionalFees = new ArrayList<FeeDto>();
         List<FeeDto> defaultFees = new ArrayList<FeeDto>();
 
-        new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext, defaultFees, additionalFees);
+        new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext,
+                defaultFees, additionalFees);
 
-        LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+        LoanOfferingBO loanOffering = new LoanPrdBusinessService()
+                .getLoanOffering(productId, userContext.getLocaleId());
 
         if (AccountingRules.isMultiCurrencyEnabled()) {
             defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
@@ -830,7 +841,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum) {
+    public List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext,
+            String globalAccountNum) {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         loan.updateDetails(userContext);
@@ -850,5 +862,92 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
+    }
+
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        String fundName = null;
+        if (loan.getFund() != null) {
+            fundName = loan.getFund().getFundName();
+        }
+
+        SurveysPersistence surveysPersistence = new SurveysPersistence();
+        boolean activeSurveys = surveysPersistence.isActiveSurveysForSurveyType(SurveyType.LOAN);
+        List<SurveyDto> accountSurveys = loanDao.getAccountSurveyDto(loan.getAccountId());
+
+        LoanSummaryDto loanSummary = new LoanSummaryDto(loan.getLoanSummary().getOriginalPrincipal(), loan.getLoanSummary().getPrincipalPaid(),
+                                                        loan.getLoanSummary().getPrincipalDue(), loan.getLoanSummary().getOriginalInterest(),
+                                                        loan.getLoanSummary().getInterestPaid(), loan.getLoanSummary().getInterestDue(),
+                                                        loan.getLoanSummary().getOriginalFees(), loan.getLoanSummary().getFeesPaid(),
+                                                        loan.getLoanSummary().getFeesDue(), loan.getLoanSummary().getOriginalPenalty(),
+                                                        loan.getLoanSummary().getPenaltyPaid(), loan.getLoanSummary().getPenaltyDue(),
+                                                        loan.getLoanSummary().getTotalLoanAmnt(), loan.getLoanSummary().getTotalAmntPaid(),
+                                                        loan.getLoanSummary().getTotalAmntDue());
+
+        LoanPerformanceHistoryDto loanPerformanceHistory = new LoanPerformanceHistoryDto(loan.getPerformanceHistory().getNoOfPayments(),
+                                                                                        loan.getPerformanceHistory().getTotalNoOfMissedPayments(),
+                                                                                        loan.getPerformanceHistory().getDaysInArrears(),
+                                                                                        loan.getPerformanceHistory().getLoanMaturityDate());
+
+        Short accountStateId = loan.getAccountState().getId();
+        String accountStateName = getAccountStateName(accountStateId);
+        String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
+        String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
+
+        return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
+                                        accountStateName, loan.getAccountFlags(),
+                                        loan.getDisbursementDate(), loan.isRedone(), loan.getBusinessActivityId(), loan.getAccountId(),
+                                        loan.getAccountActionDates(), gracePeriodTypeName, interestTypeName, loan.getLoanMeeting(),
+                                        loan.getAccountNotes(), loan.getRecentAccountNotes(),
+                                        loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
+                                        loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
+                                        loan.getTotalAmountDue(), loan.getTotalAmountInArrears(), loanSummary,
+                                        loan.getLoanActivityDetails(), loan.getInterestRate(), loan.isInterestDeductedAtDisbursement(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurAfter(),
+                                        loan.getLoanOffering().getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId(),
+                                        loan.getLoanOffering().isPrinDueLastInst(), loan.getNoOfInstallments(),
+                                        loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
+                                        loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),
+                                        loan.getExternalId(), loan.getAccountCustomFields(), loan.getAccountFees(), loan.getCreatedDate(),
+                                        loanPerformanceHistory, loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
+    }
+
+    private String getAccountStateName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        AccountStateEntity accountStateEntity;
+        try {
+            accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+                    id);
+            return accountStateEntity.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getGracePeriodTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        GracePeriodTypeEntity gracePeriodType;
+        try {
+            gracePeriodType = (GracePeriodTypeEntity) masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+                    id);
+            return gracePeriodType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private String getInterestTypeName(Short id) {
+
+        MasterPersistence masterPersistence = new MasterPersistence();
+        InterestTypesEntity interestType;
+        try {
+            interestType = (InterestTypesEntity) masterPersistence.getPersistentObject(InterestTypesEntity.class,
+                    id);
+            return interestType.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
     }
 }

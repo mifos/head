@@ -237,6 +237,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "manage");
         addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         actionPerform();
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -891,6 +892,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "manage");
         addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         actionPerform();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
@@ -914,6 +917,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
             setRequestPathInfo("/loanAccountAction.do");
             addRequestParameter("method", "manage");
             addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+            addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
             actionPerform();
             // I'd normally expect to see a call to JUnit 3's fail() here
         } catch (PageExpiredException pe) {

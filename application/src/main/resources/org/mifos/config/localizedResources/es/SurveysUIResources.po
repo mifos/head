@@ -57,11 +57,11 @@ msgstr "Centro"
 
 #: Surveys.Choice
 msgid "Choice"
-msgstr "Elección"
+msgstr "Opción"
 
 #: Surveys.Choices
 msgid "Choices"
-msgstr "Elecciones"
+msgstr "Opciones"
 
 #: Surveys.Clientlabel
 msgctxt "Surveys.Clientlabel"
@@ -145,7 +145,7 @@ msgstr "Préstamos"
 
 #: Surveys.Mandatory
 msgid "Mandatory"
-msgstr "Mandatorio"
+msgstr "Obligatorio"
 
 #: Surveys.Multiselect
 msgid "Multi Select"
@@ -243,7 +243,7 @@ msgstr "Adjuntar una encuesta"
 
 #: Surveys.between
 msgid "Between"
-msgstr "entre"
+msgstr "Entre"
 
 #: Surveys.both_type
 msgid "Customers and accounts"
@@ -404,7 +404,7 @@ msgstr "Encuestado por"
 
 #: Surveys.instance.systemid
 msgid "System ID"
-msgstr "Identificación del sistema"
+msgstr "ID del sistema"
 
 #: Surveys.instanceInformation
 msgid "Survey instance information"
@@ -632,4 +632,4 @@ msgstr "</li>"
 
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
-msgstr "Por especifique por lo menos 2 selecciones para este tipo de respuesta."
+msgstr "Por especifique por lo menos 2 opciones para este tipo de respuesta."

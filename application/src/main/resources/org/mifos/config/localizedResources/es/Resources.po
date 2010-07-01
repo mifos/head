@@ -170,7 +170,7 @@ msgstr "AplicacionParcial"
 #, fuzzy
 msgctxt "value_10"
 msgid "Hold"
-msgstr "Agarrar"
+msgstr "Mantener"
 
 #: value_11
 msgctxt "value_11"
@@ -205,7 +205,7 @@ msgstr "Activo"
 #: value_4
 msgctxt "value_4"
 msgid "Hold"
-msgstr "Agarrar"
+msgstr "Mantener"
 
 #: value_5
 msgctxt "value_5"

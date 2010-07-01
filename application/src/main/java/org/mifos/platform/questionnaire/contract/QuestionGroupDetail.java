@@ -20,9 +20,12 @@
 
 package org.mifos.platform.questionnaire.contract;
 
+import java.util.List;
+
 public class QuestionGroupDetail {
-    private String title;
     private Integer id;
+    private String title;
+    private List<SectionDefinition> sectionDefinitions;
 
     public QuestionGroupDetail(Integer id, String title) {
         this.id = id;
@@ -33,6 +36,11 @@ public class QuestionGroupDetail {
         this(0, title);
     }
 
+    public QuestionGroupDetail(int id, String title, List<SectionDefinition> sectionDefinitions) {
+        this(id, title);
+        this.sectionDefinitions = sectionDefinitions;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -40,4 +48,9 @@ public class QuestionGroupDetail {
     public Integer getId() {
         return id;
     }
+
+    public List<SectionDefinition> getSectionDefinitions() {
+        return sectionDefinitions;
+    }
+
 }

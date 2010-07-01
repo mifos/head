@@ -26,6 +26,7 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
+import org.mifos.accounts.fund.servicefacade.FundCodeDto;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -88,13 +89,13 @@ public class FundActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
-        List<FundCodeEntity> fundCodeList = retrieveAllFundCodeEntitiesFromSession();
+        List<FundCodeDto> fundCodeList = retrieveAllFundCodeEntitiesFromSession();
        Assert.assertEquals("The size of master data for funds should be 5", 5, fundCodeList.size());
     }
 
     @SuppressWarnings("unchecked")
-    private List<FundCodeEntity> retrieveAllFundCodeEntitiesFromSession() throws PageExpiredException {
-        return (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST, request);
+    private List<FundCodeDto> retrieveAllFundCodeEntitiesFromSession() throws PageExpiredException {
+        return (List<FundCodeDto>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST, request);
     }
 
     public void testPreviewWithOutData() throws Exception {

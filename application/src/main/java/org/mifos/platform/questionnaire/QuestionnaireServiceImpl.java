@@ -26,6 +26,7 @@ import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
@@ -40,9 +41,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private QuestionDao questionDao;
-    
+
     @Autowired
     private QuestionGroupDao questionGroupDao;
+
+    @Autowired
+    private EventSourceDao eventSourceDao;
 
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
@@ -94,12 +98,26 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException{
+    public QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException {
         QuestionGroup questionGroup = questionGroupDao.getDetails(questionGroupId);
-        if(questionGroup == null){
+        if (questionGroup == null) {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND);
         }
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
+    }
+
+    @Override
+    public QuestionDetail getQuestion(int questionId) throws ApplicationException {
+        Question question = questionDao.getDetails(questionId);
+        if (question == null) {
+            throw new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND);
+        }
+        return questionnaireMapper.mapToQuestionDetail(question);
+    }
+
+    @Override
+    public List<EventSource> getAllEventSources() {
+        return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
     }
 
     private void persistQuestion(Question question) throws ApplicationException {

@@ -17,36 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.test.acceptance.framework.admin;
 
-import java.util.Date;
+import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.MifosPage;
 
-import org.mifos.framework.business.service.DataTransferObject;
+public class QuestionGroupDetailPage extends MifosPage {
 
-/**
- *
- */
-public class CustomerSurveyDto implements DataTransferObject {
-    private final Integer instanceId;
-    private final String surveyName;
-    private final Date dateConducted;
-
-    public CustomerSurveyDto(final Integer instanceId, final String surveyName, final Date dateConducted) {
-        this.instanceId = instanceId;
-        this.surveyName = surveyName;
-        this.dateConducted = dateConducted;
+    public QuestionGroupDetailPage(Selenium selenium) {
+        super(selenium);
     }
 
-    public int getInstanceId() {
-        return this.instanceId;
+    public QuestionGroupDetailPage verifyPage() {
+        verifyPage("view_question_groups_details");
+        return this;
     }
-
-    public String getSurveyName() {
-        return this.surveyName;
-    }
-
-    public Date getDateConducted() {
-        return this.dateConducted;
-    }
-
 }

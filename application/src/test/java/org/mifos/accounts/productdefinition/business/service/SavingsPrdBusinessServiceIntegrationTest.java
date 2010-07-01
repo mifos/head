@@ -126,11 +126,6 @@ public class SavingsPrdBusinessServiceIntegrationTest extends MifosIntegrationTe
         }
     }
 
-    public void testRetrieveDormancyDays() throws Exception {
-        Short dormancyDays = new SavingsPrdBusinessService().retrieveDormancyDays();
-       Assert.assertEquals(dormancyDays, Short.valueOf("30"));
-    }
-
     public void testRetrieveDormancyDaysForInvalidConnection() throws Exception {
         TestObjectFactory.simulateInvalidConnection();
         try {

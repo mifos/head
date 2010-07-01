@@ -24,6 +24,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -34,6 +35,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -49,73 +53,6 @@ public class QuestionnaireController {
 
     public QuestionnaireController(QuestionnaireServiceFacade questionnaireServiceFacade) {
         this.questionnaireServiceFacade = questionnaireServiceFacade;
-    }
-
-    public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
-        if (questionFormHasErrors(questionForm, requestContext)) return "failure";
-        questionForm.addCurrentQuestion();
-        return "success";
-    }
-
-    public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
-        try {
-            questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
-        } catch (ApplicationException e) {
-            constructAndLogSystemError(requestContext, e);
-            return "failure";
-        }
-        return "success";
-    }
-
-    public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if (questionGroupFormHasErrors(questionGroupForm, requestContext)) return "failure";
-        try {
-            questionGroupForm.trimTitle();
-            questionnaireServiceFacade.createQuestionGroup(questionGroupForm);
-        } catch (ApplicationException e) {
-            constructAndLogSystemError(requestContext, e);
-            return "failure";
-        }
-        return "success";
-    }
-
-    private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
-        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
-        MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
-    }
-
-    private boolean isDuplicateQuestion(QuestionForm questionForm) {
-        String title = StringUtils.trim(questionForm.getTitle());
-        return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
-    }
-
-    private boolean isInvalidTitle(String title) {
-        return isEmpty(StringUtils.trimToNull(title));
-    }
-
-    private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {
-        MessageResolver messageResolver = new MessageBuilder().error().code(code).source(source).defaultText(message).build();
-        requestContext.getMessageContext().addMessage(messageResolver);
-    }
-
-    private boolean questionGroupFormHasErrors(QuestionGroupForm questionGroupForm, RequestContext requestContext) {
-        if (isInvalidTitle(questionGroupForm.getTitle())) {
-            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
-        if (isInvalidTitle(questionForm.getTitle())) {
-            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
-            return true;
-        }
-        if (isDuplicateQuestion(questionForm)) {
-            constructErrorMessage(requestContext, "questionnaire.error.duplicate.question.title", "title", "The name specified already exists.");
-            return true;
-        }
-        return false;
     }
 
     @RequestMapping("/viewQuestions.ftl")
@@ -137,9 +74,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroupForm questionGroupForm = questionnaireServiceFacade.
+                QuestionGroup questionGroup = questionnaireServiceFacade.
                         getQuestionGroup(Integer.valueOf(questionGroupId));
-                model.addAttribute("questionGroupDetail", questionGroupForm);
+                model.addAttribute("questionGroupDetail", questionGroup);
             }
         } catch (ApplicationException e) {
             MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
@@ -148,17 +85,125 @@ public class QuestionnaireController {
         return "viewQuestionGroupDetail";
     }
 
-    private boolean invalid(String questionGroupId) {
-        if (isEmpty(questionGroupId) || !isInteger(questionGroupId)) {
-            return true;
-        } else {
-            return false;
+
+    @RequestMapping("/viewQuestionDetail.ftl")
+    public String getQuestion(ModelMap model, HttpServletRequest httpServletRequest) {
+        String questionId = httpServletRequest.getParameter("questionId");
+        try {
+            if (invalid(questionId)) {
+                model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_ID);
+            } else {
+                Question question = questionnaireServiceFacade.
+                        getQuestion(Integer.valueOf(questionId));
+                model.addAttribute("questionDetail", question);
+            }
+        } catch (ApplicationException e) {
+            MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+            model.addAttribute("error_message_code", QuestionnaireConstants.QUESTION_NOT_FOUND);
         }
+        return "viewQuestionDetail";
     }
 
-    public boolean isInteger(String input) {
+    public String addQuestion(QuestionForm questionForm, RequestContext requestContext) {
+        if (questionFormHasErrors(questionForm, requestContext)) {
+            return "failure";
+        }
+        questionForm.addCurrentQuestion();
+        return "success";
+    }
+
+    public String createQuestions(QuestionForm questionForm, RequestContext requestContext) {
         try {
-            Integer.parseInt(input);
+            questionnaireServiceFacade.createQuestions(questionForm.getQuestions());
+        } catch (ApplicationException e) {
+            constructAndLogSystemError(requestContext, e);
+            return "failure";
+        }
+        return "success";
+    }
+
+    public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
+        if (questionGroupHasErrors(questionGroup, requestContext)) {
+            return "failure";
+        }
+        try {
+            questionGroup.trimTitle();
+            questionnaireServiceFacade.createQuestionGroup(questionGroup);
+        } catch (ApplicationException e) {
+            constructAndLogSystemError(requestContext, e);
+            return "failure";
+        }
+        return "success";
+    }
+
+    public Map<String, String> getAllQgEventSources() {
+        List<EventSource> eventSources = questionnaireServiceFacade.getAllEventSources();
+        Map<String, String> evtSourcesMap = new HashMap<String, String>();
+        for (EventSource evtSrc : eventSources) {
+            evtSourcesMap.put(getEventSourceId(evtSrc), evtSrc.getDesciption());
+        }
+        return evtSourcesMap;
+    }
+
+    private String getEventSourceId(EventSource evtSrc) {
+        return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
+    }
+
+    private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
+        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
+        MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
+    }
+
+    private boolean isDuplicateQuestion(QuestionForm questionForm) {
+        String title = StringUtils.trim(questionForm.getTitle());
+        return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
+    }
+
+    private boolean isInvalidTitle(String title) {
+        return isEmpty(StringUtils.trimToNull(title));
+    }
+
+    private void constructErrorMessage(RequestContext requestContext, String code, String source, String message) {
+        MessageResolver messageResolver = new MessageBuilder().error().code(code).source(source).defaultText(message).build();
+        requestContext.getMessageContext().addMessage(messageResolver);
+    }
+
+    private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
+        if (isInvalidTitle(questionGroup.getTitle())) {
+            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
+            return true;
+        }
+        if (sectionsNotPresent(questionGroup)) {
+            constructErrorMessage(requestContext, "questionnaire.error.no.sections.in.group", "sectionName", "Please specify at least one section or question");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean sectionsNotPresent(QuestionGroup questionGroup) {
+        return questionGroup.getSections().size() == 0;
+    }
+
+    private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
+        if (isInvalidTitle(questionForm.getTitle())) {
+            constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
+            return true;
+        }
+        if (isDuplicateQuestion(questionForm)) {
+            constructErrorMessage(requestContext, "questionnaire.error.duplicate.question.title", "title", "The name specified already exists.");
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean invalid(String id) {
+        return (isEmpty(id) || !isInteger(id)) ? true : false;
+    }
+
+    public boolean isInteger(String id) {
+        try {
+            Integer.parseInt(id);
             return true;
         }
         catch (NumberFormatException e) {
@@ -166,4 +211,8 @@ public class QuestionnaireController {
         }
     }
 
+    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
+        questionGroup.addCurrentSection();
+        return "success";
+    }
 }

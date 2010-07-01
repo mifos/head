@@ -18,35 +18,14 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.ui.core.controller;
+package org.mifos.platform.questionnaire.persistence;
 
-import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.persistence.GenericDao;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class QuestionGroupForm implements Serializable {
-    private static final long serialVersionUID = 9142463851744584305L;
-    private String title;
-
-    private String id;
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void trimTitle() {
-        this.title = StringUtils.trim(this.title);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+public interface EventSourceDao extends GenericDao<EventSourceEntity, Integer> {
+    List retrieveCountByEventAndSource(String event, String source);
+    List retrieveByEventAndSource(String event, String source);
 }

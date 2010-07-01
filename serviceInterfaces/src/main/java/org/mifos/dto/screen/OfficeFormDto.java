@@ -23,16 +23,23 @@ package org.mifos.dto.screen;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDto;
 
 public class OfficeFormDto {
 
     private final List<CustomFieldDto> customFields;
+    private final List<OfficeDto> parents;
 
-    public OfficeFormDto(List<CustomFieldDto> customFields) {
+    public OfficeFormDto(List<CustomFieldDto> customFields, List<OfficeDto> parents) {
         this.customFields = customFields;
+        this.parents = parents;
     }
 
     public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
+    }
+
+    public List<OfficeDto> getParents() {
+        return this.parents;
     }
 }

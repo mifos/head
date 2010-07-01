@@ -27,12 +27,12 @@ msgstr ""
 #: errors.batchjobrunning
 msgid "You have been logged out of the system because batch jobs are running."
 msgstr ""
-"Usted ha sido desconectado del sistema porque el procesamiento de los lotes "
-"está corriendo."
+"Usted ha sido desconectado del sistema porque el procesamiento de los tareas de mantenimiento "
+"están corriendo."
 
 #: errors.shutdown
 msgid "You have been logged out of the system because Mifos is shutting down."
-msgstr ""
+msgstr "Ha sido desconectado del sistema por que Mifos esta cerrando."
 
 #: errors.inactiveuser
 msgid ""
@@ -165,7 +165,7 @@ msgstr "Enviar"
 
 #: login.username
 msgid "Username"
-msgstr "Identificación en línea"
+msgstr "Nombre de Usuario"
 
 #: login.welcome
 msgid "Welcome to mifos"

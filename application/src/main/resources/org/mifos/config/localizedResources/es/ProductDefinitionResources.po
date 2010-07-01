@@ -28,8 +28,7 @@ msgstr ""
 #, fuzzy
 msgid "Please Specify the Calculate # of Installments Type."
 msgstr ""
-"Por favor especifique el Tipo de calcular \n"
-"o. de cuotas."
+"Por favor especifique el tipo de Calcular # de Pagos."
 
 #: errors.calcloanamounttype
 msgid "Please choose a Calculation Loan Amount Type."
@@ -50,9 +49,9 @@ msgid ""
 "between the Min and Max Interest Rates, inclusive of the two. Please specify "
 "valid interest rate."
 msgstr ""
-"Por favor especifique un tipo de interés por defecto válido, que debe estar "
-"entre el tipo de interés mínimo y máximo, ambos incluidos. Por favor "
-"especifique un tipo de interés válido."
+"Por favor especifique una tasa de interés por default válida, que debe estar "
+"entre la tasa de interés mínima y máxima. Por favor "
+"especifique una tasa de interés válido."
 
 #: errors.defIntRateconfig
 msgid ""
@@ -60,15 +59,15 @@ msgid ""
 "{4} {1} {2}, inclusive of the two."
 msgstr ""
 "Por favor especifique un {0} {1} {2} válido. {0} {1} {2} debería estar entre "
-"{3} y {4} {1} {2}, ambos incluidos."
+"{3} y {4} {1} {2}."
 
 #: errors.defLoanAmount
 msgid ""
 "Please specify valid Default amount. Default amount should be between the "
 "Min and Max Loan Amounts, inclusive of the two {0} {1}."
 msgstr ""
-"Por favor especifique un importe por defecto válido, que debe estar entre el "
-"importe de préstamo mínimo y máximo, ambos incluidos {0} {1}. "
+"Por favor especifique un importe por default válido, que debe estar entre el "
+"importe de préstamo mínimo y máximo, ambos entre {0} {1}. "
 
 #: errors.defMinMax
 msgid ""
@@ -76,7 +75,7 @@ msgid ""
 "{2}, inclusive."
 msgstr ""
 "Por favor especifique valores válidos para {0}. {0} debería estar entre {1} "
-"y {2}, ambos incluidos."
+"y {2}."
 
 #: errors.defMinMaxconfig
 msgid ""
@@ -84,7 +83,7 @@ msgid ""
 "between {3} and {4}, inclusive."
 msgstr ""
 "Por favor especifique un {0} {1} {2} válido. {0} {1} {2} debería estar entre "
-"{3} y {4}, ambos incluidos."
+"{3} y {4}."
 
 #: errors.defaultinstallments
 #, fuzzy
@@ -93,27 +92,27 @@ msgid ""
 "should be between the Min and Max # of Installments, inclusive of the two "
 "{0} {1}."
 msgstr ""
-"Por favor especifique un número de cuotas por defecto válido, que debe estar "
-"entre el número de cuotas mínimo y máximo, ambos incluidos {0} {1}. "
+"Por favor especifique un número de pagos por default válidos, que debe estar "
+"entre el número de pagos mínimo y máximo, entre {0} {1}. "
 
 #: errors.defaultloanamount
 msgid "Please Specify the valid Default Loan Amount {0}."
-msgstr "Por favor especifique un importe de préstamo por defecto válido {0}."
+msgstr "Por favor especifique un importe de préstamo por default válido {0}."
 
 #: errors.defaultloanamountinvalidformat
 msgid "The default loan amount format {0} {1} is invalid because {2}"
 msgstr ""
-"El formato del importe de préstamo por defecto {0} {1} no es válido debido a "
+"El formato del importe de préstamo por default {0} {1} no es válido debido a "
 "{2}."
 
 #: errors.definstallments
 #, fuzzy
 msgid "Please Specify the valid Default # of Installments {0} {1}."
-msgstr "Por favor especifique un número de cuotas por defecto válido {0} {1}. "
+msgstr "Por favor especifique un número de pagos por default válido {0} {1}. "
 
 #: errors.definterestinvalidformat
 msgid "The default interest is invalid because {0}"
-msgstr "El interés por defecto no es válido debido a {0}."
+msgstr "El interés por default no es válido debido a {0}."
 
 #: errors.double
 msgid "Please specify a valid {0}. Use numbers only."
@@ -132,7 +131,7 @@ msgid ""
 "The Product Instance name already exists in the application. Please specify "
 "a different name."
 msgstr ""
-"El nombre de frecuencia del producto ya existe en la aplicación. Por favor "
+"El nombre de la instancia del producto ya existe en la aplicación. Por favor "
 "especifique un nombre diferente."
 
 #: errors.duplprdinstshortname
@@ -148,18 +147,18 @@ msgid ""
 "Please specify end date greater than the start date and not less than the "
 "current date."
 msgstr ""
-"Por favor especifique una fecha de fin posterior a la fecha de comienzo y a "
+"Por favor especifique una fecha de fin posterior a la fecha de inicio y a "
 "la fecha de hoy."
 
 #: errors.endinstallment
 msgid "Please Specify the valid End Installment Range Number {0} {1}."
-msgstr "Por favor especifique el final del rango del número de cuotas {0} {1}."
+msgstr "Por favor especifique un rango para el ultimo pago {0} {1} valido."
 
 #: errors.endloanamount
 msgid "Please Specify the valid End Range Loan Amount {0} {1}."
 msgstr ""
-"Por favor especifique el final del rango del importe del préstamo válido {0} "
-"{1}."
+"Por favor especifique el final del rango de préstamo {0} "
+"{1} válido."
 
 #: errors.feefrequency
 msgid "The frequency of the product and the fee \"{0}\" does not match."
@@ -176,7 +175,7 @@ msgstr "</UL>"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "El {0} es invalido debido a {1}"
 
 #: errors.graceperioddur
 msgid ""
@@ -184,7 +183,7 @@ msgid ""
 "installments."
 msgstr ""
 "Por favor especifique el {0}. {0} debería ser inferior o igual al número "
-"máximo de cuotas."
+"máximo de pagos."
 
 #: errors.greaterthanzero
 msgctxt "errors.greaterthanzero"
@@ -254,7 +253,7 @@ msgstr "La longitud de {0} no puede ser superior a {1} caracter(es)."
 #: errors.maxinstallments
 #, fuzzy
 msgid "Please Specify the valid Max # of Installments {0} {1}."
-msgstr "Por favor especifique el número máximo de cuotas válido {0} {1}."
+msgstr "Por favor especifique el número máximo de pagos válido {0} {1}."
 
 #: errors.maxinterestinvalidformat
 msgid "The max interest is invalid because {0}"
@@ -282,7 +281,7 @@ msgid ""
 "Please specify a valid {0} {1} {2}. {0} {1} {2} should be greater than or "
 "equal to {3} {1} {2}."
 msgstr ""
-"Por favor especifique un {0} {1} {2}válido. {0} {1} {2} ha de ser mayor o "
+"Por favor especifique un {0} {1} {2} válido. {0} {1} {2} ha de ser mayor o "
 "igual que {3} {1} {2}."
 
 #: errors.maxminLoanAmount
@@ -299,15 +298,15 @@ msgid ""
 "Please specify a valid Max no of Install. Max no of Install should be "
 "greater than or equal to Min no of Install {0} {1}."
 msgstr ""
-"Por favor especifique un número máximo de cuotas válido. El número máximo de "
-"cuotas ha de ser mayor o igual que el número  mínimo de cuotas {0} {1}."
+"Por favor especifique un número máximo de pagos válido. El número máximo de "
+"pagos ha de ser mayor o igual que el número  mínimo de pagos {0} {1}."
 
 #: errors.maxpenaltyrate
 msgid ""
 "Please specify a valid penalty rate. Penalty rate should be between 0 and "
 "999."
 msgstr ""
-"Por favor especifique un tipo de penalización válido. El tipo de "
+"Por favor especifique una tasa de penalización válida. La tasa de "
 "penalización ha de estar entre 0 y 999."
 
 #: errors.minimumlength
@@ -317,7 +316,7 @@ msgstr "La longitud de {0} no puede ser inferior a {1} caracter(es)."
 #: errors.mininstallments
 #, fuzzy
 msgid "Please Specify the valid Min # of Installments {0} {1}."
-msgstr "Por favor especifique el número mínimo de cuotas válido {0} {1}."
+msgstr "Por favor especifique el número mínimo de pagos válido {0} {1}."
 
 #: errors.mininterestinvalidformat
 msgid "The min interest is invalid because {0}"
@@ -334,7 +333,7 @@ msgstr ""
 
 #: errors.mustNotBeNegative
 msgid "{0} must not be negative."
-msgstr ""
+msgstr "{0} no puede ser negativo."
 
 #: errors.prefix
 msgid "<LI>"
@@ -345,8 +344,8 @@ msgid ""
 "The Principal only grace is not applicable for Principal due on last "
 "installment."
 msgstr ""
-"La carencia sólo para el principal no es aplicable para el principal "
-"pendiente de pago a la fecha de la última cuota."
+"La gracia del principal no es aplicable para el principal "
+"que esta pendiente de pago a la fecha del último pago."
 
 #: errors.select
 msgctxt "errors.select"
@@ -366,7 +365,7 @@ msgid ""
 "The Start date can be anything between current date and 1 year from the "
 "current date."
 msgstr ""
-"La fecha de Comienzo debe estar comprendida entre el día de hoy y un año a "
+"La fecha de inicio debe de estar entre el día de hoy y un año a "
 "partir de hoy."
 
 #: errors.startdateupdateexception
@@ -374,7 +373,7 @@ msgid ""
 "The Start date cannot be changed because either the product is active or the "
 "date specified is invalid."
 msgstr ""
-"No se puede cambiar la fecha de comienzo, bien porque el producto está "
+"No se puede cambiar la fecha de inicio, bien porque el producto está "
 "activo, bien porque la fecha especificada no es válida."
 
 # for \# of last loan Installments - not sure about what this means in English, translated literally.
@@ -385,24 +384,25 @@ msgid ""
 "be greater than the Start Range Loan Amount for # of last loan Installments "
 "{0} {1}.   "
 msgstr ""
-"Por favor especifique un final del rango del importe del préstamo válido. El "
-"final del rango del importe del préstamo debe ser mayor que el inicio del "
-"rango del importe del préstamo para \n"
-"úmero de las últimas cuotas del préstamo {0} {1}."
+"Por favor especifique un rango del Final del Importe del Préstamo válido. Debe ser mayor que el inicio del "
+"rango del importe del préstamo para los \n"
+"úmeros de pagos del último préstamo {0} {1}."
+
+
 
 #: errors.startendrangeloanamount
 msgid ""
 "Please Specify the valid End Range Loan Amount. End Range Loan Amount must "
 "be greater than the Start Range Loan Amount {0} {1}."
 msgstr ""
-"Por favor especifique un final del rango del importe del préstamo válido. El "
-"final del rango del importe del préstamo debe ser mayor que el inicio del "
+"Por favor especifique un rango del importe del préstamo válido. El "
+"fin del rango del importe del préstamo debe ser mayor que el inicio del "
 "rango del importe del préstamo {0} {1}."
 
 #: errors.startinstallment
 msgid "Please Specify the valid Start Installment Range Number {0} {1}."
 msgstr ""
-"Por favor especifique el número de inicio del rango de cuotas válido {0} "
+"Por favor especifique el número de inicio del rango de pagos válido {0} "
 "{1}."
 
 #: errors.startloanamount
@@ -432,7 +432,7 @@ msgid ""
 "Please unselect this option or change the interest calculation method to "
 "flat interest.."
 msgstr ""
-"No se puede deducir el interés al desembolso para préstamos amortizables. "
+"No se puede deducir el interés al desembolso para préstamos con una tasa de interes fija. "
 "Por favor no seleccione esta opción o cambie el método de cálculo del "
 "interés a un importe fijo."
 
@@ -443,20 +443,22 @@ msgstr "Definir mezcla para un nuevo producto"
 #: product.GlcodeInterest
 msgctxt "product.GlcodeInterest"
 msgid "GL code for interest"
-msgstr "Código contable para el interés"
+msgstr "Código del Libro Mayor para el interés"
 
 #: product.GlcodePenalties
 msgid "GL code for penalty"
-msgstr "Código contable para la penalización  "
+msgstr "Código del Libro Mayor para la penalización  "
 
 #: product.GlcodePrincipal
 msgid "GL code for principal"
-msgstr "Código contable para el capital"
+msgstr "Código del Libro Mayor para el capital"
 
 #: product.Glcodefor
 #, fuzzy
 msgid "GL code for"
-msgstr "Código contable para "
+msgstr "Código del Libro Mayor para "
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 #: product.accounting
 msgid "Accounting"
@@ -520,7 +522,7 @@ msgstr "Aplicable a"
 
 #: product.attachfeestypes
 msgid "Attach fee types"
-msgstr "Adjuntar tipos de comisión"
+msgstr "Adjuntar tipos de cuotas"
 
 #: product.automatic
 msgid "Automatic"
@@ -554,7 +556,7 @@ msgstr "Editar información de categoría"
 
 #: product.buteditloaninfo
 msgid "Edit loan product information"
-msgstr "Editar información de producto de préstamo"
+msgstr "Editar información del préstamo"
 
 #: product.buteditsavingsinfo
 msgid "Edit Savings product information"
@@ -580,7 +582,7 @@ msgstr "cálculo"
 #: product.calcInstallment
 #, fuzzy
 msgid "Calculate # of Installments as"
-msgstr "Calcular número de cuotas como"
+msgstr "Calcular número de pagos como"
 
 #: product.calcloanamount
 msgid "Calculate Loan Amount as"
@@ -681,7 +683,7 @@ msgstr "Pulse en una categoría abajo para ver detalles y efectuar cambios o"
 #: product.clickfeetypes
 msgid "Click on a fee type in the left box to select. Then click Add."
 msgstr ""
-"Pulse en un tipo de comisión en el recuadro de la izquierda para "
+"Pulse en un tipo de cuota en el recuadro de la izquierda para "
 "seleccionar. Después pulse Añadir."
 
 #: product.clickfunds
@@ -747,7 +749,7 @@ msgstr ""
 
 #: product.currency
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #: product.cyclecounter
 msgid "cycle counter"
@@ -767,23 +769,23 @@ msgstr "{0} deducido al desembolso"
 
 #: product.defaccountprocessflow
 msgid "Define Account Process Flow"
-msgstr "Definir Flujo de Proceso de Cuenta"
+msgstr "Definir Proceso de Flujo de Cuenta"
 
 #: product.defamt
 msgid "Default amount"
-msgstr "Importe por defecto"
+msgstr "Importe por default"
 
 #: product.default
 msgid "Default"
-msgstr "Defecto"
+msgstr "Default"
 
 #: product.defaultAmount
 msgid "Default {0} amount"
-msgstr "Importe de {0} por defecto"
+msgstr "Importe de {0} por default"
 
 #: product.defaultRate
 msgid "Default {0} rate"
-msgstr "Tasa de {0} por defecto"
+msgstr "Tasa de {0} por default"
 
 #: product.defclientprocessflow
 msgid "Define client process flow"
@@ -804,11 +806,11 @@ msgstr "Definir un nuevo producto {0}."
 #: product.definst
 #, fuzzy
 msgid "Default # of installments"
-msgstr "No. de cuotas por defecto"
+msgstr "No. de pagos por default"
 
 #: product.defintrate
 msgid "Default interest rate"
-msgstr "Tipo de interés por defecto"
+msgstr "Tipo de interés por default"
 
 #: product.defprdcat
 msgid "Define a new product category"
@@ -828,11 +830,11 @@ msgstr "Detalles"
 
 #: product.disburstolo
 msgid "Disbursed to Loan Officer"
-msgstr "Desembolsado al Oficial de Préstamos"
+msgstr "Desembolsado al Oficial de Crédito"
 
 #: product.dormancyDays
 msgid "dormancy days"
-msgstr "Días en suspenso"
+msgstr "Días en inactividad"
 
 #: product.editCancelCat
 msgid ""
@@ -906,11 +908,11 @@ msgstr "Introducir información del producto de préstamo"
 
 #: product.fees&pen
 msgid "Fees"
-msgstr "Comisiones"
+msgstr "Cuotas"
 
 #: product.feestypes
 msgid "Fees Types"
-msgstr "Tipos de Comisiones"
+msgstr "Tipos de Cuotas"
 
 #: product.fieldsrequired
 msgid "Fields marked with an asterisk are required."
@@ -927,7 +929,7 @@ msgstr "por ciclo de préstamo en la fila"
 #: product.fornumberoflastloaninstallmentatrow
 #, fuzzy
 msgid "for # of last loan Installments at row"
-msgstr "por número de la última cuota del préstamo en la fila"
+msgstr "por número de la último pago del préstamo en la fila"
 
 #: product.freq
 #, fuzzy
@@ -944,7 +946,7 @@ msgstr "Frecuencia de publicación del interés en las cuentas."
 
 #: product.freqofinst
 msgid "Frequency of installments"
-msgstr "Frecuencia de las cuotas"
+msgstr "Frecuencia de las pagos"
 
 #: product.frequency
 #, fuzzy
@@ -954,28 +956,28 @@ msgstr "Frecuencia de"
 #: product.glCodeFor
 #, fuzzy
 msgid "GL code for "
-msgstr "Código contable para "
+msgstr "Código contable del Libro Mayor para "
 
 #: product.glcodedep
 msgid "GL code for deposits"
-msgstr "Código contable para depósitos"
+msgstr "Código contable del Libro Mayor para depósitos"
 
 #: product.glcodeint
 msgctxt "product.glcodeint"
 msgid "GL code for interest"
-msgstr "Código contable para intereses"
+msgstr "Código contable del Libro Mayor para intereses"
 
 #: product.gracepenalty
 msgid "Grace period for penalty"
-msgstr "Periodo de carencia para la penalidad"
+msgstr "Periodo de gracias para la penalidad"
 
 #: product.graceperdur
 msgid "Grace period duration"
-msgstr "Duración del periodo de carencia"
+msgstr "Duración del periodo de gracia"
 
 #: product.gracepertype
 msgid "Grace period type"
-msgstr "Tipo de periodo de carencia"
+msgstr "Tipo de periodo de gracia"
 
 #: product.groups
 msgid "Groups"
@@ -1016,7 +1018,7 @@ msgstr "Por ciclo del préstamo"
 
 #: product.installments
 msgid "installments"
-msgstr "cuotas"
+msgstr "pagos"
 
 #: product.insurance
 msgid "Insurance"
@@ -1032,7 +1034,7 @@ msgstr "Interés"
 
 #: product.intrate
 msgid "Interest rate"
-msgstr "Tipo de interés"
+msgstr "Tasa de interés"
 
 #: product.intratecalcpymt
 msgid "Interest calculation rule for late payments"
@@ -1158,7 +1160,7 @@ msgstr "Importe máx por desembolso"
 #: product.maxinst
 #, fuzzy
 msgid "Max # of installments"
-msgstr "Máx número de cuotas"
+msgstr "Máx número de pagos"
 
 #: product.maxintrate
 msgid "Max interest rate"
@@ -1196,7 +1198,7 @@ msgstr "Saldo mínimo requerido para "
 #: product.mininst
 #, fuzzy
 msgid "Min # of installments"
-msgstr "Mín número de cuotas"
+msgstr "Mín número de pagos"
 
 #: product.minintrate
 msgid "Min interest rate"
@@ -1232,11 +1234,12 @@ msgstr "Productos no permitidos"
 
 #: product.numberofinstallment
 msgid "Number of Installments"
-msgstr "Número de cuotas"
+msgstr "Número de pagos"
 
 #: product.ofevery
 msgid "of every"
 msgstr "de cada"
+
 
 #: product.optionalclientstatus
 msgid "Select the optional status to be included in the clients status flow"
@@ -1599,7 +1602,7 @@ msgid ""
 "Specify the number of days of non-payment after which status of {0} account "
 "is changed to &quot;In Arrears&quot; by the system"
 msgstr ""
-"Especifique el número de días de impago después de los cuales el estatus de "
+"Especifique el número de días de no-pago después de los cuales el estatus de "
 "la cuenta {0} se cambia a &quot;moroso&quot; por el sistema"
 
 #: product.specSavingsDormDaysAccountChanged
@@ -1609,7 +1612,7 @@ msgid ""
 msgstr ""
 "Especifique el número de días para definir &quot;Inactividad&quot; en las "
 "cuentas {0}. El estatus de la cuenta se cambiará a &quot;En pausa&quot; por "
-"el sistema &quot;moroso&quot; por el sistema"
+"el sistema."
 
 #: product.specacceptpymtinsurance
 msgid "Specify the accepted payment types for insurance products"
@@ -1627,7 +1630,7 @@ msgstr ""
 
 #: product.specloannodays
 msgid "Specify the number of days of non-payment after which status of"
-msgstr "Especifique el número de días de impago tras los cuales el estatus de"
+msgstr "Especifique el número de días de no-pago tras los cuales el estatus de"
 
 #: product.specpencal
 msgid "Specify the penalty calculation method"
@@ -1647,7 +1650,7 @@ msgstr "Fuentes de Fondos"
 
 #: product.startdate
 msgid "Start date"
-msgstr "Fecha de comienzo"
+msgstr "Fecha de inicio"
 
 #: product.status
 msgctxt "product.status"

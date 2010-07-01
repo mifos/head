@@ -20,6 +20,9 @@
 
 package org.mifos.platform.questionnaire.persistence;
 
+import org.apache.commons.lang.StringUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +31,11 @@ import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.*;
+import org.mifos.platform.questionnaire.domain.EventSourceEntity;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.domain.QuestionGroupState;
+import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.test.matchers.EventSourceMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,8 +44,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.*;
 import static org.mifos.platform.questionnaire.contract.QuestionType.*;
 
@@ -76,7 +87,7 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldDefineQuestionGroup() throws ApplicationException {
         String questionTitle = "Title" + System.currentTimeMillis();
-        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(questionTitle);
+        QuestionGroupDetail questionGroupDetail = defineQuestionGroup(questionTitle, "Create", "Client", asList(getSection("S1"), getSection("S2")));
         assertNotNull(questionGroupDetail);
         Integer questionGroupId = questionGroupDetail.getId();
         assertNotNull(questionGroupId);
@@ -84,7 +95,12 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionGroup);
         assertEquals(questionTitle, questionGroup.getTitle());
         assertEquals(QuestionGroupState.ACTIVE, questionGroup.getState());
+        List<Section> sections = questionGroup.getSections();
+        assertEquals(2, sections.size());
+        assertEquals("S1", sections.get(0).getName());
+        assertEquals("S2", sections.get(1).getName());
         verifyCreationDate(questionGroup);
+        verifyEventSources(questionGroup);
     }
 
     @Test
@@ -101,32 +117,69 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetAllQuestionGroups() throws ApplicationException {
         int initialCount = questionnaireService.getAllQuestionGroups().size();
-        defineQuestionGroup("QG1" + System.currentTimeMillis());
-        defineQuestionGroup("QG2" + System.currentTimeMillis());
-        int finalCount = questionnaireService.getAllQuestionGroups().size();
+        String questionGroupTitle1 = "QG1" + System.currentTimeMillis();
+        String questionGroupTitle2 = "QG2" + System.currentTimeMillis();
+        defineQuestionGroup(questionGroupTitle1, "Create", "Client", asList(getSection("S1")));
+        defineQuestionGroup(questionGroupTitle2, "Create", "Client", asList(getSection("S2"), getSection("S1")));
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getAllQuestionGroups();
+        int finalCount = questionGroups.size();
         assertThat(finalCount - initialCount, is(2));
+        assertThat(questionGroups, hasItems(getQuestionGroupDetailMatcher(questionGroupTitle1, asList(getSection("S1"))),
+                getQuestionGroupDetailMatcher(questionGroupTitle2, asList(getSection("S2"), getSection("S1")))));
+    }
+
+    private QuestionGroupDetailMatcher getQuestionGroupDetailMatcher(String questionGroupTitle1, List<SectionDefinition> sectionDefinitions) {
+        return new QuestionGroupDetailMatcher(new QuestionGroupDetail(0, questionGroupTitle1, sectionDefinitions));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldGetQuestionGroupById() throws ApplicationException {
         String title = "QG1" + System.currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1"), getSection("S2")));
         QuestionGroupDetail retrievedQuestionGroupDetail = questionnaireService.getQuestionGroup(createdQuestionGroupDetail.getId());
         assertNotSame(createdQuestionGroupDetail, retrievedQuestionGroupDetail);
         assertThat(retrievedQuestionGroupDetail.getTitle(), is(title));
+        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().size(), is(2));
+        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().get(0).getName(), is("S1"));
+        assertThat(retrievedQuestionGroupDetail.getSectionDefinitions().get(1).getName(), is("S2"));
     }
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void testGetQuestionGroupByIdFailure() throws ApplicationException {
         String title = "QG1" + System.currentTimeMillis();
-        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title);
+        QuestionGroupDetail createdQuestionGroupDetail = defineQuestionGroup(title, "Create", "Client", asList(getSection("S1")));
         Integer maxQuestionGroupId = createdQuestionGroupDetail.getId();
         try {
-            questionnaireService.getQuestionGroup(maxQuestionGroupId+1);
+            questionnaireService.getQuestionGroup(maxQuestionGroupId + 1);
         } catch (ApplicationException e) {
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
+        }
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldGetQuestionById() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.FREETEXT);
+        QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
+        assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
+        assertThat(retrievedQuestionDetail.getText(), is(title));
+        assertThat(retrievedQuestionDetail.getShortName(), is(title));
+        assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void testGetQuestionByIdFailure() throws ApplicationException {
+        String title = "Q1" + System.currentTimeMillis();
+        QuestionDetail createdQuestionDetail = defineQuestion(title, QuestionType.DATE);
+        Integer maxQuestionId = createdQuestionDetail.getId();
+        try {
+            questionnaireService.getQuestion(maxQuestionId + 1);
+        } catch (ApplicationException e) {
+            assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_NOT_FOUND));
         }
     }
 
@@ -155,12 +208,27 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(result, is(true));
     }
 
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldRetrieveAllEventSources() {
+        List<EventSource> eventSources = questionnaireService.getAllEventSources();
+        assertNotNull(eventSources);
+        assertThat(eventSources, new EventSourceMatcher("Create", "Client", "Create Client"));
+        assertThat(eventSources, new EventSourceMatcher("View", "Client", "View Client"));
+    }
+
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
         return questionnaireService.defineQuestion(new QuestionDefinition(questionTitle, questionType));
     }
 
-    private QuestionGroupDetail defineQuestionGroup(String title) throws ApplicationException {
-        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title));
+    private QuestionGroupDetail defineQuestionGroup(String title, String event, String source, List<SectionDefinition> sectionDefinitions) throws ApplicationException {
+        return questionnaireService.defineQuestionGroup(new QuestionGroupDefinition(title, new EventSource(event, source, null), sectionDefinitions));
+    }
+
+    private SectionDefinition getSection(String name) {
+        SectionDefinition section = new SectionDefinition();
+        section.setName(name);
+        return section;
     }
 
     private void verifyCreationDate(QuestionGroup questionGroup) {
@@ -170,5 +238,59 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(creationDate.get(Calendar.DATE), is(currentDate.get(Calendar.DATE)));
         assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
         assertThat(creationDate.get(Calendar.YEAR), is(currentDate.get(Calendar.YEAR)));
+    }
+
+    private void verifyEventSources(QuestionGroup questionGroup) {
+        Set<EventSourceEntity> eventSources = questionGroup.getEventSources();
+        assertNotNull(eventSources);
+        assertEquals(1, eventSources.size());
+        EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
+        assertEquals("Create", eventSourceEntity.getEvent().getName());
+        assertEquals("Client", eventSourceEntity.getSource().getEntityType());
+        assertEquals("Create Client", eventSourceEntity.getDescription());
+    }
+}
+
+
+class QuestionGroupDetailMatcher extends TypeSafeMatcher<QuestionGroupDetail> {
+    private QuestionGroupDetail questionGroupDetail;
+
+    public QuestionGroupDetailMatcher(QuestionGroupDetail questionGroupDetail) {
+        this.questionGroupDetail = questionGroupDetail;
+    }
+
+    @Override
+    public boolean matchesSafely(QuestionGroupDetail questionGroupDetail) {
+        if (StringUtils.equals(this.questionGroupDetail.getTitle(), questionGroupDetail.getTitle())) {
+            for (SectionDefinition sectionDefinition : this.questionGroupDetail.getSectionDefinitions()) {
+                assertThat(questionGroupDetail.getSectionDefinitions(), hasItem(new QuestionGroupSectionMatcher(sectionDefinition)));
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("QuestionGroupDetail do not match.");
+    }
+}
+
+class QuestionGroupSectionMatcher extends TypeSafeMatcher<SectionDefinition> {
+    private SectionDefinition sectionDefinition;
+
+    public QuestionGroupSectionMatcher(SectionDefinition sectionDefinition) {
+        this.sectionDefinition = sectionDefinition;
+    }
+
+    @Override
+    public boolean matchesSafely(SectionDefinition sectionDefinition) {
+        return StringUtils.equals(this.sectionDefinition.getName(), sectionDefinition.getName());
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("QuestionGroup sections do not match");
     }
 }

@@ -36,4 +36,8 @@ public interface QuestionnaireService {
     boolean isDuplicateQuestion(QuestionDefinition questionDefinition);
 
     QuestionGroupDetail getQuestionGroup(int questionGroupId) throws ApplicationException;
+
+    QuestionDetail getQuestion(int questionId) throws ApplicationException;
+
+    List<EventSource> getAllEventSources();
 }

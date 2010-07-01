@@ -18,11 +18,11 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: CONVERSION_ERROR
 msgid "Got exception when converting the string to double."
-msgstr "excepción al convertir a la cadena doble"
+msgstr "excepción al convertir del objeto de texto a un objeto doble"
 
 #: Clientid
 msgid "Client Id"
-msgstr "Identificación del Cliente"
+msgstr "ID del Cliente"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST"
@@ -62,16 +62,16 @@ msgstr ""
 
 #: ID
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
 #, fuzzy
 msgid "it is not in between %s1 and %s2."
-msgstr "el interés no está entre %s1 y %s2."
+msgstr "no está entre %s1 y %s2."
 
 #: NOT_ALL_NUMBER
 msgid "only numbers or decimal separator are allowed."
-msgstr "sólo se permiten números o separador decimal. "
+msgstr "sólo se permiten números o separadores decimal. "
 
 #: button.create
 msgid "create"
@@ -121,7 +121,7 @@ msgstr "confirmar Transferencia de la Sucursal"
 
 #: confirmGroupTransfer
 msgid "confirmGroupTransfer"
-msgstr "Confirmar Transferencia de Grupo"
+msgstr "confirmGroupTransfer"
 
 #: confirmParentTransfer
 msgid "confirmParentTransfer"

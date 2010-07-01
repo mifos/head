@@ -90,7 +90,7 @@ import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
@@ -700,7 +700,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomerSurveyDto> getCustomerSurveyDto(final Integer customerId) {
+    public List<SurveyDto> getCustomerSurveyDto(final Integer customerId) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
@@ -711,7 +711,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             return null;
         }
 
-        List<CustomerSurveyDto> customerSurveys = new ArrayList<CustomerSurveyDto>();
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
         Integer instanceId;
         String surveyName;
         Date dateConducted;
@@ -721,7 +721,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             surveyName = (String) customerSurvey[1];
             dateConducted = (Date) customerSurvey[2];
 
-            customerSurveys.add(new CustomerSurveyDto(instanceId, surveyName, dateConducted));
+            customerSurveys.add(new SurveyDto(instanceId, surveyName, dateConducted));
         }
         return customerSurveys;
     }
@@ -923,7 +923,8 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public boolean validateGovernmentIdForClient(String governmentId) {
-        return doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
+        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_GOVT_ID, governmentId,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
@@ -936,11 +937,6 @@ public class CustomerDaoHibernate implements CustomerDao {
     public boolean validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
-    }
-
-    private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
-        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
-                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @SuppressWarnings("unchecked")
