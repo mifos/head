@@ -26,6 +26,7 @@ import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.domain.QuestionGroup;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapper;
 import org.mifos.platform.questionnaire.mappers.QuestionnaireMapperImpl;
+import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.platform.questionnaire.persistence.QuestionGroupDao;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
@@ -43,6 +44,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private QuestionGroupDao questionGroupDao;
+
+    @Autowired
+    private EventSourceDao eventSourceDao;
 
     @Autowired
     private QuestionnaireMapper questionnaireMapper;
@@ -109,6 +113,11 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_NOT_FOUND);
         }
         return questionnaireMapper.mapToQuestionDetail(question);
+    }
+
+    @Override
+    public List<EventSource> getAllEventSources() {
+        return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
     }
 
     private void persistQuestion(Question question) throws ApplicationException {
