@@ -20,20 +20,24 @@
 
 package org.mifos.ui.core.controller;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
 
+@SuppressWarnings("PMD")
 @RunWith(MockitoJUnitRunner.class)
 public class LatenessDormancyControllerTest {
 
@@ -72,8 +76,8 @@ public class LatenessDormancyControllerTest {
         LatenessDormancyFormBean returnedFormBean = latenessDormancyController.showPopulatedForm();
 
         // verification
-        assertThat(returnedFormBean, is(expectedFormBean));
-        verify(adminServiceFacade).retrieveProductConfiguration();
+        Assert.assertThat(returnedFormBean, is(expectedFormBean));
+        Mockito.verify(adminServiceFacade).retrieveProductConfiguration();
     }
 
     @Test
@@ -88,8 +92,8 @@ public class LatenessDormancyControllerTest {
         String returnedView = latenessDormancyController.processFormSubmit("Cancel", expectedFormBean, bindingResult, sessionStatus);
 
         // verification
-        assertThat(returnedView, is(ADMIN_VIEW));
-        verify(sessionStatus).setComplete();
+        Assert.assertThat(returnedView, is(ADMIN_VIEW));
+        Mockito.verify(sessionStatus).setComplete();
     }
 
     @Test
@@ -107,8 +111,8 @@ public class LatenessDormancyControllerTest {
         String returnedView = latenessDormancyController.processFormSubmit("", expectedFormBean, bindingResult, sessionStatus);
 
         // verification
-        assertThat(returnedView, is(FORM_VIEW));
-        verify(sessionStatus, times(0)).setComplete();
+        Assert.assertThat(returnedView, is(FORM_VIEW));
+        Mockito.verify(sessionStatus, times(0)).setComplete();
     }
 
     @Test
@@ -123,8 +127,8 @@ public class LatenessDormancyControllerTest {
         String returnedView = latenessDormancyController.processFormSubmit("", expectedFormBean, bindingResult, sessionStatus);
 
         // verification
-        assertThat(returnedView, is(ADMIN_VIEW));
-        verify(adminServiceFacade).updateProductConfiguration((ProductConfigurationDto)anyObject());
-        verify(sessionStatus).setComplete();
+        Assert.assertThat(returnedView, is(ADMIN_VIEW));
+        Mockito.verify(adminServiceFacade).updateProductConfiguration((ProductConfigurationDto)anyObject());
+        Mockito.verify(sessionStatus).setComplete();
     }
 }
