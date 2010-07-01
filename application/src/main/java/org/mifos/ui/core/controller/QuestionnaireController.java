@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,15 +123,6 @@ public class QuestionnaireController {
     }
 
     public String defineQuestionGroup(QuestionGroup questionGroup, RequestContext requestContext) {
-        //TODO: remove default Misc section
-        if (questionGroup.getSections() == null) {
-            ArrayList<SectionForm> sectionForms = new ArrayList<SectionForm>();
-            SectionForm sectionForm = new SectionForm();
-            sectionForm.setName("Misc");
-            sectionForms.add(sectionForm);
-            questionGroup.setSections(sectionForms);
-        }
-        // end of todo comment
         if (questionGroupHasErrors(questionGroup, requestContext)) {
             return "failure";
         }
@@ -183,7 +173,15 @@ public class QuestionnaireController {
             constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
             return true;
         }
+        if (sectionsNotPresent(questionGroup)) {
+            constructErrorMessage(requestContext, "questionnaire.error.no.sections.in.group", "sectionName", "Please specify at least one section or question");
+            return true;
+        }
         return false;
+    }
+
+    private boolean sectionsNotPresent(QuestionGroup questionGroup) {
+        return questionGroup.getSections().size() == 0;
     }
 
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
@@ -211,5 +209,10 @@ public class QuestionnaireController {
         catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
+        questionGroup.addCurrentSection();
+        return "success";
     }
 }
