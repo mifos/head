@@ -49,7 +49,6 @@ public class ApplicationConfigurationPersistence extends Persistence {
     public List<LookUpEntity> getLookupEntities() {
 
         List<LookUpEntity> entities = null;
-        try {
             Session session = StaticHibernateUtil.getSessionTL();
             entities = session.getNamedQuery(NamedQueryConstants.GET_ENTITIES).list();
 
@@ -61,35 +60,27 @@ public class ApplicationConfigurationPersistence extends Persistence {
                     label.getLocaleId();
                 }
             }
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
         return entities;
     }
 
     public List<LookUpValueEntity> getLookupValues() {
         List<LookUpValueEntity> values = null;
-        try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            values = session.getNamedQuery(NamedQueryConstants.GET_LOOKUPVALUES).list();
-            if (values != null) {
-                for (LookUpValueEntity value : values) {
-                    Set<LookUpValueLocaleEntity> localeValues = value.getLookUpValueLocales();
-                    value.getLookUpName();
-                    if (localeValues != null) {
-                        for (LookUpValueLocaleEntity locale : localeValues) {
 
-                            locale.getLookUpValue();
-                            locale.getLocaleId();
-                        }
+        Session session = StaticHibernateUtil.getSessionTL();
+        values = session.getNamedQuery(NamedQueryConstants.GET_LOOKUPVALUES).list();
+        if (values != null) {
+            for (LookUpValueEntity value : values) {
+                Set<LookUpValueLocaleEntity> localeValues = value.getLookUpValueLocales();
+                value.getLookUpName();
+                if (localeValues != null) {
+                    for (LookUpValueLocaleEntity locale : localeValues) {
+
+                        locale.getLookUpValue();
+                        locale.getLocaleId();
                     }
-
                 }
-            }
 
-        } finally {
-            StaticHibernateUtil.closeSession();
+            }
         }
         return values;
     }
@@ -98,19 +89,16 @@ public class ApplicationConfigurationPersistence extends Persistence {
     // locales to its cache
     public List<SupportedLocalesEntity> getSupportedLocale() {
         List<SupportedLocalesEntity> locales = null;
-        try {
-            Session session = StaticHibernateUtil.getSessionTL();
 
-            locales = session.getNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST).list();
+        Session session = StaticHibernateUtil.getSessionTL();
 
-            for (SupportedLocalesEntity locale : locales) {
-                locale.getLanguage().getLanguageShortName();
-                locale.getCountry().getCountryShortName();
-                locale.getLocaleId();
+        locales = session.getNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST).list();
 
-            }
-        } finally {
-            StaticHibernateUtil.closeSession();
+        for (SupportedLocalesEntity locale : locales) {
+            locale.getLanguage().getLanguageShortName();
+            locale.getCountry().getCountryShortName();
+            locale.getLocaleId();
+
         }
 
         return locales;
