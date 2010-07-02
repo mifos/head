@@ -76,17 +76,11 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
         testMissingMandatoryInputs(createQuestionGroupPage);
         testCreateQuestionGroup(createQuestionGroupPage, title1, "Create Client", "Default");
-
-        adminPage = new AdminPage(selenium);
-        createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
-        testCancelCreateQuestionGroup(createQuestionGroupPage);
-
         testShouldAllowDuplicateTitlesForQuestionGroup();
+        testCancelCreateQuestionGroup(getCreateQuestionGroupPage(new AdminPage(selenium)));
 
-        adminPage = new AdminPage(selenium);
-        ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(adminPage);
+        ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(new AdminPage(selenium));
         testViewQuestionGroups(viewQuestionGroupsPage);
-
         testQuestionGroupDetail(viewQuestionGroupsPage);
     }
 
