@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
-@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
+@Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"}, enabled = false)
 public class QuestionGroupTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
     @Autowired
