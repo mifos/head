@@ -1,5 +1,6 @@
 [#ftl]
 [#import "spring.ftl" as spring]
+[#import "macros.ftl" as mifos]
 <html lang="EN">
 <head>
     <title>Mifos</title>
@@ -7,7 +8,7 @@
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
 <script type="text/javascript">
     function removeSection(sectionName){
-        sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
+        var sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
         sectionToDeleteBtn.value = sectionName;
         sectionToDeleteBtn.click();
     }
@@ -19,7 +20,11 @@
             font-size:9pt;
             font-weight:normal;
             text-decoration:none;
-            width:400px;
+            width:600px;
+            padding:1em 1em 0;
+        }
+        .divSections {
+        
         }
         fieldset {
             float: left;
@@ -48,7 +53,7 @@
             float: none;
             width: auto;
             border: 0 none #FFF;
-            padding-left: 12em;
+            padding-left: 15em;
         }
         label {
             float: left;
@@ -141,22 +146,22 @@
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                     <td class="bluetablehead05">
-                        <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">Admin</a> / </span>
-                        <span class="fontnormal8ptbold"> Add Question Group </span>
+                        <span class="fontnormal8pt"> <a href="AdminAction.do?method=load">[@spring.message "admin"/]</a> / </span>
+                        <span class="fontnormal8ptbold"> [@spring.message "questionnaire.addQuestionGroup"/] </span>
                     </td>
                 </tr>
             </table>
             <form name="createquestiongroupform"
                   action="createQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
-                <div>
-                    <span class="headingorange"> Add Question Group </span>
+                <div class="normalFontFixedDiv">
+                    <span class="headingorange"> [@spring.message "questionnaire.addQuestionGroup"/] </span>
                 </div>
                 <div class="normalFontFixedDiv">
                     <fieldset>
                         <ol>
                             <li>
                                 <span class="mandatorytext"><font color="#FF0000">* </font></span>
-                                <label for="title">Question Group Title:</label>
+                                <label for="title">[@spring.message "questionnaire.questionGroupTitle"/]</label>
                                 [@spring.formInput "questionGroupDefinition.title",
                                 'maxlength="50"
                                 onkeypress="return FnCheckNumCharsOnPress(event,this);"
@@ -165,13 +170,12 @@
                             </li>
                             <li>
                                 <span class="mandatorytext"><font color="#FF0000">* </font></span>
-                                <label for="eventSourceId">Applies To:</label>
-                                [@spring.formSingleSelect "questionGroupDefinition.eventSourceId",
-                                EventSources /]
+                                <label for="eventSourceId">[@spring.message "questionnaire.questionGroupAppliesTo"/]</label>
+                                [@mifos.formSingleSelectWithPrompt "questionGroupDefinition.eventSourceId", EventSources, "--select one--" /]
                                 [@spring.showErrors "<br>","fontnormalRedBold" /]
                             </li>
                             <li>
-                                <label for="sectionName">Section Heading:&nbsp;&nbsp;</label>
+                                <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]</label>
                                 [@spring.formInput "questionGroupDefinition.sectionName",
                                 'maxlength="50"
                                 onkeypress="return FnCheckNumCharsOnPress(event,this);"
@@ -182,21 +186,22 @@
                     </fieldset>
                     <fieldset id="submitSection" class="submit">
                         <input type="submit" name="_eventId_addSection" id="_eventId_addSection"
-                               value="Add Section"
-                               class="buttn">
+                               value='[@spring.message "questionnaire.addSection"/]'
+                               class="buttn"/>
                     </fieldset>
                 </div>
 
-                <div id="divSections">
+                <div id="divSections" class="normalFontFixedDiv">
                     [#list questionGroupDefinition.sections as section]
-                    <b>${section.name}:&nbsp;&nbsp;</b><a href="javascript:removeSection('${section.name}')">remove</a>
+                    <b>${section.name}:&nbsp;&nbsp;</b>
+                    <a href="javascript:removeSection('${section.name}')">[@spring.message "questionnaire.removeSection"/]</a>
                     <br/>
                     <table width="100%" id="sections.table" name="sections.table" border="0"
                            cellpadding="3" cellspacing="0">
                         <tr>
-                            <td class="drawtablehd">Question Name</td>
-                            <td class="drawtablehd">Mandatory</td>
-                            <td class="drawtablehd">Delete</td>
+                            <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
+                            <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>
+                            <td class="drawtablehd">[@spring.message "questionnaire.question.delete"/]</td>
                         </tr>
                         <tr>
                             <td class="drawtablerow">&nbsp;</td>
@@ -205,22 +210,22 @@
                         </tr>
                     </table>
                     [/#list]
-                    <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden">
+                    <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden"/>
                 </div>
 
                 <div id="divSumitQG">
                     <fieldset class="submit">
                         <input type="submit" name="_eventId_defineQuestionGroup"
-                               id="_eventId_defineQuestionGroup" value="Submit" class="buttn">
+                               id="_eventId_defineQuestionGroup" value='[@spring.message "submit"/]' class="buttn"/>
                         &nbsp;
-                        <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="Cancel"
-                               class="cancelbuttn">
+                        <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "cancel"/]'
+                               class="cancelbuttn"/>
                     </fieldset>
                 </div>
             </form>
 
             <br>
-            <input type="hidden" name="h_user_locale" value="en_GB">
+            <input type="hidden" name="h_user_locale" value="en_GB"/>
         </td>
     </tr>
 </table>
