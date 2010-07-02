@@ -36,6 +36,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
+
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class QuestionTest extends UiTestCaseBase {
@@ -71,7 +73,9 @@ public class QuestionTest extends UiTestCaseBase {
 
     public void createQuestion() {
         AdminPage adminPage = getAdminPage();
-        CreateQuestionPage createQuestionPage = testMissingTitle(adminPage);
+        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+        testSubmitButtonDisabled(createQuestionPage);
+        testMissingTitle(createQuestionPage);
         testAddQuestion(createQuestionPage);
         testDuplicateTitle(createQuestionPage);
         adminPage = testCreateQuestions(createQuestionPage);
@@ -126,16 +130,25 @@ public class QuestionTest extends UiTestCaseBase {
         createQuestionParameters.setType(DATE_TYPE);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertFalse(selenium.isTextPresent(TITLE_MISSING), "Missing title error should not appear");
-        Assert.assertEquals(title, selenium.getTable("questions.table.1.0"));
-        Assert.assertEquals(DATE_TYPE, selenium.getTable("questions.table.1.1"));
+        assertEquals(title, selenium.getTable("questions.table.1.0"));
+        assertEquals(DATE_TYPE, selenium.getTable("questions.table.1.1"));
+        testSubmitButtonEnabled(createQuestionPage);
     }
 
-    private CreateQuestionPage testMissingTitle(AdminPage adminPage) {
-        CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
+    private void testSubmitButtonDisabled(CreateQuestionPage createQuestionPage) {
+        assertEquals("true", createQuestionPage.submitButtonStatus());
+        assertEquals("disabledbuttn", createQuestionPage.submitButtonClass());
+    }
+
+    private void testSubmitButtonEnabled(CreateQuestionPage createQuestionPage) {
+        assertEquals("false", createQuestionPage.submitButtonStatus());
+        assertEquals("buttn", createQuestionPage.submitButtonClass());
+    }
+
+    private void testMissingTitle(CreateQuestionPage createQuestionPage) {
         createQuestionParameters.setTitle("");
         createQuestionPage.addQuestion(createQuestionParameters);
         assertTextFoundOnPage(TITLE_MISSING);
-        return createQuestionPage;
     }
 }
 

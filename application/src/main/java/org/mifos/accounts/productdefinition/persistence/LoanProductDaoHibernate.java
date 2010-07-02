@@ -17,16 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.productdefinition.business;
+
+package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -68,4 +71,17 @@ public class LoanProductDaoHibernate implements LoanProductDao {
                 queryParameters);
     }
 
+    @Override
+    public ProductTypeEntity findLoanProductConfiguration() {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
+
+        return (ProductTypeEntity) this.genericDao.executeUniqueResultNamedQuery("findProductTypeConfigurationById", queryParameters);
+    }
+
+    @Override
+    public void save(ProductTypeEntity productType) {
+        this.genericDao.createOrUpdate(productType);
+    }
 }

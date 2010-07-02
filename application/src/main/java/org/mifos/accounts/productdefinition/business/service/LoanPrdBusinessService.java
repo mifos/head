@@ -110,6 +110,10 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
+    /**
+     * FIXME - keithw - remove after spring mvc form submission example works.
+     */
+    @Deprecated
     public Short retrieveLatenessForPrd() throws ServiceException {
         try {
             return new LoanPrdPersistence().retrieveLatenessForPrd();

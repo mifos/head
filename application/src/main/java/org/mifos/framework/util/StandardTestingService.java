@@ -51,8 +51,7 @@ import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
 
 /**
- * Encapsulates all logic necessary to have the application behave differently
- * during acceptance and integration tests.
+ * Encapsulates all logic necessary to have the application behave differently during acceptance and integration tests.
  */
 public class StandardTestingService implements TestingService {
     private static final Logger LOG = Logger.getLogger(LoggerConstants.FRAMEWORKLOGGER);
@@ -149,10 +148,11 @@ public class StandardTestingService implements TestingService {
                 + ".database.hibernate.transaction.factory_class");
         hibernateToMifos.put("hibernate.cache.provider_class", testMode + ".database.hibernate.cache.provider_class");
         hibernateToMifos.put("hibernate.cache.use_query_cache", testMode + ".database.hibernate.cache.use_query_cache");
-        hibernateToMifos.put("hibernate.cache.use_second_level_cache", testMode + ".database.hibernate.cache.use_second_level_cache");
-        hibernateToMifos.put("hibernate.connection.provider_class", testMode + ".database.hibernate.connection.provider_class");
+        hibernateToMifos.put("hibernate.cache.use_second_level_cache", testMode
+                + ".database.hibernate.cache.use_second_level_cache");
+        hibernateToMifos.put("hibernate.connection.provider_class", testMode
+                + ".database.hibernate.connection.provider_class");
         hibernateToMifos.put("hibernate.connection.isolation", testMode + ".database.hibernate.connection.isolation");
-        hibernateToMifos.put("hibernate.connection.release_mode", testMode + ".database.hibernate.connection.release_mode");
         hibernateToMifos.put("hibernate.c3p0.acquire_increment", testMode
                 + ".database.hibernate.c3p0.acquire_increment");
         hibernateToMifos.put("hibernate.c3p0.idle_test_period", testMode + ".database.hibernate.c3p0.idle_test_period");
@@ -172,10 +172,9 @@ public class StandardTestingService implements TestingService {
     }
 
     /**
-     * Provides for re-initialization of certain custom Mifos caches. Necessary
-     * since acceptance tests may truncate and reload data directly in a Mifos
-     * database without the application's knowledge, causing the application to
-     * behave unexpectedly. Only allowed during acceptance tests.
+     * Provides for re-initialization of certain custom Mifos caches. Necessary since acceptance tests may truncate and
+     * reload data directly in a Mifos database without the application's knowledge, causing the application to behave
+     * unexpectedly. Only allowed during acceptance tests.
      */
     @Override
     public void reinitializeCaches() {
@@ -206,9 +205,10 @@ public class StandardTestingService implements TestingService {
     }
 
     @Override
-    public void setAccountingRules(String accountingRulesParamName, String accountingRulesParamValue) throws MifosException {
+    public void setAccountingRules(String accountingRulesParamName, String accountingRulesParamValue)
+            throws MifosException {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
-        if(accountingRulesParamValue == null || accountingRulesParamValue.equals("")) {
+        if (accountingRulesParamValue == null || accountingRulesParamValue.equals("")) {
             configMgr.clearProperty(accountingRulesParamName);
             return;
         }
@@ -263,8 +263,7 @@ public class StandardTestingService implements TestingService {
         LOG.info("running batch job with name like: " + requestedJob + "*");
         boolean jobFound = false;
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
-        OUTER:
-        for (String taskName : mifosScheduler.getTaskNames()) {
+        OUTER: for (String taskName : mifosScheduler.getTaskNames()) {
             if (taskName.startsWith(requestedJob)) {
                 final List<MifosTask> tasks = mifosScheduler.getTasks();
                 for (MifosTask task : tasks) {

@@ -26,19 +26,17 @@ public class QuestionGroupDetail {
     private Integer id;
     private String title;
     private List<SectionDefinition> sectionDefinitions;
-
-    public QuestionGroupDetail(Integer id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public QuestionGroupDetail(String title) {
-        this(0, title);
-    }
+    private EventSource eventSource;
 
     public QuestionGroupDetail(int id, String title, List<SectionDefinition> sectionDefinitions) {
-        this(id, title);
+        this(id, title, null, sectionDefinitions);
+    }
+
+    public QuestionGroupDetail(int id, String title, EventSource eventSource, List<SectionDefinition> sectionDefinitions) {
+        this.id = id;
+        this.title = title;
         this.sectionDefinitions = sectionDefinitions;
+        this.eventSource = eventSource;
     }
 
     public String getTitle() {
@@ -53,4 +51,7 @@ public class QuestionGroupDetail {
         return sectionDefinitions;
     }
 
+    public EventSource getEventSource() {
+        return eventSource;
+    }
 }

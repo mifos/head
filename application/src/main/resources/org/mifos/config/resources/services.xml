@@ -5,6 +5,12 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
     					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
+    <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier">
+    	<constructor-arg ref="productService" />
+    	<constructor-arg ref="loanProductDao" />
+    	<constructor-arg ref="savingsProductDao" />
+    </bean>
+
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
     	<constructor-arg ref="feeService" />
     	<constructor-arg ref="feeDao" />
@@ -77,4 +83,10 @@
     	<constructor-arg ref="generalLedgerDao" />
     	<constructor-arg ref="hibernateTransactionHelper" />
     </bean>
+    
+    <bean id="productService" class="org.mifos.accounts.productdefinition.business.service.ProductServiceImpl" >
+    	<constructor-arg ref="loanProductDao" />
+    	<constructor-arg ref="savingsProductDao" />
+    </bean>
+    
 </beans>

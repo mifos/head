@@ -100,7 +100,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {
-        ArrayList<Section> sections = new ArrayList<Section>();
+        List<Section> sections = new ArrayList<Section>();
         for (SectionDefinition sectionDefinition : sectionDefinitions) {
             sections.add(mapToSection(sectionDefinition));
         }
@@ -113,7 +113,15 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
-        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), mapToSectionDefinitions(questionGroup.getSections()));
+        List<SectionDefinition> sectionDefinitions = mapToSectionDefinitions(questionGroup.getSections());
+        EventSource eventSource = mapToEventSource(questionGroup.getEventSources());
+        return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(), eventSource, sectionDefinitions);
+    }
+
+    private EventSource mapToEventSource(Set<EventSourceEntity> eventSources) {
+        if (eventSources == null || eventSources.isEmpty()) return null;
+        EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
+        return new EventSource(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
     }
 
     private List<SectionDefinition> mapToSectionDefinitions(List<Section> sections) {
