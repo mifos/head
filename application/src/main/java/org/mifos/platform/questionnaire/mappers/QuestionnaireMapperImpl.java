@@ -100,7 +100,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private List<Section> mapToSections(List<SectionDefinition> sectionDefinitions) {
-        ArrayList<Section> sections = new ArrayList<Section>();
+        List<Section> sections = new ArrayList<Section>();
         for (SectionDefinition sectionDefinition : sectionDefinitions) {
             sections.add(mapToSection(sectionDefinition));
         }
