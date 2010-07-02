@@ -97,7 +97,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarUtils;
@@ -142,7 +141,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private HashMap<String, String> prdOfferingPageParams;
     private CustomerBO customerMock;
     private LoanBusinessService loanBusinessServiceMock;
-    private LoanServiceFacade loanServiceFacadeMock;
     private ConfigurationBusinessService configurationBusinessServiceMock;
     private HttpServletRequest requestMock;
 
@@ -339,8 +337,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO.update();
         StaticHibernateUtil.commitTransaction();
         LoanBO loan = (LoanBO) accountBO;
-        loanServiceFacadeMock = createMock(LoanServiceFacade.class);
-        LoanInformationDto loanInformationDto = loanServiceFacadeMock.getLoanInformationDto(loan.getGlobalAccountNum());
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "get");
@@ -352,6 +348,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
         Assert.assertEquals("Total no. of notes should be 6", 6, accountBO.getAccountNotes().size());
+
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
         Assert.assertEquals("Total no. of recent notes should be 3", 3, (loanInformationDto.getRecentAccountNotes()
                                                                             .size()));
         Assert.assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
@@ -467,8 +465,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         LoanBO loan = (LoanBO) accountBO;
-        loanServiceFacadeMock = createMock(LoanServiceFacade.class);
-        LoanInformationDto loanInformationDto = loanServiceFacadeMock.getLoanInformationDto(loan.getGlobalAccountNum());
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "get");
@@ -480,7 +476,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
         Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
-        Assert.assertEquals("Total no. of recent notes should be 3", 3, loanInformationDto.getRecentAccountNotes().size());
+
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
+        Assert.assertEquals("Total no. of recent notes should be 3", 3,  loanInformationDto.getRecentAccountNotes().size());
+    }
+
+    private LoanInformationDto retrieveLoanInformationDtoFromSession() throws PageExpiredException {
+        return (LoanInformationDto) SessionUtils.getAttribute("loanInformationDto", request);
     }
 
     public void testGetWithPayment() throws Exception {
@@ -488,8 +490,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         disburseLoan(startDate);
         LoanBO loan = (LoanBO) accountBO;
-        loanServiceFacadeMock = createMock(LoanServiceFacade.class);
-        LoanInformationDto loanInformationDto = loanServiceFacadeMock.getLoanInformationDto(loan.getGlobalAccountNum());
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "get");
@@ -498,6 +498,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward("get_success");
 
         Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
+        LoanInformationDto loanInformationDto = retrieveLoanInformationDtoFromSession();
         Assert.assertEquals("Total no. of recent notes should be 3", 3, loanInformationDto.getRecentAccountNotes().size());
 
         Assert.assertEquals("Last payment action should be 'PAYMENT'", AccountActionTypes.DISBURSAL.getValue(),
