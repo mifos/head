@@ -10,6 +10,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
+import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.MaxMinNoOfInstall;
@@ -28,7 +29,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final String accountStateName;
     private final Integer customerId;
     private final String prdOfferingName;
-    private final Set<AccountFlagMapping> accountFlags;
+    private final Set<String> accountFlagNames;
     private final Date disbursementDate;
     private final boolean redone;
     private final Integer businessActivityId;
@@ -61,12 +62,14 @@ public class LoanInformationDto implements DataTransferObject {
     private final Date createdDate;
     private final LoanPerformanceHistoryDto performanceHistory;
     private final boolean group;
+    private final List<LoanActivityDto> recentAccountActivities;
 
     private final Boolean activeSurveys;
     private final List<SurveyDto> accountSurveys;
 
+
     public LoanInformationDto(String prdOfferingName, String globalAccountNum, Short accountStateId, String accountStateName,
-                              Set<AccountFlagMapping> accountFlags, Date disbursementDate, boolean redone, Integer businessActivityId,
+                              Set<String> accountFlagNames, Date disbursementDate, boolean redone, Integer businessActivityId,
                               Integer accountId,String gracePeriodTypeName, String interestTypeName, List<AccountNotesEntity> recentAccountNotes,
                               Integer customerId, Short accountTypeId, Short officeId, Short personnelId, Date nextMeetingDate, Money totalAmountDue,
                               Money totalAmountInArrears, LoanSummaryDto loanSummary, boolean loanActivityDetails, Double interestRate,
@@ -74,13 +77,13 @@ public class LoanInformationDto implements DataTransferObject {
                               Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
                               Integer collateralTypeId,String collateralNote, String externalId, Set<AccountCustomFieldEntity> accountCustomFields,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
-                              final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
+                              List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
         this.accountStateId = accountStateId;
         this.accountStateName = accountStateName;
-        this.accountFlags = accountFlags;
+        this.accountFlagNames = accountFlagNames;
         this.disbursementDate = disbursementDate;
         this.redone = redone;
         this.businessActivityId = businessActivityId;
@@ -115,6 +118,7 @@ public class LoanInformationDto implements DataTransferObject {
         this.createdDate = createdDate;
         this.performanceHistory = performanceHistory;
         this.group = group;
+        this.recentAccountActivities = recentAccountActivities;
 
         this.activeSurveys = activeSurveys;
         this.accountSurveys = accountSurveys;
@@ -136,8 +140,8 @@ public class LoanInformationDto implements DataTransferObject {
         return this.accountStateName;
     }
 
-    public Set<AccountFlagMapping> getAccountFlags() {
-        return this.accountFlags;
+    public Set<String> getAccountFlagNames() {
+        return this.accountFlagNames;
     }
 
     public Date getDisbursementDate() {
@@ -274,6 +278,10 @@ public class LoanInformationDto implements DataTransferObject {
 
     public boolean isGroup() {
         return this.group;
+    }
+
+    public List<LoanActivityDto> getRecentAccountActivity() {
+        return this.recentAccountActivities;
     }
 
     public Boolean getActiveSurveys() {

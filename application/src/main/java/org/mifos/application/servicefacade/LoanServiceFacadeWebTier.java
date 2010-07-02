@@ -25,6 +25,8 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NO
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
 
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -35,7 +37,9 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -119,6 +123,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
@@ -135,14 +140,20 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
+    private final LoanBusinessService loanBusinessService;
+    private final ClientBusinessService clientBusinessService;
+
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao) {
+            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, final LoanBusinessService loanBusinessService,
+            final ClientBusinessService clientBusinessService) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
+        this.loanBusinessService = loanBusinessService;
+        this.clientBusinessService = clientBusinessService;
     }
 
     @Override
@@ -868,7 +879,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
     }
 
-    public LoanInformationDto getLoanInformationDto(String globalAccountNum) {
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum) throws ServiceException {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         String fundName = null;
         if (loan.getFund() != null) {
@@ -905,13 +916,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
 
+        Set<String> accountFlagNames = getAccountStateFlagEntityNames(loan.getAccountFlags());
         Short accountStateId = loan.getAccountState().getId();
         String accountStateName = getAccountStateName(accountStateId);
         String gracePeriodTypeName = getGracePeriodTypeName(loan.getGracePeriodType().getId());
         String interestTypeName = getInterestTypeName(loan.getInterestType().getId());
 
         return new LoanInformationDto(loan.getLoanOffering().getPrdOfferingName(), globalAccountNum, accountStateId,
-                                     accountStateName, loan.getAccountFlags(), loan.getDisbursementDate(), loan.isRedone(),
+                                     accountStateName, accountFlagNames, loan.getDisbursementDate(), loan.isRedone(),
                                      loan.getBusinessActivityId(), loan.getAccountId(),gracePeriodTypeName, interestTypeName,
                                      loan.getRecentAccountNotes(),loan.getCustomer().getCustomerId(), loan.getAccountType().getAccountTypeId(),
                                      loan.getOffice().getOfficeId(), loan.getPersonnel().getPersonnelId(), loan.getNextMeetingDate(),
@@ -924,7 +936,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                      loan.getMaxMinNoOfInstall().getMinNoOfInstall(), loan.getMaxMinNoOfInstall().getMaxNoOfInstall(),
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
                                      loan.getAccountCustomFields(), accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
-                                     loan.getCustomer().isGroup(), activeSurveys, accountSurveys);
+                                     loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys);
     }
 
     private String getAccountStateName(Short id) {
@@ -964,5 +976,104 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e.toString());
         }
+    }
+
+    private String getAccountStateFlagEntityName(Short id) {
+        MasterPersistence masterPersistence = new MasterPersistence();
+        AccountStateFlagEntity accountStateFlagEntity;
+        try {
+            accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
+                    id);
+            return accountStateFlagEntity.getLookUpValue().getLookUpName();
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e.toString());
+        }
+    }
+
+    private Set<String> getAccountStateFlagEntityNames(Set<AccountFlagMapping> accountFlagMappings) {
+        Set<String> accountFlagNames = new HashSet<String>();
+        if(!accountFlagMappings.isEmpty()) {
+            for (AccountFlagMapping accountFlagMapping: accountFlagMappings) {
+                String accountFlagName = getAccountStateFlagEntityName(accountFlagMapping.getFlag().getId());
+                accountFlagNames.add(accountFlagName);
+            }
+        }
+        return accountFlagNames;
+    }
+
+    private List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) throws ServiceException {
+        LoanBO loanBO = loanDao.findByGlobalAccountNum(globalAccountNumber);
+        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
+        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
+
+        int count = 0;
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            recentActivityView.add(getLoanActivityView(loanActivity));
+            if (++count == 3) {
+                break;
+            }
+        }
+        return recentActivityView;
+    }
+
+    private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
+        LoanActivityDto loanActivityDto = new LoanActivityDto(loanActivity.getAccount().getCurrency());
+        loanActivityDto.setId(loanActivity.getAccount().getAccountId());
+        loanActivityDto.setActionDate(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setActivity(loanActivity.getComments());
+        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()));
+        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()));
+        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()));
+        loanActivityDto.setFees(removeSign(loanActivity.getFee()));
+        loanActivityDto.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
+                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest())));
+        loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
+        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
+        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
+        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding());
+        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
+
+        return loanActivityDto;
+    }
+
+    private Money removeSign(final Money amount) {
+        if (amount != null && amount.isLessThanZero()) {
+            return amount.negate();
+        }
+
+        return amount;
+    }
+
+    @Override
+    public List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto,
+                                                                 List<BusinessActivityEntity> businessActEntity) throws ServiceException {
+
+        List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
+                loanInformationDto.getAccountId()).toString());
+
+        List<LoanAccountDetailsDto> loanAccountDetailsViewList = new ArrayList<LoanAccountDetailsDto>();
+
+        for (LoanBO individualLoan : individualLoans) {
+            LoanAccountDetailsDto loandetails = new LoanAccountDetailsDto();
+            loandetails.setClientId(individualLoan.getCustomer().getCustomerId().toString());
+            loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
+            loandetails.setLoanAmount(null != individualLoan.getLoanAmount()
+                    && !EMPTY.equals(individualLoan.getLoanAmount().toString()) ? individualLoan.getLoanAmount()
+                    .toString() : "0.0");
+
+            if (null != individualLoan.getBusinessActivityId()) {
+                loandetails.setBusinessActivity(individualLoan.getBusinessActivityId().toString());
+                for (ValueListElement busact : businessActEntity) {
+                    if (busact.getId().toString().equals(individualLoan.getBusinessActivityId().toString())) {
+                        loandetails.setBusinessActivityName(busact.getName());
+                    }
+                }
+            }
+            String governmentId = clientBusinessService.getClient(individualLoan.getCustomer().getCustomerId())
+                    .getGovernmentId();
+            loandetails.setGovermentId(StringUtils.isNotBlank(governmentId) ? governmentId : "-");
+            loanAccountDetailsViewList.add(loandetails);
+        }
+        return loanAccountDetailsViewList;
     }
 }

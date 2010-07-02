@@ -20,7 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
@@ -74,6 +75,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacade;
+import org.mifos.customers.personnel.business.service.PersonnelDetailsServiceFacadeWebTier;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -111,6 +113,8 @@ public class DependencyInjectedServiceLocator {
     private static CustomerService customerService;
     private static HolidayService holidayService;
     private static FeeService feeService;
+    private static LoanBusinessService loanBusinessService;
+    private static ClientBusinessService clientBusinessService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -222,7 +226,8 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao,
+                    loanBusinessService, clientBusinessService);
         }
         return loanServiceFacade;
     }
