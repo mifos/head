@@ -145,6 +145,16 @@ public class QuestionnaireController {
         return evtSourcesMap;
     }
 
+    public String addSection(QuestionGroup questionGroup) {
+        questionGroup.addCurrentSection();
+        return "success";
+    }
+
+    public String deleteSection(QuestionGroup questionGroup, String sectionName) {
+        questionGroup.removeSection(sectionName);
+        return "success";
+    }
+
     private String getEventSourceId(EventSource evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
@@ -184,6 +194,7 @@ public class QuestionnaireController {
         return questionGroup.getSections().size() == 0;
     }
 
+
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
         if (isInvalidTitle(questionForm.getTitle())) {
             constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question text");
@@ -196,12 +207,11 @@ public class QuestionnaireController {
         return false;
     }
 
-
     private boolean invalid(String id) {
         return (isEmpty(id) || !isInteger(id));
     }
 
-    public boolean isInteger(String id) {
+    private boolean isInteger(String id) {
         try {
             Integer.parseInt(id);
             return true;
@@ -209,10 +219,5 @@ public class QuestionnaireController {
         catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    public String addSection(QuestionGroup questionGroup) {
-        questionGroup.addCurrentSection();
-        return "success";
     }
 }

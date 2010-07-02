@@ -5,7 +5,13 @@
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
-
+<script type="text/javascript">
+    function removeSection(sectionName){
+        sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
+        sectionToDeleteBtn.value = sectionName;
+        sectionToDeleteBtn.click();
+    }
+</script>
       <style type="text/css">
         .normalFontFixedDiv {
             color:#000000;
@@ -183,7 +189,7 @@
 
                 <div id="divSections">
                     [#list questionGroupDefinition.sections as section]
-                    <b>${section.name}:&nbsp;&nbsp;</b><a href="#">remove</a>
+                    <b>${section.name}:&nbsp;&nbsp;</b><a href="javascript:removeSection('${section.name}')">remove</a>
                     <br/>
                     <table width="100%" id="sections.table" name="sections.table" border="0"
                            cellpadding="3" cellspacing="0">
@@ -195,9 +201,11 @@
                         <tr>
                             <td class="drawtablerow">&nbsp;</td>
                             <td class="drawtablerow">&nbsp;</td>
+                            <td class="drawtablerow">&nbsp;</td>
                         </tr>
                     </table>
                     [/#list]
+                    <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden">
                 </div>
 
                 <div id="divSumitQG">

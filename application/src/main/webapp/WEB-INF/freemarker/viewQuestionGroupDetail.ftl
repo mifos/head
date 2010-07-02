@@ -148,14 +148,13 @@
                     </fieldset>
                      <div id="divSections">
                          [#list Request.questionGroupDetail.sections as section]
-                         ${section.name}:&nbsp;&nbsp;<a href="#">remove</a>
+                         ${section.name}
                          <br/>
                          <table width="100%" id="sections.table" name="sections.table" border="0"
                                 cellpadding="3" cellspacing="0">
                              <tr>
                                  <td class="drawtablehd">Question Name</td>
                                  <td class="drawtablehd">Mandatory</td>
-                                 <td class="drawtablehd">Delete</td>
                              </tr>
                              <tr>
                                  <td class="drawtablerow">&nbsp;</td>

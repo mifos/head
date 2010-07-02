@@ -148,6 +148,17 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void testDeleteSection() {
+        QuestionGroup questionGroup = new QuestionGroup();
+        String sectionName = "sectionName";
+        questionGroup.setSectionName(sectionName);
+        questionGroup.addCurrentSection();
+        assertThat(questionGroup.getSections().size(), is(1));
+        questionnaireController.deleteSection(questionGroup, sectionName);
+        assertThat(questionGroup.getSections().size(), is(0));
+    }
+
+    @Test
     public void testAddSectionForSuccess() throws Exception {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle("title");
@@ -305,7 +316,7 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroup questionGroup = getQuestionGroupForm(questionGroupId, TITLE,"S1","S2","S3");
+        QuestionGroup questionGroup = getQuestionGroupForm(questionGroupId, TITLE, "S1", "S2", "S3");
         when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroup);
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
@@ -313,7 +324,7 @@ public class QuestionnaireControllerTest {
         verify(questionnaireServiceFacade).getQuestionGroup(questionGroupId);
         verify(questionnaireServiceFacade, times(1)).getAllEventSources();
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
-        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroupForm(questionGroupId, TITLE,"S1","S2","S2"))));
+        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroupForm(questionGroupId, TITLE, "S1", "S2", "S2"))));
     }
 
     private QuestionGroup getQuestionGroupForm(int questionGroupId, String title, String... sectionNames) {
