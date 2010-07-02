@@ -21,8 +21,8 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -32,9 +32,9 @@ import org.mifos.security.util.UserContext;
  */
 public class LoginServiceFacadeWebTier implements LoginServiceFacade {
 
-    private final AuthenticationDao personnelDao;
+    private final PersonnelDao personnelDao;
 
-    public LoginServiceFacadeWebTier(AuthenticationDao personnelDao) {
+    public LoginServiceFacadeWebTier(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;
     }
 

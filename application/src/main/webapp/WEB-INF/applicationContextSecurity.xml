@@ -7,33 +7,33 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.0.xsd">
            
-	<http auto-config='true'>
-		<intercept-url pattern="/login.ftl" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+    <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/login.ftl" />
+	</beans:bean>
+           
+	<http auto-config="false" entry-point-ref="loginFormAuthentication">
+		<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
+		<intercept-url pattern="/login.ftl*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
     	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
-    	<form-login login-page="/login.ftl" default-target-url='/admin.ftl' always-use-default-target='true' />
+    	<!-- <form-login login-page="/login.ftl" default-target-url='/admin.ftl' always-use-default-target='true' /> -->
   	</http>
   	
   	<authentication-manager alias="authenticationManager">
 	    <authentication-provider ref="mifosAuthenticationProvider"/>
 	</authentication-manager>
- 	
+	
+  	<beans:bean id="myFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
+  		<beans:property name="authenticationManager" ref="authenticationManager" />
+  	</beans:bean>
+  	
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
-        <beans:property name="userDetailsService" ref="mifosUserService" />
+        <beans:property name="userDetailsService" ref="mifosAuthenticationAuthoriaztionService" />
     </beans:bean>
 
-    <beans:bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
-  	
-    <!--       
-	<authentication-manager>
-    	<authentication-provider>
-      		<user-service>
-        		<user name="mifos" password="testmifos" authorities="ROLE_FULLY_AUTHENTICATED_USER, ROLE_ADMIN" />
-        		<user name="test" password="test" authorities="ROLE_FULLY_AUTHENTICATED_USER" />
-      		</user-service>
-    	</authentication-provider>
-  	</authentication-manager>
-    -->
-        
+    <beans:bean id="mifosAuthenticationAuthoriaztionService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl">
+    	<beans:constructor-arg ref="personnelDao" />
+    </beans:bean>
+    
 </beans:beans>
 
 <!-- 

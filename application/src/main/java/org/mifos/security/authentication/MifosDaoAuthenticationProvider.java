@@ -20,6 +20,7 @@
 
 package org.mifos.security.authentication;
 
+import org.mifos.security.MifosUser;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.authentication;
+package org.mifos.security;
 
 import java.util.Collection;
 

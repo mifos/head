@@ -18,16 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.authentication;
+package org.mifos.security;
 
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-/**
- *
- */
-public interface AuthenticationDao extends UserDetailsService {
-
-    PersonnelBO findPersonnelByUsername(String username);
+public interface AuthenticationAuthorizationServiceFacade extends UserDetailsService {
 
 }
