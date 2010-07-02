@@ -1,5 +1,6 @@
 [#ftl]
 [#import "spring.ftl" as spring]
+[#import "macros.ftl" as mifos]
 <html lang="EN">
 <head>
     <title>Mifos</title>
@@ -7,7 +8,7 @@
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
 <script type="text/javascript">
     function removeSection(sectionName){
-        sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
+        var sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
         sectionToDeleteBtn.value = sectionName;
         sectionToDeleteBtn.click();
     }
@@ -151,6 +152,10 @@
                 <div>
                     <span class="headingorange"> Add Question Group </span>
                 </div>
+                <div>
+                    [@spring.formHiddenInput "questionGroupDefinition.id"/]
+                    [@spring.showErrors "<br/>","fontnormalRedBold" /]
+                </div>
                 <div class="normalFontFixedDiv">
                     <fieldset>
                         <ol>
@@ -166,8 +171,7 @@
                             <li>
                                 <span class="mandatorytext"><font color="#FF0000">* </font></span>
                                 <label for="eventSourceId">Applies To:</label>
-                                [@spring.formSingleSelect "questionGroupDefinition.eventSourceId",
-                                EventSources /]
+                                [@mifos.formSingleSelectWithPrompt "questionGroupDefinition.eventSourceId", EventSources, "--select one--" /]
                                 [@spring.showErrors "<br>","fontnormalRedBold" /]
                             </li>
                             <li>

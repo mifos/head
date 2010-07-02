@@ -50,8 +50,9 @@ import org.mifos.test.acceptance.util.StringUtil;
 //@SuppressWarnings({"PMD", "PMD.CouplingBetweenObjects", "all"})
 @SuppressWarnings("PMD")
 public class AdminPage extends MifosPage {
+    public static final String PAGE_ID = "admin";
 
-	public AdminPage() {
+    public AdminPage() {
 		super();
 	}
 
@@ -132,7 +133,7 @@ public class AdminPage extends MifosPage {
     }
 
     public AdminPage verifyPage() {
-        verifyPage("admin");
+        verifyPage(PAGE_ID);
         return this;
     }
 
