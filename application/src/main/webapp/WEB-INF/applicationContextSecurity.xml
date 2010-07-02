@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+           
+	<http auto-config='true'>
+		<intercept-url pattern="/login.ftl" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+    	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
+    	<form-login login-page="/login.ftl" default-target-url='/admin.ftl' always-use-default-target='true' />
+  	</http>
+  	
+  	<authentication-manager alias="authenticationManager">
+	    <authentication-provider ref="mifosAuthenticationProvider"/>
+	</authentication-manager>
+ 	
+    <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="mifosUserService" />
+    </beans:bean>
+
+    <beans:bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
+  	
+    <!--       
+	<authentication-manager>
+    	<authentication-provider>
+      		<user-service>
+        		<user name="mifos" password="testmifos" authorities="ROLE_FULLY_AUTHENTICATED_USER, ROLE_ADMIN" />
+        		<user name="test" password="test" authorities="ROLE_FULLY_AUTHENTICATED_USER" />
+      		</user-service>
+    	</authentication-provider>
+  	</authentication-manager>
+    -->
+        
+</beans:beans>
+
+<!-- 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/security classpath:xsd/spring-security-3.0.xsd">
+ 
+	<sec:global-method-security pre-post-annotations="enabled">
+		<sec:expression-handler ref="expressionHandler"/>
+    </sec:global-method-security>
+    
+    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="myPermissionEvaluator"/>
+  	</bean>
+
+	<bean id="myPermissionEvaluator" class="org.springframework.security.access.expression.method.DenyAllPermissionEvaluator" />
+
+	<bean id="mifosAccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+	    <property name="decisionVoters">
+	        <list>
+	            <bean class="org.springframework.security.access.vote.RoleVoter"/>
+	            <bean class="org.mifos.security.authorization.DynamicAuthorizationVoter"/>
+	            <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+	        </list>
+	    </property>
+	</bean>
+
+	<sec:http access-decision-manager-ref="mifosAccessDecisionManager" auto-config="false" use-expressions="true">
+	  	<sec:intercept-url pattern="/login.ftl" filters="none" />
+		<sec:intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
+		<sec:form-login login-page="/login.ftl" />
+	</sec:http>
+	
+	<sec:authentication-manager alias="authenticationManager">
+	    <sec:authentication-provider ref="mifosAuthenticationProvider"/>
+	</sec:authentication-manager>
+ 	
+    <bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
+        <property name="userDetailsService" ref="mifosUserService" />
+    </bean>
+
+    <bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
+</beans>
+-->

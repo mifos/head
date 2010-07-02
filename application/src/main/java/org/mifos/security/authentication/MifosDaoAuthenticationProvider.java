@@ -31,11 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class MifosDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
-    private PasswordHashing passwordHashing;
-
-    public MifosDaoAuthenticationProvider(final PasswordHashing passwordHashing) {
-        this.passwordHashing = passwordHashing;
-    }
+    private PasswordHashing passwordHashing = new PasswordHashing();
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,

@@ -23,17 +23,12 @@
 				<div id="login-interaction">
 				
 					<div class="error-messages">
-				      [#assign error=model.request.getParameter("error")!""]
-				      [#if error =="true" ]
-				        <span id="login.errormessage">${model.request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION").message}</span><br/>
-				        </font>
-				      [/#if ]
 					</div>
 					
 					<table id="login-table">
 						<tr>
 							<td id="login-name-label" class="label">[@spring.message "UserName" /]:</td>
-							<td><input type="text"name="j_username" id="login.form.username"></td>
+							<td><input type="text" name="j_username" id="login.form.username"></td>
 						</tr>
 	
 						<tr>
