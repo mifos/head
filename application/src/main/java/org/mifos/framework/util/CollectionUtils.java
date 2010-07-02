@@ -20,10 +20,10 @@
 
 package org.mifos.framework.util;
 
-import java.util.*;
-
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.Transformer;
+
+import java.util.*;
 
 public class CollectionUtils {
 
@@ -148,4 +148,7 @@ public class CollectionUtils {
         }
     }
 
+    public static <T> boolean isEmpty(Collection<T> collection) {
+        return collection == null || collection.isEmpty();
+    }
 }

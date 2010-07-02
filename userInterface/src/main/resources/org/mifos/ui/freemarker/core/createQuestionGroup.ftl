@@ -1,11 +1,37 @@
 [#ftl]
+[#--
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ *  All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ *  explanation of the license and how it is applied.
+--]
 [#import "spring.ftl" as spring]
+[#import "macros.ftl" as mifos]
 <html lang="EN">
 <head>
     <title>Mifos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href='pages/framework/css/cssstyle.css' rel="stylesheet" type="text/css">
-
+<script type="text/javascript">
+    function removeSection(sectionName){
+        var sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
+        sectionToDeleteBtn.value = sectionName;
+        sectionToDeleteBtn.click();
+    }
+</script>
       <style type="text/css">
         .normalFontFixedDiv {
             color:#000000;
@@ -145,6 +171,10 @@
                 <div>
                     <span class="headingorange"> Add Question Group </span>
                 </div>
+                <div>
+                    [@spring.formHiddenInput "questionGroupDefinition.id"/]
+                    [@spring.showErrors "<br/>","fontnormalRedBold" /]
+                </div>
                 <div class="normalFontFixedDiv">
                     <fieldset>
                         <ol>
@@ -160,8 +190,7 @@
                             <li>
                                 <span class="mandatorytext"><font color="#FF0000">* </font></span>
                                 <label for="eventSourceId">Applies To:</label>
-                                [@spring.formSingleSelect "questionGroupDefinition.eventSourceId",
-                                EventSources /]
+                                [@mifos.formSingleSelectWithPrompt "questionGroupDefinition.eventSourceId", EventSources, "--select one--" /]
                                 [@spring.showErrors "<br>","fontnormalRedBold" /]
                             </li>
                             <li>
@@ -183,7 +212,7 @@
 
                 <div id="divSections">
                     [#list questionGroupDefinition.sections as section]
-                    <b>${section.name}:&nbsp;&nbsp;</b><a href="#">remove</a>
+                    <b>${section.name}:&nbsp;&nbsp;</b><a href="javascript:removeSection('${section.name}')">remove</a>
                     <br/>
                     <table width="100%" id="sections.table" name="sections.table" border="0"
                            cellpadding="3" cellspacing="0">
@@ -195,9 +224,11 @@
                         <tr>
                             <td class="drawtablerow">&nbsp;</td>
                             <td class="drawtablerow">&nbsp;</td>
+                            <td class="drawtablerow">&nbsp;</td>
                         </tr>
                     </table>
                     [/#list]
+                    <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value="" style="visibility:hidden">
                 </div>
 
                 <div id="divSumitQG">

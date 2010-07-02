@@ -84,6 +84,9 @@
     	<constructor-arg ref="hibernateTransactionHelper" />
     </bean>
     
-    <bean id="productService" class="org.mifos.accounts.productdefinition.business.service.ProductServiceImpl" />
+    <bean id="productService" class="org.mifos.accounts.productdefinition.business.service.ProductServiceImpl" >
+    	<constructor-arg ref="loanProductDao" />
+    	<constructor-arg ref="savingsProductDao" />
+    </bean>
     
 </beans>

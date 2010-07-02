@@ -21,29 +21,34 @@ package org.mifos.test.acceptance.questionnaire;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
 
 public class CreateQuestionGroupPage extends MifosPage {
+    public static final String PAGE_ID = "createQuestionGroup";
+
     public CreateQuestionGroupPage(Selenium selenium) {
         super(selenium);
     }
 
     public CreateQuestionGroupPage verifyPage() {
-        verifyPage("createQuestionGroup");
+        verifyPage(PAGE_ID);
         return this;
     }
 
-    public AdminPage cancel() {
+    public void cancel() {
         selenium.click("id=_eventId_cancel");
         waitForPageToLoad();
-        return new AdminPage(selenium);
     }
 
-    public AdminPage submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
+    public void submit(CreateQuestionGroupParameters createQuestionGroupParameters) {
         selenium.type("title", createQuestionGroupParameters.getTitle());
+        selenium.select("eventSourceId", createQuestionGroupParameters.getAppliesTo());
         selenium.click("id=_eventId_defineQuestionGroup");
         waitForPageToLoad();
-        return new AdminPage(selenium);
     }
 
+    public void addSection(CreateQuestionGroupParameters createQuestionGroupParameters) {
+        selenium.type("sectionName", createQuestionGroupParameters.getSectionName());
+        selenium.click("id=_eventId_addSection");
+        waitForPageToLoad();
+    }
 }

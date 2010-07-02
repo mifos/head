@@ -79,4 +79,9 @@ public class LoanProductDaoHibernate implements LoanProductDao {
 
         return (ProductTypeEntity) this.genericDao.executeUniqueResultNamedQuery("findProductTypeConfigurationById", queryParameters);
     }
+
+    @Override
+    public void save(ProductTypeEntity productType) {
+        this.genericDao.createOrUpdate(productType);
+    }
 }

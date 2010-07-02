@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
@@ -145,12 +146,22 @@ public class QuestionnaireController {
         return evtSourcesMap;
     }
 
+    public String addSection(QuestionGroup questionGroup) {
+        questionGroup.addCurrentSection();
+        return "success";
+    }
+
+    public String deleteSection(QuestionGroup questionGroup, String sectionName) {
+        questionGroup.removeSection(sectionName);
+        return "success";
+    }
+
     private String getEventSourceId(EventSource evtSrc) {
         return evtSrc.getEvent().trim().concat(".").concat(evtSrc.getSource().trim());
     }
 
     private void constructAndLogSystemError(RequestContext requestContext, ApplicationException e) {
-        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "title", "There is an unexpected failure. Please retry or contact technical support");
+        constructErrorMessage(requestContext, "questionnaire.serivce.failure", "id", "There is an unexpected failure. Please retry or contact technical support");
         MifosLogManager.getLogger(LoggerConstants.ROOTLOGGER).error(e.getMessage(), e);
     }
 
@@ -169,19 +180,28 @@ public class QuestionnaireController {
     }
 
     private boolean questionGroupHasErrors(QuestionGroup questionGroup, RequestContext requestContext) {
+        boolean result = false;
         if (isInvalidTitle(questionGroup.getTitle())) {
             constructErrorMessage(requestContext, "questionnaire.error.emptytitle", "title", "Please specify Question Group text");
-            return true;
+            result = true;
         }
-        if (sectionsNotPresent(questionGroup)) {
+        if (sectionsNotPresent(questionGroup.getSections())) {
             constructErrorMessage(requestContext, "questionnaire.error.no.sections.in.group", "sectionName", "Please specify at least one section or question");
-            return true;
+            result = true;
         }
-        return false;
+        if (appliesToNotPresent(questionGroup.getEventSourceId())) {
+            constructErrorMessage(requestContext, "questionnaire.error.empty.appliesTo", "eventSourceId", "Please choose a valid 'Applies To' value");
+            result = true;
+        }
+        return result;
     }
 
-    private boolean sectionsNotPresent(QuestionGroup questionGroup) {
-        return questionGroup.getSections().size() == 0;
+    private boolean appliesToNotPresent(String eventSourceId) {
+        return StringUtils.isEmpty(eventSourceId) || "--select one--".equals(eventSourceId);
+    }
+
+    private boolean sectionsNotPresent(List<SectionForm> sections) {
+        return CollectionUtils.isEmpty(sections);
     }
 
     private boolean questionFormHasErrors(QuestionForm questionForm, RequestContext requestContext) {
@@ -196,12 +216,11 @@ public class QuestionnaireController {
         return false;
     }
 
-
     private boolean invalid(String id) {
         return (isEmpty(id) || !isInteger(id));
     }
 
-    public boolean isInteger(String id) {
+    private boolean isInteger(String id) {
         try {
             Integer.parseInt(id);
             return true;
@@ -209,10 +228,5 @@ public class QuestionnaireController {
         catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    public String addSection(QuestionGroup questionGroup) {
-        questionGroup.addCurrentSection();
-        return "success";
     }
 }

@@ -20,34 +20,34 @@
 
 package org.mifos.framework.util;
 
-import java.util.*;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.util.*;
 
 import static java.util.Collections.enumeration;
 import static java.util.Collections.list;
 import static org.mifos.framework.util.CollectionUtils.*;
-import static org.mifos.framework.util.MapEntry.*;
+import static org.mifos.framework.util.MapEntry.makeEntry;
 
 public class CollectionUtilsTest extends TestCase {
 
     public void testAsListReturnsOneElementPassed() {
         List<Integer> list = asList(Integer.valueOf(0));
-       Assert.assertEquals(1, list.size());
-       Assert.assertEquals(Integer.valueOf(0), list.get(0));
+       assertEquals(1, list.size());
+       assertEquals(Integer.valueOf(0), list.get(0));
     }
 
     public void testAsListReturnsListFormedOfMultipleElements() throws Exception {
         List<Integer> list = asList(Integer.valueOf(0), Integer.valueOf(1), Integer.valueOf(2));
-       Assert.assertEquals(3, list.size());
-       Assert.assertEquals(Integer.valueOf(0), list.get(0));
-       Assert.assertEquals(Integer.valueOf(1), list.get(1));
-       Assert.assertEquals(Integer.valueOf(2), list.get(2));
+       assertEquals(3, list.size());
+       assertEquals(Integer.valueOf(0), list.get(0));
+       assertEquals(Integer.valueOf(1), list.get(1));
+       assertEquals(Integer.valueOf(2), list.get(2));
     }
 
     public void testSplitListReturnsEmptyListForEmptyList() throws Exception {
-       Assert.assertEquals(Collections.EMPTY_LIST, splitListIntoParts(new ArrayList(), 10));
+       assertEquals(Collections.EMPTY_LIST, splitListIntoParts(new ArrayList(), 10));
     }
 
     public void testSplitListThrowsExceptionIfSizeOfPartsIsZero() throws Exception {
@@ -61,20 +61,20 @@ public class CollectionUtilsTest extends TestCase {
     public void testSplitReturnsSameListIfSizeOfEachPartIsGreaterThanListSize() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2, 3));
-       Assert.assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3), 4));
+       assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3), 4));
     }
 
     public void testSplitListEvenlyIfListSizeIsMultipleOfSizeOfEachPart() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2));
         expected.add(Arrays.asList(3, 4));
-       Assert.assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4), 2));
+       assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4), 2));
     }
 
     public void testSplitReturnsOneSublistIfListSizeEqualsSizeOfEachPart() throws Exception {
         List expected = new ArrayList();
         expected.add(Arrays.asList(1, 2, 3));
-       Assert.assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3), 3));
+       assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3), 3));
     }
 
     public void testSplitListIntoPartsAndARemainderIfListSizeIsNotMultipleOfSizeOfEachPart() throws Exception {
@@ -82,7 +82,7 @@ public class CollectionUtilsTest extends TestCase {
         expected.add(Arrays.asList(1, 2));
         expected.add(Arrays.asList(3, 4));
         expected.add(Arrays.asList(5));
-       Assert.assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
+       assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
     }
 
     public void testAsMap() {
@@ -97,8 +97,14 @@ public class CollectionUtilsTest extends TestCase {
         ArrayList<Map.Entry<Integer, String>> entryList = list(enumeration(map.entrySet()));
         for (int i=1; i<=entryList.size(); i++) {
             Map.Entry<Integer, String> entry = entryList.get(i - 1);
-            Assert.assertEquals(Integer.valueOf(i), entry.getKey());
-            Assert.assertEquals(String.valueOf(i), entry.getValue());
+            assertEquals(Integer.valueOf(i), entry.getKey());
+            assertEquals(String.valueOf(i), entry.getValue());
         }
+    }
+    
+    public void testCollectionEmpty() {
+        assertEquals(false, isEmpty(Arrays.asList("Hi", "Bye")));
+        assertEquals(true, isEmpty(Collections.EMPTY_SET));
+        assertEquals(true, isEmpty(null));
     }
 }

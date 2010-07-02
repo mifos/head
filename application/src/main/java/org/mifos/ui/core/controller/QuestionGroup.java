@@ -105,5 +105,18 @@ public class QuestionGroup implements Serializable {
     public void setSectionName(String sectionName) {
         currentSection.setName(sectionName);
     }
+
+    public void removeSection(String sectionName) {
+        SectionForm sectionToDelete = null;
+        for (SectionForm sectionForm: sections){
+            if(sectionName.equals(sectionForm.getName())){
+                sectionToDelete = sectionForm;
+                break;
+            }
+        }
+        if (sectionToDelete != null) {
+            sections.remove(sectionToDelete);
+        }
+    }
 }
 

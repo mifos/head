@@ -12,8 +12,14 @@
 	<view-state id="createQuestionGroup" model="questionGroupDefinition">
 		<transition on="defineQuestionGroup" to="defineQuestionGroup" />
         <transition on="addSection" to="addSection"/>
+        <transition on="deleteSection" to="deleteSection"/>
         <transition on="cancel" to="cancel" bind="false" history="discard"/>
 	</view-state>
+
+    <action-state id="deleteSection">
+        <evaluate expression="questionnaireController.deleteSection(questionGroupDefinition, requestParameters._eventId_deleteSection)"/>
+        <transition on="success" to="createQuestionGroup" />
+    </action-state>
 
     <action-state id="addSection">
         <evaluate expression="questionnaireController.addSection(questionGroupDefinition)"/>

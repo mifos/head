@@ -20,9 +20,7 @@
 
 package org.mifos.test.acceptance.framework;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
+import com.thoughtworks.selenium.Selenium;
 import org.dbunit.DatabaseUnitException;
 import org.mifos.test.framework.util.DatabaseTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,11 @@ import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.thoughtworks.selenium.Selenium;
+import java.io.IOException;
+import java.sql.SQLException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @ContextConfiguration(locations={"classpath:test-context.xml", "classpath:ui-test-context.xml"})
 @Test(sequential=true)
@@ -86,7 +88,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 	}
 
     protected void assertTextFoundOnPage (String text, String message) {
-        Assert.assertTrue(selenium.isTextPresent(text), message);
+        assertTrue(selenium.isTextPresent(text), message);
     }
 
     protected void assertTextFoundOnPage (String text) {
@@ -95,7 +97,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
 
 
     protected void assertElementTextExactMatch(String text, String elementId) {
-        Assert.assertEquals(
+        assertEquals(
                 selenium.getText(elementId),
                 text,
                 "Text \"" + text + "\" does not match element \"" + elementId + "\":");
@@ -106,7 +108,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     }
 
     protected void assertElementTextIncludes(String text, String elementId) {
-        Assert.assertTrue(
+        assertTrue(
                 selenium.getText(elementId).indexOf(text) >= 0,
                 "Expected text \"" + text + "\" not included in element \"" + elementId + "\"");
     }
@@ -124,7 +126,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
     }
 
     protected void assertElementExistsOnPage(String elementId, String messageIfFail) {
-        Assert.assertTrue(selenium.isElementPresent(elementId), messageIfFail);
+        assertTrue(selenium.isElementPresent(elementId), messageIfFail);
     }
 
     protected void deleteDataFromTables(String...tableNames)
@@ -132,4 +134,7 @@ public class UiTestCaseBase extends AbstractTestNGSpringContextTests {
         dbUtils.deleteDataFromTables(dataSource, tableNames);
     }
 
+    protected void assertPage(String pageName) {
+        assertEquals(selenium.getAttribute("page.id@title"), pageName);
+    }
 }
