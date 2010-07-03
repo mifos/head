@@ -40,7 +40,7 @@ public class GenericController extends AbstractController {
 
 
 	@Override
-    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/admin.ftl","/viewProductMix.ftl","/viewProductCategories.ftl","/viewOfficeHierarchy.ftl","/viewLoanProducts.ftl","/defineMandatoryHiddenFields.ftl","/viewFunds.ftl","/defineLabels.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewEditSavingsProduct.ftl","/viewEditLoanProduct.ftl","/viewSavingsProducts.ftl"})
+    @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/admin.ftl","/viewProductMix.ftl","/viewProductCategories.ftl","/viewOfficeHierarchy.ftl","/viewLoanProducts.ftl","/defineMandatoryHiddenFields.ftl","/viewFunds.ftl","/defineLabels.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewEditSavingsProduct.ftl","/viewEditLoanProduct.ftl","/viewSavingsProducts.ftl","/viewOffices.ftl","/viewHolidays.ftl","/manageRolesAndPermissions.ftl","/viewSystemUsers.ftl"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {
         	Map<String, Object> model = new HashMap<String, Object>();
         	model.put("request", request);
