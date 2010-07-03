@@ -21,73 +21,73 @@
 package org.mifos.config.util.helpers;
 
 public interface ConfigurationConstants {
-    // public static boolean IS_PENDING_APPROVAL_STATE_DEFINED=true;
-    public static boolean IS_LSM = false;
-    public static boolean DOES_CENTERHIERARCHY_EXIST = true;
+    // boolean IS_PENDING_APPROVAL_STATE_DEFINED=true;
+    boolean IS_LSM = false;
+    boolean DOES_CENTERHIERARCHY_EXIST = true;
 
     // constants for label lookup
-    public static final String BULKENTRY = "BulkEntry";
-    public static final String CENTER = "Center";
-    public static final String OFFICE = "Office";
-    public static final String CLIENT = "Client";
-    public static final String CLIENT_ID = "Clientid";
-    public static final String GROUP = "Group";
-    public static final String ADDRESS1 = "Address1";
-    public static final String ADDRESS2 = "Address2";
-    public static final String ADDRESS3 = "Address3";
-    public static final String CITY = "City";
-    public static final String STATE = "State";
-    public static final String POSTAL_CODE = "PostalCode";
-    public static final String GOVERNMENT_ID = "GovernmentId";
-    public static final String GOVERNMENT = "Government";
-    public static final String ID = "ID";
-    public static final String HANDICAPPED = "Handicapped";
-    public static final String CITIZENSHIP = "Citizenship";
-    public static final String ETHINICITY = "Ethinicity";
-    public static final String EXTERNALID = "ExternalId";
-    public static final String SAVINGS = "Savings";
-    public static final String INTEREST = "Interest";
-    public static final String LOAN = "Loan";
-    public static final String PERSONNEL = "Personnel";
+    String BULKENTRY = "BulkEntry";
+    String CENTER = "Center";
+    String OFFICE = "Office";
+    String CLIENT = "Client";
+    String CLIENT_ID = "Clientid";
+    String GROUP = "Group";
+    String ADDRESS1 = "Address1";
+    String ADDRESS2 = "Address2";
+    String ADDRESS3 = "Address3";
+    String CITY = "City";
+    String STATE = "State";
+    String POSTAL_CODE = "PostalCode";
+    String GOVERNMENT_ID = "GovernmentId";
+    String GOVERNMENT = "Government";
+    String ID = "ID";
+    String HANDICAPPED = "Handicapped";
+    String CITIZENSHIP = "Citizenship";
+    String ETHINICITY = "Ethinicity";
+    String EXTERNALID = "ExternalId";
+    String SAVINGS = "Savings";
+    String INTEREST = "Interest";
+    String LOAN = "Loan";
+    String PERSONNEL = "Personnel";
 
     /*
      * Constants for retrieving Lookup Value text
      */
-    public static final String BRANCHOFFICE = "OfficeLevels-BranchOffice";
+    String BRANCHOFFICE = "OfficeLevels-BranchOffice";
 
-    public static final String KEY_NO_MESSAGE_FOR_THIS_KEY = "No message exist for this key";
-    public static final String SERVICE_CHARGE = "ServiceCharge";
-    public static final short INTEREST_DAYS = 360;
+    String KEY_NO_MESSAGE_FOR_THIS_KEY = "No message exist for this key";
+    String SERVICE_CHARGE = "ServiceCharge";
+    short INTEREST_DAYS = 360;
 
-    public static final String SURVEY = "Survey";
-    public static final String MEETING = "Meeting";
+    String SURVEY = "Survey";
+    String MEETING = "Meeting";
 
-    public static final String PRODUCTS = "products";
-    public static final String PRODUCT = "product";
-    public static final String PRO = "pro";
-    public static final String CONFIG_SALUTATION = "ConfigSalutation";
-    public static final String CONFIG_MARITAL_STATUS = "ConfigMaritalStatus";
-    public static final String CONFIG_PERSONNEL_TITLE = "ConfigUserTitle";
-    public static final String CONFIG_EDUCATION_LEVEL = "ConfigEducationLevel";
-    public static final String CONFIG_CITIZENSHIP = "ConfigCitizenship";
-    public static final String CONFIG_HANDICAPPED = "ConfigHandicapped";
-    public static final String CONFIG_OFFICER_TITLE = "ConfigOfficerTitle";
-    public static final String CONFIG_BUSINESS_ACTIVITY = "ConfigBusinessActivity";
-    public static final String CONFIG_LOAN_PURPOSE = "ConfigPurposeOfLoan";
-    public static final String CONFIG_COLLATERAL_TYPE = "ConfigCollateralType";
-    public static final String CONFIG_PAYMENT_TYPE = "ConfigPaymentType";
-    public static final String CONFIG_ETHNICITY = "ConfigEthnicity";
-    public static final String NO_VALUE_ERROR = "errorNoValueMessage";
-    public static final String DUPLICATE_VALUE_ERROR = "errorDuplicateValueMessage";
-    public static final String SELECT_VALUE_ERROR = "errorSelectValueMessage";
-    public static final String ENTITY = "entity";
-    public static final String ADD_OR_EDIT = "addOrEdit";
-    public static final String LOOKUP_OPTION_DATA = "LookupOptionData";
-    public static final String LOOKUP_TYPE = "lookupType";
-    public static final String ALL_DATA_TYPES = "allDataTypes";
-    public static final String ALL_CATEGORIES = "allCategories";
-    public static final String CURRENT_DATA_TYPE = "currentDataType";
-    public static final String CURRENT_CATEGORY = "currentCategory";
-    public static final String CURRENT_CUSTOM_FIELD = "currentCustomField";
+    String PRODUCTS = "products";
+    String PRODUCT = "product";
+    String PRO = "pro";
+    String CONFIG_SALUTATION = "ConfigSalutation";
+    String CONFIG_MARITAL_STATUS = "ConfigMaritalStatus";
+    String CONFIG_PERSONNEL_TITLE = "ConfigUserTitle";
+    String CONFIG_EDUCATION_LEVEL = "ConfigEducationLevel";
+    String CONFIG_CITIZENSHIP = "ConfigCitizenship";
+    String CONFIG_HANDICAPPED = "ConfigHandicapped";
+    String CONFIG_OFFICER_TITLE = "ConfigOfficerTitle";
+    String CONFIG_BUSINESS_ACTIVITY = "ConfigBusinessActivity";
+    String CONFIG_LOAN_PURPOSE = "ConfigPurposeOfLoan";
+    String CONFIG_COLLATERAL_TYPE = "ConfigCollateralType";
+    String CONFIG_PAYMENT_TYPE = "ConfigPaymentType";
+    String CONFIG_ETHNICITY = "ConfigEthnicity";
+    String NO_VALUE_ERROR = "errorNoValueMessage";
+    String DUPLICATE_VALUE_ERROR = "errorDuplicateValueMessage";
+    String SELECT_VALUE_ERROR = "errorSelectValueMessage";
+    String ENTITY = "entity";
+    String ADD_OR_EDIT = "addOrEdit";
+    String LOOKUP_OPTION_DATA = "LookupOptionData";
+    String LOOKUP_TYPE = "lookupType";
+    String ALL_DATA_TYPES = "allDataTypes";
+    String ALL_CATEGORIES = "allCategories";
+    String CURRENT_DATA_TYPE = "currentDataType";
+    String CURRENT_CATEGORY = "currentCategory";
+    String CURRENT_CUSTOM_FIELD = "currentCustomField";
 
 }

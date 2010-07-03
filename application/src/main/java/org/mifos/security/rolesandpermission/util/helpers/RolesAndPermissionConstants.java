@@ -21,31 +21,31 @@
 package org.mifos.security.rolesandpermission.util.helpers;
 
 public interface RolesAndPermissionConstants {
-    public final static String ROLE = "Role";
+    String ROLE = "Role";
 
-    public final static String ROLES = "Roles";
+    String ROLES = "Roles";
 
-    public final static String ROLENAME = "RoleName";
-    public final static String ROLEID = "roleId";
-    public final static String BUFF = "BUFF";
-    public final static String ROLEANDPERMISSIONDAO = "ManageRolesAndPermission";
-    public final static String KEYROLEDELETIONFAILED = "roleandpermission.error.roleDeleteFailed";
-    public final static String KEYROLETEMPLETELOADFAILED = "roleandpermission.error.loadTempleteFailed";
-    public final static String KEYROLEALREADYEXIST = "roleandpermission.error.roleNameExist";
-    public final static String KEYROLECREATIONFAILED = "roleandpermission.error.roleCreationFailed";
-    public final static String KEYROLEWITHNOACTIVITIES = "roleandpermission.error.noActivitySelected";
-    public final static String KEYROLEWITHNOACTIVITIESFORUPDATE = "roleandpermission.error.noActivitySelectedForUpdate";
-    public final static String KEYROLEUPDATIONFAILED = "roleandpermission.error.roleUpdateFailed";
-    public final static String KEYROLELOADINGFAILED = "roleandpermission.error.noRoleInSystem";
-    public final static String KEYROLENOTEXIST = "roleandpermission.errorroleNotExist";
-    public final static String ACTIVITYLIST = "ActivityList";
-    public final static String SELECTED_ACTIVITIES = "SelectedActivities";
-    public final static String ROLESUBOBJECT = "RoleSubObject";
-    public final static String KEYROLEASSIGNEDTOPERSONNEL = "roleandpermission.error.roleassigned";
-    public final static String KEYROLEDELETEDBYOTHERUSER = "roleandpermission.error.roledeleted";
-    public final static String KEYROLENAMENOTSPECIFIED = "roleandpermission.rolename.required";
+    String ROLENAME = "RoleName";
+    String ROLEID = "roleId";
+    String BUFF = "BUFF";
+    String ROLEANDPERMISSIONDAO = "ManageRolesAndPermission";
+    String KEYROLEDELETIONFAILED = "roleandpermission.error.roleDeleteFailed";
+    String KEYROLETEMPLETELOADFAILED = "roleandpermission.error.loadTempleteFailed";
+    String KEYROLEALREADYEXIST = "roleandpermission.error.roleNameExist";
+    String KEYROLECREATIONFAILED = "roleandpermission.error.roleCreationFailed";
+    String KEYROLEWITHNOACTIVITIES = "roleandpermission.error.noActivitySelected";
+    String KEYROLEWITHNOACTIVITIESFORUPDATE = "roleandpermission.error.noActivitySelectedForUpdate";
+    String KEYROLEUPDATIONFAILED = "roleandpermission.error.roleUpdateFailed";
+    String KEYROLELOADINGFAILED = "roleandpermission.error.noRoleInSystem";
+    String KEYROLENOTEXIST = "roleandpermission.errorroleNotExist";
+    String ACTIVITYLIST = "ActivityList";
+    String SELECTED_ACTIVITIES = "SelectedActivities";
+    String ROLESUBOBJECT = "RoleSubObject";
+    String KEYROLEASSIGNEDTOPERSONNEL = "roleandpermission.error.roleassigned";
+    String KEYROLEDELETEDBYOTHERUSER = "roleandpermission.error.roledeleted";
+    String KEYROLENAMENOTSPECIFIED = "roleandpermission.rolename.required";
 
     /* Set up in latest-data.sql */
-    public static final int ADMIN_ROLE = 1;
+    int ADMIN_ROLE = 1;
 
 }

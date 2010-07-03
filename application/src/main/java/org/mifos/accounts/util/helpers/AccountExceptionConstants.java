@@ -21,18 +21,18 @@
 package org.mifos.accounts.util.helpers;
 
 /**
- * This interface stores keys for accounts related exceptions.
+ * This public interface stores keys for accounts related exceptions.
  */
 public interface AccountExceptionConstants {
-    public final String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
-    public final String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
-    public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
-    public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
-    public final String CREATEEXCEPTION = "exception.accounts.create";
-    public final String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
-    public final String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
-    public final String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
-    public final String CHANGEINLOANMEETING = "exception.accounts.changeInLoanMeeting";
-    public final String CANT_APPLY_FEE_EXCEPTION = "exception.accounts.cantapplyfee";
-    public final String CANT_APPLY_CHARGE_EXCEPTION = "exception.accounts.cantapplycharge";
+    String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
+    String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
+    String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
+    String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
+    String CREATEEXCEPTION = "exception.accounts.create";
+    String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
+    String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
+    String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
+    String CHANGEINLOANMEETING = "exception.accounts.changeInLoanMeeting";
+    String CANT_APPLY_FEE_EXCEPTION = "exception.accounts.cantapplyfee";
+    String CANT_APPLY_CHARGE_EXCEPTION = "exception.accounts.cantapplycharge";
 }

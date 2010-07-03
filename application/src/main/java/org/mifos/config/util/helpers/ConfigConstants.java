@@ -21,30 +21,30 @@
 package org.mifos.config.util.helpers;
 
 /**
- * This interface will hold the constants related to configurable items.
+ * This public interface will hold the constants related to configurable items.
  */
 public interface ConfigConstants {
-    public static final String LATENESS_DAYS = "latenessDays";
-    public static final String DORMANCY_DAYS = "dormancyDays";
+    String LATENESS_DAYS = "latenessDays";
+    String DORMANCY_DAYS = "dormancyDays";
 
     // constants for Meeting configuration
-    public static final String FISCAL_START_OF_WEEK = "fiscalStartOfWeek";
-    public static final String WEEK_OFF_LIST = "weekOffList";
+    String FISCAL_START_OF_WEEK = "fiscalStartOfWeek";
+    String WEEK_OFF_LIST = "weekOffList";
 
     // other constants
-    public static final Short OPTIONAL_FLAG = 0;
-    public static final Short DORMANCY_DAYS_DEFAULT = 30;
-    public static final Short LATENESS_DAYS_DEFAULT = 30;
-    public static final Short INTEREST_DAYS_DEFAULT = 365;
-    public static final Short FISCAL_START_OF_WEEK_DEFAULT = 2;
-    public static final String MEETING_SCHEDULE_TYPE_DEFAULT = "same_day";
+    Short OPTIONAL_FLAG = 0;
+    Short DORMANCY_DAYS_DEFAULT = 30;
+    Short LATENESS_DAYS_DEFAULT = 30;
+    Short INTEREST_DAYS_DEFAULT = 365;
+    Short FISCAL_START_OF_WEEK_DEFAULT = 2;
+    String MEETING_SCHEDULE_TYPE_DEFAULT = "same_day";
 
-    public static final String OFFICE_CONFIG_CONSTANTS = "org.mifos.config.util.helpers.OfficeConfigConstants";
+    String OFFICE_CONFIG_CONSTANTS = "org.mifos.config.util.helpers.OfficeConfigConstants";
 
-    public static final String FIRST_NAME = "first_name";
-    public static final String MIDDLE_NAME = "middle_name";
-    public static final String SECOND_LAST_NAME = "second_last_name";
-    public static final String LAST_NAME = "last_name";
-    public static final String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
-    public static final String COLLECTION_SHEET_DAYS_IN_ADVANCE = "CollectionSheet.DaysInAdvance";
+    String FIRST_NAME = "first_name";
+    String MIDDLE_NAME = "middle_name";
+    String SECOND_LAST_NAME = "second_last_name";
+    String LAST_NAME = "last_name";
+    String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
+    String COLLECTION_SHEET_DAYS_IN_ADVANCE = "CollectionSheet.DaysInAdvance";
 }
