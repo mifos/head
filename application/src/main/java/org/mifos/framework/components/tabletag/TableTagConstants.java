@@ -22,80 +22,80 @@ package org.mifos.framework.components.tabletag;
 
 public interface TableTagConstants {
 
-    public static final String TABLE = "table";
+    String TABLE = "table";
 
-    public static final String ROW = "row";
+    String ROW = "row";
 
-    public static final String FILENAME = "filename";
+    String FILENAME = "filename";
 
-    public static final String FILES = "files";
+    String FILES = "files";
 
-    public static final String PATH = "path";
+    String PATH = "path";
 
-    public static final String KEY = "key";
+    String KEY = "key";
 
-    public static final String PATHACTION = "action";
+    String PATHACTION = "action";
 
-    public static final String SEARCHPREV = "searchPrev";
+    String SEARCHPREV = "searchPrev";
 
-    public static final String SEARCHNEXT = "searchNext";
+    String SEARCHNEXT = "searchNext";
 
-    public static final String FORWARDKEY = "forwardkey";
+    String FORWARDKEY = "forwardkey";
 
-    public static final String COLUMN = "column";
+    String COLUMN = "column";
 
-    public static final String DISPLAYNAME = "displayname";
+    String DISPLAYNAME = "displayname";
 
-    public static final String PARAMETERS = "parameters";
+    String PARAMETERS = "parameters";
 
-    public static final String FRAGMENTNAME = "fragment-name";
+    String FRAGMENTNAME = "fragment-name";
 
-    public static final String PARAMETER = "parameter";
+    String PARAMETER = "parameter";
 
-    public static final String TDREQUIRED = "tdrequired";
+    String TDREQUIRED = "tdrequired";
 
-    public static final String LABEL = "label";
+    String LABEL = "label";
 
-    public static final String LABELTYPE = "labeltype";
+    String LABELTYPE = "labeltype";
 
-    public static final String BOLDLABEL = "boldlabel";
+    String BOLDLABEL = "boldlabel";
 
-    public static final String TYPE = "type";
+    String TYPE = "type";
 
-    public static final String ACTION = "action";
+    String ACTION = "action";
 
-    public static final String IMAGE = "image";
-    public static final String ISLINKOPTIONAL = "islinkoptional";
-    public static final String CHECKOPTIONALREQUIRED = "checkoptionallinkrequired";
-    public static final String NAME = "name";
+    String IMAGE = "image";
+    String ISLINKOPTIONAL = "islinkoptional";
+    String CHECKOPTIONALREQUIRED = "checkoptionallinkrequired";
+    String NAME = "name";
 
-    public static final String VALUE = "value";
+    String VALUE = "value";
 
-    public static final String VALUETYPE = "valuetype";
+    String VALUETYPE = "valuetype";
 
-    public static final String MIFOSTABLE_PAGESIZE = "10";
+    String MIFOSTABLE_PAGESIZE = "10";
 
-    public static final String BOLDDISPLAY = "bold";
-    public static final String ITALICDISPLAY = "italic";
+    String BOLDDISPLAY = "bold";
+    String ITALICDISPLAY = "italic";
 
-    public static final String PAGEREQUIREMENTS = "pagerequirements";
-    public static final String NUMBERSREQUIRED = "numbersrequired";
-    public static final String HEADINGREQUIRED = "headingrequired";
-    public static final String BLUELINEREQUIRED = "bluelinerequired";
-    public static final String TOPBLUELINEREQUIRED = "topbluelinerequired";
-    public static final String BOTTOMBLUELINEREQUIRED = "bottombluelinerequired";
-    public static final String VALIGNNUMBERS = "valignnumbers";
-    public static final String BLANKLINEREQUIRED = "blanklinerequired";
-    public static final String FLOWREQUIRED = "flowRequired";
-    public static final String TABLECACHE = "TableCache";
+    String PAGEREQUIREMENTS = "pagerequirements";
+    String NUMBERSREQUIRED = "numbersrequired";
+    String HEADINGREQUIRED = "headingrequired";
+    String BLUELINEREQUIRED = "bluelinerequired";
+    String TOPBLUELINEREQUIRED = "topbluelinerequired";
+    String BOTTOMBLUELINEREQUIRED = "bottombluelinerequired";
+    String VALIGNNUMBERS = "valignnumbers";
+    String BLANKLINEREQUIRED = "blanklinerequired";
+    String FLOWREQUIRED = "flowRequired";
+    String TABLECACHE = "TableCache";
 
-    public static final String STYLECLASS = "styleClass";
-    public static final String UNEXPECTED_ERROR = "errors.unexpected";
-    public static final String NOXMLFILE_ERROR = "error.noxmlfile";
-    public static final String NOACTION_ERROR = "error.noaction";
-    public static final String NOFWDKEY_ERROR = "error.fwdkey";
-    public static final String WRONGTYPE_ERROR = "error.wrongtype";
-    public static final String TABLENOTFOUND_ERROR = "error.tablenotfound";
+    String STYLECLASS = "styleClass";
+    String UNEXPECTED_ERROR = "errors.unexpected";
+    String NOXMLFILE_ERROR = "error.noxmlfile";
+    String NOACTION_ERROR = "error.noaction";
+    String NOFWDKEY_ERROR = "error.fwdkey";
+    String WRONGTYPE_ERROR = "error.wrongtype";
+    String TABLENOTFOUND_ERROR = "error.tablenotfound";
 
-    public static final String SUPRESSROW = "suppressrow";
+    String SUPRESSROW = "suppressrow";
 }

@@ -27,441 +27,441 @@ package org.mifos.security.util;
  * increased.
  */
 public interface SecurityConstants {
-    public final String NOSUCHALGORITHM = "security.error.noSuchAlgorithm";
+    String NOSUCHALGORITHM = "security.error.noSuchAlgorithm";
 
-    public final String NOSUCHPADDING = "security.error.noSuchPadding";
+    String NOSUCHPADDING = "security.error.noSuchPadding";
 
-    public final String ENCODINGNOTSUPPORTED = "security.error.encodingNotSupported";
+    String ENCODINGNOTSUPPORTED = "security.error.encodingNotSupported";
 
-    public final String PBEWITHMD5ANDDES = "PBEWithMD5AndDES";
+    String PBEWITHMD5ANDDES = "PBEWithMD5AndDES";
 
-    public final String DESEDE = "DESede";
+    String DESEDE = "DESede";
 
-    public final String DES = "DES";
+    String DES = "DES";
 
-    public final String INITIALIZATIONFAILED = "security.error.iniFailed";
+    String INITIALIZATIONFAILED = "security.error.iniFailed";
 
-    public final String GENERALERROR = "security.error.generalError";
+    String GENERALERROR = "security.error.generalError";
 
-    public final int MAXTRIES = 5;
+    int MAXTRIES = 5;
 
-    public final String ONE = "1";
+    String ONE = "1";
 
-    public final String PATTERN = "pattern";
+    String PATTERN = "pattern";
 
-    public final String ID = "ID";
+    String ID = "ID";
 
-    public final String OFFICECHANGEEVENT = "OfficeChange";
+    String OFFICECHANGEEVENT = "OfficeChange";
 
-    public final String SECURITY_PARAM = "security_param";
+    String SECURITY_PARAM = "security_param";
 
     // Activity not allowd key
 
-    public final String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
+    String KEY_ACTIVITY_NOT_ALLOWED = "error.activity.not.allowed";
 
-    public final String KEY_SHUTDOWN_TIMEOUT_INVALID = "error.shutdown.timeout.invalid";
+    String KEY_SHUTDOWN_TIMEOUT_INVALID = "error.shutdown.timeout.invalid";
 
     // activity related mappeings
-    public final short VIEW = 0;
+    short VIEW = 0;
 
-    public final short SEARCH = 0;
+    short SEARCH = 0;
 
     /*
      * Constants for activity IDs.
      */
-    public final short ORGANIZATION_MANAGEMENT = 1;
+    short ORGANIZATION_MANAGEMENT = 1;
 
     // funds
-    public final short FUNDS_CREATE_FUNDS = 3;
+    short FUNDS_CREATE_FUNDS = 3;
 
-    public final short FUNDS_EDIT_FUNDS = 4;
+    short FUNDS_EDIT_FUNDS = 4;
 
     // fees
-    public final short FEES_CREATE_FEES = 6;
+    short FEES_CREATE_FEES = 6;
 
-    public final short FEES_EDIT_FEES = 7;
+    short FEES_EDIT_FEES = 7;
 
     // checklist
-    public final short CHECKLIST_CREATE_CHECKLIST = 9;
+    short CHECKLIST_CREATE_CHECKLIST = 9;
 
-    public final short CHECKLIST_EDIT_CHECKLIST = 10;
+    short CHECKLIST_EDIT_CHECKLIST = 10;
 
     // Miscellaneous
-    public final short DEFINE_NEW_DATA_FIELDS = 12;
+    short DEFINE_NEW_DATA_FIELDS = 12;
 
-    public final short EDIT_DATA_FIELDS = 12;
+    short EDIT_DATA_FIELDS = 12;
 
     // Office related activities
-    public final short OFFICE_CREATE_OFFICE = 15;
+    short OFFICE_CREATE_OFFICE = 15;
 
-    public final short OFFICE_EDIT_OFFICE = 16;
+    short OFFICE_EDIT_OFFICE = 16;
 
-    public final short OFFICE_HIERATCHY_UPDATE = 193;
+    short OFFICE_HIERATCHY_UPDATE = 193;
 
     // User management
-    public final short PERSONNEL_CREATE_PERSONNEL = 19;
+    short PERSONNEL_CREATE_PERSONNEL = 19;
 
-    public final short PERSONNEL_EDIT_PERSONNEL = 20;
+    short PERSONNEL_EDIT_PERSONNEL = 20;
 
-    public final short PERSONNEL_NOTE_CREATE = 194;
+    short PERSONNEL_NOTE_CREATE = 194;
 
-    public final short PERSONNEL_UNLOCK_PERSONNEL = 21;
+    short PERSONNEL_UNLOCK_PERSONNEL = 21;
 
-    public final short ROLES_CREATE_ROLES = 23;
+    short ROLES_CREATE_ROLES = 23;
 
-    public final short ROLES_EDIT_ROLES = 24;
+    short ROLES_EDIT_ROLES = 24;
 
-    public final short ROLES_DELETE_ROLES = 25;
+    short ROLES_DELETE_ROLES = 25;
 
     // Client attributes management
-    public final short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;
+    short EDIT_CLIENTNAME_HIERARCHY_GROUPLOANALLOWED = 28;
 
-    public final short CREATE_ADMINISTRATIVEFEEFOR_CLIENTS_GROUPS_CENTERS = 30;
+    short CREATE_ADMINISTRATIVEFEEFOR_CLIENTS_GROUPS_CENTERS = 30;
 
-    public final short CONFIGURE_HIDE_UNHIDE_DATAFIELDS_FOR_GROUP_CENTER = 32;
+    short CONFIGURE_HIDE_UNHIDE_DATAFIELDS_FOR_GROUP_CENTER = 32;
 
     // Client management
-    public final short CLIENT_MANAGEMENT = 33;
-    public final short CLIENTS = 34;
+    short CLIENT_MANAGEMENT = 33;
+    short CLIENTS = 34;
 
-    public final short CLIENT_ADD_NOTE_TO_CLIENT = 48;
+    short CLIENT_ADD_NOTE_TO_CLIENT = 48;
 
-    public final short CIENT_CREATE_NEW_CLIENT_IN_SAVE_FOR_LATER_STATE = 35;
+    short CIENT_CREATE_NEW_CLIENT_IN_SAVE_FOR_LATER_STATE = 35;
 
-    public final short CIENT_CREATE_NEW_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE = 36;
+    short CIENT_CREATE_NEW_CLIENT_IN_SUBMIT_FOR_APPROVAL_STATE = 36;
 
-    public final short CIENT_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 37;
+    short CIENT_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 37;
 
-    public final short CIENT_CHANGE_STATE_TO_APPROVAD = 38;
+    short CIENT_CHANGE_STATE_TO_APPROVAD = 38;
 
-    public final short CIENT_CHANGE_STATE_TO_CANCELLED = 39;
+    short CIENT_CHANGE_STATE_TO_CANCELLED = 39;
 
-    public final short CIENT_CHANGE_STATE_TO_ON_HOLD = 40;
+    short CIENT_CHANGE_STATE_TO_ON_HOLD = 40;
 
-    public final short CIENT_CHANGE_STATE_TO_ON_CLOSED = 41;
+    short CIENT_CHANGE_STATE_TO_ON_CLOSED = 41;
 
-    public final short CIENT_APPLY_CHARGES_TO_CLIENT_ACCOUNT = 42;
+    short CIENT_APPLY_CHARGES_TO_CLIENT_ACCOUNT = 42;
 
-    public final short CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT = 43;
+    short CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT = 43;
 
-    public final short CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT = 44;
+    short CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT = 44;
 
-    public final short CIENT_WAIVE_DUE_AMOUNT = 46;
+    short CIENT_WAIVE_DUE_AMOUNT = 46;
 
-    public final short CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT = 47;
+    short CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT = 47;
 
-    public final short CIENT_ADD_NOTES_TO_ACCOUNT = 48;
+    short CIENT_ADD_NOTES_TO_ACCOUNT = 48;
 
-    public final short CIENT_EDIT_MFI_INFORMATION = 49;
+    short CIENT_EDIT_MFI_INFORMATION = 49;
 
-    public final short CIENT_CHANGE_GROUP_MEMBERSHIP = 50;
+    short CIENT_CHANGE_GROUP_MEMBERSHIP = 50;
 
-    public final short CIENT_TRANSFER_THE_CLIENT = 51;
+    short CIENT_TRANSFER_THE_CLIENT = 51;
 
-    public final short CIENT_EDIT_MEETINGSCHEDULE = 52;
+    short CIENT_EDIT_MEETINGSCHEDULE = 52;
 
-    public final short CIENT_ADD_EDIT_HISTORICAL_DATA = 53;
+    short CIENT_ADD_EDIT_HISTORICAL_DATA = 53;
 
-    public final short CIENT_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 54;
+    short CIENT_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 54;
 
-    public final short CIENT_BLACKLIST_A_CLIENT = 55;
+    short CIENT_BLACKLIST_A_CLIENT = 55;
 
     // Group management
-    public final short GROUP_ADD_NOTE_TO_GROUP = 70;
+    short GROUP_ADD_NOTE_TO_GROUP = 70;
 
-    public final short GROUP_CREATE_NEW_GROUP_IN_SAVE_FOR_LATER_STATE = 57;
+    short GROUP_CREATE_NEW_GROUP_IN_SAVE_FOR_LATER_STATE = 57;
 
-    public final short GROUP_CREATE_NEW_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE = 58;
+    short GROUP_CREATE_NEW_GROUP_IN_SUBMIT_FOR_APPROVAL_STATE = 58;
 
-    public final short GROUP_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 59;
+    short GROUP_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL_STATE = 59;
 
-    public final short GROUP_CHANGE_STATE_TO_APPROVAD = 60;
+    short GROUP_CHANGE_STATE_TO_APPROVAD = 60;
 
-    public final short GROUP_CHANGE_STATE_TO_CANCELLED = 61;
+    short GROUP_CHANGE_STATE_TO_CANCELLED = 61;
 
-    public final short GROUP_CHANGE_STATE_TO_ON_HOLD = 62;
+    short GROUP_CHANGE_STATE_TO_ON_HOLD = 62;
 
-    public final short GROUP_CHANGE_STATE_TO_ON_CLOSED = 63;
+    short GROUP_CHANGE_STATE_TO_ON_CLOSED = 63;
 
-    public final short GROUP_APPLY_CHARGES_TO_GROUP_ACCOUNT = 64;
+    short GROUP_APPLY_CHARGES_TO_GROUP_ACCOUNT = 64;
 
-    public final short GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT = 65;
+    short GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT = 65;
 
-    public final short GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT = 66;
+    short GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT = 66;
 
-    public final short GROUP_WAIVE_DUE_AMOUNT = 68;
+    short GROUP_WAIVE_DUE_AMOUNT = 68;
 
-    public final short GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT = 69;
+    short GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT = 69;
 
-    public final short GROUP_ADD_NOTES_TO_ACCOUNT = 70;
+    short GROUP_ADD_NOTES_TO_ACCOUNT = 70;
 
-    public final short GROUP_EDIT_GROUP = 71;
+    short GROUP_EDIT_GROUP = 71;
 
-    public final short GROUP_CHANGE_CENTER_MEMBERSHIP = 72;
+    short GROUP_CHANGE_CENTER_MEMBERSHIP = 72;
 
-    public final short GROUP_TRANSFER_THE_GROUP = 73;
+    short GROUP_TRANSFER_THE_GROUP = 73;
 
-    public final short GROUP_EDIT_MEETING_SCHEDULE = 74;
+    short GROUP_EDIT_MEETING_SCHEDULE = 74;
 
-    public final short GROUP_ADD_EDIT_HISTORICAL_DATA = 75;
+    short GROUP_ADD_EDIT_HISTORICAL_DATA = 75;
 
-    public final short GROUP_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 76;
+    short GROUP_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 76;
 
-    public final short GROUP_BLACKLIST_A_GROUP = 77;
+    short GROUP_BLACKLIST_A_GROUP = 77;
 
     // Center
-    public final short CENTER_ADD_NOTE_TO_CENTER = 87;
+    short CENTER_ADD_NOTE_TO_CENTER = 87;
 
-    public final short CENTER_CREATE_NEW_CENTER = 79;
+    short CENTER_CREATE_NEW_CENTER = 79;
 
-    public final short CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS = 80;
+    short CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS = 80;
 
-    public final short CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT = 82;
+    short CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT = 82;
 
-    public final short CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT = 83;
+    short CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT = 83;
 
-    public final short CENTER_WAIVE_DUE_AMOUNT = 85;
+    short CENTER_WAIVE_DUE_AMOUNT = 85;
 
-    public final short CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT = 86;
+    short CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT = 86;
 
-    public final short CENTER_ADD_NOTES_TO_ACCOUNT = 87;
+    short CENTER_ADD_NOTES_TO_ACCOUNT = 87;
 
-    public final short CENTER_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 88;
+    short CENTER_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 88;
 
-    public final short PRODUCT_DEFINITION = 89;
+    short PRODUCT_DEFINITION = 89;
 
-    public final short CENTER_EDIT_STATUS = 81;
+    short CENTER_EDIT_STATUS = 81;
 
-    public final short CENTER_EDIT_CENTER_STATUS = 186;
+    short CENTER_EDIT_CENTER_STATUS = 186;
 
     // Product definition
-    public final short DEFINE_NEW_PRODUCT_CATEGORIES = 91;
+    short DEFINE_NEW_PRODUCT_CATEGORIES = 91;
 
-    public final short EDIT_PRODUCT_CATEGORIES = 92;
+    short EDIT_PRODUCT_CATEGORIES = 92;
 
-    public final short UPDATE_LATENESS_DORMANCY = 195;
+    short UPDATE_LATENESS_DORMANCY = 195;
 
     // loan product
-    public final short DEFINE_NEW_LOAN_PRODUCT_INSTANCE = 94;
+    short DEFINE_NEW_LOAN_PRODUCT_INSTANCE = 94;
 
-    public final short EDIT_LOAN_PRODUCT = 95;
+    short EDIT_LOAN_PRODUCT = 95;
 
     // saving product
-    public final short DEFINE_NEW_SAVING_PRODUCT_INSTANCE = 97;
+    short DEFINE_NEW_SAVING_PRODUCT_INSTANCE = 97;
 
-    public final short EDIT_SAVING_PRODUCT = 98;
-    public final short LOAN_MANAGEMENT = 99;
+    short EDIT_SAVING_PRODUCT = 98;
+    short LOAN_MANAGEMENT = 99;
 
     // Loan management
-    public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;
+    short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;
 
-    public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SUBMIT_FOR_APPROVAL_STATE = 102;
+    short LOAN_CREATE_LOAN_ACCOUNT_IN_SUBMIT_FOR_APPROVAL_STATE = 102;
 
-    public final short LOAN_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL = 103;
+    short LOAN_CHANGE_STATE_TO_SAVE_FOR_LATER_AND_SUBMIT_FOR_APPROVAL = 103;
 
-    public final short LOAN_CHANGE_STATE_TO_APPROVAD = 104;
+    short LOAN_CHANGE_STATE_TO_APPROVAD = 104;
 
-    public final short LOAN_CHANGE_STATE_TO_CANCELLED = 105;
+    short LOAN_CHANGE_STATE_TO_CANCELLED = 105;
 
-    public final short LOAN_CHANGE_STATE_TO_DISBURSED_TO_LOAN_OFFICER = 106;
+    short LOAN_CHANGE_STATE_TO_DISBURSED_TO_LOAN_OFFICER = 106;
 
-    public final short LOAN_CHANGE_STATE_TO_ACTIVE_IN_GOOD_STANDING = 107;
+    short LOAN_CHANGE_STATE_TO_ACTIVE_IN_GOOD_STANDING = 107;
 
-    public final short LOAN_CHANGE_STATE_TO_IN_ARREARS = 108;
+    short LOAN_CHANGE_STATE_TO_IN_ARREARS = 108;
 
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_WRITTEN_OFF = 109;
+    short LOAN_CHANGE_STATE_TO_CLOSED_WRITTEN_OFF = 109;
 
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_RESCHEDULE = 110;
+    short LOAN_CHANGE_STATE_TO_CLOSED_RESCHEDULE = 110;
 
-    public final short LOAN_CHANGE_STATE_TO_CLOSED_OBLIGATION_MET = 111;
+    short LOAN_CHANGE_STATE_TO_CLOSED_OBLIGATION_MET = 111;
 
-    public final short LOAN_MODIFY_THE_DEFAULTS_AMOUNT = 112;
+    short LOAN_MODIFY_THE_DEFAULTS_AMOUNT = 112;
 
     // savings
-    public final short SAVINGS_APPLY_ADJUSTMENT = 186;
+    short SAVINGS_APPLY_ADJUSTMENT = 186;
 
     // Loan Transactions
-    public final short LOAN_CAN_ADD_NOTES_TO_LOAN = 179;
+    short LOAN_CAN_ADD_NOTES_TO_LOAN = 179;
 
-    public final short LOAN_APPLY_FEE_MISC_CHARGES_TO_ACCOUNT = 114;
+    short LOAN_APPLY_FEE_MISC_CHARGES_TO_ACCOUNT = 114;
 
-    public final short LOAN_MAKE_PAYMENT_TO_ACCOUNT = 115;
+    short LOAN_MAKE_PAYMENT_TO_ACCOUNT = 115;
 
-    public final short LOAN_MAKE_ADJUSTMENT_ENTRY_TO_ACCOUNT = 116;
+    short LOAN_MAKE_ADJUSTMENT_ENTRY_TO_ACCOUNT = 116;
 
-    public final short LOAN_EDIT_ACCOUNT_INFORMATION = 117;
+    short LOAN_EDIT_ACCOUNT_INFORMATION = 117;
 
-    public final short LOAN_WAIVE_PANELTY = 118;
+    short LOAN_WAIVE_PANELTY = 118;
 
-    public final short LOAN_WAIVE_FEE_INSTALLMENT = 119;
+    short LOAN_WAIVE_FEE_INSTALLMENT = 119;
 
-    public final short LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT = 120;
+    short LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT = 120;
 
-    public final short GROUP_UPDATE_STATUS = 121;
+    short GROUP_UPDATE_STATUS = 121;
 
-    public final short GROUP_CREATE_GROUP = 122;
+    short GROUP_CREATE_GROUP = 122;
 
-    public final short CUSTOMER_ADD_NOTES_TO_CENTER_GROUP_CLIENT = 123;
+    short CUSTOMER_ADD_NOTES_TO_CENTER_GROUP_CLIENT = 123;
 
-    public final short CUSTOMER_ADD_HISTORICAL_DATA_TO_CENTER_GROUP_CLIENT = 124;
+    short CUSTOMER_ADD_HISTORICAL_DATA_TO_CENTER_GROUP_CLIENT = 124;
 
-    public final short CLIENT_CREATE_CLIENT = 125;
+    short CLIENT_CREATE_CLIENT = 125;
 
-    public final short CLIENT_UPDATE_PERSONNEL_INFO = 126;
+    short CLIENT_UPDATE_PERSONNEL_INFO = 126;
 
-    public final short CLIENT_UPDATE_STATUS = 127;
+    short CLIENT_UPDATE_STATUS = 127;
 
-    public final short LOAN_CREATE_LOAN = 128;
+    short LOAN_CREATE_LOAN = 128;
 
-    public final short LOAN_UPDATE_LOAN = 129;
+    short LOAN_UPDATE_LOAN = 129;
 
-    public final short LOAN_UPDATE_LOAN_STATUS = 130;
+    short LOAN_UPDATE_LOAN_STATUS = 130;
 
-    public final short APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS = 131;
+    short APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS = 131;
 
-    public final short APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS = 132;
+    short APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS = 132;
 
-    public final short MEETING_UPDATE_MEETING = 133;
+    short MEETING_UPDATE_MEETING = 133;
 
-    public final short MEETING_CREATE_MEETING = 134;
+    short MEETING_CREATE_MEETING = 134;
 
-    public final short MEETING_CREATE_CLIENT_MEETING = 121;
+    short MEETING_CREATE_CLIENT_MEETING = 121;
 
-    public final short MEETING_UPDATE_CLIENT_MEETING = 52;
+    short MEETING_UPDATE_CLIENT_MEETING = 52;
 
-    public final short MEETING_CREATE_GROUP_MEETING = 122;
+    short MEETING_CREATE_GROUP_MEETING = 122;
 
-    public final short MEETING_UPDATE_GROUP_MEETING = 74;
+    short MEETING_UPDATE_GROUP_MEETING = 74;
 
-    public final short MEETING_CREATE_CENTER_MEETING = 128;
+    short MEETING_CREATE_CENTER_MEETING = 128;
 
-    public final short MEETING_UPDATE_CENTER_MEETING = 127;
+    short MEETING_UPDATE_CENTER_MEETING = 127;
 
-    public final short PERSONNEL_EDIT_SELF_INFO = 135;
+    short PERSONNEL_EDIT_SELF_INFO = 135;
 
-    public final short SAVINGS_CREATE_SAVINGS = 137;
+    short SAVINGS_CREATE_SAVINGS = 137;
 
-    public final short SAVINGS_UPDATE_SAVINGS = 138;
+    short SAVINGS_UPDATE_SAVINGS = 138;
 
-    public final short SAVINGS_CLOSE_SAVINGS_ACCOUNT = 139;
+    short SAVINGS_CLOSE_SAVINGS_ACCOUNT = 139;
 
-    public final short SAVINGS_CHANGE_STATUS = 140;
+    short SAVINGS_CHANGE_STATUS = 140;
 
-    public final short ADMINISTER_REPORTS = 142;
+    short ADMINISTER_REPORTS = 142;
 
-    public final short ANALYSIS = 150;
+    short ANALYSIS = 150;
 
-    public final short CLIENTSDETAILVIEW = 152;
+    short CLIENTSDETAILVIEW = 152;
 
-    public final short CLIENTSPRODUCTHISTORY = 153;
+    short CLIENTSPRODUCTHISTORY = 153;
 
-    public final short BRANCHPERFORMANCE = 164;
+    short BRANCHPERFORMANCE = 164;
 
-    public final short AREAPERFORMANCE = 165;
+    short AREAPERFORMANCE = 165;
 
-    public final short COLLECTIONSHEET = 159;
+    short COLLECTIONSHEET = 159;
 
-    public final short LOANDISTRIBUTION = 172;
+    short LOANDISTRIBUTION = 172;
 
-    public final short BRANCHDISBURSEMENT = 173;
+    short BRANCHDISBURSEMENT = 173;
 
-    public final short STAFFWISEREPORT = 160;
+    short STAFFWISEREPORT = 160;
 
-    public final short BRANCHWISEREPORT = 161;
+    short BRANCHWISEREPORT = 161;
 
-    public final short CAN_VIEW_DAILY_PORTFOLIO = 176;
+    short CAN_VIEW_DAILY_PORTFOLIO = 176;
 
-    public final short KENDRA_MEETING = 177;
+    short KENDRA_MEETING = 177;
 
-    public final short LOAN_CAN_REPAY_LOAN = 178;
+    short LOAN_CAN_REPAY_LOAN = 178;
 
-    public final short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
+    short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
 
-    public final short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
+    short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
 
-    public final short LOAN_CAN_DISBURSE_LOAN = 189;
+    short LOAN_CAN_DISBURSE_LOAN = 189;
 
-    public final short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
+    short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
 
-    public final short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
+    short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
 
-    public final short CAN_APPROVE_LOANS_IN_BULK = 192;
+    short CAN_APPROVE_LOANS_IN_BULK = 192;
 
-    public final short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
+    short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
 
-    public final short REPORTS_MANAGEMENT = 141;
+    short REPORTS_MANAGEMENT = 141;
 
     // FIXME: both use the same ID? Is this a mistake?
-    public final short ADMINISTER_REPORTPARAMS = 142;
-    public final short ADMINISTER_REPORTDS = 142;
+    short ADMINISTER_REPORTPARAMS = 142;
+    short ADMINISTER_REPORTDS = 142;
 
-    public final short LOAN_CAN_APPLY_CHARGES = 131;
+    short LOAN_CAN_APPLY_CHARGES = 131;
 
     /**
      * What is this? It is the parent of
      * {@link #CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS} but I'm not sure why it didn't
      * have its own constant until now.
      */
-    public final short BULK = 196;
+    short BULK = 196;
 
-    public final short CLIENT_CAN_APPLY_CHARGES = 198;
-    public final short GROUP_CAN_APPLY_CHARGES = 199;
-    public final short CENTER_CAN_APPLY_CHARGES = 200;
+    short CLIENT_CAN_APPLY_CHARGES = 198;
+    short GROUP_CAN_APPLY_CHARGES = 199;
+    short CENTER_CAN_APPLY_CHARGES = 200;
 
-    public final short CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS = 201;
-    public final short CAN_REVERSE_LOAN_DISBURSAL = 202;
+    short CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS = 201;
+    short CAN_REVERSE_LOAN_DISBURSAL = 202;
 
-    public final short CONFIGURATION_MANAGEMENT = 203;
-    public final short CAN_DEFINE_LABELS = 204;
+    short CONFIGURATION_MANAGEMENT = 203;
+    short CAN_DEFINE_LABELS = 204;
 
-    public final short CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = 205;
+    short CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = 205;
 
     // Remove Group MemberShip
-    public final short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
+    short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
 
-    public final short CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK = 236;
+    short CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK = 236;
 
-    public final short CAN_VIEW_GENERAL_LEDGER = 237;
+    short CAN_VIEW_GENERAL_LEDGER = 237;
 
-    public final short CAN_VIEW_COLLECTION_SHEET_REPORT = 229;
+    short CAN_VIEW_COLLECTION_SHEET_REPORT = 229;
 
     // Add Group MemberShip
-    public final short CAN_ADD_CLIENTS_TO_GROUPS = 208;
+    short CAN_ADD_CLIENTS_TO_GROUPS = 208;
 
     // Limiting product combination
-    public final short PRODUCT_MIX = 209;
+    short PRODUCT_MIX = 209;
 
-    public final short CAN_DEFINE_PRODUCT_MIX = 210;
+    short CAN_DEFINE_PRODUCT_MIX = 210;
 
-    public final short CAN_EDIT_PRODUCT_MIX = 211;
+    short CAN_EDIT_PRODUCT_MIX = 211;
 
-    public final short CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
+    short CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
 
-    public final short CAN_DEFINE_LOOKUP_OPTIONS = 213;
+    short CAN_DEFINE_LOOKUP_OPTIONS = 213;
 
-    public final short UPLOAD_REPORT_TEMPLATE = 214;
+    short UPLOAD_REPORT_TEMPLATE = 214;
 
-    public final short VIEW_REPORTS = 215;
+    short VIEW_REPORTS = 215;
 
-    public final short EDIT_REPORT_INFORMATION = 216;
+    short EDIT_REPORT_INFORMATION = 216;
 
-    public final short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET = 217;
+    short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET = 217;
 
-    public final short CAN_REDO_LOAN_DISPURSAL = 218;
+    short CAN_REDO_LOAN_DISPURSAL = 218;
 
-    public final short CAN_DEFINE_ACCEPTED_PAYMENT_TYPE = 219;
+    short CAN_DEFINE_ACCEPTED_PAYMENT_TYPE = 219;
 
-    public final short DEFINE_REPORT_CATEGORY = 220;
+    short DEFINE_REPORT_CATEGORY = 220;
 
-    public final short VIEW_REPORT_CATEGORY = 221;
+    short VIEW_REPORT_CATEGORY = 221;
 
-    public final short DELETE_REPORT_CATEGORY = 222;
+    short DELETE_REPORT_CATEGORY = 222;
 
-    public final short DOWNLOAD_REPORT_TEMPLATE = 223;
+    short DOWNLOAD_REPORT_TEMPLATE = 223;
 
-    public final short CAN_DEFINE_CUSTOM_FIELD = 224;
+    short CAN_DEFINE_CUSTOM_FIELD = 224;
 
-    public final short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
+    short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
 
     /**
      * This permission is used for multiple operations:
@@ -476,27 +476,27 @@ public interface SecurityConstants {
      * have reasonable overlap.
      *
      */
-    public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
+    short CAN_VIEW_ADMIN_DOCUMENTS = 226;
 
     // FIXME: remove this; CONFIGURATION_MANAGEMENT should be parent for
     // CAN_VIEW_SYSTEM_INFO
-    public final short SYSTEM_INFORMATION = 227;
+    short SYSTEM_INFORMATION = 227;
 
     /** Can view database driver version, svn build revision, etc. */
-    public final short CAN_VIEW_SYSTEM_INFO = 228;
+    short CAN_VIEW_SYSTEM_INFO = 228;
 
     /** Can view install-time configuration settings. */
-    public final short CAN_VIEW_ORGANIZATION_SETTINGS = 230;
+    short CAN_VIEW_ORGANIZATION_SETTINGS = 230;
 
-    public final short CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT = 231;
+    short CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT = 231;
 
-    public final short CAN_VIEW_BRANCH_REPORT = 232;
+    short CAN_VIEW_BRANCH_REPORT = 232;
 
-    public final short CAN_IMPORT_TRANSACTIONS = 233;
+    short CAN_IMPORT_TRANSACTIONS = 233;
 
     /** Can shutdown Mifos */
-    public final short CAN_SHUTDOWN_MIFOS = 234;
+    short CAN_SHUTDOWN_MIFOS = 234;
 
     /** Can define new holidays */
-    public final short CAN_DEFINE_HOLIDAY = 235;
+    short CAN_DEFINE_HOLIDAY = 235;
 }
