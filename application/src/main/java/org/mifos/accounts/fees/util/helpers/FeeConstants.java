@@ -23,75 +23,75 @@ package org.mifos.accounts.fees.util.helpers;
 public interface FeeConstants {
 
     // Constants being used in to name the collection in masterdatareterival
-    public static final String LOCALEID = "localeId";
-    public static final String CATAGORY = "catagory";
-    public static final String PAYMENT = "payment";
-    public static final String FORMULA = "formula";
-    public static final String STATUS = "status";
+    String LOCALEID = "localeId";
+    String CATAGORY = "catagory";
+    String PAYMENT = "payment";
+    String FORMULA = "formula";
+    String STATUS = "status";
     // Master data Entity Name
-    public static final String FEECATEGORY = "CategoryType";
-    public static final String FEEFORMULA = "FeeFormulaMaster";
-    public static final String FEEPAYMENT = "FeePayment";
-    public static final String FEESTATUS = "FeeStatus";
+    String FEECATEGORY = "CategoryType";
+    String FEEFORMULA = "FeeFormulaMaster";
+    String FEEPAYMENT = "FeePayment";
+    String FEESTATUS = "FeeStatus";
 
     // Fees valueobject name
-    public static final String FEES = "fees";
+    String FEES = "fees";
     // Default Admin
-    public static final String YES = "Yes";
-    public static final String NO = "No";
+    String YES = "Yes";
+    String NO = "No";
 
     // Constansts used in Action Forwards
-    public static final String VIEWFEES = "viewFees";
-    public static final String CREATEFEES = "createFees";
-    public static final String CREATEFEESPREVIEW = "createFeesPreview";
-    public static final String CREATEFEESCONFIRMATION = "createFeesConfirmation";
-    public static final String ADMIN = "admin";
-    public static final String EDITFEEDETAILS = "editFeeDetails";
-    public static final String FEEDETAILS = "feeDetails";
-    public static final String VIEWEDITFEES = "viewEditFees";
-    public static final String PREVIEWFEEDETAILS = "previewFeeDetails";
+    String VIEWFEES = "viewFees";
+    String CREATEFEES = "createFees";
+    String CREATEFEESPREVIEW = "createFeesPreview";
+    String CREATEFEESCONFIRMATION = "createFeesConfirmation";
+    String ADMIN = "admin";
+    String EDITFEEDETAILS = "editFeeDetails";
+    String FEEDETAILS = "feeDetails";
+    String VIEWEDITFEES = "viewEditFees";
+    String PREVIEWFEEDETAILS = "previewFeeDetails";
 
     // Errors
-    public static final String VERSIONNOMATCHINGPROBLEM = "error.versionnodonotmatch";
-    public static final String AMOUNTCANNOTBEZERO = "error.amountCannotBeNull";
+    String VERSIONNOMATCHINGPROBLEM = "error.versionnodonotmatch";
+    String AMOUNTCANNOTBEZERO = "error.amountCannotBeNull";
 
-    public static final String GLCODE_LIST = "glCodeList";
-    public static final String PAYMENTID = "paymentId";
-    public static final String TIMEOFCHARGES = "TimeOfCharges";
-    public static final String CUSTOMERTIMEOFCHARGES = "CustomerTimeOfCharges";
-    public static final String CATEGORYLIST = "CategoryList";
-    public static final String FORMULALIST = "FormulaList";
-    public static final String STATUSLIST = "StatusList";
-    public static final String FEE_FREQUENCY_TYPE_LIST = "feeFrequencyTypeList";
+    String GLCODE_LIST = "glCodeList";
+    String PAYMENTID = "paymentId";
+    String TIMEOFCHARGES = "TimeOfCharges";
+    String CUSTOMERTIMEOFCHARGES = "CustomerTimeOfCharges";
+    String CATEGORYLIST = "CategoryList";
+    String FORMULALIST = "FormulaList";
+    String STATUSLIST = "StatusList";
+    String FEE_FREQUENCY_TYPE_LIST = "feeFrequencyTypeList";
 
-    public static final String PRODUCT_FEES = "productFees";
-    public static final String CUSTOMER_FEES = "customerFees";
+    String PRODUCT_FEES = "productFees";
+    String CUSTOMER_FEES = "customerFees";
 
-    public static final String INACTIVE = "FEES_INACTIVE";
+    String INACTIVE = "FEES_INACTIVE";
 
-    public static final String RATE_AND_FORMULA = "RateAndFormula";
-    public static final String RATE_OR_AMOUNT = "RateOrAmount";
+    String RATE_AND_FORMULA = "RateAndFormula";
+    String RATE_OR_AMOUNT = "RateOrAmount";
 
     // error messages for BO
-    public static final String INVALID_FEE_NAME = "errors.Fee.invalidName";
-    public static final String INVALID_FEE_CATEGORY = "errors.Fee.invalidCategory";
-    public static final String INVALID_GLCODE = "errors.Fee.invalidGLCode";
-    public static final String INVALID_FEE_FREQUENCY_TYPE = "errors.Fee.invalidFrequencyType";
-    public static final String INVALID_FEE_PAYEMENT_TYPE = "errors.Fee.invalidPaymentType";
-    public static final String INVALID_FEE_FREQUENCY = "errors.Fee.invalidFrequency";
-    public static final String INVALID_FEE_RATE_OR_FORMULA = "errors.Fee.invalidRateOrFormula";
-    public static final String INVALID_FEE_AMOUNT = "errors.Fee.invalidAmount";
-    public static final String FEE_CREATE_ERROR = "errors.Fee.create";
-    public static final String FEE_UPDATE_ERROR = "errors.Fee.update";
-    public static final String INVALID_FEE = "errors.Fee.invalid";
-    public static final String RATE = "Fees.error.rate";
-    public static final String AMOUNT = "Fees.error.amount";
+    String INVALID_FEE_NAME = "errors.Fee.invalidName";
+    String INVALID_FEE_CATEGORY = "errors.Fee.invalidCategory";
+    String INVALID_GLCODE = "errors.Fee.invalidGLCode";
+    String INVALID_FEE_FREQUENCY_TYPE = "errors.Fee.invalidFrequencyType";
+    String INVALID_FEE_PAYEMENT_TYPE = "errors.Fee.invalidPaymentType";
+    String INVALID_FEE_FREQUENCY = "errors.Fee.invalidFrequency";
+    String INVALID_FEE_RATE_OR_FORMULA = "errors.Fee.invalidRateOrFormula";
+    String INVALID_FEE_AMOUNT = "errors.Fee.invalidAmount";
+    String FEE_CREATE_ERROR = "errors.Fee.create";
+    String FEE_UPDATE_ERROR = "errors.Fee.update";
+    String INVALID_FEE = "errors.Fee.invalid";
+    String RATE = "Fees.error.rate";
+    String AMOUNT = "Fees.error.amount";
 
     // error messages for UI
-    public static final String ERRORS_SPECIFY_VALUE = "errors.enter";
-    public static final String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";
-    public static final String ERRORS_SPECIFY_RATE_AND_FORMULA = "errors.rateAndFormulaId";
-    public static final String ERRORS_SELECT_STATUS = "errors.selectStatus";
-    public static final String ERRORS_GENERIC = "errors.generic";
-    public static final String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+    String ERRORS_SPECIFY_VALUE = "errors.enter";
+    String ERRORS_SPECIFY_AMOUNT_OR_RATE = "errors.amountOrRate";
+    String ERRORS_SPECIFY_RATE_AND_FORMULA = "errors.rateAndFormulaId";
+    String ERRORS_SELECT_STATUS = "errors.selectStatus";
+    String ERRORS_GENERIC = "errors.generic";
+    String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
 }
