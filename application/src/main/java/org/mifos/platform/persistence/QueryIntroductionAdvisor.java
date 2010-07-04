@@ -17,6 +17,36 @@ public class QueryIntroductionAdvisor extends DefaultIntroductionAdvisor {
      */
     @Override
     public boolean matches(Class clazz) {
-        return false; // super.matches(clazz);
+
+        // FIXME - keithw - quick hack at reducing scope of advice to avoid matching all classes
+        if (clazz.getName().startsWith("java.")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("com.")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.spring")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.hibernate")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.platform.") && clazz.getName().contains("persistence")) {
+            return true;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.") && clazz.getName().contains("persistence.Fee")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.")) {
+            return false;
+        }
+
+        return true;
     }
 }

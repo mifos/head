@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/login")
+@SuppressWarnings("PMD")
 public class LoginController {
 
     protected LoginController() {

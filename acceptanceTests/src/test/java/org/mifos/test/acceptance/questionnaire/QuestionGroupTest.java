@@ -40,13 +40,18 @@ import static org.testng.Assert.assertEquals;
 @ContextConfiguration(locations = {"classpath:ui-test-context.xml"})
 @Test(sequential = true, groups = {"client", "acceptance", "ui", "smoke"})
 public class QuestionGroupTest extends UiTestCaseBase {
+
     private AppLauncher appLauncher;
+
     @Autowired
     private DriverManagerDataSource dataSource;
+
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String title1;
     private String title2;
@@ -72,6 +77,12 @@ public class QuestionGroupTest extends UiTestCaseBase {
 
     public void createQuestionGroup() {
         AdminPage adminPage = getAdminPage();
+
+        // pre-check
+//        ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(adminPage);
+//        String[] questionGroups = viewQuestionGroupsPage.getAllQuestionGroups();
+//        assertEquals(questionGroups.length, 0);
+
         CreateQuestionGroupPage createQuestionGroupPage = getCreateQuestionGroupPage(adminPage);
 
         testMissingMandatoryInputs(createQuestionGroupPage);
@@ -84,6 +95,8 @@ public class QuestionGroupTest extends UiTestCaseBase {
         testShouldAllowDuplicateTitlesForQuestionGroup();
 
         adminPage = new AdminPage(selenium);
+
+        // post question group creation check.
         ViewAllQuestionGroupsPage viewQuestionGroupsPage = getViewQuestionGroupsPage(adminPage);
         testViewQuestionGroups(viewQuestionGroupsPage);
 

@@ -10,20 +10,28 @@
     <beans:bean id="loginFormAuthentication" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:property name="loginFormUrl" value="/login.ftl" />
 	</beans:bean>
+	
+	<beans:bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        <beans:property name="defaultTargetUrl" value="/custSearchAction.do?method=getHomePage" />
+        <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+    </beans:bean>
            
 	<http auto-config="false" entry-point-ref="loginFormAuthentication">
-		<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
+		<intercept-url pattern="/*.css*" filters="none" />
 		<intercept-url pattern="/login.ftl*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
     	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
-    	<!-- <form-login login-page="/login.ftl" default-target-url='/admin.ftl' always-use-default-target='true' /> -->
+    	<logout logout-success-url="/login.ftl?loggedout"/>
   	</http>
   	
   	<authentication-manager alias="authenticationManager">
 	    <authentication-provider ref="mifosAuthenticationProvider"/>
 	</authentication-manager>
 	
-  	<beans:bean id="myFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
+  	<beans:bean id="mifosLegacyAuthenticationFilter" class="org.mifos.security.authentication.MifosLegacyUsernamePasswordAuthenticationFilter">
+  		<beans:constructor-arg ref="loginServiceFacade" />
   		<beans:property name="authenticationManager" ref="authenticationManager" />
+  		<beans:property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
   	</beans:bean>
   	
     <beans:bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
@@ -69,15 +77,5 @@
 		<sec:intercept-url pattern="/**" access="hasRole('ROLE_FULLY_AUTHENTICATED_USER')" />
 		<sec:form-login login-page="/login.ftl" />
 	</sec:http>
-	
-	<sec:authentication-manager alias="authenticationManager">
-	    <sec:authentication-provider ref="mifosAuthenticationProvider"/>
-	</sec:authentication-manager>
- 	
-    <bean id="mifosAuthenticationProvider" class="org.mifos.security.authentication.MifosDaoAuthenticationProvider">
-        <property name="userDetailsService" ref="mifosUserService" />
-    </bean>
-
-    <bean id="mifosUserService" class="org.mifos.security.authentication.AuthenticationDaoHibernate" />
 </beans>
 -->

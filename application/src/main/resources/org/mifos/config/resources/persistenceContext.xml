@@ -101,8 +101,7 @@
         <constructor-arg ref="queryInterceptor"/>
     </bean>
 
-    <bean id="abstractDaoTarget"
-          class="org.mifos.platform.persistence.GenericDaoHibernateImpl" abstract="true">
+    <bean id="abstractDaoTarget" class="org.mifos.platform.persistence.GenericDaoHibernateImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

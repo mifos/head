@@ -25,32 +25,80 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.mifos.application.servicefacade.LoginActivityDto;
+import org.mifos.application.servicefacade.LoginServiceFacade;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.UserContext;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * I am a custom authentication filter implementation of {@link UsernamePasswordAuthenticationFilter}.
+ *
+ * A custom filter is needed as in the legacy authentication process, certain things were set in the session
+ * that are used by the legacy views (jsp pages). When struts and jsp is completely removed, we can revert back to using
+ * the out of the box authentication filter that is created using the spring security namespace.
+ */
 public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public MifosLegacyUsernamePasswordAuthenticationFilter() {
+    final LoginServiceFacade loginServiceFacade;
+
+    public MifosLegacyUsernamePasswordAuthenticationFilter(final LoginServiceFacade loginServiceFacade) {
         super();
-    }
-
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException failed) throws IOException, ServletException {
-
-        // do legacy unsuccessful authentication stuff here
-
-        super.unsuccessfulAuthentication(request, response, failed);
+        this.loginServiceFacade = loginServiceFacade;
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             Authentication authResult) throws IOException, ServletException {
 
-        // do legacy successful authentication here
+        final String username = obtainUsername(request);
+        final String password = obtainPassword(request);
+
+        handleLegacySuccessfulAuthentication(request, username, password);
 
         super.successfulAuthentication(request, response, authResult);
+    }
+
+    private void handleLegacySuccessfulAuthentication(HttpServletRequest request, final String username,
+            final String password) {
+        try {
+            LoginActivityDto loginActivity = loginServiceFacade.login(username, password);
+
+            request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, loginActivity.getActivityContext());
+
+            UserContext userContext = loginActivity.getUserContext();
+            if (loginActivity.isPasswordChanged()) {
+                HttpSession hs = request.getSession(false);
+                hs.setAttribute(Constants.USERCONTEXT, userContext);
+                hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
+            } else {
+                String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+                HttpSession session = request.getSession();
+                FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
+                try {
+                    flowManager.addObjectToFlow(currentFlowKey, Constants.TEMPUSERCONTEXT, userContext);
+                } catch (PageExpiredException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Short passwordChanged = loginActivity.getPasswordChangedFlag();
+            if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
+                FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
+                if (flowManager != null) {
+                    flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
+                    request.setAttribute(Constants.CURRENTFLOWKEY, null);
+                }
+            }
+        } catch (ApplicationException e1) {
+            // IGNORE as shouldn't happen
+        }
     }
 }

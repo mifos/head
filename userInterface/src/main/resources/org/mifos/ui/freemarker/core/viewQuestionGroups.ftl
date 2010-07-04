@@ -36,7 +36,7 @@
         <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a id="header.link.yoursettings"
                                                                   href="yourSettings.do?method=get">Your settings</a>
 
-            &nbsp;|&nbsp; <a id="header.link.logout" href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;|&nbsp; <a id="logout_link" href="j_spring_security_logout">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         </td>
     </tr>
     <tr>

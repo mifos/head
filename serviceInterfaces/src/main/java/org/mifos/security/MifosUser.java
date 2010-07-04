@@ -28,6 +28,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 /**
  *
  */
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
 public class MifosUser implements UserDetails {
 
     public static final String FULLY_AUTHENTICATED_USER = "ROLE_FULLY_AUTHENTICATED_USER";
@@ -40,6 +42,7 @@ public class MifosUser implements UserDetails {
     private final boolean accountNonLocked;
     private final Collection<GrantedAuthority> authorities;
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
     public MifosUser(String username, byte[] password, boolean enabled, boolean accountNonExpired,
             boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
         this.username = username;
@@ -61,6 +64,7 @@ public class MifosUser implements UserDetails {
         return new String(password);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
     public byte[] getPasswordAsBytes() {
         return password;
     }

@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -46,10 +47,13 @@ public class LoginServiceFacadeWebTier implements LoginServiceFacade {
             throw new ApplicationException(LoginConstants.KEYINVALIDUSER);
         }
 
-        UserContext userContext = user.login(password);
+        try {
+            UserContext userContext = user.login(password);
+            ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
 
-        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
-
-        return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+            return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+        } catch (PersonnelException e) {
+            throw new ApplicationException(e.getKey());
+        }
     }
 }
