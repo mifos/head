@@ -89,7 +89,7 @@ public abstract class TransactionImport {
      *
      * @return numberOfTransactionsPerRow an integer
      */
-    public int getNumberOfTransactionsPerRow() {
-        return 1;
+    public int getSuccessfullyParsedRows() {
+        return -1;
     }
 }

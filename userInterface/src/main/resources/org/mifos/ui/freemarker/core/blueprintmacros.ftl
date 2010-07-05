@@ -54,6 +54,16 @@
  </div>
 [/#macro]
 
+[#macro crumbpairs breadcrumbs]
+<div class="bluedivs paddingLeft">
+	    [#list breadcrumbs?keys as text]
+  			[#if text_has_next]
+    			<a href="${breadcrumbs[text]}">[@spring.message text/]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.messageText text, text/]</span>
+  			[/#if]
+  		[/#list]
+ </div>
+[/#macro]
+
 [#macro crumb url]
 <div class="bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "tab.Admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "${url}"/]</span></div>
 [/#macro]

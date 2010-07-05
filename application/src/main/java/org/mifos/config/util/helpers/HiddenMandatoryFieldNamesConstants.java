@@ -22,71 +22,71 @@ package org.mifos.config.util.helpers;
 
 public interface HiddenMandatoryFieldNamesConstants {
 
-    public static final String EXTERNAL_ID = "ExternalId";
+    String EXTERNAL_ID = "ExternalId";
 
-    public static final String ADDRESS1 = "Address1";
+    String ADDRESS1 = "Address1";
 
-    public static final String ADDRESS3 = "Address3";
+    String ADDRESS3 = "Address3";
 
-    public static final String CITY = "City";
+    String CITY = "City";
 
-    public static final String STATE = "State";
+    String STATE = "State";
 
-    public static final String COUNTRY = "Country";
+    String COUNTRY = "Country";
 
-    public static final String POSTAL_CODE = "PostalCode";
+    String POSTAL_CODE = "PostalCode";
 
-    public static final String RECEIPT_ID = "ReceiptId";
+    String RECEIPT_ID = "ReceiptId";
 
-    public static final String COLLATERAL_TYPE = "CollateralType";
+    String COLLATERAL_TYPE = "CollateralType";
 
-    public static final String PURPOSE_OF_LOAN = "PurposeOfLoan";
+    String PURPOSE_OF_LOAN = "PurposeOfLoan";
 
-    public static final String SOURCE_OF_FUND = "SourceOfFund";
+    String SOURCE_OF_FUND = "SourceOfFund";
 
-    public static final String COLLATERAL_NOTES = "CollateralNotes";
+    String COLLATERAL_NOTES = "CollateralNotes";
 
-    public static final String ASSIGN_CLIENTS = "AssignClients";
+    String ASSIGN_CLIENTS = "AssignClients";
 
-    public static final String ADDRESS2 = "Address2";
+    String ADDRESS2 = "Address2";
 
-    public static final String TRAINED = "Trained";
+    String TRAINED = "Trained";
 
-    public static final String ETHINICITY = "Ethinicity";
+    String ETHINICITY = "Ethinicity";
 
-    public static final String CITIZENSHIP = "Citizenship";
+    String CITIZENSHIP = "Citizenship";
 
-    public static final String HANDICAPPED = "Handicapped";
+    String HANDICAPPED = "Handicapped";
 
-    public static final String EDUCATION_LEVEL = "EducationLevel";
+    String EDUCATION_LEVEL = "EducationLevel";
 
-    public static final String PHOTO = "Photo";
+    String PHOTO = "Photo";
 
-    public static final String RECEIPT_DATE = "ReceiptDate";
+    String RECEIPT_DATE = "ReceiptDate";
 
-    public static final String MIDDLE_NAME = "MiddleName";
+    String MIDDLE_NAME = "MiddleName";
 
-    public static final String SECOND_LAST_NAME = "SecondLastName";
+    String SECOND_LAST_NAME = "SecondLastName";
 
-    public static final String GOVERNMENT_ID = "GovernmentId";
+    String GOVERNMENT_ID = "GovernmentId";
 
-    public static final String MARITAL_STATUS = "MaritalStatus";
+    String MARITAL_STATUS = "MaritalStatus";
 
-    public static final String POVERTY_STATUS = "PovertyStatus";
+    String POVERTY_STATUS = "PovertyStatus";
 
-    public static final String SPOUSE_FATHER_INFORMATION = "SpouseFatherInformation";
+    String SPOUSE_FATHER_INFORMATION = "SpouseFatherInformation";
 
-    public static final String FAMILY_DETAILS = "FamilyDetails";
+    String FAMILY_DETAILS = "FamilyDetails";
 
-    public static final String SPOUSE_FATHER_MIDDLE_NAME = "SpouseFatherMiddleName";
+    String SPOUSE_FATHER_MIDDLE_NAME = "SpouseFatherMiddleName";
 
-    public static final String SPOUSE_FATHER_SECOND_LAST_NAME = "SpouseFatherSecondLastName";
+    String SPOUSE_FATHER_SECOND_LAST_NAME = "SpouseFatherSecondLastName";
 
-    public static final String PHONE_NUMBER = "PhoneNumber";
+    String PHONE_NUMBER = "PhoneNumber";
 
-    public static final String TRAINED_DATE = "TrainedDate";
+    String TRAINED_DATE = "TrainedDate";
 
-    public static final String BUSINESS_ACTIVITIES = "BusinessActivities";
+    String BUSINESS_ACTIVITIES = "BusinessActivities";
 
-    public static final String NUMBER_OF_CHILDREN = "NumberOfChildren";
+    String NUMBER_OF_CHILDREN = "NumberOfChildren";
 }

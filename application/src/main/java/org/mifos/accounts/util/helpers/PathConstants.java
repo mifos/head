@@ -24,10 +24,10 @@ package org.mifos.accounts.util.helpers;
  * This class gives path constants for accounts modules.
  */
 public interface PathConstants {
-    public final String LOANACCOUNTSPATH = "loanAccounts";
-    public final String DISBURSELOAN = "loanDisbursement";
-    public final String APPLYADJUSTMENT = "applyAdjustment";
-    public final String EARLYREPAYMENT = "earlyRepayment";
-    public final String REPAYMENT = "repayment";
-    public final String PAYMENT = "payment";
+    String LOANACCOUNTSPATH = "loanAccounts";
+    String DISBURSELOAN = "loanDisbursement";
+    String APPLYADJUSTMENT = "applyAdjustment";
+    String EARLYREPAYMENT = "earlyRepayment";
+    String REPAYMENT = "repayment";
+    String PAYMENT = "payment";
 }

@@ -22,52 +22,52 @@ package org.mifos.customers.util.helpers;
 
 public interface CustomerSearchConstants {
 
-    public String GETPATHCUSTOMERSEARCH = "CustomerSearchAction";
+    String GETPATHCUSTOMERSEARCH = "CustomerSearchAction";
 
-    public String PERSONNELID = "personnelId";
-    public String OFFICEID = "officeId";
-    public String CUSTOMERLEVELID = "customerLevelId";
-    public String CUSTOMERLIST = "customerList";
-    public String LOADFORWARD = "LoadForward";
-    public Short LOADFORWARDLOANOFFICER = 1;
-    public String LOADFORWARDLOANOFFICER_SUCCESS = "load_branch";
-    public String LOADFORWARDNONLOANOFFICER_SUCCESS = "load_loanofficer";
-    public String LOADFORWARDOFFICE_SUCCESS = "load_success";
-    public String OFFICE = "Office";
-    public String PERSONNELLEVELID = "personnelLevelId";
-    public String PERSONNELSTATUSID = "personnelStatusId";
-    public String LOANOFFICERSLIST = "LoanOfficerslist";
-    public Short LOADFORWARDNONLOANOFFICER = 2;
-    public String OFFICELEVELID = "officeLevelId";
-    public String OFFICESEARCHID = "officeSearchId";
-    public String OFFICESLIST = "OfficesList";
-    public Short LOADFORWARDNONBRANCHOFFICE = 3;
-    public String SEARCH_SUCCESS = "search_sucess";
-    public String CUSTOMERSEARCHRESULTS = "CustomerSearchResults";
-    public String CUSTOMERSEARCSTRING = "searchString";
-    public String CUSTOMER_SEARCH_OFFICE_ID = "search_officeId";
-    public String CUSTOMERSEARCBRANCH = "searchBranch";
-    public String LOADALLBRANCHES_SUCCESS = "loadallbranches_success";
-    public String CENTER_ACTIVE = "CENTERACTIVE";
-    public String GROUP_ACTIVE = "GROUPACTIVE";
-    public String GROUP_ONHOLD = "GROUPONHOLD";
-    public Short CENTERACTIVE = 13;
-    public Short GROUPACTIVE = 9;
-    public Short GROUPONHOLD = 10;
+    String PERSONNELID = "personnelId";
+    String OFFICEID = "officeId";
+    String CUSTOMERLEVELID = "customerLevelId";
+    String CUSTOMERLIST = "customerList";
+    String LOADFORWARD = "LoadForward";
+    Short LOADFORWARDLOANOFFICER = 1;
+    String LOADFORWARDLOANOFFICER_SUCCESS = "load_branch";
+    String LOADFORWARDNONLOANOFFICER_SUCCESS = "load_loanofficer";
+    String LOADFORWARDOFFICE_SUCCESS = "load_success";
+    String OFFICE = "Office";
+    String PERSONNELLEVELID = "personnelLevelId";
+    String PERSONNELSTATUSID = "personnelStatusId";
+    String LOANOFFICERSLIST = "LoanOfficerslist";
+    Short LOADFORWARDNONLOANOFFICER = 2;
+    String OFFICELEVELID = "officeLevelId";
+    String OFFICESEARCHID = "officeSearchId";
+    String OFFICESLIST = "OfficesList";
+    Short LOADFORWARDNONBRANCHOFFICE = 3;
+    String SEARCH_SUCCESS = "search_sucess";
+    String CUSTOMERSEARCHRESULTS = "CustomerSearchResults";
+    String CUSTOMERSEARCSTRING = "searchString";
+    String CUSTOMER_SEARCH_OFFICE_ID = "search_officeId";
+    String CUSTOMERSEARCBRANCH = "searchBranch";
+    String LOADALLBRANCHES_SUCCESS = "loadallbranches_success";
+    String CENTER_ACTIVE = "CENTERACTIVE";
+    String GROUP_ACTIVE = "GROUPACTIVE";
+    String GROUP_ONHOLD = "GROUPONHOLD";
+    Short CENTERACTIVE = 13;
+    Short GROUPACTIVE = 9;
+    Short GROUPONHOLD = 10;
 
-    public String CENTERSEARCH = "centerSearch";
-    public String GROUPLIST = "GroupList";
-    public String ACCOUNTSEARCHRESULTS = "AccountSearchResultsDto";
-    public String CUSTOMERSFORSAVINGSACCOUNT = "customersForSavingsAccount";
-    public String LOANACCOUNTIDSEARCH = "loanAccountIdSearch";
-    public String IDSEARCH = "IdSearch";
+    String CENTERSEARCH = "centerSearch";
+    String GROUPLIST = "GroupList";
+    String ACCOUNTSEARCHRESULTS = "AccountSearchResultsDto";
+    String CUSTOMERSFORSAVINGSACCOUNT = "customersForSavingsAccount";
+    String LOANACCOUNTIDSEARCH = "loanAccountIdSearch";
+    String IDSEARCH = "IdSearch";
 
     // Exceptions
 
-    public String NAMEMANDATORYEXCEPTION = "errors.namemandatory";
-    public String OFFICEIDMANDATORYEXCEPTION = "errors.idmandatory";
+    String NAMEMANDATORYEXCEPTION = "errors.namemandatory";
+    String OFFICEIDMANDATORYEXCEPTION = "errors.idmandatory";
 
-    public short LOAN_TYPE = (short) 1;
-    public short SAVINGS_TYPE = (short) 2;
+    short LOAN_TYPE = (short) 1;
+    short SAVINGS_TYPE = (short) 2;
 
 }
