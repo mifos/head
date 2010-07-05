@@ -55,7 +55,6 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.UserContext;
@@ -184,7 +183,7 @@ public class PersonnelPersistence extends Persistence {
     }
 
     /**
-     * @deprecated use {@link AuthenticationDao#findPersonnelByUsername(String)}.
+     * @deprecated use {@link PersonnelDao#findPersonnelByUsername(String)}.
      */
     @Deprecated
     public PersonnelBO getPersonnelByUserName(String personnelUserName) throws PersistenceException {

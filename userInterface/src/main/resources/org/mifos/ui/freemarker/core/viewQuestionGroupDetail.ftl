@@ -44,8 +44,7 @@
                 <div class="marginTop15">
                     [#list Request.questionGroupDetail.sections as section]
                         ${section.name}<br/>
-                        <table width="80%" id="sections.table" name="sections.table" border="0"
-                            cellpadding="3" cellspacing="0">
+                        <table id="sections.table" name="sections.table">
                          <tr>
                              <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
                              <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>

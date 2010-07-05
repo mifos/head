@@ -51,7 +51,7 @@ public class NavigationHelper {
     }
 
     public HomePage navigateToHomePage() {
-        LoginPage loginPage = new AppLauncher(selenium).launchMifos().logout();
+        LoginPage loginPage = new AppLauncher(selenium).launchMifos();
         loginPage.verifyPage();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();

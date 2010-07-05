@@ -23,17 +23,18 @@ package org.mifos.platform.questionnaire.validators;
 import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.contract.EventSource;
-import org.mifos.platform.questionnaire.contract.QuestionDefinition;
-import org.mifos.platform.questionnaire.contract.QuestionGroupDefinition;
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
+import org.mifos.platform.questionnaire.contract.*;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.mifos.framework.util.CollectionUtils.isEmpty;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.DUPLICATE_QUESTION_FOUND_IN_SECTION;
 import static org.mifos.platform.questionnaire.contract.QuestionType.INVALID;
 
 public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
@@ -71,7 +72,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     private void validateEventSource(EventSource eventSource) throws ApplicationException {
         List result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
-        if (isEmpty(result) || (Long) result.get(0) == 0) {
+        if (isEmpty(result) || ((Long) result.get(0) == 0)) {
             throw new ApplicationException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
         }
     }
@@ -80,6 +81,25 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
         if(isEmpty(sectionDefinitions)) {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
+        }
+        validateSectionDefinitions(sectionDefinitions);
+    }
+
+    private void validateSectionDefinitions(List<SectionDefinition> sectionDefinitions) throws ApplicationException {
+        Set<SectionQuestionDetail> questions = new HashSet<SectionQuestionDetail>();
+        for (SectionDefinition sectionDefinition : sectionDefinitions) {
+            validateSectionDefinition(sectionDefinition);
+            for (SectionQuestionDetail questionDetail : sectionDefinition.getQuestions()) {
+                if (!questions.add(questionDetail)) {
+                    throw new ApplicationException(DUPLICATE_QUESTION_FOUND_IN_SECTION);
+                }
+            }
+        }
+    }
+
+    private void validateSectionDefinition(SectionDefinition sectionDefinition) throws ApplicationException {
+        if (isEmpty(sectionDefinition.getQuestions())) {
+            throw new ApplicationException(NO_QUESTIONS_FOUND_IN_SECTION);
         }
     }
 

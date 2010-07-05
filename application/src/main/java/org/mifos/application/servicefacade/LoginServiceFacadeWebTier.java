@@ -21,8 +21,9 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.exceptions.PersonnelException;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -32,9 +33,9 @@ import org.mifos.security.util.UserContext;
  */
 public class LoginServiceFacadeWebTier implements LoginServiceFacade {
 
-    private final AuthenticationDao personnelDao;
+    private final PersonnelDao personnelDao;
 
-    public LoginServiceFacadeWebTier(AuthenticationDao personnelDao) {
+    public LoginServiceFacadeWebTier(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;
     }
 
@@ -46,10 +47,13 @@ public class LoginServiceFacadeWebTier implements LoginServiceFacade {
             throw new ApplicationException(LoginConstants.KEYINVALIDUSER);
         }
 
-        UserContext userContext = user.login(password);
+        try {
+            UserContext userContext = user.login(password);
+            ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
 
-        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
-
-        return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+            return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+        } catch (PersonnelException e) {
+            throw new ApplicationException(e.getKey());
+        }
     }
 }

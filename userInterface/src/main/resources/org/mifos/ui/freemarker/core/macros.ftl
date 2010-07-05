@@ -16,7 +16,7 @@
 	
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
-   	<a id="logout" href="j_spring_security_logout">[@spring.message "logout"/]</a>
+   	<a id="logout_link" href="j_spring_security_logout">[@spring.message "logout"/]</a>
 	</div>	
 	<div id="top-menu-bar">
 		<ul id="simple-menu">
@@ -82,4 +82,17 @@
             [/#list]
         [/#if]
     </select>
+[/#macro]
+
+
+
+[#macro showAllErrors path]
+    [@spring.bind path/]
+    [#if spring.status.errorMessages?size > 0]
+        <ol>	
+	     [#list spring.status.errorMessages as error]
+	      <li>${error}</li>
+	     [/#list]
+	    </ol>
+	[/#if]
 [/#macro]
