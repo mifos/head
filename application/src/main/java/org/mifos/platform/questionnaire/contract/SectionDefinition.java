@@ -19,8 +19,17 @@
  */
 package org.mifos.platform.questionnaire.contract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SectionDefinition {
     private String name;
+
+    private List<SectionQuestionDetail> questionDetails;
+
+    public SectionDefinition() {
+        questionDetails = new ArrayList<SectionQuestionDetail>();
+    }
 
     public String getName() {
         return name;
@@ -28,5 +37,13 @@ public class SectionDefinition {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addQuestion(SectionQuestionDetail sectionQuestionDetail) {
+        questionDetails.add(sectionQuestionDetail);
+    }
+
+    public List<SectionQuestionDetail> getQuestions() {
+        return questionDetails;
     }
 }

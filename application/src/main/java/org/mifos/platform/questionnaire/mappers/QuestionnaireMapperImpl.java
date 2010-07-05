@@ -24,11 +24,9 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.platform.questionnaire.domain.EventSourceEntity;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.platform.questionnaire.domain.QuestionGroupState;
-import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.*;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -43,14 +41,19 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Autowired
     private EventSourceDao eventSourceDao;
 
+    @Autowired
+    private QuestionDao questionDao;
+
+    @SuppressWarnings({"UnusedDeclaration"})
     public QuestionnaireMapperImpl() {
-        populateAnswerToQuestionTypeMap();
-        populateQuestionToAnswerTypeMap();
+        this(null, null);
     }
 
-    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao) {
-        this();
+    public QuestionnaireMapperImpl(EventSourceDao eventSourceDao, QuestionDao questionDao) {
+        populateAnswerToQuestionTypeMap();
+        populateQuestionToAnswerTypeMap();
         this.eventSourceDao = eventSourceDao;
+        this.questionDao = questionDao;
     }
 
     @Override
@@ -108,7 +111,27 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private Section mapToSection(SectionDefinition sectionDefinition) {
-        return new Section(sectionDefinition.getName());
+        Section section = new Section(sectionDefinition.getName());
+        section.setQuestions(mapToSectionQuestions(sectionDefinition.getQuestions(), section));
+        return section;
+    }
+
+    private List<SectionQuestion> mapToSectionQuestions(List<SectionQuestionDetail> sectionQuestionDetails, Section section) {
+        List<SectionQuestion> sectionQuestions = new ArrayList<SectionQuestion>();
+        for (int i = 0, sectionQuestionDetailsSize = sectionQuestionDetails.size(); i < sectionQuestionDetailsSize; i++) {
+            SectionQuestionDetail sectionQuestionDetail = sectionQuestionDetails.get(i);
+            sectionQuestions.add(mapToSectionQuestion(sectionQuestionDetail, i, section));
+        }
+        return sectionQuestions;
+    }
+
+    private SectionQuestion mapToSectionQuestion(SectionQuestionDetail sectionQuestionDetail, int seqNum, Section section) {
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setRequired(sectionQuestionDetail.isMandatory());
+        sectionQuestion.setQuestion(questionDao.getDetails(sectionQuestionDetail.getQuestionId()));
+        sectionQuestion.setSequenceNumber(seqNum);
+        sectionQuestion.setSection(section);
+        return sectionQuestion;
     }
 
     @Override
@@ -135,6 +158,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private SectionDefinition mapToSectionDefinition(Section section) {
         SectionDefinition sectionDefinition = new SectionDefinition();
         sectionDefinition.setName(section.getName());
+        for (SectionQuestion sectionQuestion : section.getQuestions()) {
+            sectionDefinition.addQuestion(new SectionQuestionDetail(sectionQuestion.getQuestion().getQuestionId(), sectionQuestion.isRequired()));
+        }
         return sectionDefinition;
     }
 

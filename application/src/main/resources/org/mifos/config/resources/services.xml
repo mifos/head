@@ -5,6 +5,10 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:xsd/spring-beans-3.0.xsd
     					http://www.springframework.org/schema/aop classpath:xsd/spring-aop-3.0.xsd">
 
+    <bean id="loginServiceFacade" class="org.mifos.application.servicefacade.LoginServiceFacadeWebTier">
+    	<constructor-arg ref="personnelDao" />
+    </bean>
+    
     <bean id="adminServiceFacade" class="org.mifos.application.servicefacade.AdminServiceFacadeWebTier">
     	<constructor-arg ref="productService" />
     	<constructor-arg ref="loanProductDao" />

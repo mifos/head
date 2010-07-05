@@ -45,9 +45,9 @@ public class QuestionDaoIntegrationTest {
 
     @Autowired
     private QuestionDao questionDao;
+
     @Autowired
     private QuestionnaireService questionnaireService;
-
 
     @Test
     @Transactional

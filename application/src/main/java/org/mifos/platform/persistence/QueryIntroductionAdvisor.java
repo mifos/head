@@ -7,8 +7,6 @@ public class QueryIntroductionAdvisor extends DefaultIntroductionAdvisor {
 
     public QueryIntroductionAdvisor(Advice advice) {
         super(advice);
-        //super(new QueryIntroductionInterceptor());
-        // TODO Auto-generated constructor stub
     }
 
 
@@ -16,10 +14,39 @@ public class QueryIntroductionAdvisor extends DefaultIntroductionAdvisor {
      * TODO: As long as I remember, this used to be a MUST.
      * Especially when using a ProxyFactoryBean and using <AOP:config>
      * refer to Spring AOP documentation chapter
-     *
      */
     @Override
     public boolean matches(Class clazz) {
-        return super.matches(clazz);
+
+        // FIXME - keithw - quick hack at reducing scope of advice to avoid matching all classes
+        if (clazz.getName().startsWith("java.")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("com.")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.spring")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.hibernate")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.platform.") && clazz.getName().contains("persistence")) {
+            return true;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.") && clazz.getName().contains("persistence.Fee")) {
+            return false;
+        }
+
+        if (clazz.getName().startsWith("org.mifos.")) {
+            return false;
+        }
+
+        return true;
     }
 }

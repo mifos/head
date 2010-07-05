@@ -56,11 +56,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     public QuestionnaireServiceImpl(QuestionnaireValidator questionnaireValidator, QuestionDao questionDao,
-                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao) {
+                                    QuestionnaireMapperImpl questionnaireMapper, QuestionGroupDao questionGroupDao,
+                                    EventSourceDao eventSourceDao) {
         this.questionnaireValidator = questionnaireValidator;
         this.questionDao = questionDao;
         this.questionnaireMapper = questionnaireMapper;
         this.questionGroupDao = questionGroupDao;
+        this.eventSourceDao = eventSourceDao;
     }
 
     @Override
