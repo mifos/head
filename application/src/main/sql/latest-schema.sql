@@ -4365,6 +4365,7 @@ create table sections_questions(
     section_id integer not null,
     question_id integer not null,
     is_required tinyint default 0,
+    sequence_number integer not null,
     primary key (id),
     foreign key (section_id) references sections(id),
     foreign key (question_id) references questions(question_id)
