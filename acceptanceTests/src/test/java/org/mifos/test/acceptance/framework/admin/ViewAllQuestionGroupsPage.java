@@ -27,7 +27,6 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
         super(selenium);
     }
 
-
     public ViewAllQuestionGroupsPage verifyPage() {
         verifyPage("view_question_groups");
         return this;
@@ -37,5 +36,14 @@ public class ViewAllQuestionGroupsPage extends MifosPage {
         selenium.click("link="+title);
         waitForPageToLoad();
         return new QuestionGroupDetailPage(selenium);
+    }
+
+    public String[] getAllQuestionGroups() {
+        int rows = Integer.valueOf(selenium.getEval("window.document.getElementById('questionGroups.table').rows.length"));
+        String[] questions = new String[rows];
+        for (int i=0; i<rows; i++) {
+            questions[i] = selenium.getTable("questionGroups.table." + i + ".1");
+        }
+        return questions;
     }
 }

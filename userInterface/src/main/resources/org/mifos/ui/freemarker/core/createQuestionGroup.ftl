@@ -1,4 +1,23 @@
 [#ftl]
+[#--
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ *  All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ *  explanation of the license and how it is applied.
+--]
 [#import "spring.ftl" as spring]
 [#import "macros.ftl" as mifos]
 <html lang="EN">
@@ -23,8 +42,8 @@
             width:600px;
             padding:1em 1em 0;
         }
-        .divSections {
-        
+        .mandatoryField {
+          color=#FF0000;
         }
         fieldset {
             float: left;
@@ -57,10 +76,22 @@
         }
         label {
             float: left;
-            width: 10em;
+            width: 12em;
             margin-right: 1em;
             text-align: right;
         }
+        .allErrorsDiv {
+	       color:#FF0000;
+	       font-family:Arial,Verdana,Helvetica,sans-serif;
+	       font-size:9pt;
+	       font-weight:bold;
+	       text-decoration:none;
+	       padding:1em 1em 0;
+	    }
+	    .allErrorsDiv ol {
+	      padding: 1em 1em 0 1em;
+	      list-style-type: disc;
+	    }
     </style>
 </head>
 
@@ -156,23 +187,22 @@
                 <div class="normalFontFixedDiv">
                     <span class="headingorange"> [@spring.message "questionnaire.addQuestionGroup"/] </span>
                 </div>
+                <div id="allErrorsDiv" class="allErrorsDiv">
+                    [@mifos.showAllErrors "questionGroupDefinition.*"/]
+                </div>
                 <div class="normalFontFixedDiv">
                     <fieldset>
                         <ol>
                             <li>
-                                <span class="mandatorytext"><font color="#FF0000">* </font></span>
-                                <label for="title">[@spring.message "questionnaire.questionGroupTitle"/]</label>
+                                <label for="title"><span class="mandatoryField">*</span>[@spring.message "questionnaire.questionGroupTitle"/]</label>
                                 [@spring.formInput "questionGroupDefinition.title",
                                 'maxlength="50"
                                 onkeypress="return FnCheckNumCharsOnPress(event,this);"
                                 onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-                                [@spring.showErrors "<br/>","fontnormalRedBold" /]
                             </li>
                             <li>
-                                <span class="mandatorytext"><font color="#FF0000">* </font></span>
-                                <label for="eventSourceId">[@spring.message "questionnaire.questionGroupAppliesTo"/]</label>
+                                <label for="eventSourceId"><span class="mandatoryField">*</span>[@spring.message "questionnaire.questionGroupAppliesTo"/]</label>
                                 [@mifos.formSingleSelectWithPrompt "questionGroupDefinition.eventSourceId", EventSources, "--select one--" /]
-                                [@spring.showErrors "<br>","fontnormalRedBold" /]
                             </li>
                             <li>
                                 <label for="sectionName">[@spring.message "questionnaire.currentSectionTitle"/]</label>
@@ -180,7 +210,6 @@
                                 'maxlength="50"
                                 onkeypress="return FnCheckNumCharsOnPress(event,this);"
                                 onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"'/]
-                                [@spring.showErrors "<br/>","fontnormalRedBold" /]
                             </li>
                         </ol>
                     </fieldset>
