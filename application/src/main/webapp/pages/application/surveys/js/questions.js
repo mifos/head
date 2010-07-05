@@ -50,3 +50,9 @@ function disableSubmitButtonOnEmptyQuestionList() {
         }
     }
 }
+
+function removeSection(sectionName){
+    var sectionToDeleteBtn = document.getElementById('_eventId_deleteSection');
+    sectionToDeleteBtn.value = sectionName;
+    sectionToDeleteBtn.click();
+}
