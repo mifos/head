@@ -71,7 +71,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     private void validateEventSource(EventSource eventSource) throws ApplicationException {
         List result = eventSourceDao.retrieveCountByEventAndSource(eventSource.getEvent(), eventSource.getSource());
-        if (isEmpty(result) || (Long) result.get(0) == 0) {
+        if (isEmpty(result) || ((Long) result.get(0) == 0)) {
             throw new ApplicationException(QuestionnaireConstants.INVALID_EVENT_SOURCE);
         }
     }
@@ -80,6 +80,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         List<SectionDefinition> sectionDefinitions = questionGroupDefinition.getSectionDefinitions();
         if(isEmpty(sectionDefinitions)) {
             throw new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED);
+        }
+        for (SectionDefinition sectionDefinition : sectionDefinitions) {
+            validateSectionDefinition(sectionDefinition);
+        }
+    }
+
+    private void validateSectionDefinition(SectionDefinition sectionDefinition) throws ApplicationException {
+        if (isEmpty(sectionDefinition.getQuestions())) {
+            throw new ApplicationException(QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION);
         }
     }
 

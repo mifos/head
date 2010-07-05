@@ -11,4 +11,5 @@ public class QuestionnaireConstants {
     public static final String QUESTION_NOT_FOUND = "questionnaire.error.question.not.found";
     public static final String INVALID_QUESTION_ID = "questionnaire.error.invalid.question.id";
     public static final String INVALID_EVENT_SOURCE = "InvalidEventSourceProvided";
+    public static final String NO_QUESTIONS_FOUND_IN_SECTION = "questionnaire.error.no.questions.found.in.section";
 }

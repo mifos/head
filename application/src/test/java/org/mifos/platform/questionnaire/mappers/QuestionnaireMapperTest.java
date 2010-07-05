@@ -27,11 +27,9 @@ import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.platform.questionnaire.contract.*;
-import org.mifos.platform.questionnaire.domain.EventEntity;
-import org.mifos.platform.questionnaire.domain.EventSourceEntity;
-import org.mifos.platform.questionnaire.domain.QuestionGroup;
-import org.mifos.platform.questionnaire.domain.Section;
+import org.mifos.platform.questionnaire.domain.*;
 import org.mifos.platform.questionnaire.persistence.EventSourceDao;
+import org.mifos.platform.questionnaire.persistence.QuestionDao;
 import org.mifos.test.matchers.EventSourceMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -41,7 +39,6 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mifos.customers.surveys.helpers.AnswerType.FREETEXT;
 import static org.mifos.platform.questionnaire.domain.QuestionGroupState.ACTIVE;
@@ -58,9 +55,12 @@ public class QuestionnaireMapperTest {
     @Mock
     private EventSourceDao eventSourceDao;
 
+    @Mock
+    private QuestionDao questionDao;
+
     @Before
     public void setUp() {
-        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao);
+        questionnaireMapper = new QuestionnaireMapperImpl(eventSourceDao, questionDao);
     }
 
     @Test
@@ -102,28 +102,50 @@ public class QuestionnaireMapperTest {
     @Test
     public void shouldMapQuestionGroupDefinitionToQuestionGroup() {
         when(eventSourceDao.retrieveByEventAndSource(anyString(), anyString())).thenReturn(new ArrayList());
+        when(questionDao.getDetails(12)).thenReturn(new Question());
         EventSource eventSource = getEventSource("Create", "Client");
-        List<SectionDefinition> sectionDefinitions = asList(getSection(SECTION_NAME));
+        List<SectionDefinition> sectionDefinitions = asList(getSectionDefinition(SECTION_NAME));
         QuestionGroupDefinition questionGroupDefinition = new QuestionGroupDefinition(TITLE, eventSource, sectionDefinitions);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDefinition);
-        assertThat(questionGroup, is(not(nullValue())));
+        assertQuestionGroup(questionGroup);
+        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
+        verify(questionDao, times(1)).getDetails(12);
+    }
+
+    private void assertQuestionGroup(QuestionGroup questionGroup) {
+        assertThat(questionGroup, notNullValue());
         assertThat(questionGroup.getTitle(), is(TITLE));
         assertThat(questionGroup.getState(), is(ACTIVE));
-        List<Section> sections = questionGroup.getSections();
-        assertNotNull(sections);
+        assertSections(questionGroup.getSections());
+        assertCreationDate(questionGroup.getDateOfCreation());
+    }
+
+    private void assertSections(List<Section> sections) {
+        assertThat(sections, notNullValue());
         assertThat(sections.size(), is(1));
-        assertThat(sections.get(0).getName(), is(SECTION_NAME));
-        verifyCreationDate(questionGroup);
-        verify(eventSourceDao, times(1)).retrieveByEventAndSource(anyString(), anyString());
+        Section section = sections.get(0);
+        assertThat(section.getName(), is(SECTION_NAME));
+        assertSectionQuestions(section.getQuestions());
+    }
+
+    private void assertSectionQuestions(List<SectionQuestion> sectionQuestions) {
+        assertThat(sectionQuestions, notNullValue());
+        assertThat(sectionQuestions.size(), is(1));
+        SectionQuestion sectionQuestion = sectionQuestions.get(0);
+        assertThat(sectionQuestion.getQuestion(), notNullValue());
+        assertThat(sectionQuestion.getSection(), notNullValue());
+        assertThat(sectionQuestion.isRequired(), is(true));
+        assertThat(sectionQuestion.getSequenceNumber(), is(0));
     }
 
     private EventSource getEventSource(String event, String source) {
         return new EventSource(event, source, null);
     }
 
-    private SectionDefinition getSection(String name) {
+    private SectionDefinition getSectionDefinition(String name) {
         SectionDefinition section = new SectionDefinition();
         section.setName(name);
+        section.addQuestion(new SectionQuestionDetail(12, true));
         return section;
     }
 
@@ -147,11 +169,25 @@ public class QuestionnaireMapperTest {
     private QuestionGroup getQuestionGroup(String event, String source, String... sectionNames) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(TITLE);
-        List<Section> sections = new ArrayList<Section>();
-        for (String sectionName : sectionNames) sections.add(new Section(sectionName));
-        questionGroup.setSections(sections);
+        questionGroup.setSections(getSections(sectionNames));
         questionGroup.setEventSources(getEventSources(event, source));
         return questionGroup;
+    }
+
+    private List<Section> getSections(String[] sectionNames) {
+        List<Section> sections = new ArrayList<Section>();
+        for (String sectionName : sectionNames) {
+            sections.add(getSection(sectionName));
+        }
+        return sections;
+    }
+
+    private Section getSection(String sectionName) {
+        Section section = new Section(sectionName);
+        SectionQuestion sectionQuestion = new SectionQuestion();
+        sectionQuestion.setQuestion(new Question());
+        section.setQuestions(asList(sectionQuestion));
+        return section;
     }
 
     private Set<EventSourceEntity> getEventSources(String event, String source) {
@@ -170,7 +206,7 @@ public class QuestionnaireMapperTest {
         int countOfQuestions = 10;
         List<QuestionGroup> questionGroups = new ArrayList<QuestionGroup>();
         for (int i = 0; i < countOfQuestions; i++) {
-            questionGroups.add(getQuestionGroup(TITLE + i, new Section(SECTION + i), new Section(SECTION + (i + 1))));
+            questionGroups.add(getQuestionGroup(TITLE + i, getSection(SECTION + i), getSection(SECTION + (i + 1))));
         }
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         assertThat(questionGroupDetails, is(notNullValue()));
@@ -224,9 +260,9 @@ public class QuestionnaireMapperTest {
         assertThat(questionDetail.getType(), is(questionType));
     }
 
-    private void verifyCreationDate(QuestionGroup questionGroup) {
+    private void assertCreationDate(Date dateOfCreation) {
         Calendar creationDate = Calendar.getInstance();
-        creationDate.setTime(questionGroup.getDateOfCreation());
+        creationDate.setTime(dateOfCreation);
         Calendar currentDate = Calendar.getInstance();
         assertThat(creationDate.get(Calendar.DATE), is(currentDate.get(Calendar.DATE)));
         assertThat(creationDate.get(Calendar.MONTH), is(currentDate.get(Calendar.MONTH)));
