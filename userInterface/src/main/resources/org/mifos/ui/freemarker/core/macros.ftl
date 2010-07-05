@@ -83,3 +83,16 @@
         [/#if]
     </select>
 [/#macro]
+
+
+
+[#macro showAllErrors path]
+    [@spring.bind path/]
+    [#if spring.status.errorMessages?size > 0]
+        <ol>	
+	     [#list spring.status.errorMessages as error]
+	      <li>${error}</li>
+	     [/#list]
+	    </ol>
+	[/#if]
+[/#macro]
