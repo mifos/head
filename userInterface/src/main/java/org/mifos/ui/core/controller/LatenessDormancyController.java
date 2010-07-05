@@ -66,7 +66,10 @@ public class LatenessDormancyController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel, @ModelAttribute("formBean") LatenessDormancyFormBean formBean, BindingResult result, SessionStatus status) {
+    public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+                                    @ModelAttribute("formBean") LatenessDormancyFormBean formBean,
+                                    BindingResult result,
+                                    SessionStatus status) {
 
         String viewName = REDIRECT_TO_ADMIN_SCREEN;
 

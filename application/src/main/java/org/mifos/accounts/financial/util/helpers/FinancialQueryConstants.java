@@ -21,5 +21,5 @@
 package org.mifos.accounts.financial.util.helpers;
 
 public interface FinancialQueryConstants {
-    public static final String GET_ALL_FINANCIAL_ACTION = "GETALLFINANCIALACTION";
+    String GET_ALL_FINANCIAL_ACTION = "GETALLFINANCIALACTION";
 }

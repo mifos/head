@@ -26,27 +26,39 @@
     [#include "adminLeftPane.ftl" /]
 </div>
 <div class="content leftMargin180">
-    <span id="page.id" title="view_question_details"/></span>
+    <span id="page.id" title="view_question_groups_details"/></span>
 
     <div class="fontnormal">
         [#if error_message_code??]
             [@spring.message error_message_code/]
         [#else]
-            [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",Request.questionDetail.title:""}/]
+            [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",Request.questionGroupDetail.title:""}/]
             [@mifos.crumbpairs breadcrumb/]
             <div class="marginLeft30">
                 <div class="orangeheading marginTop15">
-                    ${Request.questionDetail.title}
+                    ${Request.questionGroupDetail.title}
                 </div>
                 <div class="marginTop15">
-                    [@spring.message "questionnaire.question"/]: ${Request.questionDetail.title}<br/>
-                    [@spring.message "questionnaire.answer.type"/]: ${Request.questionDetail.type}
+                    [@spring.message "questionnaire.question.group.applies.to"/]: ${Request.eventSources[Request.questionGroupDetail.eventSourceId]}
+                </div>
+                <div class="marginTop15">
+                    [#list Request.questionGroupDetail.sections as section]
+                        ${section.name}<br/>
+                        <table width="80%" id="sections.table" name="sections.table" border="0"
+                            cellpadding="3" cellspacing="0">
+                         <tr>
+                             <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
+                             <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>
+                         </tr>
+                         <tr>
+                             <td>&nbsp;</td>
+                             <td>&nbsp;</td>
+                         </tr>
+                        </table>
+                    [/#list]
                 </div>
             </div>
         [/#if]
     </div>
 </div>
 [@mifos.footer/]
-
-
-

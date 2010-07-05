@@ -21,9 +21,10 @@
 package org.mifos.accounts.productdefinition.business.service;
 
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.dto.screen.ProductConfigurationDto;
 
 public interface ProductService {
 
-    void updateLatenessAndDormancy(ProductTypeEntity loanProductConfiguration, ProductTypeEntity savingsProductConfiguration);
+    void updateLatenessAndDormancy(ProductTypeEntity loanProductConfiguration, ProductTypeEntity savingsProductConfiguration, ProductConfigurationDto productConfiguration);
 
 }

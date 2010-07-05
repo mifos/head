@@ -148,6 +148,17 @@ public class QuestionnaireControllerTest {
     }
 
     @Test
+    public void testDeleteSection() {
+        QuestionGroup questionGroup = new QuestionGroup();
+        String sectionName = "sectionName";
+        questionGroup.setSectionName(sectionName);
+        questionGroup.addCurrentSection();
+        assertThat(questionGroup.getSections().size(), is(1));
+        questionnaireController.deleteSection(questionGroup, sectionName);
+        assertThat(questionGroup.getSections().size(), is(0));
+    }
+
+    @Test
     public void testAddSectionForSuccess() throws Exception {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle("title");
@@ -198,15 +209,15 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void testCreateQuestionGroupSuccess() throws Exception {
-        QuestionGroup questionGroup = getQuestionGroupForm("   " + TITLE + " ", "S1", "S2");
+        QuestionGroup questionGroup = getQuestionGroup("   " + TITLE + " ", "Create.Client", "S1", "S2");
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("success"));
-        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupMatcher(getQuestionGroupForm(TITLE, "S1", "S2"))));
+        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupMatcher(getQuestionGroup(TITLE, "Create.Client", "S1", "S2"))));
     }
 
     @Test
     public void testCreateQuestionGroupForFailureWhenQuestionGroupTitleNotProvided() throws Exception {
-        QuestionGroup questionGroup = new QuestionGroup();
+        QuestionGroup questionGroup = getQuestionGroup(null, "Create.Client", "Section");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is(notNullValue()));
@@ -219,17 +230,28 @@ public class QuestionnaireControllerTest {
     @Test
     public void testCreateQuestionGroupFailureWhenSectionsNotPresent() throws Exception {
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        QuestionGroup questionGroup = getQuestionGroupForm(TITLE);
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create.Client");
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
         assertThat(result, is("failure"));
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.no.sections.in.group")));
     }
 
+    @Test
+    public void testCreateQuestionGroupForFailureWhenQuestionGroupAppliesToNotProvided() throws Exception {
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "--select one--", "Section");
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
+        assertThat(result, is(notNullValue()));
+        assertThat(result, is("failure"));
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.empty.appliesTo")));
+    }
+
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionGroupFailure() throws Exception {
-        QuestionGroup questionGroup = getQuestionGroupForm(TITLE, "S1", "S2");
+        QuestionGroup questionGroup = getQuestionGroup(TITLE, "Create.Client", "S1", "S2");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         doThrow(new ApplicationException("DB Write Failure")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroup>anyObject());
         String result = questionnaireController.defineQuestionGroup(questionGroup, requestContext);
@@ -250,11 +272,11 @@ public class QuestionnaireControllerTest {
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroupForm(1, "title1", "S1", "S2"), getQuestionGroupForm(2, "title2", "S1", "S2")));
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroup(1, "title1", "S1", "S2"), getQuestionGroup(2, "title2", "S1", "S2")));
         String view = questionnaireController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
-        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupMatcher(asList(getQuestionGroupForm(1, "title1", "S1", "S2"), getQuestionGroupForm(2, "title2", "S1", "S2")))));
+        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupMatcher(asList(getQuestionGroup(1, "title1", "S1", "S2"), getQuestionGroup(2, "title2", "S1", "S2")))));
     }
 
     @Test
@@ -305,7 +327,7 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroup questionGroup = getQuestionGroupForm(questionGroupId, TITLE,"S1","S2","S3");
+        QuestionGroup questionGroup = getQuestionGroup(questionGroupId, TITLE, "S1", "S2", "S3");
         when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroup);
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
@@ -313,10 +335,10 @@ public class QuestionnaireControllerTest {
         verify(questionnaireServiceFacade).getQuestionGroup(questionGroupId);
         verify(questionnaireServiceFacade, times(1)).getAllEventSources();
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
-        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroupForm(questionGroupId, TITLE,"S1","S2","S2"))));
+        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroup(questionGroupId, TITLE, "S1", "S2", "S2"))));
     }
 
-    private QuestionGroup getQuestionGroupForm(int questionGroupId, String title, String... sectionNames) {
+    private QuestionGroup getQuestionGroup(int questionGroupId, String title, String... sectionNames) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setId(Integer.toString(questionGroupId));
         questionGroup.setTitle(title);
@@ -375,9 +397,10 @@ public class QuestionnaireControllerTest {
         return questionForm;
     }
 
-    private QuestionGroup getQuestionGroupForm(String title, String... sectionNames) {
+    private QuestionGroup getQuestionGroup(String title, String eventSourceId, String... sectionNames) {
         QuestionGroup questionGroup = new QuestionGroup();
         questionGroup.setTitle(title);
+        questionGroup.setEventSourceId(eventSourceId);
         for (String sectionName : sectionNames) {
             questionGroup.setSectionName(sectionName);
             questionGroup.addCurrentSection();
