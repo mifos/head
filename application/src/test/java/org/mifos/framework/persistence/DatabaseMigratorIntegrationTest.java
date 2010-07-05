@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.logging.impl.AvalonLogger;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -46,14 +46,17 @@ public class DatabaseMigratorIntegrationTest {
 
     @BeforeClass
     public void beforeClass() throws Exception {
-        connection = TestDatabase.getJDBCConnection();
+        StaticHibernateUtil.initialize();
+//        connection = TestDatabase.getJDBCConnection();
+        connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
 
     }
 
     @AfterClass
     public void afterClass() throws Exception {
-        connection.close();
+//        connection.close();
+//        StaticHibernateUtil.flushAndCloseSession();
     }
 
     /**
@@ -101,7 +104,7 @@ public class DatabaseMigratorIntegrationTest {
     private void loadNonSeqDatabaseSchema() throws Exception {
 
         // drop tables
-        DatabaseSetup.executeScript("mifosdroptables.sql", connection);
+        TestDatabase.dropMySQLDatabase();
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("drop table if exists bar");
         connection.createStatement().execute("drop table if exists baz");
@@ -167,12 +170,13 @@ public class DatabaseMigratorIntegrationTest {
         legacyUpgradesMap.put(201, 1276821432);
         legacyUpgradesMap.put(253, 1276821600);
 
-        new DatabaseMigrator(connection, availableUpgrades).firstRun(legacyUpgradesMap);
+        DatabaseMigrator migrator = new DatabaseMigrator(connection, availableUpgrades);
+        migrator.firstRun(legacyUpgradesMap);
 
         // check appliedUPgrades table contains Unix time-stamps for upgrades
         ResultSet rs = connection.createStatement().executeQuery("select count(*) from applied_upgrades");
         rs.next();
-        Assert.assertEquals(rs.getInt(1), 7);
+        Assert.assertEquals(rs.getInt(1), 5);
 
     }
 

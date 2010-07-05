@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import junit.framework.Assert;
-
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -143,7 +141,7 @@ public class TestDatabase {
 
     private static Connection fkDisabledConnection;
 
-    public static Connection getJDBCConnection() throws Exception {
+    private static Connection getJDBCConnection() throws Exception {
         if(fkDisabledConnection == null) {
             fkDisabledConnection = initializeFKDisabledConnection();
         }

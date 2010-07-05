@@ -69,4 +69,4 @@ left join    (select a.account_id,
         and fint.debit_credit_flag = 1
         group by a.account_id) correct on correct.account_id = ls.account_id
         
-set ls.penalty_paid = abs(ifnull(correct.amount_paid,0));s
+set ls.penalty_paid = abs(ifnull(correct.amount_paid,0));

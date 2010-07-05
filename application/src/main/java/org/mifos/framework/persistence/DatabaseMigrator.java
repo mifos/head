@@ -34,9 +34,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -62,7 +62,6 @@ public class DatabaseMigrator {
 
     public static final short ENGLISH_LOCALE = 1;
 
-
     public static final String CLASS_UPGRADE_TYPE = "class";
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";
@@ -72,13 +71,23 @@ public class DatabaseMigrator {
 
     }
 
-    public DatabaseMigrator(Connection connection, SortedMap<Integer, String> availableUpgrades){
+    public DatabaseMigrator(Connection connection) {
+        this(connection, getAvailableUpgrades());
+    }
+
+    public DatabaseMigrator(Connection connection, SortedMap<Integer, String> availableUpgrades) {
         this.connection = connection;
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         this.availableUpgrades = availableUpgrades;
 
     }
 
-    static SortedMap<Integer, String> getAvailableUpgrades(){
+    static SortedMap<Integer, String> getAvailableUpgrades() {
         Reader reader = null;
         BufferedReader bufferedReader = null;
         SortedMap<Integer, String> upgrades = new TreeMap<Integer, String>();
@@ -115,10 +124,14 @@ public class DatabaseMigrator {
             }
         }
 
-         return upgrades;
+        return upgrades;
     }
 
-    public void upgrade() throws Exception {
+    public void upgrade(boolean isFirstRun) throws Exception {
+        if (isFirstRun) {
+            firstRun();
+        }
+
         List<Integer> appliedUpgrades = getAppliedUpgrades();
 
         for (int i : availableUpgrades.keySet()) {
@@ -126,10 +139,20 @@ public class DatabaseMigrator {
                 applyUpgrade(i, availableUpgrades.get(i));
             }
         }
+
     }
 
-    public boolean checkForUnAppliedUpgrades() throws Exception{
-        if (false == this.isNSDU()){
+    public void upgrade() throws Exception {
+
+        if (isNSDU()) {
+            upgrade(false);
+        } else {
+            upgrade(true);
+        }
+    }
+
+    public boolean checkForUnAppliedUpgrades() throws Exception {
+        if (false == this.isNSDU()) {
             createAppliedUpgradesTable();
         }
 
@@ -147,38 +170,45 @@ public class DatabaseMigrator {
 
     }
 
+    private void firstRun() {
+        try {
+            firstRun(getLegacyUpgradesMap());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     /**
      *
-     * @param legacyUpgrades A mapping from the database version to the Unix time-stamp
+     * @param legacyUpgrades
+     *            A mapping from the database version to the Unix time-stamp
      * @throws Exception
      */
 
     public void firstRun(Map<Integer, Integer> legacyUpgrades) throws Exception {
         createAppliedUpgradesTable();
 
-        //check version number
+        // check version number
         int databaseVersion = readDatabaseVersion();
 
-        //insert all upgrades below version number in applied upgrades table
-        Set<Integer> appliedUpgrades = legacyUpgrades.keySet();
-        for(Integer i:appliedUpgrades){
-            if (i <= databaseVersion){
-                connection.createStatement().execute("insert into APPLIED_UPGRADES values("+legacyUpgrades.get(i)+")");
+        // insert all upgrades below version number in applied upgrades table
+        for (Entry<Integer, Integer> e : legacyUpgrades.entrySet()) {
+            if (e.getKey() <= databaseVersion) {
+                Statement stmt = connection.createStatement();
+
+                stmt.execute("insert into APPLIED_UPGRADES values(" + e.getValue() + ")");
+                connection.commit();
             }
         }
 
-        //remove database version table
-        connection.createStatement().execute("drop table database_version");
-
-        if (!isNSDU()){
-            throw new RuntimeException("Failed to migrate schema to NSDU");
+        if (!isNSDU()) {
+            throw new Error("Failed to migrate schema to NSDU");
         }
 
-        //run NSDU
-        upgrade();
     }
 
-    public Map<Integer, Integer> getLegacyUpgradesMap(){
+    public Map<Integer, Integer> getLegacyUpgradesMap() {
         Map<Integer, Integer> legacyUpgrades = new TreeMap<Integer, Integer>();
         legacyUpgrades.put(225, 1277565389);
         legacyUpgrades.put(226, 1277567194);
@@ -205,13 +235,10 @@ public class DatabaseMigrator {
         legacyUpgrades.put(249, 1277588885);
         legacyUpgrades.put(250, 1277588973);
         legacyUpgrades.put(251, 1277589055);
-        legacyUpgrades.put(252, 1277589143);
         legacyUpgrades.put(252, 1277589236);
         legacyUpgrades.put(253, 1277589321);
         legacyUpgrades.put(254, 1277589383);
-
-
-
+        legacyUpgrades.put(255, 1278334318);
 
         return legacyUpgrades;
     }
@@ -228,7 +255,6 @@ public class DatabaseMigrator {
             if (results.next()) {
                 throw new RuntimeException("too many rows in DATABASE_VERSION");
             }
-            statement.close();
             return version;
         }
         throw new RuntimeException("No row in DATABASE_VERSION");
@@ -236,10 +262,9 @@ public class DatabaseMigrator {
 
     private void createAppliedUpgradesTable() {
         try {
-            connection.createStatement().execute("CREATE TABLE  APPLIED_UPGRADES" +
-                    "( UPGRADE_ID INTEGER NOT NULL,"+
-                    "PRIMARY KEY(UPGRADE_ID)"+
-                    ")ENGINE=InnoDB CHARACTER SET utf8;");
+            Statement stmt = connection.createStatement();
+            stmt.execute("CREATE TABLE  APPLIED_UPGRADES" + "( UPGRADE_ID INTEGER NOT NULL,"
+                    + "PRIMARY KEY(UPGRADE_ID)" + ")ENGINE=InnoDB CHARACTER SET utf8;");
             connection.commit();
         } catch (SQLException e) {
             System.err.print("Unable to create APPLIED_UPGRADES table for NSDU");
@@ -249,25 +274,19 @@ public class DatabaseMigrator {
     private void applyUpgrade(int upgradeNumber, String type) throws Exception {
 
         if (SCRIPT_UPGRADE_TYPE.equals(type)) {
-            URL url = SqlResource.getInstance().getUrl("upgrade"+upgradeNumber + ".sql");
+            URL url = SqlResource.getInstance().getUrl("upgrade" + upgradeNumber + ".sql");
             SqlUpgrade sqlUpgrade = new SqlUpgrade(url);
             sqlUpgrade.upgrade(connection);
-            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
-            return;
-        }
 
-        if (CLASS_UPGRADE_TYPE.equals(type)) {
-            String className = "org.mifos.application.master.persistence.JavaUpgrade" + upgradeNumber;
+        } else if (CLASS_UPGRADE_TYPE.equals(type)) {
+            String className = "org.mifos.application.master.persistence.Upgrade" + upgradeNumber;
 
             Upgrade upgradeClass = getInstanceOfUpgradeClass(className);
             upgradeClass.upgrade(connection);
-            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
-            return;
-        }
 
-        if (METHOD_UPGRADE_TYPE.equals(type)){
+        } else if (METHOD_UPGRADE_TYPE.equals(type)) {
 
-            Method method = DatabaseMigrator.class.getDeclaredMethod("upgrade"+upgradeNumber);
+            Method method = DatabaseMigrator.class.getDeclaredMethod("upgrade" + upgradeNumber);
 
             try {
                 method.invoke(this);
@@ -275,10 +294,11 @@ public class DatabaseMigrator {
                 e.getCause().printStackTrace();
                 e.printStackTrace();
             }
-            connection.createStatement().execute("insert into applied_upgrades values ("+upgradeNumber+")");
-            return;
 
         }
+        Statement stmt = connection.createStatement();
+        stmt.execute("insert into applied_upgrades values (" + upgradeNumber + ")");
+        connection.commit();
     }
 
     private Upgrade getInstanceOfUpgradeClass(String className) {
@@ -290,7 +310,6 @@ public class DatabaseMigrator {
             cs = c.getDeclaredConstructor();
             cs.setAccessible(true);
             upgrade = (Upgrade) cs.newInstance();
-//            upgrade = new JavaUpgrade1275913405();
 
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
@@ -330,10 +349,7 @@ public class DatabaseMigrator {
             if (rs.next()) {
                 appliedUpgrades.add(rs.getInt(1));
             }
-
             rs.close();
-
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -342,7 +358,7 @@ public class DatabaseMigrator {
 
     }
 
-    public boolean isNSDU() throws SQLException{
+    public boolean isNSDU() throws SQLException {
         return isNSDU(connection);
     }
 
@@ -353,27 +369,28 @@ public class DatabaseMigrator {
         return foundColumns;
     }
 
-
     @SuppressWarnings("unused")
     private static void upgrade1277571792() {
-        new AddActivity("Permissions-CanShutdownMifos",
-                SecurityConstants.CAN_SHUTDOWN_MIFOS, SecurityConstants.SYSTEM_INFORMATION);
+        new AddActivity("Permissions-CanShutdownMifos", SecurityConstants.CAN_SHUTDOWN_MIFOS,
+                SecurityConstants.SYSTEM_INFORMATION);
     }
 
     @SuppressWarnings("unused")
     private static void upgrade1277588373() {
-        new AddActivity("Permissions-CanDefineHoliday",
-                SecurityConstants.CAN_DEFINE_HOLIDAY, SecurityConstants.ORGANIZATION_MANAGEMENT);
-//        register(register, new CompositeUpgrade(
-//                new AddActivity(248, SecurityConstants.PRODUCT_MIX, null, ENGLISH_LOCALE, "Product mix"),
-//                new AddActivity(248, SecurityConstants.CAN_DEFINE_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Define product mix"),
-//                new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE, "Can Edit product mix")));
+        new AddActivity("Permissions-CanDefineHoliday", SecurityConstants.CAN_DEFINE_HOLIDAY,
+                SecurityConstants.ORGANIZATION_MANAGEMENT);
+        // register(register, new CompositeUpgrade(
+        // new AddActivity(248, SecurityConstants.PRODUCT_MIX, null, ENGLISH_LOCALE, "Product mix"),
+        // new AddActivity(248, SecurityConstants.CAN_DEFINE_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE,
+        // "Can Define product mix"),
+        // new AddActivity(248, SecurityConstants.CAN_EDIT_PRODUCT_MIX, SecurityConstants.PRODUCT_MIX, ENGLISH_LOCALE,
+        // "Can Edit product mix")));
     }
 
-    //TODO remove
-//    public void upgrade1277124044() throws IOException, SQLException{
-//        Upgrade upgrade = new DummyUpgrade();
-//        upgrade.upgrade(connection);
-//    }
+    // TODO remove
+    // public void upgrade1277124044() throws IOException, SQLException{
+    // Upgrade upgrade = new DummyUpgrade();
+    // upgrade.upgrade(connection);
+    // }
 
 }
