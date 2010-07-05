@@ -37,4 +37,20 @@ public class SectionQuestionDetail {
         return mandatory;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SectionQuestionDetail that = (SectionQuestionDetail) o;
+
+        if (questionId != that.questionId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return questionId;
+    }
 }
