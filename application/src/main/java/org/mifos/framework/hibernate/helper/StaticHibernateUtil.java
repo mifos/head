@@ -44,16 +44,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-    /**
-     * Close a session. Do nothing if the session is null or already closed.
-     *
-     * @deprecated use only {@link StaticHibernateUtil#closeSession()} for session retrieved by
-     *             {@link StaticHibernateUtil#getSessionTL()}
-     */
-    @Deprecated
-    public static void closeSession(Session session) throws HibernateProcessException {
-        hibernateUtil.closeSession(session);
-    }
 
     public static SessionFactory getSessionFactory() {
         return hibernateUtil.getSessionFactory();
