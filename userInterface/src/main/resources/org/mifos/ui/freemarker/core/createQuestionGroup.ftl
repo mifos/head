@@ -33,7 +33,6 @@
 
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.addQuestionGroup":""}/]
     [@mifos.crumbpairs breadcrumb/]
-
     <div class=" fontnormal marginLeft30">
         <div class="orangeheading marginTop15">
             [@spring.message "questionnaire.addQuestionGroup"/]

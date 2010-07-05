@@ -18,25 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework;
+package org.mifos.security;
 
-import org.mifos.test.acceptance.framework.login.LoginPage;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.thoughtworks.selenium.Selenium;
-
-public class AppLauncher extends AbstractPage {
-
-	public AppLauncher() {
-		super();
-	}
-
-	public AppLauncher(Selenium selenium) {
-		super(selenium);
-	}
-
-	public LoginPage launchMifos() {
-		selenium.open("login.ftl");
-		return new LoginPage(selenium);
-	}
+public interface AuthenticationAuthorizationServiceFacade extends UserDetailsService {
 
 }
