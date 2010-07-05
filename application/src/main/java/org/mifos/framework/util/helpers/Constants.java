@@ -25,73 +25,73 @@ package org.mifos.framework.util.helpers;
  * a more specific place.
  */
 public interface Constants {
-    public final static String DELEGATOR = "Delegator";
-    public final static String VALUEOBJECT = "ValueObject";
-    public final static String BUSINESSPROCESSOR = "BusinessProcessor";
-    public final static String CONTEXT = "Context";
-    public final static String MIFOSLOCALE = "Mifos_Locale";
-    public final static String PREVIOUS_REQUEST = "Previous_Request";
-    public final static String PATH = "path";
-    public final static String CREATE_SUCCESS = "create_success";
-    public final static String UPDATE_SUCCESS = "update_success";
-    public final static String NEXT_SUCCESS = "next_success";
-    public final static String PREVIEW_SUCCESS = "preview_success";
-    public final static String SEARCH_SUCCESS = "search_success";
-    public static final String GET_SUCCESS = "get_success";
-    public static final String LOAD_SUCCESS = "load_success";
-    public static final String PREVIOUS_SUCCESS = "previous_success";
-    public final static String CANCEL_SUCCESS = "cancel_success";
-    public final static String MANAGE_SUCCESS = "manage_success";
-    public final static String DELETE_SUCCESS = "delete_success";
-    public final static String BUSINESSPROCESSORIMPLEMENTATION = "BusinessProcessorImplementation";
-    public final static String SKIPVALIDATION = "skipValidation";
-    public final static String MANAGE_PREVIOUS = "manage_previous";
-    public final static String MANAGE_PREVIEW = "manage_preview";
-    public final static String STORE_ATTRIBUTE = "store_attribute";
-    public final static String FAILURE = "failure";
-    public final static String MASTERINFO = "masterinfo";
+    String DELEGATOR = "Delegator";
+    String VALUEOBJECT = "ValueObject";
+    String BUSINESSPROCESSOR = "BusinessProcessor";
+    String CONTEXT = "Context";
+    String MIFOSLOCALE = "Mifos_Locale";
+    String PREVIOUS_REQUEST = "Previous_Request";
+    String PATH = "path";
+    String CREATE_SUCCESS = "create_success";
+    String UPDATE_SUCCESS = "update_success";
+    String NEXT_SUCCESS = "next_success";
+    String PREVIEW_SUCCESS = "preview_success";
+    String SEARCH_SUCCESS = "search_success";
+    String GET_SUCCESS = "get_success";
+    String LOAD_SUCCESS = "load_success";
+    String PREVIOUS_SUCCESS = "previous_success";
+    String CANCEL_SUCCESS = "cancel_success";
+    String MANAGE_SUCCESS = "manage_success";
+    String DELETE_SUCCESS = "delete_success";
+    String BUSINESSPROCESSORIMPLEMENTATION = "BusinessProcessorImplementation";
+    String SKIPVALIDATION = "skipValidation";
+    String MANAGE_PREVIOUS = "manage_previous";
+    String MANAGE_PREVIEW = "manage_preview";
+    String STORE_ATTRIBUTE = "store_attribute";
+    String FAILURE = "failure";
+    String MASTERINFO = "masterinfo";
 
-    public final static String USER_ID = "user_id";
-    public final static String BRANCH_ID = "branch_id";
-    public final static String OFFICE_NAME = "office_name";
-    public final static String SEARCH_NAME = "search_name";
-    public final static String SEARCH_RESULTS = "search_name";
+    String USER_ID = "user_id";
+    String BRANCH_ID = "branch_id";
+    String OFFICE_NAME = "office_name";
+    String SEARCH_NAME = "search_name";
+    String SEARCH_RESULTS = "search_name";
 
-    public final static String SEARCH_STRING = "search_string";
+    String SEARCH_STRING = "search_string";
 
-    public final static String ALGORITHM = "Algorithm";
-    public final static String CREATE = "create";
-    public final static String UPDATE = "update";
-    public final static String DELETE = "delete";
-    public final static short ACTIVE = 1;
-    public final static short LOCKED = 1;
-    public final static short PASSWORDCHANGED = 1;
-    public final static short LOANOFFICER = 1;
-    public final static String ROLECHANGEEVENT = "RoleChange";
-    public final static String ACTIVITYCHANGEEVENT = "ActivityChange";
-    public final static String KEY = "123456789123456789123456";
+    String ALGORITHM = "Algorithm";
+    String CREATE = "create";
+    String UPDATE = "update";
+    String DELETE = "delete";
+    short ACTIVE = 1;
+    short LOCKED = 1;
+    short PASSWORDCHANGED = 1;
+    short LOANOFFICER = 1;
+    String ROLECHANGEEVENT = "RoleChange";
+    String ACTIVITYCHANGEEVENT = "ActivityChange";
+    String KEY = "123456789123456789123456";
     // User Context for storing in session
-    public final static String USERCONTEXT = "UserContext";
-    public final static String TEMPUSERCONTEXT = "Temp_UserContext";
-    public final static String SELECTTAG = "select";
+    String USERCONTEXT = "UserContext";
+    String TEMPUSERCONTEXT = "Temp_UserContext";
+    String SELECTTAG = "select";
 
-    public static final short NO = 0;
-    public static final short YES = 1;
+    short NO = 0;
+    short YES = 1;
     // --------------------added for new framework
-    public static final String USER_CONTEXT_KEY = "UserContext";
-    public static final String ACTIVITYCONTEXT = "ActivityContext";
-    public static final String BUSINESS_KEY = "BusinessKey";
+    String USER_CONTEXT_KEY = "UserContext";
+    String ACTIVITYCONTEXT = "ActivityContext";
+    String BUSINESS_KEY = "BusinessKey";
 
-    public static final String ACCOUNT_TYPE = "AccountType";
-    public static final String ACCOUNT_VERSION = "AccountVersion";
-    public static final String ACCOUNT_ID = "AccountId";
+    String ACCOUNT_TYPE = "AccountType";
+    String ACCOUNT_VERSION = "AccountVersion";
+    String ACCOUNT_ID = "AccountId";
 
-    public static final String FIELD_CONFIGURATION = "FieldConfiguration";
+    String FIELD_CONFIGURATION = "FieldConfiguration";
 
-    public static final String CURRENTFLOWKEY = "currentFlowKey";
-    public static final String FLOWMANAGER = "flowManager";
+    String CURRENTFLOWKEY = "currentFlowKey";
+    String FLOWMANAGER = "flowManager";
 
-    public static final String ACTION_MAPPING = "actionMapping";
+    String ACTION_MAPPING = "actionMapping";
 
     /**
      * There is a large amount of code which generates randomNum, writes it to
@@ -102,10 +102,10 @@ public interface Constants {
      *
      * A related machanism is {@link TransactionDemarcate}.
      */
-    public static final String RANDOMNUM = "randomNUm";
+    String RANDOMNUM = "randomNUm";
 
-    public static final String INPUT = "input";
-    public static final String ERROR_VERSION_MISMATCH = "error.versionnodonotmatch";
-    public static final String LOAN = "loan";
-    public static final String EMPTY_STRING = "";
+    String INPUT = "input";
+    String ERROR_VERSION_MISMATCH = "error.versionnodonotmatch";
+    String LOAN = "loan";
+    String EMPTY_STRING = "";
 }

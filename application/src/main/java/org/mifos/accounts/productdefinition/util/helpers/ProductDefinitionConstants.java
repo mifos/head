@@ -21,275 +21,275 @@
 package org.mifos.accounts.productdefinition.util.helpers;
 
 /**
- * This interface contains all the definition of all constants required for
+ * This public interface contains all the definition of all constants required for
  * product definition
  */
 public interface ProductDefinitionConstants {
 
-    public String METHOD = "method";
-    public String PREVIEWMETHOD = "preview";
-    public String LOADMETHOD = "load";
-    public String CANCELMETHOD = "cancel";
-    public String GETMETHOD = "get";
-    public String SEARCHMETHOD = "search";
-    public String MANAGEMETHOD = "manage";
-    public String CREATEMETHOD = "create";
-    public String UPDATEMETHOD = "update";
-    public String INPUT = "input";
-    public String INPUTADMIN = "admin";
-    public String INPUTDETAILS = "details";
-    public String CHANGELOG = "ChangeLog";
+    String METHOD = "method";
+    String PREVIEWMETHOD = "preview";
+    String LOADMETHOD = "load";
+    String CANCELMETHOD = "cancel";
+    String GETMETHOD = "get";
+    String SEARCHMETHOD = "search";
+    String MANAGEMETHOD = "manage";
+    String CREATEMETHOD = "create";
+    String UPDATEMETHOD = "update";
+    String INPUT = "input";
+    String INPUTADMIN = "admin";
+    String INPUTDETAILS = "details";
+    String CHANGELOG = "ChangeLog";
 
-    public String LOAD = "load_success";
-    public String MANAGE = "manage_success";
-    public String CREATEPREVIEW = "create_preview";
-    public String MANAGEPREVIEW = "manage_preview";
-    public String CREATE = "create_success";
-    public String UPDATE = "update_success";
-    public String ADMINCANCELFORWARD = "cancel_admin";
-    public String DETAILSCANCELFORWARD = "cancel_details";
-    public String DETAILSPREVIOUSFORWARD = "previous_details";
-    public String ADMINPREVIOUSFORWARD = "previous_admin";
-    public String GET = "get_success";
-    public String SEARCH = "search_success";
-    public String SEARCHLOG = "search_log_success";
-    public String CANCEL = "cancel_success";
+    String LOAD = "load_success";
+    String MANAGE = "manage_success";
+    String CREATEPREVIEW = "create_preview";
+    String MANAGEPREVIEW = "manage_preview";
+    String CREATE = "create_success";
+    String UPDATE = "update_success";
+    String ADMINCANCELFORWARD = "cancel_admin";
+    String DETAILSCANCELFORWARD = "cancel_details";
+    String DETAILSPREVIOUSFORWARD = "previous_details";
+    String ADMINPREVIOUSFORWARD = "previous_admin";
+    String GET = "get_success";
+    String SEARCH = "search_success";
+    String SEARCHLOG = "search_log_success";
+    String CANCEL = "cancel_success";
 
     // Product Category
-    public String GETPATHPRODUCTCATEGORY = "ProductCategory";
-    public String PRODUCTCATEGORYNAME = "productCategoryName";
-    public String PRODUCTCATEGORYID = "productCategoryID";
-    public Short DEFAULTMAX = 0;
-    public String DEFAULTPRINDUELASTINSTFLAG = "2";
-    public String DEFAULTINTDEDDISBURSEMENTFLAG = "2";
-    public String DEFAULTRECURFREQUENCY = "1";
-    public String DEFAULTMINNOINSTALLMENTS = "1";
-    public String MIFOSPRDDEFACTIONFORM = "mifosproddefactionform";
-    public String METHODCALLED = "methodCalled";
+    String GETPATHPRODUCTCATEGORY = "ProductCategory";
+    String PRODUCTCATEGORYNAME = "productCategoryName";
+    String PRODUCTCATEGORYID = "productCategoryID";
+    Short DEFAULTMAX = 0;
+    String DEFAULTPRINDUELASTINSTFLAG = "2";
+    String DEFAULTINTDEDDISBURSEMENTFLAG = "2";
+    String DEFAULTRECURFREQUENCY = "1";
+    String DEFAULTMINNOINSTALLMENTS = "1";
+    String MIFOSPRDDEFACTIONFORM = "mifosproddefactionform";
+    String METHODCALLED = "methodCalled";
 
     // States for Product Category
-    public Short ACTIVE = 1;
-    public Short INACTIVE = 0;
+    Short ACTIVE = 1;
+    Short INACTIVE = 0;
 
     // payment types
-    public String GETPATHPMTTYPES = "PaymentTypes";
+    String GETPATHPMTTYPES = "PaymentTypes";
 
     // process flow
-    public String GETPATHPROCESSFLOW = "AccountProcess";
+    String GETPATHPROCESSFLOW = "AccountProcess";
 
     // product type for business processor
-    public String PRODUCTTYPE = "ProductType";
-    public String PRODUCTID = "prdOfferingId";
-    public String NOTALLOWEDPRODUCTID = "notAllowedPrdOfferingId";
-    public String PRODUCTCATEGORYLIST = "ProductCategoryList";
-    public String LOCALEID = "localeId";
-    public String STATUS = "status";
-    public String PRDCATEGORYSTATUSLIST = "PrdCategoryStatusList";
+    String PRODUCTTYPE = "ProductType";
+    String PRODUCTID = "prdOfferingId";
+    String NOTALLOWEDPRODUCTID = "notAllowedPrdOfferingId";
+    String PRODUCTCATEGORYLIST = "ProductCategoryList";
+    String LOCALEID = "localeId";
+    String STATUS = "status";
+    String PRDCATEGORYSTATUSLIST = "PrdCategoryStatusList";
 
     // Product Configuration(Lateness Definition)
     // Product Mix
-    public String GETPATHPRDCONF = "ProductConfiguration";
-    public String PRODUCTTYPELIST = "ProductTypeList";
-    public String PRODUCTINSTANCELIST = "ProductInstanceList";
-    public String ALLOWEDPRODUCTLIST = "AllowedProductList";
-    public String SELECTEDACCOUNTSTATUS = "SelectedAccountStatus";
-    public String AVAILABLEACCOUNTSTATUS = "AvailableAccountStatus";
-    public String NOTSELECTEDACCOUNTSTATUS = "NotSelectedAccountStatus";
-    public String STATUS_LIST = "statusList";
+    String GETPATHPRDCONF = "ProductConfiguration";
+    String PRODUCTTYPELIST = "ProductTypeList";
+    String PRODUCTINSTANCELIST = "ProductInstanceList";
+    String ALLOWEDPRODUCTLIST = "AllowedProductList";
+    String SELECTEDACCOUNTSTATUS = "SelectedAccountStatus";
+    String AVAILABLEACCOUNTSTATUS = "AvailableAccountStatus";
+    String NOTSELECTEDACCOUNTSTATUS = "NotSelectedAccountStatus";
+    String STATUS_LIST = "statusList";
 
-    public String NOTALLOWEDPRODUCTLIST = "NotAllowedProductList";
-    public String OLDNOTALLOWEDPRODUCTLIST = "OldNotAllowedProductList";
+    String NOTALLOWEDPRODUCTLIST = "NotAllowedProductList";
+    String OLDNOTALLOWEDPRODUCTLIST = "OldNotAllowedProductList";
 
-    public String TABALLOWED = "tabAllowed";
-    public String SHOWMESSAGE = "showMessage";
+    String TABALLOWED = "tabAllowed";
+    String SHOWMESSAGE = "showMessage";
 
-    public String PRODUCTMIXLIST = "ProductMixList";
+    String PRODUCTMIXLIST = "ProductMixList";
 
-    public String PRODUCTTYPEID = "productTypeID";
-    public String PRODUCTCATEGORYSTATUSID = "prdCategoryStatusId";
-    public String LOANPRODUCTID = "loanId";
-    public String SAVINGSPRODUCTID = "savingsId";
+    String PRODUCTTYPEID = "productTypeID";
+    String PRODUCTCATEGORYSTATUSID = "prdCategoryStatusId";
+    String LOANPRODUCTID = "loanId";
+    String SAVINGSPRODUCTID = "savingsId";
 
     // Product Offering
-    public String PRDOFFERINGNAME = "prdOfferingName";
-    public String PRDOFFERINGSHORTNAME = "prdOfferingShortName";
-    public String PRODUCTOFFERINGLIST = "productOfferingList";
-    public String OLDPRODUCTOFFERINGLIST = "oldProductOfferingList";
-    public String NOTALLOWEDPRODUCTOFFERINGLIST = "notAllowedproductOfferingList";
+    String PRDOFFERINGNAME = "prdOfferingName";
+    String PRDOFFERINGSHORTNAME = "prdOfferingShortName";
+    String PRODUCTOFFERINGLIST = "productOfferingList";
+    String OLDPRODUCTOFFERINGLIST = "oldProductOfferingList";
+    String NOTALLOWEDPRODUCTOFFERINGLIST = "notAllowedproductOfferingList";
 
     // Loan Product
 
-    public String GETPATHLOANPRODUCT = "LoanProduct";
-    public String LOANPRODUCTCATEGORYLIST = "LoanProductCategoryList";
-    public String LOANAPPLFORLIST = "LoanApplForList";
-    public String LOANGRACEPERIODTYPELIST = "LoanGracePeriodTypeList";
-    public String YESNOMASTERLIST = "YesNoMasterList";
-    public String INTERESTTYPESLIST = "InterestTypesList";
-    public String INTERESTCALCRULELIST = "InterestCalcRuleList";
-    public String PENALTYTYPESLIST = "PenaltyTypesList";
-    public String LOANPRDSTATUSLIST = "LoanPrdStatusList";
-    public String LOANPRODUCTLIST = "LoanProductList";
-    public String LOANPRODUCTNAME = "loanProductName";
-    public String SRCFUNDSLIST = "SrcFundsList";
-    public String LOANFEESLIST = "LoanFeesList";
-    public String LOANCATEGORYID = "loanCategoryId";
-    public String LOANFEESSTATUS = "feeStatus";
-    public String OFFERINGAPPLICENTERSID = "offerinApplicableCentersId";
-    public String LOANPRDACTIONFORM = "loanprdactionform";
-    public String LOANPRDACTIONDEFAMOUNT = "Default amount";
-    public String LOANPRDACTIONMAXAMOUNT = "max amount";
-    public String LOANPRDACTIONDEFINTERESTRATE = "Default interest rate";
-    public String LOANPRDACTIONMAXINTERESTRATE = "max interest rate";
-    public String LOANAMOUNTTYPE = "loanAmountType";
-    public String INSTALLTYPE = "installType";
-    public String PRDOFFERINGBO = "prdOfferingBO";
+    String GETPATHLOANPRODUCT = "LoanProduct";
+    String LOANPRODUCTCATEGORYLIST = "LoanProductCategoryList";
+    String LOANAPPLFORLIST = "LoanApplForList";
+    String LOANGRACEPERIODTYPELIST = "LoanGracePeriodTypeList";
+    String YESNOMASTERLIST = "YesNoMasterList";
+    String INTERESTTYPESLIST = "InterestTypesList";
+    String INTERESTCALCRULELIST = "InterestCalcRuleList";
+    String PENALTYTYPESLIST = "PenaltyTypesList";
+    String LOANPRDSTATUSLIST = "LoanPrdStatusList";
+    String LOANPRODUCTLIST = "LoanProductList";
+    String LOANPRODUCTNAME = "loanProductName";
+    String SRCFUNDSLIST = "SrcFundsList";
+    String LOANFEESLIST = "LoanFeesList";
+    String LOANCATEGORYID = "loanCategoryId";
+    String LOANFEESSTATUS = "feeStatus";
+    String OFFERINGAPPLICENTERSID = "offerinApplicableCentersId";
+    String LOANPRDACTIONFORM = "loanprdactionform";
+    String LOANPRDACTIONDEFAMOUNT = "Default amount";
+    String LOANPRDACTIONMAXAMOUNT = "max amount";
+    String LOANPRDACTIONDEFINTERESTRATE = "Default interest rate";
+    String LOANPRDACTIONMAXINTERESTRATE = "max interest rate";
+    String LOANAMOUNTTYPE = "loanAmountType";
+    String INSTALLTYPE = "installType";
+    String PRDOFFERINGBO = "prdOfferingBO";
 
-    public Short LOANFRQINSTID = 1;
-    public Short LOANFEESINACTIVEID = 1;
-    public Short LOANCATEGORYIDVALUE = 5;
+    Short LOANFRQINSTID = 1;
+    Short LOANFEESINACTIVEID = 1;
+    Short LOANCATEGORYIDVALUE = 5;
 
-    public Short LOANAMOUNTTYPE_UNKNOWN = 0;
-    public Short LOANAMOUNTSAMEFORALLLOAN = 1;
-    public Short LOANAMOUNTFROMLASTLOAN = 2;
-    public Short LOANAMOUNTFROMLOANCYCLE = 3;
+    Short LOANAMOUNTTYPE_UNKNOWN = 0;
+    Short LOANAMOUNTSAMEFORALLLOAN = 1;
+    Short LOANAMOUNTFROMLASTLOAN = 2;
+    Short LOANAMOUNTFROMLOANCYCLE = 3;
 
-    public Short NOOFINSTALL_UNKNOWN = 0;
-    public Short NOOFINSTALLSAMEFORALLLOAN = 1;
-    public Short NOOFINSTALLFROMLASTLOAN = 2;
-    public Short NOOFINSTALLFROMLOANCYCLLE = 3;
+    Short NOOFINSTALL_UNKNOWN = 0;
+    Short NOOFINSTALLSAMEFORALLLOAN = 1;
+    Short NOOFINSTALLFROMLASTLOAN = 2;
+    Short NOOFINSTALLFROMLOANCYCLLE = 3;
     // Savings Product
 
-    public String GETPATHSAVINGSPRODUCT = "SavingsProduct";
-    public String SAVINGSPRODUCTCATEGORYLIST = "SavingsProductCategoryList";
-    public String SAVINGSAPPLFORLIST = "SavingsApplForList";
-    public String SAVINGSTYPELIST = "SavingsTypesList";
-    public String RECAMNTUNITLIST = "RecAmntUnitList";
-    public String INTCALCTYPESLIST = "IntCalcTypesList";
-    public String SAVINGSPRODUCTNAME = "savingsProductName";
-    public String SAVINGSPRODUCTLIST = "SavingsProductList";
-    public String PRDOFFERINGID = "prdOfferingId";
-    public String SAVINGSPRDSTATUSLIST = "SavingsPrdStatusList";
-    public String SAVINGSPRDACTIONFORM = "savingsprdactionform";
-    public String SAVINGSRECURRENCETYPELIST = "SavingsRecurrenceTypeList";
+    String GETPATHSAVINGSPRODUCT = "SavingsProduct";
+    String SAVINGSPRODUCTCATEGORYLIST = "SavingsProductCategoryList";
+    String SAVINGSAPPLFORLIST = "SavingsApplForList";
+    String SAVINGSTYPELIST = "SavingsTypesList";
+    String RECAMNTUNITLIST = "RecAmntUnitList";
+    String INTCALCTYPESLIST = "IntCalcTypesList";
+    String SAVINGSPRODUCTNAME = "savingsProductName";
+    String SAVINGSPRODUCTLIST = "SavingsProductList";
+    String PRDOFFERINGID = "prdOfferingId";
+    String SAVINGSPRDSTATUSLIST = "SavingsPrdStatusList";
+    String SAVINGSPRDACTIONFORM = "savingsprdactionform";
+    String SAVINGSRECURRENCETYPELIST = "SavingsRecurrenceTypeList";
 
     // Change Log
-    public Short LOANENTITYTYPEID = 2;
-    public Short SAVINGSENTITYTYPEID = 3;
-    public String LOANCHANGELOGLIST = "LoanChangeLogList";
-    public String SAVINGSCHANGELOGLIST = "SavingsChangeLogList";
+    Short LOANENTITYTYPEID = 2;
+    Short SAVINGSENTITYTYPEID = 3;
+    String LOANCHANGELOGLIST = "LoanChangeLogList";
+    String SAVINGSCHANGELOGLIST = "SavingsChangeLogList";
 
     // Exceptions
-    public String ERRORMAXMINLOANAMOUNT = "errors.maxminLoanAmount";
-    public String ERRORMAXMINNOOFINSTALL = "errors.maxminnoofinstall";
-    public String ERRORDEFLOANAMOUNT = "errors.defLoanAmount";
-    public String ERRORMAXMININTRATE = "errors.maxminIntRate";
-    public String ERRORDEFINTRATE = "errors.defIntRate";
-    public String ERRORINTRATE = "errors.intRateValue";
-    public String PRDINVALID = "errors.invalid";
-    public String DUPLICATE_CATEGORY_NAME = "errors.duplcategoryname";
-    public String DUPLPRDINSTNAME = "errors.duplprdinstname";
-    public String DUPLPRDINSTSHORTNAME = "errors.duplprdinstshortname";
-    public String INVALIDSTARTDATE = "errors.startdateexception";
-    public String INVALIDENDDATE = "errors.enddateexception";
-    public String STARTDATEUPDATEEXCEPTION = "errors.startdateupdateexception";
-    public String ERRORMAXPENALTYRATE = "errors.maxpenaltyrate";
-    public String ERRORFEEFREQUENCY = "errors.feefrequency";
-    public String ERROR_FEE_CURRENCY_MATCH = "errors.feeCurrencyMatch";
-    public String ERRORMANDAMOUNT = "errors.mandAmount";
-    public String INVALIDFIELD = "exceptions.application.productDef.invalidfield";
-    public String ERROR_MANDATORY = "errors.mandatory";
-    public String DECLINEINTERESTDISBURSEMENTDEDUCTION = "exceptions.declineinterestdisbursementdeduction";
-    public String ERROR_SELECT = "errors.select";
-    public String ERROR_CREATE = "errors.create";
-    public String ERRORSSELECTCONFIG = "errors.selectconfig";
-    public String ERRORSENTERCONFIG = "errors.mandatoryconfig";
-    public String ERRORSDEFMINMAXCONFIG = "errors.defMinMaxconfig";
-    public String ERRORSMINMAXINTCONFIG = "errors.maxminIntRateconfig";
-    public String ERRORSDEFINTCONFIG = "errors.defIntRateconfig";
-    public String ERRORS_RANGE = "errors.defMinMax";
+    String ERRORMAXMINLOANAMOUNT = "errors.maxminLoanAmount";
+    String ERRORMAXMINNOOFINSTALL = "errors.maxminnoofinstall";
+    String ERRORDEFLOANAMOUNT = "errors.defLoanAmount";
+    String ERRORMAXMININTRATE = "errors.maxminIntRate";
+    String ERRORDEFINTRATE = "errors.defIntRate";
+    String ERRORINTRATE = "errors.intRateValue";
+    String PRDINVALID = "errors.invalid";
+    String DUPLICATE_CATEGORY_NAME = "errors.duplcategoryname";
+    String DUPLPRDINSTNAME = "errors.duplprdinstname";
+    String DUPLPRDINSTSHORTNAME = "errors.duplprdinstshortname";
+    String INVALIDSTARTDATE = "errors.startdateexception";
+    String INVALIDENDDATE = "errors.enddateexception";
+    String STARTDATEUPDATEEXCEPTION = "errors.startdateupdateexception";
+    String ERRORMAXPENALTYRATE = "errors.maxpenaltyrate";
+    String ERRORFEEFREQUENCY = "errors.feefrequency";
+    String ERROR_FEE_CURRENCY_MATCH = "errors.feeCurrencyMatch";
+    String ERRORMANDAMOUNT = "errors.mandAmount";
+    String INVALIDFIELD = "exceptions.application.productDef.invalidfield";
+    String ERROR_MANDATORY = "errors.mandatory";
+    String DECLINEINTERESTDISBURSEMENTDEDUCTION = "exceptions.declineinterestdisbursementdeduction";
+    String ERROR_SELECT = "errors.select";
+    String ERROR_CREATE = "errors.create";
+    String ERRORSSELECTCONFIG = "errors.selectconfig";
+    String ERRORSENTERCONFIG = "errors.mandatoryconfig";
+    String ERRORSDEFMINMAXCONFIG = "errors.defMinMaxconfig";
+    String ERRORSMINMAXINTCONFIG = "errors.maxminIntRateconfig";
+    String ERRORSDEFINTCONFIG = "errors.defIntRateconfig";
+    String ERRORS_RANGE = "errors.defMinMax";
 
-    public String BALANCE_INTEREST = "Balance used for ";
-    public String CALCULATION = "calculation";
-    public String TIME_PERIOD = "Time period for ";
-    public String FREQUENCY = "Frequency of ";
-    public String POSTING_ACCOUNTS = "posting to accounts";
-    public String RECUR_AFTER = "Recur every";
-    public String GLCODE_FOR = "GL code for ";
+    String BALANCE_INTEREST = "Balance used for ";
+    String CALCULATION = "calculation";
+    String TIME_PERIOD = "Time period for ";
+    String FREQUENCY = "Frequency of ";
+    String POSTING_ACCOUNTS = "posting to accounts";
+    String RECUR_AFTER = "Recur every";
+    String GLCODE_FOR = "GL code for ";
 
     // GLcodes
-    public String PRICIPALGLCODE = "principal";
-    public String INTERESTGLCODE = "interest";
-    public String PENALTYGLCODE = "penalty";
-    public String DEPOSITGLCODE = "deposit";
-    public String SAVINGSPRODUCTACTIONFORM = "savingsproductactionform";
-    public String SAVINGSDEPOSITGLCODELIST = "depositGLCodes";
-    public String SAVINGSINTERESTGLCODELIST = "interestGLCodes";
-    public String SAVINGSPRDGLOBALOFFERINGNUM = "savingsprdglobalofferingnum";
-    public String LOANPRICIPALGLCODELIST = "principalGLCodes";
-    public String LOANINTERESTGLCODELIST = "interestGLCodes";
-    public String LOANPRODUCTACTIONFORM = "loanproductactionform";
-    public String LOANPRDGLOBALOFFERINGNUM = "loanprdglobalofferingnum";
-    public String LOANPRDFEESELECTEDLIST = "loanprdfeeselectedlist";
-    public String LOANPRDFUNDSELECTEDLIST = "loanprdfundselectedlist";
-    public String LOANPRDFEE = "loanprdfee";
-    public String RATETYPE = "rate type";
-    public String RATE = "rate";
-    public String MAX = "Max";
-    public String MIN = "Min";
-    public String DEFAULT = "Default ";
-    public String LOANPRDSTARTDATE = "LoanPrdstartDate";
+    String PRICIPALGLCODE = "principal";
+    String INTERESTGLCODE = "interest";
+    String PENALTYGLCODE = "penalty";
+    String DEPOSITGLCODE = "deposit";
+    String SAVINGSPRODUCTACTIONFORM = "savingsproductactionform";
+    String SAVINGSDEPOSITGLCODELIST = "depositGLCodes";
+    String SAVINGSINTERESTGLCODELIST = "interestGLCodes";
+    String SAVINGSPRDGLOBALOFFERINGNUM = "savingsprdglobalofferingnum";
+    String LOANPRICIPALGLCODELIST = "principalGLCodes";
+    String LOANINTERESTGLCODELIST = "interestGLCodes";
+    String LOANPRODUCTACTIONFORM = "loanproductactionform";
+    String LOANPRDGLOBALOFFERINGNUM = "loanprdglobalofferingnum";
+    String LOANPRDFEESELECTEDLIST = "loanprdfeeselectedlist";
+    String LOANPRDFUNDSELECTEDLIST = "loanprdfundselectedlist";
+    String LOANPRDFEE = "loanprdfee";
+    String RATETYPE = "rate type";
+    String RATE = "rate";
+    String MAX = "Max";
+    String MIN = "Min";
+    String DEFAULT = "Default ";
+    String LOANPRDSTARTDATE = "LoanPrdstartDate";
     // product configuration
-    public String LATENESS_DAYS = "lateness_days";
-    public String DORMANCY_DAYS = "dormancy_days";
-    public String DORMANCYDAYS = "dormancy days";
-    public String LATENESSDAYS = "lateness days";
+    String LATENESS_DAYS = "lateness_days";
+    String DORMANCY_DAYS = "dormancy_days";
+    String DORMANCYDAYS = "dormancy days";
+    String LATENESSDAYS = "lateness days";
 
-    public String MAX_DAYS = "product.maxDays";
-    public String ERROR_MAX_DAYS = "errors.maxValue";
+    String MAX_DAYS = "product.maxDays";
+    String ERROR_MAX_DAYS = "errors.maxValue";
 
-    public String PRODUCT_TYPE = "product type";
-    public String PRODUCT_INSTANCE_NAME = "product instance name";
+    String PRODUCT_TYPE = "product type";
+    String PRODUCT_INSTANCE_NAME = "product instance name";
 
-    public String ERRORMINIMUMLOANAMOUNT = "errors.minloanamount";
-    public String ERRORMAXIMUMLOANAMOUNT = "errors.maxloanamount";
-    public String ERRORDEFAULTLOANAMOUNT = "errors.defaultloanamount";
-    public String ERRORSTARTRANGELOANAMOUNT = "errors.startloanamount";
-    public String ERRORENDLOANAMOUNT = "errors.endloanamount";
-    public String ERRORCALCLOANAMOUNTTYPE = "errors.calcloanamounttype";
-    public String ERRORSTARTENDLOANAMOUNT = "errors.startendrangeloanamount";
+    String ERRORMINIMUMLOANAMOUNT = "errors.minloanamount";
+    String ERRORMAXIMUMLOANAMOUNT = "errors.maxloanamount";
+    String ERRORDEFAULTLOANAMOUNT = "errors.defaultloanamount";
+    String ERRORSTARTRANGELOANAMOUNT = "errors.startloanamount";
+    String ERRORENDLOANAMOUNT = "errors.endloanamount";
+    String ERRORCALCLOANAMOUNTTYPE = "errors.calcloanamounttype";
+    String ERRORSTARTENDLOANAMOUNT = "errors.startendrangeloanamount";
 
-    public String ERRORMINIMUMINSTALLMENT = "errors.mininstallments";
-    public String ERRORMAXIMUMINSTALLMENT = "errors.maxinstallments";
-    public String ERRORDEFAULTINSTALLMENT = "errors.definstallments";
-    public String ERRORSTARTRANGEINSTALLMENT = "errors.startinstallment";
-    public String ERRORENDINSTALLMENT = "errors.endinstallment";
-    public String ERRORCALCINSTALLMENTTYPE = "errors.calcinstallmenttype";
-    public String ERRORSTARTENDINSTALLMENT = "errors.startendinstallment";
-    public String ERRORMINMAXDEFINSTALLMENT = "errors.defaultinstallments";
-    public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE = "errors.principallast_invalidgrace";
-    public String SAMEFORALLLOANS = "product.sameforallloans";
-    public String FORBYLASTLOANATROW = "product.forbylastloanatrow";
-    public String FORBYLOANCYCLEATROW = "product.forbyloancycleatrow";
-    public String INVALIDRATE = "errors.intRate";
-    public String FORNUMBEROFLASTLOLANINSTALLMENTATROW = "product.fornumberoflastloaninstallmentatrow";
+    String ERRORMINIMUMINSTALLMENT = "errors.mininstallments";
+    String ERRORMAXIMUMINSTALLMENT = "errors.maxinstallments";
+    String ERRORDEFAULTINSTALLMENT = "errors.definstallments";
+    String ERRORSTARTRANGEINSTALLMENT = "errors.startinstallment";
+    String ERRORENDINSTALLMENT = "errors.endinstallment";
+    String ERRORCALCINSTALLMENTTYPE = "errors.calcinstallmenttype";
+    String ERRORSTARTENDINSTALLMENT = "errors.startendinstallment";
+    String ERRORMINMAXDEFINSTALLMENT = "errors.defaultinstallments";
+    String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE = "errors.principallast_invalidgrace";
+    String SAMEFORALLLOANS = "product.sameforallloans";
+    String FORBYLASTLOANATROW = "product.forbylastloanatrow";
+    String FORBYLOANCYCLEATROW = "product.forbyloancycleatrow";
+    String INVALIDRATE = "errors.intRate";
+    String FORNUMBEROFLASTLOLANINSTALLMENTATROW = "product.fornumberoflastloaninstallmentatrow";
 
-    public String ERRORMINIMUMLOANAMOUNTINVALIDFORMAT = "errors.minloanamountinvalidformat";
-    public String ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT = "errors.maxloanamountinvalidformat";
-    public String ERRORDEFAULTLOANAMOUNTINVALIDFORMAT = "errors.defaultloanamountinvalidformat";
+    String ERRORMINIMUMLOANAMOUNTINVALIDFORMAT = "errors.minloanamountinvalidformat";
+    String ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT = "errors.maxloanamountinvalidformat";
+    String ERRORDEFAULTLOANAMOUNTINVALIDFORMAT = "errors.defaultloanamountinvalidformat";
 
-    public String ERRORMININTERESTINVALIDFORMAT = "errors.mininterestinvalidformat";
-    public String ERRORMAXINTERESTINVALIDFORMAT = "errors.maxinterestinvalidformat";
-    public String ERRORDEFINTERESTINVALIDFORMAT = "errors.definterestinvalidformat";
+    String ERRORMININTERESTINVALIDFORMAT = "errors.mininterestinvalidformat";
+    String ERRORMAXINTERESTINVALIDFORMAT = "errors.maxinterestinvalidformat";
+    String ERRORDEFINTERESTINVALIDFORMAT = "errors.definterestinvalidformat";
 
-    public String EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR";
-    public String EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR";
-    public String NOT_ALL_NUMBER = "NOT_ALL_NUMBER";
-    public String CONVERSION_ERROR = "CONVERSION_ERROR";
+    String EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR";
+    String EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR = "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR";
+    String NOT_ALL_NUMBER = "NOT_ALL_NUMBER";
+    String CONVERSION_ERROR = "CONVERSION_ERROR";
 
     //Create Saving Products
-    public static final String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "product.mandamntdep";
-    public static final String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "product.recamtdep";
-    public static final String MAX_AMOUNT_WITHDRAWL_KEY = "product.maxamtwid";
-    public static final String MIN_BALANCE_FOR_CALC_KEY = "product.minBalForCalc";
-    public static final String ERROR_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
+    String MANDATORY_AMOUNT_FOR_DEPOSIT_KEY = "product.mandamntdep";
+    String RECOMMENDED_AMOUNT_FOR_DEPOSIT_KEY = "product.recamtdep";
+    String MAX_AMOUNT_WITHDRAWL_KEY = "product.maxamtwid";
+    String MIN_BALANCE_FOR_CALC_KEY = "product.minBalForCalc";
+    String ERROR_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
 }

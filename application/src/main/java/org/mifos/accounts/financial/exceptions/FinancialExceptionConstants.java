@@ -21,11 +21,11 @@
 package org.mifos.accounts.financial.exceptions;
 
 public interface FinancialExceptionConstants {
-    public static final String ACTIONNOTFOUND = "exception.financial.ApplicationException.ActionNotFound";
+    String ACTIONNOTFOUND = "exception.financial.ApplicationException.ActionNotFound";
 
-    public static final String ACCOUNT_NOT_FOUND = "exception.financial.ApplicationException.AccountNotFound";
+    String ACCOUNT_NOT_FOUND = "exception.financial.ApplicationException.AccountNotFound";
 
-    public static final String FINANCIALACTION_INITFAILED = "exception.financial.ApplicationException.FinInitFailed";
+    String FINANCIALACTION_INITFAILED = "exception.financial.ApplicationException.FinInitFailed";
 
-    public static final String COA_INITFAILED = "exception.financial.ApplicationException.COAInitFailed";
+    String COA_INITFAILED = "exception.financial.ApplicationException.COAInitFailed";
 }
