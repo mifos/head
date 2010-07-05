@@ -20,6 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Date;
 import java.util.List;
 
@@ -97,6 +99,6 @@ public interface LoanServiceFacade {
 
     LoanInformationDto getLoanInformationDto(String globalAccountNum) throws ServiceException;
 
-    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity)
+    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, LoanBusinessService loanBusinessService, ClientBusinessService clientBusinessService)
             throws ServiceException;
 }

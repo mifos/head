@@ -95,8 +95,7 @@ public class LoanServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao,
-                loanBusinessService, clientBusinessService);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
     }
 
     @Test

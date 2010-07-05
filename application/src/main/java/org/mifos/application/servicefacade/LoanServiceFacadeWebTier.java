@@ -140,20 +140,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
-    private final LoanBusinessService loanBusinessService;
-    private final ClientBusinessService clientBusinessService;
-
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, final LoanBusinessService loanBusinessService,
-            final ClientBusinessService clientBusinessService) {
+            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
-        this.loanBusinessService = loanBusinessService;
-        this.clientBusinessService = clientBusinessService;
     }
 
     @Override
@@ -1046,7 +1040,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto,
-                                                                 List<BusinessActivityEntity> businessActEntity) throws ServiceException {
+                                                                 List<BusinessActivityEntity> businessActEntity,
+                                                                 LoanBusinessService loanBusinessService,
+                                                                 ClientBusinessService clientBusinessService) throws ServiceException {
 
         List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                 loanInformationDto.getAccountId()).toString());

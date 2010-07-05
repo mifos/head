@@ -226,8 +226,7 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao,
-                    loanBusinessService, clientBusinessService);
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
         }
         return loanServiceFacade;
     }

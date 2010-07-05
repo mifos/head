@@ -66,6 +66,9 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestTypeNameLocalised')}"
 				var="interestTypeNameLocalised" />
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountFlagNamesLocalised')}"
+				var="accountFlagNamesLocalised" />
 
 
 			<html-el:hidden property="currentFlowKey"
@@ -109,7 +112,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								moduleName="org.mifos.accounts.util.resources.accountsImages" /> <c:out
 								value="${accountStateNameLocalised}" />&nbsp; 
 								<c:forEach
-								var="flagSet" items="${loanInformationDto.accountFlagNamesLocalised}">
+								var="flagSet" items="${accountFlagNamesLocalised}">
 								<span class="fontnormal"><c:out
 									value="${flagSet}" /></span>
 							</c:forEach> </span></td>

@@ -595,10 +595,12 @@ public class LoanAccountAction extends AccountAppAction {
             List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
                             .getAttribute("BusinessActivities", request);
             SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
-                    businessActEntity), request);
+                    businessActEntity, loanBusinessService, clientBusinessService), request);
         }
         loadCustomFieldDefinitions(request);
         loadMasterData(request);
+        SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService
+                .getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
         request.setAttribute(CustomerConstants.SURVEY_KEY, loanInformationDto.getAccountSurveys());
