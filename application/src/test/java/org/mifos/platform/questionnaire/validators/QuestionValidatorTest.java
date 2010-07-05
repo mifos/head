@@ -31,6 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -165,6 +166,20 @@ public class QuestionValidatorTest {
             fail("Should have thrown the application exception");
         } catch (ApplicationException e) {
             assertEquals(NO_QUESTIONS_FOUND_IN_SECTION, e.getKey());
+        }
+        verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenAGivenQuestionAppearsInMoreThanOneSection() {
+        try {
+            SectionDefinition sectionDefinition1 = getSectionWithQuestions("S1", 1, 3);
+            SectionDefinition sectionDefinition2 = getSectionWithQuestions("S2", 3, 2);
+            List<SectionDefinition> sectionDefinitions = asList(sectionDefinition1, sectionDefinition2);
+            questionnaireValidator.validate(new QuestionGroupDefinition("Title", getEventSource("Create", "Client"), sectionDefinitions));
+            fail("Should have thrown the application exception");
+        } catch (ApplicationException e) {
+            assertEquals(DUPLICATE_QUESTION_FOUND_IN_SECTION, e.getKey());
         }
         verify(eventSourceDao, never()).retrieveCountByEventAndSource(anyString(), anyString());
     }
