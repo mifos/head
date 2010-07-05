@@ -20,6 +20,9 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +40,13 @@ import org.springframework.web.bind.support.SessionStatus;
 @SessionAttributes("formBean")
 public class LatenessDormancyController {
 
-    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
+    private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/admin.ftl";
     private static final String CANCEL_PARAM = "CANCEL";
     private static final String CANCEL_PARAM_VALUE = "Cancel";
+
+    BreadCrumbsLinks adminCrumb=new BreadCrumbsLinks();
+    BreadCrumbsLinks childCrumb=new BreadCrumbsLinks();
+    List<BreadCrumbsLinks> breadcrumbs=new LinkedList<BreadCrumbsLinks> ();
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -53,17 +60,26 @@ public class LatenessDormancyController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+     @ModelAttribute("breadcrumbs")
+    public List<BreadCrumbsLinks> showBreadCrumbs() {
+        adminCrumb.setLink("admin.ftl");
+        childCrumb.setLink("editLatenessDormancy.ftl");
+        adminCrumb.setMessage("admin");
+        childCrumb.setMessage("editLatenessDormancy");
+        breadcrumbs.add(adminCrumb);
+        breadcrumbs.add(childCrumb);
+        return breadcrumbs;
+    }
     @ModelAttribute("formBean")
     public LatenessDormancyFormBean showPopulatedForm() {
-
         ProductConfigurationDto productConfiguration = adminServiceFacade.retrieveProductConfiguration();
-
         LatenessDormancyFormBean formBean = new LatenessDormancyFormBean();
         formBean.setLatenessDays(productConfiguration.getLatenessDays());
         formBean.setDormancyDays(productConfiguration.getDormancyDays());
-
         return formBean;
     }
+
+
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
