@@ -22,6 +22,8 @@ package org.mifos.platform.questionnaire.persistence;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.contract.QuestionDefinition;
 import org.mifos.platform.questionnaire.contract.QuestionDetail;
@@ -33,9 +35,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mifos.platform.questionnaire.contract.QuestionType.DATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,6 +64,25 @@ public class QuestionDaoIntegrationTest {
         defineQuestion(questionTitle, DATE);
         result = questionDao.retrieveCountOfQuestionsWithTitle(questionTitle);
         assertEquals((long) 1, result.get(0));
+    }
+
+    @Test
+    @Transactional
+    public void testRetrieveByState() throws ApplicationException {
+        QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
+        List list = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
+        List<Integer> expectedIds = Arrays.asList(questionDetail1.getId(), questionDetail2.getId());
+        List<String> expectedTitles = Arrays.asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<Question> actualQuestions = new ArrayList<Question>();
+        for (Object obj : list) {
+            Question question = (Question) obj;
+            if (expectedIds.contains(question.getQuestionId()))
+                actualQuestions.add(question);
+        }
+        assertThat(actualQuestions.size(), is(2));
+        assertThat(actualQuestions.get(0).getShortName(), is(expectedTitles.get(0)));
+        assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws ApplicationException {
