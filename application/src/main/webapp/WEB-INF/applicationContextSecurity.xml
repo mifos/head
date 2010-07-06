@@ -22,6 +22,7 @@
 		<intercept-url pattern="/ping.ftl" filters="none" />
 		<intercept-url pattern="/dateTimeUpdate.ftl*" filters="none" />
 		<intercept-url pattern="/initializeApplication.ftl*" filters="none" />
+		<intercept-url pattern="/customPropertiesUpdate.ftl*" filters="none" />
 		
 		<intercept-url pattern="/login.ftl*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
     	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
