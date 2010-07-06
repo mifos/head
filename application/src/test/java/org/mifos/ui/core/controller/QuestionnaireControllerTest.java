@@ -20,6 +20,7 @@
 package org.mifos.ui.core.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
@@ -30,7 +31,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.EventSource;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -41,6 +41,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -161,30 +162,79 @@ public class QuestionnaireControllerTest {
     @Test
     public void testAddSectionForSuccess() throws Exception {
         QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setQuestionPool(new ArrayList(asList(getQuestion("1", "Q1", "Free text"), getQuestion("2", "Q2", "Date"))));
+        questionGroup.setSelectedQuestionIds(asList("1"));
         questionGroup.setTitle("title");
         questionGroup.setSectionName("sectionName");
-        String result = questionnaireController.addSection(questionGroup);
+        String result = questionnaireController.addSection(questionGroup, requestContext);
         assertThat(questionGroup.getSections().size(), is(1));
+        assertThat(questionGroup.getSections().get(0).getName(), is("sectionName"));
+        assertThat(questionGroup.getSections().get(0).getQuestions().size(), is(1));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(0).getTitle(), is("Q1"));
         assertThat(result, is("success"));
     }
 
     @Test
     public void testAddSectionsSuccessWhenSectionNameIsNotProvided() {
         QuestionGroup questionGroup = new QuestionGroup();
-        String result = questionnaireController.addSection(questionGroup);
+        questionGroup.setQuestionPool(new ArrayList(asList(getQuestion("1", "Q1", "Free text"), getQuestion("2", "Q2", "Date"))));
+        questionGroup.setSelectedQuestionIds(asList("2"));
+        String result = questionnaireController.addSection(questionGroup, requestContext);
         assertThat(questionGroup.getSections().size(), is(1));
         assertThat(questionGroup.getSections().get(0).getName(), is("Misc"));
+        assertThat(questionGroup.getSections().get(0).getQuestions().size(), is(1));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(0).getTitle(), is("Q2"));
         assertThat(result, is("success"));
     }
 
     @Test
     public void testAddSectionForSuccessWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setQuestionPool(new ArrayList(asList(getQuestion("1", "Q1", "Free text"), getQuestion("2", "Q2", "Date"))));
+        questionGroup.setSelectedQuestionIds(asList("1", "2"));
         questionGroup.setSectionName("        ");
-        String result = questionnaireController.addSection(questionGroup);
+        String result = questionnaireController.addSection(questionGroup, requestContext);
         assertThat(questionGroup.getSections().size(), is(1));
         assertThat(questionGroup.getSections().get(0).getName(), is("Misc"));
+        assertThat(questionGroup.getSections().get(0).getQuestions().size(), is(2));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(1).getTitle(), is("Q2"));
         assertThat(result, is("success"));
+    }
+
+    @Test
+    public void testAddSectionWithoutQuestions() throws Exception {
+        when(requestContext.getMessageContext()).thenReturn(messageContext);
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setTitle("title");
+        questionGroup.setSectionName("sectionName");
+        String result = questionnaireController.addSection(questionGroup, requestContext);
+        verify(requestContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.no.question.in.section")));
+        assertThat(result, is("failure"));
+    }
+
+    @Test
+    public void testRemoveQuestion() {
+        QuestionGroup questionGroup = new QuestionGroup();
+        ArrayList<SectionForm> sections = new ArrayList<SectionForm>();
+        sections.add(getSection("sectionName", new ArrayList(asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date")))));
+        questionGroup.setSections(sections);
+
+        assertThat(questionGroup.getSections().size(), CoreMatchers.is(1));
+        assertThat(questionGroup.getSections().get(0).getQuestions().size(), CoreMatchers.is(2));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(0).getTitle(), CoreMatchers.is("Q1"));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(1).getTitle(), CoreMatchers.is("Q2"));
+
+        questionnaireController.deleteQuestion(questionGroup, "sectionName", "1");
+
+        assertThat(questionGroup.getSections().size(), CoreMatchers.is(1));
+        assertThat(questionGroup.getSections().get(0).getQuestions().size(), CoreMatchers.is(1));
+        assertThat(questionGroup.getSections().get(0).getQuestions().get(0).getTitle(), CoreMatchers.is("Q2"));
+
+        questionnaireController.deleteQuestion(questionGroup, "sectionName", "2");
+
+        assertThat(questionGroup.getSections().size(), CoreMatchers.is(0));
     }
 
     @Test
@@ -267,16 +317,24 @@ public class QuestionnaireControllerTest {
         String view = questionnaireController.getAllQuestions(model, httpServletRequest);
         assertThat(view, is("viewQuestions"));
         verify(questionnaireServiceFacade).getAllQuestions();
-        verify(model).addAttribute(eq("questions"), argThat(new ListOfQuestionsMatcher(getQuestion("1", "title1", "Number"), getQuestion("2", "title2", "Number"))));
+        verify(model).addAttribute(eq("questions"), argThat(new ListOfQuestionsMatcher(asList(getQuestion("1", "title1", "Number"), getQuestion("2", "title2", "Number")))));
     }
 
     @Test
     public void shouldGetAllQuestionGroups() {
-        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(getQuestionGroup(1, "title1", "S1", "S2"), getQuestionGroup(2, "title2", "S1", "S2")));
+        when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(asList(
+                getQuestionGroup(1, "title1", asList(getSection("sectionName1",
+                        asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date"))))),
+                getQuestionGroup(2, "title2", asList(getSection("sectionName2",
+                        asList(getQuestion("3", "Q3", "Free Text"), getQuestion("4", "Q4", "Date"), getQuestion("5", "Q5", "Date")))))));
         String view = questionnaireController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
-        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupMatcher(asList(getQuestionGroup(1, "title1", "S1", "S2"), getQuestionGroup(2, "title2", "S1", "S2")))));
+        verify(model).addAttribute(eq("questionGroups"), argThat(new ListOfQuestionGroupMatcher(asList(
+                getQuestionGroup(1, "title1", asList(getSection("sectionName1",
+                        asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date"))))),
+                getQuestionGroup(2, "title2", asList(getSection("sectionName2",
+                        asList(getQuestion("3", "Q3", "Free Text"), getQuestion("4", "Q4", "Date"), getQuestion("5", "Q5", "Date")))))))));
     }
 
     @Test
@@ -327,7 +385,8 @@ public class QuestionnaireControllerTest {
     @Test
     public void shouldGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroup questionGroup = getQuestionGroup(questionGroupId, TITLE, "S1", "S2", "S3");
+        QuestionGroup questionGroup = getQuestionGroup(questionGroupId, TITLE, asList(getSection("sectionName",
+                asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date")))));
         when(questionnaireServiceFacade.getQuestionGroup(questionGroupId)).thenReturn(questionGroup);
         when(httpServletRequest.getParameter("questionGroupId")).thenReturn(Integer.toString(questionGroupId));
         String view = questionnaireController.getQuestionGroup(model, httpServletRequest);
@@ -335,18 +394,8 @@ public class QuestionnaireControllerTest {
         verify(questionnaireServiceFacade).getQuestionGroup(questionGroupId);
         verify(questionnaireServiceFacade, times(1)).getAllEventSources();
         verify(httpServletRequest, times(1)).getParameter("questionGroupId");
-        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroup(questionGroupId, TITLE, "S1", "S2", "S2"))));
-    }
-
-    private QuestionGroup getQuestionGroup(int questionGroupId, String title, String... sectionNames) {
-        QuestionGroup questionGroup = new QuestionGroup();
-        questionGroup.setId(Integer.toString(questionGroupId));
-        questionGroup.setTitle(title);
-        for (String sectionName : sectionNames) {
-            questionGroup.setSectionName(sectionName);
-            questionGroup.addCurrentSection();
-        }
-        return questionGroup;
+        verify(model).addAttribute(eq("questionGroupDetail"), argThat(new QuestionGroupMatcher(getQuestionGroup(questionGroupId, TITLE,
+                asList(getSection("sectionName", asList(getQuestion("1", "Q1", "Free Text"), getQuestion("2", "Q2", "Date"))))))));
     }
 
     @Test
@@ -390,6 +439,15 @@ public class QuestionnaireControllerTest {
         assertThat(eventSources.get("View.Client"), is("View Client"));
     }
 
+    private QuestionGroup getQuestionGroup(int questionGroupId, String title, List<SectionForm> sections) {
+        QuestionGroup questionGroup = new QuestionGroup();
+        questionGroup.setId(Integer.toString(questionGroupId));
+        questionGroup.setTitle(title);
+        questionGroup.setSections(sections);
+        return questionGroup;
+    }
+
+
     private QuestionForm getQuestionForm(String title, String type) {
         QuestionForm questionForm = new QuestionForm();
         questionForm.setTitle(title);
@@ -416,6 +474,14 @@ public class QuestionnaireControllerTest {
         return question;
     }
 
+    private SectionForm getSection(String sectionName, List<Question> questions) {
+        SectionForm section = new SectionForm();
+        section.setName(sectionName);
+        section.setQuestions(questions);
+        return section;
+    }
+
+
     private class MessageMatcher extends TypeSafeMatcher<MessageResolver> {
         private String errorCode;
 
@@ -436,39 +502,32 @@ public class QuestionnaireControllerTest {
         }
     }
 
-    private class ListOfQuestionsMatcher extends ArgumentMatcher<List> {
-        private Question[] questions;
+    private class ListOfQuestionsMatcher extends TypeSafeMatcher<List<Question>> {
+        private List<Question> questions;
 
-        public ListOfQuestionsMatcher(Question... questions) {
+        public ListOfQuestionsMatcher(List<Question> questions) {
             this.questions = questions;
         }
 
         @Override
-        public boolean matches(Object argument) {
-            if (argument instanceof List) {
-                List questionList = (List) argument;
-                for (int i = 0, questionListSize = questionList.size(); i < questionListSize; i++) {
-                    Object obj = questionList.get(i);
-                    if (obj instanceof Question) {
-                        Question question = (Question) obj;
-                        if (!(
-                                equalsIgnoreCase(question.getId(), questions[i].getId())
-                                        && equalsIgnoreCase(question.getTitle(), questions[i].getTitle())
-                                        && equalsIgnoreCase(question.getType(), questions[i].getType())
-                        )) {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
+        public boolean matchesSafely(List<Question> questions) {
+            if (questions.size() == this.questions.size()) {
+                for (Question question : this.questions) {
+                    assertThat(questions, hasItem(new QuestionMatcher(question)));
                 }
-                return true;
+            } else {
+                return false;
             }
-            return false;
+            return true;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Question lists does not match");
         }
     }
 
-    private class QuestionMatcher extends ArgumentMatcher<Question> {
+    private class QuestionMatcher extends TypeSafeMatcher<Question> {
         private Question question;
 
         public QuestionMatcher(Question question) {
@@ -476,14 +535,15 @@ public class QuestionnaireControllerTest {
         }
 
         @Override
-        public boolean matches(Object argument) {
-            if (argument instanceof Question) {
-                Question question = (Question) argument;
-                return (equalsIgnoreCase(this.question.getType(), question.getType())
-                        && equalsIgnoreCase(this.question.getId(), question.getId())
-                        && equalsIgnoreCase(this.question.getTitle(), question.getTitle()));
-            }
-            return false;
+        public boolean matchesSafely(Question question) {
+            return (equalsIgnoreCase(this.question.getType(), question.getType())
+                    && equalsIgnoreCase(this.question.getId(), question.getId())
+                    && equalsIgnoreCase(this.question.getTitle(), question.getTitle()));
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("Question does not match");
         }
     }
 
@@ -523,7 +583,15 @@ public class QuestionnaireControllerTest {
 
         @Override
         public boolean matchesSafely(SectionForm sectionForm) {
-            return StringUtils.equals(this.sectionForm.getName(), sectionForm.getName());
+            if (StringUtils.equals(this.sectionForm.getName(), sectionForm.getName())) {
+                for (Question question : this.sectionForm.getQuestions()) {
+                    assertThat(sectionForm.getQuestions(), hasItem(new QuestionMatcher(question)));
+                }
+            } else {
+                return false;
+            }
+            return true;
+
         }
 
         @Override

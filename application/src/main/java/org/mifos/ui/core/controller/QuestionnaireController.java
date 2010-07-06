@@ -146,13 +146,22 @@ public class QuestionnaireController {
         return evtSourcesMap;
     }
 
-    public String addSection(QuestionGroup questionGroup) {
+    public String addSection(QuestionGroup questionGroup, RequestContext requestContext) {
+        if(questionGroup.hasQuestionsInCurrentSection()){
+            constructErrorMessage(requestContext, "questionnaire.error.no.question.in.section", "currentSectionTitle", "Section should have at least one question.");
+            return "failure";
+        }
         questionGroup.addCurrentSection();
         return "success";
     }
 
     public String deleteSection(QuestionGroup questionGroup, String sectionName) {
         questionGroup.removeSection(sectionName);
+        return "success";
+    }
+
+    public String deleteQuestion(QuestionGroup questionGroup, String sectionName, String questionId) {
+        questionGroup.removeQuestion(sectionName,questionId);
         return "success";
     }
 

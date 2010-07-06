@@ -56,3 +56,10 @@ function removeSection(sectionName){
     sectionToDeleteBtn.value = sectionName;
     sectionToDeleteBtn.click();
 }
+
+function removeQuestion(sectionName, questionId){
+    var questionToDeleteBtn = document.getElementById('_eventId_deleteQuestion');
+    questionToDeleteBtn.value = questionId;
+    document.getElementById('questionSection').value = sectionName;
+    questionToDeleteBtn.click();
+}

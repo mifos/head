@@ -46,8 +46,8 @@
                         ${section.name}<br/>
                         <table id="sections.table" name="sections.table">
                          <tr>
-                             <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
-                             <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
+                             <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.mandatory"/]</td>
                          </tr>
                          <tr>
                              <td>&nbsp;</td>

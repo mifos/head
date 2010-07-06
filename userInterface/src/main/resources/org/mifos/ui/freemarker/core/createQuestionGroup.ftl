@@ -68,22 +68,34 @@
                 </ol>
             </fieldset>
             <div class="marginLeft15em">
+                <select multiple="multiple" size="10" id="selectedQuestionIds" name="selectedQuestionIds" style="width:35em">
+                    [#list questionGroupDefinition.questionPool as question]
+                        <option value="${question.id}">${question.title}</option>
+                    [/#list]
+                </select>
+            </div>
+            <div class="marginLeft15em">
                     <input type="submit" name="_eventId_addSection" id="_eventId_addSection" value='[@spring.message "questionnaire.addSection"/]' class="buttn"/>
             </div>
             <div id="divSections">
-                [#list questionGroupDefinition.sections as section]
+                [#list questionGroupDefinition.sections?reverse as section]
                 <b>${section.name}:&nbsp;&nbsp;</b>
                 <a href="javascript:removeSection('${section.name}')">[@spring.message
-                    "questionnaire.removeSection"/]</a>
+                    "questionnaire.remove.link"/]</a>
                 <br/>
                 <table id="sections.table" name="sections.table">
                     <tr>
-                        <td class="drawtablehd">[@spring.message "questionnaire.question.name"/]</td>
-                        <td class="drawtablehd">[@spring.message "questionnaire.question.mandatory"/]</td>
-                        <td class="drawtablehd">[@spring.message "questionnaire.question.delete"/]</td>
+                        <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.name"/]</td>
+                        <td class="drawtablehd" width="50%">[@spring.message "questionnaire.question.delete"/]</td>
                     </tr>
+                    [#list section.questions as sectionQuestion]
                     <tr>
-                        <td class="drawtablerow">&nbsp;</td>
+                        <td class="drawtablerow">${sectionQuestion.title}</td>
+                        <td class="drawtablerow"><a href="javascript:removeQuestion('${section.name}','${sectionQuestion.id}')">
+                            [@spring.message "questionnaire.remove.link"/]</a></td>
+                    </tr>
+                    [/#list]
+                    <tr>
                         <td class="drawtablerow">&nbsp;</td>
                         <td class="drawtablerow">&nbsp;</td>
                     </tr>
@@ -91,6 +103,9 @@
                 [/#list]
                 <input type="submit" id="_eventId_deleteSection" name="_eventId_deleteSection" value=""
                        style="visibility:hidden"/>
+                <input type="submit" id="_eventId_deleteQuestion" name="_eventId_deleteQuestion" value=""
+                       style="visibility:hidden"/>
+                <input type="hidden" id="questionSection" name="questionSection" value=""/>
             </div>
 
             <div class="marginLeft12em">
