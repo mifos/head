@@ -546,7 +546,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         if (holidayBOToDelete != null) {
             StaticHibernateUtil.getSessionTL().delete(holidayBOToDelete);
         }
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
 

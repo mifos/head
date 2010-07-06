@@ -1075,7 +1075,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(itr.next().getFees().getFeeId(), uc.getId());
         }
 
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
             Assert.assertEquals(accountFeesEntity.getFeeStatusAsEnum(), FeeStatus.INACTIVE);
         }
@@ -1693,7 +1693,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(accountBO);
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
 
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1762,7 +1762,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(accountBO);
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         ((LoanBO) accountBO).setLoanMeeting(null);
         List<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
         Assert.assertEquals(1, accountpayments.size());
@@ -1858,7 +1858,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             StaticHibernateUtil.startTransaction();
             ((LoanBO) accountBO).setLoanMeeting(null);
             session.update(accountBO);
-            StaticHibernateUtil.getTransaction().commit();
+            StaticHibernateUtil.commitTransaction();
         }
     }
 
@@ -1891,7 +1891,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.startTransaction();
         ((LoanBO) accountBO).setLoanMeeting(null);
         session.update(accountBO);
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         Assert.assertEquals(true, true);
     }
 
@@ -2378,7 +2378,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(accountBO);
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         ((LoanBO) accountBO).setLoanMeeting(null);
         List<AccountPaymentEntity> accountpayments = accountBO.getAccountPayments();
         Assert.assertEquals(1, accountpayments.size());
@@ -3878,7 +3878,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(accountBO);
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
     public void testUpdateLoanFailure() throws Exception {

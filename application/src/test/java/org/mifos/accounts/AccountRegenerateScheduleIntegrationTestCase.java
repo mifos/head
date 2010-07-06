@@ -421,7 +421,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
         savingsBO.handleChangeInMeetingSchedule(workingDays, holidays);
 
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
 
     }

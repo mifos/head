@@ -79,7 +79,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
             groupLoan.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), uc.getId());
         }
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
     @Test(dependsOnMethods = { "testFailureRemoveFees" })
@@ -328,7 +328,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         groupLoan.deleteFutureInstallments();
-        StaticHibernateUtil.getTransaction().commit();
+        StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.closeSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         Assert.assertEquals(1, groupLoan.getAccountActionDates().size());
