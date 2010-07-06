@@ -24,13 +24,11 @@ import org.mifos.config.LocalizedTextLookup;
 
 public enum CustomFieldType implements LocalizedTextLookup {
 
-    NUMERIC((short) 1), ALPHA_NUMERIC((short) 2), DATE((short) 3);
+    NONE((short) 0), NUMERIC((short) 1), ALPHA_NUMERIC((short) 2), DATE((short) 3);
 
-    public static CustomFieldType NONE = null;
+    private Short value;
 
-    Short value;
-
-    CustomFieldType(Short value) {
+    private CustomFieldType(Short value) {
         this.value = value;
     }
 
@@ -44,7 +42,7 @@ public enum CustomFieldType implements LocalizedTextLookup {
                 return candidate;
             }
         }
-        throw new RuntimeException("no field type " + value);
+        return CustomFieldType.NONE;
     }
 
     public String getPropertiesKey() {

@@ -24,6 +24,8 @@ import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,8 +45,8 @@ import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -69,13 +71,13 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
@@ -409,6 +411,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public MeetingBO getCustomerMeetingValue() {
+        if (customerMeeting == null) {
+            return null;
+        }
         return customerMeeting.getMeeting();
     }
 
@@ -848,9 +853,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         try {
             if (customFields != null) {
                 for (CustomFieldDto fieldView : customFields) {
-                    if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
+                    if (CustomFieldType.fromInt(fieldView.getFieldId()).equals(CustomFieldType.DATE)
                             && StringUtils.isNotBlank(fieldView.getFieldValue())) {
-                        fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), userfmt));
                     }
 
                     for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
@@ -1094,27 +1101,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    /**
-     * @deprecated pull up to service level to remove persistence/update here and remove getPersonnelPersistence
-     */
-    @Deprecated
-    public void removeGroupMemberShip(final PersonnelBO personnel, final String comment) throws PersistenceException,
-            CustomerException {
-        PersonnelBO user = getPersonnelPersistence().getPersonnel(getUserContext().getId());
-        CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment, new DateTimeService()
-                .getCurrentJavaSqlDate(), user, this);
-        this.addCustomerNotes(accountNotesEntity);
-
-        resetPositions(getParentCustomer());
-        getParentCustomer().setUserContext(getUserContext());
-        getParentCustomer().update();
-
-        setPersonnel(personnel);
-        setParentCustomer(null);
-        generateSearchId();
-        update();
-    }
-
     protected void handleAddClientToGroup() {
         setPersonnel(getParentCustomer().getPersonnel());
         if (getCustomerMeeting() != null) {
@@ -1325,7 +1311,9 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
                 if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
                     try {
-                        DateUtils.getDate(centerCustomField.getFieldValue());
+                        // is set as database format coming in...
+                        String userFormattedDate = DateUtils.convertDbToUserFmt(centerCustomField.getFieldValue(), "dd/MM/yyyy");
+                        DateUtils.getDate(userFormattedDate);
                     } catch (Exception e) {
                         throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
                     }
@@ -1387,5 +1375,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
 
         return !groupMeeting.getMeetingId().equals(customerMeeting.getMeetingId());
+    }
+
+    public Short getLoanOfficerId() {
+        Short loanOfficerId = null;
+        if (this.personnel != null) {
+            loanOfficerId = this.personnel.getPersonnelId();
+        }
+        return loanOfficerId;
     }
 }

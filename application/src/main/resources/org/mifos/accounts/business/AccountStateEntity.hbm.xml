@@ -6,19 +6,19 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.AccountStateEntity" table="ACCOUNT_STATE">
-		<id name="id" column="ACCOUNT_STATE_ID" type="short">
+	<class name="org.mifos.accounts.business.AccountStateEntity" table="account_state">
+		<id name="id" column="account_state_id" type="short">
 			<generator class="native" />
 		</id>
-		<property name="optional" column="CURRENTLY_IN_USE" type="short" />
-		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
-		<many-to-one name="prdType" column="PRD_TYPE_ID" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
+		<property name="optional" column="currently_in_use" type="short" />
+		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" unique="true" />
+		<many-to-one name="prdType" column="prd_type_id" class="org.mifos.accounts.productdefinition.business.ProductTypeEntity" cascade="none" update="false" unique="true" access="field"/>
 
-		<set name="flagSet" table="ACCOUNT_STATE_FLAG">
-			<key column="STATUS_ID" />
+		<set name="flagSet" table="account_state_flag">
+			<key column="status_id" />
 			<one-to-many class="org.mifos.accounts.business.AccountStateFlagEntity" />
 		</set>
-		<property name="description" column="STATUS_DESCRIPTION" type="java.lang.String" />
+		<property name="description" column="status_description" type="java.lang.String" />
 	
 	</class>
 

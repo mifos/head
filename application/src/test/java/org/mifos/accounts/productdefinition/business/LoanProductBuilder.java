@@ -20,9 +20,6 @@
 package org.mifos.accounts.productdefinition.business;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;

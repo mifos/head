@@ -55,7 +55,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -155,7 +155,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean allConsoleOutputEnabled = false;
     private boolean isFileNameConsoleOutputEnabled = false;
 
-    private LoanDao loanDao;
+    private LoanDaoLegacyImpl loanDao;
 
     @Override
     public void setUp() throws Exception {
@@ -169,7 +169,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
         savedDaysInYear = AccountingRules.getNumberOfInterestDays();
 
-        loanDao = new LoanDao();
+        loanDao = new LoanDaoLegacyImpl();
     }
 
     @Override

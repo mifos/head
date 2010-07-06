@@ -7,26 +7,26 @@
 <hibernate-mapping>
 
     <class name="org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO" 
-    	table="ADMIN_DOCUMENT_ACC_STATE_MIX">
+    	table="admin_document_acc_state_mix">
     	
-        <id name="adminDocAccStateMixId" column="ADMIN_DOC_ACC_STATE_MIX_ID" type="short" access="field">
+        <id name="adminDocAccStateMixId" column="admin_doc_acc_state_mix_id" type="short" access="field">
             <generator class="native"/>
         </id>
   
-  		<version name="versionNo" column="VERSION_NO" unsaved-value="null" />
+  		<version name="versionNo" column="version_no" unsaved-value="null" />
 
-  		<property name="createdDate" column="CREATED_DATE" update="false" />
-		<property name="createdBy" column="CREATED_BY" update="false" />
-		<property name="updatedDate" column="UPDATED_DATE" />
-		<property name="updatedBy" column="UPDATED_BY" />
+  		<property name="createdDate" column="created_date" update="false" />
+		<property name="createdBy" column="created_by" update="false" />
+		<property name="updatedDate" column="updated_date" />
+		<property name="updatedBy" column="updated_by" />
   
       	<many-to-one name="adminDocumentID" 
-    		column="ADMIN_DOCUMENT_ID"
+    		column="admin_document_id"
     		class="org.mifos.reports.admindocuments.business.AdminDocumentBO" 
     		/>   
     		
       	<many-to-one name="accountStateID" 
-    		column="ACCOUNT_STATE_ID" 
+    		column="account_state_id" 
     		class="org.mifos.accounts.business.AccountStateEntity" 
     		/>   
  	

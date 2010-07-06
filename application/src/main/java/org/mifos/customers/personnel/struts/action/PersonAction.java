@@ -35,7 +35,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -63,6 +62,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.tabletag.TableTagConstants;
@@ -202,11 +202,9 @@ public class PersonAction extends SearchAction {
     private Short getPerefferedLocale(PersonActionForm personActionForm, UserContext userContext) {
         if (StringUtils.isNotBlank(personActionForm.getPreferredLocale())) {
             return getShortValue(personActionForm.getPreferredLocale());
-        } else {
-            // return userContext.getMfiLocaleId();
-            return userContext.getLocaleId();
         }
 
+        return userContext.getLocaleId();
     }
 
     @TransactionDemarcate(joinToken = true)

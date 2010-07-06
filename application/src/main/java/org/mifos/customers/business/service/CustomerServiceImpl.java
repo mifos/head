@@ -42,7 +42,6 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -87,6 +86,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -129,8 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.validate();
         customer.validateMeetingAndFees(accountFees);
 
-//        FIXME - keithw - should we ensure center names are unique per branch/office
-//        customerDao.validateCenterNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
+        customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
 
         List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
         customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
@@ -253,9 +252,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private void createCustomer(CustomerBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
         try {
-            // in case any other leaked sessions exist from legacy code use.
-            this.hibernateTransactionHelper.closeSession();
-
             this.hibernateTransactionHelper.startTransaction();
             this.customerDao.save(customer);
 
@@ -264,9 +260,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.addAccount(customerAccount);
 
             this.customerDao.save(customer);
-            this.hibernateTransactionHelper.commitTransaction();
+            this.hibernateTransactionHelper.flushSession();
 
-            this.hibernateTransactionHelper.startTransaction();
             customer.generateGlobalCustomerNumber();
             this.customerDao.save(customer);
 
@@ -278,8 +273,6 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (Exception e) {
             this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } finally {
-            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -914,7 +907,7 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            //hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -937,8 +930,8 @@ public class CustomerServiceImpl implements CustomerService {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
 
-            client.resetPositions(oldParent);
             if (oldParent != null) {
+                client.resetPositions(oldParent);
                 oldParent.updateDetails(client.getUserContext());
 
                 if (oldParent.getParentCustomer() != null) {
@@ -956,14 +949,14 @@ public class CustomerServiceImpl implements CustomerService {
             client.updateDetails(userContext);
             customerDao.save(client);
 
-            hibernateTransactionHelper.commitTransaction();
+            hibernateTransactionHelper.flushSession();
 
             if (regenerateSchedules) {
-                hibernateTransactionHelper.startTransaction();
+                client = customerDao.findClientBySystemId(clientGlobalCustNum);
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(client.getOfficeId());
                 handleChangeInMeetingSchedule(client, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-                hibernateTransactionHelper.commitTransaction();
             }
+            hibernateTransactionHelper.commitTransaction();
             return client;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
@@ -995,12 +988,8 @@ public class CustomerServiceImpl implements CustomerService {
             oldParentOfGroup.incrementChildCount();
             searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
         } else {
-            try {
-                int newSearchIdSuffix = new CustomerPersistence().getMaxSearchIdSuffix(CustomerLevel.GROUP, group.getOffice().getOfficeId()) + 1;
-                searchId = GroupConstants.PREFIX_SEARCH_STRING + newSearchIdSuffix;
-            } catch (PersistenceException pe) {
-                throw new CustomerException(pe);
-            }
+            int newSearchIdSuffix = this.customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(group.getOfficeId());
+            searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
         }
         group.setSearchId(searchId);
 

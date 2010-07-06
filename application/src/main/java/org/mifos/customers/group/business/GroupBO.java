@@ -31,8 +31,8 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.calendar.CalendarEvent;
@@ -55,8 +55,8 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
@@ -121,7 +121,10 @@ public class GroupBO extends CustomerBO {
             DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
-        Assert.notNull(meeting, "meeting cannot be null");
+
+        if (customerStatus.isGroupActive()) {
+            Assert.notNull(meeting, "meeting cannot be null when group is active");
+        }
 
         DateTime mfiJoiningDate = new DateTime().toDateMidnight().toDateTime();
         GroupBO group = new GroupBO(userContext, groupName, formedBy, meeting, loanOfficer, office, customerStatus,
@@ -321,6 +324,10 @@ public class GroupBO extends CustomerBO {
         }
     }
 
+    /**
+     * called from deprecated constructors so not used in production
+     */
+    @Deprecated
     private void setValues(final boolean trained, final Date trainedDate) throws CustomerException {
 
         String searchId = null;

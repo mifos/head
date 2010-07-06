@@ -6,18 +6,18 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.master.business.CustomFieldDefinitionEntity" table="CUSTOM_FIELD_DEFINITION">
-        <id name="fieldId" column="FIELD_ID" type="short" access="field">
+    <class name="org.mifos.application.master.business.CustomFieldDefinitionEntity" table="custom_field_definition">
+        <id name="fieldId" column="field_id" type="short" access="field">
             <generator class="native"/>
         </id>
         <!-- the level id is the foreign key to the level_id of the customer_level table -->
-        <property name="levelId" column="LEVEL_ID" type="short"  access="field"/>
-        <property name="fieldType" column="FIELD_TYPE" type="short"  not-null="true" access="field"/>
+        <property name="levelId" column="level_id" type="short"  access="field"/>
+        <property name="fieldType" column="field_type" type="short"  not-null="true" access="field"/>
         <!-- the entity Type is the foreign key to the ENTITY_TYPE_ID of the ENTITY_MASTER table -->
-        <property name="entityType" column="ENTITY_TYPE" type="short"  not-null="true" access="field"/>
-        <property name="defaultValue" column="DEFAULT_VALUE" type="string" not-null="true" access="field"/>
-        <property name="mandatoryFlag" column="MANDATORY_FLAG" type="short"  not-null="true" access="field"/>
-        <many-to-one name="lookUpEntity" column="ENTITY_ID" class="org.mifos.application.master.business.LookUpEntity"  not-null="true" lazy="false" access="field"/>
+        <property name="entityType" column="entity_type" type="short"  not-null="true" access="field"/>
+        <property name="defaultValue" column="default_value" type="string" not-null="true" access="field"/>
+        <property name="mandatoryFlag" column="mandatory_flag" type="short"  not-null="true" access="field"/>
+        <many-to-one name="lookUpEntity" column="entity_id" class="org.mifos.application.master.business.LookUpEntity"  not-null="true" lazy="false" access="field"/>
     </class>
     <query name="retrieveCustomFields"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.entityType = :entityType order by cfd.fieldId]]></query>
     <query name="retrieveAllCustomFields"><![CDATA[from CustomFieldDefinitionEntity ]]></query>

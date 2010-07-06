@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -35,22 +34,18 @@ import org.mifos.framework.persistence.Persistence;
 public class AuditPersistence extends Persistence {
 
     public void save(AuditLog auditLog) {
-        Session session = null;
-        Transaction txn = null;
         try {
-            session = StaticHibernateUtil.openSession();
-            txn = session.beginTransaction();
+            //explicit close session calls required to avoid infinite looping of audit logs afterTransaction
+            StaticHibernateUtil.closeSession();
+            Session session = StaticHibernateUtil.getSessionTL();
+            StaticHibernateUtil.startTransaction();
             session.save(auditLog);
-            txn.commit();
+            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.closeSession();
         } catch (Exception e) {
-            txn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
+            StaticHibernateUtil.closeSession();
             throw new RuntimeException(e);
-        } finally {
-            try {
-                StaticHibernateUtil.closeSession(session);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

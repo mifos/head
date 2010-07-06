@@ -5,12 +5,12 @@
 
 
 <hibernate-mapping>
-	<class name="org.mifos.customers.personnel.business.PersonnelCustomFieldEntity" table="PERSONNEL_CUSTOM_FIELD">
-		<id name="personnelCustomFieldId" column="PERSONNEL_CUSTOM_FIELD_ID" type="integer" access="field">
+	<class name="org.mifos.customers.personnel.business.PersonnelCustomFieldEntity" table="personnel_custom_field">
+		<id name="personnelCustomFieldId" column="personnel_custom_field_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="fieldId" column="FIELD_ID" not-null="true" access="field" />
-		<property name="fieldValue" column="FIELD_VALUE" />
-		<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.customers.personnel.business.PersonnelBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
+		<property name="fieldId" column="field_id" not-null="true" access="field" />
+		<property name="fieldValue" column="field_value" />
+		<many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
 	</class>
 </hibernate-mapping>

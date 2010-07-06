@@ -23,127 +23,128 @@ package org.mifos.customers.office.util.helpers;
 public interface OfficeConstants {
 
     // dependency names
-    public final String OFFICE_DEPENDENCY_NAME = "Office";
-    public final String OFFICEHIERARCHY_DEPENDENCY_NAME = "OfficeHierarchy";
+    String OFFICE_DEPENDENCY_NAME = "Office";
+    String OFFICEHIERARCHY_DEPENDENCY_NAME = "OfficeHierarchy";
 
     // vo names
 
-    public final String OFFICEVO = "OfficeVo";
-    public final String OFFFICEHIERARCHYVO = "OHVo";
+    String OFFICEVO = "OfficeVo";
+    String OFFFICEHIERARCHYVO = "OHVo";
 
     // master data
-    public final String OFFICELEVELLIST = "OfficeLevelList";
-    public final String OFFICECODELIST = "OfficeCodeList";
-    public final String PARENTOFFICESMAP = "parentOfficesMap";
-    public final String PARENTS = "Parents";
-    public final String OFFICESTATUSLIST = "OfficeStatusList";
-    public final String OFFICESUBOBJECT = "OffficeSubObject";
-    public final String OFFICEDBOBJECT = "OffficeDbObject";
-    public final String OLDHIERARCHYLIST = "OldHierarchyList";
-    public final String OFFICESTILLBRANCHOFFICESLIST = "OfficesTillBranchOffices";
-    public final String OFFICESBRANCHOFFICESLIST = "OfficesBranchOffices";
-    public final String CUSTOM_FIELDS = "customFields";
+    String OFFICELEVELLIST = "OfficeLevelList";
+    String OFFICECODELIST = "OfficeCodeList";
+    String PARENTOFFICESMAP = "parentOfficesMap";
+    String PARENTS = "Parents";
+    String OFFICESTATUSLIST = "OfficeStatusList";
+    String OFFICESUBOBJECT = "OffficeSubObject";
+    String OFFICEDBOBJECT = "OffficeDbObject";
+    String OLDHIERARCHYLIST = "OldHierarchyList";
+    String OFFICESTILLBRANCHOFFICESLIST = "OfficesTillBranchOffices";
+    String OFFICESBRANCHOFFICESLIST = "OfficesBranchOffices";
+    String CUSTOM_FIELDS = "customFields";
 
     // custom methods
-    public final String LOADPARENT = "loadParent";
-    public final String LOADALL = "loadall";
+    String LOADPARENT = "loadParent";
+    String LOADALL = "loadall";
 
-    public final String CREATESUCESS = "createSuccess";
-    public final String OFFICENAME = "officeName";
-    public final String GLOBELOFFICENUMBER = "globelOfficeNumber";
+    String CREATESUCESS = "createSuccess";
+    String OFFICENAME = "officeName";
+    String GLOBELOFFICENUMBER = "globelOfficeNumber";
 
-    public final String MANAGE = "manage";
-    public final String MANAGEPREVIEWSUCESS = "managePreview_success";
-    public final String FORWARDLOADPARENTSUCESS = "loadParent_success";
-    public final String FORWARDMANAGEGETSUCESS = "manageGet_success";
-    public final String FORWARDMANAGEPREVOISSUCESS = "managePrevious_success";
-    public final String FORWARDGETSUCESS = "get_success";
-    public final String FORWARDCREATECANCEL = "cancelCreate_success";
-    public final String FORWARDLOADALL = "loadall_success";
+    String MANAGE = "manage";
+    String MANAGEPREVIEWSUCESS = "managePreview_success";
+    String FORWARDLOADPARENTSUCESS = "loadParent_success";
+    String FORWARDMANAGEGETSUCESS = "manageGet_success";
+    String FORWARDMANAGEPREVOISSUCESS = "managePrevious_success";
+    String FORWARDGETSUCESS = "get_success";
+    String FORWARDCREATECANCEL = "cancelCreate_success";
+    String FORWARDLOADALL = "loadall_success";
 
-    public final String CREATE = "create";
-    public final String SEARCH = "search";
-    public final String UPDATEPARENTFLAG = "updateParentFlag";
+    String CREATE = "create";
+    String SEARCH = "search";
+    String UPDATEPARENTFLAG = "updateParentFlag";
 
-    public final short HEADOFFICE = 1;
-    public final short REGIONALOFFICE = 2;
-    public final short SUBREGIONALOFFICE = 3;
-    public final short AREAOFFICE = 4;
-    public final short BRANCHOFFICE = 5;
-    public final short OTHEROFFICE = 3;
-    public final String SHOWDROPDOWN = "ShowDropDown";
-    public final String MANAGEEDIT = "manageedit";
-    public final String OFFICE_ACTIVE = "ACTIVE";
-    public final short ACTIVE = 1;
-    public final short INACTIVE = 2;
-    public final short CONFIURE = 1;
-    public final short UNCONFIURE = 0;
-    public final short LOCALEENGLISH = 1;
-    public final String CHECKED = "on";
-    public final short ZERO = 0;
-    public final short REMOTESERVER = 1;
-    public final String SEARCHIDLIST = "SearchIdList";
+    short HEADOFFICE = 1;
+    short REGIONALOFFICE = 2;
+    short SUBREGIONALOFFICE = 3;
+    short AREAOFFICE = 4;
+    short BRANCHOFFICE = 5;
+    short OTHEROFFICE = 3;
+    String SHOWDROPDOWN = "ShowDropDown";
+    String MANAGEEDIT = "manageedit";
+    String OFFICE_ACTIVE = "ACTIVE";
+    short ACTIVE = 1;
+    short INACTIVE = 2;
+    short CONFIURE = 1;
+    short UNCONFIURE = 0;
+    short LOCALEENGLISH = 1;
+    String CHECKED = "on";
+    short ZERO = 0;
+    short REMOTESERVER = 1;
+    String SEARCHIDLIST = "SearchIdList";
 
-    public static final short OFFICE_CUSTOM_FIELD_ENTITY_TYPE = 15;
+    short OFFICE_CUSTOM_FIELD_ENTITY_TYPE = 15;
 
     // for named queries
-    public final String LOCALEID = "localeId";
-    public final String LEVELID = "levelId";
-    public final String DISPLAYNAME = "displayName";
-    public final String SHORTNAME = "shortName";
-    public final String OFFICEID = "officeId";
-    public final String STATUSID = "statusId";
-    public final String ENTITYTYPE = "entityType";
+    String LOCALEID = "localeId";
+    String LEVELID = "levelId";
+    String DISPLAYNAME = "displayName";
+    String SHORTNAME = "shortName";
+    String OFFICEID = "officeId";
+    String STATUSID = "statusId";
+    String ENTITYTYPE = "entityType";
 
     // exception keys
-    public final String KEYCREATEFAILED = "office.error.creationFailed";
-    public final String KEYUPDATEFAILED = "office.error.updationFailed";
-    public final String KEYGETFAILED = "office.error.getFailed";
-    public final String KEYLOADFAILED = "office.error.loadFailed";
-    public final String KEYHASACTIVECHILDREN = "Office.error.hasActiveChildern";
-    public final String KEYHASACTIVEPERSONNEL = "Office.error.hasActivePersonnel";
-    public final String KEYHASACTIVEOFFICEWITHLEVEL = "Office.error.hasActiveOfficeWithThisLevel";
-    public final String KEYLOADINOFFICEHIERARCHYMASTERFAILED = "Office.error.errorInLoadingMasterData";
-    public final String KEYOFFICEHIERARCHYUPDATEFAILED = "Office.error.updationHierarchyFailed";
-    public final String KEYSELECTOFFICETYPE = "Office.formOfficeType.pleaseLelect";
+    String KEYCREATEFAILED = "office.error.creationFailed";
+    String KEYUPDATEFAILED = "office.error.updationFailed";
+    String KEYGETFAILED = "office.error.getFailed";
+    String KEYLOADFAILED = "office.error.loadFailed";
+    String KEYHASACTIVECHILDREN = "Office.error.hasActiveChildern";
+    String KEYHASACTIVEPERSONNEL = "Office.error.hasActivePersonnel";
+    String KEYHASACTIVEOFFICEWITHLEVEL = "Office.error.hasActiveOfficeWithThisLevel";
+    String KEYLOADINOFFICEHIERARCHYMASTERFAILED = "Office.error.errorInLoadingMasterData";
+    String KEYOFFICEHIERARCHYUPDATEFAILED = "Office.error.updationHierarchyFailed";
+    String KEYSELECTOFFICETYPE = "Office.formOfficeType.pleaseLelect";
 
-    public final String KEYNAMEEXIST = "Office.formOfficeType.nameExist";
-    public final String KEYSHORTNAMEEXIST = "Office.formOfficeType.shortNameExist";
-    public final String KEYHIERARCHYUPDATIONFAILED = "errors.office.updationhierarchyfailed";
-    public final String KEYOFFICELEVELNOTCONFIGURED = "errors.office.officelevelnotconfigured";
-    public final String KEYPARENTNOTACTIVE = "errors.office.parentnotactive";
-    public final String KEYPARENTNOTVALID = "errors.office.parentinvalid";
-    public final String KEYLEVELNOTCONFIGURED = "error.office.levelNotConfigured";
+    String KEYNAMEEXIST = "Office.formOfficeType.nameExist";
+    String KEYSHORTNAMEEXIST = "Office.formOfficeType.shortNameExist";
+    String KEYHIERARCHYUPDATIONFAILED = "errors.office.updationhierarchyfailed";
+    String KEYOFFICELEVELNOTCONFIGURED = "errors.office.officelevelnotconfigured";
+    String KEYPARENTNOTACTIVE = "errors.office.parentnotactive";
+    String KEYPARENTNOTVALID = "errors.office.parentinvalid";
+    String KEYLEVELNOTCONFIGURED = "error.office.levelNotConfigured";
 
-    public static final String KEYCUSTOMFIELDREQUIRED = "errors.office.requiredCustomField";
+    String KEYCUSTOMFIELDREQUIRED = "errors.office.requiredCustomField";
 
     // M2 keys
 
-    public static final String ERRORMANDATORYFIELD = "error.office.mandatory_field";
+    String ERRORMANDATORYFIELD = "error.office.mandatory_field";
 
-    public static final String OFFICE_NAME = "Office.officeName";
-    public static final String OFFICESHORTNAME = "Office.officeShortName";
-    public static final String OFFICELEVEL = "Office.officeLevel";
-    public static final String OFFICETYPE = "Office.officeType";
-    public static final String OFFICEOPERATIONMODE = "Office.operationMode";
-    public static final String PARENTOFFICE = "Office.parentOffice";
+    String OFFICE_NAME = "Office.officeName";
+    String OFFICESHORTNAME = "Office.officeShortName";
+    String OFFICELEVEL = "Office.officeLevel";
+    String OFFICETYPE = "Office.officeType";
+    String OFFICEOPERATIONMODE = "Office.operationMode";
+    String PARENTOFFICE = "Office.parentOffice";
 
-    public static final String MAXOFFICELIMITREACHED = "error.office.maxReached";
+    String MAXOFFICELIMITREACHED = "error.office.maxReached";
 
-    public static final String OFFICENAMEEXIST = "error.office.duplicateName";
-    public static final String OFFICESHORTNAMEEXIST = "error.office.duplicateShortName";
+    String OFFICENAMEEXIST = "error.office.duplicateName";
+    String OFFICESHORTNAMEEXIST = "error.office.duplicateShortName";
 
-    public static final String ENTERADDTIONALINFO = "error.office.provideadditionalInformation";
-    public static final String ERROR_CUSTOMDATEFIELD = "error.office.customdatefield";
-    public static final String OFFICE_LEVELS = "officelevels";
-    public static final String GET_HEADOFFICE = "headOfficeList";
-    public static final String GET_REGIONALOFFICE = "regionalOfficeList";
-    public static final String GET_SUBREGIONALOFFICE = "divisionalOfficeList";
-    public static final String GET_AREAOFFICE = "areaOfficeList";
-    public static final String GET_BRANCHOFFICE = "branchOfficeList";
-    public static final String ERROR_INVALID_LEVEL = "error.office.childhasmorelevel";
-    public static final String ERROR_LEVEL = "error.noofficelevel";
-    public static final String ERROR_STATUS = "error.noofficestatus";
+    String ENTERADDTIONALINFO = "error.office.provideadditionalInformation";
+    String ERROR_CUSTOMDATEFIELD = "error.office.customdatefield";
+    String OFFICE_LEVELS = "officelevels";
+    String GET_HEADOFFICE = "headOfficeList";
+    String GET_REGIONALOFFICE = "regionalOfficeList";
+    String GET_SUBREGIONALOFFICE = "divisionalOfficeList";
+    String GET_AREAOFFICE = "areaOfficeList";
+    String GET_BRANCHOFFICE = "branchOfficeList";
+    String ERROR_INVALID_LEVEL = "error.office.childhasmorelevel";
+    String ERROR_LEVEL = "error.noofficelevel";
+    String ERROR_STATUS = "error.noofficestatus";
 
-    public static final String ERROR_INVLID_PARENT = "error.office.invalidparentoffice";
+    String ERROR_INVALID_PARENT = "error.office.invalidparentoffice";
+    String ERROR_REPARENT_NOT_ALLOWED_AS_FUTURE_APPLICABLE_HOLIDAYS_ARE_DIFFERENT_ON_PREVIOUS_AND_NEW_PARENT = "error.office.futureholidaysnotthesame";
 }

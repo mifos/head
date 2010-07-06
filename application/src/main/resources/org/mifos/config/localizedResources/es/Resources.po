@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-07-01 13:10+0530\n"
 "PO-Revision-Date: 2009-08-08 05:59-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgstr "AplicacionParcial"
 #, fuzzy
 msgctxt "value_10"
 msgid "Hold"
-msgstr "Agarrar"
+msgstr "Mantener"
 
 #: value_11
 msgctxt "value_11"
@@ -205,7 +205,7 @@ msgstr "Activo"
 #: value_4
 msgctxt "value_4"
 msgid "Hold"
-msgstr "Agarrar"
+msgstr "Mantener"
 
 #: value_5
 msgctxt "value_5"

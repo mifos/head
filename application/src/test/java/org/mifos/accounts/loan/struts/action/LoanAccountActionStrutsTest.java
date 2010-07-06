@@ -86,6 +86,7 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -111,7 +112,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -237,6 +237,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "manage");
         addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         actionPerform();
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -891,6 +892,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         addRequestParameter("method", "manage");
         addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+
+        addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
         actionPerform();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
@@ -914,6 +917,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
             setRequestPathInfo("/loanAccountAction.do");
             addRequestParameter("method", "manage");
             addRequestParameter("customerId", accountBO.getCustomer().getCustomerId().toString());
+            addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
             actionPerform();
             // I'd normally expect to see a call to JUnit 3's fail() here
         } catch (PageExpiredException pe) {

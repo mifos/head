@@ -20,11 +20,9 @@
 
 package org.mifos.customers.office.persistence;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -34,8 +32,6 @@ import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
@@ -146,6 +142,10 @@ public class OfficePersistence extends Persistence {
 
     }
 
+    /**
+     * use {@link OfficeDao#validateOfficeNameIsNotTaken(String)}
+     */
+    @Deprecated
     public boolean isOfficeNameExist(String officeName) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OFFICE_NAME", officeName);
@@ -156,37 +156,14 @@ public class OfficePersistence extends Persistence {
         return false;
     }
 
+    /**
+     * use {@link OfficeDao#validateOfficeShortNameIsNotTaken(String)}
+     */
+    @Deprecated
     public boolean isOfficeShortNameExist(String shortName) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SHORT_NAME", shortName);
         List queryResult = executeNamedQuery(NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
-        }
-        return false;
-    }
-
-    public boolean hasActiveChildern(Short officeId) throws PersistenceException {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_ID", officeId);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
-        if (queryResult != null && queryResult.size() != 0) {
-            return ((Number) queryResult.get(0)).longValue() > 0;
-        }
-        return false;
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao}
-     */
-    @Deprecated
-    public boolean hasActivePeronnel(Short officeId) throws PersistenceException {
-
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("OFFICE_ID", officeId);
-        queryParameters.put("STATUS_ID", PersonnelConstants.ACTIVE);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
         if (queryResult != null && queryResult.size() != 0) {
             return ((Number) queryResult.get(0)).longValue() > 0;
         }
@@ -205,6 +182,10 @@ public class OfficePersistence extends Persistence {
         return false;
     }
 
+    /**
+     * see {@link OfficeDao}
+     */
+    @Deprecated
     public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", level.getValue());
@@ -314,11 +295,5 @@ public class OfficePersistence extends Persistence {
         List<OfficeBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES_FOR_CUSTOM_FIELD,
                 queryParameters);
         return queryResult;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<String> topLevelOfficeName(Collection<Short> ids) {
-        Query namedQuery = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_OFFICE_NAMES);
-        return namedQuery.setParameterList("OFFICE_IDS", ids).list();
     }
 }

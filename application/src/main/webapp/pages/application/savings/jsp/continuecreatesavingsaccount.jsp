@@ -24,14 +24,15 @@ explanation of the license and how it is applied.
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-<%@ taglib prefix="date" uri="/tags/date" %>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 	<span id="page.id" title="continuecreatesavingsaccount" />
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
+    <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 	<html-el:form method="post" action="/savingsAction.do?method=preview" >
     <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>

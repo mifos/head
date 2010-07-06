@@ -35,13 +35,13 @@ import java.sql.Statement;
 import junit.framework.Assert;
 
 import org.dbunit.Assertion;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.exceptions.SystemException;
@@ -65,12 +65,14 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 public class LatestTestAfterCheckpointIntegrationTest {
 
     private static Connection connection;
+    private static DatabaseConnection dbUnitConnection;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         StaticHibernateUtil.initialize();
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
+        dbUnitConnection = new DatabaseConnection(connection);
     }
 
     @Before
@@ -93,11 +95,11 @@ public class LatestTestAfterCheckpointIntegrationTest {
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         loadLatest();
-        IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet latestDump = dbUnitConnection.createDataSet();
         connection.createStatement().execute("drop table if exists foo");
         connection.commit();
         applyUpgrades();
-        IDataSet upgradeDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet upgradeDump = dbUnitConnection.createDataSet();
         Assertion.assertEquals(latestDump, upgradeDump);
     }
 
@@ -106,7 +108,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         createLatestDatabaseWithLatestData();
         Assert.assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, new DatabaseVersionPersistence(connection)
                 .read());
-        IDataSet latestDataDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet latestDataDump = dbUnitConnection.createDataSet();
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
@@ -121,7 +123,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
         TestDatabase.runUpgradeScripts(LATEST_CHECKPOINT_VERSION, connection);
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
 
-        IDataSet upgradeDataDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
 
         final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
         FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
@@ -160,10 +162,10 @@ public class LatestTestAfterCheckpointIntegrationTest {
         createLatestCheckPointDatabaseWithLatestData();
         int nextLookupId = largestLookupId() + 1;
         connection.createStatement().execute(
-                "insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " + "VALUES(" + nextLookupId
+                "insert into lookup_value(lookup_id, entity_id, lookup_name) " + "values(" + nextLookupId
                         + ", 19,'TestLookUpName')");
         connection.createStatement().execute(
-                "insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " + "VALUES(1," + nextLookupId
+                "insert into lookup_value_locale(locale_id, lookup_id, lookup_value) " + "values(1," + nextLookupId
                         + ",'Martian')");
 
         upgradeAllFromVersion(LATEST_CHECKPOINT_VERSION);
@@ -218,7 +220,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     private int largestLookupId() throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
+        ResultSet results = statement.executeQuery("select max(lookup_id) from lookup_value");
         if (!results.next()) {
             throw new SystemException(SystemException.DEFAULT_KEY,
                     "Did not find an existing lookup_id in lookup_value table");

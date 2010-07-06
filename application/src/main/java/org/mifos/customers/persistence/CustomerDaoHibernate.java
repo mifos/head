@@ -48,7 +48,6 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -91,12 +90,13 @@ import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -700,7 +700,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomerSurveyDto> getCustomerSurveyDto(final Integer customerId) {
+    public List<SurveyDto> getCustomerSurveyDto(final Integer customerId) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
@@ -711,7 +711,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             return null;
         }
 
-        List<CustomerSurveyDto> customerSurveys = new ArrayList<CustomerSurveyDto>();
+        List<SurveyDto> customerSurveys = new ArrayList<SurveyDto>();
         Integer instanceId;
         String surveyName;
         Date dateConducted;
@@ -721,7 +721,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             surveyName = (String) customerSurvey[1];
             dateConducted = (Date) customerSurvey[2];
 
-            customerSurveys.add(new CustomerSurveyDto(instanceId, surveyName, dateConducted));
+            customerSurveys.add(new SurveyDto(instanceId, surveyName, dateConducted));
         }
         return customerSurveys;
     }
@@ -878,12 +878,26 @@ public class CustomerDaoHibernate implements CustomerDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(CustomerConstants.DISPLAY_NAME, displayName);
         queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
-        List queryResult = this.genericDao.executeNamedQuery(NamedQueryConstants.GET_GROUP_COUNT_BY_NAME,
-                queryParameters);
+        List queryResult = this.genericDao.executeNamedQuery("Customer.getGroupCountByGroupNameAndOffice", queryParameters);
 
         if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
-            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER);
+            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, new Object[] {displayName});
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void validateCenterNameIsNotTakenForOffice(String displayName, Short officeId) throws CustomerException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(CustomerConstants.DISPLAY_NAME, displayName);
+        queryParameters.put(CustomerConstants.OFFICE_ID, officeId);
+
+        List queryResult = this.genericDao.executeNamedQuery("Customer.getCenterCount", queryParameters);
+
+        if (Integer.valueOf(queryResult.get(0).toString()) > 0) {
+            throw new CustomerException(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, new Object[] {displayName});
+        }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -909,7 +923,8 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @Override
     public boolean validateGovernmentIdForClient(String governmentId) {
-        return doesClientExistInAnyStateButClosedWithSameGovernmentId(governmentId);
+        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_GOVT_ID, governmentId,
+                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @Override
@@ -922,11 +937,6 @@ public class CustomerDaoHibernate implements CustomerDao {
     public boolean validateForBlackListedClientsOnNameAndDob(final String name, final DateTime dateOfBirth) {
         return checkForDuplicacyBasedOnName(NamedQueryConstants.GET_BLACKLISTED_CLIENT_BASED_ON_NAME_DOB, name, dateOfBirth,
                 Integer.valueOf(0), CustomerStatus.CLIENT_CANCELLED);
-    }
-
-    private boolean doesClientExistInAnyStateButClosedWithSameGovernmentId(final String governmentId) {
-        return checkForClientsBasedOnGovtId(NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID, governmentId,
-                Integer.valueOf(0), CustomerStatus.CLIENT_CLOSED);
     }
 
     @SuppressWarnings("unchecked")
@@ -1249,9 +1259,11 @@ public class CustomerDaoHibernate implements CustomerDao {
             List<Object[]> clientNameDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
                     "getClientNameDetailDto", queryParameters);
 
-            final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
-            spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
-            spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+            if (clientNameDetailsQueryResult.size() > 0) {
+                final String spouseFatherValueLookUp = (String) clientNameDetailsQueryResult.get(0)[0];
+                spouseFatherName = (String) clientNameDetailsQueryResult.get(0)[1];
+                spouseFatherValue = MessageLookup.getInstance().lookup(spouseFatherValueLookUp, userContext);
+            }
         }
 
         return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
@@ -1529,14 +1541,26 @@ public class CustomerDaoHibernate implements CustomerDao {
     @Override
     public int retrieveLastSearchIdValueForNonParentCustomersInOffice(final Short officeId) {
         final int maxCustomerId = maxIdOfCustomersWithNoParentWithinOffice(officeId);
-        int valueAssociatedWithLastEnteredCustomer = 0;
+        int maxValue = 0;
         if (maxCustomerId > 0) {
             final CustomerBO lastEnteredNonParentCustomerUnderOffice = findCustomerById(maxCustomerId);
             final String searchId = lastEnteredNonParentCustomerUnderOffice.getSearchId();
-            valueAssociatedWithLastEnteredCustomer = Integer.valueOf(searchId.replaceFirst(
-                    GroupConstants.PREFIX_SEARCH_STRING, ""));
+
+            int suffixValue = 0;
+            if (searchId.startsWith(GroupConstants.PREFIX_SEARCH_STRING) && searchId.lastIndexOf('.') == 1) {
+                suffixValue = Integer.parseInt(searchId.substring(2));
+            } else if (searchId.startsWith(GroupConstants.PREFIX_SEARCH_STRING)) {
+                // legacy format 1.x.y instead of just 1.x for customers directly under office (don't care about level)
+                String nextWholeNumber = searchId.substring(2, searchId.indexOf('.', 2));
+                suffixValue = Integer.parseInt(nextWholeNumber) + 25;
+            }
+
+            if (suffixValue > maxValue) {
+                maxValue = suffixValue;
+            }
+
         }
-        return valueAssociatedWithLastEnteredCustomer;
+        return maxValue;
     }
 
     @Override

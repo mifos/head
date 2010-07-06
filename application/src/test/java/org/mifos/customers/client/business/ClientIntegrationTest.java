@@ -39,7 +39,6 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -55,10 +54,10 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -124,35 +123,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
         Assert.assertEquals(pct, retrievedClient.getPovertyLikelihoodPercent());
 
-    }
-
-    public void testRemoveClientFromGroup() throws Exception {
-        createInitialObjects();
-        client.updateClientFlag();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        client = TestObjectFactory.getClient(client.getCustomerId());
-
-    }
-
-    public void testSuccessfulAddClientToGroupWithMeeting() throws Exception {
-        createObjectsForTransferToGroup_WithMeeting();
-        Assert.assertEquals(0, group1.getMaxChildCount().intValue());
-
-        client.addClientToGroup(group1);
-
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        Assert.assertNotNull(client.getParentCustomer());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-
-        client = TestObjectFactory.getClient(client.getCustomerId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        group1 = TestObjectFactory.getGroup(group1.getCustomerId());
-
-        Assert.assertEquals(1, group1.getMaxChildCount().intValue());
-        Assert.assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
-        Assert.assertEquals(true, client.isClientUnderGroup());
     }
 
     public void testSuccessfulValidateBeforeAddingClientToGroup_Client() throws Exception {
@@ -502,21 +472,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(officeId, client.getOffice().getOfficeId());
     }
 
-    /**
-     * Transfer a client created outside a group to a group. This was originally created to address <a
-     * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=2184">issue 2184</a>.
-     * <p>
-     * In the UI, the second transfer is what causes the the null pointer exception to be thrown.
-     */
-    public void testSuccessfulTransferToGroupFromOutsideGroup() throws Exception {
-        createObjectsForTransferToGroup_OutsideGroup();
-
-        client.addClientToGroup((GroupBO) group);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-    }
-
-
     public void testUpdateBranchFailure_OfficeNULL() throws Exception {
         createInitialObjects();
         try {
@@ -534,20 +489,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             Assert.fail();
         } catch (CustomerException e) {
             Assert.assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER, e.getKey());
-        }
-    }
-
-    public void testUpdateBranchFailure_OfficeInactive() throws Exception {
-        createObjectsForClientTransfer();
-        office.update(office.getOfficeName(), office.getShortName(), OfficeStatus.INACTIVE, office.getOfficeLevel(),
-                office.getParentOffice(), null, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        try {
-            client.transferToBranch(office);
-            Assert.fail();
-        } catch (CustomerException e) {
-            Assert.assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, e.getKey());
         }
     }
 
@@ -610,30 +551,6 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.closeSession();
     }
 
-    private void createObjectsForTransferToGroup_WithMeeting() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, null,
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
-                getMeeting(), personnel);
-        client = TestObjectFactory.createClient("new client", CustomerStatus.CLIENT_PARTIAL, group,
-                new java.util.Date());
-        StaticHibernateUtil.closeSession();
-    }
-
-    private void createObjectsForTransferToGroup_OutsideGroup() throws Exception {
-        Short officeId = new Short("3");
-        Short personnel = new Short("1");
-        group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, getMeeting(),
-                personnel);
-        group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,
-                getMeeting(), personnel);
-        client = TestObjectFactory
-                .createClient("new client", CustomerStatus.CLIENT_PARTIAL, null, new java.util.Date());
-        StaticHibernateUtil.closeSession();
-    }
-
     private void createObjectsForClient(String name, CustomerStatus status) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
@@ -661,8 +578,8 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     private List<CustomFieldDto> getCustomFields() {
         List<CustomFieldDto> fields = new ArrayList<CustomFieldDto>();
-        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC));
-        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC));
+        fields.add(new CustomFieldDto(Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC.getValue()));
+        fields.add(new CustomFieldDto(Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC.getValue()));
         return fields;
     }
 

@@ -8,14 +8,14 @@
 
 	<class
 		name="org.mifos.customers.client.business.ClientAttendanceBO"
-		table="CUSTOMER_ATTENDANCE">
-		<id name="id" column="ID">
+		table="customer_attendance">
+		<id name="id" column="id">
 			<generator class="native" />
 		</id>
-		<property name="meetingDate" column="MEETING_DATE" />
-		<property name="attendance" column="ATTENDANCE" />
+		<property name="meetingDate" column="meeting_date" />
+		<property name="attendance" column="attendance" />
 
-		<many-to-one name="customer" column="CUSTOMER_ID"
+		<many-to-one name="customer" column="customer_id"
 			class="org.mifos.customers.business.CustomerBO"
 			cascade="none" update="false" insert="true" unique="true" />
 	</class>

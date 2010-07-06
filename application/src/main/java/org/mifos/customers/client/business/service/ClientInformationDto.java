@@ -22,7 +22,6 @@ package org.mifos.customers.client.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.ClientPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
@@ -30,9 +29,10 @@ import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
-import org.mifos.customers.util.helpers.CustomerSurveyDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.service.DataTransferObject;
 
 /**
@@ -51,7 +51,7 @@ public class ClientInformationDto implements DataTransferObject {
     private final List<SavingsDetailDto> savingsAccountsInUse;
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
-    private final List<CustomerSurveyDto> customerSurveys;
+    private final List<SurveyDto> customerSurveys;
     private final List<CustomFieldDto> customFields;
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
@@ -60,7 +60,7 @@ public class ClientInformationDto implements DataTransferObject {
             final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerFlagDto> customerFlags,
             final List<LoanDetailDto> loanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
             final CustomerMeetingDto customerMeeting, final Boolean activeSurveys,
-            final List<CustomerSurveyDto> customerSurveys, final List<CustomFieldDto> customFields) {
+            final List<SurveyDto> customerSurveys, final List<CustomFieldDto> customFields) {
         this.clientDisplay = clientDisplay;
         this.customerAccountSummary = customerAccountSummary;
         this.clientPerformanceHistory = clientPerformanceHistory;
@@ -115,7 +115,7 @@ public class ClientInformationDto implements DataTransferObject {
         return this.activeSurveys;
     }
 
-    public List<CustomerSurveyDto> getCustomerSurveys() {
+    public List<SurveyDto> getCustomerSurveys() {
         return this.customerSurveys;
     }
 

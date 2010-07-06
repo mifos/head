@@ -4,12 +4,12 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
   
 <hibernate-mapping > 
-  <class name="org.mifos.customers.client.business.CustomerPictureEntity" table="CUSTOMER_PICTURE" >
-    <id column="PICTURE_ID" name="pictureId" type="integer" access="field"> 
+  <class name="org.mifos.customers.client.business.CustomerPictureEntity" table="customer_picture" >
+    <id column="picture_id" name="pictureId" type="integer" access="field"> 
 		<generator class="native"></generator>
     </id>
-	<property column="PICTURE"  name="picture"  type="blob"/>
-	<many-to-one name="customer" column="CUSTOMER_ID"
+	<property column="picture"  name="picture"  type="blob"/>
+	<many-to-one name="customer" column="customer_id"
 			class="org.mifos.customers.business.CustomerBO" unique="true" access="field"/>
   </class> 
   

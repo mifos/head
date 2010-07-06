@@ -29,8 +29,8 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
@@ -61,7 +61,7 @@ public class GlimLoanUpdater {
         String loanAmount = loanAccountDetail.getLoanAmount();
         Money loanMoney = new Money(individualLoan.getCurrency(), !loanAmount.equals("-") ? loanAmount : "0");
         individualLoan.updateLoan(loanMoney, !businessActivityIsEmpty(loanAccountDetail) ? Integer
-                .valueOf(loanAccountDetail.getBusinessActivity()) : 0);
+                .valueOf(loanAccountDetail.getBusinessActivity()) : null);
     }
 
     private boolean businessActivityIsEmpty(LoanAccountDetailsDto loanAccountDetail) {

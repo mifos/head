@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.fees.servicefacade;
 
-import java.io.Serializable;
-
 import org.mifos.framework.business.service.DataTransferObject;
 
 public class FeeStatusDto implements DataTransferObject {

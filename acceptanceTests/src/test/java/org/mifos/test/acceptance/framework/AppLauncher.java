@@ -35,7 +35,7 @@ public class AppLauncher extends AbstractPage {
 	}
 
 	public LoginPage launchMifos() {
-		selenium.open("loginAction.do?method=load");
+		selenium.open("login.ftl");
 		return new LoginPage(selenium);
 	}
 

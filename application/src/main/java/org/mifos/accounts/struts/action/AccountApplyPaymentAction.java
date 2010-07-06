@@ -47,12 +47,12 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -67,7 +67,6 @@ import org.mifos.security.util.UserContext;
 public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
     private AccountService accountService = null;
-    private AccountBusinessService accountBusinessService = null;
     private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
     private List<PaymentTypeDto> feePaymentTypeDtos;
@@ -84,7 +83,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getAccountBusinessService();
+        return null;
     }
 
     @Override
@@ -225,13 +224,6 @@ public class AccountApplyPaymentAction extends BaseAction {
         }
 
         return "applyPayment_success";
-    }
-
-    private AccountBusinessService getAccountBusinessService() {
-        if (accountBusinessService == null) {
-            accountBusinessService = new AccountBusinessService();
-        }
-        return accountBusinessService;
     }
 
     @TransactionDemarcate(joinToken = true)

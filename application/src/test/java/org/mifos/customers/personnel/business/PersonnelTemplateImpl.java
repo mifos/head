@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 
@@ -60,7 +60,7 @@ public class PersonnelTemplateImpl implements PersonnelTemplate {
         this.roleIds = new ArrayList<Short>();
         this.roleIds.add(new Short((short) 1));
         this.customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
         this.name = new Name("TestFirstName", null, null, null);
         this.governmentIdNumber = "111111";
         this.dateOfBirth = new Date();

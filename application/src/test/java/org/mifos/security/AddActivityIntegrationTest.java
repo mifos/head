@@ -99,7 +99,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
         AuthorizationManager authorizer = AuthorizationManager.getInstance();
-        authorizer.init(session);
+        authorizer.init();
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
        Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));
@@ -135,7 +135,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
             upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, null, TEST_LOCALE,
                     "NewActivity");
         } catch (Exception e) {
-           Assert.assertEquals(e.getMessage(), AddActivity.wrongConstructor);
+           Assert.assertEquals(e.getMessage(), AddActivity.WRONG_CONSTRUCTOR);
         }
         String invalidKey = "NewActivity";
 

@@ -24,12 +24,12 @@ public interface CollectionSheetConstants {
 
     // states in which collection sheet generation can be at any given point in
     // time.
-    public static final Short COLLECTION_SHEET_GENERATION_STARTED = 1;
-    public static final Short COLLECTION_SHEET_GENERATION_SUCCESSFUL = 2;
-    public static final Short COLLECTION_SHEET_GENERATION_FAILED = 3;
+    Short COLLECTION_SHEET_GENERATION_STARTED = 1;
+    Short COLLECTION_SHEET_GENERATION_SUCCESSFUL = 2;
+    Short COLLECTION_SHEET_GENERATION_FAILED = 3;
 
     // parameters for query
-    public static final String MEETING_DATE = "meeting_date";
-    public static final Short FIRST_INSTALLMENT = 1;
+    String MEETING_DATE = "meeting_date";
+    Short FIRST_INSTALLMENT = 1;
 
 }

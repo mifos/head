@@ -63,19 +63,10 @@ public class HibernateUtil {
     }
 
     /**
-     * Open a new Hibernate session.
-     */
-    public Session openSession() throws HibernateProcessException {
-        try {
-            return sessionFactory.openSession();
-        } catch (HibernateException e) {
-            throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION, e);
-        }
-    }
-
-    /**
      * Close a session. Do nothing if the session is null or already closed.
+     * @deprecated use only {@link StaticHibernateUtil#closeSession()} for session retrieved by {@link StaticHibernateUtil#getSessionTL()}
      */
+    @Deprecated
     public void closeSession(Session session) throws HibernateProcessException {
         try {
             if (session != null && session.isOpen()) {
@@ -129,6 +120,14 @@ public class HibernateUtil {
         return transaction;
     }
 
+    /**
+     * @deprecated use only<br>
+     * {@link StaticHibernateUtil#startTransaction()}<br>
+     * {@link StaticHibernateUtil#commitTransaction()}<br>
+     * {@link StaticHibernateUtil#rollbackTransaction()}<br>
+     * @return
+     */
+    @Deprecated
     public Transaction getTransaction() {
         return getSessionTL().getTransaction();
     }
@@ -139,6 +138,11 @@ public class HibernateUtil {
         }
         sessionTL.set(null);
     }
+
+    public void flushSession() {
+        sessionTL.get().flush();
+    }
+
 
     public void flushAndCloseSession() {
         if (getSessionTL().isOpen()) {
@@ -156,15 +160,6 @@ public class HibernateUtil {
             session.clear();
         }
 
-    }
-
-    private Session getSession() {
-        if (null == sessionTL.get()) {
-            // need to log to indicate that the session is being invoked when
-            // not present
-
-        }
-        return sessionTL.get();
     }
 
     private Session getOrCreateSession() throws HibernateException {

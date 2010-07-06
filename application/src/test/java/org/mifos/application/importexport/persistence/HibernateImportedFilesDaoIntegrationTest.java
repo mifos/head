@@ -42,7 +42,7 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
     public void setUp() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
         Connection connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.createStatement().execute("TRUNCATE TABLE IMPORTED_TRANSACTIONS_FILES");
+        connection.createStatement().execute("truncate table imported_transactions_files");
     }
 
     public void testSaveAndFind() throws Exception {

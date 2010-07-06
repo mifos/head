@@ -28,7 +28,6 @@ import java.util.Map;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.customers.business.CustomerBO;
@@ -46,6 +45,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.Param;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -62,13 +62,6 @@ public class CenterPersistence extends Persistence {
 
     public CenterPersistence() {
         super();
-    }
-
-    public boolean isCenterExists(String name) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
-        List queryResult = executeNamedQuery(NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
-        return ((Number) queryResult.get(0)).longValue() > 0;
     }
 
     public CenterBO getCenter(Integer customerId) throws PersistenceException {

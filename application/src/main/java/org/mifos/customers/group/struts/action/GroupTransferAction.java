@@ -39,6 +39,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.service.CenterBusinessService;
@@ -65,6 +66,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -222,17 +224,31 @@ public class GroupTransferAction extends BaseAction {
 
         ClientBO client = getClientBusinessService().getClient(customerBO.getCustomerId());
 
-        client.updateClientFlag();
-        setInitialObjectForAuditLogging(customerBO);
+        setInitialObjectForAuditLogging(client);
         PersonnelBO personnel = null;
         if (StringUtils.isNotBlank(actionForm.getAssignedLoanOfficerId())) {
             personnel = getPersonnelBusinessService()
                     .getPersonnel(Short.valueOf(actionForm.getAssignedLoanOfficerId()));
         }
-        customerBO.removeGroupMemberShip(personnel, actionForm.getComment());
+        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        int numberOfCustomersInOfficeAlready = customerDao
+                .retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOffice().getOfficeId());
 
-        customerBOInSession = null;
-        customerBO = null;
+        String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+        client.setSearchId(searchId);
+
+        PersonnelBO user = client.getPersonnelPersistence().getPersonnel(client.getUserContext().getId());
+        CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(actionForm.getComment(), new DateTimeService().getCurrentJavaSqlDate(), user, client);
+        client.addCustomerNotes(accountNotesEntity);
+
+        client.resetPositions(client.getParentCustomer());
+        client.getParentCustomer().updateDetails(client.getUserContext());
+        client.getParentCustomer().update();
+
+        client.setPersonnel(personnel);
+        client.setParentCustomer(null);
+        client.removeGroupMembership();
+        client.update();
 
         return mapping.findForward(ActionForwards.view_client_details_page.toString());
 

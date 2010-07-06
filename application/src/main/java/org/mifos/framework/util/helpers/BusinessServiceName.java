@@ -20,7 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.admin.business.service.AdminBusinessService;
@@ -47,7 +46,7 @@ import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBu
 @Deprecated
 public enum BusinessServiceName {
     Customer(CustomerBusinessService.class), MasterDataService(MasterDataService.class), ReportsService(
-            ReportsBusinessService.class), FeesService(FeeBusinessService.class), Personnel(
+            ReportsBusinessService.class), Personnel(
             PersonnelBusinessService.class), Center(CenterBusinessService.class), Client(ClientBusinessService.class), Group(
             GroupBusinessService.class), Office(OfficeBusinessService.class), LoanProduct(LoanPrdBusinessService.class), RolesPermissions(
             RolesPermissionsBusinessService.class), Admin(AdminBusinessService.class), AuditLog(
@@ -60,6 +59,7 @@ public enum BusinessServiceName {
         this.name = name;
     }
 
+    @SuppressWarnings("unchecked")
     private BusinessServiceName(Class service) {
         this(service.getName());
     }

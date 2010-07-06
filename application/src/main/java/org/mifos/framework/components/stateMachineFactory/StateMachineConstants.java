@@ -21,11 +21,11 @@
 package org.mifos.framework.components.stateMachineFactory;
 
 public interface StateMachineConstants {
-    public final short PARIAL_APPLICATION = 1;
-    public final short PENDING_APPROVAL = 2;
-    public final short APPROVED = 3;
-    public final short INACTIVE = 4;
-    public final short CLOSED = 5;
-    public final short CANCEL = 6;
-    public final String TRANSITION_CONFIG_FILE_PATH = "org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
+    short PARIAL_APPLICATION = 1;
+    short PENDING_APPROVAL = 2;
+    short APPROVED = 3;
+    short INACTIVE = 4;
+    short CLOSED = 5;
+    short CANCEL = 6;
+    String TRANSITION_CONFIG_FILE_PATH = "org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml";
 }

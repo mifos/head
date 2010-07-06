@@ -9,6 +9,14 @@
 
     <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
     
+    <bean id="fundDao" class="org.mifos.accounts.fund.persistence.FundDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
+    <bean id="feeDao" class="org.mifos.accounts.fees.persistence.FeeDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
     <bean id="customerDao" class="org.mifos.customers.persistence.CustomerDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>
@@ -24,8 +32,20 @@
     <bean id="holidayDao" class="org.mifos.application.holiday.persistence.HolidayDaoHibernate" >
     	<constructor-arg ref="genericDao" />
     </bean>
-    
-    <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.business.LoanProductDaoHibernate" >
+   
+    <bean id="loanDao" class="org.mifos.accounts.loan.persistance.LoanDaoHibernate" >
     	<constructor-arg ref="genericDao" />
+    </bean>
+     
+    <bean id="loanProductDao" class="org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
+    <bean id="savingsProductDao" class="org.mifos.accounts.productdefinition.persistence.SavingsProductDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
+    
+    <bean id="generalLedgerDao" class="org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate" >
+        <constructor-arg ref="genericDao" />
     </bean>
 </beans>

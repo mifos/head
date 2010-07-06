@@ -25,9 +25,9 @@ public enum OfficeLevel {
     HEADOFFICE(Short.valueOf("1")), REGIONALOFFICE(Short.valueOf("2")), SUBREGIONALOFFICE(Short.valueOf("3")), AREAOFFICE(
             Short.valueOf("4")), BRANCHOFFICE(Short.valueOf("5"));
 
-    Short value;
+    private Short value;
 
-    OfficeLevel(Short value) {
+    private OfficeLevel(Short value) {
         this.value = value;
     }
 

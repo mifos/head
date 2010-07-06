@@ -22,14 +22,14 @@ package org.mifos.framework.components.batchjobs;
 
 public interface SchedulerConstants {
 
-    public static final String CONFIGURATION_FILE_NAME = "task.xml";
-    public static final String SCHEDULER_TASKS = "scheduler-tasks";
-    public static final String SCHEDULER = "scheduler";
-    public static final String TASK_CLASS_NAME = "task-class-name";
-    public static final String INITIAL_TIME = "initial-time";
-    public static final String DELAY_TIME = "delay-time";
-    public static final String START = "Start";
-    public static final String FINISHED_SUCCESSFULLY = "Finished Successfully";
-    public static final String FAILURE = "Failure";
+    String CONFIGURATION_FILE_NAME = "task.xml";
+    String SCHEDULER_TASKS = "scheduler-tasks";
+    String SCHEDULER = "scheduler";
+    String TASK_CLASS_NAME = "task-class-name";
+    String INITIAL_TIME = "initial-time";
+    String DELAY_TIME = "delay-time";
+    String START = "Start";
+    String FINISHED_SUCCESSFULLY = "Finished Successfully";
+    String FAILURE = "Failure";
 
 }

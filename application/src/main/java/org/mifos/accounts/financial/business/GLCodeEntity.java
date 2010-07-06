@@ -30,17 +30,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.mifos.accounts.financial.servicefacade.GLCodeDto;
 import org.mifos.framework.business.AbstractEntity;
 
-@Entity
-@Table(name = "GL_CODE")
 @NamedQueries( { @NamedQuery(name = "GLCode.findById", query = "from GLCodeEntity glCode where glCode.glcodeId = :glcodeId")})
 
+
+@Entity
+@Table(name = "gl_code")
 public class GLCodeEntity extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "GLCODE_ID", nullable = false)
     private Short glcodeId;
 
     @Column(name = "GLCODE_VALUE")
@@ -86,5 +87,12 @@ public class GLCodeEntity extends AbstractEntity {
     @Override
     public String toString() {
         return glcode;
+    }
+
+    public GLCodeDto toDto() {
+        GLCodeDto glCodeDto = new GLCodeDto();
+        glCodeDto.setGlcode(this.glcode);
+        glCodeDto.setGlcodeId(this.glcodeId);
+        return glCodeDto;
     }
 }

@@ -6,47 +6,47 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.loan.business.LoanActivityEntity" table="LOAN_ACTIVITY_DETAILS">
-		<id name="id" column="ID" type="integer" access="field">
+	<class name="org.mifos.accounts.loan.business.LoanActivityEntity" table="loan_activity_details">
+		<id name="id" column="id" type="integer" access="field">
 			<generator class="native" />
 		</id>
 
-		<property name="comments" column="COMMENTS" type="string" access="field" />
-		<property name="trxnCreatedDate" column="CREATED_DATE" access="field" />
+		<property name="comments" column="comments" type="string" access="field" />
+		<property name="trxnCreatedDate" column="created_date" access="field" />
 		<property name="principal" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="PRINCIPAL_AMOUNT_CURRENCY_ID" />
-			<column name="PRINCIPAL_AMOUNT" />
+			<column name="principal_amount_currency_id" />
+			<column name="principal_amount" />
 		</property>
 		<property name="principalOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_PRINCIPAL_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_PRINCIPAL_AMOUNT" />
+			<column name="balance_principal_amount_currency_id" />
+			<column name="balance_principal_amount" />
 		</property>
 		<property name="interest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="INTEREST_AMOUNT_CURRENCY_ID" />
-			<column name="INTEREST_AMOUNT" />
+			<column name="interest_amount_currency_id" />
+			<column name="interest_amount" />
 		</property>
 		<property name="interestOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_INTEREST_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_INTEREST_AMOUNT" />
+			<column name="balance_interest_amount_currency_id" />
+			<column name="balance_interest_amount" />
 		</property>
 		<property name="fee" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="FEE_AMOUNT_CURRENCY_ID" />
-			<column name="FEE_AMOUNT" />
+			<column name="fee_amount_currency_id" />
+			<column name="fee_amount" />
 		</property>
 		<property name="feeOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_FEE_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_FEE_AMOUNT" />
+			<column name="balance_fee_amount_currency_id" />
+			<column name="balance_fee_amount" />
 		</property>
 		<property name="penalty" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="PENALTY_AMOUNT_CURRENCY_ID" />
-			<column name="PENALTY_AMOUNT" />
+			<column name="penalty_amount_currency_id" />
+			<column name="penalty_amount" />
 		</property>
 		<property name="penaltyOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_PENALTY_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_PENALTY_AMOUNT" />
+			<column name="balance_penalty_amount_currency_id" />
+			<column name="balance_penalty_amount" />
 		</property>
-		<many-to-one name="personnel" column="CREATED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+		<many-to-one name="personnel" column="created_by" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 
 	</class>
 

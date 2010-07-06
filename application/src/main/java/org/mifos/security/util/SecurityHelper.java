@@ -27,7 +27,6 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -45,12 +44,6 @@ import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersist
 
 public class SecurityHelper {
 
-    private final Session session;
-
-    public SecurityHelper(Session session) {
-        this.session = session;
-    }
-
     /**
      * This function is used to retrive the all the activities in the system and
      * the set of roles which includes these activities
@@ -59,24 +52,12 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public List<ActivityRoles> getActivities() throws SystemException, ApplicationException {
-        Transaction transaction = null;
         try {
-            // FIXME: what's with the transaction here? I don't see any CRUD.
-            transaction = session.beginTransaction();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
             List<ActivityRoles> activityRolesList = query.list();
-            transaction.commit();
             return activityRolesList;
-
-        } catch (HibernateProcessException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new SystemException(e);
         } catch (HibernateException e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new SecurityException(SecurityConstants.GENERALERROR, e);
         }
     }
@@ -91,36 +72,19 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public static Set getUserRoles(short uid) throws SystemException, ApplicationException {
-
         Set roles = null;
-        Session session = null;
-        Transaction transaction = null;
-
-        Query personRoles = null;
-
         try {
-            session = StaticHibernateUtil.openSession();
-            transaction = session.beginTransaction();
-            personRoles = session.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query personRoles = session.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
             personRoles.setShort("ID", uid);
             List<PersonRoles> lst = personRoles.list();
-            transaction.commit();
             if (null != lst && lst.size() > 0) {
                 PersonRoles pr = lst.get(0);
                 roles = pr.getRoles();
             }
-        } catch (HibernateProcessException e) {
-            transaction.rollback();
-            throw new SystemException(e);
         } catch (HibernateException he) {
-            transaction.rollback();
             throw new SecurityException(SecurityConstants.GENERALERROR, he);
         }
-
-        finally {
-            StaticHibernateUtil.closeSession(session);
-        }
-
         return roles;
 
     }
@@ -135,30 +99,16 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public static List<OfficeSearch> getPersonnelOffices(Short officeid) throws SystemException, ApplicationException {
-
         HierarchyManager hm = HierarchyManager.getInstance();
         String pattern = hm.getSearchId(officeid) + "%";
         List<OfficeSearch> lst = null;
-
-        Session session = null;
-        Transaction transaction = null;
-        Query officeSearch = null;
         try {
-            session = StaticHibernateUtil.openSession();
-            transaction = session.beginTransaction();
-            officeSearch = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query officeSearch = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
             officeSearch.setString(SecurityConstants.PATTERN, pattern);
             lst = officeSearch.list();
-            transaction.commit();
-
-        } catch (HibernateProcessException e) {
-            transaction.rollback();
-            throw new SystemException(e);
         } catch (HibernateException he) {
-            transaction.rollback();
             throw new SecurityException(SecurityConstants.GENERALERROR, he);
-        } finally {
-            StaticHibernateUtil.closeSession(session);
         }
         return lst;
     }
@@ -174,28 +124,14 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public static List<OfficeSearch> getOffices() throws SystemException, ApplicationException {
-
         List<OfficeSearch> lst = null;
-        Session session = null;
-        Transaction transaction = null;
-        Query queryOfficeSearchList = null;
-
         try {
-            session = StaticHibernateUtil.openSession();
-            transaction = session.beginTransaction();
-            queryOfficeSearchList = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query queryOfficeSearchList = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
             lst = queryOfficeSearchList.list();
-            transaction.commit();
-        } catch (HibernateProcessException e) {
-            transaction.rollback();
-            throw new SystemException(e);
         } catch (HibernateException he) {
-            transaction.rollback();
             throw new SecurityException(SecurityConstants.GENERALERROR, he);
-        } finally {
-            StaticHibernateUtil.closeSession(session);
         }
-
         return lst;
     }
 
@@ -209,8 +145,7 @@ public class SecurityHelper {
      */
     public List<Short> getLeafActivities() throws SystemException, ApplicationException {
         RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
-
-        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities(session);
+        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
         List<Short> leafs = new ArrayList<Short>();
         buildLeafItems(activityList, leafs);
         return leafs;

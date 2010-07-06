@@ -20,20 +20,17 @@
 
 package org.mifos.accounts.fund.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.fund.business.service.FundBusinessService;
 import org.mifos.accounts.fund.struts.actionforms.FundActionForm;
 import org.mifos.accounts.fund.util.helpers.FundConstants;
+import org.mifos.accounts.fund.servicefacade.FundDto;
+import org.mifos.accounts.fund.servicefacade.FundCodeDto;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -53,11 +50,11 @@ public class FundAction extends BaseAction {
 
     @Override
     protected BusinessService getService() throws ServiceException {
-        return getFundBizService();
+        return null;
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
 
@@ -82,7 +79,7 @@ public class FundAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start Load method of Fund Action");
         doCleanUp(request);
-        SessionUtils.setCollectionAttribute(FundConstants.ALL_FUNDLIST, getFundCodes(), request);
+        SessionUtils.setCollectionAttribute(FundConstants.ALL_FUNDLIST, this.fundServiceFacade.getFundCodes(), request);
         logger.debug("Load method of Fund Action called");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -110,19 +107,22 @@ public class FundAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start create method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
-        FundCodeEntity fundCodeEntity = getFundCode(fundActionForm.getFundCode(), request);
-        FundBO fundBO = new FundBO(fundCodeEntity, fundActionForm.getFundName());
-        fundBO.save();
+        FundDto fundDto = new FundDto();
+        fundDto.setCode(getFundCode(fundActionForm.getFundCode(), request));
+        fundDto.setName(fundActionForm.getFundName());
+
+        this.fundServiceFacade.createFund(fundDto);
+
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward viewAllFunds(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        SessionUtils.setCollectionAttribute(FundConstants.FUNDLIST, getFunds(), request);
+        SessionUtils.setCollectionAttribute(FundConstants.FUNDLIST, this.fundServiceFacade.getFunds(), request);
         return mapping.findForward(ActionForwards.viewAllFunds_success.toString());
     }
 
@@ -132,9 +132,9 @@ public class FundAction extends BaseAction {
         logger.debug("start manage method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
         Short fundId = getShortValue(fundActionForm.getFundCodeId());
-        FundBO fundBO = getFund(fundId);
-        SessionUtils.setAttribute(FundConstants.OLDFUNDNAME, fundBO.getFundName(), request);
-        setFormAttributes(fundActionForm, fundBO.getFundName(), fundBO.getFundCode().getFundCodeValue());
+        FundDto fundDto = this.fundServiceFacade.getFund(fundId);
+        SessionUtils.setAttribute(FundConstants.OLDFUNDNAME, fundDto.getName(), request);
+        setFormAttributes(fundActionForm, fundDto.getName(), fundDto.getCode().getValue());
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
@@ -165,9 +165,12 @@ public class FundAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("start update method of Fund Action");
         FundActionForm fundActionForm = (FundActionForm) form;
-        Short fundId = getShortValue(fundActionForm.getFundCodeId());
-        FundBO fundBO = getFund(fundId);
-        fundBO.update(fundActionForm.getFundName());
+        FundDto fundDto = new FundDto();
+        fundDto.setId(fundActionForm.getFundCodeId());
+        fundDto.setName(fundActionForm.getFundName());
+
+        this.fundServiceFacade.updateFund(fundDto);
+
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
@@ -182,24 +185,8 @@ public class FundAction extends BaseAction {
         return mapping.findForward(ActionForwards.preview_failure.toString());
     }
 
-    private FundBusinessService getFundBizService() {
-        return new FundBusinessService();
-    }
-
     private void doCleanUp(HttpServletRequest request) {
         SessionUtils.setAttribute(FundConstants.FUND_ACTIONFORM, null, request.getSession());
-    }
-
-    private List<FundCodeEntity> getFundCodes() throws Exception {
-        return getFundBizService().getFundCodes();
-    }
-
-    private List<FundBO> getFunds() throws Exception {
-        return getFundBizService().getSourcesOfFund();
-    }
-
-    private FundBO getFund(Short fundId) throws Exception {
-        return getFundBizService().getFund(fundId);
     }
 
     private void setFormAttributes(FundActionForm actionForm, String fundName, String fundCodeValue) {
@@ -207,14 +194,9 @@ public class FundAction extends BaseAction {
         actionForm.setFundCode(fundCodeValue);
     }
 
-    private FundCodeEntity getFundCode(String fundCode, HttpServletRequest request) throws Exception {
-        List<FundCodeEntity> fundList = (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST,
-                request);
-        for (FundCodeEntity fundCodeEntity : fundList) {
-            if (fundCodeEntity.getFundCodeId().equals(getShortValue(fundCode))) {
-                return fundCodeEntity;
-            }
-        }
-        return null;
+    private FundCodeDto getFundCode(String fundCode, HttpServletRequest request) throws Exception {
+        FundCodeDto fundCodeDto = new FundCodeDto();
+        fundCodeDto.setId(fundCode);
+        return fundCodeDto;
     }
 }

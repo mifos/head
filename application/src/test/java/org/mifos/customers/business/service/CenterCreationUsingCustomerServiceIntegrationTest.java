@@ -46,6 +46,7 @@ import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -301,8 +302,8 @@ public class CenterCreationUsingCustomerServiceIntegrationTest {
         assertThat(center.getCustomerAccount().getAccountFees().isEmpty(), is(false));
     }
 
-    @Test
-    public void canCreateCenterWithNameOfAlreadyExistingCenter() throws Exception {
+    @Test(expected=CustomerException.class)
+    public void canNotCreateCenterWithNameOfAlreadyExistingCenter() throws Exception {
 
         // minimal details
         MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday();

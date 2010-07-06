@@ -120,8 +120,8 @@ explanation of the license and how it is applied.
 		        <mifos:mifoslabel name="funds.fundcode" bundle="fundUIResources" isColonRequired="yes"/>
 		        </span>
 		        <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'allFunds')}" var="fund">
-					<c:if test="${fund.fundCodeId == sessionScope.fundActionForm.fundCode}">
-						<c:out value="${fund.fundCodeValue}" />
+					<c:if test="${fund.id == sessionScope.fundActionForm.fundCode}">
+						<c:out value="${fund.value}" />
 					</c:if>
 				</c:forEach>
 		        <br>		        

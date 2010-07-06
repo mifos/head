@@ -21,21 +21,20 @@
 package org.mifos.framework.util.helpers;
 
 public interface ExceptionConstants {
-    public static String CFGFILENOTFOUND = "exceptions.hibernate.systemexception.cfgfilenotfound";
-    public static String HIBERNATEPROPNOTFOUND = "exceptions.hibernate.systemexception.hibernatepropnotfound";
-    public static String CONFIGPATHNOTFOUND = "exceptions.hibernate.systemexception.configpathnotfound";
-    public static String SYSTEMEXCEPTION = "exception.framework.SystemException";
-    public static String CONCURRENCYEXCEPTION = "exception.framework.ConcurrencyException";
-    public static String DOUBLESUBMITEXCEPTION = "exception.framework.DoubleSubmitException";
-    public static String SERVICEEXCEPTION = "exception.framework.ServiceException";
-    public static String ILLEGALMONEYOPERATION = "The desired operation on money class is not possible because the two money objects are of different currencies.";
-    public static String FRAMEWORKRUNTIMEEXCEPTION = "exception.framework.FrameworkRuntimeException";
-    public static String CONSTANTSNOTLOADEDEXCEPTION = "exception.framework.ConstantsNotLoadedException";
-    public static String STARTUP_EXCEPTION = "exception.framework.StartUpException";
-    public static String ENUMSNOTLOADEDEXCEPTION = "exception.framework.EnumsNotLoadedException";
-    public static String PAGEEXPIREDEXCEPTION = "exception.framework.PageExpiredException";
-    public static String INVALIDDATEEXCEPTION = "exception.validation.InvalidDate";
-    public static String PERMISSIONFAILUREEXCEPTION = "exception.framework.permission";
-    public static String CURRENCY_MUST_NOT_BE_NULL ="Currency must not be null";
-    public static String AMMOUNT_MUST_NOT_BE_NULL = "Amount must not be null";
+    String CFGFILENOTFOUND = "exceptions.hibernate.systemexception.cfgfilenotfound";
+    String HIBERNATEPROPNOTFOUND = "exceptions.hibernate.systemexception.hibernatepropnotfound";
+    String CONFIGPATHNOTFOUND = "exceptions.hibernate.systemexception.configpathnotfound";
+    String SYSTEMEXCEPTION = "exception.framework.SystemException";
+    String CONCURRENCYEXCEPTION = "exception.framework.ConcurrencyException";
+    String DOUBLESUBMITEXCEPTION = "exception.framework.DoubleSubmitException";
+    String SERVICEEXCEPTION = "exception.framework.ServiceException";
+    String ILLEGALMONEYOPERATION = "The desired operation on money class is not possible because the two money objects are of different currencies.";
+    String FRAMEWORKRUNTIMEEXCEPTION = "exception.framework.FrameworkRuntimeException";
+    String CONSTANTSNOTLOADEDEXCEPTION = "exception.framework.ConstantsNotLoadedException";
+    String STARTUP_EXCEPTION = "exception.framework.StartUpException";
+    String ENUMSNOTLOADEDEXCEPTION = "exception.framework.EnumsNotLoadedException";
+    String PAGEEXPIREDEXCEPTION = "exception.framework.PageExpiredException";
+    String PERMISSIONFAILUREEXCEPTION = "exception.framework.permission";
+    String CURRENCY_MUST_NOT_BE_NULL ="Currency must not be null";
+    String AMMOUNT_MUST_NOT_BE_NULL = "Amount must not be null";
 }

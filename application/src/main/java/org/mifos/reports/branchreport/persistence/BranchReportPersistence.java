@@ -50,8 +50,6 @@ import static org.mifos.customers.util.helpers.QueryParamConstants.MAX_DAYS;
 import static org.mifos.customers.util.helpers.QueryParamConstants.MIN_DAYS;
 import static org.mifos.customers.util.helpers.QueryParamConstants.NOT_LESS_THAN_DAYS;
 import static org.mifos.customers.util.helpers.QueryParamConstants.RUN_DATE;
-import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_ID_PARAM;
-import static org.mifos.customers.util.helpers.QueryParamConstants.TOTAL_STAFF_ROLE_NAME_PARAM;
 import static org.mifos.framework.util.helpers.MoneyUtils.createMoney;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
