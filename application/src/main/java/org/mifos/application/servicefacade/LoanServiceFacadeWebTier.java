@@ -95,6 +95,7 @@ import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -873,7 +874,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId);
     }
 
-    public LoanInformationDto getLoanInformationDto(String globalAccountNum) throws ServiceException {
+    public LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException {
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         String fundName = null;
         if (loan.getFund() != null) {
@@ -904,7 +905,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 AccountFeesDto accountFeesDto = new AccountFeesDto(accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId(),
                                                                   accountFeesEntity.getFeeStatus(), accountFeesEntity.getFees().getFeeName(),
                                                                   accountFeesEntity.getAccountFeeAmount(),
-                                                                  accountFeesEntity.getFees().getFeeFrequency().getFeeMeetingFrequency(),
+                                                                  getMeetingRecurrence(accountFeesEntity.getFees().getFeeFrequency()
+                                                                          .getFeeMeetingFrequency(), userContext),
                                                                   accountFeesEntity.getFees().getFeeId());
                 accountFeesDtos.add(accountFeesDto);
             }
@@ -931,6 +933,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                                      loan.getGracePeriodDuration(), fundName, loan.getCollateralTypeId(), loan.getCollateralNote(),loan.getExternalId(),
                                      loan.getAccountCustomFields(), accountFeesDtos, loan.getCreatedDate(), loanPerformanceHistory,
                                      loan.getCustomer().isGroup(), getRecentActivityView(globalAccountNum), activeSurveys, accountSurveys);
+    }
+
+    private String getMeetingRecurrence(MeetingBO meeting, UserContext userContext) {
+        return meeting != null ? new MeetingHelper().getMessageWithFrequency(meeting, userContext) : null;
     }
 
     private String getAccountStateName(Short id) {

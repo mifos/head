@@ -10,17 +10,17 @@ public class AccountFeesDto  implements DataTransferObject {
     private final Short feeStatus;
     private final String feeName;
     private final Money accountFeeAmount;
-    private final MeetingBO feeMeetingFrequency;
+    private final String meetingRecurrence;
     private final Short feeId;
 
     public AccountFeesDto(Short feeFrequencyTypeId, Short feeStatus, String feeName, Money accountFeeAmount,
-            MeetingBO feeMeetingFrequency, Short feeId) {
+            String meetingRecurrence, Short feeId) {
         super();
         this.feeFrequencyTypeId = feeFrequencyTypeId;
         this.feeStatus = feeStatus;
         this.feeName = feeName;
         this.accountFeeAmount = accountFeeAmount;
-        this.feeMeetingFrequency = feeMeetingFrequency;
+        this.meetingRecurrence = meetingRecurrence;
         this.feeId = feeId;
     }
 
@@ -40,8 +40,8 @@ public class AccountFeesDto  implements DataTransferObject {
         return this.accountFeeAmount;
     }
 
-    public MeetingBO getFeeMeetingFrequency() {
-        return this.feeMeetingFrequency;
+    public String getMeetingRecurrence() {
+        return this.meetingRecurrence;
     }
 
     public Short getFeeId() {

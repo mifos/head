@@ -560,7 +560,7 @@ public class LoanAccountAction extends AccountAppAction {
             final HttpServletResponse response) throws Exception {
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum);
+        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, getUserContext(request));
 
         final String accountStateNameLocalised = MessageLookup.getInstance().lookup(
                 loanInformationDto.getAccountStateName(), getUserContext(request));
