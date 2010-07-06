@@ -19,6 +19,8 @@
 	<http auto-config="false" entry-point-ref="loginFormAuthentication">
 		<custom-filter position="FORM_LOGIN_FILTER" ref="mifosLegacyAuthenticationFilter" />
 		<intercept-url pattern="/*.css*" filters="none" />
+		<intercept-url pattern="/ping.ftl" filters="none" />
+		
 		<intercept-url pattern="/login.ftl*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
     	<intercept-url pattern="/**" access="ROLE_FULLY_AUTHENTICATED_USER" />
     	<logout logout-success-url="/login.ftl?loggedout"/>
