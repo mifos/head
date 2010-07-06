@@ -29,8 +29,8 @@ import junit.framework.Assert;
 
 import org.hibernate.Session;
 import org.mifos.accounts.business.AddAccountAction;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -97,7 +97,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
         ActivityContext activityContext = new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
         AuthorizationManager authorizer = AuthorizationManager.getInstance();
-        authorizer.init(session);
+        authorizer.init();
 
         UserContext admin = TestUtils.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
        Assert.assertTrue(authorizer.isActivityAllowed(admin, activityContext));

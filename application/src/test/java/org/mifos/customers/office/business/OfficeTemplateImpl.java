@@ -23,12 +23,17 @@ package org.mifos.customers.office.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+/**
+ * use builder and {@link IntegrationTestObjectMother#createOffice(OfficeBO)} to set up state for integration tests
+ */
+@Deprecated
 public class OfficeTemplateImpl implements OfficeTemplate {
     private Address address;
     private String officeName;

@@ -6,14 +6,14 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.accounts.business.AccountNotesEntity" table="ACCOUNT_NOTES">
-		<id name="commentId" column="ACCOUNT_NOTES_ID" type="integer" access="field">
+	<class name="org.mifos.accounts.business.AccountNotesEntity" table="account_notes">
+		<id name="commentId" column="account_notes_id" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="commentDate" column="COMMENT_DATE" type="date" access="field"/>
-		<property name="comment" column="NOTE" type="string" access="field"/>
-		<many-to-one name="personnel" column="OFFICER_ID" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" insert="true" update="false" unique="true" access="field"/>
+		<property name="commentDate" column="comment_date" type="date" access="field"/>
+		<property name="comment" column="note" type="string" access="field"/>
+		<many-to-one name="personnel" column="officer_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
+		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" insert="true" update="false" unique="true" access="field"/>
 	</class>
 
 	<query name="notes.getAllAccountNotes">

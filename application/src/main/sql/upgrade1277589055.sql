@@ -1,1 +1,1 @@
-INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG) VALUES (83,'ExternalId',22,0,0);
+insert into field_configuration(field_config_id,field_name,entity_id,mandatory_flag,hidden_flag) values (83,'ExternalId',22,0,0);

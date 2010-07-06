@@ -40,7 +40,6 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
@@ -56,6 +55,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -102,22 +102,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         }
         StaticHibernateUtil.closeSession();
         super.tearDown();
-    }
-
-    public void testRemoveGroupMemberShip() throws Exception {
-        createInitialObjects();
-        client.setUserContext(TestUtils.makeUser());
-        StaticHibernateUtil.getInterceptor().createInitialValueMap(client);
-        createPersonnel(PersonnelLevel.LOAN_OFFICER);
-        client.removeGroupMemberShip(loanOfficer, "comment");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
-        Assert.assertEquals(loanOfficer.getPersonnelId(), client.getPersonnel().getPersonnelId());
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-
-        TestObjectFactory.cleanUpChangeLog();
     }
 
     public void testHasActiveLoanAccounts() throws Exception {
@@ -408,7 +392,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
     private void createPersonnel(PersonnelLevel personnelLevel) throws Exception {
         List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Name name = new Name("XYZ", null, null, "Last Name");
         java.util.Date date = new java.util.Date();

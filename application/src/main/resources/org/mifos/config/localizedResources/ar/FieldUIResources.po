@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:18+0530\n"
+"POT-Creation-Date: 2010-07-01 13:08+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,10 @@ msgctxt "Client.ExternalId"
 msgid "External ID"
 msgstr ""
 
+#: Client.FamilyDetails
+msgid "Family Details"
+msgstr ""
+
 #: Client.GovernmentId
 msgctxt "Client.GovernmentId"
 msgid "Government ID"
@@ -143,6 +147,10 @@ msgstr ""
 #: Client.SecondLastName
 msgctxt "Client.SecondLastName"
 msgid "Second Last Name"
+msgstr ""
+
+#: Client.SpouseFatherInformation
+msgid "Spouse/Father Information"
 msgstr ""
 
 #: Client.SpouseFatherMiddleName

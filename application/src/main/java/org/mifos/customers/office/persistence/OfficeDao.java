@@ -20,11 +20,17 @@
 
 package org.mifos.customers.office.persistence;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.customers.center.struts.action.OfficeHierarchyDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeDetailsDto;
+import org.mifos.customers.office.exceptions.OfficeException;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
+import org.mifos.dto.domain.OfficeDto;
 import org.mifos.security.util.UserContext;
 
 public interface OfficeDao {
@@ -33,9 +39,27 @@ public interface OfficeDao {
 
     OfficeDto findOfficeDtoById(Short valueOf);
 
+    List<OfficeDto> findAllOffices();
+
     List<OfficeBO> findBranchsOnlyWithParentsMatching(String searchId);
 
     List<OfficeDetailsDto> findActiveOfficeLevels();
 
+    OfficeHierarchyDto headOfficeHierarchy();
+
+    List<String> topLevelOfficeNames(Collection<Short> idList);
+
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldsForOffice();
+
+    void validateOfficeNameIsNotTaken(String officeName) throws OfficeException;
+
+    void validateOfficeShortNameIsNotTaken(String shortName) throws OfficeException;
+
+    void validateNoActiveChildrenExist(Short officeId) throws OfficeException;
+
+    void validateNoActivePeronnelExist(Short officeId) throws OfficeException;
+
     void validateBranchIsActiveWithNoActivePersonnel(Short officeId, UserContext userContext) throws CustomerException;
+
+    List<OfficeDto> findActiveParents(OfficeLevel officeLevel);
 }

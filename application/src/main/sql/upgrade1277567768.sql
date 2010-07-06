@@ -1,3 +1,3 @@
-ALTER TABLE currency DROP COLUMN DISPLAY_SYMBOL;
-ALTER TABLE currency DROP COLUMN DEFAULT_CURRENCY;
-ALTER TABLE currency DROP COLUMN DEFAULT_DIGITS_AFTER_DECIMAL;
+alter table currency drop column display_symbol;
+alter table currency drop column default_currency;
+alter table currency drop column default_digits_after_decimal;

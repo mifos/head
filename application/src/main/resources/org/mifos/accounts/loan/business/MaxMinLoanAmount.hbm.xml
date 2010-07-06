@@ -7,15 +7,15 @@
 
 	<class
 		name="org.mifos.accounts.loan.business.MaxMinLoanAmount"
-		table="MAX_MIN_LOAN_AMOUNT">
-		<id name="accountId" column="ACCOUNT_ID" type="integer"
+		table="max_min_loan_amount">
+		<id name="accountId" column="account_id" type="integer"
 			access="field">
 			<generator class="foreign">
 				<param name="property">loan</param>
 			</generator>
 		</id>
-		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
-		<property name="maxLoanAmount" column="MAX_LOAN_AMOUNT" />
+		<property name="minLoanAmount" column="min_loan_amount" />
+		<property name="maxLoanAmount" column="max_loan_amount" />
 		<one-to-one name="loan"
 			class="org.mifos.accounts.loan.business.LoanBO"
 			access="field" />

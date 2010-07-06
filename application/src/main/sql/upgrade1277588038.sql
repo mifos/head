@@ -1,8 +1,9 @@
-SET FOREIGN_KEY_CHECKS=0;
+set foreign_key_checks=0;
 
-DROP TABLE IF EXISTS COLL_SHEET_SAVINGS_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_LOAN_DETAILS;
-DROP TABLE IF EXISTS COLL_SHEET_CUSTOMER;
-DROP TABLE IF EXISTS COLL_SHEET;
+drop table if exists coll_sheet_savings_details;
+drop table if exists coll_sheet_loan_details;
+drop table if exists coll_sheet_customer;
+drop table if exists coll_sheet;
 
-SET FOREIGN_KEY_CHECKS=1;
+set foreign_key_checks=1;
+

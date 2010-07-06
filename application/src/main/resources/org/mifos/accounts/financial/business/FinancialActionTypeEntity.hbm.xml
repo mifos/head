@@ -3,11 +3,11 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.financial.business.FinancialActionTypeEntity" table="FINANCIAL_ACTION">
-		<id name="id" column="FIN_ACTION_ID">
+	<class name="org.mifos.accounts.financial.business.FinancialActionTypeEntity" table="financial_action">
+		<id name="id" column="fin_action_id">
 			<generator class="native" />
 		</id>
-		<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" />
+		<many-to-one name="lookUpValue" column="lookup_id" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false" />
 	</class>
 	<query name="GETALLFINANCIALACTION">
 		<![CDATA[

@@ -12,11 +12,11 @@
 [#macro topNavigation currentTab]
 <div id = "homePageHeader">
 	<IMG id="logo" height=74 alt=""
-					src="images/logo.gif" width=188></td>
+					src="pages/framework/images/logo.gif" width=188></td>
 	
 	<div id="top-right-links">
       <a id="settings" href="#">[@spring.message "yourSettings"/]</a> |
-   	<a id="logout" href="j_spring_security_logout">[@spring.message "logout"/]</a>
+   	<a id="logout_link" href="j_spring_security_logout">[@spring.message "logout"/]</a>
 	</div>	
 	<div id="top-menu-bar">
 		<ul id="simple-menu">
@@ -57,6 +57,7 @@
     <title id="${pageTitle}">[@spring.message "${pageTitle}" /]</title>
     <link href="cheetah.css.ftl" rel="stylesheet" type="text/css" />
     <link href="gazelle.css.ftl" rel="stylesheet" type="text/css" />
+   
   </head>
   <body>
 [/#macro]
@@ -64,4 +65,34 @@
 [#macro footer]
 </body>
 </html>
+[/#macro]
+
+
+[#macro formSingleSelectWithPrompt path options selectPrompt attributes=""]
+    [@spring.bind path/]
+    <select id="${spring.status.expression}" name="${spring.status.expression}" ${attributes}>
+        <option value="">${selectPrompt}</option>
+        [#if options?is_hash]
+            [#list options?keys as value]
+            <option value="${value?html}"[@spring.checkSelected value/]>${options[value]?html}</option>
+            [/#list]
+        [#else] 
+            [#list options as value]
+            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
+            [/#list]
+        [/#if]
+    </select>
+[/#macro]
+
+
+
+[#macro showAllErrors path]
+    [@spring.bind path/]
+    [#if spring.status.errorMessages?size > 0]
+        <ol>	
+	     [#list spring.status.errorMessages as error]
+	      <li>${error}</li>
+	     [/#list]
+	    </ol>
+	[/#if]
 [/#macro]

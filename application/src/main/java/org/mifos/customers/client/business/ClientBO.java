@@ -41,10 +41,10 @@ import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
@@ -72,15 +72,16 @@ import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.Assert;
 
 /**
  * FIXME - keithw - move all usage of deprecated constructors in tests and TestObjectFactory towards newer builder + IntegrationTestObjectMother pattern
@@ -120,6 +121,11 @@ public class ClientBO extends CustomerBO {
         // inherit settings from parent (group)
         OfficeBO office = group.getOffice();
         MeetingBO meeting = group.getCustomerMeetingValue();
+
+        if (clientStatus.isClientActive()) {
+            Assert.notNull(meeting, "meeting inherited from parent group should not be null when client is active");
+        }
+
         PersonnelBO loanOfficer = group.getPersonnel();
 
         ClientBO client = new ClientBO(userContext, clientName, clientStatus, mfiJoiningDate, office, meeting,
@@ -541,8 +547,11 @@ public class ClientBO extends CustomerBO {
         this.lastName = clientName.getLastName();
         this.secondLastName = clientName.getSecondLastName();
 
+        if (personalInfo.getSpouseFather() != null) {
+            // can be null when family details configuration is turned on
+            this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
+        }
         this.updateClientDetails(personalInfo.getClientDetail());
-        this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
 
         setDisplayName(personalInfo.getClientDisplayName());
         updateAddress(personalInfo.getAddress());
@@ -589,22 +598,26 @@ public class ClientBO extends CustomerBO {
                 for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
 
-                        clientNameDetailEntity.updateNameDetails(clientNameDetailDto.get(key));
+                        ClientNameDetailDto nameView = clientNameDetailDto.get(key);
+                        if (nameView != null) {
+                            clientNameDetailEntity.updateNameDetails(nameView);
 
-                        // if switched from familyDetailsRequired=false to true then migrate clientNameDetail to family
-                        // details table.
-                        if (ClientRules.isFamilyDetailsRequired()) {
-                            List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate
-                                    .getFamilyDetails();
+                            // if switched from familyDetailsRequired=false to true then migrate clientNameDetail to
+                            // family
+                            // details table.
+                            if (ClientRules.isFamilyDetailsRequired()) {
+                                List<ClientFamilyDetailDto> clientFamilyDetailDto = clientFamilyInfoUpdate
+                                        .getFamilyDetails();
 
-                            // check each detail to see if it is part of familyDetails and if not, add it to
-                            // familyDetails
-                            for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
+                                // check each detail to see if it is part of familyDetails and if not, add it to
+                                // familyDetails
+                                for (ClientFamilyDetailDto clientFamilyDetail : clientFamilyDetailDto) {
 
-                                if (familyDetailsDoesNotAlreadyContain(clientNameDetailEntity.getCustomerNameId())) {
-                                    ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(this,
-                                            clientNameDetailEntity, clientFamilyDetail);
-                                    familyDetailSet.add(clientFamilyEntity);
+                                    if (familyDetailsDoesNotAlreadyContain(clientNameDetailEntity.getCustomerNameId())) {
+                                        ClientFamilyDetailEntity clientFamilyEntity = new ClientFamilyDetailEntity(
+                                                this, clientNameDetailEntity, clientFamilyDetail);
+                                        familyDetailSet.add(clientFamilyEntity);
+                                    }
                                 }
                             }
                         }
@@ -653,7 +666,7 @@ public class ClientBO extends CustomerBO {
         List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
         for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
             // Ignoring name entities of client type
-            if (!clientNameDetailEntity.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (!ClientConstants.CLIENT_NAME_TYPE.equals(clientNameDetailEntity.getNameType())) {
                 if (!isKeyExists(clientNameDetailEntity.getCustomerNameId(), primaryKeys)) {
                     deleteNameDetailEntity.add(clientNameDetailEntity);
                 }
@@ -738,7 +751,7 @@ public class ClientBO extends CustomerBO {
 
     public ClientNameDetailEntity getClientName() {
         for (ClientNameDetailEntity nameDetail : nameDetailSet) {
-            if (nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
         }
@@ -747,7 +760,7 @@ public class ClientBO extends CustomerBO {
 
     public ClientNameDetailEntity getSpouseName() {
         for (ClientNameDetailEntity nameDetail : nameDetailSet) {
-            if (!nameDetail.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+            if (!ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
         }
@@ -804,7 +817,13 @@ public class ClientBO extends CustomerBO {
     }
 
     private boolean isSameGroup(final GroupBO group) {
-        return getParentCustomer().getCustomerId().equals(group.getCustomerId());
+
+        boolean isSameGroup = false;
+        if (this.getParentCustomer() != null) {
+            isSameGroup = getParentCustomer().getCustomerId().equals(group.getCustomerId());
+        }
+
+        return isSameGroup;
     }
 
     public void validateReceivingGroup(final GroupBO toGroup) throws CustomerException {
@@ -992,11 +1011,6 @@ public class ClientBO extends CustomerBO {
         }
     }
 
-    public void updateClientFlag() throws CustomerException {
-        this.groupFlag = YesNoFlag.NO.getValue();
-        update();
-    }
-
     public void validateBeforeAddingClientToGroup(GroupBO targetGroup) throws CustomerException {
         if (isClientCancelledOrClosed()) {
             throw new CustomerException(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION);
@@ -1012,34 +1026,6 @@ public class ClientBO extends CustomerBO {
     private boolean isClientCancelledOrClosed() {
         return getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED ? true
                 : false;
-    }
-
-    public void addClientToGroup(final GroupBO newParent) throws CustomerException {
-        validateAddClientToGroup(newParent);
-
-        if (!isSameBranch(newParent.getOffice())) {
-            makeCustomerMovementEntries(newParent.getOffice());
-        }
-
-        setParentCustomer(newParent);
-        addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-        handleAddClientToGroup();
-        childAddedForParent(newParent);
-        setSearchId(newParent.getSearchId() + "." + String.valueOf(newParent.getMaxChildCount()));
-        newParent.setUserContext(getUserContext());
-        newParent.update();
-
-        groupFlag = YesNoFlag.YES.getValue();
-        update();
-    }
-
-    private void validateAddClientToGroup(final GroupBO toGroup) throws CustomerException {
-
-        if (toGroup == null) {
-            throw new CustomerException(CustomerConstants.INVALID_PARENT);
-        }
-        validateForGroupStatus(toGroup.getStatus());
-
     }
 
     public void attachPpiSurveyInstance(final SurveyInstance ppiSurvey) {
@@ -1144,10 +1130,15 @@ public class ClientBO extends CustomerBO {
         ClientNameDetailDto clientName = null;
         ClientNameDetailDto spouseName = null;
         for (ClientNameDetailDto nameView : clientNameViews) {
-            if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
-                clientName = nameView;
-            } else if (!isFamilyDetailsRequired) {
-                spouseName = nameView;
+            if (nameView.getNameType() != null) {
+                if (nameView.getNameType().equals(ClientConstants.CLIENT_NAME_TYPE)) {
+                    clientName = nameView;
+                } else if (!isFamilyDetailsRequired) {
+                    spouseName = nameView;
+                }
+            }
+            else {
+                spouseName = new ClientNameDetailDto();
             }
         }
 
@@ -1228,7 +1219,9 @@ public class ClientBO extends CustomerBO {
         if (parentGroupMeeting != null) {
             if (clientMeeting != null) {
                 regenerateClientSchedules = receivingGroup.hasMeetingDifferentTo(clientMeeting);
-                this.setCustomerMeeting(receivingGroup.getCustomerMeeting());
+
+                CustomerMeetingEntity clientMeetingEntity = this.getCustomerMeeting();
+                clientMeetingEntity.setMeeting(receivingGroup.getCustomerMeetingValue());
             } else {
                 CustomerMeetingEntity customerMeeting = this.createCustomerMeeting(parentGroupMeeting);
                 this.setCustomerMeeting(customerMeeting);
@@ -1242,9 +1235,18 @@ public class ClientBO extends CustomerBO {
             regenerateClientSchedules = true;
         }
 
+        this.addGroupMembership();
         receivingGroup.incrementChildCount();
         this.setSearchId(receivingGroup.getSearchId() + "." + String.valueOf(receivingGroup.getMaxChildCount()));
 
         return regenerateClientSchedules;
+    }
+
+    private void addGroupMembership() {
+        this.groupFlag = YesNoFlag.YES.getValue();
+    }
+
+    public void removeGroupMembership() {
+        this.groupFlag = YesNoFlag.NO.getValue();
     }
 }

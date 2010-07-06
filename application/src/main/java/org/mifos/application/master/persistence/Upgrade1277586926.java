@@ -48,7 +48,7 @@ public class Upgrade1277586926 extends Upgrade {
 
     private void insertIntoRepaymentRuleLookup(Connection connection,int repaymentRuleId, int lookUpId )
                     throws SQLException {
-        String sql = "INSERT INTO REPAYMENT_RULE (REPAYMENT_RULE_ID, REPAYMENT_RULE_LOOKUP_ID) VALUES(?,?)";
+        String sql = "insert into repayment_rule (repayment_rule_id, repayment_rule_lookup_id) values (?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setInt(1,repaymentRuleId);
         statement.setInt(2, lookUpId);

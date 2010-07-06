@@ -20,28 +20,26 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.core.MifosException;
 import org.mifos.framework.business.LogUtils;
 import org.mifos.service.test.TestMode;
 import org.mifos.service.test.TestingService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+@Controller
 public class CustomPropertiesUpdateController extends AbstractController {
 
     private TestingService testingService;
 
     @Override
+    @RequestMapping("/customPropertiesUpdate.ftl")
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
         List<String> errorMessages = new ArrayList<String>();
         ModelAndView returnValue = new ModelAndView("pageNotFound");

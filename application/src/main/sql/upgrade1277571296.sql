@@ -1,1 +1,1 @@
-CREATE INDEX CUST_GOVERNMENT_IDX ON CUSTOMER (GOVERNMENT_ID);
+create index cust_government_idx on customer (government_id);

@@ -22,8 +22,8 @@ package org.mifos.accounts.util.helpers;
 
 import java.util.Date;
 
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.Money;
 
 public interface PaymentDataTemplate {

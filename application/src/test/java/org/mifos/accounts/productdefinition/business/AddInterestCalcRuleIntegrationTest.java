@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business;
 
+import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
@@ -47,7 +48,6 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
         short categoryId = 1;
         String description = "DecliningBalance";
         AddInterestCalcRule upgrade = null;
-
         String invalidKey = "DecliningBalance";
 
         try {

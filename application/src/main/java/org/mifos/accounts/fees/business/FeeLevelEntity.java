@@ -34,19 +34,17 @@ import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.framework.business.AbstractEntity;
 
 @Entity
-@Table(name = "FEELEVEL")
+@Table(name = "feelevel")
 public class FeeLevelEntity  extends AbstractEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "FEELEVEL_ID", nullable = false)
-    private Short feeLevelId;
+    private Short feelevelId;
 
-    @Column(name = "LEVEL_ID")
     private Short levelId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "FEE_ID")
+    @JoinColumn(name = "fee_id")
     private FeeBO fee;
 
     public FeeLevelEntity(FeeBO fee, FeeLevel feeLevel) {
@@ -59,7 +57,7 @@ public class FeeLevelEntity  extends AbstractEntity {
     }
 
     protected Short getFeeLevelId() {
-        return feeLevelId;
+        return feelevelId;
     }
 
     public Short getLevelId() {
@@ -71,7 +69,7 @@ public class FeeLevelEntity  extends AbstractEntity {
     }
 
     protected void setFeeLevelId(Short feeLevelId) {
-        this.feeLevelId = feeLevelId;
+        this.feelevelId = feeLevelId;
     }
 
     protected void setLevelId(Short levelId) {

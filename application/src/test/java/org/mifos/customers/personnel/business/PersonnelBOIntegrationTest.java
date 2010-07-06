@@ -32,7 +32,6 @@ import junit.framework.Assert;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.Localization;
@@ -49,6 +48,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -736,7 +736,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
     private List<CustomFieldDto> getCustomFields() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC));
+        customFields.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
         return customFields;
     }
 

@@ -108,8 +108,6 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     protected void makeRepaymentEnteries(String payFullOrPartial) {
         if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
             setFeeAmountPaid(getFeeAmountPaid().add(getFeeDue()));
-        } else {
-            setFeeAmount(getFeeAmountPaid());
         }
     }
 

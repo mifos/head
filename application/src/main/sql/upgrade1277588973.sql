@@ -70,3 +70,5 @@ left join    (select a.account_id,
         group by a.account_id) correct on correct.account_id = ls.account_id
         
 set ls.penalty_paid = abs(ifnull(correct.amount_paid,0));
+
+

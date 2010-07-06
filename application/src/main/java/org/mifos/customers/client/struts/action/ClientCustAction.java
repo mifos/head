@@ -46,7 +46,9 @@ import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.OnlyBranchOfficeHierarchyDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
+import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
@@ -66,6 +68,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -176,7 +180,16 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setAttribute(ClientConstants.MAXIMUM_NUMBER_OF_FAMILY_MEMBERS, ClientRules.getMaximumNumberOfFamilyMembers(), request);
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),request);
+        boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        if (isFamilyDetailsRequired) {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
+        }
+        else {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
+        }
 
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -279,12 +292,12 @@ public class ClientCustAction extends CustAction {
             SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
         }
 
-        if (processRules.isDuplicateNameOnClosedClient()) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+        if (processRules.isDuplicateNameOnBlackListedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_BLACKLISTED);
         }
 
-        if (processRules.isDuplicateNameOnBlackListedClient()) {
-            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_BLACKLISTED);
+        if (processRules.isDuplicateNameOnClosedClient()) {
+            SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_NAME_DOB_EXIST_IN_CLOSED);
         }
     }
 
@@ -490,7 +503,16 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(),request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, personalInfo.getClientDropdowns().getSpouseFather(), request);
 
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, personalInfo.getClientRules().isFamilyDetailsRequired(), request);
+        boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        if (isFamilyDetailsRequired) {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
+        }
+        else {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
+        }
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, personalInfo.getCustomFieldViews(), request);
 
         // customer specific
@@ -527,7 +549,16 @@ public class ClientCustAction extends CustAction {
         ClientDetailDto clientDetailDto = new ClientDetailDto(governmentId, dateOfBirth, clientName);
         ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo(clientDetailDto);
 
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, clientRules.isFamilyDetailsRequired(), request);
+        boolean isFamilyDetailsRequired = clientRules.isFamilyDetailsRequired();
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        if (isFamilyDetailsRequired) {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
+        }
+        else {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
+        }
         return mapping.findForward(ActionForwards.previewEditPersonalInfo_success.toString());
     }
 
@@ -535,8 +566,16 @@ public class ClientCustAction extends CustAction {
     public ActionForward prevEditPersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, ClientRules.isFamilyDetailsRequired(),
-                request);
+        boolean isFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired,request);
+        if (isFamilyDetailsRequired) {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, false, request);
+        }
+        else {
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
+            SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
+        }
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
         return mapping.findForward(ActionForwards.prevEditPersonalInfo_success.toString());
     }
@@ -571,6 +610,8 @@ public class ClientCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFamilyInfo.getClientDropdowns().getSpouseFather(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFamilyInfo.getCustomFieldViews(), request);
+
+        SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
 
         // customer specific
         actionForm.setCustomerId(clientFamilyInfo.getCustomerDetail().getCustomerId().toString());
@@ -741,5 +782,20 @@ public class ClientCustAction extends CustAction {
     private List<SavingsDetailDto> getSavingsOfferingsFromSession(HttpServletRequest request)
             throws PageExpiredException {
         return (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private boolean isSpouseFatherInformationMandatory() {
+        return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private boolean isSpouseFatherInformationHidden() {
+        return FieldConfig.getInstance().isFieldHidden("Client." + HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private boolean isFamilyDetailsMandatory() {
+        return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 }

@@ -30,7 +30,6 @@ import junit.framework.Assert;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -47,6 +46,7 @@ import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -341,7 +341,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
         Name name = new Name("XYZ", null, null, null);
         List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC));
+        customFieldDto.add(new CustomFieldDto((short) 9, "123456", CustomFieldType.NUMERIC.getValue()));
         Address address = new Address("abcd" + surveyName, "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
         Date date = DateUtils.getCurrentDateWithoutTimeStamp();
         String officerName = "Test Officer " + surveyName;

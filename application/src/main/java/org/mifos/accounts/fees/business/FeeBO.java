@@ -25,8 +25,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.servicefacade.FeeDto;
+import org.mifos.accounts.fees.servicefacade.FeeFrequencyDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
@@ -35,6 +40,7 @@ import org.mifos.accounts.fees.util.helpers.FeeLevel;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.financial.servicefacade.GLCodeDto;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -309,5 +315,57 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     public boolean isWeekly() {
         return this.feeFrequency.getFeeMeetingFrequency().isWeekly();
+    }
+
+    public FeeDto toDto() {
+        FeeDto feeDto = new FeeDto();
+        feeDto.setId(Short.toString(this.feeId));
+        feeDto.setName(this.feeName);
+        feeDto.setCategoryType(this.categoryType.getName());
+        feeDto.setFeeStatus(this.feeStatus.toDto());
+
+        FeeFrequencyDto feeFrequencyDto = this.feeFrequency.toDto();
+        feeDto.setFeeFrequency(this.feeFrequency.toDto());
+        feeDto.setActive(isActive());
+        feeDto.setCustomerDefaultFee(this.isCustomerDefaultFee());
+        feeDto.setRateBasedFee(this instanceof RateFeeBO);
+
+        feeDto.setChangeType(this.changeType);
+        feeDto.setFeeFrequencyType(feeFrequencyDto.getType());
+
+        GLCodeDto glCodeDto = this.glCode.toDto();
+        feeDto.setGlCodeDto(glCodeDto);
+        feeDto.setGlCode(glCodeDto.getGlcode());
+
+        feeDto.setOneTime(isOneTime());
+        feeDto.setPeriodic(isPeriodic());
+        feeDto.setTimeOfDisbursement(isTimeOfDisbursement());
+
+        if (this instanceof AmountFeeBO) {
+            feeDto.setAmount(((AmountFeeBO) this).getFeeAmount());
+        } else {
+            RateFeeBO rateFeeBo = (RateFeeBO) this;
+            feeDto.setRate(rateFeeBo.getRate());
+            feeDto.setFeeFormula(rateFeeBo.getFeeFormula().toDto());
+        }
+        return feeDto;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        FeeBO rhs = (FeeBO) obj;
+        return new EqualsBuilder().append(this.feeId, rhs.feeId).append(this.feeName, rhs.feeName).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        int initialNonZeroOddNumber = 7;
+        int multiplierNonZeroOddNumber = 7;
+        return new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber).append(this.feeId).append(this.feeName).toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).toString();
     }
 }

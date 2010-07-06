@@ -255,10 +255,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
             }
         } else {
             setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
-            setInterest(getInterestPaid());
-            setPenalty(getPenaltyPaid());
-            setMiscFee(getMiscFeePaid());
-            setMiscPenalty(getMiscPenaltyPaid());
             setPaymentStatus(PaymentStatus.PAID);
             setPaymentDate(new DateTimeService().getCurrentJavaSqlDate());
             Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this.getAccountFeesActionDetails();

@@ -6,16 +6,16 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.customers.business.CustomerNoteEntity" table="CUSTOMER_NOTE">
-        <id name="commentId" column="COMMENT_ID" type="integer" access="field">
+    <class name="org.mifos.customers.business.CustomerNoteEntity" table="customer_note">
+        <id name="commentId" column="comment_id" type="integer" access="field">
             <generator class="native"/>
         </id>
-        <property name="commentDate" column="COMMENT_DATE" type="date" access="field"/>
-        <property name="comment" column="COMMENT" type="string" access="field"/>
-       <!--  <property name="personnelId" column="FIELD_OFFICER_ID" type="short" unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> 
-        <property name="customerId" column="CUSTOMER_ID"  unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> -->
-        <many-to-one  name="customer" column="CUSTOMER_ID" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" unique="true" access="field"/>
-        <many-to-one  name="personnel" column="FIELD_OFFICER_ID" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
+        <property name="commentDate" column="comment_date" type="date" access="field"/>
+        <property name="comment" column="comment" type="string" access="field"/>
+       <!--  <property name="personnelId" column="field_officer_id" type="short" unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> 
+        <property name="customerId" column="customer_id"  unique="false" update="true" insert="true" optimistic-lock="true" lazy="false" /> -->
+        <many-to-one  name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="false" unique="true" access="field"/>
+        <many-to-one  name="personnel" column="field_officer_id" class="org.mifos.customers.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
     </class>
     
     <query name="notes.getAllCustomerNotes">

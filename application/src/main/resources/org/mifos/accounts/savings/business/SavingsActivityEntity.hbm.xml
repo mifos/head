@@ -3,22 +3,22 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.accounts.savings.business.SavingsActivityEntity" table="SAVINGS_ACTIVITY_DETAILS">
-		<id name="id" column="ID" type="integer" access="field">
+	<class name="org.mifos.accounts.savings.business.SavingsActivityEntity" table="savings_activity_details">
+		<id name="id" column="id" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<property name="trxnCreatedDate" column="CREATED_DATE" access="field"/>
+		<property name="trxnCreatedDate" column="created_date" access="field"/>
 		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="AMOUNT_CURRENCY_ID" />
-			<column name="AMOUNT" />
+			<column name="amount_currency_id" />
+			<column name="amount" />
 		</property>
 		<property name="balanceAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
-			<column name="BALANCE_AMOUNT_CURRENCY_ID" />
-			<column name="BALANCE_AMOUNT" />
+			<column name="balance_amount_currency_id" />
+			<column name="balance_amount" />
 		</property>
-		<many-to-one name="trxnCreatedBy" column="CREATED_BY" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
-		<many-to-one name="activity" column="ACCOUNT_ACTION_ID" class="org.mifos.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" access="field"/>
+		<many-to-one name="trxnCreatedBy" column="created_by" class="org.mifos.customers.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" cascade="none" update="false" insert="true" unique="true" access="field"/>
+		<many-to-one name="activity" column="account_action_id" class="org.mifos.accounts.business.AccountActionEntity" cascade="none" update="false" insert="true" access="field"/>
 	</class>
 
 </hibernate-mapping>

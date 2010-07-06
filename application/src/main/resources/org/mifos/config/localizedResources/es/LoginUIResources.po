@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-07-01 13:10+0530\n"
 "PO-Revision-Date: 2009-08-08 22:06-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,12 +27,12 @@ msgstr ""
 #: errors.batchjobrunning
 msgid "You have been logged out of the system because batch jobs are running."
 msgstr ""
-"Usted ha sido desconectado del sistema porque el procesamiento de los lotes "
-"está corriendo."
+"Usted ha sido desconectado del sistema porque el procesamiento de los tareas "
+"de mantenimiento están corriendo."
 
 #: errors.shutdown
 msgid "You have been logged out of the system because Mifos is shutting down."
-msgstr ""
+msgstr "Ha sido desconectado del sistema por que Mifos esta cerrando."
 
 #: errors.inactiveuser
 msgid ""
@@ -165,7 +165,7 @@ msgstr "Enviar"
 
 #: login.username
 msgid "Username"
-msgstr "Identificación en línea"
+msgstr "Nombre de Usuario"
 
 #: login.welcome
 msgid "Welcome to mifos"

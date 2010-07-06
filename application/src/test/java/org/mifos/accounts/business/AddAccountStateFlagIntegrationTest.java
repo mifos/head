@@ -86,7 +86,6 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     public void testConstructor() throws Exception {
         short newId = 31500;
         AddAccountStateFlag upgrade = null;
-
         String invalidKey = "NewAccountStateFlag";
 
         try {

@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
-import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.framework.components.logger.LoggerConstants;

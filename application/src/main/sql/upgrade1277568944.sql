@@ -1,2 +1,2 @@
-ALTER TABLE currency DROP COLUMN ROUNDING_MODE;
-UPDATE currency SET ROUNDING_AMOUNT = 1;
+alter table currency drop column rounding_mode;
+update currency set rounding_amount = 1;

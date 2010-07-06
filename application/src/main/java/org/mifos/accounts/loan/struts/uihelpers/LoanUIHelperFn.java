@@ -25,10 +25,10 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
 

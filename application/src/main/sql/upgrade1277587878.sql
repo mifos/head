@@ -1,1 +1,1 @@
-CREATE UNIQUE INDEX PRD_OFFERING_NAME_IDX ON PRD_OFFERING (PRD_OFFERING_NAME);
+create unique index prd_offering_name_idx on prd_offering (prd_offering_name);

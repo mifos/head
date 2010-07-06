@@ -6,18 +6,18 @@
 
 <hibernate-mapping>
 
-	<class	name="org.mifos.customers.office.business.OfficeLevelEntity" table="OFFICE_LEVEL">
-		<id name="id" column="LEVEL_ID" type="short">
+	<class	name="org.mifos.customers.office.business.OfficeLevelEntity" table="office_level">
+		<id name="id" column="level_id" type="short">
 			<generator class="native" />
 		</id>
 
-		<property name="interactionFlag" column="INTERACTION_FLAG"	type="short" access="field"/>
-		<property name="configured" column="CONFIGURED" type="short" access="field"/>
+		<property name="interactionFlag" column="interaction_flag"	type="short" access="field"/>
+		<property name="configured" column="configured" type="short" access="field"/>
 
-		<many-to-one name="lookUpValue" column="LEVEL_NAME_ID" class="org.mifos.application.master.business.LookUpValueEntity" 
+		<many-to-one name="lookUpValue" column="level_name_id" class="org.mifos.application.master.business.LookUpValueEntity" 
     			cascade="none" update="false" unique="true"/>	
 		
-		<many-to-one name="parent" class="org.mifos.customers.office.business.OfficeLevelEntity" column="PARENT_LEVEL_ID" unique="true" cascade="all" access="field"/>
+		<many-to-one name="parent" class="org.mifos.customers.office.business.OfficeLevelEntity" column="parent_level_id" unique="true" cascade="all" access="field"/>
 		<one-to-one name="child" class="org.mifos.customers.office.business.OfficeLevelEntity" cascade="none" property-ref="parent" access="field"/>
 	</class>
 	 <query name="officeLevel.getOfficeLevels">

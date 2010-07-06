@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-07-01 13:10+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,7 +63,7 @@ msgstr "Crear cuenta de ahorros"
 
 #: framework.enterCollectionSheetData
 msgid "Enter collection sheet data"
-msgstr "Introducir datos de hoja de reembolsos"
+msgstr "Introducir datos de hoja de cobranza"
 
 #: framework.home
 msgid "Home"
@@ -75,7 +75,7 @@ msgstr "Desconectar"
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
-msgstr "Gestionar hojas de reembolsos"
+msgstr "Gestionar hojas de cobranza"
 
 #: framework.menuTitleClientsAndAccountsTasks
 msgid "Clients & Accounts Tasks"
@@ -92,7 +92,7 @@ msgstr "Buscar"
 #: framework.searchCriteria
 #, fuzzy
 msgid "Search by name, system ID or account number "
-msgstr "Buscar por nombre, identificación del sistema, o número de cuenta"
+msgstr "Buscar por nombre, ID del sistema, o número de cuenta"
 
 #: framework.yoursettings
 msgid "Your settings"

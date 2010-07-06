@@ -109,9 +109,9 @@ public class RateFeeBO extends FeeBO {
         if (!rate.equals(otherRate)) {
             if (!getFeeStatus().getId().equals(otherStatus.getId())) {
                 return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
-            } else {
-                return FeeChangeType.AMOUNT_UPDATED;
             }
+
+            return FeeChangeType.AMOUNT_UPDATED;
         } else if (!getFeeStatus().getId().equals(otherStatus.getId())) {
             return FeeChangeType.STATUS_UPDATED;
         } else {

@@ -1,1 +1,1 @@
-ALTER TABLE LOAN_ACCOUNT CHANGE COLLATERAL_NOTE COLLATERAL_NOTE VARCHAR(500);
+alter table loan_account change collateral_note collateral_note varchar(500);

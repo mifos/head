@@ -109,7 +109,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -124,6 +123,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -160,6 +160,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -338,7 +339,7 @@ public class TestObjectFactory {
 
     public static List<CustomFieldDto> getCustomFields() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        CustomFieldDto fee = new CustomFieldDto(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC);
+        CustomFieldDto fee = new CustomFieldDto(Short.valueOf("4"), "Custom", CustomFieldType.NUMERIC.getValue());
         customFields.add(fee);
         return customFields;
     }
@@ -880,7 +881,7 @@ public class TestObjectFactory {
 
     private static List<CustomFieldDto> getCustomFieldView() {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        customFields.add(new CustomFieldDto(new Short("8"), "custom field value", CustomFieldType.NONE));
+        customFields.add(new CustomFieldDto(new Short("8"), "custom field value", null));
         return customFields;
     }
 
@@ -1265,7 +1266,7 @@ public class TestObjectFactory {
 
     public static void cleanUpAccount(final Integer accountId) {
         if (null != accountId) {
-            Session session = StaticHibernateUtil.openSession();
+            Session session = StaticHibernateUtil.getSessionTL();
             Transaction transaction = session.beginTransaction();
             AccountBO account = (AccountBO) session.get(AccountBO.class, accountId);
             deleteAccount(account, session);
@@ -2023,9 +2024,18 @@ public class TestObjectFactory {
 
     public static FundBO createFund(final FundCodeEntity fundCode, final String fundName) throws Exception {
         FundBO fundBO = new FundBO(fundCode, fundName);
-        fundBO.save();
-        StaticHibernateUtil.commitTransaction();
-        return fundBO;
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            DependencyInjectedServiceLocator.locateFundDao().save(fundBO);
+            StaticHibernateUtil.commitTransaction();
+            return fundBO;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e.getMessage(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
     }
 
     public static GroupBO createGroupUnderBranch(final String customerName, final CustomerStatus customerStatus,
@@ -2041,13 +2051,10 @@ public class TestObjectFactory {
         StaticHibernateUtil.startTransaction();
         List<AuditLog> auditLogList = session
                 .createQuery("from org.mifos.framework.components.audit.business.AuditLog").list();
-        if (auditLogList != null) {
-            for (AuditLog auditLog : auditLogList) {
-                session.delete(auditLog);
-            }
+        for (AuditLog auditLog : auditLogList) {
+            session.delete(auditLog);
         }
         StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
     }
 
     public static List<AuditLog> getChangeLog(final EntityType type, final Integer entityId) {

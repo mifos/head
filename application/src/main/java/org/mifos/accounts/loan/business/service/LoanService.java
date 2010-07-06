@@ -29,7 +29,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -61,7 +61,7 @@ public class LoanService implements Service {
     private static final FundBO NO_FUND = null;
 
     LoanProductService loanProductService;
-    LoanDao loanDao;
+    LoanDaoLegacyImpl loanDao;
     HolidayDao holidayDao;
 
     public LoanProductService getLoanProductService() {
@@ -72,11 +72,11 @@ public class LoanService implements Service {
         this.loanProductService = loanProductService;
     }
 
-    public LoanDao getLoanDao() {
+    public LoanDaoLegacyImpl getLoanDao() {
         return this.loanDao;
     }
 
-    public void setLoanDao(LoanDao loanDao) {
+    public void setLoanDao(LoanDaoLegacyImpl loanDao) {
         this.loanDao = loanDao;
     }
 
@@ -84,7 +84,7 @@ public class LoanService implements Service {
         // for use with setter dependency injection
     }
 
-    public LoanService(LoanProductService loanProductService, LoanDao loanDao) {
+    public LoanService(LoanProductService loanProductService, LoanDaoLegacyImpl loanDao) {
         this.loanProductService = loanProductService;
         this.loanDao = loanDao;
     }

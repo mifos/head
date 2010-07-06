@@ -22,6 +22,7 @@ package org.mifos.accounts.productdefinition.business;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
 
 /**
  *

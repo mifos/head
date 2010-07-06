@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.calendar.CalendarEvent;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public interface HolidayDao {
 
@@ -43,4 +44,6 @@ public interface HolidayDao {
     List<String> applicableOffices(Integer id);
 
     CalendarEvent findCalendarEventsForThisYearAndNext(short officeId);
+
+    void validateNoExtraFutureHolidaysApplicableOnParentOffice(Short oldParentOfficeId, Short newParentOfficeId) throws ApplicationException;
 }

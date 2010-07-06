@@ -47,7 +47,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;

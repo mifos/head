@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:18+0530\n"
+"POT-Creation-Date: 2010-07-01 13:08+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,6 +231,10 @@ msgstr ""
 #: configuration.externalId
 msgid "External ID"
 msgstr "លេខសម្គាល់ខាងក្រៅ"
+
+#: configuration.familydetails
+msgid "Family Details"
+msgstr ""
 
 #: configuration.fields
 msgid "fields"
@@ -477,6 +481,10 @@ msgstr ""
 
 #: configuration.source_fund
 msgid "Source of fund"
+msgstr ""
+
+#: configuration.spousefatherinformation
+msgid "Spouse/Father Information"
 msgstr ""
 
 #: configuration.spousefathermiddlename

@@ -36,7 +36,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -49,15 +48,13 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -86,6 +83,10 @@ public class LoanPersistence extends Persistence {
         return amount;
     }
 
+    /**
+     * Use {@link LoanDao#findByGlobalAccountNum(String)}
+     */
+    @Deprecated
     public LoanBO findBySystemId(final String accountGlobalNum) throws PersistenceException {
         Map<String, String> queryParameters = new HashMap<String, String>();
         queryParameters.put("globalAccountNumber", accountGlobalNum);

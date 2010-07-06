@@ -24,15 +24,15 @@ package org.mifos.framework.components.mifosmenu;
  * Interface to hold constants used in Menu Handler.
  */
 public interface MenuConstants {
-    public static final String DISPLAYNAME = "displayname";
-    public static final String NAME = "name";
-    public static final String NAMEFRAGMENT = "namefragment";
-    public static final String MENUITEM = "menuitem";
-    public static final String MENUGROUP = "menugroup";
-    public static final String LEFTMENULABEL = "leftmenulabel";
-    public static final String TOPMENUTAB = "topmenutab";
-    public static final String LINKVALUE = "linkvalue";
-    public static final String MENU_RESOURCE_NAME = "MenuResources";
-    public static final String SPACE = " ";
-    public static final String KEY_FOR_HIDDEN = "keyForHidden";
+    String DISPLAYNAME = "displayname";
+    String NAME = "name";
+    String NAMEFRAGMENT = "namefragment";
+    String MENUITEM = "menuitem";
+    String MENUGROUP = "menugroup";
+    String LEFTMENULABEL = "leftmenulabel";
+    String TOPMENUTAB = "topmenutab";
+    String LINKVALUE = "linkvalue";
+    String MENU_RESOURCE_NAME = "MenuResources";
+    String SPACE = " ";
+    String KEY_FOR_HIDDEN = "keyForHidden";
 }

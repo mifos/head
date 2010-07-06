@@ -42,25 +42,31 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**
- * This class runs tests on database upgrade scripts (both SQL based and java based). It uses a version of the database
- * referred to as a "checkpoint" as a starting point. The database checkpoint version that it starts with can be
- * adjusted by updating sql/latest-schema-checkupoint.sql and sql/latest-data-checkupoint.sql with a pair of the
- * corresponding latest-schema.sql and latest-data.sql files for a given database version. The static variable
- * DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION must then be set to the database version number of the
- * latest-xxx.sql files that have been used to update the latest-xxx-checkpoint.sql files. This test will run upgrade
- * scripts using LATEST_CHECKPOINT_VERSION as a starting point. In general LATEST_CHECKPOINT_VERSION should be a
- * database version that is at least 3-5 upgrades ago in order to allow for fixes to be made to recent upgrades when
- * necessary.
+ * This class runs tests on database upgrade scripts (both SQL
+ * based and java based).  It uses a version of the database referred to as
+ * a "checkpoint" as a starting point.  The database checkpoint version that
+ * it starts with can be adjusted by updating sql/latest-schema-checkupoint.sql
+ * and sql/latest-data-checkupoint.sql with a pair of the corresponding
+ * latest-schema.sql and latest-data.sql files for a given database version.
+ * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION
+ * must then be set to the database version number of the latest-xxx.sql files
+ * that have been used to update the latest-xxx-checkpoint.sql files.
+ * This test will run upgrade scripts using LATEST_CHECKPOINT_VERSION
+ * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a
+ * database version that is at least 3-5 upgrades ago in order to allow for
+ * fixes to be made to recent upgrades when necessary.
  */
 public class LatestTestAfterCheckpointIntegrationTest {
 
     private static Connection connection;
+    private static DatabaseConnection dbUnitConnection;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         StaticHibernateUtil.initialize();
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
+        dbUnitConnection = new DatabaseConnection(connection);
     }
 
     @Before
@@ -80,27 +86,22 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     @Test
     public void testSimple() throws Exception {
-        loadLatest();
-        IDataSet latestDump = new DatabaseConnection(connection).createDataSet();
-        dropSimple();
-
-        applyUpgrades();
-        IDataSet upgradeDump = new DatabaseConnection(connection).createDataSet();
-        dropSimple();
-        Assertion.assertEquals(latestDump, upgradeDump);
-    }
-
-    private void dropSimple() throws SQLException {
         connection.createStatement().execute("drop table if exists foo");
-
         connection.commit();
+        loadLatest();
+        IDataSet latestDump = dbUnitConnection.createDataSet();
+        connection.createStatement().execute("drop table if exists foo");
+        connection.commit();
+        applyUpgrades();
+        IDataSet upgradeDump = dbUnitConnection.createDataSet();
+        Assertion.assertEquals(latestDump, upgradeDump);
     }
 
     @Test
     public void testRealSchemaFromCheckpoint() throws Exception {
         createLatestDatabaseWithLatestData();
 
-        IDataSet latestDataDump = new DatabaseConnection(connection).createDataSet();
+        IDataSet latestDataDump = dbUnitConnection.createDataSet();
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
         // datasets FlatXmlDataSet seems to work here.
@@ -120,8 +121,8 @@ public class LatestTestAfterCheckpointIntegrationTest {
         connection.createStatement().execute("drop table if exists applied_upgrades");
         String upgradeDump = TestDatabase.getAllTablesStructureDump();
 
-        IDataSet upgradeDataDump = new DatabaseConnection(connection).createDataSet();
-        //dropCheckpointDatabase
+        IDataSet upgradeDataDump = dbUnitConnection.createDataSet();
+        
         // final File upgradeDumpFile = File.createTempFile("upgradeDataDump", ".xml");
         // FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(upgradeDumpFile));
         // upgradeDataDump = new FlatXmlDataSet(upgradeDumpFile);
@@ -141,8 +142,9 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     /**
-     * The idea here is to figure out whether we are dropping tables in the right order to deal with foreign keys. I'm
-     * not sure we fully succeed, however.
+     * The idea here is to figure out whether we are dropping tables in the
+     * right order to deal with foreign keys. I'm not sure we fully succeed,
+     * however.
      */
     @Test
     public void testDropTablesWithData() throws Exception {
@@ -158,10 +160,10 @@ public class LatestTestAfterCheckpointIntegrationTest {
         createLatestCheckPointDatabaseWithLatestData();
         int nextLookupId = largestLookupId() + 1;
         connection.createStatement().execute(
-                "insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " + "VALUES(" + nextLookupId
+                "insert into lookup_value(lookup_id, entity_id, lookup_name) " + "values(" + nextLookupId
                         + ", 19,'TestLookUpName')");
         connection.createStatement().execute(
-                "insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " + "VALUES(1," + nextLookupId
+                "insert into lookup_value_locale(locale_id, lookup_id, lookup_value) " + "values(1," + nextLookupId
                         + ",'Martian')");
 
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
@@ -196,7 +198,7 @@ public class LatestTestAfterCheckpointIntegrationTest {
 
     private int largestLookupId() throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet results = statement.executeQuery("select max(lookup_id) from LOOKUP_VALUE");
+        ResultSet results = statement.executeQuery("select max(lookup_id) from lookup_value");
         if (!results.next()) {
             throw new SystemException(SystemException.DEFAULT_KEY,
                     "Did not find an existing lookup_id in lookup_value table");
@@ -211,10 +213,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
         TestDatabase.dropMySQLDatabase();
     }
 
-//    private void dropCheckPointDatabase() throws Exception {
-//        TestDatabase.dropMySQLDatabase()
-//    }
-
     private void applyUpgrades() throws Exception {
         connection.createStatement().execute("create table foo(x integer)");
         connection.createStatement().execute("insert into foo(x) values(5)");
@@ -223,7 +221,6 @@ public class LatestTestAfterCheckpointIntegrationTest {
     }
 
     private void loadLatest() throws Exception {
-        connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("create table foo(x integer, y integer default 7)");
         connection.createStatement().execute("insert into foo(x, y) values(5,7)");
         connection.commit();

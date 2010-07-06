@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-08 18:19+0530\n"
+"POT-Creation-Date: 2010-07-01 13:10+0530\n"
 "PO-Revision-Date: 2009-06-19 11:38-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr "Inicio rápido"
 
 #: label.atrisk
 msgid "at risk"
-msgstr "a riesgo"
+msgstr "en riesgo"
 
 #: label.branch
 msgid "Branch"
@@ -79,11 +79,11 @@ msgstr "Clientes"
 
 #: label.collectionsheet
 msgid "Collection Sheet"
-msgstr "Hoja de colección"
+msgstr "Hoja de cobranza"
 
 #: label.collectionsheets
 msgid "Collection Sheets"
-msgstr "Hojas de Colección"
+msgstr "Hojas de cobranza"
 
 #: label.create
 msgctxt "label.create"
@@ -145,7 +145,7 @@ msgstr "Ayuda"
 
 #: label.loanofficer
 msgid "Loan officer"
-msgstr "Oficial de préstamo"
+msgstr "Oficial de Crédito"
 
 #: label.manage
 msgid "Manage"
@@ -235,7 +235,7 @@ msgstr "Vista"
 #: label.w/ocenter
 #, fuzzy
 msgid "w/o center"
-msgstr "w/o centro"
+msgstr "con/sin centro"
 
 #: label.yoursettings
 msgid "Your settings"

@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.application.servicefacade.CenterDto;

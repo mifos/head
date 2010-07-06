@@ -33,11 +33,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.service.FeeBusinessService;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanDto;
 import org.mifos.accounts.loan.business.service.LoanService;
-import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
@@ -93,18 +91,8 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     public MultipleLoanAccountsCreationAction() {
         loanPrdBusinessService = new LoanPrdBusinessService();
         clientBusinessService = new ClientBusinessService();
-        loanProductService = new LoanProductService(loanPrdBusinessService, new FeeBusinessService());
-        loanService = new LoanService(loanProductService, new LoanDao());
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
-    @Override
-    protected BusinessService getService() {
-        return new LoanBusinessService();
+        loanProductService = new LoanProductService(loanPrdBusinessService);
+        loanService = new LoanService(loanProductService, new LoanDaoLegacyImpl());
     }
 
     public static ActionSecurity getSecurity() {

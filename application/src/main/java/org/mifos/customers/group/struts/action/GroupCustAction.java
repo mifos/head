@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
@@ -242,7 +241,7 @@ public class GroupCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, groupDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, groupDto.getClientList(), request);
 
-        actionForm.setLoanOfficerId(group1.getPersonnel().getPersonnelId().toString());
+        actionForm.setLoanOfficerId(String.valueOf(group1.getLoanOfficerId()));
         actionForm.setDisplayName(group1.getDisplayName());
         actionForm.setCustomerId(group1.getCustomerId().toString());
         actionForm.setGlobalCustNum(group1.getGlobalCustNum());

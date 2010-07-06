@@ -23,6 +23,8 @@ package org.mifos.accounts.business;
 import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,9 +59,9 @@ import org.mifos.accounts.util.helpers.FeeInstallment;
 import org.mifos.accounts.util.helpers.InstallmentDate;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -75,10 +77,10 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -457,7 +459,9 @@ public class AccountBO extends AbstractBusinessObject {
             for (CustomFieldDto view : customFields) {
                 if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
                         && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
-                    view.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                    SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                    String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                    view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
                 }
                 this.getAccountCustomFields().add(
                         new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
@@ -608,9 +612,8 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity installment = allInstallments.get(installmentIndex);
         // keep looking at the next installment as long as the current date falls on or
         // after (!before) the start of the current installment
-        while (installment != null
-                && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate()
-                        .getTime())))) {
+        while (installment != null && !currentDate.isBefore(meeting.startDateForMeetingInterval(new LocalDate(installment.getActionDate().getTime())))) {
+
             ++installmentIndex;
             // if we've iterated over all the installments, then just return null
             if (installmentIndex == allInstallments.size()) {
@@ -1688,7 +1691,9 @@ public class AccountBO extends AbstractBusinessObject {
         for (CustomFieldDto fieldView : customFields) {
             if (fieldView.getFieldType().equals(CustomFieldType.DATE.getValue())
                     && org.apache.commons.lang.StringUtils.isNotBlank(fieldView.getFieldValue())) {
-                fieldView.convertDateToUniformPattern(getUserContext().getPreferredLocale());
+                SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
+                String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), userfmt));
             }
             if (getAccountCustomFields().size() > 0) {
                 for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields()) {

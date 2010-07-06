@@ -29,13 +29,13 @@ import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.security.authentication.AuthenticationDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -107,7 +107,7 @@ public class PersonnelBusinessService implements BusinessService {
     }
 
     /**
-     * @deprecated use {@link AuthenticationDao}.
+     * @deprecated use {@link PersonnelDao}.
      */
     @Deprecated
     public PersonnelBO getPersonnel(String personnelName) throws ServiceException {

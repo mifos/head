@@ -40,7 +40,7 @@ while(enn.hasMoreElements()){
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-        <span id="page.id" title="admin" />
+        <span id="page.id" title="admin" ></span>
 		<html-el:form action="AdminAction.do?method=load">
 			<td align="left" valign="top" bgcolor="#FFFFFF"
 				style="padding-left:8px; padding-top:10px;">
@@ -196,7 +196,7 @@ while(enn.hasMoreElements()){
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 								<td width="97%"><html-el:link styleId="admin.link.viewAdditionalFields"
 								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></a> | <html-el:link
+								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link>| <html-el:link
 								styleId="admin.link.defineAdditionalFields"
 								action="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}" >
 								<mifos:mifoslabel name="admin.defineadditionalfields" /></html-el:link></td>
@@ -406,7 +406,22 @@ while(enn.hasMoreElements()){
                   </tr>
 
                 </table>
+                <br>
+
+		<span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.questions" /></span><br />
+                  <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a id="admin.link.questions" href="viewQuestions.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questions" /></a> | <html-el:link styleId="admin.link.defineNewQuestion" href="createQuestion.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.question" /></html-el:link></td>
+                    </tr>
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questiongroups" /></a> | <html-el:link styleId="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.questiongroup" /></html-el:link></td>
+                    </tr>
+                </table>
 			</td>
+			</tr>
+			</table>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

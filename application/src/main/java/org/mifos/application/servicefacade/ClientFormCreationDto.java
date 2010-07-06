@@ -22,10 +22,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CustomFieldDto;
 
 public class ClientFormCreationDto {
 

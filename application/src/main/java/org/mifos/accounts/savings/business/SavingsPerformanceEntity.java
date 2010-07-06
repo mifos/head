@@ -20,8 +20,12 @@
 
 package org.mifos.accounts.savings.business;
 
+import java.math.BigDecimal;
+
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyCompositeUserType;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class SavingsPerformanceEntity extends AbstractEntity {
 
@@ -61,7 +65,22 @@ public class SavingsPerformanceEntity extends AbstractEntity {
         this.missedDeposits = missedDeposits;
     }
 
+    /**
+     * <b>FIXME :</b> Since {@link MoneyCompositeUserType} is not be hit by a transactional(no commit) integration test
+     * this will be initialised as null, which can result in null pointer exception. Previously the integration tests
+     * were doing a transaction commit and then retrieve this object from database, if this value is null in database
+     * {@link MoneyCompositeUserType} will initialise it as zero {@link Money}, but not null. Initialising this value as
+     * zero {@link Money} will help in testing without transaction commit and it's a safe thing to do the initialisation
+     * if this value is null<br/>
+     * <br/>
+     *
+     * <b>TODO :</b> Add the database constraint "not null" on column for this property, and initialise this object as
+     * zero {@link Money} at creation time.
+     */
     public Money getTotalDeposits() {
+        if (totalDeposits == null) {
+            totalDeposits = MoneyUtils.createMoney(savings.getCurrency(), BigDecimal.ZERO);
+        }
         return totalDeposits;
     }
 
@@ -69,7 +88,23 @@ public class SavingsPerformanceEntity extends AbstractEntity {
         this.totalDeposits = totalDeposits;
     }
 
+
+    /**
+     * <b>FIXME :</b> Since {@link MoneyCompositeUserType} is not be hit by a transactional(no commit) integration test
+     * this will be initialised as null, which can result in null pointer exception. Previously the integration tests
+     * were doing a transaction commit and then retrieve this object from database, if this value is null in database
+     * {@link MoneyCompositeUserType} will initialise it as zero {@link Money}, but not null. Initialising this value as
+     * zero {@link Money} will help in testing without transaction commit and it's a safe thing to do the initialisation
+     * if this value is null<br/>
+     * <br/>
+     *
+     * <b>TODO :</b> Add the database constraint "not null" on column for this property, and initialise this object as
+     * zero {@link Money} at creation time.
+     */
     public Money getTotalInterestEarned() {
+        if (totalInterestEarned == null) {
+            totalInterestEarned = MoneyUtils.createMoney(savings.getCurrency(), BigDecimal.ZERO);
+        }
         return totalInterestEarned;
     }
 
@@ -77,7 +112,23 @@ public class SavingsPerformanceEntity extends AbstractEntity {
         this.totalInterestEarned = totalInterstEarned;
     }
 
+
+    /**
+     * <b>FIXME :</b> Since {@link MoneyCompositeUserType} is not be hit by a transactional(no commit) integration test
+     * this will be initialised as null, which can result in null pointer exception. Previously the integration tests
+     * were doing a transaction commit and then retrieve this object from database, if this value is null in database
+     * {@link MoneyCompositeUserType} will initialise it as zero {@link Money}, but not null. Initialising this value as
+     * zero {@link Money} will help in testing without transaction commit and it's a safe thing to do the initialisation
+     * if this value is null<br/>
+     * <br/>
+     *
+     * <b>TODO :</b> Add the database constraint "not null" on column for this property, and initialise this object as
+     * zero {@link Money} at creation time.
+     */
     public Money getTotalWithdrawals() {
+        if (totalWithdrawals == null) {
+            totalWithdrawals = MoneyUtils.createMoney(savings.getCurrency(), BigDecimal.ZERO);
+        }
         return totalWithdrawals;
     }
 

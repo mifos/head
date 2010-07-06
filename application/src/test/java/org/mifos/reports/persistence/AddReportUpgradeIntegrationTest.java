@@ -29,16 +29,13 @@ import org.hibernate.Transaction;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.reports.business.ReportsBO;
+import org.mifos.reports.business.ReportsCategoryBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
     public AddReportUpgradeIntegrationTest() throws Exception {
         super();
     }
-
-    private static final short ACTIVITY_ID = 1;
-    private static final short REPORT_CATEGORY_ID = (short) 6;
-    private static final short TEST_REPORT_ID = (short) 4;
 
     private Session session;
     private Transaction transaction;
@@ -52,28 +49,16 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         transaction = session.beginTransaction();
     }
 
-    public void testShouldNotThrowErrorWhenUpgradingForVer184WithActivityIdNull() throws Exception {
-        AddReport addReport = createReport();
-
-        try {
-            addReport.doUpgrade(connection);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            Assert.fail("Should not throw error when inserting report:");
-        }
-    }
-
     private AddReport createReport() {
-        return new AddReport(TEST_REPORT_ID, REPORT_CATEGORY_ID, "TestReportForUpgrade",
-                "test_report_upgrade", "design string", ACTIVITY_ID);
+        return new AddReport(ReportsCategoryBO.ANALYSIS, "TestReportForUpgrade", "XYZ.rptdesign");
     }
 
-    public void testShouldUpgradeForDBVersion185OrMoreWithAcivityId() throws Exception {
+    public void testShouldUpgrade() throws Exception {
         AddReport addReport = createReport();
-        addReport.doUpgrade(connection);
-        ReportsBO report = new ReportsPersistence().getReport(TEST_REPORT_ID);
+        addReport.upgrade(connection);
+        ReportsBO report = new ReportsPersistence().getReport(ReportsCategoryBO.ANALYSIS);
         Assert.assertNotNull(report.getActivityId());
-        Assert.assertNotNull(report.getIsActive());
+        Assert.assertTrue(report.getIsActive() == (short)1);
     }
 
     @Override

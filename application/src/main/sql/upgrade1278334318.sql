@@ -1,1 +1,1 @@
-DROP TABLE DATABASE_VERSION;
+drop table database_version;

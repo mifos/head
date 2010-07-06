@@ -456,13 +456,17 @@ explanation of the license and how it is applied.
 						<c:if test="${!clientInformationDto.clientDisplay.areFamilyDetailsRequired}">
 						<tr>
 							<td colspan="2" class="fontnormal"><c:out value="${clientInformationDto.clientDisplay.maritalStatus}" />
-							<c:if
-								test="${!empty clientInformationDto.clientDisplay.maritalStatus}">;</c:if>
+							<c:if test="${!empty clientInformationDto.clientDisplay.maritalStatus}">;</c:if>
+
+                                <c:if test="${!empty clientInformationDto.clientDisplay.spouseFatherValue &&
+                                !empty clientInformationDto.clientDisplay.spouseFatherName}">
 							<c:out value="${clientInformationDto.clientDisplay.spouseFatherValue}" />
 							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>
 							<span id="viewClientDetails.text.spouseFatherName"><c:out value="${clientInformationDto.clientDisplay.spouseFatherName}" /></span>
-								<c:if
-								test="${!empty clientInformationDto.clientDisplay.numChildren}">;
+                                    <c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">;</c:if>
+                                </c:if>
+
+								<c:if test="${!empty clientInformationDto.clientDisplay.numChildren}">
 								<c:out
 									value="${clientInformationDto.clientDisplay.numChildren}" />
 								<mifos:mifoslabel name="client.Children"

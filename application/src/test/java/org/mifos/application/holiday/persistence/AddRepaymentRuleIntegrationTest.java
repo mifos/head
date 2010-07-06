@@ -20,6 +20,7 @@
 
 package org.mifos.application.holiday.persistence;
 
+import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
@@ -41,7 +42,6 @@ public class AddRepaymentRuleIntegrationTest extends MifosIntegrationTestCase {
 
     public void testConstructor() throws Exception {
         AddRepaymentRule upgrade = null;
-
         String invalidKey = "SameDay";
 
         try {

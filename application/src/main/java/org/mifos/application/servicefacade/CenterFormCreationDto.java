@@ -23,8 +23,8 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.application.master.business.CustomFieldDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.CustomFieldDto;
 
 public class CenterFormCreationDto {
 
