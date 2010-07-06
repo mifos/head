@@ -20,28 +20,37 @@
 
 package org.mifos.ui.core.controller;
 
-import org.mifos.platform.questionnaire.contract.SectionDefinition;
 import org.mifos.platform.questionnaire.contract.SectionQuestionDetail;
 
-import java.util.ArrayList;
-import java.util.List;
+public class SectionQuestionDetailForm {
+    private SectionQuestionDetail sectionQuestionDetail;
 
-public class SectionDetailForm {
-    private SectionDefinition sectionDefinition;
-
-    public SectionDetailForm(SectionDefinition sectionDefinition) {
-        this.sectionDefinition = sectionDefinition;
+    public SectionQuestionDetailForm(SectionQuestionDetail sectionQuestionDetail) {
+        this.sectionQuestionDetail = sectionQuestionDetail;
     }
 
-    public String getName() {
-        return sectionDefinition.getName();
+    public int getQuestionId() {
+        return sectionQuestionDetail.getQuestionId();
     }
 
-    public List<SectionQuestionDetailForm> getSectionQuestions() {
-        List<SectionQuestionDetailForm> questionDetailForms = new ArrayList<SectionQuestionDetailForm>();
-        for (SectionQuestionDetail sectionQuestionDetail : sectionDefinition.getQuestions()) {
-            questionDetailForms.add(new SectionQuestionDetailForm(sectionQuestionDetail));
-        }
-        return questionDetailForms;
+    public String getTitle() {
+        return sectionQuestionDetail.getTitle();
+    }
+
+    public boolean isMandatory() {
+        return sectionQuestionDetail.isMandatory();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SectionQuestionDetailForm that = (SectionQuestionDetailForm) o;
+        return getQuestionId() == that.getQuestionId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getQuestionId();
     }
 }
