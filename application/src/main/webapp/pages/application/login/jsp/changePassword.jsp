@@ -31,9 +31,6 @@ explanation of the license and how it is applied.
 		loginActionForm.action="loginAction.do?method=cancel";
 		loginActionForm.submit();
 	}
-	function fnLogout() {
-		location.href="loginAction.do?method=logout";
-	}
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -46,9 +43,9 @@ explanation of the license and how it is applied.
 		<tr>
 			<td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188"
 				height="74"></td>
-			<td align="right" bgcolor="#FFFFFF" class="fontnormal"><html-el:link styleId="changePassword.link.logout"
-				href="javascript:fnLogout()"><mifos:mifoslabel
-				name="login.logout" bundle="LoginUIResources"/></html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td align="right" bgcolor="#FFFFFF" class="fontnormal">
+				<html-el:link styleId="logout_link" href="j_spring_security_logout">
+				<mifos:mifoslabel name="login.logout" bundle="LoginUIResources"/></html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td align="left" valign="bottom" bgcolor="#ffffff">&nbsp;</td>

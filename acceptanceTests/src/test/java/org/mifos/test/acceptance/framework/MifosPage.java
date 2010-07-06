@@ -39,7 +39,7 @@ public class MifosPage extends AbstractPage {
     }
 
     public LoginPage logout() {
-        selenium.open("loginAction.do?method=logout");
+        selenium.open("j_spring_security_logout");
         waitForPageToLoad();
         return new LoginPage(selenium);
     }

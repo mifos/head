@@ -37,8 +37,6 @@ import java.util.Map;
 @Controller
 public class GenericController extends AbstractController {
 
-
-
 	@Override
     @RequestMapping(value={"/accessDenied.ftl","/pageNotFound.ftl","/ping.ftl","/cheetah.css.ftl","/gazelle.css.ftl","/adminHome.ftl","/maincss.css","/screen.css","/admin.ftl","/viewProductMix.ftl","/viewProductCategories.ftl","/viewOfficeHierarchy.ftl","/viewLoanProducts.ftl","/defineMandatoryHiddenFields.ftl","/viewFunds.ftl","/defineLabels.ftl","/defineLookupOptions.ftl","/viewChecklists.ftl","/viewEditCheckLists.ftl","/viewEditSavingsProduct.ftl","/viewEditLoanProduct.ftl","/viewSavingsProducts.ftl"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)  {

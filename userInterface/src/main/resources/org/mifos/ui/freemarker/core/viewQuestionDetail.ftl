@@ -47,6 +47,3 @@
     </div>
 </div>
 [@mifos.footer/]
-
-
-
