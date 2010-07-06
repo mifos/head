@@ -44,11 +44,6 @@ public class StaticHibernateUtil {
         hibernateUtil = new HibernateUtil();
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ae162ff61f7cc628821155182f314af445c83423
-
     public static SessionFactory getSessionFactory() {
         return hibernateUtil.getSessionFactory();
     }
