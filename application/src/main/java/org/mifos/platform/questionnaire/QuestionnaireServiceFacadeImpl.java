@@ -118,8 +118,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public QuestionGroup getQuestionGroup(int questionGroupId) throws ApplicationException {
-        return mapToQuestionGroup(questionnaireService.getQuestionGroup(questionGroupId));
+    public QuestionGroupDetail getQuestionGroupDetail(int questionGroupId) throws ApplicationException {
+        return questionnaireService.getQuestionGroup(questionGroupId);
     }
 
     @Override

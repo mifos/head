@@ -40,8 +40,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -129,17 +128,17 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetQuestionGroupById() throws ApplicationException {
         int questionGroupId = 1;
-        QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
-        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(questionGroupDetail);
-        QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(questionGroupId);
-        assertNotNull("Question group should not be null", questionGroup);
-        assertThat(questionGroup.getTitle(), is(TITLE));
-        List<SectionForm> sectionForms = questionGroup.getSections();
-        assertThat(sectionForms.size(), is(2));
-        assertThat(sectionForms.get(0).getName(), is("S1"));
-        assertThat(sectionForms.get(1).getName(), is("S2"));
-        EventSource eventSource = questionGroup.getEventSource();
-        assertThat(eventSource, is(not(nullValue())));
+        QuestionGroupDetail expectedQuestionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
+        when(questionnaireService.getQuestionGroup(questionGroupId)).thenReturn(expectedQuestionGroupDetail);
+        QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
+        assertNotNull("Question group should not be null", questionGroupDetail);
+        assertThat(questionGroupDetail.getTitle(), is(TITLE));
+        List<SectionDefinition> sectionDefinitions = questionGroupDetail.getSectionDefinitions();
+        assertThat(sectionDefinitions.size(), is(2));
+        assertThat(sectionDefinitions.get(0).getName(), is("S1"));
+        assertThat(sectionDefinitions.get(1).getName(), is("S2"));
+        EventSource eventSource = questionGroupDetail.getEventSource();
+        assertThat(eventSource, notNullValue());
         assertThat(eventSource.getEvent(), is("Create"));
         assertThat(eventSource.getSource(), is("Client"));
     }
@@ -163,7 +162,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionGroupId = 1;
         when(questionnaireService.getQuestionGroup(questionGroupId)).thenThrow(new ApplicationException(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));
         try {
-            questionnaireServiceFacade.getQuestionGroup(questionGroupId);
+            questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
         } catch (ApplicationException e) {
             verify(questionnaireService, times(1)).getQuestionGroup(questionGroupId);
             assertThat(e.getKey(), is(QuestionnaireConstants.QUESTION_GROUP_NOT_FOUND));

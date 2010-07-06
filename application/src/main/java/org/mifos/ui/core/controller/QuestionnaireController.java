@@ -26,6 +26,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.mifos.platform.questionnaire.contract.EventSource;
+import org.mifos.platform.questionnaire.contract.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.contract.QuestionnaireServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.binding.message.MessageBuilder;
@@ -75,8 +76,9 @@ public class QuestionnaireController {
             if (invalid(questionGroupId)) {
                 model.addAttribute("error_message_code", QuestionnaireConstants.INVALID_QUESTION_GROUP_ID);
             } else {
-                QuestionGroup questionGroup = questionnaireServiceFacade.getQuestionGroup(Integer.valueOf(questionGroupId));
-                model.addAttribute("questionGroupDetail", questionGroup);
+                QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(Integer.valueOf(questionGroupId));
+                QuestionGroupDetailForm questionGroupDetailForm = new QuestionGroupDetailForm(questionGroupDetail);
+                model.addAttribute("questionGroupDetail", questionGroupDetailForm);
                 model.addAttribute("eventSources", getAllQgEventSources());
             }
         } catch (ApplicationException e) {
