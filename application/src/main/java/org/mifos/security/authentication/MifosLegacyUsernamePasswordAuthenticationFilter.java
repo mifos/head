@@ -82,10 +82,12 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
                 String currentFlowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
                 HttpSession session = request.getSession();
                 FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
-                try {
-                    flowManager.addObjectToFlow(currentFlowKey, Constants.TEMPUSERCONTEXT, userContext);
-                } catch (PageExpiredException e) {
-                    e.printStackTrace();
+                if (flowManager != null) {
+                    try {
+                        flowManager.addObjectToFlow(currentFlowKey, Constants.TEMPUSERCONTEXT, userContext);
+                    } catch (PageExpiredException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
