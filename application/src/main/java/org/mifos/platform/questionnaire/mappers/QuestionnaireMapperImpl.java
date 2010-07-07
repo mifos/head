@@ -148,7 +148,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     }
 
     private List<SectionDefinition> mapToSectionDefinitions(List<Section> sections) {
-        ArrayList<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
+        List<SectionDefinition> sectionDefinitions = new ArrayList<SectionDefinition>();
         for(Section section: sections){
             sectionDefinitions.add(mapToSectionDefinition(section));
         }
@@ -159,7 +159,8 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         SectionDefinition sectionDefinition = new SectionDefinition();
         sectionDefinition.setName(section.getName());
         for (SectionQuestion sectionQuestion : section.getQuestions()) {
-            sectionDefinition.addQuestion(new SectionQuestionDetail(sectionQuestion.getQuestion().getQuestionId(), sectionQuestion.isRequired()));
+            Question question = sectionQuestion.getQuestion();
+            sectionDefinition.addQuestion(new SectionQuestionDetail(question.getQuestionId(), question.getShortName(), sectionQuestion.isRequired()));
         }
         return sectionDefinition;
     }

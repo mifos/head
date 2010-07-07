@@ -45,7 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"personnel","acceptance","ui"})
+@Test(sequential = true, groups = {"personnel","acceptance","ui"}, enabled = false)
 public class PersonnelTest extends UiTestCaseBase {
 
     private NavigationHelper navigationHelper;
@@ -53,14 +53,15 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @Autowired
     private DriverManagerDataSource dataSource;
+
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    // one of the dependent methods throws Exception
     @BeforeMethod(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
@@ -79,7 +80,6 @@ public class PersonnelTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
-//        UiTestUtils.sleep(600000);
         userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
     }
 

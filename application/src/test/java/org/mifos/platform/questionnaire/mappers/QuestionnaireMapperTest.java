@@ -185,7 +185,9 @@ public class QuestionnaireMapperTest {
     private Section getSection(String sectionName) {
         Section section = new Section(sectionName);
         SectionQuestion sectionQuestion = new SectionQuestion();
-        sectionQuestion.setQuestion(new Question());
+        Question question = new Question();
+        question.setShortName(sectionName);
+        sectionQuestion.setQuestion(question);
         section.setQuestions(asList(sectionQuestion));
         return section;
     }
@@ -211,9 +213,18 @@ public class QuestionnaireMapperTest {
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
         assertThat(questionGroupDetails, is(notNullValue()));
         for (int i = 0; i < countOfQuestions; i++) {
-            assertThat(questionGroupDetails.get(i).getTitle(), is(TITLE + i));
-            assertThat(questionGroupDetails.get(i).getSectionDefinitions().get(0).getName(), is(SECTION + i));
-            assertThat(questionGroupDetails.get(i).getSectionDefinitions().get(1).getName(), is(SECTION + (i + 1)));
+            QuestionGroupDetail questionGroupDetail = questionGroupDetails.get(i);
+            assertThat(questionGroupDetail.getTitle(), is(TITLE + i));
+            SectionDefinition sectionDefinition1 = questionGroupDetail.getSectionDefinitions().get(0);
+            assertThat(sectionDefinition1.getName(), is(SECTION + i));
+            List<SectionQuestionDetail> questionDetails1 = sectionDefinition1.getQuestions();
+            assertThat(questionDetails1.size(), is(1));
+            assertThat(questionDetails1.get(0).getTitle(), is(SECTION + i));
+            SectionDefinition sectionDefinition2 = questionGroupDetail.getSectionDefinitions().get(1);
+            assertThat(sectionDefinition2.getName(), is(SECTION + (i + 1)));
+            List<SectionQuestionDetail> questionDetails2 = sectionDefinition2.getQuestions();
+            assertThat(questionDetails2.size(), is(1));
+            assertThat(questionDetails2.get(0).getTitle(), is(SECTION + (i + 1)));
         }
     }
 
