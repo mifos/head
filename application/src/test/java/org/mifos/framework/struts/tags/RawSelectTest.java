@@ -51,5 +51,6 @@ public class RawSelectTest extends TestCase {
        Assert.assertEquals("1", rawSelect.getSize());
        Assert.assertEquals("style", rawSelect.getStyle());
        Assert.assertTrue(rawSelect.toString().contains("Select the item"));
+       Assert.assertTrue(rawSelect.toString().contains("MIN-WIDTH"));
     }
 }
