@@ -80,8 +80,7 @@ public class LoginFilter implements Filter {
                     return;
 
                 } else {
-                    ((HttpServletRequest) req).getSession(false).setAttribute(Constants.RANDOMNUM,
-                            new Random().nextLong());
+                    ((HttpServletRequest) req).getSession(false).setAttribute(Constants.RANDOMNUM,new Random().nextLong());
                     chain.doFilter(req, res);
                 }
 

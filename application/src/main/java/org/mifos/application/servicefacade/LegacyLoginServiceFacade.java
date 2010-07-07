@@ -18,13 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.servicefacade;
+package org.mifos.application.servicefacade;
 
-import org.mifos.dto.screen.ProductConfigurationDto;
+import org.mifos.framework.exceptions.ApplicationException;
 
-public interface AdminServiceFacade {
+/**
+ *
+ */
+public interface LegacyLoginServiceFacade {
 
-    ProductConfigurationDto retrieveProductConfiguration();
-
-    void updateProductConfiguration(ProductConfigurationDto productConfiguration);
+    LoginActivityDto login(String userName, String password) throws ApplicationException;
 }

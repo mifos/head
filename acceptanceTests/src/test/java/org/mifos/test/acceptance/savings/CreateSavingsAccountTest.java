@@ -63,10 +63,8 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-//    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
-    private void newVoluntaryClientSavingsAccount() throws Exception {
-
-        // FIXME - KEITHW - test manually and rewrite test to pass
+    @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
+    public void newVoluntaryClientSavingsAccount() throws Exception {
 
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
 

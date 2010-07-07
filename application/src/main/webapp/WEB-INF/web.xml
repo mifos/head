@@ -20,11 +20,13 @@
         <filter-name>DatabaseVersionFilter</filter-name>
         <filter-class>org.mifos.framework.persistence.DatabaseInitFilter</filter-class>
     </filter>
+    
+<!-- 
     <filter>
         <filter-name>loginfilter</filter-name>
         <filter-class>org.mifos.security.util.LoginFilter</filter-class>
     </filter>
-
+-->
     <filter>
     	<filter-name>springSecurityFilterChain</filter-name>
     	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -75,13 +77,14 @@
         <url-pattern>*.css</url-pattern>
     </filter-mapping>
 
+<!--
     <filter-mapping>
         <filter-name>loginfilter</filter-name>
         <url-pattern>/developer/*</url-pattern>
         <url-pattern>*.do</url-pattern>
         <url-pattern>/reportTemplateDownload</url-pattern>
     </filter-mapping>
-
+-->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
